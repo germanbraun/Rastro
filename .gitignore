@@ -1,0 +1,25 @@
+# Datos descargados: el repo guarda scripts, nunca los datos
+data/raw/
+data/cache/
+*.dump
+*.sql.gz
+*.zip
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# Node
+node_modules/
+
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+
+# Caché de respuestas del LLM
+layer/eval/cache/
+
+.DS_Store
