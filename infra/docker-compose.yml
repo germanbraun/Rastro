@@ -1,0 +1,63 @@
+name: rastro
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${PG_DB:-rastro}
+      POSTGRES_USER: ${PG_USER:-rastro}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-rastro}
+    ports:
+      - "${PG_PORT:-5434}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  ontop:
+    build: ./ontop
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ONTOP_ONTOLOGY_FILE: /opt/rastro/ontology/rastro.ttl
+      ONTOP_MAPPING_FILE: /opt/rastro/mappings/rastro.obda
+      ONTOP_DB_URL: jdbc:postgresql://postgres:5432/${PG_DB:-rastro}
+      ONTOP_DB_USER: ${PG_USER:-rastro}
+      ONTOP_DB_PASSWORD: ${PG_PASSWORD:-rastro}
+      ONTOP_DB_DRIVER: org.postgresql.Driver
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      # Recarga ontología y mapeos al editarlos, sin reiniciar el contenedor
+      ONTOP_DEV_MODE: "true"
+    ports:
+      - "${ONTOP_PORT:-8080}:8080"
+    volumes:
+      - ../ontology:/opt/rastro/ontology:ro
+      - ../mappings:/opt/rastro/mappings:ro
+
+  graphdb:
+    image: ontotext/graphdb:10.8.5
+    environment:
+      GDB_HEAP_SIZE: ${GRAPHDB_HEAP:-2g}
+    ports:
+      - "${GRAPHDB_PORT:-7210}:7200"
+    volumes:
+      - graphdb-data:/opt/graphdb/home
+
+  # Crea el repositorio "rastro" en GraphDB si no existe y termina.
+  graphdb-init:
+    image: curlimages/curl:8.10.1
+    depends_on:
+      - graphdb
+    volumes:
+      - ./graphdb:/config:ro
+    entrypoint: ["sh", "/config/init.sh"]
+    restart: "no"
+
+volumes:
+  pgdata:
+  graphdb-data:

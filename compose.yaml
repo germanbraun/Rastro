@@ -1,0 +1,3 @@
+# Punto de entrada: `docker compose up` desde la raíz del repo.
+include:
+  - infra/docker-compose.yml

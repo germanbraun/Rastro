@@ -1,0 +1,21 @@
+@prefix : <https://w3id.org/rastro/ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<https://w3id.org/rastro/ontology> a owl:Ontology ;
+    rdfs:label "Ontología de Rastro"@es ;
+    rdfs:comment "Esqueleto inicial. Crece en la Fase 1 a partir de las preguntas de competencia."@es .
+
+# Fuentes de datos: base de la marca de procedencia de cada dato.
+:DataSource a owl:Class ;
+    rdfs:label "Fuente de datos"@es , "Data source"@en .
+
+:homepage a owl:DatatypeProperty ;
+    rdfs:domain :DataSource ;
+    rdfs:range xsd:anyURI .
+
+:license a owl:DatatypeProperty ;
+    rdfs:domain :DataSource ;
+    rdfs:range xsd:string .

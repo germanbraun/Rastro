@@ -24,4 +24,22 @@ El plan completo, por fases y con checkpoints, está en [docs/plan.md](docs/plan
 
 ## Levantar el entorno
 
-Pendiente (Fase 0): `docker compose up` desde `infra/`.
+```bash
+docker compose up -d
+```
+
+| Servicio | URL local | Qué es |
+|---|---|---|
+| Postgres | `localhost:5434` (usuario y clave `rastro`) | Fuentes relacionales, un esquema por fuente, y `rastro_meta` con el registro de fuentes y cargas |
+| Ontop | http://localhost:8080 | Endpoint SPARQL virtual sobre Postgres; recarga `ontology/` y `mappings/` al editarlos |
+| GraphDB Free | http://localhost:7210 | Triplestore con el repositorio `rastro` (MeSH y grafos materializados) |
+
+Los puertos se cambian copiando `.env.example` a `.env`. Por defecto evitan 5432 y 7200 para convivir con un Postgres y un GraphDB locales.
+
+Conteo por fuente (checkpoint de la Fase 0):
+
+```bash
+docker compose exec postgres psql -U rastro -c "select * from rastro_meta.source_counts"
+```
+
+Cada script de `data/` registra sus cargas en `rastro_meta.load_run`, que alimenta esa vista.
