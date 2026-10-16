@@ -2,7 +2,7 @@ name: rastro
 
 services:
   postgres:
-    image: postgres:16
+    image: postgres:17
     environment:
       POSTGRES_DB: ${PG_DB:-rastro}
       POSTGRES_USER: ${PG_USER:-rastro}
@@ -57,6 +57,24 @@ services:
       - ./graphdb:/config:ro
     entrypoint: ["sh", "/config/init.sh"]
     restart: "no"
+
+  # Cargadores de datos: se corren a demanda con `docker compose run --rm <servicio>`
+  aact-loader:
+    image: postgres:17
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+      AACT_USER: ${AACT_USER:-}
+      AACT_PASSWORD: ${AACT_PASSWORD:-}
+      AACT_DUMP: ${AACT_DUMP:-}
+    volumes:
+      - ../data:/data
+    entrypoint: ["bash", "/data/aact/load.sh"]
 
 volumes:
   pgdata:

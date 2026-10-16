@@ -55,7 +55,7 @@ Ocho fases: de la 0 a la 4 construyen Rastro Layer, de la 5 a la 7 Rastro Lab, y
 
 - [x] Crear el repo con la estructura y un README mínimo
 - [x] docker-compose con Postgres, Ontop y GraphDB Free
-- [ ] Script de carga de AACT en Postgres
+- [x] Script de carga de AACT en Postgres
 - [ ] Script de carga de ChEMBL (subconjunto: compuestos con targets en oncología)
 - [ ] Script de descarga de eventos adversos de openFDA para la lista de fármacos del recorte, guardados como JSON y cargados a una tabla
 - [ ] Carga de MeSH (RDF) en el triplestore

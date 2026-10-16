@@ -43,3 +43,13 @@ docker compose exec postgres psql -U rastro -c "select * from rastro_meta.source
 ```
 
 Cada script de `data/` registra sus cargas en `rastro_meta.load_run`, que alimenta esa vista.
+
+## Cargar datos
+
+Los cargadores corren a demanda y necesitan credenciales en `.env` (copiado de `.env.example`).
+
+| Fuente | Comando | Requisito |
+|---|---|---|
+| AACT (oncología) | `docker compose run --rm aact-loader` | Cuenta gratuita de AACT (`AACT_USER`, `AACT_PASSWORD`) o un snapshot en `data/raw/` (`AACT_DUMP`) |
+
+Si una contraseña tiene `$`, va entre comillas simples en el `.env`: Docker Compose interpreta `$` en valores sin comillas.
