@@ -37,12 +37,36 @@
     - **Procedencia.** Rastro dice de qué fuente sale cada dato.
 
 - question: ¿Por qué Rastro acierta donde el SQL directo falla?
-  answer: >-
-    Porque la parte difícil ya estaba resuelta. Saber qué ensayo prueba qué fármaco
-    exige cruzar texto libre («Pembrolizumab 200 mg», «rhuMAb HER2») con los nombres de
-    ChEMBL. El SQL directo lo improvisa en cada consulta: es lento y tiene huecos («humab»
-    coincidió con trastuzumab y contó ensayos que no eran anti-EGFR). Rastro lo resolvió
-    una vez, con reglas explícitas, y lo revisó a mano (98-99 % de precisión).
+  answer: |-
+    Porque Rastro ya sabe **qué fármaco prueba cada ensayo**, y el SQL directo lo tiene que adivinar en cada consulta.
+
+    ClinicalTrials.gov no dice "este ensayo prueba el fármaco X". Dice, en el texto que escribió cada sponsor, «Pembrolizumab 200 mg», «MK-3475» o «Keytruda». Para responder "¿cuántos ensayos prueban fármacos anti-EGFR?" primero hay que convertir ese texto en un fármaco concreto. El SQL directo lo improvisa en cada consulta, y ahí se equivoca: buscando pedazos de nombres, «humab» coincidió con «rhuMAb HER2» (trastuzumab, que no es anti-EGFR).
+
+- question: ¿Cómo sabe Rastro qué fármaco prueba cada ensayo?
+  answer: |-
+    Un programa recorre una sola vez las 130.000 intervenciones de los ensayos y arma una tabla ensayo → fármaco, con los nombres y sinónimos de ChEMBL. Aplica estas reglas, en orden:
+
+    | Qué dice el ensayo | Regla | Resultado |
+    |---|---|---|
+    | «Trastuzumab» | nombre exacto | trastuzumab |
+    | «MK-3475», «PTK787» | sinónimo de ChEMBL | pembrolizumab, vatalanib |
+    | alias en AACT: «Taxotere» | alias | docetaxel |
+    | «Carboplatin + Paclitaxel» | combinación | carboplatino y paclitaxel |
+    | «FOLFOX» | régimen conocido | fluorouracilo, leucovorina y oxaliplatino |
+    | «Pembrolizumab 200 mg» | nombre como palabra entera | pembrolizumab |
+    | «albumin-bound paclitaxel» | sin palabras genéricas | paclitaxel, no «albumin» |
+    | «rhuMAb HER2» | alias de trastuzumab | trastuzumab, que actúa sobre HER2: no cuenta como anti-EGFR |
+
+    Después se revisaron a mano muestras al azar: **98-99 % de los enlaces son correctos**. Las reglas están en linking/drugs.sql y la revisión, en linking/review-2026-10-16.md.
+
+- question: ¿Por qué conviene resolverlo una vez y no en cada consulta?
+  answer: |-
+    - **Una sola definición.** "Ensayo que prueba el fármaco X" significa lo mismo en todas las preguntas. El SQL directo lo calculó de {n_methods} formas distintas en 20 preguntas.
+    - **Se puede revisar.** Las reglas se leen y su precisión está medida. Lo que improvisa el SQL directo no lo revisa nadie.
+    - **Se corrige una vez y mejora todo.** Cuando apareció un error (faltaban los ensayos con bicalutamida), arreglar la regla arregló todas las preguntas que la usan.
+    - **Es rápido y repetible.** Corre en segundos, no necesita un LLM y siempre da el mismo resultado.
+
+    No es perfecto: 1 o 2 de cada 100 enlaces están mal, y se pierden algunos fármacos que solo aparecen en los alias. Pero ese error es conocido y está medido; el del SQL directo, no.
 
 - question: ¿Y si al SQL directo le doy las mismas tablas de enlaces?
   answer: >-
