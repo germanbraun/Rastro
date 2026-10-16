@@ -297,6 +297,39 @@ with compare_tab:
                     "integrar las fuentes se paga en cada pregunta, en lugar de una sola vez.")
         st.markdown("**🔎 Rastro dice de dónde sale cada dato.** Cada columna trae su fuente y su "
                     "licencia. Con SQL directo, la procedencia queda enterrada en la query.")
+    st.subheader("Por qué Rastro acierta")
+    st.markdown(
+        "No es que el LLM escriba mejor una consulta que otra. **La parte difícil ya estaba "
+        "resuelta y revisada antes de que llegara la pregunta.**\n\n"
+        "En casi todas las preguntas, lo difícil es saber qué ensayos prueban qué fármaco: AACT "
+        "nombra las intervenciones en texto libre («Pembrolizumab 200 mg», «rhuMAb HER2», "
+        "«PTK787») y ChEMBL tiene los fármacos con sus nombres y sinónimos.")
+    left, right = st.columns(2)
+    with left:
+        st.markdown(
+            "**Sin Rastro**, el LLM resuelve ese enlace dentro de cada consulta, sobre la marcha:\n"
+            "- **Lento:** compara cada nombre y sinónimo con el texto de unas 130.000 "
+            "intervenciones. Tres consultas superaron el límite de 60 segundos y hubo que "
+            "reescribirlas.\n"
+            "- **Con huecos que nadie revisa:** buscando pedazos de nombres, «humab» coincidió "
+            "con «rhuMAb HER2» (trastuzumab) y contó ensayos que no eran anti-EGFR. Exigiendo el "
+            "nombre exacto, perdió «PTK787» (vatalanib).")
+    with right:
+        st.markdown(
+            "**Con Rastro**, ese enlace ya existe:\n"
+            "- **Se construyó una vez** con reglas explícitas (palabra entera, gana el nombre más "
+            "largo, sin palabras genéricas) y se **revisó a mano: 98-99 % de precisión**.\n"
+            "- **La consulta solo nombra conceptos** («ensayo prueba fármaco», «fármaco actúa "
+            "sobre target») y Rastro la traduce a uniones simples sobre tablas indexadas. Tarda "
+            "décimas de segundo.")
+    st.info(
+        "**¿Y si al SQL directo le damos las mismas tablas de enlaces?** Probablemente acertaría "
+        "casi todas: la precisión viene sobre todo de la integración revisada, no del lenguaje "
+        "de consulta. Lo que agrega la capa semántica de Rastro es exponer esa integración como "
+        "un **vocabulario de negocio** que se documenta solo, que no cambia si cambian las tablas "
+        "de abajo, que es un estándar (lo leen otras herramientas de grafos de conocimiento) y que "
+        "lleva la **procedencia de cada dato** incorporada.")
+
     with st.expander("Cómo se midió"):
         st.markdown("- Una respuesta es correcta si un número está a menos del 5 % del valor real, "
                     "o si una lista coincide en al menos un 80 %.\n"
