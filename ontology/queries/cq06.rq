@@ -1,0 +1,20 @@
+# CQ06. ¿Qué fármacos comparten al menos un target con imatinib y en cuántos ensayos
+# aparece cada uno?
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+
+SELECT ?otherName (GROUP_CONCAT(DISTINCT ?gene; separator=", ") AS ?sharedTargets)
+       (COUNT(DISTINCT ?trial) AS ?trials)
+WHERE {
+  ?imatinib rdfs:label "IMATINIB" ;
+            :hasTarget ?target .
+  ?other :hasTarget ?target ;
+         rdfs:label ?otherName .
+  FILTER (?other != ?imatinib)
+  OPTIONAL { ?target :geneSymbol ?gene }
+  OPTIONAL { ?trial :testsDrug ?other }
+}
+GROUP BY ?otherName
+ORDER BY DESC(?trials)

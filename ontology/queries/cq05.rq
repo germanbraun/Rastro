@@ -1,0 +1,27 @@
+# CQ05. ¿Cuáles son los eventos adversos más reportados para los fármacos que se están
+# probando en ensayos de leucemia?
+# Suma los conteos por fármaco: un reporte que menciona dos de estos fármacos cuenta dos
+# veces. FAERS son reportes espontáneos, sin denominador; el fármaco puede no ser el
+# sospechoso.
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+
+SELECT ?reaction (SUM(?reports) AS ?totalReports) (COUNT(DISTINCT ?drug) AS ?drugs)
+WHERE {
+  {
+    SELECT DISTINCT ?drug WHERE {
+      ?trial :testsDrug ?drug ;
+             :studiesCondition ?condition .
+      ?leukemia rdfs:label "Leukemia"@en .
+      ?condition meshv:broaderDescriptor* ?leukemia .
+    }
+  }
+  ?r :reactionOf ?drug ;
+     :reactionTerm ?reaction ;
+     :reportCount ?reports .
+}
+GROUP BY ?reaction
+ORDER BY DESC(?totalReports)
+LIMIT 20

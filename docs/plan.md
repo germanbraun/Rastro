@@ -64,10 +64,10 @@ Ocho fases: de la 0 a la 4 construyen Rastro Layer, de la 5 a la 7 Rastro Lab, y
 
 ### Fase 1 — Preguntas de competencia y ontología
 
-- [ ] Escribir 10–15 preguntas de negocio en `ontology/competency-questions.md`
-- [ ] Ontología de 10–15 clases: Fármaco, Target, Ensayo, Condición, Sponsor, Fase, EventoAdverso, Reporte
-- [ ] Reutilizar MeSH para condiciones y alinear con estándares donde aporte
-- [ ] Escribir a mano la query SPARQL de cada pregunta de competencia
+- [x] Escribir 10–15 preguntas de negocio en `ontology/competency-questions.md` (borrador, a revisar)
+- [x] Ontología de 10–15 clases: Fármaco, Target, Ensayo, Condición, Sponsor, Fase, EventoAdverso, Reporte (borrador, a revisar)
+- [x] Reutilizar MeSH para condiciones y alinear con estándares donde aporte (Schema.org y PROV-O)
+- [x] Escribir a mano la query SPARQL de cada pregunta de competencia (sintaxis validada; se prueban contra datos en la Fase 2)
 
 **Checkpoint:** la ontología carga sin errores y cada pregunta tiene su SPARQL escrito.
 

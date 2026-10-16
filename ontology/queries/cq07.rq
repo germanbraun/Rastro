@@ -1,0 +1,28 @@
+# CQ07. ¿Qué fármacos ya aprobados (fase máxima 4) se están probando en ensayos para tipos
+# de cáncer en los que ChEMBL no les registra ninguna indicación?
+# No cuenta como nueva una condición igual o más específica que una indicación existente.
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+
+SELECT ?drugName ?conditionName (COUNT(DISTINCT ?trial) AS ?trials)
+WHERE {
+  ?drug :maxPhase ?maxPhase ;
+        rdfs:label ?drugName .
+  FILTER (?maxPhase >= 4)
+  ?trial :testsDrug ?drug ;
+         :studiesCondition ?condition .
+  ?condition rdfs:label ?conditionName .
+
+  ?neoplasms rdfs:label "Neoplasms"@en .
+  ?condition meshv:broaderDescriptor+ ?neoplasms .
+
+  FILTER NOT EXISTS {
+    ?drug :hasIndication/:indicationCondition ?indicated .
+    ?condition meshv:broaderDescriptor* ?indicated .
+  }
+}
+GROUP BY ?drugName ?conditionName
+ORDER BY DESC(?trials)
+LIMIT 50

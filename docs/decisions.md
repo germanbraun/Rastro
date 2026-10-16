@@ -54,3 +54,14 @@ MeSH 2026 completo (15,4 M triples) en el grafo `<http://id.nlm.nih.gov/mesh/202
 - **Carpeta de importación explícita:** GraphDB busca por defecto en `${user.home}/graphdb-import`; se fija `/import`, montada sobre `data/raw/mesh/`.
 - **Descarga sin descomprimir:** NLM responde con `Content-Encoding: x-gzip` y `requests` lo descomprime solo; se guardan los bytes crudos.
 - **Conector Lucene `mesh`:** indexa descriptores y SCR de enfermedades por etiqueta, sinónimos (concepto → término) y número de árbol (sin analizar, para filtrar por rama, por ejemplo `C04*`). Sirve para normalizar condiciones de texto libre (Fase 6) y resolver nombres en NL→SPARQL (Fase 3).
+
+## 2026-10-16 — Ontología v0.1 (borrador)
+
+17 clases para responder las 13 preguntas de competencia. Decisiones a revisar:
+
+- **Las condiciones son descriptores de MeSH**, sin clase `Condición` propia: los ensayos y las indicaciones apuntan a la IRI del descriptor y la jerarquía se recorre con `meshv:broaderDescriptor`.
+- **Mecanismo e Indicación se reifican**, porque tienen atributos (tipo de acción; fase máxima para la indicación). Atajos `:hasTarget` y `:testsDrug` como cadenas de propiedades.
+- **Fases combinadas** (1/2, 2/3) como individuos que incluyen cada fase simple, para que "fase 3" encuentre también los 2/3.
+- **Estados en tres clases** (`ActiveStatus`, `ClosedStatus`, `StoppedEarlyStatus`): la variable objetivo de Rastro Lab es literalmente una clase.
+- **Eventos adversos como resúmenes** (fármaco-año y fármaco-reacción), no como reportes, para no sugerir verdad clínica. MedDRA queda como texto por su licencia.
+- **Alineación liviana** con Schema.org (`Drug`, `MedicalTrial`, `Organization`, `Country`) y PROV-O (`DataSource` como `prov:Entity`, `LoadRun` como `prov:Activity`).

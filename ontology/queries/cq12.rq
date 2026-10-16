@@ -1,0 +1,25 @@
+# CQ12. ¿Cuántos targets distintos tiene cada fármaco de un ensayo, y cuántos de esos
+# targets ya tenían un fármaco aprobado al inicio del ensayo?
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+
+SELECT ?drugName (COUNT(DISTINCT ?target) AS ?targets)
+       (COUNT(DISTINCT ?validatedTarget) AS ?targetsWithApprovedDrug)
+WHERE {
+  VALUES ?nctId { "NCT00000000" }   # parámetro
+  ?trial :nctId ?nctId ;
+         :startDate ?start ;
+         :testsDrug ?drug .
+  ?drug rdfs:label ?drugName ;
+        :hasTarget ?target .
+
+  OPTIONAL {
+    ?other :hasTarget ?target ;
+           :firstApprovalYear ?approvalYear .
+    FILTER (?other != ?drug && YEAR(?approvalYear) < YEAR(?start))
+    BIND (?target AS ?validatedTarget)
+  }
+}
+GROUP BY ?drugName
