@@ -93,6 +93,8 @@ En Streamlit (`app/`), en http://localhost:8501 con `docker compose up`.
 
 **Checkpoint:** demo de 3 minutos sin tocar la terminal.
 
+> **Rastro Lab (fases 5 a 7) queda en pausa** (16 oct 2026): el MVP 1 es Rastro Layer, y la Fase 8 arma su demo.
+
 ### Fase 5 — Modelo base de Rastro Lab
 
 - [ ] Qué se predice: si un ensayo cerrado terminó o se detuvo (terminado o retirado)
@@ -119,9 +121,13 @@ En Streamlit (`app/`), en http://localhost:8501 con `docker compose up`.
 
 ### Fase 8 — Demo comercial
 
-- [ ] Guion de 5 minutos con los dos productos
-- [ ] Video de respaldo
-- [ ] Una página con los números de las fases 3 y 6
+Para el MVP 1, solo con Rastro Layer.
+
+- [x] Guion de 5 minutos (`docs/demo-guion.md`)
+- [x] Una página con los números de la Fase 3 (`docs/one-pager.md`)
+- [x] Diapositivas simples para acompañar el guion (artifact privado de claude.ai, 9 diapositivas)
+- [ ] Video de respaldo: lo graba una persona siguiendo el guion
+- [ ] Que alguien de ventas dé la demo siguiendo solo el guion
 
 **Checkpoint:** alguien de ventas da la demo siguiendo solo el guion.
 
