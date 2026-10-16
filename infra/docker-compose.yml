@@ -25,7 +25,7 @@ services:
         condition: service_healthy
     environment:
       ONTOP_ONTOLOGY_FILE: /opt/rastro/ontology/rastro.ttl
-      ONTOP_MAPPING_FILE: /opt/rastro/mappings/rastro.obda
+      ONTOP_MAPPING_FILE: /opt/rastro/mappings/rastro.r2rml.ttl
       ONTOP_DB_URL: jdbc:postgresql://postgres:5432/${PG_DB:-rastro}
       ONTOP_DB_USER: ${PG_USER:-rastro}
       ONTOP_DB_PASSWORD: ${PG_PASSWORD:-rastro}
@@ -125,6 +125,14 @@ services:
     volumes:
       - ../data:/data
     command: ["python", "-u", "/data/mesh/load.py"]
+
+  # Herramientas: docker compose run --rm <servicio>
+  ontology-check:
+    build: ./loaders
+    profiles: ["tools"]
+    volumes:
+      - ../ontology:/ontology:ro
+    command: ["python", "/ontology/check.py"]
 
 volumes:
   pgdata:

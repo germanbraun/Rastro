@@ -55,13 +55,19 @@ MeSH 2026 completo (15,4 M triples) en el grafo `<http://id.nlm.nih.gov/mesh/202
 - **Descarga sin descomprimir:** NLM responde con `Content-Encoding: x-gzip` y `requests` lo descomprime solo; se guardan los bytes crudos.
 - **Conector Lucene `mesh`:** indexa descriptores y SCR de enfermedades por etiqueta, sinónimos (concepto → término) y número de árbol (sin analizar, para filtrar por rama, por ejemplo `C04*`). Sirve para normalizar condiciones de texto libre (Fase 6) y resolver nombres en NL→SPARQL (Fase 3).
 
-## 2026-10-16 — Ontología v0.1 (borrador)
+## 2026-10-16 — Todo simple: es un MVP comercial
 
-17 clases para responder las 13 preguntas de competencia. Decisiones a revisar:
+Lo tiene que entender alguien de ventas. Se aplica a todas las fases: lo mínimo que funciona para la demo, nombres en palabras de negocio y cada fase cerrando en algo que se ve. Está en `CLAUDE.md` para que guíe todo el trabajo, y el plan se reescribió con esa regla (sin SHACL ni PROV-O por ahora: la procedencia se resuelve con `:fromSource`).
 
-- **Las condiciones son descriptores de MeSH**, sin clase `Condición` propia: los ensayos y las indicaciones apuntan a la IRI del descriptor y la jerarquía se recorre con `meshv:broaderDescriptor`.
-- **Mecanismo e Indicación se reifican**, porque tienen atributos (tipo de acción; fase máxima para la indicación). Atajos `:hasTarget` y `:testsDrug` como cadenas de propiedades.
-- **Fases combinadas** (1/2, 2/3) como individuos que incluyen cada fase simple, para que "fase 3" encuentre también los 2/3.
-- **Estados en tres clases** (`ActiveStatus`, `ClosedStatus`, `StoppedEarlyStatus`): la variable objetivo de Rastro Lab es literalmente una clase.
-- **Eventos adversos como resúmenes** (fármaco-año y fármaco-reacción), no como reportes, para no sugerir verdad clínica. MedDRA queda como texto por su licencia.
-- **Alineación liviana** con Schema.org (`Drug`, `MedicalTrial`, `Organization`, `Country`) y PROV-O (`DataSource` como `prov:Entity`, `LoadRun` como `prov:Activity`).
+## 2026-10-16 — Ontología mínima (v0.2)
+
+Un primer borrador tenía 13 preguntas y 17 clases. Se recortó a **8 preguntas y 7 clases**: Ensayo, Fármaco, Target, Sponsor, Reportes por año, Reacción reportada y Fuente.
+
+- **Las condiciones son descriptores de MeSH**, sin clase propia. "Cáncer de pulmón y sus subtipos" se resuelve con `meshv:broaderDescriptor*`.
+- **Fase y estado como texto**, con los valores de ClinicalTrials.gov (`PHASE3`, `TERMINATED`). Es menos elegante que modelarlos como clases, pero cualquiera lo lee.
+- **Fármaco → target directo**, sin reificar el mecanismo.
+- **Eventos adversos como conteos**, nunca como reportes individuales.
+
+## 2026-10-16 — Mapeos en R2RML
+
+Los mapeos se escriben en R2RML (estándar W3C, en Turtle) y no en el formato propio de Ontop. Es portable (lo leen Ontop y otras herramientas) y no ata Rastro a un motor. Ontop lee un solo archivo de mapeo, así que va todo en `mappings/rastro.r2rml.ttl`, con una sección por fuente.

@@ -1,0 +1,19 @@
+# 1. ¿Qué fármacos anti-HER2 están en ensayos de fase 3 de cáncer de mama, y quién los patrocina?
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?drug ?nctId ?title ?sponsor ?status
+WHERE {
+  ?t :gene "ERBB2" .
+  ?d :hasTarget ?t ; :name ?drug .
+
+  ?trial :testsDrug ?d ; :nctId ?nctId ; :title ?title ; :status ?status ;
+         :phase ?phase ; :sponsor/:name ?sponsor ; :condition ?c .
+  FILTER (CONTAINS(?phase, "PHASE3"))
+
+  # Cáncer de mama y sus subtipos
+  ?breast rdfs:label "Breast Neoplasms"@en .
+  ?c meshv:broaderDescriptor* ?breast .
+}
+ORDER BY ?drug

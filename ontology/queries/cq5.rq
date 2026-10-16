@@ -1,0 +1,14 @@
+# 5. ¿Qué otros fármacos actúan sobre los mismos targets que imatinib?
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?drug (GROUP_CONCAT(DISTINCT ?gene; separator=", ") AS ?sharedTargets)
+WHERE {
+  ?imatinib :name "IMATINIB" ; :hasTarget ?t .
+  ?other :hasTarget ?t ; :name ?drug .
+  ?t :gene ?gene .
+  FILTER (?other != ?imatinib)
+}
+GROUP BY ?drug
+ORDER BY ?drug

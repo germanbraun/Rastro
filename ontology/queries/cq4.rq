@@ -1,0 +1,20 @@
+# 4. ¿Cuáles son los eventos adversos más reportados de los fármacos que se prueban en leucemia?
+# Conteos de reportes espontáneos de FAERS, no frecuencias clínicas.
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?reaction (SUM(?n) AS ?reports)
+WHERE {
+  {
+    SELECT DISTINCT ?d WHERE {
+      ?trial :testsDrug ?d ; :condition ?c .
+      ?leukemia rdfs:label "Leukemia"@en .
+      ?c meshv:broaderDescriptor* ?leukemia .
+    }
+  }
+  ?r :drug ?d ; :reaction ?reaction ; :reports ?n .
+}
+GROUP BY ?reaction
+ORDER BY DESC(?reports)
+LIMIT 20

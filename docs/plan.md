@@ -1,159 +1,133 @@
-# Plan de desarrollo — MVPs de tecnologías semánticas
+# Plan de desarrollo — Rastro
 
-15 oct 2026 · German Braun
+Dos MVP comerciales sobre tecnologías semánticas, en oncología y con datos públicos:
 
-## Nombre comercial
+- **Rastro Layer:** preguntás en lenguaje natural y la respuesta junta datos de varias fuentes, diciendo de dónde viene cada dato.
+- **Rastro Lab:** un modelo que predice si un ensayo clínico se va a detener, con explicaciones que cualquiera entiende.
 
-Recomendación: **Rastro**, con dos productos: **Rastro Layer** (capa semántica, MVP 2) y **Rastro Lab** (pipeline de data science, MVP 1). El nombre resume el valor diferencial de ambos: cada dato y cada predicción deja rastro de dónde viene y por qué.
+El nombre resume lo que tienen en común: cada dato y cada predicción deja rastro de dónde viene.
 
-| Nombre | Idea que comunica | A favor | En contra |
-|---|---|---|---|
-| Rastro | Trazabilidad, linaje, explicabilidad | Corto, se pronuncia bien en inglés y español, conecta con el baqueano que sigue el rastro | Menos explícito sobre integración |
-| Confluencia | Ríos que se unen: fuentes que convergen | Muy visual, raíz patagónica | Choca con Confluence (Atlassian) en software |
-| Trama | Hilos distintos tejidos en una sola tela | Metáfora clara de integración | Palabra muy común, difícil de buscar |
-| Sextante | Orientarse con referencias comunes | Suena a precisión | Más largo, menos cercano |
+## Principio: simple
 
-Antes de fijarlo: buscar el nombre en GitHub, en marcas registradas (INPI y EUIPO) y disponibilidad de dominio.
+Es un MVP comercial. Lo tiene que entender alguien de ventas, no solo un ingeniero.
 
-## Principios y alcance
+- **Lo mínimo que funciona.** Si una pieza no hace falta para la demo o para un número de la demo, no se hace.
+- **Palabras simples.** Nombres de clases, columnas y pantallas que se entiendan sin explicación: "Fármaco", "Ensayo", "detenido", no siglas internas.
+- **Cada paso se puede mostrar.** Cada fase termina en algo que se ve funcionar.
+- **Cada afirmación con un número propio.** Medido por nosotros, no prometido.
+- **Todo levanta con un comando** (`docker compose up`).
 
-Se construye primero Rastro Layer, porque Rastro Lab reutiliza su ontología, sus mapeos y la resolución de entidades. Cada fase termina con un checkpoint que se puede probar y mostrar antes de seguir.
+Fuera de alcance: ontología completa del dominio, tiempo real, agentes, fine-tuning, usuarios y permisos.
 
-- **Un área terapéutica, no todo el universo.** Recorte sugerido: oncología. Mantiene los volúmenes manejables en una laptop y los ejemplos son entendibles para un comercial.
-- **Datos reales, sin copiarlos al repo.** El repo guarda scripts de descarga y carga, nunca los datos.
-- **Preguntas de competencia antes que ontología.** Se escriben 10–15 preguntas de negocio y la ontología crece solo lo necesario para responderlas.
-- **Cada afirmación comercial con un número propio.** Precisión de preguntas respondidas, métricas del modelo, tiempo de preparación de features.
-- **Todo levanta con un comando** (`docker compose up`), para que la demo sea reproducible.
-
-Fuera de alcance: ontología completa del dominio, tiempo real, agentes autónomos, fine-tuning de modelos, autenticación y multiusuario.
-
-## Estructura del repositorio
-
-Un monorepo con las piezas compartidas arriba y una carpeta por producto.
+## Qué hay en el repo
 
 ```
-rastro/
-├── infra/            docker-compose: Postgres, Ontop, triplestore
-├── data/             scripts de descarga y carga (AACT, ChEMBL, openFDA, MeSH)
-├── ontology/         ontología en Turtle + preguntas de competencia
-├── mappings/         mapeos R2RML/OBDA por fuente
-├── shapes/           shapes SHACL de validación
-├── linking/          resolución de entidades de fármacos
-├── layer/            Rastro Layer: NL→SPARQL, NL→SQL baseline, API
-│   └── eval/         preguntas con respuestas de referencia
-├── lab/              Rastro Lab: features, modelos, linaje
-│   └── notebooks/
-├── app/              frontend de ambas demos
-└── docs/             guion de demo, decisiones, resultados
+infra/       docker-compose: Postgres, Ontop, GraphDB
+data/        scripts de descarga y carga (los datos no se versionan)
+ontology/    preguntas, ontología y una query por pregunta
+mappings/    cómo se leen las tablas como grafo: R2RML, que lee Ontop
+linking/     enlace de fármacos entre fuentes
+layer/       Rastro Layer: preguntas en lenguaje natural
+lab/         Rastro Lab: features y modelo
+app/         la interfaz de las dos demos
+docs/        plan, decisiones, resultados y guion
 ```
 
 ## Fases
 
-Ocho fases: de la 0 a la 4 construyen Rastro Layer, de la 5 a la 7 Rastro Lab, y la 8 prepara la demo. Cada una cierra con un checkpoint verificable.
+Cada fase cierra con un checkpoint que se puede mostrar. Las fases 0 a 4 construyen Rastro Layer, las 5 a 7 Rastro Lab y la 8 arma la demo.
 
-### Fase 0 — Infraestructura y datos
+### Fase 0 — Datos ✅
 
-- [x] Crear el repo con la estructura y un README mínimo
-- [x] docker-compose con Postgres, Ontop y GraphDB Free
-- [x] Script de carga de AACT en Postgres
-- [x] Script de carga de ChEMBL (subconjunto: compuestos con targets en oncología)
-- [x] Script de descarga de eventos adversos de openFDA para la lista de fármacos del recorte, guardados como JSON y cargados a una tabla
-- [x] Carga de MeSH (RDF) en el triplestore, con conector Lucene para búsqueda de texto
+Postgres, Ontop y GraphDB levantan con un comando, con las cuatro fuentes cargadas: AACT (106 mil ensayos de oncología), ChEMBL (3.739 fármacos), openFDA (eventos adversos de 2.064 fármacos) y MeSH completo con búsqueda de texto.
 
-**Checkpoint:** `docker compose up` y una consulta SQL de conteo por fuente devuelven datos.
+**Checkpoint:** el conteo por fuente devuelve datos de las cuatro.
 
-### Fase 1 — Preguntas de competencia y ontología
+### Fase 1 — Preguntas y ontología ✅
 
-- [x] Escribir 10–15 preguntas de negocio en `ontology/competency-questions.md` (borrador, a revisar)
-- [x] Ontología de 10–15 clases: Fármaco, Target, Ensayo, Condición, Sponsor, Fase, EventoAdverso, Reporte (borrador, a revisar)
-- [x] Reutilizar MeSH para condiciones y alinear con estándares donde aporte (Schema.org y PROV-O)
-- [x] Escribir a mano la query SPARQL de cada pregunta de competencia (sintaxis validada; se prueban contra datos en la Fase 2)
+Ocho preguntas de negocio y una ontología de siete clases (Ensayo, Fármaco, Target, Sponsor, dos de eventos adversos y Fuente) que alcanza para responderlas. Cada pregunta tiene su query SPARQL.
 
-**Checkpoint:** la ontología carga sin errores y cada pregunta tiene su SPARQL escrito.
+**Checkpoint:** la ontología carga y cada pregunta tiene su query.
 
-### Fase 2 — Mapeos virtuales y resolución de entidades
+### Fase 2 — Conectar las fuentes
 
-- [ ] Mapeos de AACT a la ontología (Ontop)
-- [ ] Mapeos de ChEMBL a la ontología
-- [ ] Mapeo de la tabla de eventos adversos de openFDA
-- [ ] Resolución de fármacos entre las tres fuentes: por identificadores primero (ChEMBL ID, UNII, nombre normalizado), y LLM solo para los casos ambiguos
-- [ ] Revisar a mano una muestra de 100 enlaces y medir precisión
-- [ ] Shapes SHACL básicas sobre el grafo integrado
+- [ ] Mapeos R2RML para AACT, ChEMBL y openFDA, en `mappings/rastro.r2rml.ttl`
+- [ ] Enlazar fármacos entre fuentes: primero por nombre normalizado y alias (hoy ya enlaza el 69 %), el LLM solo para lo que quede
+- [ ] Enlazar las condiciones de los ensayos con MeSH por su etiqueta
+- [ ] Revisar a mano 100 enlaces y medir cuántos están bien
 
-**Checkpoint:** las preguntas de competencia de la Fase 1 devuelven resultados correctos sobre las tres fuentes, sin copiar datos.
+**Checkpoint:** las ocho preguntas devuelven respuestas correctas, y sabemos qué porcentaje de enlaces está bien.
 
 ### Fase 3 — Preguntas en lenguaje natural
 
-- [ ] Conjunto de evaluación: 20–30 preguntas con su respuesta de referencia, en `layer/eval/`
-- [ ] Baseline: LLM que genera SQL directo sobre los esquemas crudos
-- [ ] Rastro Layer: LLM que genera SPARQL con la ontología como contexto
-- [ ] Script que corre ambos y produce una tabla de precisión por pregunta
-- [ ] Registrar qué fuente aportó cada dato de la respuesta
+- [ ] 20 preguntas con su respuesta correcta
+- [ ] El mismo LLM responde de dos formas: escribiendo SQL sobre las tablas crudas, o SPARQL sobre la ontología
+- [ ] Un script que cuenta cuántas acierta cada forma
 
-**Checkpoint:** tabla comparativa de precisión, SQL directo contra capa semántica, con el mismo modelo.
+**Checkpoint:** un número para vender: "con Rastro acierta X de 20; sin Rastro, Y de 20".
 
 ### Fase 4 — Interfaz de Rastro Layer
 
-- [ ] Vista de esquemas fuente, ontología y mapeos
-- [ ] Caja de pregunta con respuesta en tabla y una marca de fuente por celda
-- [ ] Panel «¿cómo lo supe?»: query generada y camino en el grafo
-- [ ] Modo comparación lado a lado contra el baseline SQL
+- [ ] Una caja para preguntar
+- [ ] La respuesta en una tabla, con la fuente de cada dato
+- [ ] Un botón "¿cómo lo supe?" que muestra la query y las fuentes usadas
 
-**Checkpoint:** demo de 3 minutos de Rastro Layer sin tocar la terminal.
+**Checkpoint:** demo de 3 minutos sin tocar la terminal.
 
-### Fase 5 — Modelo baseline de Rastro Lab
+### Fase 5 — Modelo base de Rastro Lab
 
-- [ ] Definir la variable objetivo: ensayo terminado o retirado contra completado, sobre ensayos cerrados
-- [ ] Split temporal: entrenar con ensayos iniciados hasta un año de corte y evaluar con los posteriores
-- [ ] Features planas solo desde AACT
-- [ ] Entrenar LightGBM y registrar métricas (AUC, F1) en `docs/results.md`
+- [ ] Qué se predice: si un ensayo cerrado terminó o se detuvo (terminado o retirado)
+- [ ] Entrenar con ensayos que empezaron antes de un año de corte y evaluar con los posteriores
+- [ ] Solo datos de AACT, un modelo estándar (LightGBM), y anotar el resultado en `docs/results.md`
 
-**Checkpoint:** baseline reproducible con un solo comando.
+**Checkpoint:** un comando entrena el modelo y muestra su precisión.
 
-### Fase 6 — Features semánticas
+### Fase 6 — Features de la capa semántica
 
-- [ ] Normalizar condiciones de texto libre a MeSH con el LLM y medir precisión sobre una muestra
-- [ ] Generalizar condiciones por la jerarquía de MeSH
-- [ ] Agregar features de la capa integrada: eventos adversos del fármaco, cantidad de targets, historial del sponsor, siempre con datos anteriores a la fecha de inicio del ensayo
-- [ ] Validación SHACL previa al entrenamiento, con conteo de registros rechazados
+- [ ] Agregar lo que solo la capa sabe: eventos adversos previos de los fármacos, historial del sponsor, cantidad de targets y la condición agrupada por MeSH
+- [ ] Siempre con datos anteriores al inicio de cada ensayo
 - [ ] Reentrenar el mismo modelo y comparar
 
-**Checkpoint:** tabla A/B baseline contra semántico en el mismo split.
+**Checkpoint:** una tabla "antes y después" con el mismo modelo y los mismos ensayos.
 
-### Fase 7 — Linaje, explicabilidad e interfaz de Rastro Lab
+### Fase 7 — Interfaz de Rastro Lab
 
-- [ ] Linaje con PROV-O: cada feature enlazada a su fuente y concepto
-- [ ] Catálogo de features navegable
-- [ ] Explicación de una predicción individual: valores SHAP traducidos a conceptos y caminos en el grafo
-- [ ] Vista del pipeline y de métricas comparadas
+- [ ] Elegir un ensayo y ver la probabilidad de que se detenga
+- [ ] Las tres razones principales, en palabras simples
+- [ ] De qué fuente viene cada razón
 
-**Checkpoint:** demo de 3 minutos de Rastro Lab sin tocar la terminal.
+**Checkpoint:** demo de 3 minutos sin tocar la terminal.
 
-### Fase 8 — Demo para comerciales
+### Fase 8 — Demo comercial
 
-- [ ] Guion de 5 minutos que une ambos productos
-- [ ] Video grabado como respaldo
-- [ ] One-pager con los números obtenidos en las fases 3 y 6
+- [ ] Guion de 5 minutos con los dos productos
+- [ ] Video de respaldo
+- [ ] Una página con los números de las fases 3 y 6
 
 **Checkpoint:** alguien de ventas da la demo siguiendo solo el guion.
 
-## Riesgos y decisiones abiertas
+## Riesgos
 
-El riesgo técnico principal es la resolución de fármacos entre fuentes. El riesgo comercial principal es que la mejora del modelo sea chica: por eso el argumento de Rastro Lab se apoya también en reutilización, linaje y explicabilidad.
-
-| Riesgo | Mitigación |
+| Riesgo | Qué hacemos |
 |---|---|
-| Nombres de fármacos inconsistentes entre AACT, ChEMBL y FAERS | Identificadores primero, LLM solo para ambiguos, precisión medida a mano |
-| Fuga de información en el modelo (usar datos posteriores al inicio del ensayo) | Split temporal y features calculadas con fecha de corte por ensayo |
-| FAERS es ruidoso y con duplicados | Usarlo agregado (conteos por fármaco), nunca como verdad clínica; aclararlo en la demo |
-| Costo y variabilidad del LLM en la evaluación | Fijar modelo y temperatura 0, cachear respuestas, versionar los resultados |
-| Licencias (ChEMBL es CC BY-SA) | Revisar condiciones antes de mostrar a clientes y citar las fuentes en la interfaz |
-| Rendimiento de la virtualización con Ontop | Materializar solo lo que sea lento, documentando por qué |
+| Los fármacos se llaman distinto en cada fuente | Nombre normalizado primero, LLM solo para el resto, y medir a mano |
+| El modelo usa datos del futuro sin querer | Solo datos anteriores al inicio de cada ensayo |
+| Los eventos adversos de FAERS son ruidosos | Usarlos como conteos y decirlo en la interfaz |
+| La mejora del modelo es chica | El argumento de Lab también es la explicación y la procedencia, no solo la precisión |
+| Respuestas del LLM que cambian | Modelo fijo, temperatura 0 y respuestas guardadas |
+| Licencias (ChEMBL es CC BY-SA) | Citar las fuentes en la interfaz |
 
-### Decisiones abiertas
+## Decisiones
 
-- [x] ¿Oncología u otra área terapéutica? → Oncología (ver [decisions.md](decisions.md))
-- [x] ¿Qué triplestore? ¿Se construye sobre otra plataforma o de forma independiente? → GraphDB Free, independiente (ver [decisions.md](decisions.md))
-- [ ] ¿Qué LLM para la evaluación, y se prueba también con un modelo abierto?
-- [ ] ¿Frontend propio (React) o una herramienta rápida (Streamlit) para la primera versión?
-- [ ] ¿Repo público o privado?
+Tomadas (detalle en [decisions.md](decisions.md)):
+
+- [x] Oncología como recorte
+- [x] GraphDB Free como triplestore
+- [x] Ontología mínima: siete clases, condiciones como descriptores de MeSH
+
+Abiertas:
+
+- [ ] Cómo juntar Ontop y GraphDB en una query. Propuesta: copiar a Postgres solo el árbol de MeSH de oncología, que es chico, y no federar.
+- [ ] Qué LLM usar, y si se prueba también uno abierto
+- [ ] Interfaz: propuesta Streamlit, que es lo más simple para un MVP
+- [ ] ¿El repo de GitHub queda privado?

@@ -1,0 +1,13 @@
+# 2. ¿Cuántos ensayos hay por fase para fármacos que actúan sobre EGFR?
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?phase (COUNT(DISTINCT ?trial) AS ?trials)
+WHERE {
+  ?t :gene "EGFR" .
+  ?d :hasTarget ?t .
+  ?trial :testsDrug ?d ; :phase ?phase .
+}
+GROUP BY ?phase
+ORDER BY ?phase

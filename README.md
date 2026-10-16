@@ -13,9 +13,8 @@ El plan completo, por fases y con checkpoints, está en [docs/plan.md](docs/plan
 |---|---|
 | `infra/` | docker-compose: Postgres, Ontop, triplestore |
 | `data/` | scripts de descarga y carga (los datos no se versionan) |
-| `ontology/` | ontología en Turtle y preguntas de competencia |
-| `mappings/` | mapeos R2RML/OBDA por fuente |
-| `shapes/` | shapes SHACL de validación |
+| `ontology/` | preguntas de competencia, ontología y una query por pregunta |
+| `mappings/` | mapeos R2RML (`rastro.r2rml.ttl`), que lee Ontop |
 | `linking/` | resolución de entidades de fármacos |
 | `layer/` | Rastro Layer: NL→SPARQL, baseline NL→SQL, API; `eval/` con el set de evaluación |
 | `lab/` | Rastro Lab: features, modelos, linaje |
@@ -43,6 +42,12 @@ docker compose exec postgres psql -U rastro -c "select * from rastro_meta.source
 ```
 
 Cada script de `data/` registra sus cargas en `rastro_meta.load_run`, que alimenta esa vista.
+
+Para revisar la ontología y las queries:
+
+```bash
+docker compose run --rm ontology-check
+```
 
 ## Cargar datos
 

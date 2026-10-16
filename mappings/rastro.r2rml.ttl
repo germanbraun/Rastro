@@ -1,0 +1,15 @@
+# Mapeos R2RML de Rastro: cómo se leen las tablas de Postgres como grafo.
+# Ontop lee un solo archivo, así que va una sección por fuente.
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix : <https://w3id.org/rastro/ontology#> .
+
+# --- Fuentes (rastro_meta) -------------------------------------
+
+<#DataSource> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, name, license FROM rastro_meta.source" ] ;
+    rr:subjectMap [
+        rr:template "https://w3id.org/rastro/source/{id}" ;
+        rr:class :DataSource
+    ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :license ; rr:objectMap [ rr:column "license" ] ] .

@@ -1,248 +1,104 @@
 @prefix : <https://w3id.org/rastro/ontology#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix schema: <https://schema.org/> .
 @prefix meshv: <http://id.nlm.nih.gov/mesh/vocab#> .
 
 <https://w3id.org/rastro/ontology> a owl:Ontology ;
-    rdfs:label "Ontología de Rastro"@es , "Rastro ontology"@en ;
-    rdfs:comment """Ontología mínima para integrar ensayos clínicos (AACT), fármacos y targets
-(ChEMBL), eventos adversos (openFDA) y condiciones (MeSH) en oncología. Crece solo lo
-necesario para responder las preguntas de competencia (competency-questions.md).
-Las condiciones son descriptores de MeSH, sin una clase propia."""@es ;
-    owl:versionInfo "0.1 (borrador)" .
+    rdfs:label "Ontología de Rastro"@es ;
+    rdfs:comment """Lo mínimo para responder las preguntas de competencia: ensayos, fármacos,
+targets, sponsors y eventos adversos. Las condiciones son los descriptores de MeSH,
+sin clase propia."""@es ;
+    owl:versionInfo "0.2" .
 
-#################################################################
-# Fármacos y targets (ChEMBL)
-#################################################################
+# Clases ---------------------------------------------------------
+
+:Trial a owl:Class ;
+    rdfs:label "Ensayo clínico"@es ;
+    rdfs:comment "Un estudio de ClinicalTrials.gov (AACT)."@es .
 
 :Drug a owl:Class ;
-    rdfs:subClassOf schema:Drug ;
-    rdfs:label "Fármaco"@es , "Drug"@en ;
-    rdfs:comment "Familia de moléculas de ChEMBL: la molécula padre y sus sales. Es la unidad de resolución de entidades entre fuentes."@es .
+    rdfs:label "Fármaco"@es ;
+    rdfs:comment "Un fármaco de ChEMBL. Sus sales cuentan como el mismo fármaco."@es .
 
 :Target a owl:Class ;
-    rdfs:label "Target"@es , "Target"@en ;
-    rdfs:comment "Target molecular de ChEMBL: una proteína, un complejo o una familia de proteínas."@es .
-
-:Mechanism a owl:Class ;
-    rdfs:label "Mecanismo de acción"@es , "Mechanism of action"@en ;
-    rdfs:comment "Acción de un fármaco sobre un target (por ejemplo, inhibidor de ABL1). Se reifica porque tiene atributos propios."@es .
-
-:Indication a owl:Class ;
-    rdfs:label "Indicación"@es , "Indication"@en ;
-    rdfs:comment "Uso de un fármaco para una condición, con la fase máxima alcanzada para esa condición según ChEMBL."@es .
-
-:hasMechanism a owl:ObjectProperty ;
-    rdfs:label "tiene mecanismo"@es ;
-    rdfs:domain :Drug ; rdfs:range :Mechanism .
-
-:onTarget a owl:ObjectProperty ;
-    rdfs:label "sobre target"@es ;
-    rdfs:domain :Mechanism ; rdfs:range :Target .
-
-:hasTarget a owl:ObjectProperty ;
-    rdfs:label "tiene target"@es ;
-    rdfs:comment "Atajo: fármaco → target a través de un mecanismo."@es ;
-    rdfs:domain :Drug ; rdfs:range :Target ;
-    owl:propertyChainAxiom ( :hasMechanism :onTarget ) .
-
-:hasIndication a owl:ObjectProperty ;
-    rdfs:label "tiene indicación"@es ;
-    rdfs:domain :Drug ; rdfs:range :Indication .
-
-:indicationCondition a owl:ObjectProperty ;
-    rdfs:label "condición de la indicación"@es ;
-    rdfs:domain :Indication ; rdfs:range meshv:Descriptor .
-
-:supportedByTrial a owl:ObjectProperty ;
-    rdfs:label "respaldada por el ensayo"@es ;
-    rdfs:comment "Ensayo que ChEMBL cita como referencia de la indicación."@es ;
-    rdfs:domain :Indication ; rdfs:range :ClinicalTrial .
-
-:chemblId a owl:DatatypeProperty ; rdfs:label "ChEMBL ID"@es ; rdfs:range xsd:string .
-:unii a owl:DatatypeProperty ; rdfs:label "UNII"@es ;
-    rdfs:comment "Identificador de sustancias de la FDA; enlaza fármacos con openFDA."@es ;
-    rdfs:domain :Drug ; rdfs:range xsd:string .
-:inchiKey a owl:DatatypeProperty ; rdfs:label "InChIKey"@es ; rdfs:domain :Drug ; rdfs:range xsd:string .
-:synonym a owl:DatatypeProperty ; rdfs:label "sinónimo"@es ; rdfs:domain :Drug ; rdfs:range xsd:string .
-:moleculeType a owl:DatatypeProperty ; rdfs:label "tipo de molécula"@es ; rdfs:domain :Drug ; rdfs:range xsd:string .
-:maxPhase a owl:DatatypeProperty ; rdfs:label "fase máxima"@es ;
-    rdfs:comment "Fase de desarrollo más avanzada alcanzada por el fármaco en cualquier indicación (4 = aprobado)."@es ;
-    rdfs:domain :Drug ; rdfs:range xsd:decimal .
-:firstApprovalYear a owl:DatatypeProperty ; rdfs:label "año de primera aprobación"@es ; rdfs:domain :Drug ; rdfs:range xsd:gYear .
-:mechanismOfAction a owl:DatatypeProperty ; rdfs:label "mecanismo de acción"@es ; rdfs:domain :Mechanism ; rdfs:range xsd:string .
-:actionType a owl:DatatypeProperty ; rdfs:label "tipo de acción"@es ; rdfs:domain :Mechanism ; rdfs:range xsd:string .
-:maxPhaseForIndication a owl:DatatypeProperty ; rdfs:label "fase máxima para la indicación"@es ; rdfs:domain :Indication ; rdfs:range xsd:decimal .
-:targetType a owl:DatatypeProperty ; rdfs:label "tipo de target"@es ; rdfs:domain :Target ; rdfs:range xsd:string .
-:organism a owl:DatatypeProperty ; rdfs:label "organismo"@es ; rdfs:domain :Target ; rdfs:range xsd:string .
-:geneSymbol a owl:DatatypeProperty ; rdfs:label "símbolo del gen"@es ; rdfs:domain :Target ; rdfs:range xsd:string .
-:uniprotAccession a owl:DatatypeProperty ; rdfs:label "accession de UniProt"@es ; rdfs:domain :Target ; rdfs:range xsd:string .
-
-#################################################################
-# Ensayos clínicos (AACT)
-#################################################################
-
-:ClinicalTrial a owl:Class ;
-    rdfs:subClassOf schema:MedicalTrial ;
-    rdfs:label "Ensayo clínico"@es , "Clinical trial"@en .
-
-:Intervention a owl:Class ;
-    rdfs:label "Intervención"@es , "Intervention"@en ;
-    rdfs:comment "Intervención tal como la declara el ensayo (texto libre y tipo). Puede mencionar un fármaco de ChEMBL."@es .
+    rdfs:label "Target"@es ;
+    rdfs:comment "La proteína sobre la que actúa un fármaco (ChEMBL)."@es .
 
 :Sponsor a owl:Class ;
-    rdfs:subClassOf schema:Organization ;
-    rdfs:label "Sponsor"@es , "Sponsor"@en .
+    rdfs:label "Sponsor"@es ;
+    rdfs:comment "La organización que lidera un ensayo."@es .
 
-:Country a owl:Class ;
-    rdfs:subClassOf schema:Country ;
-    rdfs:label "País"@es , "Country"@en .
-
-:TrialPhase a owl:Class ;
-    rdfs:label "Fase del ensayo"@es , "Trial phase"@en .
-
-:TrialStatus a owl:Class ;
-    rdfs:label "Estado del ensayo"@es , "Trial status"@en .
-
-:ActiveStatus a owl:Class ; rdfs:subClassOf :TrialStatus ;
-    rdfs:label "Estado activo"@es ;
-    rdfs:comment "El ensayo todavía puede reclutar o tratar pacientes."@es .
-
-:ClosedStatus a owl:Class ; rdfs:subClassOf :TrialStatus ;
-    rdfs:label "Estado cerrado"@es ;
-    rdfs:comment "El ensayo terminó, por completarse o por detenerse."@es .
-
-:StoppedEarlyStatus a owl:Class ; rdfs:subClassOf :ClosedStatus ;
-    rdfs:label "Detenido antes de tiempo"@es ;
-    rdfs:comment "Terminado o retirado. Es la clase positiva de la variable objetivo de Rastro Lab."@es .
-
-:hasIntervention a owl:ObjectProperty ; rdfs:label "tiene intervención"@es ;
-    rdfs:domain :ClinicalTrial ; rdfs:range :Intervention .
-
-:mentionsDrug a owl:ObjectProperty ; rdfs:label "menciona el fármaco"@es ;
-    rdfs:comment "Resultado de la resolución de entidades de la Fase 2."@es ;
-    rdfs:domain :Intervention ; rdfs:range :Drug .
-
-:testsDrug a owl:ObjectProperty ; rdfs:label "prueba el fármaco"@es ;
-    rdfs:comment "Atajo: ensayo → fármaco a través de sus intervenciones."@es ;
-    rdfs:domain :ClinicalTrial ; rdfs:range :Drug ;
-    owl:propertyChainAxiom ( :hasIntervention :mentionsDrug ) .
-
-:studiesCondition a owl:ObjectProperty ; rdfs:label "estudia la condición"@es ;
-    rdfs:comment "Condición del ensayo como descriptor de MeSH. Los ancestros se recorren con meshv:broaderDescriptor."@es ;
-    rdfs:domain :ClinicalTrial ; rdfs:range meshv:Descriptor .
-
-:leadSponsor a owl:ObjectProperty ; rdfs:label "sponsor principal"@es ;
-    rdfs:domain :ClinicalTrial ; rdfs:range :Sponsor .
-
-:collaborator a owl:ObjectProperty ; rdfs:label "colaborador"@es ;
-    rdfs:domain :ClinicalTrial ; rdfs:range :Sponsor .
-
-:conductedIn a owl:ObjectProperty ; rdfs:label "se realiza en"@es ;
-    rdfs:domain :ClinicalTrial ; rdfs:range :Country .
-
-:phase a owl:ObjectProperty ; rdfs:label "fase"@es ;
-    rdfs:domain :ClinicalTrial ; rdfs:range :TrialPhase .
-
-:includesPhase a owl:ObjectProperty ; rdfs:label "incluye la fase"@es ;
-    rdfs:comment "Una fase combinada (por ejemplo 1/2) incluye cada fase simple. Cada fase se incluye a sí misma (se afirma explícitamente: declararla reflexiva haría de todo individuo una fase, por el dominio)."@es ;
-    rdfs:domain :TrialPhase ; rdfs:range :TrialPhase .
-
-:status a owl:ObjectProperty ; rdfs:label "estado"@es ;
-    rdfs:domain :ClinicalTrial ; rdfs:range :TrialStatus .
-
-:nctId a owl:DatatypeProperty ; rdfs:label "NCT ID"@es ; rdfs:domain :ClinicalTrial ; rdfs:range xsd:string .
-:title a owl:DatatypeProperty ; rdfs:label "título"@es ; rdfs:domain :ClinicalTrial ; rdfs:range xsd:string .
-:studyType a owl:DatatypeProperty ; rdfs:label "tipo de estudio"@es ; rdfs:domain :ClinicalTrial ; rdfs:range xsd:string .
-:startDate a owl:DatatypeProperty ; rdfs:label "fecha de inicio"@es ; rdfs:domain :ClinicalTrial ; rdfs:range xsd:date .
-:completionDate a owl:DatatypeProperty ; rdfs:label "fecha de finalización"@es ; rdfs:domain :ClinicalTrial ; rdfs:range xsd:date .
-:enrollment a owl:DatatypeProperty ; rdfs:label "pacientes inscriptos"@es ; rdfs:domain :ClinicalTrial ; rdfs:range xsd:integer .
-:whyStopped a owl:DatatypeProperty ; rdfs:label "motivo de detención"@es ; rdfs:domain :ClinicalTrial ; rdfs:range xsd:string .
-:conditionText a owl:DatatypeProperty ; rdfs:label "condición declarada"@es ;
-    rdfs:comment "Condición tal como la escribe el ensayo, antes de normalizar a MeSH."@es ;
-    rdfs:domain :ClinicalTrial ; rdfs:range xsd:string .
-:interventionType a owl:DatatypeProperty ; rdfs:label "tipo de intervención"@es ; rdfs:domain :Intervention ; rdfs:range xsd:string .
-:agencyClass a owl:DatatypeProperty ; rdfs:label "tipo de organización"@es ;
-    rdfs:comment "INDUSTRY, NIH, OTHER_GOV, OTHER…, según AACT."@es ;
-    rdfs:domain :Sponsor ; rdfs:range xsd:string .
-
-# Fases. Las combinadas incluyen cada fase simple.
-:EarlyPhase1 a :TrialPhase ; :includesPhase :EarlyPhase1 ; rdfs:label "Fase 1 temprana"@es .
-:Phase1 a :TrialPhase ; :includesPhase :Phase1 ; rdfs:label "Fase 1"@es .
-:Phase2 a :TrialPhase ; :includesPhase :Phase2 ; rdfs:label "Fase 2"@es .
-:Phase3 a :TrialPhase ; :includesPhase :Phase3 ; rdfs:label "Fase 3"@es .
-:Phase4 a :TrialPhase ; :includesPhase :Phase4 ; rdfs:label "Fase 4"@es .
-:Phase1_2 a :TrialPhase ; rdfs:label "Fase 1/2"@es ; :includesPhase :Phase1_2 , :Phase1 , :Phase2 .
-:Phase2_3 a :TrialPhase ; rdfs:label "Fase 2/3"@es ; :includesPhase :Phase2_3 , :Phase2 , :Phase3 .
-:PhaseNotApplicable a :TrialPhase ; :includesPhase :PhaseNotApplicable ; rdfs:label "No aplica"@es .
-
-# Estados de ClinicalTrials.gov
-:Recruiting a :ActiveStatus ; rdfs:label "Reclutando"@es .
-:NotYetRecruiting a :ActiveStatus ; rdfs:label "Todavía no recluta"@es .
-:ActiveNotRecruiting a :ActiveStatus ; rdfs:label "Activo, sin reclutar"@es .
-:EnrollingByInvitation a :ActiveStatus ; rdfs:label "Inscripción por invitación"@es .
-:Suspended a :ActiveStatus ; rdfs:label "Suspendido"@es .
-:Completed a :ClosedStatus ; rdfs:label "Completado"@es .
-:Terminated a :StoppedEarlyStatus ; rdfs:label "Terminado"@es .
-:Withdrawn a :StoppedEarlyStatus ; rdfs:label "Retirado"@es .
-:UnknownStatus a :TrialStatus ; rdfs:label "Desconocido"@es .
-
-#################################################################
-# Eventos adversos (openFDA)
-#################################################################
-
-:AdverseEventSummary a owl:Class ;
-    rdfs:label "Resumen anual de eventos adversos"@es , "Yearly adverse event summary"@en ;
-    rdfs:comment "Conteo de reportes de FAERS que mencionan al fármaco, por año de recepción. Reportes espontáneos, sin denominador ni deduplicación: nunca como verdad clínica."@es .
+:YearlyReports a owl:Class ;
+    rdfs:label "Reportes de eventos adversos por año"@es ;
+    rdfs:comment "Cuántos reportes de FAERS (openFDA) mencionan un fármaco en un año. Son reportes espontáneos, no frecuencias clínicas."@es .
 
 :ReportedReaction a owl:Class ;
-    rdfs:label "Reacción reportada"@es , "Reported reaction"@en ;
-    rdfs:comment "Reacción (MedDRA PT) y cantidad de reportes del fármaco que la mencionan, en todo el período."@es .
-
-:summaryOf a owl:ObjectProperty ; rdfs:label "resumen de"@es ;
-    rdfs:domain :AdverseEventSummary ; rdfs:range :Drug .
-
-:reactionOf a owl:ObjectProperty ; rdfs:label "reacción de"@es ;
-    rdfs:domain :ReportedReaction ; rdfs:range :Drug .
-
-:year a owl:DatatypeProperty ; rdfs:label "año"@es ; rdfs:domain :AdverseEventSummary ; rdfs:range xsd:gYear .
-:reportCount a owl:DatatypeProperty ; rdfs:label "reportes"@es ; rdfs:range xsd:integer .
-:seriousCount a owl:DatatypeProperty ; rdfs:label "reportes serios"@es ; rdfs:domain :AdverseEventSummary ; rdfs:range xsd:integer .
-:deathCount a owl:DatatypeProperty ; rdfs:label "reportes con muerte"@es ; rdfs:domain :AdverseEventSummary ; rdfs:range xsd:integer .
-:reactionTerm a owl:DatatypeProperty ; rdfs:label "término de reacción"@es ;
-    rdfs:comment "Preferred term de MedDRA como texto. MedDRA tiene licencia propia, así que no se modela como vocabulario."@es ;
-    rdfs:domain :ReportedReaction ; rdfs:range xsd:string .
-
-#################################################################
-# Procedencia
-#################################################################
+    rdfs:label "Reacción reportada"@es ;
+    rdfs:comment "Una reacción adversa y cuántos reportes de FAERS la mencionan para un fármaco."@es .
 
 :DataSource a owl:Class ;
-    rdfs:subClassOf prov:Entity ;
-    rdfs:label "Fuente de datos"@es , "Data source"@en .
+    rdfs:label "Fuente de datos"@es ;
+    rdfs:comment "AACT, ChEMBL, openFDA o MeSH."@es .
 
-:LoadRun a owl:Class ;
-    rdfs:subClassOf prov:Activity ;
-    rdfs:label "Carga"@es , "Load run"@en ;
-    rdfs:comment "Una carga de una tabla o grafo de una fuente, con su versión y su fecha."@es .
+# Relaciones -----------------------------------------------------
+
+:testsDrug a owl:ObjectProperty ;
+    rdfs:label "prueba el fármaco"@es ;
+    rdfs:domain :Trial ; rdfs:range :Drug .
+
+:condition a owl:ObjectProperty ;
+    rdfs:label "condición"@es ;
+    rdfs:comment "La enfermedad que estudia el ensayo, como descriptor de MeSH. Los subtipos se encuentran siguiendo meshv:broaderDescriptor."@es ;
+    rdfs:domain :Trial ; rdfs:range meshv:Descriptor .
+
+:sponsor a owl:ObjectProperty ;
+    rdfs:label "sponsor"@es ;
+    rdfs:domain :Trial ; rdfs:range :Sponsor .
+
+:hasTarget a owl:ObjectProperty ;
+    rdfs:label "actúa sobre"@es ;
+    rdfs:domain :Drug ; rdfs:range :Target .
+
+:drug a owl:ObjectProperty ;
+    rdfs:label "fármaco"@es ;
+    rdfs:comment "El fármaco al que se refiere un conteo de reportes."@es ;
+    rdfs:range :Drug .
 
 :fromSource a owl:ObjectProperty ;
-    rdfs:subPropertyOf dcterms:source ;
     rdfs:label "proviene de"@es ;
-    rdfs:comment "Fuente de la que proviene una entidad. Es la marca de procedencia por celda de Rastro Layer."@es ;
+    rdfs:comment "La fuente de la que viene un dato. Es la marca de procedencia que muestra Rastro Layer."@es ;
     rdfs:range :DataSource .
 
-:loadOf a owl:ObjectProperty ;
-    rdfs:label "carga de"@es ;
-    rdfs:domain :LoadRun ; rdfs:range :DataSource .
+# Atributos ------------------------------------------------------
 
-:homepage a owl:DatatypeProperty ; rdfs:domain :DataSource ; rdfs:range xsd:anyURI .
-:license a owl:DatatypeProperty ; rdfs:domain :DataSource ; rdfs:range xsd:string .
-:version a owl:DatatypeProperty ; rdfs:label "versión"@es ; rdfs:domain :LoadRun ; rdfs:range xsd:string .
-:loadedTable a owl:DatatypeProperty ; rdfs:label "tabla cargada"@es ; rdfs:domain :LoadRun ; rdfs:range xsd:string .
-:rowCount a owl:DatatypeProperty ; rdfs:label "filas"@es ; rdfs:domain :LoadRun ; rdfs:range xsd:integer .
+:name a owl:DatatypeProperty ; rdfs:label "nombre"@es ; rdfs:range xsd:string .
+
+:nctId a owl:DatatypeProperty ; rdfs:label "NCT ID"@es ; rdfs:domain :Trial ; rdfs:range xsd:string .
+:title a owl:DatatypeProperty ; rdfs:label "título"@es ; rdfs:domain :Trial ; rdfs:range xsd:string .
+:phase a owl:DatatypeProperty ; rdfs:label "fase"@es ;
+    rdfs:comment "Como en ClinicalTrials.gov: PHASE1, PHASE2, PHASE3, PHASE4, PHASE1/PHASE2…"@es ;
+    rdfs:domain :Trial ; rdfs:range xsd:string .
+:status a owl:DatatypeProperty ; rdfs:label "estado"@es ;
+    rdfs:comment "Como en ClinicalTrials.gov: RECRUITING, COMPLETED, TERMINATED, WITHDRAWN…"@es ;
+    rdfs:domain :Trial ; rdfs:range xsd:string .
+:startDate a owl:DatatypeProperty ; rdfs:label "fecha de inicio"@es ; rdfs:domain :Trial ; rdfs:range xsd:date .
+:whyStopped a owl:DatatypeProperty ; rdfs:label "motivo de detención"@es ; rdfs:domain :Trial ; rdfs:range xsd:string .
+
+:chemblId a owl:DatatypeProperty ; rdfs:label "ChEMBL ID"@es ; rdfs:domain :Drug ; rdfs:range xsd:string .
+:approved a owl:DatatypeProperty ; rdfs:label "aprobado"@es ;
+    rdfs:comment "Verdadero si el fármaco está aprobado en alguna indicación (fase máxima 4 en ChEMBL)."@es ;
+    rdfs:domain :Drug ; rdfs:range xsd:boolean .
+
+:gene a owl:DatatypeProperty ; rdfs:label "gen"@es ;
+    rdfs:comment "Símbolo del gen del target, por ejemplo ERBB2 o EGFR."@es ;
+    rdfs:domain :Target ; rdfs:range xsd:string .
+
+:industry a owl:DatatypeProperty ; rdfs:label "es industria"@es ;
+    rdfs:domain :Sponsor ; rdfs:range xsd:boolean .
+
+:year a owl:DatatypeProperty ; rdfs:label "año"@es ; rdfs:domain :YearlyReports ; rdfs:range xsd:integer .
+:reports a owl:DatatypeProperty ; rdfs:label "reportes"@es ; rdfs:range xsd:integer .
+:seriousReports a owl:DatatypeProperty ; rdfs:label "reportes serios"@es ; rdfs:domain :YearlyReports ; rdfs:range xsd:integer .
+:reaction a owl:DatatypeProperty ; rdfs:label "reacción"@es ; rdfs:domain :ReportedReaction ; rdfs:range xsd:string .
+:license a owl:DatatypeProperty ; rdfs:label "licencia"@es ; rdfs:domain :DataSource ; rdfs:range xsd:string .

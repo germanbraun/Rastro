@@ -1,0 +1,20 @@
+# 3. ¿Qué empresas tienen más ensayos detenidos en cáncer de pulmón, y por qué?
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?sponsor (COUNT(DISTINCT ?trial) AS ?stopped)
+       (GROUP_CONCAT(DISTINCT ?why; separator=" | ") AS ?reasons)
+WHERE {
+  ?trial :sponsor ?s ; :status ?status ; :condition ?c .
+  ?s :industry true ; :name ?sponsor .
+  FILTER (?status IN ("TERMINATED", "WITHDRAWN"))
+  OPTIONAL { ?trial :whyStopped ?why }
+
+  # Cáncer de pulmón y sus subtipos
+  ?lung rdfs:label "Lung Neoplasms"@en .
+  ?c meshv:broaderDescriptor* ?lung .
+}
+GROUP BY ?sponsor
+ORDER BY DESC(?stopped)
+LIMIT 20
