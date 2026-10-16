@@ -130,6 +130,14 @@ def link_method(query):
     return None
 
 
+def friendly_error(error):
+    """El error de la base, con una explicación simple si es uno conocido."""
+    if "statement timeout" in error:
+        return ("La consulta superó el límite de 60 segundos y la base la canceló. "
+                f"Error original: {error.strip()}")
+    return error.strip()
+
+
 def pretty(query, approach):
     if approach == "B":
         return sqlparse.format(query, reindent=True, keyword_case="upper", indent_width=2)
@@ -300,7 +308,13 @@ with compare_tab:
                     "misma consigna y los mismos reintentos para SQL y para Rastro.")
 
     st.subheader("Pregunta por pregunta")
-    options = {q["question"]: q for q in questions()}
+    st.caption("🔁 marca las preguntas en las que el SQL directo necesitó más de un intento.")
+
+    def option_label(q):
+        retried = len(data[q["id"]]["B"]["attempts"]) > 1
+        return ("🔁 " if retried else "") + q["question"]
+
+    options = {option_label(q): q for q in questions()}
     chosen = st.selectbox("Pregunta", list(options), label_visibility="collapsed", key="compare_question")
     q = options[chosen]
     entry = data[q["id"]]
@@ -357,6 +371,18 @@ with compare_tab:
                            + (f" · {seconds:.1f} s" if seconds is not None else "")
                            + f" · {attempts} intento{'s' if attempts != 1 else ''}")
                 st.code(shown, language="sql" if k == "B" else "sparql")
+                history = entry[k]["attempts"]
+                if len(history) > 1:
+                    with st.expander(f"🔁 Ver los {len(history)} intentos hasta dar con el resultado"):
+                        st.caption("Cada vez que una query falló, el LLM recibió el error y "
+                                   "escribió otra. Hasta tres intentos, igual para SQL y para Rastro.")
+                        for i, attempt in enumerate(history, start=1):
+                            if attempt["error"]:
+                                st.markdown(f"**Intento {i}: ❌ falló**")
+                                st.error(friendly_error(attempt["error"]))
+                            else:
+                                st.markdown(f"**Intento {i}: ✅ funcionó**")
+                            st.code(pretty(attempt["query"], k), language="sql" if k == "B" else "sparql")
                 if k == "C":
                     with st.expander("El SQL que Rastro generó a partir de esta consulta"):
                         st.caption("Ontop traduce la consulta a SQL sobre Postgres usando los "
