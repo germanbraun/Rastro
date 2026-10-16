@@ -41,12 +41,16 @@ services:
 
   graphdb:
     image: ontotext/graphdb:10.8.5
+    restart: unless-stopped
     environment:
       GDB_HEAP_SIZE: ${GRAPHDB_HEAP:-2g}
+      GDB_JAVA_OPTS: -Dgraphdb.workbench.importDirectory=/import
     ports:
       - "${GRAPHDB_PORT:-7210}:7200"
     volumes:
       - graphdb-data:/opt/graphdb/home
+      # Carpeta de importación del servidor: los cargadores dejan ahí los RDF descargados
+      - ../data/raw/mesh:/import:ro
 
   # Crea el repositorio "rastro" en GraphDB si no existe y termina.
   graphdb-init:
@@ -89,6 +93,38 @@ services:
     volumes:
       - ../data:/data
     command: ["python", "-u", "/data/chembl/load.py"]
+
+  openfda-loader:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+      OPENFDA_API_KEY: ${OPENFDA_API_KEY:-}
+    volumes:
+      - ../data:/data
+    command: ["python", "-u", "/data/openfda/load.py"]
+
+  mesh-loader:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      graphdb-init:
+        condition: service_completed_successfully
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+      MESH_YEAR: ${MESH_YEAR:-2026}
+    volumes:
+      - ../data:/data
+    command: ["python", "-u", "/data/mesh/load.py"]
 
 volumes:
   pgdata:

@@ -1,0 +1,29 @@
+{
+  "types": [
+    "http://id.nlm.nih.gov/mesh/vocab#TopicalDescriptor",
+    "http://id.nlm.nih.gov/mesh/vocab#SCR_Disease"
+  ],
+  "languages": ["en", ""],
+  "fields": [
+    {
+      "fieldName": "label",
+      "propertyChain": ["http://www.w3.org/2000/01/rdf-schema#label"]
+    },
+    {
+      "fieldName": "synonym",
+      "propertyChain": [
+        "http://id.nlm.nih.gov/mesh/vocab#concept",
+        "http://id.nlm.nih.gov/mesh/vocab#term",
+        "http://id.nlm.nih.gov/mesh/vocab#prefLabel"
+      ]
+    },
+    {
+      "fieldName": "treeNumber",
+      "propertyChain": [
+        "http://id.nlm.nih.gov/mesh/vocab#treeNumber",
+        "http://www.w3.org/2000/01/rdf-schema#label"
+      ],
+      "analyzed": false
+    }
+  ]
+}

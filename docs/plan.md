@@ -57,8 +57,8 @@ Ocho fases: de la 0 a la 4 construyen Rastro Layer, de la 5 a la 7 Rastro Lab, y
 - [x] docker-compose con Postgres, Ontop y GraphDB Free
 - [x] Script de carga de AACT en Postgres
 - [x] Script de carga de ChEMBL (subconjunto: compuestos con targets en oncología)
-- [ ] Script de descarga de eventos adversos de openFDA para la lista de fármacos del recorte, guardados como JSON y cargados a una tabla
-- [ ] Carga de MeSH (RDF) en el triplestore
+- [x] Script de descarga de eventos adversos de openFDA para la lista de fármacos del recorte, guardados como JSON y cargados a una tabla
+- [x] Carga de MeSH (RDF) en el triplestore, con conector Lucene para búsqueda de texto
 
 **Checkpoint:** `docker compose up` y una consulta SQL de conteo por fuente devuelven datos.
 
@@ -66,7 +66,7 @@ Ocho fases: de la 0 a la 4 construyen Rastro Layer, de la 5 a la 7 Rastro Lab, y
 
 - [ ] Escribir 10–15 preguntas de negocio en `ontology/competency-questions.md`
 - [ ] Ontología de 10–15 clases: Fármaco, Target, Ensayo, Condición, Sponsor, Fase, EventoAdverso, Reporte
-- [ ] Reutilizar MeSH para condiciones y alinear con estándares donde aporte (por ejemplo, Schema.org o vocabularios de ChEMBL)
+- [ ] Reutilizar MeSH para condiciones y alinear con estándares donde aporte
 - [ ] Escribir a mano la query SPARQL de cada pregunta de competencia
 
 **Checkpoint:** la ontología carga sin errores y cada pregunta tiene su SPARQL escrito.
