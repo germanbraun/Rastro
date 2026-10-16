@@ -63,6 +63,11 @@ def saved():
 
 
 @st.cache_data
+def faq():
+    return yaml.safe_load(Path("/app/faq.yaml").read_text())
+
+
+@st.cache_data
 def explanations():
     return yaml.safe_load((EVAL / "explanations.yaml").read_text()) or {}
 
@@ -197,36 +202,20 @@ st.markdown("Preguntas de negocio sobre ensayos de oncología, fármacos y event
 
 available, status = llm_status()
 with st.sidebar:
-    st.subheader("Qué es Rastro")
-    st.markdown("Una capa que integra fuentes públicas de oncología y las describe con "
-                "conceptos de negocio. Un LLM pregunta sobre esos conceptos en lugar de "
-                "adivinar cómo se cruzan las tablas, y cada respuesta dice de dónde viene.")
     st.subheader("LLM")
     st.markdown(("🟢 " if available else "⚪ ") + status)
     if not available:
-        st.caption("Las preguntas de ejemplo funcionan igual: usan las queries ya guardadas. "
-                   "Para preguntas libres, configurar ANTHROPIC_API_KEY u Ollama (ver layer/README.md).")
+        st.caption("Las preguntas de ejemplo funcionan igual.")
     st.subheader("Fuentes")
     for key, info in sources().items():
-        st.markdown(f"{STORAGE.get(key, '')} **{info['name']}**  \n{info['license']}  \n"
-                    f"<small>{STORAGE_NOTE.get(key, '')}</small>", unsafe_allow_html=True)
-    st.caption("🐘 Postgres (SQL) · 🕸️ GraphDB (grafo). Las consultas de Rastro corren en vivo "
-               "sobre Postgres a través de Ontop, que traduce cada pregunta a SQL.")
+        st.markdown(f"{STORAGE.get(key, '')} **{info['name']}**  \n<small>{info['license']}</small>",
+                    unsafe_allow_html=True)
+    st.caption("🐘 Postgres · 🕸️ GraphDB")
 
-ask_tab, compare_tab = st.tabs(["Preguntar", "Con y sin Rastro"])
+ask_tab, compare_tab, faq_tab = st.tabs(["Preguntar", "Con y sin Rastro", "Preguntas frecuentes"])
+FAQ_HINT = "¿Dudas? Mirá la pestaña **Preguntas frecuentes**."
 
 with ask_tab:
-    with st.expander("Cómo funciona", expanded=True):
-        st.markdown(
-            "1. **Escribís una pregunta** como la harías a un analista.\n"
-            "2. **El LLM la traduce a una consulta** sobre la ontología de Rastro: un mapa de "
-            "conceptos de negocio (ensayo, fármaco, target, sponsor, evento adverso) que ya sabe "
-            "cómo se conectan las fuentes.\n"
-            "3. **Rastro la ejecuta en vivo** sobre las cuatro fuentes, sin copiarlas: AACT "
-            "(ensayos), ChEMBL (fármacos y targets), openFDA (eventos adversos) y MeSH "
-            "(enfermedades y sus subtipos).\n"
-            "4. **Ves la respuesta con su procedencia**: qué fuentes usó y de dónde sale cada "
-            "columna. En «¿Cómo lo supe?» está la consulta exacta.")
     mode = st.radio("¿Qué querés preguntar?", ["Una pregunta de ejemplo", "Mi propia pregunta"],
                     horizontal=True, label_visibility="collapsed")
     if mode == "Una pregunta de ejemplo":
@@ -257,88 +246,16 @@ with compare_tab:
     totals, per_question = scores()
     data = saved()["questions"]
     n = len(questions())
-    st.markdown("El mismo LLM (Claude Opus 5.5) respondió las mismas 20 preguntas de tres formas:")
+    st.markdown("El mismo LLM respondió las mismas 20 preguntas de tres formas:")
     cols = st.columns(3)
-    help_text = {"A": "Sin acceso a datos: responde con lo que sabe.",
-                 "B": "Escribe SQL sobre las tablas de las fuentes, tal como se cargaron, y "
-                      "resuelve por su cuenta cómo se cruzan.",
-                 "C": "Escribe una consulta sobre la ontología de Rastro, donde los cruces ya "
-                      "están resueltos y revisados."}
+    help_text = {"A": "Sin datos: responde de memoria.",
+                 "B": "SQL sobre las tablas de las fuentes; resuelve los cruces por su cuenta.",
+                 "C": "Consulta sobre los conceptos de Rastro; los cruces ya están resueltos."}
     for col, k in zip(cols, NAMES):
         col.metric(NAMES[k], f"{totals[k]} de {n} correctas")
         col.caption(help_text[k])
-
-    # Lo que muestra la comparación, con números medidos sobre las respuestas guardadas
-    b_queries = [last_ok_query(e, "B") for e in data.values()]
-    methods = [link_method(q) for q in b_queries if q]
-    reinvented = sum(m is not None for m in methods)
-    n_methods = len({m for m in methods if m})
-    secs = {k: sum(e[k].get("seconds", 0) for e in data.values()) for k in ("B", "C")}
-    retries = {k: sum(len(e[k]["attempts"]) > 1 for e in data.values()) for k in ("B", "C")}
-
-    st.subheader("Qué muestra esta comparación")
-    st.markdown("Con un LLM fuerte, el SQL directo acierta casi tanto como Rastro. "
-                "**La diferencia no está en cuántas acierta, sino en cuánto podés confiar "
-                "en cada respuesta:**")
-    left, right = st.columns(2)
-    with left:
-        st.markdown(f"**🔁 Cada respuesta define las cosas a su manera.** En {reinvented} de {n} "
-                    f"preguntas el SQL directo tuvo que inventar cómo reconocer un fármaco en el "
-                    f"texto de los ensayos, y lo hizo de {n_methods} formas distintas. Dos "
-                    "respuestas del mismo sistema no son comparables entre sí. Rastro usa siempre "
-                    "el mismo enlace, revisado a mano (98-99 % de precisión).")
-        st.markdown("**🔇 Sus errores no avisan.** Las dos respuestas incorrectas del SQL directo "
-                    "parecen razonables: 488 ensayos en vez de 438. Solo se descubren revisando "
-                    "ensayo por ensayo.")
-    with right:
-        st.markdown(f"**⏱️ Más lento y más frágil.** Las 20 queries del SQL directo tardan "
-                    f"{secs['B']:.0f} s en total y {retries['B']} necesitaron un segundo intento; "
-                    f"las de Rastro, {secs['C']:.0f} s y {retries['C']} reintentos. El trabajo de "
-                    "integrar las fuentes se paga en cada pregunta, en lugar de una sola vez.")
-        st.markdown("**🔎 Rastro dice de dónde sale cada dato.** Cada columna trae su fuente y su "
-                    "licencia. Con SQL directo, la procedencia queda enterrada en la query.")
-    st.subheader("Por qué Rastro acierta")
-    st.markdown(
-        "No es que el LLM escriba mejor una consulta que otra. **La parte difícil ya estaba "
-        "resuelta y revisada antes de que llegara la pregunta.**\n\n"
-        "En casi todas las preguntas, lo difícil es saber qué ensayos prueban qué fármaco: AACT "
-        "nombra las intervenciones en texto libre («Pembrolizumab 200 mg», «rhuMAb HER2», "
-        "«PTK787») y ChEMBL tiene los fármacos con sus nombres y sinónimos.")
-    left, right = st.columns(2)
-    with left:
-        st.markdown(
-            "**Sin Rastro**, el LLM resuelve ese enlace dentro de cada consulta, sobre la marcha:\n"
-            "- **Lento:** compara cada nombre y sinónimo con el texto de unas 130.000 "
-            "intervenciones. Tres consultas superaron el límite de 60 segundos y hubo que "
-            "reescribirlas.\n"
-            "- **Con huecos que nadie revisa:** buscando pedazos de nombres, «humab» coincidió "
-            "con «rhuMAb HER2» (trastuzumab) y contó ensayos que no eran anti-EGFR. Exigiendo el "
-            "nombre exacto, perdió «PTK787» (vatalanib).")
-    with right:
-        st.markdown(
-            "**Con Rastro**, ese enlace ya existe:\n"
-            "- **Se construyó una vez** con reglas explícitas (palabra entera, gana el nombre más "
-            "largo, sin palabras genéricas) y se **revisó a mano: 98-99 % de precisión**.\n"
-            "- **La consulta solo nombra conceptos** («ensayo prueba fármaco», «fármaco actúa "
-            "sobre target») y Rastro la traduce a uniones simples sobre tablas indexadas. Tarda "
-            "décimas de segundo.")
-    st.info(
-        "**¿Y si al SQL directo le damos las mismas tablas de enlaces?** Probablemente acertaría "
-        "casi todas: la precisión viene sobre todo de la integración revisada, no del lenguaje "
-        "de consulta. Lo que agrega la capa semántica de Rastro es exponer esa integración como "
-        "un **vocabulario de negocio** que se documenta solo, que no cambia si cambian las tablas "
-        "de abajo, que es un estándar (lo leen otras herramientas de grafos de conocimiento) y que "
-        "lleva la **procedencia de cada dato** incorporada.")
-
-    with st.expander("Cómo se midió"):
-        st.markdown("- Una respuesta es correcta si un número está a menos del 5 % del valor real, "
-                    "o si una lista coincide en al menos un 80 %.\n"
-                    "- Los valores reales salen de consultas escritas a mano sobre Rastro. Como eso "
-                    "podría favorecer a Rastro, cada diferencia con el SQL directo se revisó con "
-                    "ensayos reales (layer/eval/adjudication.md). Esa revisión encontró errores de "
-                    "Rastro, que se corrigieron antes de este resultado.\n"
-                    "- Cada respuesta la generó un LLM sin ver las respuestas correctas, con la "
-                    "misma consigna y los mismos reintentos para SQL y para Rastro.")
+    st.info("La diferencia no está en cuántas acierta, sino en **cuánto podés confiar en cada "
+            "respuesta**. " + FAQ_HINT)
 
     st.subheader("Pregunta por pregunta")
     st.caption("🔁 marca las preguntas en las que el SQL directo necesitó más de un intento.")
@@ -425,3 +342,18 @@ with compare_tab:
                             st.code(pretty(answer.ontop_sql(query), "B"), language="sql")
                         except requests.RequestException:
                             st.caption("Ontop no devolvió la traducción.")
+
+with faq_tab:
+    data = saved()["questions"]
+    methods = [link_method(q) for q in (last_ok_query(e, "B") for e in data.values()) if q]
+    numbers = {
+        "reinvented": sum(m is not None for m in methods),
+        "n_methods": len({m for m in methods if m}),
+        "secs_b": f"{sum(e['B'].get('seconds', 0) for e in data.values()):.0f}",
+        "secs_c": f"{sum(e['C'].get('seconds', 0) for e in data.values()):.0f}",
+        "retries_b": sum(len(e["B"]["attempts"]) > 1 for e in data.values()),
+        "retries_c": sum(len(e["C"]["attempts"]) > 1 for e in data.values()),
+    }
+    for item in faq():
+        with st.expander(item["question"]):
+            st.markdown(item["answer"].format(**numbers))

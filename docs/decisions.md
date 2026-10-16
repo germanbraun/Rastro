@@ -150,3 +150,7 @@ Cada fuente lleva un ícono según dónde vive: 🐘 Postgres (AACT, ChEMBL, ope
 Rastro acierta porque la parte difícil (qué ensayo prueba qué fármaco) se resolvió una vez, con reglas explícitas, y se revisó a mano. Si al SQL directo le diéramos las mismas tablas de enlaces, probablemente acertaría casi todas. El mensaje honesto es: **el valor de Rastro es la integración revisada, expuesta como un vocabulario de negocio**. La capa semántica la hace estable ante cambios de tablas, autodocumentada, estándar y con procedencia por dato. La demo lo explica así en "Por qué Rastro acierta".
 
 Pendiente, si se quiere medir: un cuarto enfoque, "LLM + SQL sobre las tablas de Rastro", para separar cuánto aporta la integración y cuánto la capa semántica.
+
+## 2026-10-16 — Las explicaciones van en Preguntas frecuentes
+
+La demo se mantiene corta: cada pestaña muestra lo esencial y una línea que manda a "Preguntas frecuentes". Las explicaciones viven en `app/faq.yaml`, una pregunta y una respuesta corta por entrada, editable sin tocar código. Los números de las respuestas (reintentos, tiempos, formas de reconocer un fármaco) los completa la app desde la evaluación guardada, así que no quedan desactualizados.

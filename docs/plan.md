@@ -87,6 +87,7 @@ En Streamlit (`app/`), en http://localhost:8501 con `docker compose up`.
 - [x] Una pestaña "Con y sin Rastro": el puntaje y qué significa, las tres respuestas de cada pregunta lado a lado, por qué falló cada respuesta incorrecta, y el SQL que genera Ontop
 - [x] Dónde vive cada fuente (🐘 Postgres, 🕸️ GraphDB) y una explicación de cómo funciona
 - [x] El historial de intentos de cada query: qué falló y qué escribió el LLM después
+- [x] Preguntas frecuentes en una pestaña (`app/faq.yaml`), en lugar de más texto en pantalla
 - [ ] Ensayar la demo de 3 minutos con alguien que no sea técnico
 
 **Checkpoint:** demo de 3 minutos sin tocar la terminal.

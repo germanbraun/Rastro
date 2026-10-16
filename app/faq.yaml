@@ -1,0 +1,65 @@
+# Preguntas frecuentes de la demo. Respuestas cortas, en palabras simples.
+# Los valores entre llaves ({secs_b}, {reinvented}...) los completa la app con los
+# números de la evaluación guardada.
+
+- question: ¿Qué es Rastro?
+  answer: >-
+    Una capa que integra cuatro fuentes públicas de oncología y las describe con
+    conceptos de negocio: ensayo, fármaco, target, sponsor, evento adverso. Un LLM
+    pregunta sobre esos conceptos en lugar de adivinar cómo se cruzan las tablas, y
+    cada respuesta dice de dónde viene.
+
+- question: ¿Qué pasa cuando hago una pregunta?
+  answer: |-
+    1. El LLM traduce la pregunta a una consulta sobre los conceptos de Rastro.
+    2. Rastro la convierte en SQL y la ejecuta en vivo sobre las fuentes, sin copiarlas.
+    3. Ves la respuesta, las fuentes que usó y la fuente de cada columna. En «¿Cómo lo supe?» están la consulta y el SQL exactos.
+
+- question: ¿De dónde salen los datos y dónde están guardados?
+  answer: |-
+    - 🐘 **AACT** (ensayos de ClinicalTrials.gov), **ChEMBL** (fármacos y targets) y **openFDA** (eventos adversos) están en Postgres.
+    - 🕸️ **MeSH** (enfermedades y sus subtipos) está completo en GraphDB. Rastro usa una copia de su jerarquía en Postgres.
+
+    Las consultas corren en vivo sobre Postgres: Ontop traduce cada pregunta a SQL.
+
+- question: ¿Necesito un LLM o una API key?
+  answer: >-
+    Para las 20 preguntas de ejemplo, no: usan consultas ya escritas por el LLM, que se
+    ejecutan en vivo. Para preguntas propias hace falta un LLM: la Claude API (de pago
+    por uso) u Ollama, gratis en la propia computadora. Ver layer/README.md.
+
+- question: Si el SQL directo acierta 18 de 20 y Rastro 20, ¿cuál es la ventaja?
+  answer: |-
+    La diferencia no está en cuántas acierta, sino en cuánto podés confiar en cada respuesta:
+    - **Definiciones distintas en cada respuesta.** En {reinvented} de 20 preguntas, el SQL directo tuvo que inventar cómo reconocer un fármaco, y lo hizo de {n_methods} formas distintas. Rastro usa siempre el mismo enlace, revisado a mano.
+    - **Errores que no avisan.** Sus respuestas incorrectas parecen razonables (488 ensayos en vez de 438).
+    - **Más lento y más frágil.** Sus 20 consultas tardan {secs_b} s y {retries_b} necesitaron reintento; las de Rastro, {secs_c} s y {retries_c} reintentos.
+    - **Procedencia.** Rastro dice de qué fuente sale cada dato.
+
+- question: ¿Por qué Rastro acierta donde el SQL directo falla?
+  answer: >-
+    Porque la parte difícil ya estaba resuelta. Saber qué ensayo prueba qué fármaco
+    exige cruzar texto libre («Pembrolizumab 200 mg», «rhuMAb HER2») con los nombres de
+    ChEMBL. El SQL directo lo improvisa en cada consulta: es lento y tiene huecos («humab»
+    coincidió con trastuzumab y contó ensayos que no eran anti-EGFR). Rastro lo resolvió
+    una vez, con reglas explícitas, y lo revisó a mano (98-99 % de precisión).
+
+- question: ¿Y si al SQL directo le doy las mismas tablas de enlaces?
+  answer: >-
+    Probablemente acertaría casi todas: la precisión viene de la integración revisada,
+    no del lenguaje de consulta. Lo que agrega la capa semántica es exponer esa
+    integración como un vocabulario de negocio que se documenta solo, que no cambia si
+    cambian las tablas, que es un estándar (lo leen otras herramientas de grafos de
+    conocimiento) y que trae la procedencia de cada dato.
+
+- question: ¿Cómo se midió? ¿No favorece a Rastro?
+  answer: |-
+    - El mismo LLM respondió cada pregunta sin ver la respuesta correcta, con la misma consigna y los mismos reintentos.
+    - Un número es correcto si está a menos del 5 % del valor real; una lista, si coincide en al menos un 80 %.
+    - Los valores reales salen de Rastro, así que cada diferencia con el SQL directo se revisó con ensayos reales. Esa revisión encontró errores de Rastro, que se corrigieron antes del resultado. Detalle en layer/eval/adjudication.md.
+
+- question: ¿Los eventos adversos son frecuencias reales?
+  answer: >-
+    No. Son conteos de reportes espontáneos de FAERS (openFDA): no tienen denominador,
+    pueden tener duplicados y el fármaco puede no ser el sospechoso del evento. Sirven
+    para comparar y detectar señales, no como verdad clínica.
