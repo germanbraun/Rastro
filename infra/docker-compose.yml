@@ -76,6 +76,20 @@ services:
       - ../data:/data
     entrypoint: ["bash", "/data/aact/load.sh"]
 
+  chembl-loader:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../data:/data
+    command: ["python", "-u", "/data/chembl/load.py"]
+
 volumes:
   pgdata:
   graphdb-data:
