@@ -3,10 +3,11 @@
 DROP SCHEMA IF EXISTS openfda CASCADE;
 CREATE SCHEMA openfda;
 
--- Qué se consultó: una familia de ChEMBL buscada por sus UNII en patient.drug.openfda.unii
+-- Qué se consultó: una familia de ChEMBL buscada por sus UNII o por el nombre del principio activo
 CREATE TABLE openfda.drug_query (
     query_id        text PRIMARY KEY,   -- parent_chembl_id de la familia consultada
     uniis           text[] NOT NULL,
+    names           text[] NOT NULL,    -- nombres de ChEMBL de la familia (molécula y sales)
     total_reports   int NOT NULL,       -- 0 si openFDA no tiene reportes
     fetched_at      timestamptz NOT NULL,
     data_updated    date                -- meta.last_updated de openFDA

@@ -16,9 +16,9 @@ El plan completo, por fases y con checkpoints, está en [docs/plan.md](docs/plan
 | `ontology/` | preguntas de competencia, ontología y una query por pregunta |
 | `mappings/` | mapeos R2RML (`rastro.r2rml.ttl`), que lee Ontop |
 | `linking/` | enlaces de ensayos con MeSH y ChEMBL, en SQL legible, y su revisión a mano |
-| `layer/` | Rastro Layer: NL→SPARQL, baseline NL→SQL, API; `eval/` con el set de evaluación |
+| `layer/` | Rastro Layer: preguntas en lenguaje natural (`answer.py`) y su evaluación (`eval/`) |
 | `lab/` | Rastro Lab: features, modelos, linaje |
-| `app/` | frontend de ambas demos |
+| `app/` | la demo (Streamlit) |
 | `docs/` | plan, decisiones, resultados y guion de demo |
 
 ## Levantar el entorno
@@ -29,6 +29,7 @@ docker compose up -d
 
 | Servicio | URL local | Qué es |
 |---|---|---|
+| **Demo de Rastro Layer** | **http://localhost:8501** | Preguntar en lenguaje natural y comparar con y sin Rastro |
 | Postgres | `localhost:5434` (usuario y clave `rastro`) | Fuentes relacionales, un esquema por fuente, y `rastro_meta` con el registro de fuentes y cargas |
 | Ontop | http://localhost:8080 | Endpoint SPARQL virtual sobre Postgres; recarga `ontology/` y `mappings/` al editarlos |
 | GraphDB Free | http://localhost:7210 | Triplestore con el repositorio `rastro`: MeSH 2026 en el grafo `<http://id.nlm.nih.gov/mesh/2026>` y el conector Lucene `mesh` |
@@ -42,6 +43,16 @@ docker compose exec postgres psql -U rastro -c "select * from rastro_meta.source
 ```
 
 Cada script de `data/` registra sus cargas en `rastro_meta.load_run`, que alimenta esa vista.
+
+## Evaluar Rastro Layer
+
+Compara cuántas de 20 preguntas responde bien un LLM solo, con SQL directo y con Rastro:
+
+```bash
+docker compose run --rm layer-eval
+```
+
+Los resultados están en `layer/eval/results.md`. Las respuestas ya generadas se guardan en `layer/eval/results.json`, así que esto funciona sin API key. Para generar respuestas nuevas hace falta `ANTHROPIC_API_KEY` en `.env` (Claude API, de pago por uso: una corrida completa con Claude Opus 5.5 cuesta unos pocos dólares). `RASTRO_MODEL` elige otro modelo, por ejemplo uno más barato para una demo en vivo.
 
 Para revisar la ontología y las queries:
 

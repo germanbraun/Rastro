@@ -14,6 +14,8 @@ docker compose exec -T postgres psql -U rastro -c "select * from rastro_meta.sou
 docker compose run --rm ontology-check
 curl -s -H 'Accept: text/csv' --data-urlencode 'query=PREFIX : <https://w3id.org/rastro/ontology#> SELECT (COUNT(*) AS ?n) WHERE { ?s a :DataSource }' http://localhost:8080/sparql
 curl -s http://localhost:7210/repositories/rastro/size
+curl -s http://localhost:8501/_stcore/health
+docker compose run --rm layer-eval
 ```
 
 Qué esperar:
@@ -23,6 +25,8 @@ Qué esperar:
 - `ontology-check` en OK para todas las queries.
 - Ontop devuelve 4 fuentes (y, desde la Fase 2, unos 106 mil ensayos y 3.700 fármacos). Si Ontop no levanta, mirá `docker compose logs ontop`: casi siempre es un error en `mappings/rastro.r2rml.ttl` o un término del mapeo que no está en la ontología.
 - GraphDB con unos 15,4 M de triples (MeSH 2026).
+- La demo responde `ok` en http://localhost:8501. Abrila y probá una pregunta de ejemplo: tiene que mostrar la tabla, las fuentes y "¿Cómo lo supe?".
+- `layer-eval` muestra el puntaje de las tres formas de responder. Si cambiaste datos o enlaces, corré antes `--rerun`.
 
 Y las preguntas de competencia contra Ontop (cada una tarda alrededor de un segundo):
 

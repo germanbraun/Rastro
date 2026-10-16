@@ -55,19 +55,37 @@ Mapeos R2RML para las cuatro fuentes, MeSH copiado en Postgres (sin federar) y e
 
 **Checkpoint:** las ocho preguntas devuelven respuestas correctas, y sabemos qué porcentaje de enlaces está bien.
 
-### Fase 3 — Preguntas en lenguaje natural
+### Fase 3 — Preguntas en lenguaje natural ✅
 
-- [ ] 20 preguntas con su respuesta correcta
-- [ ] El mismo LLM responde de dos formas: escribiendo SQL sobre las tablas crudas, o SPARQL sobre la ontología
-- [ ] Un script que cuenta cuántas acierta cada forma
+El mismo LLM (Claude Opus 5.5) responde las mismas 20 preguntas de tres formas:
 
-**Checkpoint:** un número para vender: "con Rastro acierta X de 20; sin Rastro, Y de 20".
+| | Cómo responde | Qué muestra |
+|---|---|---|
+| A. LLM solo | Con lo que sabe, sin datos | Inventa números y no cita fuentes |
+| B. LLM + SQL crudo | SQL sobre las tablas de las fuentes tal como se cargaron | Tiene que adivinar cómo se cruzan las fuentes |
+| C. LLM + Rastro | SPARQL sobre la ontología de Rastro | Los cruces ya están resueltos y cada dato tiene fuente |
+
+- [x] 20 preguntas con su respuesta correcta (`layer/eval/questions.yaml`)
+- [x] Las tres formas de responder (`layer/answer.py`), con los mismos reintentos para B y C
+- [x] Un script que puntúa y guarda las respuestas en el repo (`layer/eval/`)
+- [x] Correr la evaluación con Claude Opus 5.5 (subagentes de Claude Code, sin API key)
+- [x] Adjudicar las diferencias entre B y C con ensayos reales (`layer/eval/adjudication.md`), y corregir los enlaces de Rastro que fallaban
+
+Las respuestas quedan guardadas: en otra máquina se ven y se puntúan sin API key.
+
+**Resultado:** con Rastro, 20 de 20; con SQL directo, 18 de 20 (con queries 3 a 4 veces más largas); el LLM solo, 5 de 20. Detalle en `docs/results.md` y `layer/eval/adjudication.md`.
+
+**Checkpoint:** un número para vender: "con Rastro acierta X de 20; con SQL directo, Y; solo, Z".
 
 ### Fase 4 — Interfaz de Rastro Layer
 
-- [ ] Una caja para preguntar
-- [ ] La respuesta en una tabla, con la fuente de cada dato
-- [ ] Un botón "¿cómo lo supe?" que muestra la query y las fuentes usadas
+En Streamlit (`app/`), en http://localhost:8501 con `docker compose up`.
+
+- [x] Una caja para preguntar: las 20 preguntas de ejemplo funcionan sin LLM (usan las queries guardadas, ejecutadas en vivo); las libres usan el LLM configurado
+- [x] La respuesta en una tabla, con las fuentes que usó y la fuente de cada columna
+- [x] Un botón "¿cómo lo supe?" con la query, las fuentes y sus licencias
+- [x] Una pestaña "Con y sin Rastro": el puntaje de la evaluación y las tres respuestas de cada pregunta lado a lado, con sus queries
+- [ ] Ensayar la demo de 3 minutos con alguien que no sea técnico
 
 **Checkpoint:** demo de 3 minutos sin tocar la terminal.
 
@@ -107,7 +125,7 @@ Mapeos R2RML para las cuatro fuentes, MeSH copiado en Postgres (sin federar) y e
 
 | Riesgo | Qué hacemos |
 |---|---|
-| Los fármacos se llaman distinto en cada fuente | Resuelto en la Fase 2 con reglas simples: 74 % enlazado, 99 % correcto |
+| Los fármacos se llaman distinto en cada fuente | Resuelto con reglas simples: 81 % enlazado, 98-99 % correcto |
 | El modelo usa datos del futuro sin querer | Solo datos anteriores al inicio de cada ensayo |
 | Los eventos adversos de FAERS son ruidosos | Usarlos como conteos y decirlo en la interfaz |
 | La mejora del modelo es chica | El argumento de Lab también es la explicación y la procedencia, no solo la precisión |
@@ -123,9 +141,9 @@ Tomadas (detalle en [decisions.md](decisions.md)):
 - [x] Ontología mínima: siete clases, condiciones como descriptores de MeSH
 
 - [x] MeSH copiado en Postgres: Ontop responde solo, sin federar con GraphDB
+- [x] Claude Opus 5.5 para la evaluación; el modelo es configurable para la demo en vivo
+- [x] Interfaz en Streamlit, lo más simple para un MVP
 
 Abiertas:
 
-- [ ] Qué LLM usar, y si se prueba también uno abierto
-- [ ] Interfaz: propuesta Streamlit, que es lo más simple para un MVP
 - [ ] ¿El repo de GitHub queda privado?

@@ -1,14 +1,17 @@
 """Descarga de openFDA los eventos adversos agregados de los fármacos del recorte.
 
 Fármacos = familias de ChEMBL (esquema `chembl`, cargado antes) que tienen UNII.
-Por familia se consultan, buscando por sus UNII en patient.drug.openfda.unii:
+Cada familia se busca por sus UNII (patient.drug.openfda.unii) o por el nombre de su
+principio activo (patient.drug.activesubstance.activesubstancename), en una sola
+búsqueda con OR: openFDA deja vacío el UNII de algunos fármacos (por ejemplo, el
+osimertinib de Tagrisso), que solo se encuentran por nombre. Se consultan:
 reportes por día (todos, serios y con muerte), agregados luego por año, y las
 100 reacciones más reportadas. El UNII matchea el fármaco en cualquier rol del reporte
 (sospechoso o concomitante): openFDA no permite exigir ambas condiciones sobre el
 mismo fármaco del reporte.
 
-Cada respuesta se guarda en data/raw/openfda/<familia>.json y no se vuelve a pedir,
-así que la descarga es reanudable. Sin OPENFDA_API_KEY el límite es 1000 requests
+Cada respuesta se guarda en data/raw/openfda/<familia>.json y no se vuelve a pedir
+mientras la búsqueda sea la misma, así que la descarga es reanudable. Sin OPENFDA_API_KEY el límite es 1000 requests
 por día: el script se detiene al llegar, carga lo que haya y sigue en la próxima corrida.
 
 Se corre con: docker compose run --rm openfda-loader
@@ -55,17 +58,28 @@ def query(search, **params):
     return data["results"], data["meta"]
 
 
-def fetch(uniis):
+def search_for(uniis, names):
+    """Búsqueda de openFDA para una familia: por UNII o por nombre del principio activo."""
     # Espacios y no "+": requests codifica "+" como %2B y openFDA lo toma literal
-    by_unii = "patient.drug.openfda.unii:(" + " ".join(f'"{u}"' for u in uniis) + ")"
-    daily, meta = query(by_unii, count="receivedate")
+    quoted = lambda values: " ".join(f'"{v}"' for v in values)
+    parts = [f"patient.drug.openfda.unii:({quoted(uniis)})"]
+    if names:
+        parts.append(f"patient.drug.activesubstance.activesubstancename:({quoted(names)})")
+    return "(" + " OR ".join(parts) + ")"
+
+
+def fetch(uniis, names):
+    search = search_for(uniis, names)
+    daily, meta = query(search, count="receivedate")
     if daily is None:
-        return {"uniis": uniis, "total": 0}
-    serious, _ = query(f"{by_unii} AND serious:1", count="receivedate")
-    deaths, _ = query(f"{by_unii} AND seriousnessdeath:1", count="receivedate")
-    reactions, _ = query(by_unii, count="patient.reaction.reactionmeddrapt.exact", limit=TOP_REACTIONS)
+        return {"uniis": uniis, "names": names, "search": search, "total": 0}
+    serious, _ = query(f"{search} AND serious:1", count="receivedate")
+    deaths, _ = query(f"{search} AND seriousnessdeath:1", count="receivedate")
+    reactions, _ = query(search, count="patient.reaction.reactionmeddrapt.exact", limit=TOP_REACTIONS)
     return {
         "uniis": uniis,
+        "names": names,
+        "search": search,
         "total": sum(d["count"] for d in daily),
         "data_updated": meta["last_updated"],
         "daily": daily,
@@ -87,22 +101,31 @@ def main():
                 f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}")
     with psycopg.connect(conninfo) as conn:
         families = conn.execute("""
-            SELECT m.parent_chembl_id, array_agg(DISTINCT u.unii ORDER BY u.unii)
+            SELECT m.parent_chembl_id,
+                   array_agg(DISTINCT u.unii ORDER BY u.unii),
+                   (SELECT array_agg(DISTINCT x.pref_name ORDER BY x.pref_name)
+                    FROM chembl.molecule_dictionary x
+                    WHERE x.parent_chembl_id = m.parent_chembl_id
+                      AND x.pref_name IS NOT NULL AND position('"' IN x.pref_name) = 0)
             FROM chembl.unii_xref u JOIN chembl.molecule_dictionary m USING (chembl_id)
             GROUP BY 1 ORDER BY 1""").fetchall()
 
+    def cached_search(family):
+        f = CACHE / f"{family}.json"
+        return json.loads(f.read_text()).get("search") if f.exists() else None
+
     CACHE.mkdir(parents=True, exist_ok=True)
-    pending = [(f, u) for f, u in families if not (CACHE / f"{f}.json").exists()]
+    pending = [(f, u, n or []) for f, u, n in families if cached_search(f) != search_for(u, n or [])]
     only = os.environ.get("OPENFDA_ONLY")  # para pruebas: familias separadas por coma
     if only:
-        pending = [(f, u) for f, u in pending if f in only.split(",")]
+        pending = [p for p in pending if p[0] in only.split(",")]
     print(f"Familias con UNII: {len(families)}, por descargar: {len(pending)}"
           f"{'' if API_KEY else ' (sin API key: máximo ~250 familias por día)'}")
 
     done = 0
     try:
-        for family, uniis in pending:
-            result = fetch(uniis)
+        for family, uniis, names in pending:
+            result = fetch(uniis, names)
             result["fetched_at"] = datetime.now(timezone.utc).isoformat()
             (CACHE / f"{family}.json").write_text(json.dumps(result))
             done += 1
@@ -115,7 +138,7 @@ def main():
     rows = {"drug_query": [], "reports_by_year": [], "reactions": []}
     for f in sorted(CACHE.glob("*.json")):
         d = json.loads(f.read_text())
-        rows["drug_query"].append((f.stem, d["uniis"], d["total"], d["fetched_at"],
+        rows["drug_query"].append((f.stem, d["uniis"], d.get("names", []), d["total"], d["fetched_at"],
                                    datetime.strptime(d["data_updated"], "%Y-%m-%d").date()
                                    if d.get("data_updated") else None))
         if not d["total"]:
@@ -124,7 +147,7 @@ def main():
         rows["reports_by_year"] += [(f.stem, y, n, serious[y], deaths[y]) for y, n in sorted(reports.items())]
         rows["reactions"] += [(f.stem, r["term"], r["count"]) for r in d["reactions"]]
 
-    version = max((r[4] for r in rows["drug_query"] if r[4]), default=None)
+    version = max((r[5] for r in rows["drug_query"] if r[5]), default=None)
     with psycopg.connect(conninfo) as conn:
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
         for table, data in rows.items():

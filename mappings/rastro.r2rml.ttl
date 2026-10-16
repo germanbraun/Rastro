@@ -66,13 +66,10 @@
     rr:predicateObjectMap [ rr:predicate :sponsor ; rr:objectMap [ rr:template "https://w3id.org/rastro/sponsor/{name}" ] ] .
 
 <#Sponsor> a rr:TriplesMap ;
-    rr:logicalTable [ rr:sqlQuery """
-        SELECT name, bool_or(agency_class = 'INDUSTRY') AS industry
-        FROM aact.sponsors WHERE lead_or_collaborator = 'lead'
-        GROUP BY name""" ] ;
+    rr:logicalTable [ rr:tableName "linking.sponsor" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/sponsor/{name}" ; rr:class :Sponsor ] ;
-    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate :industry ; rr:objectMap [ rr:column "industry" ; rr:datatype xsd:boolean ] ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :industry ; rr:objectMap [ rr:column "industry" ] ] ;
     rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/aact> ] ] .
 
 # --- Enlaces (linking/) -----------------------------------------
@@ -89,25 +86,18 @@
 
 # --- Fármacos y targets (ChEMBL) --------------------------------
 
-# Un fármaco es la molécula padre; está aprobado si lo está cualquiera de sus sales.
-# Con GROUP BY o DISTINCT, Ontop no infiere el tipo de las columnas: se declara con rr:datatype.
+# Fármacos, sponsors y targets se leen de tablas de linking/entities.sql: los mapeos
+# no usan GROUP BY ni DISTINCT, que Ontop no maneja bien.
 <#Drug> a rr:TriplesMap ;
-    rr:logicalTable [ rr:sqlQuery """
-        SELECT p.chembl_id, p.pref_name, bool_or(m.max_phase >= 4) AS approved
-        FROM chembl.molecule_dictionary p
-        JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = p.chembl_id
-        WHERE p.chembl_id = p.parent_chembl_id
-        GROUP BY p.chembl_id, p.pref_name""" ] ;
+    rr:logicalTable [ rr:tableName "linking.drug" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :Drug ] ;
-    rr:predicateObjectMap [ rr:predicate :chemblId ; rr:objectMap [ rr:column "chembl_id" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "pref_name" ; rr:datatype xsd:string ] ] ;
-    rr:predicateObjectMap [ rr:predicate :approved ; rr:objectMap [ rr:column "approved" ; rr:datatype xsd:boolean ] ] ;
+    rr:predicateObjectMap [ rr:predicate :chemblId ; rr:objectMap [ rr:column "chembl_id" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "pref_name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :approved ; rr:objectMap [ rr:column "approved" ] ] ;
     rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/chembl> ] ] .
 
 <#DrugTarget> a rr:TriplesMap ;
-    rr:logicalTable [ rr:sqlQuery """
-        SELECT DISTINCT parent_chembl_id, target_chembl_id
-        FROM chembl.drug_mechanism WHERE target_chembl_id IS NOT NULL""" ] ;
+    rr:logicalTable [ rr:tableName "linking.drug_target" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ;
     rr:predicateObjectMap [ rr:predicate :hasTarget ; rr:objectMap [ rr:template "https://w3id.org/rastro/target/{target_chembl_id}" ] ] .
 
@@ -117,13 +107,10 @@
     rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "pref_name" ] ] ;
     rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/chembl> ] ] .
 
-# Un target puede tener varios genes (complejos y fusiones, como BCR-ABL)
 <#TargetGene> a rr:TriplesMap ;
-    rr:logicalTable [ rr:sqlQuery """
-        SELECT DISTINCT target_chembl_id, gene_symbol
-        FROM chembl.target_components WHERE gene_symbol IS NOT NULL""" ] ;
+    rr:logicalTable [ rr:tableName "linking.target_gene" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/target/{target_chembl_id}" ] ;
-    rr:predicateObjectMap [ rr:predicate :gene ; rr:objectMap [ rr:column "gene_symbol" ; rr:datatype xsd:string ] ] .
+    rr:predicateObjectMap [ rr:predicate :gene ; rr:objectMap [ rr:column "gene_symbol" ] ] .
 
 # --- Eventos adversos (openFDA) ---------------------------------
 

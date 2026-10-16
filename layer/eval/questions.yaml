@@ -1,0 +1,230 @@
+# Preguntas de evaluación de Rastro Layer.
+#
+# Cada pregunta tiene:
+#   kind: "lista" (nombres) o "número"
+#   items: qué se nombra en una lista (fármacos, sponsors, genes, reacciones);
+#          los fármacos se comparan por sinónimos de ChEMBL, el resto por texto
+#   reference: SPARQL escrito a mano sobre Rastro que da la respuesta correcta,
+#              en una sola columna ?answer
+#
+# Convenciones que las preguntas dicen explícitamente, para que cualquier enfoque
+# pueda responderlas: "ensayos de X" incluye los subtipos de X en MeSH; "detenido"
+# es TERMINATED o WITHDRAWN; "activo" es RECRUITING, ACTIVE_NOT_RECRUITING,
+# NOT_YET_RECRUITING o ENROLLING_BY_INVITATION; "fase 3" incluye fase 2/3.
+
+prefixes: |
+  PREFIX : <https://w3id.org/rastro/ontology#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+questions:
+
+  - id: q01
+    question: ¿Qué fármacos con target HER2 (gen ERBB2) se prueban en ensayos de fase 3 (incluye fase 2/3) de cáncer de mama?
+    kind: lista
+    items: fármacos
+    reference: |
+      SELECT DISTINCT ?answer WHERE {
+        ?d :hasTarget/:gene "ERBB2" ; :name ?answer .
+        ?trial :testsDrug ?d ; :phase ?phase ; :condition ?c .
+        FILTER (CONTAINS(?phase, "PHASE3"))
+        ?x rdfs:label "Breast Neoplasms"@en . ?c :within ?x .
+      }
+
+  - id: q02
+    question: ¿Cuántos ensayos de fase 3 (incluye fase 2/3) prueban fármacos que actúan sobre EGFR?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
+        ?d :hasTarget/:gene "EGFR" .
+        ?trial :testsDrug ?d ; :phase ?phase .
+        FILTER (CONTAINS(?phase, "PHASE3"))
+      }
+
+  - id: q03
+    question: ¿Cuáles son los 3 sponsors de la industria con más ensayos detenidos (terminados o retirados) en cáncer de pulmón, contando como sponsor solo al principal?
+    kind: lista
+    items: sponsors
+    reference: |
+      SELECT ?answer WHERE {
+        ?trial :sponsor ?s ; :status ?status ; :condition ?c .
+        ?s :industry true ; :name ?answer .
+        FILTER (?status IN ("TERMINATED", "WITHDRAWN"))
+        ?x rdfs:label "Lung Neoplasms"@en . ?c :within ?x .
+      }
+      GROUP BY ?answer ORDER BY DESC(COUNT(DISTINCT ?trial)) LIMIT 3
+
+  - id: q04
+    question: ¿Cuál es la reacción adversa más reportada en FAERS (openFDA) para imatinib?
+    kind: lista
+    items: reacciones
+    reference: |
+      SELECT ?answer WHERE {
+        ?d :name "IMATINIB" .
+        ?r :drug ?d ; :reaction ?answer ; :reports ?n .
+      }
+      ORDER BY DESC(?n) LIMIT 1
+
+  - id: q05
+    question: ¿Qué fármacos aprobados actúan sobre BRAF?
+    kind: lista
+    items: fármacos
+    reference: |
+      SELECT DISTINCT ?answer WHERE {
+        ?d :hasTarget/:gene "BRAF" ; :approved true ; :name ?answer .
+      }
+
+  - id: q06
+    question: ¿Cuántos ensayos de cáncer de mama hay en total?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
+        ?trial :condition ?c .
+        ?x rdfs:label "Breast Neoplasms"@en . ?c :within ?x .
+      }
+
+  - id: q07
+    question: ¿Cuántos reportes de eventos adversos en FAERS (openFDA) tenía lenalidomida recibidos antes de 2015?
+    kind: número
+    reference: |
+      SELECT (SUM(?n) AS ?answer) WHERE {
+        ?d :name "LENALIDOMIDE" .
+        ?y :drug ?d ; :year ?year ; :reports ?n .
+        FILTER (?year < 2015)
+      }
+
+  - id: q08
+    question: ¿Qué porcentaje de los ensayos de fase 2 (incluye fase 1/2 y fase 2/3) cerrados (completados, terminados o retirados) de Pfizer como sponsor principal se detuvo antes de tiempo (terminados o retirados)?
+    kind: número
+    reference: |
+      SELECT (100 * SUM(?isStopped) / COUNT(?trial) AS ?answer) WHERE {
+        ?trial :sponsor/:name "Pfizer" ; :phase ?phase ; :status ?status .
+        FILTER (CONTAINS(?phase, "PHASE2"))
+        FILTER (?status IN ("COMPLETED", "TERMINATED", "WITHDRAWN"))
+        BIND (IF(?status IN ("TERMINATED", "WITHDRAWN"), 1, 0) AS ?isStopped)
+      }
+
+  - id: q09
+    question: ¿Cuántos ensayos activos (reclutando, activos sin reclutar, todavía sin reclutar o por invitación) prueban pembrolizumab?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
+        ?d :name "PEMBROLIZUMAB" .
+        ?trial :testsDrug ?d ; :status ?status .
+        FILTER (?status IN ("RECRUITING", "ACTIVE_NOT_RECRUITING", "NOT_YET_RECRUITING", "ENROLLING_BY_INVITATION"))
+      }
+
+  - id: q10
+    question: ¿Cuántos ensayos de leucemia prueban fármacos que actúan sobre BTK?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
+        ?d :hasTarget/:gene "BTK" .
+        ?trial :testsDrug ?d ; :condition ?c .
+        ?x rdfs:label "Leukemia"@en . ?c :within ?x .
+      }
+
+  - id: q11
+    question: ¿Qué sponsor de la industria tiene más ensayos de fase 3 (incluye fase 2/3) en cáncer colorrectal, contando como sponsor solo al principal?
+    kind: lista
+    items: sponsors
+    reference: |
+      SELECT ?answer WHERE {
+        ?trial :sponsor ?s ; :phase ?phase ; :condition ?c .
+        ?s :industry true ; :name ?answer .
+        FILTER (CONTAINS(?phase, "PHASE3"))
+        ?x rdfs:label "Colorectal Neoplasms"@en . ?c :within ?x .
+      }
+      GROUP BY ?answer ORDER BY DESC(COUNT(DISTINCT ?trial)) LIMIT 1
+
+  - id: q12
+    question: ¿Cuántos ensayos de melanoma prueban nivolumab?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
+        ?d :name "NIVOLUMAB" .
+        ?trial :testsDrug ?d ; :condition ?c .
+        ?x rdfs:label "Melanoma"@en . ?c :within ?x .
+      }
+
+  - id: q13
+    question: ¿Cuántos ensayos de cáncer de próstata prueban algún fármaco aprobado que actúa sobre el receptor de andrógenos (gen AR)?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
+        ?d :hasTarget/:gene "AR" ; :approved true .
+        ?trial :testsDrug ?d ; :condition ?c .
+        ?x rdfs:label "Prostatic Neoplasms"@en . ?c :within ?x .
+      }
+
+  - id: q14
+    question: ¿Cuántos ensayos detenidos (terminados o retirados) hay en cáncer de páncreas?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
+        ?trial :status ?status ; :condition ?c .
+        FILTER (?status IN ("TERMINATED", "WITHDRAWN"))
+        ?x rdfs:label "Pancreatic Neoplasms"@en . ?c :within ?x .
+      }
+
+  - id: q15
+    question: ¿Cuántos reportes serios de eventos adversos acumula osimertinib en FAERS (openFDA)?
+    kind: número
+    reference: |
+      SELECT (SUM(?n) AS ?answer) WHERE {
+        ?d :name "OSIMERTINIB" .
+        ?y :drug ?d ; :seriousReports ?n .
+      }
+
+  - id: q16
+    question: ¿Cuántos fármacos distintos se prueban en ensayos de mieloma múltiple?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?d) AS ?answer) WHERE {
+        ?trial :testsDrug ?d ; :condition ?c .
+        ?x rdfs:label "Multiple Myeloma"@en . ?c :within ?x .
+      }
+
+  - id: q17
+    question: ¿Cuántos ensayos activos (reclutando, activos sin reclutar, todavía sin reclutar o por invitación) prueban fármacos dirigidos a TIGIT?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
+        ?d :hasTarget/:gene "TIGIT" .
+        ?trial :testsDrug ?d ; :status ?status .
+        FILTER (?status IN ("RECRUITING", "ACTIVE_NOT_RECRUITING", "NOT_YET_RECRUITING", "ENROLLING_BY_INVITATION"))
+      }
+
+  - id: q18
+    question: ¿Qué fármacos anti-PD-1 o anti-PD-L1 (genes PDCD1 o CD274) se prueban en ensayos de fase 3 (incluye fase 2/3) de cáncer de pulmón?
+    kind: lista
+    items: fármacos
+    reference: |
+      SELECT DISTINCT ?answer WHERE {
+        VALUES ?gene { "PDCD1" "CD274" }
+        ?d :hasTarget/:gene ?gene ; :name ?answer .
+        ?trial :testsDrug ?d ; :phase ?phase ; :condition ?c .
+        FILTER (CONTAINS(?phase, "PHASE3"))
+        ?x rdfs:label "Lung Neoplasms"@en . ?c :within ?x .
+      }
+
+  - id: q19
+    question: ¿Cuántos ensayos de linfoma que empezaron en 2020 o después prueban rituximab?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
+        ?d :name "RITUXIMAB" .
+        ?trial :testsDrug ?d ; :startDate ?start ; :condition ?c .
+        FILTER (YEAR(?start) >= 2020)
+        ?x rdfs:label "Lymphoma"@en . ?c :within ?x .
+      }
+
+  - id: q20
+    question: ¿Qué fármacos comparten al menos un target con imatinib?
+    kind: lista
+    items: fármacos
+    reference: |
+      SELECT DISTINCT ?answer WHERE {
+        ?imatinib :name "IMATINIB" ; :hasTarget ?t .
+        ?other :hasTarget ?t ; :name ?answer .
+        FILTER (?other != ?imatinib)
+      }

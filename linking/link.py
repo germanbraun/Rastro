@@ -1,7 +1,8 @@
 """Enlaza ensayos de AACT con MeSH (condiciones) y con ChEMBL (fármacos).
 
-Todo el enlace está en SQL legible: conditions.sql y drugs.sql. Este script los
-corre y muestra cuánto enlazó.
+Todo el enlace está en SQL legible: conditions.sql, drugs.sql y entities.sql (una
+fila por fármaco, sponsor y target, que leen los mapeos). Este script los corre y
+muestra cuánto enlazó.
 
 Se corre con: docker compose run --rm linker
 """
@@ -26,8 +27,15 @@ def main():
             for row in csv.DictReader((HERE / "regimens.csv").open()):
                 copy.write_row((row["regimen"], row["drug"]))
 
+        conn.execute("DROP TABLE IF EXISTS linking.generic_word")
+        conn.execute("CREATE TABLE linking.generic_word (word text PRIMARY KEY)")
+        with conn.cursor().copy("COPY linking.generic_word FROM STDIN") as copy:
+            for row in csv.DictReader((HERE / "generic_words.csv").open()):
+                copy.write_row((row["word"],))
+
         conn.execute((HERE / "conditions.sql").read_text())
         conn.execute((HERE / "drugs.sql").read_text())
+        conn.execute((HERE / "entities.sql").read_text())
 
         print("Condiciones → MeSH")
         for r in conn.execute("""

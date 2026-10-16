@@ -20,6 +20,7 @@ CREATE TABLE chembl.molecule_dictionary (
     usan_stem           text,
     usan_stem_definition text,
     parent_chembl_id    text,
+    active_chembl_id    text,   -- molécula activa: distinta de la propia si es una prodroga
     standard_inchi_key  text,
     canonical_smiles    text
 );

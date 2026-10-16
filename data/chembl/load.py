@@ -106,6 +106,7 @@ def main():
              m["black_box_warning"], m["withdrawn_flag"], m["first_in_class"], m["orphan"],
              m["usan_stem"], m["usan_stem_definition"],
              (m["molecule_hierarchy"] or {}).get("parent_chembl_id"),
+             (m["molecule_hierarchy"] or {}).get("active_chembl_id"),
              (m["molecule_structures"] or {}).get("standard_inchi_key"),
              (m["molecule_structures"] or {}).get("canonical_smiles"))
             for m in molecules],

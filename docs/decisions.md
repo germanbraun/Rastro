@@ -91,3 +91,46 @@ Resultado: 74,4 % de las intervenciones enlazadas y 99 de 100 correctas en la re
 
 Ontop no infiere el tipo de una columna calculada con `GROUP BY` o `DISTINCT`. En esos mapeos se declara con `rr:datatype`. Es el error más probable al agregar mapeos nuevos.
 
+## 2026-10-16 — openFDA: buscar también por nombre del principio activo
+
+openFDA deja vacío el bloque `openfda` (donde está el UNII) en muchos reportes. Buscar solo por UNII perdía fármacos enteros: osimertinib (Tagrisso) daba 0 reportes y tiene 32.521. Ahora cada fármaco se busca por sus UNII **o** por el nombre de su principio activo (los nombres de ChEMBL de la molécula y sus sales), en una sola búsqueda con OR, así que ningún reporte se cuenta dos veces. Imatinib pasó de 41.417 a 61.334 reportes.
+
+## 2026-10-16 — Fase 3: tres formas de responder, comparación justa
+
+El mismo modelo responde las mismas 20 preguntas de tres formas: solo, con SQL sobre las tablas crudas y con SPARQL sobre Rastro.
+
+- **Lo que recibe cada una:** B recibe el esquema de las tablas de AACT, ChEMBL, openFDA y MeSH, más una página de notas (qué es cada fuente y cómo se escriben sus valores); no ve los enlaces de `linking/`. C recibe la ontología y una página de notas equivalente. Es lo que tendría un equipo de datos con y sin Rastro.
+- **Seguridad:** B corre con un usuario de Postgres de solo lectura (`rastro_reader`) y un límite de 60 segundos por query.
+- **Mismas reglas:** mismo modelo y esfuerzo, salida en JSON con esquema, y hasta tres intentos si la query falla (el modelo ve el error).
+- **Referencias:** las respuestas correctas salen de queries SPARQL escritas a mano sobre Rastro. Las definiciones (qué es "detenido", "fase 3", "activo") van dentro de cada pregunta para que cualquier enfoque pueda responderla. Para "ensayos de X", AACT ya trae los ancestros MeSH de cada ensayo, así que B también llega a los subtipos (difiere de Rastro en un 0,4 %).
+- **Puntaje:** un número es correcto a menos del 5 % de la referencia; una lista, con al menos 80 % de coincidencia (F1), comparando fármacos por sinónimos de ChEMBL.
+- **Respuestas guardadas en el repo** (`layer/eval/results.json`): se paga una sola vez. Otra persona puede ver y puntuar los resultados sin API key.
+- **Claude Opus 5.5** no acepta `temperature`. La reproducibilidad viene de guardar las respuestas, no de fijar la temperatura.
+
+## 2026-10-16 — Respuestas generadas con subagentes de Claude Code
+
+No había API key de Claude. Las 60 respuestas (20 preguntas × 3 enfoques) se generaron con subagentes de Claude Code (el mismo modelo, Claude Opus 5.5), cada uno con contexto limpio: leía solo su prompt, el mismo texto que enviaría `answer.py` a la API, y respondía el JSON pedido. Sus queries se ejecutaron con `manual.py` y, si fallaban, el subagente recibía el error con el mismo mensaje que usa la versión con API. B necesitó un reintento en 3 preguntas (las tres por tiempo límite); C respondió todo al primer intento.
+
+El LLM es intercambiable (`RASTRO_PROVIDER`): Claude API, Ollama en la Mac, o a mano con `manual.py`.
+
+## 2026-10-16 — La evaluación mejoró Rastro: adjudicar antes de publicar
+
+Como las referencias salen de Rastro, la ventaja de C podía ser en parte circular. Se revisaron con ensayos reales las preguntas donde B y C diferían (`layer/eval/adjudication.md`). B tenía razón en varios casos, y eso llevó a corregir Rastro:
+
+- **Regla "nombre como palabra entera"** para dosis, separadores y texto libre ("Pembrolizumab 200 mg", "Nivolumab or Pembrolizumab"): 94 % de precisión revisada a mano, cobertura de 74 % a 81 % de las intervenciones.
+- **El nombre preferido de ChEMBL gana sobre los sinónimos de otros fármacos.** ChEMBL lista "bicalutamide" como sinónimo de talazoparib, y eso dejaba sin enlazar todos los ensayos con bicalutamida.
+- **Prodrogas:** ChEMBL trata a la abiraterona y su acetato como familias distintas. Ahora una prodroga actúa sobre los targets de su molécula activa (`active_chembl_id` de ChEMBL).
+- **Una pregunta ambigua** (q08, ¿"fase 2" incluye 1/2 y 2/3?) se reescribió y se volvió a responder. Con la definición clara, SQL directo y Rastro coinciden.
+
+Resultado final: LLM solo 5/20, SQL directo 18/20, Rastro 20/20.
+
+Regla para el futuro: ningún número de la evaluación se publica sin adjudicar las diferencias.
+
+## 2026-10-16 — Demo en Streamlit, que funciona sin LLM
+
+La interfaz es Streamlit (`app/`), lo más simple para un MVP: un solo archivo de Python, sin frontend aparte. Se levanta con `docker compose up` en el puerto 8501.
+
+- **Funciona sin LLM:** las preguntas de ejemplo usan las queries que el LLM escribió en la evaluación, ejecutadas en vivo sobre los datos. Las preguntas libres usan el LLM configurado (Claude API u Ollama).
+- **Fuente por columna:** se deduce de la query. Una columna que sale de `:reports` viene de openFDA, y una que sale de `:name` sobre un fármaco, de ChEMBL. No hace falta anotar los datos.
+- **"Con y sin Rastro"** muestra el puntaje y las tres respuestas de cada pregunta, con el largo de cada query: el argumento visual de la demo.
+

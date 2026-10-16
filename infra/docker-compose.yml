@@ -39,6 +39,31 @@ services:
       - ../ontology:/opt/rastro/ontology:ro
       - ../mappings:/opt/rastro/mappings:ro
 
+  # Demo de Rastro Layer: http://localhost:8501
+  app:
+    build: ./loaders
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ontop:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      RASTRO_PROVIDER: ${RASTRO_PROVIDER:-}
+      RASTRO_MODEL: ${RASTRO_MODEL:-}
+      OLLAMA_URL: ${OLLAMA_URL:-}
+    ports:
+      - "${APP_PORT:-8501}:8501"
+    volumes:
+      - ../app:/app:ro
+      - ../layer:/layer:ro
+      - ../ontology:/ontology:ro
+    command: ["streamlit", "run", "/app/app.py", "--server.port", "8501", "--server.address", "0.0.0.0",
+              "--server.headless", "true", "--browser.gatherUsageStats", "false"]
+
   graphdb:
     image: ontotext/graphdb:10.8.5
     restart: unless-stopped
@@ -140,6 +165,28 @@ services:
     volumes:
       - ../linking:/linking:ro
     command: ["python", "-u", "/linking/link.py"]
+
+  # Evaluación de Rastro Layer (layer/eval/): docker compose run --rm layer-eval
+  layer-eval:
+    build: ./loaders
+    profiles: ["tools"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      ontop:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      RASTRO_PROVIDER: ${RASTRO_PROVIDER:-}
+      RASTRO_MODEL: ${RASTRO_MODEL:-}
+      OLLAMA_URL: ${OLLAMA_URL:-}
+    volumes:
+      - ../layer:/layer
+      - ../ontology:/ontology:ro
+    command: ["python", "-u", "/layer/eval/run.py"]
 
   # Herramientas: docker compose run --rm <servicio>
   ontology-check:

@@ -25,10 +25,12 @@ Es un MVP comercial: lo tiene que entender alguien de ventas.
 ## Comandos
 
 ```bash
-docker compose up -d                              # Postgres :5434, Ontop :8080, GraphDB :7210
+docker compose up -d                              # demo :8501, Postgres :5434, Ontop :8080, GraphDB :7210
 docker compose run --rm <fuente>-loader           # aact, chembl, openfda, mesh
 docker compose run --rm linker                    # enlaces ensayo → MeSH y ensayo → fármaco
 docker compose run --rm ontology-check            # ontología y queries
+docker compose run --rm layer-eval                # evaluación: LLM solo, SQL directo y Rastro
+docker compose run --rm layer-eval python /layer/eval/run.py --rerun   # re-ejecutar queries guardadas tras cambiar datos
 docker compose exec postgres psql -U rastro -c "select * from rastro_meta.source_counts"
 ```
 
@@ -38,3 +40,7 @@ docker compose exec postgres psql -U rastro -c "select * from rastro_meta.source
 - `agregar-pregunta`: sumar una pregunta de competencia con su query
 - `verificar`: comprobar que todo levanta y responde
 - `cerrar-fase`: marcar el plan, documentar y commitear
+
+## Evaluación
+
+Las referencias salen de Rastro, así que la ventaja de Rastro puede ser circular. Antes de publicar un número, adjudicar con ensayos reales las preguntas donde SQL directo y Rastro difieren (`layer/eval/adjudication.md`).
