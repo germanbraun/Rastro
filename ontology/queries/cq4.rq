@@ -10,7 +10,7 @@ WHERE {
     SELECT DISTINCT ?d WHERE {
       ?trial :testsDrug ?d ; :condition ?c .
       ?leukemia rdfs:label "Leukemia"@en .
-      ?c meshv:broaderDescriptor* ?leukemia .
+      ?c :within ?leukemia .
     }
   }
   ?r :drug ?d ; :reaction ?reaction ; :reports ?n .

@@ -15,7 +15,7 @@ El plan completo, por fases y con checkpoints, está en [docs/plan.md](docs/plan
 | `data/` | scripts de descarga y carga (los datos no se versionan) |
 | `ontology/` | preguntas de competencia, ontología y una query por pregunta |
 | `mappings/` | mapeos R2RML (`rastro.r2rml.ttl`), que lee Ontop |
-| `linking/` | resolución de entidades de fármacos |
+| `linking/` | enlaces de ensayos con MeSH y ChEMBL, en SQL legible, y su revisión a mano |
 | `layer/` | Rastro Layer: NL→SPARQL, baseline NL→SQL, API; `eval/` con el set de evaluación |
 | `lab/` | Rastro Lab: features, modelos, linaje |
 | `app/` | frontend de ambas demos |
@@ -58,7 +58,8 @@ Los cargadores corren a demanda y necesitan credenciales en `.env` (copiado de `
 | AACT (oncología) | `docker compose run --rm aact-loader` | Cuenta gratuita de AACT (`AACT_USER`, `AACT_PASSWORD`) o un snapshot en `data/raw/` (`AACT_DUMP`) |
 | ChEMBL (oncología) | `docker compose run --rm chembl-loader` | Ninguno: usa la API pública de ChEMBL, MeSH de NLM y UniChem |
 | openFDA (eventos adversos) | `docker compose run --rm openfda-loader` | ChEMBL cargado antes. API key gratuita recomendada (`OPENFDA_API_KEY`): sin ella, 1000 requests por día y la descarga sigue en la próxima corrida |
-| MeSH 2026 (GraphDB) | `docker compose run --rm mesh-loader` | Unos 3 GB de memoria libres en Docker durante la importación. Crea también el conector Lucene `mesh` |
+| MeSH 2026 (GraphDB) | `docker compose run --rm mesh-loader` | Unos 3 GB de memoria libres en Docker durante la importación. Crea también el conector Lucene `mesh` y copia descriptores y jerarquía a Postgres |
+| Enlaces | `docker compose run --rm linker` | Las fuentes de arriba ya cargadas. Enlaza ensayos con MeSH y con ChEMBL en unos segundos |
 
 Las descargas quedan en `data/raw/`, que no se versiona: openFDA guarda ahí un JSON por fármaco y no lo vuelve a pedir.
 

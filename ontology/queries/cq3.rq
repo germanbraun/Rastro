@@ -13,7 +13,7 @@ WHERE {
 
   # Cáncer de pulmón y sus subtipos
   ?lung rdfs:label "Lung Neoplasms"@en .
-  ?c meshv:broaderDescriptor* ?lung .
+  ?c :within ?lung .
 }
 GROUP BY ?sponsor
 ORDER BY DESC(?stopped)

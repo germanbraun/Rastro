@@ -49,12 +49,9 @@ Ocho preguntas de negocio y una ontología de siete clases (Ensayo, Fármaco, Ta
 
 **Checkpoint:** la ontología carga y cada pregunta tiene su query.
 
-### Fase 2 — Conectar las fuentes
+### Fase 2 — Conectar las fuentes ✅
 
-- [ ] Mapeos R2RML para AACT, ChEMBL y openFDA, en `mappings/rastro.r2rml.ttl`
-- [ ] Enlazar fármacos entre fuentes: primero por nombre normalizado y alias (hoy ya enlaza el 69 %), el LLM solo para lo que quede
-- [ ] Enlazar las condiciones de los ensayos con MeSH por su etiqueta
-- [ ] Revisar a mano 100 enlaces y medir cuántos están bien
+Mapeos R2RML para las cuatro fuentes, MeSH copiado en Postgres (sin federar) y enlaces en SQL legible: el 74 % de las intervenciones de tipo fármaco enlaza con ChEMBL, con 99 de 100 enlaces correctos en la revisión a mano, y el 99,8 % de los ensayos tiene su condición en MeSH. No hizo falta el LLM. Las ocho preguntas responden en un segundo.
 
 **Checkpoint:** las ocho preguntas devuelven respuestas correctas, y sabemos qué porcentaje de enlaces está bien.
 
@@ -110,7 +107,7 @@ Ocho preguntas de negocio y una ontología de siete clases (Ensayo, Fármaco, Ta
 
 | Riesgo | Qué hacemos |
 |---|---|
-| Los fármacos se llaman distinto en cada fuente | Nombre normalizado primero, LLM solo para el resto, y medir a mano |
+| Los fármacos se llaman distinto en cada fuente | Resuelto en la Fase 2 con reglas simples: 74 % enlazado, 99 % correcto |
 | El modelo usa datos del futuro sin querer | Solo datos anteriores al inicio de cada ensayo |
 | Los eventos adversos de FAERS son ruidosos | Usarlos como conteos y decirlo en la interfaz |
 | La mejora del modelo es chica | El argumento de Lab también es la explicación y la procedencia, no solo la precisión |
@@ -125,9 +122,10 @@ Tomadas (detalle en [decisions.md](decisions.md)):
 - [x] GraphDB Free como triplestore
 - [x] Ontología mínima: siete clases, condiciones como descriptores de MeSH
 
+- [x] MeSH copiado en Postgres: Ontop responde solo, sin federar con GraphDB
+
 Abiertas:
 
-- [ ] Cómo juntar Ontop y GraphDB en una query. Propuesta: copiar a Postgres solo el árbol de MeSH de oncología, que es chico, y no federar.
 - [ ] Qué LLM usar, y si se prueba también uno abierto
 - [ ] Interfaz: propuesta Streamlit, que es lo más simple para un MVP
 - [ ] ¿El repo de GitHub queda privado?

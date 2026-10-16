@@ -5,7 +5,7 @@ PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT (COUNT(?trial) AS ?closed) (SUM(?isStopped) AS ?stopped)
-       (100 * SUM(?isStopped) / COUNT(?trial) AS ?percentStopped)
+       (ROUND(100 * SUM(?isStopped) / COUNT(?trial)) AS ?percentStopped)
 WHERE {
   VALUES ?sponsor { "Pfizer" }   # el sponsor a consultar
   ?trial :sponsor/:name ?sponsor ; :phase ?phase ; :status ?status .

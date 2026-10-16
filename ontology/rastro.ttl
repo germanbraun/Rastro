@@ -49,8 +49,13 @@ sin clase propia."""@es ;
 
 :condition a owl:ObjectProperty ;
     rdfs:label "condición"@es ;
-    rdfs:comment "La enfermedad que estudia el ensayo, como descriptor de MeSH. Los subtipos se encuentran siguiendo meshv:broaderDescriptor."@es ;
+    rdfs:comment "La enfermedad que estudia el ensayo, como descriptor de MeSH. Sus subtipos se encuentran con :within."@es ;
     rdfs:domain :Trial ; rdfs:range meshv:Descriptor .
+
+:within a owl:ObjectProperty ;
+    rdfs:label "está dentro de"@es ;
+    rdfs:comment "Un descriptor de MeSH está dentro de sí mismo y de todos sus ancestros. Así \"cáncer de pulmón y sus subtipos\" es una sola condición: ?c :within ?pulmon."@es ;
+    rdfs:domain meshv:Descriptor ; rdfs:range meshv:Descriptor .
 
 :sponsor a owl:ObjectProperty ;
     rdfs:label "sponsor"@es ;

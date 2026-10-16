@@ -71,3 +71,23 @@ Un primer borrador tenía 13 preguntas y 17 clases. Se recortó a **8 preguntas 
 ## 2026-10-16 — Mapeos en R2RML
 
 Los mapeos se escriben en R2RML (estándar W3C, en Turtle) y no en el formato propio de Ontop. Es portable (lo leen Ontop y otras herramientas) y no ata Rastro a un motor. Ontop lee un solo archivo de mapeo, así que va todo en `mappings/rastro.r2rml.ttl`, con una sección por fuente.
+
+## 2026-10-16 — MeSH en Postgres, sin federar
+
+Para que una sola query cruce ensayos (Ontop) y la jerarquía de MeSH (GraphDB) había dos caminos: federar con `SERVICE` o copiar. Se copió a Postgres lo único que hace falta: descriptores (30.512) y su jerarquía (41.809 relaciones). Es chico, y así Ontop responde todo solo. GraphDB queda para MeSH completo y la búsqueda Lucene.
+
+Ontop no soporta caminos de largo arbitrario (`meshv:broaderDescriptor*`), así que se precalculó cada descriptor con todos sus ancestros (`mesh.ancestor`, 245.641 filas) y se expone como `:within`. "Cáncer de pulmón y sus subtipos" queda en una sola línea: `?c :within ?pulmon`. La tabla no se llama `within` porque es palabra reservada de SQL y Ontop no la acepta.
+
+## 2026-10-16 — Enlaces con reglas simples, sin LLM
+
+Los enlaces están en SQL legible en `linking/`:
+
+- **Condiciones:** el término MeSH que trae AACT igual a la etiqueta del descriptor. 99,8 % de los ensayos.
+- **Fármacos:** nombre normalizado (minúsculas, sin marca entre corchetes o paréntesis, sin puntuación, sin vía ni forma al final) contra nombres y sinónimos de ChEMBL sin ambigüedad. En orden: nombre, alias, partes de una combinación ("A + B") y un diccionario de 10 regímenes (FOLFOX, R-CHOP…).
+
+Resultado: 74,4 % de las intervenciones enlazadas y 99 de 100 correctas en la revisión a mano. El plan preveía un LLM para los casos ambiguos, pero con este nivel no hace falta para el MVP. Lo que no enlaza es sobre todo lo que no es un fármaco ("placebo", "chemotherapy").
+
+## 2026-10-16 — Tipos explícitos en mapeos con GROUP BY o DISTINCT
+
+Ontop no infiere el tipo de una columna calculada con `GROUP BY` o `DISTINCT`. En esos mapeos se declara con `rr:datatype`. Es el error más probable al agregar mapeos nuevos.
+

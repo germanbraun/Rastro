@@ -6,7 +6,7 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?drug (SUM(?n) AS ?reportsBefore) (SUM(?serious) AS ?seriousBefore)
 WHERE {
-  VALUES ?nctId { "NCT00000000" }   # el ensayo a consultar
+  VALUES ?nctId { "NCT02252172" }   # el ensayo a consultar (daratumumab en mieloma, 2015)
   ?trial :nctId ?nctId ; :startDate ?start ; :testsDrug ?d .
   ?d :name ?drug .
   OPTIONAL {

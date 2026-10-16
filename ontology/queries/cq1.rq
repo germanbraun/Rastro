@@ -3,7 +3,7 @@ PREFIX : <https://w3id.org/rastro/ontology#>
 PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-SELECT ?drug ?nctId ?title ?sponsor ?status
+SELECT DISTINCT ?drug ?nctId ?title ?sponsor ?status
 WHERE {
   ?t :gene "ERBB2" .
   ?d :hasTarget ?t ; :name ?drug .
@@ -14,6 +14,6 @@ WHERE {
 
   # Cáncer de mama y sus subtipos
   ?breast rdfs:label "Breast Neoplasms"@en .
-  ?c meshv:broaderDescriptor* ?breast .
+  ?c :within ?breast .
 }
 ORDER BY ?drug

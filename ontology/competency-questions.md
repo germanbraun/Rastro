@@ -18,14 +18,16 @@ Todas cruzan al menos dos fuentes: es lo que una base sola no puede contestar.
 ## Notas
 
 - **La 1 es la pregunta de la demo:** corta, con una respuesta que cualquiera reconoce (trastuzumab, pertuzumab…).
-- **"Cáncer de mama", "cáncer de pulmón" y "leucemia" incluyen sus subtipos.** Eso lo resuelve la jerarquía de MeSH: "cáncer de pulmón" incluye "carcinoma de pulmón de células no pequeñas" sin listarlo a mano.
+- **"Cáncer de mama", "cáncer de pulmón" y "leucemia" incluyen sus subtipos.** Eso lo resuelve la jerarquía de MeSH con `:within`: "cáncer de pulmón" incluye "carcinoma de pulmón de células no pequeñas" sin listarlo a mano.
+- **Los targets son los directos de ChEMBL.** Por eso la 6 lista MTOR: ChEMBL registra los rapálogos aprobados (everolimus, temsirolimus) sobre FKBP1A, la proteína a la que se unen.
 - **Los eventos adversos (4 y 7) son conteos de reportes espontáneos de FAERS**, no frecuencias clínicas. La interfaz lo tiene que decir.
 - **La 7 y la 8 son las features de Rastro Lab:** usan solo datos anteriores al inicio de cada ensayo.
 - **"Detenido" es TERMINATED o WITHDRAWN** en ClinicalTrials.gov.
 - **Cada dato de una respuesta lleva su fuente.** No es una pregunta aparte: toda entidad apunta a la fuente de la que viene (`rastro:fromSource`).
 
-## Supuestos para la Fase 2
+## Cómo se responden
 
-- **Ensayo → fármaco.** AACT nombra las intervenciones en texto libre. El enlace `rastro:testsDrug` se construye en la Fase 2: por nombre exacto o alias ya enlaza el 69 % de las intervenciones de tipo fármaco.
-- **Ensayo → condición.** AACT da el término MeSH como texto; se enlaza con el descriptor de MeSH por su etiqueta.
-- **Un solo grafo.** Las queries se escriben como si todo estuviera junto. Cómo se juntan Ontop (Postgres) y GraphDB (MeSH) se decide en la Fase 2.
+Todas corren contra Ontop (http://localhost:8080/sparql) y tardan alrededor de un segundo. Los resultados de la Fase 2 están en [docs/results.md](../docs/results.md).
+
+- **Ensayo → fármaco** (`:testsDrug`) y **ensayo → condición** (`:condition`) salen de `linking/`.
+- **MeSH** está copiado en Postgres, así que no hace falta federar con GraphDB.

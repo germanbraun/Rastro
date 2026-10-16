@@ -126,6 +126,21 @@ services:
       - ../data:/data
     command: ["python", "-u", "/data/mesh/load.py"]
 
+  # Enlaza ensayos con MeSH y ChEMBL (linking/): docker compose run --rm linker
+  linker:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../linking:/linking:ro
+    command: ["python", "-u", "/linking/link.py"]
+
   # Herramientas: docker compose run --rm <servicio>
   ontology-check:
     build: ./loaders

@@ -15,7 +15,8 @@ Es un MVP comercial: lo tiene que entender alguien de ventas.
 
 - **Idioma:** código, comentarios, docs y commits en español.
 - **Mapeos en R2RML**, en un solo archivo, `mappings/rastro.r2rml.ttl`, con una sección por fuente. Ontop lee un solo archivo de mapeo.
-- **Ontología mínima** (`ontology/rastro.ttl`): solo lo que piden las preguntas de `ontology/competency-questions.md`. Las condiciones son descriptores de MeSH.
+- **Ontología mínima** (`ontology/rastro.ttl`): solo lo que piden las preguntas de `ontology/competency-questions.md`. Las condiciones son descriptores de MeSH; sus subtipos se buscan con `:within`.
+- **Todo se consulta en Ontop** (http://localhost:8080/sparql). Ontop no soporta caminos `*` ni `+`: lo que necesite clausura se precalcula en Postgres.
 - **Datos fuera del repo:** las descargas van a `data/raw/`, que no se versiona. El repo guarda scripts.
 - **Secretos solo en `.env`**, nunca en `.env.example` ni en commits. Antes de commitear, revisá que `.env.example` tenga los valores vacíos.
 - **Cada carga se registra** en `rastro_meta.load_run`, para que el conteo por fuente y la procedencia funcionen.
@@ -26,6 +27,7 @@ Es un MVP comercial: lo tiene que entender alguien de ventas.
 ```bash
 docker compose up -d                              # Postgres :5434, Ontop :8080, GraphDB :7210
 docker compose run --rm <fuente>-loader           # aact, chembl, openfda, mesh
+docker compose run --rm linker                    # enlaces ensayo → MeSH y ensayo → fármaco
 docker compose run --rm ontology-check            # ontología y queries
 docker compose exec postgres psql -U rastro -c "select * from rastro_meta.source_counts"
 ```

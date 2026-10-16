@@ -7,10 +7,12 @@ los 15 M de triples en una sola transacción agota la memoria de una laptop.
 Reimportar reemplaza ese grafo.
 
 Al final (re)crea el conector Lucene `mesh` (lucene-connector.json): búsqueda de texto
-sobre descriptores por etiqueta, sinónimos y número de árbol.
+sobre descriptores por etiqueta, sinónimos y número de árbol. Y copia a Postgres
+(esquema `mesh`) los descriptores y su jerarquía, para que Ontop responda sin federar.
 
 Se corre con: docker compose run --rm mesh-loader
 Solo el conector, sin reimportar: docker compose run --rm mesh-loader python /data/mesh/load.py --connector-only
+Solo la copia a Postgres:         docker compose run --rm mesh-loader python /data/mesh/load.py --postgres-only
 """
 
 import gzip
@@ -146,9 +148,59 @@ def create_lucene_connector():
     update(LUCENE + "INSERT DATA { inst:mesh con:createConnector '''" + definition + "''' }")
 
 
+def copy_to_postgres(conninfo):
+    """Copia descriptores (id y etiqueta) y la relación 'más amplio' a Postgres."""
+    def rows(query):
+        r = requests.post(f"{GDB}/repositories/rastro", data={"query": query},
+                          headers={"Accept": "text/tab-separated-values"}, timeout=600)
+        r.raise_for_status()
+        return [line.split("\t") for line in r.text.splitlines()[1:]]
+
+    def mesh_id(iri):
+        return iri.strip("<>").rsplit("/", 1)[-1]
+
+    prefix = "PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
+    # Algunos descriptores traen etiquetas en varios idiomas: se guarda la inglesa, que usa AACT
+    descriptors = [(mesh_id(d), en.rsplit("@", 1)[0].strip('"')) for d, en in rows(prefix + f"""
+        SELECT ?d ?en WHERE {{ GRAPH <{GRAPH}> {{
+            ?d a meshv:TopicalDescriptor ; rdfs:label ?en . FILTER (LANG(?en) = "en")
+        }} }}""")]
+    # Solo la jerarquía entre descriptores temáticos (quedan afuera tipos de publicación y similares)
+    known = {d for d, *_ in descriptors}
+    broader = [(mesh_id(d), mesh_id(b)) for d, b in rows(
+        prefix + f"SELECT ?d ?b WHERE {{ GRAPH <{GRAPH}> {{ ?d meshv:broaderDescriptor ?b }} }}")
+        if mesh_id(d) in known and mesh_id(b) in known]
+
+    with psycopg.connect(conninfo) as conn:
+        conn.execute(Path(__file__).with_name("schema.sql").read_text())
+        for table, data in (("descriptor", descriptors), ("broader", broader)):
+            with conn.cursor().copy(f"COPY mesh.{table} FROM STDIN") as copy:
+                for row in data:
+                    copy.write_row(row)
+            conn.execute("INSERT INTO rastro_meta.load_run (source_id, version, table_name, row_count) "
+                         "VALUES ('mesh', %s, %s, %s)", (f"MeSH {YEAR}", f"mesh.{table}", len(data)))
+            print(f"  mesh.{table:<12}{len(data):>8} filas")
+        n = conn.execute("""
+            INSERT INTO mesh.ancestor
+            WITH RECURSIVE up(id, ancestor_id) AS (
+                SELECT id, id FROM mesh.descriptor
+                UNION
+                SELECT up.id, b.broader_id FROM up JOIN mesh.broader b ON b.id = up.ancestor_id
+            )
+            SELECT id, ancestor_id FROM up""").rowcount
+        conn.execute("INSERT INTO rastro_meta.load_run (source_id, version, table_name, row_count) "
+                     "VALUES ('mesh', %s, 'mesh.ancestor', %s)", (f"MeSH {YEAR}", n))
+        print(f"  mesh.ancestor    {n:>8} filas")
+
+
 def main():
+    conninfo = (f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
+                f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}")
     if "--connector-only" in sys.argv:
         create_lucene_connector()
+        return
+    if "--postgres-only" in sys.argv:
+        copy_to_postgres(conninfo)
         return
     RAW.mkdir(parents=True, exist_ok=True)
     download()
@@ -158,14 +210,13 @@ def main():
         SELECT (COUNT(*) AS ?n) WHERE {{ GRAPH <{GRAPH}> {{ ?d a meshv:TopicalDescriptor }} }}""")
     print(f"Triples: {triples}, descriptores: {descriptors}")
 
-    conninfo = (f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
-                f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}")
     with psycopg.connect(conninfo) as conn:
         conn.execute("INSERT INTO rastro_meta.load_run (source_id, version, table_name, row_count) "
                      "VALUES ('mesh', %s, %s, %s)", (f"MeSH {YEAR}", f"graphdb:<{GRAPH}>", triples))
         print(conn.execute("SELECT * FROM rastro_meta.source_counts WHERE source_id = 'mesh'").fetchone())
 
     create_lucene_connector()
+    copy_to_postgres(conninfo)
 
 
 if __name__ == "__main__":

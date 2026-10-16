@@ -21,9 +21,15 @@ Qué esperar:
 - Los servicios `postgres`, `ontop` y `graphdb` arriba, con Ontop `healthy`.
 - El conteo por fuente con filas en las cuatro fuentes cargadas.
 - `ontology-check` en OK para todas las queries.
-- Ontop devuelve 4 fuentes. Si Ontop no levanta, mirá `docker compose logs ontop`: casi siempre es un error en `mappings/rastro.r2rml.ttl` o un término del mapeo que no está en la ontología.
+- Ontop devuelve 4 fuentes (y, desde la Fase 2, unos 106 mil ensayos y 3.700 fármacos). Si Ontop no levanta, mirá `docker compose logs ontop`: casi siempre es un error en `mappings/rastro.r2rml.ttl` o un término del mapeo que no está en la ontología.
 - GraphDB con unos 15,4 M de triples (MeSH 2026).
 
-Desde la Fase 2, corré además las queries de `ontology/queries/` contra Ontop y revisá que las respuestas tengan sentido.
+Y las preguntas de competencia contra Ontop (cada una tarda alrededor de un segundo):
+
+```bash
+for f in ontology/queries/cq*.rq; do echo "== $(head -1 $f)"; curl -s -m 300 -H 'Accept: text/csv' --data-urlencode "query@$f" http://localhost:8080/sparql | head -5; done
+```
+
+Las ocho tienen que devolver filas. Referencias: la 1 tiene que mostrar trastuzumab y pertuzumab; la 7, daratumumab con 0 reportes previos.
 
 Si GraphDB se reinicia solo, casi siempre es memoria de Docker: revisá qué otros contenedores corren.

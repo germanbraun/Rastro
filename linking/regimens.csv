@@ -1,0 +1,39 @@
+regimen,drug
+folfox,fluorouracil
+folfox,leucovorin
+folfox,oxaliplatin
+folfiri,fluorouracil
+folfiri,leucovorin
+folfiri,irinotecan
+folfirinox,fluorouracil
+folfirinox,leucovorin
+folfirinox,irinotecan
+folfirinox,oxaliplatin
+capox,capecitabine
+capox,oxaliplatin
+xelox,capecitabine
+xelox,oxaliplatin
+chop,cyclophosphamide
+chop,doxorubicin
+chop,vincristine
+chop,prednisone
+r chop,rituximab
+r chop,cyclophosphamide
+r chop,doxorubicin
+r chop,vincristine
+r chop,prednisone
+abvd,doxorubicin
+abvd,bleomycin
+abvd,vinblastine
+abvd,dacarbazine
+beacopp,bleomycin
+beacopp,etoposide
+beacopp,doxorubicin
+beacopp,cyclophosphamide
+beacopp,vincristine
+beacopp,procarbazine
+beacopp,prednisone
+folfoxiri,fluorouracil
+folfoxiri,leucovorin
+folfoxiri,oxaliplatin
+folfoxiri,irinotecan

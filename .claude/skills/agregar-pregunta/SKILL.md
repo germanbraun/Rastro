@@ -14,9 +14,12 @@ Las preguntas mandan: la ontología solo tiene lo que alguna pregunta necesita.
 3. **Escribí la query** en `ontology/queries/cq<N>.rq`:
    - Primera línea: `# <N>. <la pregunta>`.
    - Prefijos `:` (Rastro), `meshv:` y `rdfs:`.
-   - Para "una enfermedad y sus subtipos": `?x rdfs:label "..."@en . ?c meshv:broaderDescriptor* ?x`.
+   - Para "una enfermedad y sus subtipos": `?x rdfs:label "..."@en . ?c :within ?x`. No uses caminos `*` o `+`: Ontop no los soporta.
    - Valores de ClinicalTrials.gov tal cual (`"TERMINATED"`, `"PHASE3"`).
    - Si tiene parámetro, usá `VALUES` con un comentario.
 4. **Si falta un término**, agregalo a `ontology/rastro.ttl` con `rdfs:label` en español y un comentario corto. Preferí un atributo simple a una clase nueva.
 5. **Validá:** `docker compose run --rm ontology-check` tiene que dar OK para todas las queries.
+   Después corré la query contra Ontop y mirá si la respuesta tiene sentido para alguien del negocio:
+   `curl -s -H 'Accept: text/csv' --data-urlencode "query@ontology/queries/cq<N>.rq" http://localhost:8080/sparql`
+   Si necesita un dato nuevo, agregá su mapeo en `mappings/rastro.r2rml.ttl` (con `rr:datatype` si la columna sale de un `GROUP BY` o `DISTINCT`).
 6. Si la pregunta es de Rastro Lab, usá solo datos anteriores al inicio del ensayo.
