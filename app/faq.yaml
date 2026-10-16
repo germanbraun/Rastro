@@ -44,7 +44,18 @@
 
 - question: ¿Cómo sabe Rastro qué fármaco prueba cada ensayo?
   answer: |-
-    Un programa recorre una sola vez las 130.000 intervenciones de los ensayos y arma una tabla ensayo → fármaco, con los nombres y sinónimos de ChEMBL. Aplica estas reglas, en orden:
+    Con **entity linking** (vinculación de entidades): cada mención de un fármaco en el texto de un ensayo se conecta con una entrada de una base de conocimiento, ChEMBL. Lo hace un programa, una sola vez, para las 130.000 intervenciones.
+
+    **Entrada**, en AACT: `NCT05563467 · «Pembrolizumab 25 MG/ML [Keytruda]»`
+
+    **Salida**, en la tabla de enlaces: `NCT05563467 · CHEMBL3137343 (pembrolizumab)`
+
+    Es el tipo más simple, **por diccionario**: compara el texto con los nombres y sinónimos de ChEMBL, en tres pasos.
+    1. **Encontrar la mención:** separar combinaciones y buscar palabras o frases de hasta 4 palabras.
+    2. **Buscar candidatos:** compararlas con los nombres de ChEMBL, sin mayúsculas, puntuación ni dosis.
+    3. **Desambiguar:** si un nombre apunta a varios fármacos, gana el nombre más largo, el nombre oficial de un fármaco le gana al sinónimo de otro, y las palabras genéricas no cuentan.
+
+    Ejemplos reales de cada regla:
 
     | Qué dice el ensayo | Regla | Resultado |
     |---|---|---|
@@ -57,7 +68,25 @@
     | «albumin-bound paclitaxel» | sin palabras genéricas | paclitaxel, no «albumin» |
     | «rhuMAb HER2» | alias de trastuzumab | trastuzumab, que actúa sobre HER2: no cuenta como anti-EGFR |
 
-    Después se revisaron a mano muestras al azar: **98-99 % de los enlaces son correctos**. Las reglas están en linking/drugs.sql y la revisión, en linking/review-2026-10-16.md.
+    Revisado a mano sobre muestras al azar: **98-99 % de los enlaces son correctos**. Un entity linking más sofisticado usaría el contexto, con un modelo o un LLM. Acá no hizo falta, porque los nombres de fármacos son muy específicos. Las reglas están en linking/drugs.sql y la revisión, en linking/review-2026-10-16.md.
+
+- question: ¿Rastro vincula otras cosas, además de los fármacos?
+  answer: |-
+    Sí, con la misma idea:
+    - **Condición del ensayo → MeSH:** el término de AACT se conecta con el descriptor de MeSH de igual nombre. Así "cáncer de pulmón" incluye todos sus subtipos.
+    - **Sales y prodrogas → un fármaco:** el mesilato de imatinib es imatinib, y el acetato de abiraterona actúa como la abiraterona. Esto es más bien **resolución de entidades**: decidir que dos registros de la misma base son lo mismo.
+
+- question: ¿Qué otras formas de hacer entity linking hay, y por qué Rastro usa esta?
+  answer: |-
+    | Forma | Cómo funciona | A favor | En contra |
+    |---|---|---|---|
+    | **Diccionario y reglas** (Rastro) | Compara el texto con nombres y sinónimos conocidos | Simple, rápido, explicable y repetible | No encuentra lo que no está en el diccionario |
+    | **Coincidencia aproximada** (fuzzy) | Tolera diferencias de escritura («pembrolizumb») | Atrapa errores de tipeo | Confunde nombres parecidos (vinblastina y vincristina) |
+    | **Servicios terminológicos** | Usa herramientas de vocabularios médicos (UMLS, RxNorm, MetaMap) | Vocabularios curados y muy amplios | Licencias, otra dependencia, y hay que mapear después a ChEMBL |
+    | **Modelos de NLP biomédico** | Modelos entrenados que leen el contexto (scispaCy, SapBERT) | Resuelven ambigüedades por contexto | Hay que instalarlos y evaluarlos; son menos explicables |
+    | **LLM** | Se le pide al LLM que identifique el fármaco | Muy bueno con casos raros o texto confuso | Costo por consulta, resultados que pueden variar, y hay que validarlo |
+
+    Rastro usa diccionario y reglas porque ya alcanza el **98-99 % de precisión** y es lo más simple de explicar y auditar. Las otras formas sirven como **complemento**, no como reemplazo: por ejemplo, pasarle a un LLM o a un modelo solo las menciones que el diccionario no resolvió y que parecen fármacos. La mayoría de las intervenciones sin enlace no son fármacos («placebo», «chemotherapy»), así que hoy no hace falta.
 
 - question: ¿Por qué conviene resolverlo una vez y no en cada consulta?
   answer: |-
