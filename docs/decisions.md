@@ -134,3 +134,13 @@ La interfaz es Streamlit (`app/`), lo más simple para un MVP: un solo archivo d
 - **Fuente por columna:** se deduce de la query. Una columna que sale de `:reports` viene de openFDA, y una que sale de `:name` sobre un fármaco, de ChEMBL. No hace falta anotar los datos.
 - **"Con y sin Rastro"** muestra el puntaje y las tres respuestas de cada pregunta, con el largo de cada query: el argumento visual de la demo.
 
+## 2026-10-16 — Cómo leer 18 contra 20
+
+El SQL directo con un LLM fuerte acierta casi tanto como Rastro. El argumento de venta no es la precisión, sino la confianza: definiciones consistentes entre preguntas (el SQL directo reconoce los fármacos de 4 formas distintas), errores que no avisan, el costo de integrar pagado en cada pregunta (20 s contra 2 s, 3 reintentos contra 0) y procedencia por dato. La demo lo dice así, con números, y explica por qué falla cada respuesta incorrecta.
+
+## 2026-10-16 — Mostrar el SQL que genera Ontop
+
+"¿Cómo lo supe?" muestra la consulta del LLM, el SQL que Ontop genera y ejecuta (`/ontop/reformulate`, disponible en modo desarrollo) y las fuentes. Hace visible que Rastro no copia datos: traduce la pregunta a SQL sobre las tablas originales y los enlaces, con uniones simples. En la comparación, ese SQL queda al lado del que el LLM escribió a mano.
+
+Cada fuente lleva un ícono según dónde vive: 🐘 Postgres (AACT, ChEMBL, openFDA, enlaces de Rastro) y 🕸️ GraphDB (MeSH completo, con su jerarquía copiada en Postgres).
+

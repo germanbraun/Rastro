@@ -41,6 +41,22 @@ El SQL directo subió porque las referencias mejoraron: varias "fallas" eran, en
 
 ## Lo que el número no dice
 
-- **El SQL directo acierta 18 de 20, pero con queries mucho más largas y frágiles.** Para la pregunta de la demo escribió 1.543 caracteres que reconstruyen a mano el cruce fármaco-ensayo con expresiones regulares, y 3 de sus queries necesitaron un segundo intento por tiempo límite. Con Rastro, 435 caracteres y ninguna query falló.
-- **Las respuestas de Rastro dicen de qué fuente sale cada dato.** Las del SQL directo, no.
-- **El LLM solo acertó 5 de 20**: listas de fármacos conocidos, pero ningún conteo.
+Con un LLM fuerte, el SQL directo acierta casi tanto como Rastro (18 contra 20). **La ventaja de Rastro no está en cuántas acierta, sino en cuánto se puede confiar en cada respuesta.** Medido sobre las 20 respuestas guardadas:
+
+| | SQL directo | Rastro |
+|---|---|---|
+| Correctas | 18 de 20 | 20 de 20 |
+| Preguntas en las que tuvo que inventar cómo reconocer un fármaco en el texto | 16 de 20 | 0 (usa el enlace revisado) |
+| Formas distintas de reconocer un fármaco | 4 (nombre exacto, ILIKE, pedazos del nombre, expresiones regulares) | 1 |
+| Queries que necesitaron un segundo intento | 3 (por tiempo límite) | 0 |
+| Tiempo de ejecución de las 20 queries | 20 s (una tarda 7 s) | 2 s |
+| Procedencia de cada dato | enterrada en la query | una fuente por columna |
+
+Lo que eso significa:
+
+1. **Cada respuesta del SQL directo define las cosas a su manera.** "Ensayos que prueban el fármaco X" se calcula de cuatro formas distintas según la pregunta, así que dos respuestas del mismo sistema no son comparables. Rastro lo define una vez, lo revisa a mano y lo reusa.
+2. **Sus errores no avisan.** 488 ensayos en vez de 438 parece razonable. Solo se descubre revisando ensayo por ensayo, como en esta adjudicación.
+3. **El costo de integrar se paga en cada pregunta.** Con SQL directo, el LLM rehace la integración en cada query: más tiempo, más tokens y más lugar para errores. Con Rastro se hace una vez, y Rastro Lab la reusa.
+4. **El LLM solo acertó 5 de 20**: listas de fármacos conocidos, pero ningún conteo.
+
+**Cautela honesta:** el 18 de 20 del SQL directo es con el modelo más capaz y con notas del esquema. Con un modelo más barato, o con preguntas fuera de estas 20, la diferencia probablemente crezca, pero no está medido.

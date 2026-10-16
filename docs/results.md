@@ -26,6 +26,8 @@ El mismo LLM (Claude Opus 5.5) respondió 20 preguntas de negocio de tres formas
 
 Para la pregunta de la demo, la query del SQL directo tiene 1.543 caracteres y la de Rastro, 435.
 
+**Interpretación:** la ventaja de Rastro no es cuántas acierta, sino cuánto se puede confiar en cada respuesta. El SQL directo tuvo que inventar cómo reconocer un fármaco en 16 de las 20 preguntas, y lo hizo de 4 formas distintas. Sus errores parecen razonables (488 en vez de 438). Sus queries tardan 20 s en total contra 2 s de Rastro, y 3 necesitaron reintento. Rastro, además, dice de dónde sale cada dato. Detalle en `layer/eval/adjudication.md`.
+
 Cómo se midió: `layer/eval/` (preguntas, respuestas guardadas y puntaje) y `layer/eval/adjudication.md` (las diferencias revisadas con ensayos reales). La adjudicación también encontró y corrigió errores de Rastro: la cobertura de enlaces de fármacos pasó de 74 % a 81 %, con 98-99 % de precisión.
 
 ### Otros números que salieron de esta fase
@@ -37,5 +39,8 @@ Cómo se midió: `layer/eval/` (preguntas, respuestas guardadas y puntaje) y `la
 
 ## Fase 4 — Interfaz de Rastro Layer (16 oct 2026)
 
-Demo en http://localhost:8501: las 20 preguntas de ejemplo funcionan sin LLM (queries guardadas, ejecutadas en vivo), con la fuente de cada columna y un "¿cómo lo supe?" con la query. La pestaña "Con y sin Rastro" muestra el puntaje y las tres respuestas de cada pregunta lado a lado.
+Demo en http://localhost:8501:
+
+- **Preguntar:** las 20 preguntas de ejemplo funcionan sin LLM (queries guardadas, ejecutadas en vivo). Muestra la fuente de cada columna y dónde vive cada fuente (🐘 Postgres, 🕸️ GraphDB). "¿Cómo lo supe?" tiene tres pasos: la consulta que escribió el LLM, el SQL que Ontop generó y ejecutó, y las fuentes con su licencia.
+- **Con y sin Rastro:** el puntaje y qué significa, y cada pregunta con las tres respuestas lado a lado. Para cada respuesta incorrecta explica por qué falló; para cada query del SQL directo, cómo reconoció los fármacos; y para Rastro, el SQL que generó Ontop, para compararlo con el escrito a mano.
 

@@ -1,0 +1,17 @@
+# Por qué falla una respuesta, en palabras simples. Lo muestra la demo debajo de cada ❌.
+# Las fallas del "LLM solo" se explican solas en la demo (respondió de memoria); acá van
+# las que necesitan contexto. Revisadas con ensayos reales: ver adjudication.md.
+
+q02:
+  B: >-
+    Contó 488 ensayos; la cifra correcta es 438. Para encontrar los fármacos anti-EGFR
+    buscó pedazos de sus nombres dentro del texto de las intervenciones. Uno de esos
+    pedazos, «humab», aparece también en «rhuMAb HER2», que es trastuzumab: actúa sobre
+    HER2, no sobre EGFR. Así sumó unos 40 ensayos que no corresponden. El número parece
+    razonable y no hay forma de notarlo sin revisar ensayo por ensayo.
+
+q16:
+  B: >-
+    Contó 545 fármacos; la cifra correcta es 604. Comparó el nombre completo de cada
+    intervención con los nombres de ChEMBL, así que perdió los que vienen con dosis, en
+    combinación o con un código de desarrollo (por ejemplo «PTK787», que es vatalanib).

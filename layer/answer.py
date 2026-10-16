@@ -236,6 +236,15 @@ def run_sparql_table(query):
     return columns, rows
 
 
+def ontop_sql(query):
+    """El SQL que Ontop genera y ejecuta en Postgres para una query SPARQL."""
+    r = requests.get(ONTOP.replace("/sparql", "/ontop/reformulate"), params={"query": query}, timeout=60)
+    r.raise_for_status()
+    lines = r.text.splitlines()
+    native = next((i for i, line in enumerate(lines) if line.strip().startswith("NATIVE")), None)
+    return "\n".join(lines[native + 1:]).strip() if native is not None else r.text.strip()
+
+
 def column_sources(query):
     """Fuentes de una query: (todas las que usa, las de cada columna del resultado).
 

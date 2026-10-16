@@ -19,6 +19,7 @@ import argparse
 import json
 import os
 import sys
+import time
 from datetime import date
 from pathlib import Path
 
@@ -107,7 +108,9 @@ def main():
             for key in ("B", "C"):
                 ok = [a for a in entry.get(key, {}).get("attempts", []) if a["error"] is None]
                 if ok:
+                    start = time.time()
                     entry[key]["answer"] = try_query(key, ok[-1]["query"], q["kind"])["answer"]
+                    entry[key]["seconds"] = round(time.time() - start, 2)
         for key, approach in APPROACHES.items():
             if key in entry and key not in args.fresh:
                 continue

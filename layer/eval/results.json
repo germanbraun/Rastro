@@ -56,7 +56,8 @@
       "query": "WITH her2 AS (\n  SELECT DISTINCT COALESCE(md.parent_chembl_id, md.chembl_id) AS parent_id\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id\n  WHERE tc.gene_symbol = 'ERBB2'\n),\nnames AS (\n  SELECT h.parent_id, lower(md.pref_name) AS nm\n  FROM her2 h\n  JOIN chembl.molecule_dictionary md ON COALESCE(md.parent_chembl_id, md.chembl_id) = h.parent_id\n  WHERE md.pref_name IS NOT NULL\n  UNION\n  SELECT h.parent_id, lower(s.synonyms)\n  FROM her2 h\n  JOIN chembl.molecule_dictionary md ON COALESCE(md.parent_chembl_id, md.chembl_id) = h.parent_id\n  JOIN chembl.molecule_synonyms s ON s.chembl_id = md.chembl_id\n  WHERE s.synonyms IS NOT NULL\n),\ntrials AS (\n  SELECT s.nct_id\n  FROM aact.studies s\n  WHERE s.phase IN ('PHASE3', 'PHASE2/PHASE3')\n    AND EXISTS (\n      SELECT 1 FROM aact.browse_conditions bc\n      WHERE bc.nct_id = s.nct_id AND bc.downcase_mesh_term = 'breast neoplasms'\n    )\n),\niv AS (\n  SELECT i.nct_id, lower(i.name) AS txt\n  FROM aact.interventions i JOIN trials t ON t.nct_id = i.nct_id\n  UNION ALL\n  SELECT o.nct_id, lower(o.name)\n  FROM aact.intervention_other_names o JOIN trials t ON t.nct_id = o.nct_id\n)\nSELECT DISTINCT p.pref_name\nFROM names n\nJOIN iv ON iv.txt ~ ('(^|[^a-z0-9])' || regexp_replace(n.nm, '([.^$*+?()\\[\\]{}|\\\\-])', '\\\\\\1', 'g') || '($|[^a-z0-9])')\nJOIN chembl.molecule_dictionary p ON p.chembl_id = n.parent_id\nWHERE length(n.nm) >= 4\n  AND p.pref_name IS NOT NULL\nORDER BY 1",
       "error": null
      }
-    ]
+    ],
+    "seconds": 5.32
    },
    "C": {
     "answer": [
@@ -79,7 +80,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?trial a :Trial ;\n         :phase ?phase ;\n         :condition ?c ;\n         :testsDrug ?drug .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c :within ?breast .\n  ?breast rdfs:label \"Breast Neoplasms\"@en .\n  ?drug :name ?name ;\n        :hasTarget ?target .\n  ?target :gene \"ERBB2\" .\n}\nORDER BY ?name",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.34
    }
   },
   "q02": {
@@ -100,7 +102,8 @@
       "query": "WITH egfr_parents AS (SELECT DISTINCT COALESCE(md0.parent_chembl_id, dm.parent_chembl_id, dm.chembl_id) AS parent_id FROM chembl.drug_mechanism dm JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id LEFT JOIN chembl.molecule_dictionary md0 ON md0.chembl_id = dm.chembl_id WHERE upper(tc.gene_symbol) = 'EGFR'), egfr_mols AS (SELECT DISTINCT md.chembl_id FROM chembl.molecule_dictionary md WHERE md.parent_chembl_id IN (SELECT parent_id FROM egfr_parents) OR md.chembl_id IN (SELECT parent_id FROM egfr_parents)), egfr_names AS MATERIALIZED (SELECT DISTINCT lower(n) AS nm FROM (SELECT md.pref_name AS n FROM chembl.molecule_dictionary md WHERE md.chembl_id IN (SELECT chembl_id FROM egfr_mols) UNION SELECT ms.synonyms FROM chembl.molecule_synonyms ms WHERE ms.chembl_id IN (SELECT chembl_id FROM egfr_mols)) x WHERE n IS NOT NULL AND length(n) >= 5), p3 AS MATERIALIZED (SELECT nct_id FROM aact.studies WHERE phase IN ('PHASE3', 'PHASE2/PHASE3')), trial_texts AS MATERIALIZED (SELECT i.nct_id, lower(i.name) AS txt FROM aact.interventions i WHERE i.nct_id IN (SELECT nct_id FROM p3) UNION SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o WHERE o.nct_id IN (SELECT nct_id FROM p3)) SELECT count(DISTINCT t.nct_id) AS n FROM trial_texts t WHERE EXISTS (SELECT 1 FROM egfr_names e WHERE position(e.nm IN t.txt) > 0)",
       "error": null
      }
-    ]
+    ],
+    "seconds": 4.13
    },
    "C": {
     "answer": 438.0,
@@ -109,7 +112,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?trial a :Trial ;\n         :phase ?phase ;\n         :testsDrug ?drug .\n  ?drug :hasTarget ?target .\n  ?target :gene \"EGFR\" .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.18
    }
   },
   "q03": {
@@ -138,7 +142,8 @@
       "query": "SELECT s.name FROM aact.sponsors s JOIN aact.studies st ON st.nct_id = s.nct_id WHERE s.lead_or_collaborator = 'lead' AND s.agency_class = 'INDUSTRY' AND st.overall_status IN ('TERMINATED', 'WITHDRAWN') AND EXISTS (SELECT 1 FROM aact.browse_conditions bc WHERE bc.nct_id = st.nct_id AND bc.downcase_mesh_term = 'lung neoplasms') GROUP BY s.name ORDER BY COUNT(DISTINCT st.nct_id) DESC, s.name LIMIT 3",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.27
    },
    "C": {
     "answer": [
@@ -151,7 +156,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?sponsorName WHERE {\n  {\n    SELECT ?sponsorName (COUNT(DISTINCT ?t) AS ?n) WHERE {\n      ?t a :Trial ;\n         :status ?st ;\n         :sponsor ?s ;\n         :condition ?c .\n      FILTER(?st IN (\"TERMINATED\", \"WITHDRAWN\"))\n      ?c :within ?lung .\n      ?lung rdfs:label \"Lung Neoplasms\"@en .\n      ?s :industry true ;\n         :name ?sponsorName .\n    }\n    GROUP BY ?sponsorName\n    ORDER BY DESC(?n)\n    LIMIT 3\n  }\n}\nORDER BY DESC(?n)",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.26
    }
   },
   "q04": {
@@ -174,7 +180,8 @@
       "query": "SELECT r.reaction FROM openfda.reactions r WHERE r.query_id IN (SELECT DISTINCT COALESCE(m.parent_chembl_id, m.chembl_id) FROM chembl.molecule_dictionary m WHERE m.pref_name IN ('IMATINIB', 'IMATINIB MESYLATE')) ORDER BY r.reports DESC LIMIT 1",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.01
    },
    "C": {
     "answer": [
@@ -185,7 +192,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?reaction WHERE {\n  ?r a :ReportedReaction ;\n     :drug ?d ;\n     :reaction ?reaction ;\n     :reports ?n .\n  ?d :name \"IMATINIB\" .\n}\nORDER BY DESC(?n)\nLIMIT 1",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.01
    }
   },
   "q05": {
@@ -223,7 +231,8 @@
       "query": "SELECT DISTINCT p.pref_name FROM chembl.drug_mechanism dm JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id JOIN chembl.molecule_dictionary m ON m.chembl_id = dm.chembl_id JOIN chembl.molecule_dictionary p ON p.chembl_id = COALESCE(m.parent_chembl_id, m.chembl_id) WHERE tc.gene_symbol = 'BRAF' AND p.max_phase = 4 AND p.pref_name IS NOT NULL ORDER BY p.pref_name",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.01
    },
    "C": {
     "answer": [
@@ -239,7 +248,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?d a :Drug ;\n     :name ?name ;\n     :approved true ;\n     :hasTarget ?t .\n  ?t :gene \"BRAF\" .\n}\nORDER BY ?name",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.01
    }
   },
   "q06": {
@@ -256,7 +266,8 @@
       "query": "SELECT COUNT(DISTINCT bc.nct_id) FROM aact.browse_conditions bc WHERE bc.downcase_mesh_term = 'breast neoplasms'",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.14
    },
    "C": {
     "answer": 14405.0,
@@ -265,7 +276,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n)\nWHERE {\n  ?mama rdfs:label \"Breast Neoplasms\"@en .\n  ?c :within ?mama .\n  ?trial a :Trial ;\n         :condition ?c .\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.05
    }
   },
   "q07": {
@@ -282,7 +294,8 @@
       "query": "SELECT COALESCE(SUM(r.reports), 0) AS total_reports FROM openfda.reports_by_year r WHERE r.year < 2015 AND r.query_id IN (SELECT DISTINCT COALESCE(m.parent_chembl_id, m.chembl_id) FROM chembl.molecule_dictionary m WHERE m.pref_name = 'LENALIDOMIDE')",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.01
    },
    "C": {
     "answer": 50504.0,
@@ -291,7 +304,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (SUM(?r) AS ?total) WHERE {\n  ?y a :YearlyReports ;\n     :drug ?d ;\n     :year ?year ;\n     :reports ?r .\n  ?d :name \"LENALIDOMIDE\" .\n  FILTER(?year < 2015)\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.01
    }
   },
   "q08": {
@@ -308,7 +322,8 @@
       "query": "SELECT ROUND(100.0 * COUNT(DISTINCT s.nct_id) FILTER (WHERE s.overall_status IN ('TERMINATED','WITHDRAWN')) / NULLIF(COUNT(DISTINCT s.nct_id), 0), 2) AS pct_detenidos FROM aact.studies s WHERE s.phase IN ('PHASE2','PHASE1/PHASE2','PHASE2/PHASE3') AND s.overall_status IN ('COMPLETED','TERMINATED','WITHDRAWN') AND EXISTS (SELECT 1 FROM aact.sponsors sp WHERE sp.nct_id = s.nct_id AND sp.lead_or_collaborator = 'lead' AND sp.name ILIKE '%pfizer%')",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.1
    },
    "C": {
     "answer": 28.10810810810811,
@@ -317,7 +332,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ((100.0 * ?stopped / ?closed) AS ?percentage)\nWHERE {\n  {\n    SELECT (COUNT(DISTINCT ?t) AS ?closed)\n    WHERE {\n      ?t a :Trial ;\n         :phase ?phase ;\n         :status ?status ;\n         :sponsor ?s .\n      ?s :name ?sname .\n      FILTER(LCASE(STR(?sname)) = \"pfizer\")\n      FILTER(?phase IN (\"PHASE2\", \"PHASE1/PHASE2\", \"PHASE2/PHASE3\"))\n      FILTER(?status IN (\"COMPLETED\", \"TERMINATED\", \"WITHDRAWN\"))\n    }\n  }\n  {\n    SELECT (COUNT(DISTINCT ?t2) AS ?stopped)\n    WHERE {\n      ?t2 a :Trial ;\n          :phase ?phase2 ;\n          :status ?status2 ;\n          :sponsor ?s2 .\n      ?s2 :name ?sname2 .\n      FILTER(LCASE(STR(?sname2)) = \"pfizer\")\n      FILTER(?phase2 IN (\"PHASE2\", \"PHASE1/PHASE2\", \"PHASE2/PHASE3\"))\n      FILTER(?status2 IN (\"TERMINATED\", \"WITHDRAWN\"))\n    }\n  }\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.13
    }
   },
   "q09": {
@@ -334,7 +350,8 @@
       "query": "SELECT COUNT(DISTINCT s.nct_id) AS n FROM aact.studies s WHERE s.overall_status IN ('RECRUITING','ACTIVE_NOT_RECRUITING','NOT_YET_RECRUITING','ENROLLING_BY_INVITATION') AND s.nct_id IN (SELECT i.nct_id FROM aact.interventions i WHERE i.name ILIKE '%pembrolizumab%' OR i.name ILIKE '%keytruda%' OR i.name ILIKE '%mk-3475%' OR i.name ILIKE '%mk3475%' UNION SELECT o.nct_id FROM aact.intervention_other_names o WHERE o.name ILIKE '%pembrolizumab%' OR o.name ILIKE '%keytruda%' OR o.name ILIKE '%mk-3475%' OR o.name ILIKE '%mk3475%')",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.6
    },
    "C": {
     "answer": 961.0,
@@ -343,7 +360,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :testsDrug ?d ;\n     :status ?s .\n  ?d :name \"PEMBROLIZUMAB\" .\n  FILTER(?s IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.05
    }
   },
   "q10": {
@@ -364,7 +382,8 @@
       "query": "WITH btk_parents AS MATERIALIZED (SELECT DISTINCT COALESCE(md.parent_chembl_id, md.chembl_id) AS parent_id FROM chembl.target_components tc JOIN chembl.drug_mechanism dm ON dm.target_chembl_id = tc.target_chembl_id JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id WHERE tc.gene_symbol = 'BTK'), btk_molecules AS MATERIALIZED (SELECT md.chembl_id FROM chembl.molecule_dictionary md WHERE COALESCE(md.parent_chembl_id, md.chembl_id) IN (SELECT parent_id FROM btk_parents)), btk_names AS MATERIALIZED (SELECT DISTINCT lower(md.pref_name) AS name FROM chembl.molecule_dictionary md WHERE md.chembl_id IN (SELECT chembl_id FROM btk_molecules) AND md.pref_name IS NOT NULL UNION SELECT DISTINCT lower(ms.synonyms) FROM chembl.molecule_synonyms ms WHERE ms.chembl_id IN (SELECT chembl_id FROM btk_molecules) AND ms.synonyms IS NOT NULL AND length(ms.synonyms) >= 4), leukemia_trials AS MATERIALIZED (SELECT DISTINCT nct_id FROM aact.browse_conditions WHERE downcase_mesh_term LIKE '%leukemia%'), trial_names AS MATERIALIZED (SELECT i.nct_id, lower(i.name) AS txt FROM aact.interventions i WHERE i.nct_id IN (SELECT nct_id FROM leukemia_trials) UNION SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o WHERE o.nct_id IN (SELECT nct_id FROM leukemia_trials)) SELECT COUNT(DISTINCT tn.nct_id) AS n FROM trial_names tn JOIN btk_names b ON strpos(tn.txt, b.name) > 0",
       "error": null
      }
-    ]
+    ],
+    "seconds": 2.26
    },
    "C": {
     "answer": 269.0,
@@ -373,7 +392,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?leucemia rdfs:label \"Leukemia\"@en .\n  ?trial a :Trial ;\n         :condition ?c ;\n         :testsDrug ?drug .\n  ?c :within ?leucemia .\n  ?drug :hasTarget ?target .\n  ?target :gene \"BTK\" .\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.12
    }
   },
   "q11": {
@@ -396,7 +416,8 @@
       "query": "SELECT s.name FROM aact.sponsors s JOIN aact.studies st ON st.nct_id = s.nct_id WHERE s.lead_or_collaborator = 'lead' AND s.agency_class = 'INDUSTRY' AND st.phase IN ('PHASE3', 'PHASE2/PHASE3') AND EXISTS (SELECT 1 FROM aact.browse_conditions bc WHERE bc.nct_id = st.nct_id AND bc.downcase_mesh_term = 'colorectal neoplasms') GROUP BY s.name ORDER BY COUNT(DISTINCT st.nct_id) DESC LIMIT 1",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.2
    },
    "C": {
     "answer": [
@@ -407,7 +428,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?sponsorName WHERE {\n  ?t a :Trial ;\n     :phase ?phase ;\n     :sponsor ?s ;\n     :condition ?c .\n  ?c :within ?crc .\n  ?crc rdfs:label \"Colorectal Neoplasms\"@en .\n  ?s :industry true ;\n     :name ?sponsorName .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n}\nGROUP BY ?sponsorName\nORDER BY DESC(COUNT(DISTINCT ?t))\nLIMIT 1",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.15
    }
   },
   "q12": {
@@ -424,7 +446,8 @@
       "query": "SELECT COUNT(DISTINCT s.nct_id) AS n FROM aact.studies s WHERE EXISTS (SELECT 1 FROM aact.browse_conditions bc WHERE bc.nct_id = s.nct_id AND bc.downcase_mesh_term LIKE '%melanoma%') AND (EXISTS (SELECT 1 FROM aact.interventions i WHERE i.nct_id = s.nct_id AND (i.name ILIKE '%nivolumab%' OR i.name ILIKE '%opdivo%' OR i.name ILIKE '%bms-936558%' OR i.name ILIKE '%ono-4538%' OR i.name ILIKE '%mdx-1106%')) OR EXISTS (SELECT 1 FROM aact.intervention_other_names o WHERE o.nct_id = s.nct_id AND (o.name ILIKE '%nivolumab%' OR o.name ILIKE '%opdivo%' OR o.name ILIKE '%bms-936558%' OR o.name ILIKE '%ono-4538%' OR o.name ILIKE '%mdx-1106%')))",
       "error": null
      }
-    ]
+    ],
+    "seconds": 1.26
    },
    "C": {
     "answer": 293.0,
@@ -433,7 +456,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :testsDrug ?d ;\n     :condition ?c .\n  ?d :name \"NIVOLUMAB\" .\n  ?c :within ?m .\n  ?m rdfs:label \"Melanoma\"@en .\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.09
    }
   },
   "q13": {
@@ -454,7 +478,8 @@
       "query": "WITH approved AS MATERIALIZED (\n  SELECT DISTINCT p.chembl_id AS parent_id\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id\n  JOIN chembl.molecule_dictionary p ON p.chembl_id = COALESCE(md.parent_chembl_id, md.chembl_id)\n  WHERE tc.gene_symbol = 'AR' AND p.max_phase = 4\n),\nmols AS MATERIALIZED (\n  SELECT md.chembl_id, md.pref_name\n  FROM chembl.molecule_dictionary md\n  JOIN approved a ON a.parent_id = COALESCE(md.parent_chembl_id, md.chembl_id)\n),\ndrug_names AS MATERIALIZED (\n  SELECT DISTINCT lower(trim(n)) AS name FROM (\n    SELECT pref_name AS n FROM mols\n    UNION\n    SELECT ms.synonyms FROM chembl.molecule_synonyms ms JOIN mols m ON m.chembl_id = ms.chembl_id\n  ) x\n  WHERE n IS NOT NULL AND length(trim(n)) >= 4\n),\nprostate AS MATERIALIZED (\n  SELECT DISTINCT nct_id FROM aact.browse_conditions\n  WHERE downcase_mesh_term = 'prostatic neoplasms'\n),\ntrial_texts AS MATERIALIZED (\n  SELECT i.nct_id, lower(i.name) AS txt FROM aact.interventions i JOIN prostate p ON p.nct_id = i.nct_id\n  UNION\n  SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o JOIN prostate p ON p.nct_id = o.nct_id\n)\nSELECT COUNT(DISTINCT t.nct_id) AS n\nFROM trial_texts t\nJOIN drug_names d ON position(d.name IN t.txt) > 0",
       "error": null
      }
-    ]
+    ],
+    "seconds": 1.81
    },
    "C": {
     "answer": 658.0,
@@ -463,7 +488,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?prostata rdfs:label \"Prostatic Neoplasms\"@en .\n  ?trial a :Trial ;\n         :condition ?c ;\n         :testsDrug ?drug .\n  ?c :within ?prostata .\n  ?drug :approved true ;\n        :hasTarget ?target .\n  ?target :gene \"AR\" .\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.07
    }
   },
   "q14": {
@@ -480,7 +506,8 @@
       "query": "SELECT COUNT(DISTINCT s.nct_id) AS n FROM aact.studies s JOIN aact.browse_conditions bc ON bc.nct_id = s.nct_id WHERE bc.downcase_mesh_term = 'pancreatic neoplasms' AND s.overall_status IN ('TERMINATED', 'WITHDRAWN')",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.07
    },
    "C": {
     "answer": 569.0,
@@ -489,7 +516,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :status ?status ;\n     :condition ?c .\n  ?c :within ?pancreas .\n  ?pancreas rdfs:label \"Pancreatic Neoplasms\"@en .\n  FILTER(?status IN (\"TERMINATED\", \"WITHDRAWN\"))\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.04
    }
   },
   "q15": {
@@ -506,7 +534,8 @@
       "query": "SELECT COALESCE(SUM(r.serious), 0) AS serious_reports FROM openfda.reports_by_year r WHERE r.query_id IN (SELECT DISTINCT COALESCE(m.parent_chembl_id, m.chembl_id) FROM chembl.molecule_dictionary m WHERE m.pref_name = 'OSIMERTINIB')",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.01
    },
    "C": {
     "answer": 30448.0,
@@ -515,7 +544,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (SUM(?serious) AS ?total) WHERE {\n  ?yr a :YearlyReports ;\n      :drug ?d ;\n      :seriousReports ?serious .\n  ?d :name \"OSIMERTINIB\" .\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.01
    }
   },
   "q16": {
@@ -532,7 +562,8 @@
       "query": "WITH mm AS (SELECT DISTINCT nct_id FROM aact.browse_conditions WHERE downcase_mesh_term = 'multiple myeloma'), names AS (SELECT lower(trim(i.name)) AS n FROM aact.interventions i JOIN mm ON mm.nct_id = i.nct_id WHERE upper(i.intervention_type) IN ('DRUG','BIOLOGICAL') UNION SELECT lower(trim(o.name)) FROM aact.intervention_other_names o JOIN aact.interventions i ON i.id = o.intervention_id JOIN mm ON mm.nct_id = i.nct_id WHERE upper(i.intervention_type) IN ('DRUG','BIOLOGICAL')), chem AS (SELECT lower(trim(pref_name)) AS n, coalesce(parent_chembl_id, chembl_id) AS p FROM chembl.molecule_dictionary WHERE pref_name IS NOT NULL UNION SELECT lower(trim(s.synonyms)), coalesce(m.parent_chembl_id, m.chembl_id) FROM chembl.molecule_synonyms s JOIN chembl.molecule_dictionary m ON m.chembl_id = s.chembl_id) SELECT count(DISTINCT chem.p) AS n_farmacos FROM names JOIN chem ON chem.n = names.n",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.3
    },
    "C": {
     "answer": 604.0,
@@ -541,7 +572,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?drug) AS ?n) WHERE {\n  ?mm rdfs:label \"Multiple Myeloma\"@en .\n  ?c :within ?mm .\n  ?trial a :Trial ;\n         :condition ?c ;\n         :testsDrug ?drug .\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.04
    }
   },
   "q17": {
@@ -558,7 +590,8 @@
       "query": "WITH tigit_parents AS (SELECT DISTINCT COALESCE(dm.parent_chembl_id, dm.chembl_id) AS parent_id FROM chembl.drug_mechanism dm JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id WHERE upper(tc.gene_symbol) = 'TIGIT'), tigit_mols AS (SELECT md.chembl_id, md.pref_name FROM chembl.molecule_dictionary md WHERE md.parent_chembl_id IN (SELECT parent_id FROM tigit_parents) OR md.chembl_id IN (SELECT parent_id FROM tigit_parents)), drug_names AS (SELECT DISTINCT lower(trim(n)) AS name FROM (SELECT pref_name AS n FROM tigit_mols UNION SELECT ms.synonyms FROM chembl.molecule_synonyms ms JOIN tigit_mols tm ON tm.chembl_id = ms.chembl_id) x WHERE n IS NOT NULL AND length(trim(n)) >= 5), trial_names AS (SELECT i.nct_id, lower(i.name) AS name FROM aact.interventions i WHERE i.intervention_type IN ('DRUG','BIOLOGICAL','COMBINATION_PRODUCT','OTHER') OR i.intervention_type IS NULL UNION SELECT ion.nct_id, lower(ion.name) FROM aact.intervention_other_names ion) SELECT COUNT(DISTINCT s.nct_id) AS n FROM aact.studies s JOIN trial_names t ON t.nct_id = s.nct_id JOIN drug_names d ON t.name LIKE '%' || d.name || '%' WHERE s.overall_status IN ('RECRUITING','ACTIVE_NOT_RECRUITING','NOT_YET_RECRUITING','ENROLLING_BY_INVITATION')",
       "error": null
      }
-    ]
+    ],
+    "seconds": 2.24
    },
    "C": {
     "answer": 34.0,
@@ -567,7 +600,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?trial a :Trial ;\n         :status ?status ;\n         :testsDrug ?drug .\n  ?drug :hasTarget ?target .\n  ?target :gene \"TIGIT\" .\n  FILTER(?status IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.02
    }
   },
   "q18": {
@@ -653,7 +687,8 @@
       "query": "WITH target_drugs AS (SELECT DISTINCT COALESCE(md.parent_chembl_id, md.chembl_id) AS parent_id FROM chembl.drug_mechanism dm JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id WHERE tc.gene_symbol IN ('PDCD1','CD274')), drug_names AS (SELECT td.parent_id, lower(m.pref_name) AS nm FROM target_drugs td JOIN chembl.molecule_dictionary m ON COALESCE(m.parent_chembl_id, m.chembl_id) = td.parent_id WHERE m.pref_name IS NOT NULL UNION SELECT td.parent_id, lower(s.synonyms) FROM target_drugs td JOIN chembl.molecule_dictionary m ON COALESCE(m.parent_chembl_id, m.chembl_id) = td.parent_id JOIN chembl.molecule_synonyms s ON s.chembl_id = m.chembl_id WHERE s.synonyms IS NOT NULL AND length(s.synonyms) >= 5), lung_trials AS (SELECT DISTINCT s.nct_id FROM aact.studies s JOIN aact.browse_conditions bc ON bc.nct_id = s.nct_id WHERE s.phase IN ('PHASE3','PHASE2/PHASE3') AND bc.downcase_mesh_term = 'lung neoplasms'), trial_texts AS (SELECT i.nct_id, lower(i.name) AS txt FROM aact.interventions i JOIN lung_trials lt ON lt.nct_id = i.nct_id UNION SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o JOIN lung_trials lt ON lt.nct_id = o.nct_id) SELECT DISTINCT pm.pref_name FROM drug_names dn JOIN trial_texts tt ON position(dn.nm IN tt.txt) > 0 JOIN chembl.molecule_dictionary pm ON pm.chembl_id = dn.parent_id WHERE pm.pref_name IS NOT NULL ORDER BY pm.pref_name",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.56
    },
    "C": {
     "answer": [
@@ -685,7 +720,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?pulmon rdfs:label \"Lung Neoplasms\"@en .\n  ?trial a :Trial ;\n         :phase ?phase ;\n         :condition ?c ;\n         :testsDrug ?drug .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c :within ?pulmon .\n  ?drug :name ?name ;\n        :hasTarget ?target .\n  ?target :gene ?gene .\n  FILTER(?gene IN (\"PDCD1\", \"CD274\"))\n}\nORDER BY ?name",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.06
    }
   },
   "q19": {
@@ -702,7 +738,8 @@
       "query": "SELECT COUNT(DISTINCT s.nct_id) AS n FROM aact.studies s WHERE s.start_date >= DATE '2020-01-01' AND EXISTS (SELECT 1 FROM aact.browse_conditions bc WHERE bc.nct_id = s.nct_id AND (bc.downcase_mesh_term = 'lymphoma' OR bc.downcase_mesh_term LIKE '%lymphoma%')) AND (EXISTS (SELECT 1 FROM aact.interventions i WHERE i.nct_id = s.nct_id AND (i.name ILIKE '%rituximab%' OR i.name ILIKE '%rituxan%' OR i.name ILIKE '%mabthera%')) OR EXISTS (SELECT 1 FROM aact.intervention_other_names o WHERE o.nct_id = s.nct_id AND (o.name ILIKE '%rituximab%' OR o.name ILIKE '%rituxan%' OR o.name ILIKE '%mabthera%')))",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.62
    },
    "C": {
     "answer": 309.0,
@@ -711,7 +748,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :testsDrug ?d ;\n     :condition ?c ;\n     :startDate ?date .\n  ?d :name \"RITUXIMAB\" .\n  ?l rdfs:label \"Lymphoma\"@en .\n  ?c :within ?l .\n  FILTER(?date >= \"2020-01-01\"^^xsd:date)\n}",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.15
    }
   },
   "q20": {
@@ -853,7 +891,8 @@
       "query": "WITH mech AS (SELECT DISTINCT COALESCE(md.parent_chembl_id, md.chembl_id) AS parent_id, tc.gene_symbol FROM chembl.drug_mechanism dm JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id WHERE tc.gene_symbol IS NOT NULL), imat AS (SELECT DISTINCT COALESCE(parent_chembl_id, chembl_id) AS parent_id FROM chembl.molecule_dictionary WHERE pref_name IN ('IMATINIB', 'IMATINIB MESYLATE')), imat_genes AS (SELECT DISTINCT m.gene_symbol FROM mech m JOIN imat i ON i.parent_id = m.parent_id) SELECT DISTINCT p.pref_name FROM mech m JOIN imat_genes g ON g.gene_symbol = m.gene_symbol JOIN chembl.molecule_dictionary p ON p.chembl_id = m.parent_id WHERE m.parent_id NOT IN (SELECT parent_id FROM imat) AND p.pref_name IS NOT NULL ORDER BY p.pref_name",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.02
    },
    "C": {
     "answer": [
@@ -911,7 +950,8 @@
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?imatinib a :Drug ;\n            :name \"IMATINIB\" ;\n            :hasTarget ?target .\n  ?drug a :Drug ;\n        :hasTarget ?target ;\n        :name ?name .\n  FILTER(?drug != ?imatinib)\n}\nORDER BY ?name",
       "error": null
      }
-    ]
+    ],
+    "seconds": 0.01
    }
   }
  },
