@@ -14,5 +14,6 @@ description: Cerrar un paso o una fase del plan de Rastro (marcar el plan, docum
    grep -E '^(AACT_USER|AACT_PASSWORD|OPENFDA_API_KEY)=.+' .env.example   # no debe imprimir nada
    git status --short                                                    # nada de .env ni data/raw
    ```
+   Y que no haya nombres de productos ni empresas comerciales de grafos de conocimiento (ver `CLAUDE.md`).
 6. **Commit en español**, con el formato `Fase N: <qué cambió>` y viñetas cortas en el cuerpo.
 7. **Push solo si el usuario lo pide.**

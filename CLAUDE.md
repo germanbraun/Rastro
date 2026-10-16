@@ -21,6 +21,7 @@ Es un MVP comercial: lo tiene que entender alguien de ventas.
 - **Secretos solo en `.env`**, nunca en `.env.example` ni en commits. Antes de commitear, revisá que `.env.example` tenga los valores vacíos.
 - **Cada carga se registra** en `rastro_meta.load_run`, para que el conteo por fuente y la procedencia funcionen.
 - **Decisiones** en `docs/decisions.md`: una entrada corta por decisión, con el porqué.
+- **Sin nombres de productos ni empresas comerciales de grafos de conocimiento** en el repo (interfaz, docs, código, commits). Para hablar de interoperabilidad, decir "otras plataformas o herramientas de grafos de conocimiento".
 
 ## Comandos
 
