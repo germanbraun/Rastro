@@ -1,0 +1,20 @@
+<section id="porque" style="background:#F7F6F2;color:#14213D;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué funciona</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.1;width:1600px">Lo difícil se hace una vez, y se revisa</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1;background:#FFFFFF;border-top:8px solid #2F6FB5;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:22px">
+<p style="font-size:26px;color:#2F6FB5;font-weight:700;text-transform:uppercase;letter-spacing:1px">Heterogeneidad de datos</p>
+<p style="font-size:32px;line-height:1.35">La misma entidad, escrita distinto en los valores</p>
+<p style="font-size:28px;line-height:1.5;background:#F7F6F2;border-radius:12px;padding:20px 24px">«Pembrolizumab 200 mg»<br>→ CHEMBL3137343</p>
+<p style="font-size:30px;line-height:1.4"><b>Lo resuelve el entity linking:</b> crea la clave que falta entre ensayos y fármacos, una vez.</p>
+</div>
+<div style="flex:1;background:#FFFFFF;border-top:8px solid #14213D;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:22px">
+<p style="font-size:26px;color:#14213D;font-weight:700;text-transform:uppercase;letter-spacing:1px">Heterogeneidad de esquema</p>
+<p style="font-size:32px;line-height:1.35">El mismo concepto, en columnas distintas</p>
+<p style="font-size:28px;line-height:1.5;background:#F7F6F2;border-radius:12px;padding:20px 24px">query_id · chembl_id · parent_chembl_id<br>→ Fármaco</p>
+<p style="font-size:30px;line-height:1.4"><b>Lo resuelven los mapeos:</b> las tres columnas pasan a ser un solo concepto.</p>
+</div>
+</div>
+<p style="font-size:30px;color:#4A5568">Después, Ontop une todo solo: cada pregunta usa la misma definición.</p>
+<aside>Dos tipos de heterogeneidad, cada uno con su solución. De datos: el ensayo dice «Pembrolizumab 200 mg» y ChEMBL dice CHEMBL3137343; ningún igual de SQL los une, así que el entity linking crea esa clave una vez y se revisa a mano. De esquema: openFDA llama al fármaco query_id, ChEMBL chembl_id y la tabla de enlaces parent_chembl_id; los mapeos dicen que las tres son el mismo Fármaco. La lista completa está en docs/integracion.md.</aside>
+</section>
