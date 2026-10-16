@@ -154,3 +154,12 @@ Pendiente, si se quiere medir: un cuarto enfoque, "LLM + SQL sobre las tablas de
 ## 2026-10-16 — Las explicaciones van en Preguntas frecuentes
 
 La demo se mantiene corta: cada pestaña muestra lo esencial y una línea que manda a "Preguntas frecuentes". Las explicaciones viven en `app/faq.yaml`, una pregunta y una respuesta corta por entrada, editable sin tocar código. Los números de las respuestas (reintentos, tiempos, formas de reconocer un fármaco) los completa la app desde la evaluación guardada, así que no quedan desactualizados.
+
+## 2026-10-16 — Hacer visible la unificación de columnas de los mapeos
+
+Una parte central de la capa semántica es que columnas distintas que significan lo mismo terminan en el mismo concepto: openFDA identifica un fármaco con `query_id`, ChEMBL con `chembl_id` y los enlaces con `parent_chembl_id`, y los mapeos los unen en un solo `:Drug`. Rastro ya lo hacía, pero no se veía. Ahora:
+
+- una pregunta frecuente lo explica con una tabla **generada desde `mappings/rastro.r2rml.ttl`**, que no se desactualiza cuando cambian los mapeos;
+- el diagrama "Cómo responde cada forma" (`app/como-funciona.svg`, en la pestaña de comparación) lo menciona en la capa de Ontop.
+
+Las condiciones usan los identificadores de MeSH, así que un descriptor en Postgres y el mismo en GraphDB son la misma entidad.

@@ -14,6 +14,7 @@ import os
 import sys
 from pathlib import Path
 
+import base64
 import re
 
 import pandas as pd
@@ -60,6 +61,50 @@ def questions():
 @st.cache_data
 def saved():
     return json.loads((EVAL / "results.json").read_text())
+
+
+@st.cache_data
+def unified_columns():
+    """Desde los mapeos R2RML: qué columnas distintas terminan en el mismo concepto."""
+    import collections
+
+    import rdflib
+
+    rr = rdflib.Namespace("http://www.w3.org/ns/r2rml#")
+    g = rdflib.Graph().parse("/mappings/rastro.r2rml.ttl")
+    schema_name = {"aact": "AACT", "chembl": "ChEMBL", "openfda": "openFDA", "mesh": "MeSH",
+                   "linking": "enlaces de Rastro", "rastro_meta": "registro de fuentes"}
+    entity_name = {"drug": "Fármaco", "trial": "Ensayo", "sponsor": "Sponsor", "target": "Target",
+                   "2026": "Condición (descriptor de MeSH)"}
+
+    def table(tm):
+        lt = g.value(tm, rr.logicalTable)
+        text = str(g.value(lt, rr.tableName) or g.value(lt, rr.sqlQuery))
+        found = re.search(r"FROM\s+([\w.]+)", text, re.I)
+        return found.group(1) if found else text
+
+    def column(t, c):
+        schema, name = t.split(".", 1)
+        return f"`{name}.{c}` ({schema_name.get(schema, schema)})"
+
+    entities, attributes = collections.defaultdict(set), collections.defaultdict(set)
+    for tm in g.subjects(rdflib.RDF.type, rr.TriplesMap):
+        t = table(tm)
+        templates = [g.value(g.value(tm, rr.subjectMap), rr.template)]
+        for pom in g.objects(tm, rr.predicateObjectMap):
+            om = g.value(pom, rr.objectMap)
+            templates.append(g.value(om, rr.template))
+            if g.value(om, rr.column):
+                attributes[str(g.value(pom, rr.predicate)).split("#")[-1]].add(column(t, g.value(om, rr.column)))
+        for tpl in filter(None, templates):
+            key = str(tpl).rstrip("/").split("{")[0].rstrip("/").rsplit("/", 1)[-1]
+            entities[key].add(column(t, re.findall(r"\{(\w+)\}", str(tpl))[0]))
+
+    lines = ["| Concepto en Rastro | Columnas de las fuentes que lo forman |", "|---|---|"]
+    lines += [f"| **{entity_name.get(k, k)}** | {', '.join(sorted(v))} |"
+              for k, v in entities.items() if len(v) > 1]
+    lines += [f"| atributo **:{k}** | {', '.join(sorted(v))} |" for k, v in attributes.items() if len(v) > 1]
+    return "\n".join(lines)
 
 
 @st.cache_data
@@ -256,6 +301,10 @@ with compare_tab:
         col.caption(help_text[k])
     st.info("La diferencia no está en cuántas acierta, sino en **cuánto podés confiar en cada "
             "respuesta**. " + FAQ_HINT)
+    with st.expander("Cómo responde cada forma", expanded=True):
+        svg = base64.b64encode(Path("/app/como-funciona.svg").read_bytes()).decode()
+        st.markdown(f'<img src="data:image/svg+xml;base64,{svg}" style="width:100%">',
+                    unsafe_allow_html=True)
 
     st.subheader("Pregunta por pregunta")
     st.caption("🔁 marca las preguntas en las que el SQL directo necesitó más de un intento.")
@@ -353,6 +402,7 @@ with faq_tab:
         "secs_c": f"{sum(e['C'].get('seconds', 0) for e in data.values()):.0f}",
         "retries_b": sum(len(e["B"]["attempts"]) > 1 for e in data.values()),
         "retries_c": sum(len(e["C"]["attempts"]) > 1 for e in data.values()),
+        "unified_columns": unified_columns(),
     }
     for item in faq():
         with st.expander(item["question"]):

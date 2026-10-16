@@ -70,6 +70,16 @@
 
     Revisado a mano sobre muestras al azar: **98-99 % de los enlaces son correctos**. Un entity linking más sofisticado usaría el contexto, con un modelo o un LLM. Acá no hizo falta, porque los nombres de fármacos son muy específicos. Las reglas están en linking/drugs.sql y la revisión, en linking/review-2026-10-16.md.
 
+- question: ¿Cómo junta Rastro columnas distintas que significan lo mismo?
+  answer: |-
+    Con los **mapeos** (R2RML). Cada fuente llama a las cosas a su manera: openFDA identifica un fármaco con `query_id`, ChEMBL con `chembl_id`, y los enlaces con `parent_chembl_id`. Los mapeos dicen que todas esas columnas son **el mismo concepto**, así que en Rastro hay un solo «Fármaco», con sus ensayos, sus targets y sus eventos adversos juntos.
+
+    Esta tabla sale directamente de los mapeos (mappings/rastro.r2rml.ttl):
+
+    {unified_columns}
+
+    Las condiciones usan los mismos identificadores que MeSH (`http://id.nlm.nih.gov/mesh/...`), así que un descriptor en Postgres y el mismo descriptor en GraphDB son la misma entidad.
+
 - question: ¿Rastro vincula otras cosas, además de los fármacos?
   answer: |-
     Sí, con la misma idea:

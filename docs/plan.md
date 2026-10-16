@@ -88,6 +88,7 @@ En Streamlit (`app/`), en http://localhost:8501 con `docker compose up`.
 - [x] Dónde vive cada fuente (🐘 Postgres, 🕸️ GraphDB) y una explicación de cómo funciona
 - [x] El historial de intentos de cada query: qué falló y qué escribió el LLM después
 - [x] Preguntas frecuentes en una pestaña (`app/faq.yaml`), en lugar de más texto en pantalla
+- [x] Un diagrama de cómo responde cada forma, y la unificación de columnas de los mapeos visible
 - [ ] Ensayar la demo de 3 minutos con alguien que no sea técnico
 
 **Checkpoint:** demo de 3 minutos sin tocar la terminal.
