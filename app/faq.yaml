@@ -94,6 +94,14 @@
 
     Las condiciones usan los mismos identificadores que MeSH (`http://id.nlm.nih.gov/mesh/...`), así que un descriptor en Postgres y el mismo descriptor en GraphDB son la misma entidad.
 
+- question: Si Ontop y los mapeos resuelven los cruces, ¿para qué la tabla de enlaces?
+  answer: |-
+    Porque los mapeos resuelven la heterogeneidad **de esquema**, no la **de datos**.
+
+    Ontop une dos tablas cuando comparten un **valor igual**: el `query_id` de openFDA y el `chembl_id` de ChEMBL valen los dos «CHEMBL941», así que la unión es automática. Pero entre AACT y ChEMBL no hay un valor en común: AACT dice «Pembrolizumab 200 mg» y ChEMBL dice `CHEMBL3137343`. Ningún mapeo puede inventar esa igualdad.
+
+    El entity linking **crea** la clave que falta (ensayo → `CHEMBL3137343`). Desde ahí, el mapeo y Ontop hacen el resto. Se calcula una vez porque, dentro del mapeo, Ontop tendría que comparar texto contra 130.000 intervenciones en cada pregunta. Más detalle en docs/integracion.md.
+
 - question: ¿Rastro vincula otras cosas, además de los fármacos?
   answer: |-
     Sí, con la misma idea:

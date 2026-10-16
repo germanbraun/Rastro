@@ -5,7 +5,7 @@ Dos MVPs sobre tecnologías semánticas, en oncología, con datos públicos (AAC
 - **Rastro Layer** — capa semántica virtual sobre fuentes heterogéneas y preguntas en lenguaje natural con trazabilidad de cada dato.
 - **Rastro Lab** — pipeline de data science que reutiliza la capa para generar features semánticas, con linaje y explicabilidad.
 
-El plan completo, por fases y con checkpoints, está en [docs/plan.md](docs/plan.md).
+El plan completo, por fases y con checkpoints, está en [docs/plan.md](docs/plan.md). Cómo se integran las fuentes (heterogeneidad de esquema y de datos), en [docs/integracion.md](docs/integracion.md).
 
 ## Estructura
 
