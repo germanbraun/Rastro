@@ -3,11 +3,12 @@
 # números de la evaluación guardada.
 
 - question: ¿Qué es Rastro?
-  answer: >-
-    Una capa que integra cuatro fuentes públicas de oncología y las describe con
-    conceptos de negocio: ensayo, fármaco, target, sponsor, evento adverso. Un LLM
-    pregunta sobre esos conceptos en lugar de adivinar cómo se cruzan las tablas, y
-    cada respuesta dice de dónde viene.
+  answer: |-
+    Una capa que integra cuatro fuentes públicas de oncología y las describe con conceptos de negocio: ensayo, fármaco, target, sponsor, evento adverso. Un LLM pregunta sobre esos conceptos en lugar de adivinar cómo se cruzan las tablas, y cada respuesta dice de dónde viene.
+
+    Técnicamente es un **Virtual Knowledge Graph** (VKG), también llamado acceso a datos basado en ontologías (OBDA): una **ontología** con el vocabulario del dominio, **mapeos** que la conectan con las fuentes, y un grafo **virtual**, que se consulta sin copiar los datos a otro lado. Usa los estándares del W3C para eso: RDF, OWL, R2RML y SPARQL.
+
+    Es un VKG pragmático: las fuentes se cargan primero en Postgres, y los enlaces y la jerarquía de MeSH quedan precalculados en tablas. Sobre eso, el grafo es virtual.
 
 - question: ¿Qué pasa cuando hago una pregunta?
   answer: |-
@@ -42,9 +43,22 @@
 
     ClinicalTrials.gov no dice "este ensayo prueba el fármaco X". Dice, en el texto que escribió cada sponsor, «Pembrolizumab 200 mg», «MK-3475» o «Keytruda». Para responder "¿cuántos ensayos prueban fármacos anti-EGFR?" primero hay que convertir ese texto en un fármaco concreto. El SQL directo lo improvisa en cada consulta, y ahí se equivoca: buscando pedazos de nombres, «humab» coincidió con «rhuMAb HER2» (trastuzumab, que no es anti-EGFR).
 
+- question: ¿Qué problemas de integración resuelve Rastro?
+  answer: |-
+    Las fuentes son **heterogéneas** de cuatro formas (según la clasificación del tutorial de Virtual Knowledge Graphs de Calvanese, Cogrel y Lanti, Ontobras 2022), y Rastro aborda las cuatro:
+
+    | Heterogeneidad | Ejemplo en Rastro | Cómo la resuelve |
+    |---|---|---|
+    | **De modelo de datos** | AACT y ChEMBL son tablas, openFDA es JSON y MeSH es RDF | Los cargadores las llevan a Postgres y a GraphDB |
+    | **De sistema** | AACT en un Postgres en la nube, ChEMBL y openFDA por API, MeSH como archivo | Un cargador por fuente |
+    | **De esquema** | openFDA dice `query_id`, ChEMBL `chembl_id`, y ambos son «Fármaco» | **Ontología y mapeos R2RML** |
+    | **De datos** | «Pembrolizumab 200 mg», «MK-3475» y «Keytruda» son el mismo fármaco | **Entity linking**, hecho una vez y revisado |
+
+    El SQL directo tiene que resolver las dos últimas dentro de cada consulta, y de ahí vienen sus errores y su lentitud. Las dos preguntas siguientes explican cada una.
+
 - question: ¿Cómo sabe Rastro qué fármaco prueba cada ensayo?
   answer: |-
-    Con **entity linking** (vinculación de entidades): cada mención de un fármaco en el texto de un ensayo se conecta con una entrada de una base de conocimiento, ChEMBL. Lo hace un programa, una sola vez, para las 130.000 intervenciones.
+    Con **entity linking** (vinculación de entidades), que resuelve la **heterogeneidad de datos**: cada mención de un fármaco en el texto de un ensayo se conecta con una entrada de una base de conocimiento, ChEMBL. Lo hace un programa, una sola vez, para las 130.000 intervenciones.
 
     **Entrada**, en AACT: `NCT05563467 · «Pembrolizumab 25 MG/ML [Keytruda]»`
 
@@ -72,7 +86,7 @@
 
 - question: ¿Cómo junta Rastro columnas distintas que significan lo mismo?
   answer: |-
-    Con los **mapeos** (R2RML). Cada fuente llama a las cosas a su manera: openFDA identifica un fármaco con `query_id`, ChEMBL con `chembl_id`, y los enlaces con `parent_chembl_id`. Los mapeos dicen que todas esas columnas son **el mismo concepto**, así que en Rastro hay un solo «Fármaco», con sus ensayos, sus targets y sus eventos adversos juntos.
+    Es la **heterogeneidad de esquemas**, y la resuelven la ontología y los **mapeos** (R2RML). Cada fuente llama a las cosas a su manera: openFDA identifica un fármaco con `query_id`, ChEMBL con `chembl_id`, y los enlaces con `parent_chembl_id`. Los mapeos dicen que todas esas columnas son **el mismo concepto**, así que en Rastro hay un solo «Fármaco», con sus ensayos, sus targets y sus eventos adversos juntos.
 
     Esta tabla sale directamente de los mapeos (mappings/rastro.r2rml.ttl):
 

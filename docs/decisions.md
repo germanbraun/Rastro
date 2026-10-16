@@ -163,3 +163,11 @@ Una parte central de la capa semántica es que columnas distintas que significan
 - el diagrama "Cómo responde cada forma" (`app/como-funciona.svg`, en la pestaña de comparación) lo menciona en la capa de Ontop.
 
 Las condiciones usan los identificadores de MeSH, así que un descriptor en Postgres y el mismo en GraphDB son la misma entidad.
+
+## 2026-10-16 — Rastro es un Virtual Knowledge Graph (VKG)
+
+Se adopta la terminología del tutorial *Designing Virtual Knowledge Graphs with Ontop and Ontopic Studio* (Calvanese, Cogrel y Lanti, Ontobras 2022, https://www.inf.ufrgs.br/ontobras/wp-content/uploads/2022/11/ontobras-2022-tutorial-vkgs.pdf):
+
+- **Rastro es un VKG** (también llamado OBDA): una ontología con el vocabulario del dominio, mapeos declarativos a las fuentes y un grafo virtual, con los estándares del W3C (RDF, OWL, R2RML, SPARQL).
+- **Cuatro tipos de heterogeneidad**: de modelo de datos y de sistema (los resuelven los cargadores), de esquema (ontología y mapeos) y de datos (entity linking). La demo lo explica así en "Preguntas frecuentes".
+- **Es un VKG pragmático:** las fuentes se cargan en Postgres (ETL) y los enlaces y la jerarquía de MeSH están precalculados. Sobre eso, el grafo es virtual.
