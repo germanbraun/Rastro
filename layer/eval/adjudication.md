@@ -1,5 +1,7 @@
 # Adjudicación: ¿quién tiene razón cuando B y C no coinciden?
 
+> Esta adjudicación la hizo un asistente de IA (Claude Code) revisando ensayos reales. Falta que una persona la confirme: [docs/verificacion-humana.md](../../docs/verificacion-humana.md).
+
 Las respuestas de referencia salen de Rastro. Por eso, cuando el SQL directo (B) y Rastro (C) dan resultados distintos, B podría tener razón y Rastro estar equivocado. Esto revisa, con ensayos reales, cada pregunta donde la diferencia cambia el puntaje.
 
 ## Lo que la evaluación encontró en Rastro (y ya está corregido)
@@ -54,7 +56,7 @@ Con un LLM fuerte, el SQL directo acierta casi tanto como Rastro (18 contra 20).
 
 Lo que eso significa:
 
-1. **Cada respuesta del SQL directo define las cosas a su manera.** "Ensayos que prueban el fármaco X" se calcula de cuatro formas distintas según la pregunta, así que dos respuestas del mismo sistema no son comparables. Rastro lo define una vez, lo revisa a mano y lo reusa.
+1. **Cada respuesta del SQL directo define las cosas a su manera.** "Ensayos que prueban el fármaco X" se calcula de cuatro formas distintas según la pregunta, así que dos respuestas del mismo sistema no son comparables. Rastro lo define una vez, lo revisa y lo reusa.
 2. **Sus errores no avisan.** 488 ensayos en vez de 438 parece razonable. Solo se descubre revisando ensayo por ensayo, como en esta adjudicación.
 3. **El costo de integrar se paga en cada pregunta.** Con SQL directo, el LLM rehace la integración en cada query: más tiempo, más tokens y más lugar para errores. Con Rastro se hace una vez, y Rastro Lab la reusa.
 4. **El LLM solo acertó 5 de 20**: listas de fármacos conocidos, pero ningún conteo.

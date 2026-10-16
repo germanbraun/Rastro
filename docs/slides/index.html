@@ -78,7 +78,7 @@ addEventListener('resize', fit); fit();
 </div>
 <div style="flex:1;display:flex;flex-direction:column;gap:28px">
 <div style="background:#14213D;color:#F7F6F2;border-radius:20px;padding:36px"><p style="font-size:28px;color:#8FB8E8">De dónde sale</p><p style="font-size:30px;line-height:1.4">Ensayos: AACT · Target HER2: ChEMBL · Cáncer de mama y subtipos: MeSH</p></div>
-<div style="background:#FFFFFF;border-radius:20px;padding:36px"><p style="font-size:28px;color:#4A5568">Largo de la consulta</p><p style="font-size:30px;line-height:1.4">SQL escrito a mano: <b>1.543</b> caracteres<br>Con Rastro: <b>435</b></p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:36px"><p style="font-size:28px;color:#4A5568">Largo de la consulta</p><p style="font-size:30px;line-height:1.4">SQL directo: <b>1.543</b> caracteres<br>Con Rastro: <b>435</b></p></div>
 </div>
 </div>
 <aside>Esta es la pregunta con la que abre la demo. Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. Rastro la responde en un segundo y muestra la fuente de cada columna.</aside>
@@ -132,7 +132,7 @@ addEventListener('resize', fit); fit();
 </div>
 </div>
 <p style="font-size:30px;color:#4A5568">Después, Ontop une todo solo: cada pregunta usa la misma definición.</p>
-<aside>Dos tipos de heterogeneidad, cada uno con su solución. De datos: el ensayo dice «Pembrolizumab 200 mg» y ChEMBL dice CHEMBL3137343; ningún igual de SQL los une, así que el entity linking crea esa clave una vez y se revisa a mano. De esquema: openFDA llama al fármaco query_id, ChEMBL chembl_id y la tabla de enlaces parent_chembl_id; los mapeos dicen que las tres son el mismo Fármaco. La lista completa está en docs/integracion.md.</aside>
+<aside>Dos tipos de heterogeneidad, cada uno con su solución. De datos: el ensayo dice «Pembrolizumab 200 mg» y ChEMBL dice CHEMBL3137343; ningún igual de SQL los une, así que el entity linking crea esa clave una vez y se revisa. De esquema: openFDA llama al fármaco query_id, ChEMBL chembl_id y la tabla de enlaces parent_chembl_id; los mapeos dicen que las tres son el mismo Fármaco. La lista completa está en docs/integracion.md.</aside>
 </section>
 </div>
 <div class="slide">
@@ -147,7 +147,7 @@ addEventListener('resize', fit); fit();
 <div style="display:flex;flex-direction:column;gap:20px;font-size:32px;line-height:1.4;width:1600px">
 <p><b>Honesto:</b> con las mismas tablas de enlaces, el SQL directo probablemente acertaría igual. El valor está en la integración revisada y en exponerla como vocabulario estándar, con fuente.</p>
 <p><b>Cobertura:</b> 19 % de las intervenciones de tipo fármaco todavía no se enlaza. Es una foto fija, no datos en vivo.</p>
-<p><b>Evaluación:</b> 20 preguntas propias, con cada diferencia revisada contra ensayos reales.</p>
+<p><b>Evaluación:</b> 20 preguntas propias. Las referencias y su revisión las hizo un asistente de IA; falta la confirmación humana.</p>
 </div>
 <aside>Conviene decir los límites antes de que los pregunten. El valor no es magia del LLM: es la integración hecha y revisada. Si alguien le da al SQL directo las mismas tablas de enlaces, se acerca. Lo que Rastro agrega es que eso queda como un vocabulario que se documenta solo, estándar y con la fuente de cada dato.</aside>
 </section>

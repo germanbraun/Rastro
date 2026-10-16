@@ -15,7 +15,7 @@ El plan completo, por fases y con checkpoints, está en [docs/plan.md](docs/plan
 | `data/` | scripts de descarga y carga (los datos no se versionan) |
 | `ontology/` | preguntas de competencia, ontología y una query por pregunta |
 | `mappings/` | mapeos R2RML (`rastro.r2rml.ttl`), que lee Ontop |
-| `linking/` | enlaces de ensayos con MeSH y ChEMBL, en SQL legible, y su revisión a mano |
+| `linking/` | enlaces de ensayos con MeSH y ChEMBL, en SQL legible, y su revisión |
 | `layer/` | Rastro Layer: preguntas en lenguaje natural (`answer.py`) y su evaluación (`eval/`) |
 | `lab/` | Rastro Lab: features, modelos, linaje |
 | `app/` | la demo (Streamlit) |

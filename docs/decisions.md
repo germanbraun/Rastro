@@ -85,7 +85,7 @@ Los enlaces están en SQL legible en `linking/`:
 - **Condiciones:** el término MeSH que trae AACT igual a la etiqueta del descriptor. 99,8 % de los ensayos.
 - **Fármacos:** nombre normalizado (minúsculas, sin marca entre corchetes o paréntesis, sin puntuación, sin vía ni forma al final) contra nombres y sinónimos de ChEMBL sin ambigüedad. En orden: nombre, alias, partes de una combinación ("A + B") y un diccionario de 10 regímenes (FOLFOX, R-CHOP…).
 
-Resultado: 74,4 % de las intervenciones enlazadas y 99 de 100 correctas en la revisión a mano. El plan preveía un LLM para los casos ambiguos, pero con este nivel no hace falta para el MVP. Lo que no enlaza es sobre todo lo que no es un fármaco ("placebo", "chemotherapy").
+Resultado: 74,4 % de las intervenciones enlazadas y 99 de 100 correctas en la revisión de una muestra (hecha con IA, pendiente de revisión humana). El plan preveía un LLM para los casos ambiguos, pero con este nivel no hace falta para el MVP. Lo que no enlaza es sobre todo lo que no es un fármaco ("placebo", "chemotherapy").
 
 ## 2026-10-16 — Tipos explícitos en mapeos con GROUP BY o DISTINCT
 
@@ -117,7 +117,7 @@ El LLM es intercambiable (`RASTRO_PROVIDER`): Claude API, Ollama en la Mac, o a 
 
 Como las referencias salen de Rastro, la ventaja de C podía ser en parte circular. Se revisaron con ensayos reales las preguntas donde B y C diferían (`layer/eval/adjudication.md`). B tenía razón en varios casos, y eso llevó a corregir Rastro:
 
-- **Regla "nombre como palabra entera"** para dosis, separadores y texto libre ("Pembrolizumab 200 mg", "Nivolumab or Pembrolizumab"): 94 % de precisión revisada a mano, cobertura de 74 % a 81 % de las intervenciones.
+- **Regla "nombre como palabra entera"** para dosis, separadores y texto libre ("Pembrolizumab 200 mg", "Nivolumab or Pembrolizumab"): 94 % de precisión en una muestra revisada con IA, cobertura de 74 % a 81 % de las intervenciones.
 - **El nombre preferido de ChEMBL gana sobre los sinónimos de otros fármacos.** ChEMBL lista "bicalutamide" como sinónimo de talazoparib, y eso dejaba sin enlazar todos los ensayos con bicalutamida.
 - **Prodrogas:** ChEMBL trata a la abiraterona y su acetato como familias distintas. Ahora una prodroga actúa sobre los targets de su molécula activa (`active_chembl_id` de ChEMBL).
 - **Una pregunta ambigua** (q08, ¿"fase 2" incluye 1/2 y 2/3?) se reescribió y se volvió a responder. Con la definición clara, SQL directo y Rastro coinciden.
@@ -147,7 +147,7 @@ Cada fuente lleva un ícono según dónde vive: 🐘 Postgres (AACT, ChEMBL, ope
 
 ## 2026-10-16 — Posicionamiento: el valor es la integración revisada
 
-Rastro acierta porque la parte difícil (qué ensayo prueba qué fármaco) se resolvió una vez, con reglas explícitas, y se revisó a mano. Si al SQL directo le diéramos las mismas tablas de enlaces, probablemente acertaría casi todas. El mensaje honesto es: **el valor de Rastro es la integración revisada, expuesta como un vocabulario de negocio**. La capa semántica la hace estable ante cambios de tablas, autodocumentada, estándar y con procedencia por dato. La demo lo explica así en "Por qué Rastro acierta".
+Rastro acierta porque la parte difícil (qué ensayo prueba qué fármaco) se resolvió una vez, con reglas explícitas, y se revisó sobre muestras. Si al SQL directo le diéramos las mismas tablas de enlaces, probablemente acertaría casi todas. El mensaje honesto es: **el valor de Rastro es la integración revisada, expuesta como un vocabulario de negocio**. La capa semántica la hace estable ante cambios de tablas, autodocumentada, estándar y con procedencia por dato. La demo lo explica así en "Por qué Rastro acierta".
 
 Pendiente, si se quiere medir: un cuarto enfoque, "LLM + SQL sobre las tablas de Rastro", para separar cuánto aporta la integración y cuánto la capa semántica.
 
@@ -171,3 +171,8 @@ Se adopta la terminología del tutorial *Designing Virtual Knowledge Graphs with
 - **Rastro es un VKG** (también llamado OBDA): una ontología con el vocabulario del dominio, mapeos declarativos a las fuentes y un grafo virtual, con los estándares del W3C (RDF, OWL, R2RML, SPARQL).
 - **Cuatro tipos de heterogeneidad**: de modelo de datos y de sistema (los resuelven los cargadores), de esquema (ontología y mapeos) y de datos (entity linking). La demo lo explica así en "Preguntas frecuentes".
 - **Es un VKG pragmático:** las fuentes se cargan en Postgres (ETL) y los enlaces y la jerarquía de MeSH están precalculados. Sobre eso, el grafo es virtual.
+
+## 2026-10-16 — Las referencias de la evaluación las hizo una IA
+
+Las 20 preguntas, sus respuestas de referencia, la adjudicación y la revisión de enlaces las hizo Claude Code, no una persona. Los números salen de ejecutar queries y de un puntaje automático, pero si la referencia está mal, el puntaje también. Por eso los documentos dejan de decir "revisado a mano" y dicen que falta la revisión humana, hasta completar `docs/verificacion-humana.md` (una hora, sin conocimientos técnicos). Al revisar el control contra la web de ClinicalTrials.gov apareció que la web da 15-30 % más que Rastro en conteos por enfermedad, porque busca con sinónimos propios: conviene tenerlo listo si un cliente compara.
+

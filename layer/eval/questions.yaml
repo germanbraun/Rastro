@@ -4,8 +4,9 @@
 #   kind: "lista" (nombres) o "número"
 #   items: qué se nombra en una lista (fármacos, sponsors, genes, reacciones);
 #          los fármacos se comparan por sinónimos de ChEMBL, el resto por texto
-#   reference: SPARQL escrito a mano sobre Rastro que da la respuesta correcta,
-#              en una sola columna ?answer
+#   reference: SPARQL sobre Rastro que da la respuesta correcta, en una sola
+#              columna ?answer. La escribió un asistente de IA (Claude Code), no el
+#              LLM evaluado; falta confirmarla: docs/verificacion-humana.md
 #
 # Convenciones que las preguntas dicen explícitamente, para que cualquier enfoque
 # pueda responderlas: "ensayos de X" incluye los subtipos de X en MeSH; "detenido"

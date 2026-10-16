@@ -42,7 +42,7 @@
 - question: Si el SQL directo acierta 18 de 20 y Rastro 20, ¿cuál es la ventaja?
   answer: |-
     La diferencia no está en cuántas acierta, sino en cuánto podés confiar en cada respuesta:
-    - **Definiciones distintas en cada respuesta.** En {reinvented} de 20 preguntas, el SQL directo tuvo que inventar cómo reconocer un fármaco, y lo hizo de {n_methods} formas distintas. Rastro usa siempre el mismo enlace, revisado a mano.
+    - **Definiciones distintas en cada respuesta.** En {reinvented} de 20 preguntas, el SQL directo tuvo que inventar cómo reconocer un fármaco, y lo hizo de {n_methods} formas distintas. Rastro usa siempre el mismo enlace, revisado sobre una muestra.
     - **Errores que no avisan.** Sus respuestas incorrectas parecen razonables (488 ensayos en vez de 438).
     - **Más lento y más frágil.** Sus 20 consultas tardan {secs_b} s y {retries_b} necesitaron reintento; las de Rastro, {secs_c} s y {retries_c} reintentos.
     - **Procedencia.** Rastro dice de qué fuente sale cada dato.
@@ -92,7 +92,7 @@
     | «albumin-bound paclitaxel» | sin palabras genéricas | paclitaxel, no «albumin» |
     | «rhuMAb HER2» | alias de trastuzumab | trastuzumab, que actúa sobre HER2: no cuenta como anti-EGFR |
 
-    Revisado a mano sobre muestras al azar: **98-99 % de los enlaces son correctos**. Un entity linking más sofisticado usaría el contexto, con un modelo o un LLM. Acá no hizo falta, porque los nombres de fármacos son muy específicos. Las reglas están en linking/drugs.sql y la revisión, en linking/review-2026-10-16.md.
+    En muestras al azar revisadas una por una, **98-99 % de los enlaces son correctos**. Esa revisión la hizo un asistente de IA: falta confirmarla con una persona (docs/verificacion-humana.md). Un entity linking más sofisticado usaría el contexto, con un modelo o un LLM. Acá no hizo falta, porque los nombres de fármacos son muy específicos. Las reglas están en linking/drugs.sql y la revisión, en linking/review-2026-10-16.md.
 
 - question: ¿Cómo junta Rastro columnas distintas que significan lo mismo?
   answer: |-
@@ -152,6 +152,7 @@
     - El mismo LLM respondió cada pregunta sin ver la respuesta correcta, con la misma consigna y los mismos reintentos.
     - Un número es correcto si está a menos del 5 % del valor real; una lista, si coincide en al menos un 80 %.
     - Los valores reales salen de Rastro, así que cada diferencia con el SQL directo se revisó con ensayos reales. Esa revisión encontró errores de Rastro, que se corrigieron antes del resultado. Detalle en layer/eval/adjudication.md.
+    - Ojo: las preguntas, las respuestas de referencia y esa revisión las hizo un asistente de IA (Claude Code), no el LLM evaluado. Falta que una persona las confirme: docs/verificacion-humana.md.
 
 - question: ¿Los eventos adversos son frecuencias reales?
   answer: >-

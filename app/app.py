@@ -229,8 +229,8 @@ def show_answer(query, columns, rows, note=None):
         for s in used:
             if s == "rastro":
                 st.markdown(f"- {STORAGE['rastro']} **Enlace de Rastro**: ensayo → fármaco, resuelto "
-                            "por nombre, alias y sinónimos de ChEMBL (98-99 % de precisión revisada "
-                            f"a mano) · {STORAGE_NOTE['rastro']}")
+                            "por nombre, alias y sinónimos de ChEMBL (98-99 % de precisión "
+                            f"en una muestra) · {STORAGE_NOTE['rastro']}")
             elif s in info:
                 st.markdown(f"- {STORAGE[s]} **{info[s]['name']}** · licencia: {info[s]['license']}"
                             f" · {STORAGE_NOTE[s]}")
@@ -361,7 +361,7 @@ with compare_tab:
                 st.caption(f"Para reconocer los fármacos, los buscó {LINK_METHODS[link_method(query)]}.")
             if k == "C" and query and ":testsDrug" in query:
                 st.caption("Para reconocer los fármacos usó el enlace de Rastro: el mismo en todas "
-                           "las preguntas, revisado a mano.")
+                           "las preguntas.")
             if query:
                 shown = pretty(query, k)
                 attempts = len(entry[k]["attempts"])

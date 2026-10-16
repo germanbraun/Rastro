@@ -40,7 +40,7 @@ Para quien da la demo, sin conocimientos técnicos. Las diapositivas acompañan 
 
 3. Abrir **Ver los intentos** en la respuesta del SQL directo, si los tiene.
 
-> «Y para llegar ahí, el LLM tuvo que inventar cómo reconocer un fármaco en el texto, en cada pregunta. Lo hizo de cuatro formas distintas en 20 preguntas. Rastro usa siempre una, revisada a mano.»
+> «Y para llegar ahí, el LLM tuvo que inventar cómo reconocer un fármaco en el texto, en cada pregunta. Lo hizo de cuatro formas distintas en 20 preguntas. Rastro usa siempre una, la misma, revisada.»
 
 ## 4:00 – 5:00 · Cierre (diapositivas 7 a 9)
 
@@ -53,6 +53,7 @@ Para quien da la demo, sin conocimientos técnicos. Las diapositivas acompañan 
 La pestaña **Preguntas frecuentes** de la app tiene las respuestas. Las más comunes:
 
 - **«¿Y si le doy al SQL las mismas tablas de enlaces?»** Probablemente acierte igual. El valor está en la integración revisada y en exponerla como un vocabulario estándar, con fuente.
+- **«¿Quién revisó las respuestas correctas?»** Decirlo tal cual: las preguntas y la primera revisión las hizo un asistente de IA, y una persona las confirmó con ensayos reales (ver `docs/verificacion-humana.md`). Si esa revisión humana todavía no se hizo, decir que está pendiente.
 - **«¿Funciona con otro LLM?»** Sí. Para la demo se usó Claude; también corre con un modelo local.
 - **«¿Los datos están al día?»** Es una foto de octubre de 2026. Recargar es correr los cargadores de nuevo.
 

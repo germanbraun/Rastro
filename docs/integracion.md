@@ -82,7 +82,7 @@ AACT: «Pembrolizumab 200 mg» ──(entity linking, una vez)──► linking.
                                           Ontop: unión por igualdad, automática
 ```
 
-**¿Se podría poner el entity linking dentro del mapeo?** Técnicamente sí: un mapeo R2RML puede tener cualquier consulta SQL. Pero Ontop la ejecutaría **en cada pregunta**, comparando texto contra 130.000 intervenciones. Eso es justamente lo que hizo lento y frágil al SQL directo en la evaluación. Y el resultado dejaría de ser una foto fija revisada a mano (98-99 % de precisión). Por eso Rastro lo calcula una vez y el mapeo lee el resultado: es un **VKG pragmático**.
+**¿Se podría poner el entity linking dentro del mapeo?** Técnicamente sí: un mapeo R2RML puede tener cualquier consulta SQL. Pero Ontop la ejecutaría **en cada pregunta**, comparando texto contra 130.000 intervenciones. Eso es justamente lo que hizo lento y frágil al SQL directo en la evaluación. Y el resultado dejaría de ser una foto fija revisada (98-99 % de precisión en una muestra). Por eso Rastro lo calcula una vez y el mapeo lee el resultado: es un **VKG pragmático**.
 
 ## Dónde está cada cosa
 
@@ -91,5 +91,5 @@ AACT: «Pembrolizumab 200 mg» ──(entity linking, una vez)──► linking.
 | Vocabulario (conceptos y relaciones) | `ontology/rastro.ttl` |
 | Mapeos de columnas a conceptos | `mappings/rastro.r2rml.ttl` |
 | Entity linking y entidades | `linking/` (`drugs.sql`, `conditions.sql`, `entities.sql`) |
-| Revisión a mano de los enlaces | `linking/review-2026-10-16.md` |
+| Revisión de los enlaces | `linking/review-2026-10-16.md` |
 | Cargadores de cada fuente | `data/` |

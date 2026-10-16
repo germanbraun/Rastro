@@ -1,5 +1,7 @@
 # Resultados
 
+> **Pendiente:** las preguntas de evaluación, sus respuestas de referencia, la adjudicación y la revisión de enlaces las hizo un asistente de IA (Claude Code). Los números salen de ejecutar queries sobre los datos y de un puntaje automático, pero falta que una persona confirme las referencias: [verificacion-humana.md](verificacion-humana.md).
+
 Los números propios de Rastro, para el one-pager de la Fase 8. Cada uno dice cómo se midió.
 
 ## Fase 2 — Conectar las fuentes (16 oct 2026)
@@ -7,7 +9,7 @@ Los números propios de Rastro, para el one-pager de la Fase 8. Cada uno dice c�
 | Qué | Resultado | Cómo se midió |
 |---|---|---|
 | Intervenciones de tipo fármaco o biológico enlazadas con ChEMBL | **74,4 %** (96.983 de 130.331) | `docker compose run --rm linker` |
-| Enlaces de fármacos correctos | **99 de 100**, y 30 de 30 en la regla agregada después | Revisión a mano de una muestra al azar: [linking/review-2026-10-16.md](../linking/review-2026-10-16.md) |
+| Enlaces de fármacos correctos | **99 de 100**, y 30 de 30 en la regla agregada después | Revisión uno por uno de una muestra al azar, hecha por un asistente de IA (falta revisión humana): [linking/review-2026-10-16.md](../linking/review-2026-10-16.md) |
 | Ensayos con al menos un fármaco de ChEMBL | 46.863 de 106.483 | Incluye solo intervenciones de tipo fármaco o biológico |
 | Ensayos con su condición en MeSH | **99,8 %** | Término MeSH de AACT igual a la etiqueta del descriptor |
 | Preguntas de competencia que responden | **8 de 8**, en alrededor de un segundo cada una | Contra Ontop, sobre los datos reales |

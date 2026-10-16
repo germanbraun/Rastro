@@ -51,7 +51,7 @@ Ocho preguntas de negocio y una ontología de siete clases (Ensayo, Fármaco, Ta
 
 ### Fase 2 — Conectar las fuentes ✅
 
-Mapeos R2RML para las cuatro fuentes, MeSH copiado en Postgres (sin federar) y enlaces en SQL legible: el 74 % de las intervenciones de tipo fármaco enlaza con ChEMBL, con 99 de 100 enlaces correctos en la revisión a mano, y el 99,8 % de los ensayos tiene su condición en MeSH. No hizo falta el LLM. Las ocho preguntas responden en un segundo.
+Mapeos R2RML para las cuatro fuentes, MeSH copiado en Postgres (sin federar) y enlaces en SQL legible: el 74 % de las intervenciones de tipo fármaco enlaza con ChEMBL, con 99 de 100 enlaces correctos en la revisión de una muestra (hecha con IA), y el 99,8 % de los ensayos tiene su condición en MeSH. No hizo falta el LLM. Las ocho preguntas responden en un segundo.
 
 **Checkpoint:** las ocho preguntas devuelven respuestas correctas, y sabemos qué porcentaje de enlaces está bien.
 
@@ -126,6 +126,7 @@ Para el MVP 1, solo con Rastro Layer.
 - [x] Guion de 5 minutos (`docs/demo-guion.md`)
 - [x] Una página con los números de la Fase 3 (`docs/one-pager.md`)
 - [x] Diapositivas simples para acompañar el guion (`docs/slides/`, 9 diapositivas)
+- [ ] Verificación humana de las referencias de la evaluación (`docs/verificacion-humana.md`)
 - [ ] Video de respaldo: lo graba una persona siguiendo el guion
 - [ ] Que alguien de ventas dé la demo siguiendo solo el guion
 

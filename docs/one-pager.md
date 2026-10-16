@@ -11,7 +11,7 @@ Cuatro fuentes públicas que no se hablan: ensayos (AACT), fármacos (ChEMBL), e
 Rastro es una **capa semántica** entre las fuentes y quien pregunta: traduce el lenguaje de negocio al de las tablas.
 
 
-1. **Enlaza** una vez: reconoce qué fármaco nombra cada ensayo, revisado a mano.
+1. **Enlaza** una vez: reconoce qué fármaco nombra cada ensayo, revisado sobre una muestra.
 2. **Nombra** con un vocabulario de negocio: ensayo, fármaco, target, sponsor, evento adverso.
 3. **Responde**: el LLM recibe la ontología como contexto, arma la consulta con esos conceptos ya definidos, y cada dato dice de qué fuente sale.
 
@@ -39,7 +39,7 @@ No es cuántas acierta, sino cuánto se puede confiar. Los errores del SQL direc
 
 - Con las mismas tablas de enlaces, el SQL directo probablemente acertaría igual: el valor está en la integración revisada, expuesta como vocabulario estándar.
 - Es una foto fija de octubre de 2026, no datos en vivo.
-- La evaluación son 20 preguntas propias.
+- La evaluación son 20 preguntas propias. Las respuestas de referencia y la revisión las hizo un asistente de IA; la confirmación humana está pendiente.
 
 ## Próximo paso
 
