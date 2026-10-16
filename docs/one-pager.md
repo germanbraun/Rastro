@@ -8,9 +8,12 @@ Cuatro fuentes públicas que no se hablan: ensayos (AACT), fármacos (ChEMBL), e
 
 ## Qué hace Rastro
 
+Rastro es una **capa semántica** entre las fuentes y quien pregunta: traduce el lenguaje de negocio al de las tablas.
+
+
 1. **Enlaza** una vez: reconoce qué fármaco nombra cada ensayo, revisado a mano.
 2. **Nombra** con un vocabulario de negocio: ensayo, fármaco, target, sponsor, evento adverso.
-3. **Responde**: un LLM pregunta en esos conceptos y cada dato dice de qué fuente sale.
+3. **Responde**: el LLM recibe la ontología como contexto, arma la consulta con esos conceptos ya definidos, y cada dato dice de qué fuente sale.
 
 Tecnología abierta y estándar: OWL, R2RML y SPARQL, con Ontop, Postgres y GraphDB.
 

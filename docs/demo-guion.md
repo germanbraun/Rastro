@@ -11,7 +11,7 @@ Para quien da la demo, sin conocimientos técnicos. Las diapositivas acompañan 
 
 ## 0:00 – 1:00 · El problema (diapositivas 1 y 2)
 
-> «En oncología hay cuatro fuentes públicas muy buenas: ensayos clínicos, fármacos, eventos adversos y enfermedades. El problema es que no se hablan. El mismo fármaco aparece como "Pembrolizumab 200 mg" en un ensayo, como un código en ChEMBL y como "KEYTRUDA" en la FDA. Cualquier pregunta que cruce fuentes tiene que resolver eso primero.»
+> «En oncología hay cuatro fuentes públicas muy buenas: ensayos clínicos, fármacos, eventos adversos y enfermedades. El problema es que no se hablan. El mismo fármaco aparece como "Pembrolizumab 200 mg" en un ensayo, como un código en ChEMBL y como "KEYTRUDA" en la FDA. Cualquier pregunta que cruce fuentes tiene que resolver eso primero. Rastro es una capa semántica que lo resuelve una vez: entre las fuentes y quien pregunta, habla en conceptos de negocio.»
 
 ## 1:00 – 2:30 · Una pregunta en vivo (pestaña Preguntar)
 
@@ -26,7 +26,7 @@ Para quien da la demo, sin conocimientos técnicos. Las diapositivas acompañan 
 
 4. Abrir **¿Cómo lo supe?**
 
-> «Esto es lo que escribió el LLM: una consulta corta, en conceptos de negocio, "fármaco", "target", "ensayo". Debajo, el SQL que Rastro generó solo. Y las fuentes con su licencia. Nada es una caja negra.»
+> «Esto es lo que escribió el LLM. No adivinó cómo se cruzan las tablas: recibió la ontología de Rastro, con cada concepto definido, y escribió una consulta corta en esos conceptos, "fármaco", "target", "ensayo". Debajo, el SQL que Rastro generó solo. Y las fuentes con su licencia. Nada es una caja negra.»
 
 ## 2:30 – 4:00 · Con y sin Rastro (pestaña Con y sin Rastro)
 

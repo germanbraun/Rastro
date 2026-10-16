@@ -4,7 +4,7 @@
 
 - question: ¿Qué es Rastro?
   answer: |-
-    Una capa que integra cuatro fuentes públicas de oncología y las describe con conceptos de negocio: ensayo, fármaco, target, sponsor, evento adverso. Un LLM pregunta sobre esos conceptos en lugar de adivinar cómo se cruzan las tablas, y cada respuesta dice de dónde viene.
+    Una **capa semántica**: integra cuatro fuentes públicas de oncología y las describe con conceptos de negocio: ensayo, fármaco, target, sponsor, evento adverso. Un LLM pregunta sobre esos conceptos en lugar de adivinar cómo se cruzan las tablas, y cada respuesta dice de dónde viene.
 
     Técnicamente es un **Virtual Knowledge Graph** (VKG), también llamado acceso a datos basado en ontologías (OBDA): una **ontología** con el vocabulario del dominio, **mapeos** que la conectan con las fuentes, y un grafo **virtual**, que se consulta sin copiar los datos a otro lado. Usa los estándares del W3C para eso: RDF, OWL, R2RML y SPARQL.
 
@@ -12,9 +12,19 @@
 
 - question: ¿Qué pasa cuando hago una pregunta?
   answer: |-
-    1. El LLM traduce la pregunta a una consulta sobre los conceptos de Rastro.
+    1. El LLM recibe la ontología de Rastro como contexto y traduce la pregunta a una consulta SPARQL sobre esos conceptos.
     2. Rastro la convierte en SQL y la ejecuta en vivo sobre las fuentes, sin copiarlas.
     3. Ves la respuesta, las fuentes que usó y la fuente de cada columna. En «¿Cómo lo supe?» están la consulta y el SQL exactos.
+
+- question: ¿Cómo sabe el LLM qué conceptos usar?
+  answer: |-
+    Porque recibe la **ontología** como contexto: la lista de conceptos (ensayo, fármaco, target, sponsor, evento adverso), cómo se relacionan y qué significa cada uno. Con eso escribe la consulta SPARQL.
+
+    Es una fuente de confianza: el LLM no inventa cómo se cruzan las tablas ni qué es un «fármaco», usa definiciones ya hechas y revisadas. Y la consulta queda a la vista en «¿Cómo lo supe?»: es corta y en palabras de negocio, así que alguien puede revisarla.
+
+    Lo que no garantiza: el LLM todavía puede elegir mal un concepto o un filtro. Por eso se muestra la consulta.
+
+    En cambio, con el SQL directo el LLM solo ve nombres de tablas y columnas, y tiene que deducir el resto en cada pregunta.
 
 - question: ¿De dónde salen los datos y dónde están guardados?
   answer: |-

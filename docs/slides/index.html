@@ -16,7 +16,7 @@ addEventListener('resize', fit); fit();
 </script></head><body>
 <div class="slide">
 <section id="cover" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
-<p style="font-size:32px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Rastro Layer · MVP</p>
+<p style="font-size:32px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Rastro Layer · capa semántica · MVP</p>
 <h1 style="font-size:120px;font-weight:700;line-height:1.05;color:#F7F6F2">Rastro</h1>
 <p style="font-size:44px;line-height:1.3;color:#D7DEE8;width:1400px">Preguntas de negocio sobre ensayos de oncología, con la respuesta y de dónde viene cada dato.</p>
 <aside>Rastro es una capa que integra fuentes públicas de oncología y deja preguntar en lenguaje natural. Cada respuesta dice de qué fuente sale. En los próximos minutos: el problema, cómo funciona, y qué muestran los números.</aside>
@@ -37,16 +37,29 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
-<section id="rastro" style="background:#F7F6F2;color:#14213D;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">
+<section id="rastro" style="background:#F7F6F2;color:#14213D;font-family:'DM Sans', Arial, sans-serif;padding:112px 128px;display:flex;flex-direction:column;gap:36px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Qué es Rastro</p>
-<h2 style="font-size:72px;font-weight:700;line-height:1.1;width:1500px">Una capa que une las fuentes una vez y deja preguntar en conceptos</h2>
-<div style="display:flex;gap:32px;align-items:stretch">
-<div style="flex:1;border-top:8px solid #2F6FB5;background:#FFFFFF;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:20px"><p style="font-size:44px;font-weight:700">1 · Enlazar</p><p style="font-size:30px;line-height:1.4">Reconoce qué fármaco nombra cada ensayo. Revisado a mano: 98-99 % correcto.</p></div>
-<div style="flex:1;border-top:8px solid #2F6FB5;background:#FFFFFF;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:20px"><p style="font-size:44px;font-weight:700">2 · Nombrar</p><p style="font-size:30px;line-height:1.4">Un vocabulario de negocio: ensayo, fármaco, target, sponsor, evento adverso.</p></div>
-<div style="flex:1;border-top:8px solid #2F6FB5;background:#FFFFFF;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:20px"><p style="font-size:44px;font-weight:700">3 · Responder</p><p style="font-size:30px;line-height:1.4">El LLM pregunta en esos conceptos. Cada dato dice de qué fuente sale.</p></div>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Una capa semántica entre los datos y quien pregunta</h2>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="background:#FFFFFF;border-radius:20px;padding:28px 40px;display:flex;align-items:center;gap:40px">
+<p style="font-size:30px;font-weight:700;width:340px">Quien pregunta</p>
+<p style="font-size:30px;line-height:1.4">El LLM lee la ontología como contexto y arma la consulta con conceptos ya definidos.</p>
 </div>
-<p style="font-size:30px;color:#4A5568">Tecnología abierta y estándar: OWL, R2RML, SPARQL · Ontop · Postgres · GraphDB</p>
-<aside>Técnicamente es un grafo de conocimiento virtual: los datos quedan en Postgres y Ontop traduce cada pregunta a SQL. Lo importante para el cliente: el trabajo difícil, unir las fuentes, se hace una vez y se revisa. Después cualquiera pregunta sobre conceptos que entiende.</aside>
+<div style="background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px 40px;display:flex;flex-direction:column;gap:24px">
+<p style="font-size:40px;font-weight:700">Capa semántica · Rastro</p>
+<div style="display:flex;gap:24px">
+<div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:24px"><p style="font-size:30px;font-weight:700">Ontología</p><p style="font-size:26px;line-height:1.35">El vocabulario de negocio: ensayo, fármaco, target, sponsor</p></div>
+<div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:24px"><p style="font-size:30px;font-weight:700">Mapeos</p><p style="font-size:26px;line-height:1.35">Columnas distintas que son el mismo concepto</p></div>
+<div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:24px"><p style="font-size:30px;font-weight:700">Enlaces revisados</p><p style="font-size:26px;line-height:1.35">Qué fármaco nombra cada ensayo, 98-99 % correcto</p></div>
+</div>
+</div>
+<div style="background:#E4E7EC;border-radius:20px;padding:28px 40px;display:flex;align-items:center;gap:40px">
+<p style="font-size:30px;font-weight:700;width:340px">Fuentes</p>
+<p style="font-size:30px">AACT · ChEMBL · openFDA en Postgres · MeSH en GraphDB</p>
+</div>
+</div>
+<p style="font-size:26px;color:#4A5568">Estándares abiertos: OWL, R2RML, SPARQL · Ontop · Postgres · GraphDB</p>
+<aside>Rastro es una capa semántica: se pone entre las fuentes y quien pregunta, y traduce el lenguaje de negocio al de las tablas. Tiene tres piezas: la ontología, que define los conceptos; los mapeos, que conectan cada concepto con las columnas de cada fuente; y los enlaces revisados, que unen ensayos con fármacos. El LLM nunca ve tablas: lee la ontología y pregunta en esos conceptos. Técnicamente es un grafo de conocimiento virtual: Ontop traduce cada pregunta a SQL sobre las fuentes.</aside>
 </section>
 </div>
 <div class="slide">
@@ -85,18 +98,19 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
-<section id="confianza" style="background:#F7F6F2;color:#14213D;font-family:'DM Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<section id="confianza" style="background:#F7F6F2;color:#14213D;font-family:'DM Sans', Arial, sans-serif;padding:112px 128px;display:flex;flex-direction:column;gap:36px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">La ventaja real</p>
-<h2 style="font-size:72px;font-weight:700;line-height:1.1;width:1600px">No es cuántas acierta, sino cuánto podés confiar</h2>
-<div style="display:grid;grid-template-columns:560px 1fr 1fr;gap:0;font-size:32px;background:#FFFFFF;border-radius:20px;padding:24px 40px">
-<p style="padding:20px 0;color:#4A5568"></p><p style="padding:20px 0;color:#4A5568;font-weight:600">SQL directo</p><p style="padding:20px 0;color:#2F6FB5;font-weight:700">Rastro</p>
-<p style="padding:20px 0;border-top:2px solid #E5E7EB">Cómo reconoce un fármaco</p><p style="padding:20px 0;border-top:2px solid #E5E7EB">4 formas distintas</p><p style="padding:20px 0;border-top:2px solid #E5E7EB;font-weight:700">1, revisada</p>
-<p style="padding:20px 0;border-top:2px solid #E5E7EB">Cuando se equivoca</p><p style="padding:20px 0;border-top:2px solid #E5E7EB">No avisa: 488 en vez de 438</p><p style="padding:20px 0;border-top:2px solid #E5E7EB;font-weight:700">Misma regla siempre</p>
-<p style="padding:20px 0;border-top:2px solid #E5E7EB">Tiempo total</p><p style="padding:20px 0;border-top:2px solid #E5E7EB">20 s</p><p style="padding:20px 0;border-top:2px solid #E5E7EB;font-weight:700">2 s</p>
-<p style="padding:20px 0;border-top:2px solid #E5E7EB">Reintentos</p><p style="padding:20px 0;border-top:2px solid #E5E7EB">3</p><p style="padding:20px 0;border-top:2px solid #E5E7EB;font-weight:700">0</p>
-<p style="padding:20px 0;border-top:2px solid #E5E7EB">De dónde sale cada dato</p><p style="padding:20px 0;border-top:2px solid #E5E7EB">No lo dice</p><p style="padding:20px 0;border-top:2px solid #E5E7EB;font-weight:700">Fuente y licencia por columna</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1600px">No es cuántas acierta, sino cuánto podés confiar</h2>
+<div style="display:grid;grid-template-columns:560px 1fr 1fr;gap:0;font-size:30px;background:#FFFFFF;border-radius:20px;padding:24px 40px">
+<p style="padding:16px 0;color:#4A5568"></p><p style="padding:16px 0;color:#4A5568;font-weight:600">SQL directo</p><p style="padding:16px 0;color:#2F6FB5;font-weight:700">Rastro</p>
+<p style="padding:16px 0;border-top:2px solid #E5E7EB">Qué lee el LLM</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">Nombres de tablas y columnas</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">La ontología: conceptos definidos</p>
+<p style="padding:16px 0;border-top:2px solid #E5E7EB">Cómo reconoce un fármaco</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">4 formas distintas</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">1, revisada</p>
+<p style="padding:16px 0;border-top:2px solid #E5E7EB">Cuando se equivoca</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">No avisa: 488 en vez de 438</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">Misma regla siempre</p>
+<p style="padding:16px 0;border-top:2px solid #E5E7EB">Tiempo total</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">20 s</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">2 s</p>
+<p style="padding:16px 0;border-top:2px solid #E5E7EB">Reintentos</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">3</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">0</p>
+<p style="padding:16px 0;border-top:2px solid #E5E7EB">De dónde sale cada dato</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">No lo dice</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">Fuente y licencia por columna</p>
 </div>
-<aside>En 16 de las 20 preguntas el SQL directo tuvo que inventar cómo reconocer un fármaco en el texto del ensayo, y lo hizo de cuatro maneras distintas. Sus errores parecen razonables: 488 en lugar de 438. Nadie lo nota. Rastro usa siempre la misma definición, revisada, y dice de dónde sale cada número.</aside>
+<aside>En 16 de las 20 preguntas el SQL directo tuvo que inventar cómo reconocer un fármaco en el texto del ensayo, y lo hizo de cuatro maneras distintas. Sus errores parecen razonables: 488 en lugar de 438. Nadie lo nota. Rastro usa siempre la misma definición, revisada, y dice de dónde sale cada número. La diferencia empieza en lo que lee el LLM: el SQL directo ve nombres de tablas y columnas; con Rastro ve la ontología, con cada concepto definido.</aside>
 </section>
 </div>
 <div class="slide">
