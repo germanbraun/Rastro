@@ -1,0 +1,10 @@
+{
+ "question": "Contá los ensayos de cáncer de próstata que prueban algún fármaco aprobado que actúa sobre el gen AR (receptor de andrógenos).",
+ "attempts": [
+  {
+   "query": "WITH farmacos AS (\n  SELECT DISTINCT m.pref_name\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary m ON m.chembl_id = COALESCE(dm.parent_chembl_id, dm.chembl_id)\n  WHERE tc.gene_symbol = 'AR' AND m.max_phase = 4 AND m.pref_name IS NOT NULL\n),\nnombres AS (\n  SELECT i.nct_id, lower(i.name) AS nombre FROM aact.interventions i\n  UNION\n  SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o\n)\nSELECT count(DISTINCT n.nct_id)\nFROM nombres n\nJOIN farmacos f ON n.nombre LIKE '%' || lower(f.pref_name) || '%'\nWHERE EXISTS (SELECT 1 FROM aact.browse_conditions bc\n              WHERE bc.nct_id = n.nct_id AND bc.downcase_mesh_term = 'prostatic neoplasms')",
+   "error": null
+  }
+ ],
+ "answer": 650.0
+}

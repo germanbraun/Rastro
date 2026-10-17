@@ -1,0 +1,10 @@
+{
+ "question": "¿En cuántos ensayos activos (reclutando, activos sin reclutar, todavía sin reclutar o por invitación) se está probando pembrolizumab?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nSELECT (COUNT(DISTINCT ?tr) AS ?n) WHERE {\n  ?tr a :Trial ; :status ?st ; :testsDrug ?d .\n  ?d :name \"PEMBROLIZUMAB\" .\n  FILTER(?st IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n}",
+   "error": null
+  }
+ ],
+ "answer": 961.0
+}

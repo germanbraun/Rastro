@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos ensayos que prueban pembrolizumab están activos, es decir reclutando, activos sin reclutar, todavía sin reclutar o por invitación?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT s.nct_id)\nFROM aact.studies s\nWHERE s.overall_status IN ('RECRUITING','ACTIVE_NOT_RECRUITING','NOT_YET_RECRUITING','ENROLLING_BY_INVITATION')\n  AND (EXISTS (SELECT 1 FROM aact.interventions i WHERE i.nct_id = s.nct_id AND (lower(i.name) LIKE '%pembrolizumab%' OR lower(i.name) LIKE '%keytruda%' OR lower(i.name) LIKE '%mk-3475%'))\n    OR EXISTS (SELECT 1 FROM aact.intervention_other_names o WHERE o.nct_id = s.nct_id AND (lower(o.name) LIKE '%pembrolizumab%' OR lower(o.name) LIKE '%keytruda%' OR lower(o.name) LIKE '%mk-3475%')))",
+   "error": null
+  }
+ ],
+ "answer": 973.0
+}

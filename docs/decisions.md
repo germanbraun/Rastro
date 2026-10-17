@@ -176,3 +176,12 @@ Se adopta la terminología del tutorial *Designing Virtual Knowledge Graphs with
 
 Las 20 preguntas, sus respuestas de referencia, la adjudicación y la revisión de enlaces las hizo Claude Code, no una persona. Los números salen de ejecutar queries y de un puntaje automático, pero si la referencia está mal, el puntaje también. Por eso los documentos dejan de decir "revisado a mano" y dicen que falta la revisión humana, hasta completar `docs/verificacion-humana.md` (una hora, sin conocimientos técnicos). Al revisar el control contra la web de ClinicalTrials.gov apareció que la web da 15-30 % más que Rastro en conteos por enfermedad, porque busca con sinónimos propios: conviene tenerlo listo si un cliente compara.
 
+## 2026-10-17 — La demo es para consultores que saben SQL
+
+La audiencia son consultores que saben SQL y no conocen tecnologías semánticas. Su primera pregunta va a ser «¿por qué no vistas SQL?». Por eso la demo compara todo con SQL y suma dos evidencias que el puntaje de 18 contra 20 no mostraba:
+
+- **Consistencia:** la misma pregunta escrita de 4 formas. Con SQL directo la respuesta cambia en 9 de 10 preguntas; con Rastro, en ninguna (`layer/consistencia/`).
+- **Cambio:** una versión nueva de AACT simulada. Un cambio de nombre rompe 5 consultas del SQL directo y en Rastro se arregla con una línea; un cambio de formato deja 5 respuestas en 0 sin aviso, y el control de vocabulario de Rastro lo detecta (`layer/cambio/`).
+
+También se simplificó todo: 9 diapositivas en lugar de 13, 14 preguntas frecuentes en lugar de 22, y un guion con la comparación con SQL en el centro.
+

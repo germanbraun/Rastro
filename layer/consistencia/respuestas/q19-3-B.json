@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos ensayos clínicos de linfoma iniciados desde 2020 prueban rituximab?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT s.nct_id)\nFROM aact.studies s\nWHERE s.start_date >= DATE '2020-01-01'\n  AND EXISTS (SELECT 1 FROM aact.browse_conditions b WHERE b.nct_id = s.nct_id AND b.downcase_mesh_term = 'lymphoma')\n  AND (EXISTS (SELECT 1 FROM aact.interventions i WHERE i.nct_id = s.nct_id AND (i.name ILIKE '%rituximab%' OR i.name ILIKE '%rituxan%' OR i.name ILIKE '%mabthera%'))\n    OR EXISTS (SELECT 1 FROM aact.intervention_other_names o WHERE o.nct_id = s.nct_id AND (o.name ILIKE '%rituximab%' OR o.name ILIKE '%rituxan%' OR o.name ILIKE '%mabthera%')))",
+   "error": null
+  }
+ ],
+ "answer": 297.0
+}

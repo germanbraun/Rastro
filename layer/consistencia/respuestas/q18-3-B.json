@@ -1,0 +1,33 @@
+{
+ "question": "Listá los fármacos con target PDCD1 o CD274 (anti-PD-1 o anti-PD-L1) que tienen ensayos de fase 3 (incluye fase 2/3) en cáncer de pulmón.",
+ "attempts": [
+  {
+   "query": "WITH drugs AS (\n  SELECT DISTINCT md.parent_chembl_id, p.pref_name\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id\n  JOIN chembl.molecule_dictionary p ON p.chembl_id = md.parent_chembl_id\n  WHERE tc.gene_symbol IN ('PDCD1','CD274')\n),\nnames AS (\n  SELECT DISTINCT pref_name, n FROM (\n    SELECT d.pref_name, lower(d.pref_name) AS n FROM drugs d\n    UNION\n    SELECT d.pref_name, lower(s.synonyms) FROM drugs d\n    JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = d.parent_chembl_id\n    JOIN chembl.molecule_synonyms s ON s.chembl_id = m.chembl_id\n  ) x WHERE length(n) >= 5\n),\ntrials AS (\n  SELECT s.nct_id FROM aact.studies s\n  WHERE s.phase IN ('PHASE3','PHASE2/PHASE3')\n    AND EXISTS (SELECT 1 FROM aact.browse_conditions b WHERE b.nct_id = s.nct_id AND b.downcase_mesh_term = 'lung neoplasms')\n),\ntnames AS (\n  SELECT lower(i.name) AS n FROM aact.interventions i JOIN trials t ON t.nct_id = i.nct_id\n  UNION\n  SELECT lower(o.name) FROM aact.intervention_other_names o JOIN trials t ON t.nct_id = o.nct_id\n)\nSELECT DISTINCT nm.pref_name\nFROM tnames tn JOIN names nm ON position(nm.n IN tn.n) > 0\nORDER BY 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "ADEBRELIMAB",
+  "ATEZOLIZUMAB",
+  "AVELUMAB",
+  "BINTRAFUSP ALFA",
+  "BUDIGALIMAB",
+  "CADONILIMAB",
+  "CAMRELIZUMAB",
+  "CEMIPLIMAB",
+  "COSIBELIMAB",
+  "DOSTARLIMAB",
+  "DURVALUMAB",
+  "NIVOLUMAB",
+  "PEMBROLIZUMAB",
+  "PENPULIMAB",
+  "RETIFANLIMAB",
+  "SERPLULIMAB",
+  "SINTILIMAB",
+  "SOCAZOLIMAB",
+  "SUGEMALIMAB",
+  "TISLELIZUMAB",
+  "TORIPALIMAB",
+  "ZIMBERELIMAB"
+ ]
+}

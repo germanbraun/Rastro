@@ -1,0 +1,10 @@
+{
+ "question": "Contá los ensayos de fase 3 o fase 2/3 que prueban al menos un fármaco que actúa sobre el gen EGFR.",
+ "attempts": [
+  {
+   "query": "WITH farmacos AS (\n  SELECT DISTINCT m.pref_name\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary m ON m.chembl_id = COALESCE(dm.parent_chembl_id, dm.chembl_id)\n  WHERE tc.gene_symbol = 'EGFR' AND m.pref_name IS NOT NULL\n),\nnombres AS (\n  SELECT i.nct_id, lower(i.name) AS nombre FROM aact.interventions i\n  UNION\n  SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o\n)\nSELECT count(DISTINCT s.nct_id)\nFROM aact.studies s\nJOIN nombres n ON n.nct_id = s.nct_id\nJOIN farmacos f ON n.nombre LIKE '%' || lower(f.pref_name) || '%'\nWHERE s.phase IN ('PHASE3', 'PHASE2/PHASE3')",
+   "error": null
+  }
+ ],
+ "answer": 409.0
+}

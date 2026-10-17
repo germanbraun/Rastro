@@ -1,0 +1,10 @@
+{
+ "question": "Contá los ensayos de melanoma que incluyen nivolumab entre sus intervenciones.",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT s.nct_id)\nFROM aact.studies s\nWHERE EXISTS (SELECT 1 FROM aact.browse_conditions bc WHERE bc.nct_id = s.nct_id AND bc.downcase_mesh_term = 'melanoma')\n  AND (EXISTS (SELECT 1 FROM aact.interventions i WHERE i.nct_id = s.nct_id AND i.name ILIKE '%nivolumab%')\n    OR EXISTS (SELECT 1 FROM aact.intervention_other_names o WHERE o.nct_id = s.nct_id AND o.name ILIKE '%nivolumab%'))",
+   "error": null
+  }
+ ],
+ "answer": 295.0
+}

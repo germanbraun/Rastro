@@ -1,0 +1,10 @@
+{
+ "question": "Contá los ensayos de cáncer de próstata que prueban algún fármaco aprobado que actúa sobre el gen AR (receptor de andrógenos).",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?pr rdfs:label \"Prostatic Neoplasms\"@en .\n  ?t :condition ?c . ?c :within ?pr .\n  ?t :testsDrug ?d . ?d :approved true . ?d :hasTarget ?tg . ?tg :gene \"AR\" .\n}",
+   "error": null
+  }
+ ],
+ "answer": 658.0
+}

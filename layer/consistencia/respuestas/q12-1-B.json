@@ -1,0 +1,10 @@
+{
+ "question": "¿En cuántos ensayos de melanoma se prueba nivolumab?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT s.nct_id)\nFROM aact.studies s\nWHERE EXISTS (SELECT 1 FROM aact.browse_conditions b WHERE b.nct_id = s.nct_id AND b.downcase_mesh_term = 'melanoma')\n  AND (EXISTS (SELECT 1 FROM aact.interventions i WHERE i.nct_id = s.nct_id AND (lower(i.name) LIKE '%nivolumab%' OR lower(i.name) LIKE '%opdivo%' OR lower(i.name) LIKE '%bms-936558%'))\n    OR EXISTS (SELECT 1 FROM aact.intervention_other_names o WHERE o.nct_id = s.nct_id AND (lower(o.name) LIKE '%nivolumab%' OR lower(o.name) LIKE '%opdivo%' OR lower(o.name) LIKE '%bms-936558%')))",
+   "error": null
+  }
+ ],
+ "answer": 301.0
+}

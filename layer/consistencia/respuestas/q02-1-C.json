@@ -1,0 +1,10 @@
+{
+ "question": "¿En cuántos ensayos de fase 3, contando los de fase 2/3, se prueba algún fármaco cuyo target es EGFR?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ; :phase ?p ; :testsDrug ?d .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?d :hasTarget ?tg . ?tg :gene \"EGFR\" .\n}",
+   "error": null
+  }
+ ],
+ "answer": 438.0
+}

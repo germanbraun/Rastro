@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos ensayos clínicos sobre melanoma prueban el fármaco nivolumab?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT s.nct_id)\nFROM aact.studies s\nWHERE EXISTS (SELECT 1 FROM aact.browse_conditions b WHERE b.nct_id = s.nct_id AND b.downcase_mesh_term = 'melanoma')\n  AND (EXISTS (SELECT 1 FROM aact.interventions i WHERE i.nct_id = s.nct_id AND (i.name ILIKE '%nivolumab%' OR i.name ILIKE '%opdivo%' OR i.name ILIKE '%bms-936558%' OR i.name ILIKE '%ono-4538%'))\n    OR EXISTS (SELECT 1 FROM aact.intervention_other_names o WHERE o.nct_id = s.nct_id AND (o.name ILIKE '%nivolumab%' OR o.name ILIKE '%opdivo%' OR o.name ILIKE '%bms-936558%' OR o.name ILIKE '%ono-4538%')))",
+   "error": null
+  }
+ ],
+ "answer": 301.0
+}

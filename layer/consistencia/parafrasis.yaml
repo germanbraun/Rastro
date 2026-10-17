@@ -1,0 +1,45 @@
+# Prueba de consistencia: la misma pregunta, escrita de otras formas.
+# Cada paráfrasis mantiene las definiciones explícitas de la original (qué es "fase 3",
+# "detenido", "activo"), así que la respuesta correcta es la misma que la de la original.
+# Se eligieron 10 de las 20 preguntas: las que cruzan fuentes o filtran por estado.
+
+q01:
+  - ¿Cuáles son los fármacos que actúan sobre HER2 (gen ERBB2) y que se están probando en cáncer de mama en ensayos de fase 3, contando también los de fase 2/3?
+  - En cáncer de mama, ¿qué fármacos dirigidos al gen ERBB2 (HER2) aparecen en ensayos de fase 3 o de fase 2/3?
+  - Listá los fármacos con target ERBB2 (HER2) que tienen ensayos de fase 3 (incluye fase 2/3) en cáncer de mama.
+q02:
+  - ¿En cuántos ensayos de fase 3, contando los de fase 2/3, se prueba algún fármaco cuyo target es EGFR?
+  - Contá los ensayos de fase 3 o fase 2/3 que prueban al menos un fármaco que actúa sobre el gen EGFR.
+  - ¿Cuántos ensayos clínicos de fase 3 (incluye fase 2/3) tienen entre sus intervenciones un fármaco dirigido a EGFR?
+q03:
+  - En cáncer de pulmón, ¿qué 3 sponsors de la industria tienen más ensayos detenidos (terminados o retirados)? Contá solo al sponsor principal de cada ensayo.
+  - ¿Qué tres empresas de la industria, como sponsor principal, acumulan más ensayos terminados o retirados (detenidos) de cáncer de pulmón?
+  - Top 3 de sponsors de la industria por cantidad de ensayos detenidos (terminados o retirados) en cáncer de pulmón, considerando solo el sponsor principal.
+q09:
+  - ¿Cuántos ensayos que prueban pembrolizumab están activos, es decir reclutando, activos sin reclutar, todavía sin reclutar o por invitación?
+  - Contá los ensayos con pembrolizumab cuyo estado es activo (reclutando, activo sin reclutar, todavía sin reclutar o por invitación).
+  - ¿En cuántos ensayos activos (reclutando, activos sin reclutar, todavía sin reclutar o por invitación) se está probando pembrolizumab?
+q10:
+  - ¿En cuántos ensayos de leucemia se prueba algún fármaco que actúa sobre BTK?
+  - Contá los ensayos de leucemia que prueban al menos un fármaco con target BTK.
+  - ¿Cuántos ensayos clínicos de leucemia incluyen un fármaco dirigido al gen BTK?
+q12:
+  - ¿En cuántos ensayos de melanoma se prueba nivolumab?
+  - Contá los ensayos de melanoma que incluyen nivolumab entre sus intervenciones.
+  - ¿Cuántos ensayos clínicos sobre melanoma prueban el fármaco nivolumab?
+q13:
+  - ¿En cuántos ensayos de cáncer de próstata se prueba al menos un fármaco aprobado cuyo target es el receptor de andrógenos (gen AR)?
+  - Contá los ensayos de cáncer de próstata que prueban algún fármaco aprobado que actúa sobre el gen AR (receptor de andrógenos).
+  - ¿Cuántos ensayos clínicos de cáncer de próstata incluyen un fármaco aprobado dirigido al receptor de andrógenos (gen AR)?
+q16:
+  - ¿Cuántos fármacos diferentes aparecen en ensayos de mieloma múltiple?
+  - Contá los fármacos distintos que se prueban en ensayos clínicos de mieloma múltiple.
+  - En mieloma múltiple, ¿cuántos fármacos distintos se están probando o se probaron en ensayos?
+q18:
+  - ¿Cuáles son los fármacos anti-PD-1 o anti-PD-L1 (genes PDCD1 o CD274) que se prueban en cáncer de pulmón en ensayos de fase 3, contando los de fase 2/3?
+  - En cáncer de pulmón, ¿qué fármacos dirigidos a PDCD1 o CD274 (PD-1 o PD-L1) aparecen en ensayos de fase 3 o fase 2/3?
+  - Listá los fármacos con target PDCD1 o CD274 (anti-PD-1 o anti-PD-L1) que tienen ensayos de fase 3 (incluye fase 2/3) en cáncer de pulmón.
+q19:
+  - ¿En cuántos ensayos de linfoma que comenzaron en 2020 o más tarde se prueba rituximab?
+  - Contá los ensayos de linfoma con fecha de inicio en 2020 o después que incluyen rituximab.
+  - ¿Cuántos ensayos clínicos de linfoma iniciados desde 2020 prueban rituximab?

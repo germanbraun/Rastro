@@ -1,0 +1,14 @@
+{
+ "question": "Contá los fármacos distintos que se prueban en ensayos clínicos de mieloma múltiple.",
+ "attempts": [
+  {
+   "query": "WITH farmacos AS (\n  SELECT DISTINCT m.chembl_id, m.pref_name\n  FROM chembl.molecule_dictionary m\n  WHERE m.pref_name IS NOT NULL AND m.chembl_id = COALESCE(m.parent_chembl_id, m.chembl_id)\n),\nnombres AS (\n  SELECT i.nct_id, lower(i.name) AS nombre FROM aact.interventions i\n  UNION\n  SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o\n)\nSELECT count(DISTINCT f.chembl_id)\nFROM nombres n\nJOIN farmacos f ON n.nombre LIKE '%' || lower(f.pref_name) || '%'\nWHERE EXISTS (SELECT 1 FROM aact.browse_conditions bc\n              WHERE bc.nct_id = n.nct_id AND bc.downcase_mesh_term = 'multiple myeloma')",
+   "error": "canceling statement due to statement timeout"
+  },
+  {
+   "query": "WITH ensayos AS MATERIALIZED (\n  SELECT DISTINCT nct_id FROM aact.browse_conditions\n  WHERE downcase_mesh_term = 'multiple myeloma'\n),\nnombres AS MATERIALIZED (\n  SELECT DISTINCT lower(i.name) AS nombre FROM aact.interventions i JOIN ensayos e ON e.nct_id = i.nct_id\n  UNION\n  SELECT DISTINCT lower(o.name) FROM aact.intervention_other_names o JOIN ensayos e ON e.nct_id = o.nct_id\n),\nfarmacos AS MATERIALIZED (\n  SELECT DISTINCT COALESCE(m.parent_chembl_id, m.chembl_id) AS id, lower(m.pref_name) AS nombre\n  FROM chembl.molecule_dictionary m\n  WHERE m.pref_name IS NOT NULL\n)\nSELECT count(DISTINCT f.id)\nFROM farmacos f\nJOIN nombres n ON position(f.nombre IN n.nombre) > 0",
+   "error": null
+  }
+ ],
+ "answer": 532.0
+}

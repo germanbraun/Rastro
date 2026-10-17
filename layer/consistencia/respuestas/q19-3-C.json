@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos ensayos clínicos de linfoma iniciados desde 2020 prueban rituximab?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT (COUNT(DISTINCT ?tr) AS ?n) WHERE {\n  ?tr a :Trial ; :condition ?c ; :testsDrug ?d ; :startDate ?sd .\n  ?d :name \"RITUXIMAB\" .\n  FILTER(?sd >= \"2020-01-01\"^^xsd:date)\n  ?c :within ?m . ?m rdfs:label \"Lymphoma\"@en .\n}",
+   "error": null
+  }
+ ],
+ "answer": 309.0
+}

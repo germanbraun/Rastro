@@ -1,0 +1,14 @@
+{
+ "question": "¿Qué tres empresas de la industria, como sponsor principal, acumulan más ensayos terminados o retirados (detenidos) de cáncer de pulmón?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?name WHERE {\n  {\n    SELECT ?name (COUNT(DISTINCT ?t) AS ?n) WHERE {\n      ?pulmon rdfs:label \"Lung Neoplasms\"@en .\n      ?t :condition ?c . ?c :within ?pulmon .\n      ?t :status ?st . FILTER(?st IN (\"TERMINATED\",\"WITHDRAWN\"))\n      ?t :sponsor ?s . ?s :industry true . ?s :name ?name .\n    } GROUP BY ?name\n  }\n} ORDER BY DESC(?n) LIMIT 3",
+   "error": null
+  }
+ ],
+ "answer": [
+  "Pfizer",
+  "Novartis Pharmaceuticals",
+  "AstraZeneca"
+ ]
+}

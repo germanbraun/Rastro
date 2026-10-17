@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos ensayos clínicos de fase 3 (incluye fase 2/3) tienen entre sus intervenciones un fármaco dirigido a EGFR?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nSELECT (COUNT(DISTINCT ?tr) AS ?n) WHERE {\n  ?tr a :Trial ; :phase ?p ; :testsDrug ?d .\n  ?d :hasTarget ?t . ?t :gene \"EGFR\" .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n}",
+   "error": null
+  }
+ ],
+ "answer": 438.0
+}

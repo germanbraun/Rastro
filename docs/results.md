@@ -46,3 +46,13 @@ Demo en http://localhost:8501:
 - **Preguntar:** las 20 preguntas de ejemplo funcionan sin LLM (queries guardadas, ejecutadas en vivo). Muestra la fuente de cada columna y dónde vive cada fuente (🐘 Postgres, 🕸️ GraphDB). "¿Cómo lo supe?" tiene tres pasos: la consulta que escribió el LLM, el SQL que Ontop generó y ejecutó, y las fuentes con su licencia.
 - **Con y sin Rastro:** el puntaje y qué significa, y cada pregunta con las tres respuestas lado a lado. Para cada respuesta incorrecta explica por qué falló; para cada query del SQL directo, cómo reconoció los fármacos; y para Rastro, el SQL que generó Ontop, para compararlo con el escrito a mano.
 
+## Consistencia y cambio (17 oct 2026)
+
+| Qué | SQL directo | Rastro | Cómo se midió |
+|---|---|---|---|
+| La misma pregunta escrita de 4 formas da la misma respuesta | 1 de 10 preguntas | **10 de 10** | [layer/consistencia/](../layer/consistencia/README.md) |
+| Correctas en esas 40 versiones | 32 de 40 | **40 de 40** | Mismo criterio que la evaluación |
+| Una columna cambia de nombre | 5 consultas fallan | **1 línea del mapeo** | [demo-cambio.md](demo-cambio.md) |
+| Un valor cambia de formato | 5 respuestas pasan a 0 sin aviso | el control de vocabulario avisa; **1 línea** | [demo-cambio.md](demo-cambio.md) |
+| Largo promedio de la consulta del LLM | 726 caracteres | **368** (el SQL de Ontop: 633) | Las 20 consultas guardadas |
+

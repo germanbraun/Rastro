@@ -1,0 +1,10 @@
+{
+ "question": "Contá los ensayos de melanoma que incluyen nivolumab entre sus intervenciones.",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?mel rdfs:label \"Melanoma\"@en .\n  ?t :condition ?c . ?c :within ?mel .\n  ?t :testsDrug ?d . ?d :name \"NIVOLUMAB\" .\n}",
+   "error": null
+  }
+ ],
+ "answer": 293.0
+}

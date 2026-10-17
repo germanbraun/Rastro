@@ -1,0 +1,10 @@
+{
+ "question": "¿En cuántos ensayos de cáncer de próstata se prueba al menos un fármaco aprobado cuyo target es el receptor de andrógenos (gen AR)?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ; :condition ?c ; :testsDrug ?d .\n  ?c :within ?m . ?m rdfs:label \"Prostatic Neoplasms\"@en .\n  ?d :approved true ; :hasTarget ?tg . ?tg :gene \"AR\" .\n}",
+   "error": null
+  }
+ ],
+ "answer": 658.0
+}

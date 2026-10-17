@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos fármacos diferentes aparecen en ensayos de mieloma múltiple?",
+ "attempts": [
+  {
+   "query": "WITH names AS (\n  SELECT DISTINCT m.parent_chembl_id AS pid, lower(m.pref_name) AS n FROM chembl.molecule_dictionary m WHERE m.pref_name IS NOT NULL AND m.parent_chembl_id IS NOT NULL\n  UNION\n  SELECT DISTINCT m.parent_chembl_id, lower(s.synonyms) FROM chembl.molecule_dictionary m JOIN chembl.molecule_synonyms s ON s.chembl_id = m.chembl_id WHERE m.parent_chembl_id IS NOT NULL\n), trials AS (\n  SELECT DISTINCT nct_id FROM aact.browse_conditions WHERE downcase_mesh_term = 'multiple myeloma'\n), tn AS (\n  SELECT DISTINCT lower(i.name) AS n FROM aact.interventions i JOIN trials t ON t.nct_id = i.nct_id\n  UNION\n  SELECT DISTINCT lower(o.name) FROM aact.intervention_other_names o JOIN trials t ON t.nct_id = o.nct_id\n)\nSELECT count(DISTINCT x.pid) FROM tn JOIN names x ON x.n = tn.n",
+   "error": null
+  }
+ ],
+ "answer": 550.0
+}

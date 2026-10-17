@@ -1,0 +1,24 @@
+{
+ "question": "En cáncer de mama, ¿qué fármacos dirigidos al gen ERBB2 (HER2) aparecen en ensayos de fase 3 o de fase 2/3?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?mama rdfs:label \"Breast Neoplasms\"@en .\n  ?t :condition ?c . ?c :within ?mama .\n  ?t :phase ?ph . FILTER(?ph IN (\"PHASE3\",\"PHASE2/PHASE3\"))\n  ?t :testsDrug ?d . ?d :hasTarget ?tg . ?tg :gene \"ERBB2\" .\n  ?d :name ?name .\n}",
+   "error": null
+  }
+ ],
+ "answer": [
+  "AFATINIB",
+  "DISITAMAB VEDOTIN",
+  "GANCOTAMAB",
+  "KN-026",
+  "LAPATINIB",
+  "NERATINIB",
+  "PERTUZUMAB",
+  "PYROTINIB",
+  "TRASTUZUMAB",
+  "TRASTUZUMAB DERUXTECAN",
+  "TRASTUZUMAB DUOCARMAZINE",
+  "TRASTUZUMAB EMTANSINE",
+  "TUCATINIB"
+ ]
+}

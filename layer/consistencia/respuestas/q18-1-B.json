@@ -1,0 +1,33 @@
+{
+ "question": "¿Cuáles son los fármacos anti-PD-1 o anti-PD-L1 (genes PDCD1 o CD274) que se prueban en cáncer de pulmón en ensayos de fase 3, contando los de fase 2/3?",
+ "attempts": [
+  {
+   "query": "WITH tgt AS (\n  SELECT DISTINCT md.parent_chembl_id AS pid\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id\n  WHERE tc.gene_symbol IN ('PDCD1','CD274')\n), names AS (\n  SELECT DISTINCT h.pid, lower(m.pref_name) AS n FROM tgt h JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = h.pid WHERE m.pref_name IS NOT NULL\n  UNION\n  SELECT DISTINCT h.pid, lower(s.synonyms) FROM tgt h JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = h.pid JOIN chembl.molecule_synonyms s ON s.chembl_id = m.chembl_id\n), trials AS (\n  SELECT DISTINCT s.nct_id FROM aact.studies s\n  JOIN aact.browse_conditions b ON b.nct_id = s.nct_id AND b.downcase_mesh_term = 'lung neoplasms'\n  WHERE s.phase IN ('PHASE3','PHASE2/PHASE3')\n), tnames AS (\n  SELECT DISTINCT lower(i.name) AS n FROM aact.interventions i JOIN trials t ON t.nct_id = i.nct_id\n  UNION\n  SELECT DISTINCT lower(o.name) FROM aact.intervention_other_names o JOIN trials t ON t.nct_id = o.nct_id\n)\nSELECT DISTINCT md.pref_name\nFROM names n\nJOIN tnames t ON length(n.n) >= 4 AND position(n.n IN t.n) > 0\nJOIN chembl.molecule_dictionary md ON md.chembl_id = n.pid",
+   "error": null
+  }
+ ],
+ "answer": [
+  "CADONILIMAB",
+  "ATEZOLIZUMAB",
+  "RETIFANLIMAB",
+  "SUGEMALIMAB",
+  "COSIBELIMAB",
+  "CEMIPLIMAB",
+  "BUDIGALIMAB",
+  "AVELUMAB",
+  "SINTILIMAB",
+  "DOSTARLIMAB",
+  "CAMRELIZUMAB",
+  "TORIPALIMAB",
+  "PENPULIMAB",
+  "BINTRAFUSP ALFA",
+  "NIVOLUMAB",
+  "DURVALUMAB",
+  "PEMBROLIZUMAB",
+  "ADEBRELIMAB",
+  "SOCAZOLIMAB",
+  "SERPLULIMAB",
+  "ZIMBERELIMAB",
+  "TISLELIZUMAB"
+ ]
+}

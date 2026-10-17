@@ -1,0 +1,10 @@
+{
+ "question": "Contá los ensayos de linfoma con fecha de inicio en 2020 o después que incluyen rituximab.",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?lin rdfs:label \"Lymphoma\"@en .\n  ?t :condition ?c . ?c :within ?lin .\n  ?t :testsDrug ?d . ?d :name \"RITUXIMAB\" .\n  ?t :startDate ?sd . FILTER(?sd >= \"2020-01-01\"^^xsd:date)\n}",
+   "error": null
+  }
+ ],
+ "answer": 309.0
+}

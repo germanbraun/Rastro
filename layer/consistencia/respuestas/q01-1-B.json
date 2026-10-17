@@ -1,0 +1,28 @@
+{
+ "question": "¿Cuáles son los fármacos que actúan sobre HER2 (gen ERBB2) y que se están probando en cáncer de mama en ensayos de fase 3, contando también los de fase 2/3?",
+ "attempts": [
+  {
+   "query": "WITH her2 AS (\n  SELECT DISTINCT md.parent_chembl_id AS pid\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id\n  WHERE tc.gene_symbol = 'ERBB2'\n), names AS (\n  SELECT h.pid, lower(m.pref_name) AS n FROM her2 h JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = h.pid WHERE m.pref_name IS NOT NULL\n  UNION\n  SELECT h.pid, lower(s.synonyms) FROM her2 h JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = h.pid JOIN chembl.molecule_synonyms s ON s.chembl_id = m.chembl_id\n), trials AS (\n  SELECT s.nct_id FROM aact.studies s\n  WHERE s.phase IN ('PHASE3','PHASE2/PHASE3')\n    AND EXISTS (SELECT 1 FROM aact.browse_conditions b WHERE b.nct_id = s.nct_id AND b.downcase_mesh_term = 'breast neoplasms')\n), tnames AS (\n  SELECT i.nct_id, lower(i.name) AS n FROM aact.interventions i JOIN trials t ON t.nct_id = i.nct_id\n  UNION\n  SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o JOIN trials t ON t.nct_id = o.nct_id\n)\nSELECT DISTINCT md.pref_name\nFROM names n\nJOIN tnames t ON t.n ~ ('\\m' || regexp_replace(n.n, '([^a-z0-9 ])', '\\\\\\1', 'g') || '\\M')\nJOIN chembl.molecule_dictionary md ON md.chembl_id = n.pid",
+   "error": "canceling statement due to statement timeout"
+  },
+  {
+   "query": "WITH her2 AS (\n  SELECT DISTINCT md.parent_chembl_id AS pid\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id\n  WHERE tc.gene_symbol = 'ERBB2'\n), names AS (\n  SELECT DISTINCT h.pid, lower(m.pref_name) AS n FROM her2 h JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = h.pid WHERE m.pref_name IS NOT NULL\n  UNION\n  SELECT DISTINCT h.pid, lower(s.synonyms) FROM her2 h JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = h.pid JOIN chembl.molecule_synonyms s ON s.chembl_id = m.chembl_id\n), trials AS (\n  SELECT DISTINCT s.nct_id FROM aact.studies s\n  JOIN aact.browse_conditions b ON b.nct_id = s.nct_id AND b.downcase_mesh_term = 'breast neoplasms'\n  WHERE s.phase IN ('PHASE3','PHASE2/PHASE3')\n), tnames AS (\n  SELECT DISTINCT lower(i.name) AS n FROM aact.interventions i JOIN trials t ON t.nct_id = i.nct_id\n  UNION\n  SELECT DISTINCT lower(o.name) FROM aact.intervention_other_names o JOIN trials t ON t.nct_id = o.nct_id\n)\nSELECT DISTINCT md.pref_name\nFROM names n\nJOIN tnames t ON length(n.n) >= 4 AND position(n.n IN t.n) > 0\nJOIN chembl.molecule_dictionary md ON md.chembl_id = n.pid",
+   "error": null
+  }
+ ],
+ "answer": [
+  "PERTUZUMAB",
+  "TRASTUZUMAB DUOCARMAZINE",
+  "TRASTUZUMAB EMTANSINE",
+  "NERATINIB",
+  "DISITAMAB VEDOTIN",
+  "GANCOTAMAB",
+  "TRASTUZUMAB DERUXTECAN",
+  "PYROTINIB",
+  "LAPATINIB",
+  "TRASTUZUMAB",
+  "TUCATINIB",
+  "AFATINIB",
+  "KN-026"
+ ]
+}

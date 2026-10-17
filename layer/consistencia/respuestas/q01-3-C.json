@@ -1,0 +1,24 @@
+{
+ "question": "Listá los fármacos con target ERBB2 (HER2) que tienen ensayos de fase 3 (incluye fase 2/3) en cáncer de mama.",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?d a :Drug ; :name ?name ; :hasTarget ?t .\n  ?t :gene \"ERBB2\" .\n  ?tr :testsDrug ?d ; :phase ?p ; :condition ?c .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c :within ?m . ?m rdfs:label \"Breast Neoplasms\"@en .\n}",
+   "error": null
+  }
+ ],
+ "answer": [
+  "AFATINIB",
+  "DISITAMAB VEDOTIN",
+  "GANCOTAMAB",
+  "KN-026",
+  "LAPATINIB",
+  "NERATINIB",
+  "PERTUZUMAB",
+  "PYROTINIB",
+  "TRASTUZUMAB",
+  "TRASTUZUMAB DERUXTECAN",
+  "TRASTUZUMAB DUOCARMAZINE",
+  "TRASTUZUMAB EMTANSINE",
+  "TUCATINIB"
+ ]
+}

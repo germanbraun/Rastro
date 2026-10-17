@@ -1,0 +1,21 @@
+{
+ "question": "En cáncer de mama, ¿qué fármacos dirigidos al gen ERBB2 (HER2) aparecen en ensayos de fase 3 o de fase 2/3?",
+ "attempts": [
+  {
+   "query": "WITH farmacos AS (\n  SELECT DISTINCT m.pref_name\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary m ON m.chembl_id = COALESCE(dm.parent_chembl_id, dm.chembl_id)\n  WHERE tc.gene_symbol = 'ERBB2' AND m.pref_name IS NOT NULL\n),\nensayos AS (\n  SELECT DISTINCT s.nct_id\n  FROM aact.studies s\n  JOIN aact.browse_conditions bc ON bc.nct_id = s.nct_id\n  WHERE bc.downcase_mesh_term = 'breast neoplasms'\n    AND s.phase IN ('PHASE3', 'PHASE2/PHASE3')\n),\nnombres AS (\n  SELECT i.nct_id, lower(i.name) AS nombre FROM aact.interventions i\n  UNION\n  SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o\n)\nSELECT DISTINCT f.pref_name\nFROM farmacos f\nJOIN nombres n ON n.nombre LIKE '%' || lower(f.pref_name) || '%'\nJOIN ensayos e ON e.nct_id = n.nct_id\nORDER BY 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "DISITAMAB VEDOTIN",
+  "LAPATINIB",
+  "NERATINIB",
+  "PERTUZUMAB",
+  "PYROTINIB",
+  "TRASTUZUMAB",
+  "TRASTUZUMAB DERUXTECAN",
+  "TRASTUZUMAB DUOCARMAZINE",
+  "TRASTUZUMAB EMTANSINE",
+  "TUCATINIB"
+ ]
+}

@@ -1,0 +1,32 @@
+{
+ "question": "En cáncer de pulmón, ¿qué fármacos dirigidos a PDCD1 o CD274 (PD-1 o PD-L1) aparecen en ensayos de fase 3 o fase 2/3?",
+ "attempts": [
+  {
+   "query": "WITH farmacos AS (\n  SELECT DISTINCT m.pref_name\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary m ON m.chembl_id = COALESCE(dm.parent_chembl_id, dm.chembl_id)\n  WHERE tc.gene_symbol IN ('PDCD1', 'CD274') AND m.pref_name IS NOT NULL\n),\nensayos AS (\n  SELECT DISTINCT s.nct_id\n  FROM aact.studies s\n  JOIN aact.browse_conditions bc ON bc.nct_id = s.nct_id\n  WHERE bc.downcase_mesh_term = 'lung neoplasms'\n    AND s.phase IN ('PHASE3', 'PHASE2/PHASE3')\n),\nnombres AS (\n  SELECT i.nct_id, lower(i.name) AS nombre FROM aact.interventions i\n  UNION\n  SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o\n)\nSELECT DISTINCT f.pref_name\nFROM farmacos f\nJOIN nombres n ON n.nombre LIKE '%' || lower(f.pref_name) || '%'\nJOIN ensayos e ON e.nct_id = n.nct_id\nORDER BY 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "ADEBRELIMAB",
+  "ATEZOLIZUMAB",
+  "AVELUMAB",
+  "BINTRAFUSP ALFA",
+  "BUDIGALIMAB",
+  "CADONILIMAB",
+  "CAMRELIZUMAB",
+  "CEMIPLIMAB",
+  "COSIBELIMAB",
+  "DOSTARLIMAB",
+  "DURVALUMAB",
+  "NIVOLUMAB",
+  "PEMBROLIZUMAB",
+  "PENPULIMAB",
+  "RETIFANLIMAB",
+  "SERPLULIMAB",
+  "SINTILIMAB",
+  "SUGEMALIMAB",
+  "TISLELIZUMAB",
+  "TORIPALIMAB",
+  "ZIMBERELIMAB"
+ ]
+}

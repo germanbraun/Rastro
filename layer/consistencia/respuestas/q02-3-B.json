@@ -1,0 +1,14 @@
+{
+ "question": "¿Cuántos ensayos clínicos de fase 3 (incluye fase 2/3) tienen entre sus intervenciones un fármaco dirigido a EGFR?",
+ "attempts": [
+  {
+   "query": "WITH drugs AS (\n  SELECT DISTINCT md.parent_chembl_id\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id\n  WHERE tc.gene_symbol = 'EGFR'\n),\nnames AS (\n  SELECT DISTINCT lower(p.pref_name) AS n FROM drugs d JOIN chembl.molecule_dictionary p ON p.chembl_id = d.parent_chembl_id WHERE p.pref_name IS NOT NULL\n  UNION\n  SELECT lower(s.synonyms) FROM drugs d\n  JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = d.parent_chembl_id\n  JOIN chembl.molecule_synonyms s ON s.chembl_id = m.chembl_id\n),\ntrials AS (\n  SELECT nct_id FROM aact.studies WHERE phase IN ('PHASE3','PHASE2/PHASE3')\n),\ntnames AS (\n  SELECT i.nct_id, lower(i.name) AS n FROM aact.interventions i JOIN trials t ON t.nct_id = i.nct_id\n  UNION\n  SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o JOIN trials t ON t.nct_id = o.nct_id\n)\nSELECT count(DISTINCT tn.nct_id)\nFROM names nm JOIN tnames tn ON tn.n ~ ('\\m' || regexp_replace(nm.n, '([.*+?^${}()|\\[\\]\\\\])', '\\\\\\1', 'g') || '\\M')",
+   "error": "canceling statement due to statement timeout"
+  },
+  {
+   "query": "WITH drugs AS (\n  SELECT DISTINCT md.parent_chembl_id\n  FROM chembl.drug_mechanism dm\n  JOIN chembl.target_components tc ON tc.target_chembl_id = dm.target_chembl_id\n  JOIN chembl.molecule_dictionary md ON md.chembl_id = dm.chembl_id\n  WHERE tc.gene_symbol = 'EGFR'\n),\nnames AS (\n  SELECT DISTINCT n FROM (\n    SELECT lower(p.pref_name) AS n FROM drugs d JOIN chembl.molecule_dictionary p ON p.chembl_id = d.parent_chembl_id\n    UNION\n    SELECT lower(s.synonyms) FROM drugs d\n    JOIN chembl.molecule_dictionary m ON m.parent_chembl_id = d.parent_chembl_id\n    JOIN chembl.molecule_synonyms s ON s.chembl_id = m.chembl_id\n  ) x WHERE length(n) >= 5\n),\ntnames AS (\n  SELECT DISTINCT i.nct_id, lower(i.name) AS n FROM aact.interventions i JOIN aact.studies s ON s.nct_id = i.nct_id\n  WHERE s.phase IN ('PHASE3','PHASE2/PHASE3')\n  UNION\n  SELECT o.nct_id, lower(o.name) FROM aact.intervention_other_names o JOIN aact.studies s ON s.nct_id = o.nct_id\n  WHERE s.phase IN ('PHASE3','PHASE2/PHASE3')\n)\nSELECT count(DISTINCT tn.nct_id)\nFROM tnames tn JOIN names nm ON position(nm.n IN tn.n) > 0",
+   "error": null
+  }
+ ],
+ "answer": 488.0
+}

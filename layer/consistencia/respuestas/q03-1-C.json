@@ -1,0 +1,14 @@
+{
+ "question": "En cáncer de pulmón, ¿qué 3 sponsors de la industria tienen más ensayos detenidos (terminados o retirados)? Contá solo al sponsor principal de cada ensayo.",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?name WHERE {\n  ?t a :Trial ; :status ?s ; :condition ?c ; :sponsor ?sp .\n  FILTER(?s IN (\"TERMINATED\", \"WITHDRAWN\"))\n  ?c :within ?m . ?m rdfs:label \"Lung Neoplasms\"@en .\n  ?sp :industry true ; :name ?name .\n}\nGROUP BY ?name\nORDER BY DESC(COUNT(DISTINCT ?t))\nLIMIT 3",
+   "error": null
+  }
+ ],
+ "answer": [
+  "Pfizer",
+  "Novartis Pharmaceuticals",
+  "AstraZeneca"
+ ]
+}

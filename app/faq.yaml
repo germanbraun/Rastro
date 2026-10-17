@@ -2,43 +2,38 @@
 # Los valores entre llaves ({secs_b}, {reinvented}...) los completa la app con los
 # números de la evaluación guardada.
 
+# --- Qué es -----------------------------------------------------------
+
 - question: ¿Qué es Rastro?
   answer: |-
-    Una **capa semántica**: integra cuatro fuentes públicas de oncología y las describe con conceptos de negocio: ensayo, fármaco, target, sponsor, evento adverso. Un LLM pregunta sobre esos conceptos en lugar de adivinar cómo se cruzan las tablas, y cada respuesta dice de dónde viene.
+    Una **capa semántica** sobre cuatro fuentes públicas de oncología. Las describe con conceptos de negocio (ensayo, fármaco, target, sponsor, evento adverso), un LLM pregunta sobre esos conceptos, y cada respuesta dice de qué fuente sale.
 
-    Técnicamente es un **Virtual Knowledge Graph** (VKG), también llamado acceso a datos basado en ontologías (OBDA): una **ontología** con el vocabulario del dominio, **mapeos** que la conectan con las fuentes, y un grafo **virtual**, que se consulta sin copiar los datos a otro lado. Usa los estándares del W3C para eso: RDF, OWL, R2RML y SPARQL.
+    Técnicamente es un **Virtual Knowledge Graph**: ontología, mapeos R2RML y SPARQL, estándares del W3C. Es pragmático: las fuentes se cargan en Postgres, y los enlaces y la jerarquía de MeSH quedan precalculados en tablas.
 
-    Es un VKG pragmático: las fuentes se cargan primero en Postgres, y los enlaces y la jerarquía de MeSH quedan precalculados en tablas. Sobre eso, el grafo es virtual.
+- question: Sé SQL. ¿Qué es cada pieza, en términos de SQL?
+  answer: |-
+    | Tecnología semántica | En términos de SQL |
+    |---|---|
+    | **Ontología** | El esquema de negocio documentado: las tablas que te gustaría tener |
+    | **Mapeo (R2RML)** | Una definición de vista: «esta columna de esta tabla es este concepto» |
+    | **SPARQL** | Un lenguaje de consulta sobre conceptos en lugar de tablas |
+    | **Ontop** | Un compilador: traduce la consulta a SQL normal sobre las tablas reales |
+    | **Entity linking** | La clave de join que faltaba, calculada una vez |
+
+    Los datos no se mueven: siguen en Postgres, y cada pregunta se ejecuta como SQL.
 
 - question: ¿Qué pasa cuando hago una pregunta?
   answer: |-
-    1. El LLM recibe la ontología de Rastro como contexto y traduce la pregunta a una consulta SPARQL sobre esos conceptos.
-    2. Rastro la convierte en SQL y la ejecuta en vivo sobre las fuentes, sin copiarlas.
-    3. Ves la respuesta, las fuentes que usó y la fuente de cada columna. En «¿Cómo lo supe?» están la consulta y el SQL exactos.
+    1. El LLM recibe la **ontología** como contexto: los conceptos, cómo se relacionan y qué significa cada uno. Con eso escribe una consulta SPARQL. No ve tablas, así que no tiene que adivinar cómo se cruzan.
+    2. Ontop la traduce a SQL y la ejecuta en vivo sobre Postgres.
+    3. Ves la respuesta y la fuente de cada columna. En «¿Cómo lo supe?» están la consulta y el SQL exactos, para revisarlos: el LLM todavía puede elegir mal un concepto o un filtro.
 
-- question: ¿Cómo sabe el LLM qué conceptos usar?
+- question: ¿Qué tiene cada fuente, y dónde está?
   answer: |-
-    Porque recibe la **ontología** como contexto: la lista de conceptos (ensayo, fármaco, target, sponsor, evento adverso), cómo se relacionan y qué significa cada uno. Con eso escribe la consulta SPARQL.
-
-    Es una fuente de confianza: el LLM no inventa cómo se cruzan las tablas ni qué es un «fármaco», usa definiciones ya hechas y revisadas. Y la consulta queda a la vista en «¿Cómo lo supe?»: es corta y en palabras de negocio, así que alguien puede revisarla.
-
-    Lo que no garantiza: el LLM todavía puede elegir mal un concepto o un filtro. Por eso se muestra la consulta.
-
-    En cambio, con el SQL directo el LLM solo ve nombres de tablas y columnas, y tiene que deducir el resto en cada pregunta.
-
-- question: ¿De dónde salen los datos y dónde están guardados?
-  answer: |-
-    - 🐘 **AACT** (ensayos de ClinicalTrials.gov), **ChEMBL** (fármacos y targets) y **openFDA** (eventos adversos) están en Postgres.
-    - 🕸️ **MeSH** (enfermedades y sus subtipos) está completo en GraphDB. Rastro usa una copia de su jerarquía en Postgres.
-
-    Las consultas corren en vivo sobre Postgres: Ontop traduce cada pregunta a SQL.
-
-- question: ¿Qué tiene cada fuente, en palabras simples?
-  answer: |-
-    - **AACT** es el registro público de **ensayos clínicos**, los estudios en personas para probar un tratamiento. Trae la fase (1: ¿es seguro?, 2: ¿funciona?, 3: ¿es mejor que lo que hay?), el estado (por ejemplo terminado antes de tiempo), quién lo paga (el sponsor) y qué se prueba, escrito como texto libre.
-    - **ChEMBL** es una base europea de **fármacos**: sus nombres y códigos, si están aprobados, y sobre qué **proteína del cuerpo** actúan (el target, con el nombre corto de su gen, como HER2 o EGFR).
-    - **openFDA** trae los **reportes de efectos adversos** que médicos y pacientes envían a la FDA. Son avisos espontáneos, no porcentajes de riesgo.
-    - **MeSH** es el **vocabulario médico** de la Biblioteca Nacional de Medicina de EE. UU.: sabe que «cáncer de pulmón de células no pequeñas» es un tipo de «cáncer de pulmón».
+    - 🐘 **AACT**, en Postgres: el registro público de **ensayos clínicos**. Fase, estado, sponsor y qué se prueba, como texto libre.
+    - 🐘 **ChEMBL**, en Postgres: **fármacos**, si están aprobados y sobre qué **proteína** actúan (el target, con el nombre de su gen, como HER2).
+    - 🐘 **openFDA**, en Postgres: **reportes de efectos adversos** enviados a la FDA. Son avisos, no porcentajes de riesgo.
+    - 🕸️ **MeSH**, en GraphDB, con una copia de su jerarquía en Postgres: el **vocabulario médico** que sabe qué enfermedad es subtipo de cuál.
 
     Más detalle, ejemplos y un glosario en docs/fuentes.md.
 
@@ -48,120 +43,84 @@
     ejecutan en vivo. Para preguntas propias hace falta un LLM: la Claude API (de pago
     por uso) u Ollama, gratis en la propia computadora. Ver layer/README.md.
 
+# --- Frente a SQL -----------------------------------------------------
+
 - question: Si el SQL directo acierta 18 de 20 y Rastro 20, ¿cuál es la ventaja?
   answer: |-
-    La diferencia no está en cuántas acierta, sino en cuánto podés confiar en cada respuesta:
-    - **Definiciones distintas en cada respuesta.** En {reinvented} de 20 preguntas, el SQL directo tuvo que inventar cómo reconocer un fármaco, y lo hizo de {n_methods} formas distintas. Rastro usa siempre el mismo enlace, revisado sobre una muestra.
-    - **Errores que no avisan.** Sus respuestas incorrectas parecen razonables (488 ensayos en vez de 438).
-    - **Más lento y más frágil.** Sus 20 consultas tardan {secs_b} s y {retries_b} necesitaron reintento; las de Rastro, {secs_c} s y {retries_c} reintentos.
+    No está en cuántas acierta, sino en cuánto podés confiar en cada respuesta:
+    - **Una sola definición.** En {reinvented} de 20 preguntas, el SQL directo tuvo que inventar cómo reconocer un fármaco en el texto del ensayo, y lo hizo de {n_methods} formas distintas. Rastro usa siempre el mismo enlace.
+    - **Errores que no avisan.** Buscando pedazos de nombres, el SQL directo encontró «humab» dentro de «rhuMAb HER2» y contó 488 ensayos anti-EGFR en vez de 438. Parece razonable.
+    - **Más lento y más frágil.** Sus 20 consultas tardan {secs_b} s y {retries_b} necesitaron reintento; las de Rastro, {secs_c} s y {retries_c}.
     - **Procedencia.** Rastro dice de qué fuente sale cada dato.
 
-- question: ¿Por qué Rastro acierta donde el SQL directo falla?
+- question: ¿Da la misma respuesta si pregunto lo mismo de otra forma?
   answer: |-
-    Porque Rastro ya sabe **qué fármaco prueba cada ensayo**, y el SQL directo lo tiene que adivinar en cada consulta.
+    Con Rastro, sí. Escribimos 10 de las preguntas de 4 formas distintas, con el mismo significado, y el mismo LLM respondió cada una sin ver las otras:
+    - **SQL directo:** la respuesta cambia según cómo se pregunte en 9 de las 10. Los ensayos anti-EGFR dan 488, 488, 409 o 488. Acierta 32 de 40.
+    - **Rastro:** la misma respuesta en las 4 versiones de las 10 preguntas. Acierta 40 de 40.
 
-    ClinicalTrials.gov no dice "este ensayo prueba el fármaco X". Dice, en el texto que escribió cada sponsor, «Pembrolizumab 200 mg», «MK-3475» o «Keytruda». Para responder "¿cuántos ensayos prueban fármacos anti-EGFR?" primero hay que convertir ese texto en un fármaco concreto. El SQL directo lo improvisa en cada consulta, y ahí se equivoca: buscando pedazos de nombres, «humab» coincidió con «rhuMAb HER2» (trastuzumab, que no es anti-EGFR).
+    El SQL directo inventa en cada consulta cómo reconocer un fármaco en el texto del ensayo; Rastro usa siempre el mismo enlace. Detalle en layer/consistencia/.
 
-- question: ¿Qué problemas de integración resuelve Rastro?
+- question: ¿Por qué no vistas SQL sobre las tablas de enlaces?
   answer: |-
-    Las fuentes son **heterogéneas** de cuatro formas (según la clasificación del tutorial de Virtual Knowledge Graphs de Calvanese, Cogrel y Lanti, Ontobras 2022), y Rastro aborda las cuatro:
+    Con las mismas tablas de enlaces, el SQL directo acertaría casi igual, y unas buenas vistas dan una capa con nombres de negocio y una sola definición de cada cosa. Para un caso chico pueden alcanzar.
 
-    | Heterogeneidad | Ejemplo en Rastro | Cómo la resuelve |
-    |---|---|---|
-    | **De modelo de datos** | AACT y ChEMBL son tablas, openFDA es JSON y MeSH es RDF | Los cargadores las llevan a Postgres y a GraphDB |
-    | **De sistema** | AACT en un Postgres en la nube, ChEMBL y openFDA por API, MeSH como archivo | Un cargador por fuente |
-    | **De esquema** | openFDA dice `query_id`, ChEMBL `chembl_id`, y ambos son «Fármaco» | **Ontología y mapeos R2RML** |
-    | **De datos** | «Pembrolizumab 200 mg», «MK-3475» y «Keytruda» son el mismo fármaco | **Entity linking**, hecho una vez y revisado |
+    La capa semántica agrega:
+    - **Composición:** cualquier combinación de conceptos funciona sin crear una vista para cada pregunta.
+    - **Jerarquías:** «cáncer de pulmón» incluye sus subtipos.
+    - **Procedencia:** la fuente de cada columna de la respuesta.
+    - **Contexto para el LLM:** un vocabulario con definiciones, no nombres de tablas.
+    - **Estándares abiertos** (W3C), que otras herramientas entienden, no atados a una base.
 
-    El SQL directo tiene que resolver las dos últimas dentro de cada consulta, y de ahí vienen sus errores y su lentitud. Las dos preguntas siguientes explican cada una.
-
-- question: ¿Cómo sabe Rastro qué fármaco prueba cada ensayo?
+- question: ¿Dónde quedó la complejidad del SQL?
   answer: |-
-    Con **entity linking** (vinculación de entidades), que resuelve la **heterogeneidad de datos**: cada mención de un fármaco en el texto de un ensayo se conecta con una entrada de una base de conocimiento, ChEMBL. Lo hace un programa, una sola vez, para las 130.000 intervenciones.
+    En la capa. El SPARQL es corto porque solo nombra conceptos: promedia 368 caracteres, contra 726 del SQL que escribió el LLM. En la pregunta de HER2: 435 contra 1.543.
 
-    **Entrada**, en AACT: `NCT05563467 · «Pembrolizumab 25 MG/ML [Keytruda]»`
+    La complejidad se escribe una vez, en los mapeos y en los enlaces, y Ontop genera el SQL (742 caracteres para HER2): joins simples sobre tablas revisadas, que nadie escribe ni mantiene. En preguntas muy simples el SQL directo puede ser más corto; la ventaja aparece al cruzar fuentes.
 
-    **Salida**, en la tabla de enlaces: `NCT05563467 · CHEMBL3137343 (pembrolizumab)`
-
-    Es el tipo más simple, **por diccionario**: compara el texto con los nombres y sinónimos de ChEMBL, en tres pasos.
-    1. **Encontrar la mención:** separar combinaciones y buscar palabras o frases de hasta 4 palabras.
-    2. **Buscar candidatos:** compararlas con los nombres de ChEMBL, sin mayúsculas, puntuación ni dosis.
-    3. **Desambiguar:** si un nombre apunta a varios fármacos, gana el nombre más largo, el nombre oficial de un fármaco le gana al sinónimo de otro, y las palabras genéricas no cuentan.
-
-    Ejemplos reales de cada regla:
-
-    | Qué dice el ensayo | Regla | Resultado |
-    |---|---|---|
-    | «Trastuzumab» | nombre exacto | trastuzumab |
-    | «MK-3475», «PTK787» | sinónimo de ChEMBL | pembrolizumab, vatalanib |
-    | alias en AACT: «Taxotere» | alias | docetaxel |
-    | «Carboplatin + Paclitaxel» | combinación | carboplatino y paclitaxel |
-    | «FOLFOX» | régimen conocido | fluorouracilo, leucovorina y oxaliplatino |
-    | «Pembrolizumab 200 mg» | nombre como palabra entera | pembrolizumab |
-    | «albumin-bound paclitaxel» | sin palabras genéricas | paclitaxel, no «albumin» |
-    | «rhuMAb HER2» | alias de trastuzumab | trastuzumab, que actúa sobre HER2: no cuenta como anti-EGFR |
-
-    En muestras al azar revisadas una por una, **98-99 % de los enlaces son correctos**. Esa revisión la hizo un asistente de IA: falta confirmarla con una persona (docs/verificacion-humana.md). Un entity linking más sofisticado usaría el contexto, con un modelo o un LLM. Acá no hizo falta, porque los nombres de fármacos son muy específicos. Las reglas están en linking/drugs.sql y la revisión, en linking/review-2026-10-16.md.
-
-- question: ¿Cómo junta Rastro columnas distintas que significan lo mismo?
+- question: ¿Qué pasa si una fuente cambia?
   answer: |-
-    Es la **heterogeneidad de esquemas**, y la resuelven la ontología y los **mapeos** (R2RML). Cada fuente llama a las cosas a su manera: openFDA identifica un fármaco con `query_id`, ChEMBL con `chembl_id`, y los enlaces con `parent_chembl_id`. Los mapeos dicen que todas esas columnas son **el mismo concepto**, así que en Rastro hay un solo «Fármaco», con sus ensayos, sus targets y sus eventos adversos juntos.
+    Lo probamos con las 20 consultas guardadas, simulando una versión nueva de AACT:
+    - **Cambia el nombre de una columna:** 5 consultas del SQL directo fallan y hay que reescribirlas. En Rastro, **una línea del mapeo**.
+    - **Cambia cómo se escribe un valor** (`TERMINATED` → `Terminated`): el SQL directo no falla, pero 5 respuestas pasan a 0 sin aviso. Rastro también, hasta que se arregla, pero su control de vocabulario avisa. Y se arregla con una línea.
 
-    Esta tabla sale directamente de los mapeos (mappings/rastro.r2rml.ttl):
+    Detalle en docs/demo-cambio.md.
+
+# --- Cómo integra -----------------------------------------------------
+
+- question: ¿Qué problemas de integración resuelve?
+  answer: |-
+    Según el tutorial de Virtual Knowledge Graphs de Calvanese, Cogrel y Lanti (Ontobras 2022), hay cuatro tipos de heterogeneidad. Los dos que importan:
+
+    - **De esquema:** el mismo concepto en columnas distintas. openFDA dice `query_id`, ChEMBL `chembl_id`, y ambos son «Fármaco». Lo resuelven la **ontología y los mapeos**. Esta tabla sale de los mapeos:
 
     {unified_columns}
 
-    Las condiciones usan los mismos identificadores que MeSH (`http://id.nlm.nih.gov/mesh/...`), así que un descriptor en Postgres y el mismo descriptor en GraphDB son la misma entidad.
+    - **De datos:** la misma entidad escrita distinto. «Pembrolizumab 200 mg», «MK-3475» y «Keytruda» son el mismo fármaco. Lo resuelve el **entity linking**.
 
-- question: Si Ontop y los mapeos resuelven los cruces, ¿para qué la tabla de enlaces?
+    Los mapeos solo unen valores iguales. Entre AACT y ChEMBL no hay ninguno: AACT dice «Pembrolizumab 200 mg» y ChEMBL `CHEMBL3137343`. Por eso hace falta el entity linking, que **crea** esa clave. Las otras dos (de modelo de datos y de sistema) las resuelven los cargadores. Más en docs/integracion.md.
+
+- question: ¿Cómo sabe Rastro qué fármaco prueba cada ensayo?
   answer: |-
-    Porque los mapeos resuelven la heterogeneidad **de esquema**, no la **de datos**.
+    Con **entity linking por diccionario**, calculado una vez para las 130.000 intervenciones: compara el texto del ensayo con los nombres y sinónimos de ChEMBL.
 
-    Ontop une dos tablas cuando comparten un **valor igual**: el `query_id` de openFDA y el `chembl_id` de ChEMBL valen los dos «CHEMBL941», así que la unión es automática. Pero entre AACT y ChEMBL no hay un valor en común: AACT dice «Pembrolizumab 200 mg» y ChEMBL dice `CHEMBL3137343`. Ningún mapeo puede inventar esa igualdad.
+    | Qué dice el ensayo | Resultado |
+    |---|---|
+    | «MK-3475» | pembrolizumab (sinónimo de ChEMBL) |
+    | «Carboplatin + Paclitaxel» | carboplatino y paclitaxel (combinación) |
+    | «FOLFOX» | fluorouracilo, leucovorina y oxaliplatino (régimen) |
+    | «Pembrolizumab 200 mg» | pembrolizumab (nombre como palabra entera) |
 
-    El entity linking **crea** la clave que falta (ensayo → `CHEMBL3137343`). Desde ahí, el mapeo y Ontop hacen el resto. Se calcula una vez porque, dentro del mapeo, Ontop tendría que comparar texto contra 130.000 intervenciones en cada pregunta. Más detalle en docs/integracion.md.
+    Precisión: 98-99 % en muestras al azar, revisadas por un asistente de IA; falta la confirmación humana (docs/verificacion-humana.md). Hay formas más sofisticadas (coincidencia aproximada, modelos de lenguaje biomédico, un LLM), pero el diccionario ya alcanza, es explicable y siempre da lo mismo. Las otras sirven de complemento para lo que el diccionario no resuelve.
 
-- question: ¿Rastro vincula otras cosas, además de los fármacos?
-  answer: |-
-    Sí, con la misma idea:
-    - **Condición del ensayo → MeSH:** el término de AACT se conecta con el descriptor de MeSH de igual nombre. Así "cáncer de pulmón" incluye todos sus subtipos.
-    - **Sales y prodrogas → un fármaco:** el mesilato de imatinib es imatinib, y el acetato de abiraterona actúa como la abiraterona. Esto es más bien **resolución de entidades**: decidir que dos registros de la misma base son lo mismo.
-
-- question: ¿Qué otras formas de hacer entity linking hay, y por qué Rastro usa esta?
-  answer: |-
-    | Forma | Cómo funciona | A favor | En contra |
-    |---|---|---|---|
-    | **Diccionario y reglas** (Rastro) | Compara el texto con nombres y sinónimos conocidos | Simple, rápido, explicable y repetible | No encuentra lo que no está en el diccionario |
-    | **Coincidencia aproximada** (fuzzy) | Tolera diferencias de escritura («pembrolizumb») | Atrapa errores de tipeo | Confunde nombres parecidos (vinblastina y vincristina) |
-    | **Servicios terminológicos** | Usa herramientas de vocabularios médicos (UMLS, RxNorm, MetaMap) | Vocabularios curados y muy amplios | Licencias, otra dependencia, y hay que mapear después a ChEMBL |
-    | **Modelos de NLP biomédico** | Modelos entrenados que leen el contexto (scispaCy, SapBERT) | Resuelven ambigüedades por contexto | Hay que instalarlos y evaluarlos; son menos explicables |
-    | **LLM** | Se le pide al LLM que identifique el fármaco | Muy bueno con casos raros o texto confuso | Costo por consulta, resultados que pueden variar, y hay que validarlo |
-
-    Rastro usa diccionario y reglas porque ya alcanza el **98-99 % de precisión** y es lo más simple de explicar y auditar. Las otras formas sirven como **complemento**, no como reemplazo: por ejemplo, pasarle a un LLM o a un modelo solo las menciones que el diccionario no resolvió y que parecen fármacos. La mayoría de las intervenciones sin enlace no son fármacos («placebo», «chemotherapy»), así que hoy no hace falta.
-
-- question: ¿Por qué conviene resolverlo una vez y no en cada consulta?
-  answer: |-
-    - **Una sola definición.** "Ensayo que prueba el fármaco X" significa lo mismo en todas las preguntas. El SQL directo lo calculó de {n_methods} formas distintas en 20 preguntas.
-    - **Se puede revisar.** Las reglas se leen y su precisión está medida. Lo que improvisa el SQL directo no lo revisa nadie.
-    - **Se corrige una vez y mejora todo.** Cuando apareció un error (faltaban los ensayos con bicalutamida), arreglar la regla arregló todas las preguntas que la usan.
-    - **Es rápido y repetible.** Corre en segundos, no necesita un LLM y siempre da el mismo resultado.
-
-    No es perfecto: 1 o 2 de cada 100 enlaces están mal, y se pierden algunos fármacos que solo aparecen en los alias. Pero ese error es conocido y está medido; el del SQL directo, no.
-
-- question: ¿Y si al SQL directo le doy las mismas tablas de enlaces?
-  answer: >-
-    Probablemente acertaría casi todas: la precisión viene de la integración revisada,
-    no del lenguaje de consulta. Lo que agrega la capa semántica es exponer esa
-    integración como un vocabulario de negocio que se documenta solo, que no cambia si
-    cambian las tablas, que es un estándar (lo leen otras herramientas de grafos de
-    conocimiento) y que trae la procedencia de cada dato.
+# --- Confianza en los números ----------------------------------------
 
 - question: ¿Cómo se midió? ¿No favorece a Rastro?
   answer: |-
     - El mismo LLM respondió cada pregunta sin ver la respuesta correcta, con la misma consigna y los mismos reintentos.
     - Un número es correcto si está a menos del 5 % del valor real; una lista, si coincide en al menos un 80 %.
-    - Los valores reales salen de Rastro, así que cada diferencia con el SQL directo se revisó con ensayos reales. Esa revisión encontró errores de Rastro, que se corrigieron antes del resultado. Detalle en layer/eval/adjudication.md.
-    - Ojo: las preguntas, las respuestas de referencia y esa revisión las hizo un asistente de IA (Claude Code), no el LLM evaluado. Falta que una persona las confirme: docs/verificacion-humana.md.
+    - Los valores reales salen de Rastro, así que cada diferencia con el SQL directo se revisó con ensayos reales. Esa revisión encontró y corrigió errores de Rastro. Detalle en layer/eval/adjudication.md.
+    - Las preguntas, las referencias y esa revisión las hizo un asistente de IA (Claude Code), no el LLM evaluado. Falta que una persona las confirme: docs/verificacion-humana.md.
 
 - question: ¿Los eventos adversos son frecuencias reales?
   answer: >-
