@@ -11,7 +11,6 @@ slides = "\n".join(
 (here / "index.html").write_text(f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rastro Layer</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400..800&display=swap" rel="stylesheet">
 <!-- Generado por build.py. No editar a mano: editar slides/ y volver a correr build.py. -->
 <style>
 *{{margin:0;box-sizing:border-box}}
