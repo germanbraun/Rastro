@@ -1,0 +1,73 @@
+# Prueba de composición: preguntas que cruzan 3 o 4 conceptos que ninguna pregunta
+# anterior combinaba. Mismo formato que layer/eval/questions.yaml. Las definiciones
+# van dentro de cada pregunta, como en la evaluación.
+
+prefixes: |
+  PREFIX : <https://w3id.org/rastro/ontology#>
+  PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+questions:
+
+  - id: m1
+    question: ¿Cuántos sponsors de la industria distintos, contando solo al sponsor principal de cada ensayo, tienen ensayos que prueban algún fármaco que actúa sobre BRAF?
+    kind: número
+    items: sponsors
+    reference: |
+      SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE {
+        ?t :testsDrug ?d ; :sponsor ?s . ?s :industry true .
+        ?d :hasTarget/:gene "BRAF" .
+      }
+
+  - id: m2
+    question: ¿Cuántos genes distintos son target de los fármacos que se prueban en ensayos detenidos (terminados o retirados) de cáncer de páncreas?
+    kind: número
+    items: genes
+    reference: |
+      SELECT (COUNT(DISTINCT ?g) AS ?answer) WHERE {
+        ?t :testsDrug ?d ; :status ?st ; :condition ?c .
+        FILTER (?st IN ("TERMINATED", "WITHDRAWN"))
+        ?x rdfs:label "Pancreatic Neoplasms"@en . ?c :within ?x .
+        ?d :hasTarget/:gene ?g .
+      }
+
+  - id: m3
+    question: ¿Cuántos reportes serios de eventos adversos en FAERS (openFDA) suman, entre todos, los fármacos que actúan sobre EGFR y se prueban en ensayos activos (reclutando, activos sin reclutar, todavía sin reclutar o por invitación) de cáncer de pulmón? Cada fármaco se cuenta una sola vez.
+    kind: número
+    items: reportes
+    reference: |
+      SELECT (SUM(?serious) AS ?answer) WHERE {
+        { SELECT DISTINCT ?d WHERE {
+            ?t :testsDrug ?d ; :status ?st ; :condition ?c .
+            FILTER (?st IN ("RECRUITING", "ACTIVE_NOT_RECRUITING", "NOT_YET_RECRUITING", "ENROLLING_BY_INVITATION"))
+            ?x rdfs:label "Lung Neoplasms"@en . ?c :within ?x .
+            ?d :hasTarget/:gene "EGFR" .
+        } }
+        ?y a :YearlyReports ; :drug ?d ; :seriousReports ?serious .
+      }
+
+  - id: m4
+    question: ¿Cuántos fármacos aprobados se prueban en ensayos de fase 3 (incluye fase 2/3) tanto de cáncer de mama como de cáncer de pulmón?
+    kind: número
+    items: fármacos
+    reference: |
+      SELECT (COUNT(DISTINCT ?d) AS ?answer) WHERE {
+        ?d :approved true .
+        ?t1 :testsDrug ?d ; :phase ?p1 ; :condition ?c1 . FILTER (CONTAINS(?p1, "PHASE3"))
+        ?x1 rdfs:label "Breast Neoplasms"@en . ?c1 :within ?x1 .
+        ?t2 :testsDrug ?d ; :phase ?p2 ; :condition ?c2 . FILTER (CONTAINS(?p2, "PHASE3"))
+        ?x2 rdfs:label "Lung Neoplasms"@en . ?c2 :within ?x2 .
+      }
+
+  - id: m5
+    question: ¿Qué sponsor de la industria, contando solo al sponsor principal de cada ensayo, tiene más ensayos detenidos (terminados o retirados) que prueban fármacos que actúan sobre algún gen de la familia ERBB (EGFR, ERBB2, ERBB3 o ERBB4)?
+    kind: lista
+    items: sponsors
+    reference: |
+      SELECT ?answer WHERE {
+        { SELECT ?answer (COUNT(DISTINCT ?t) AS ?n) WHERE {
+            ?t :testsDrug ?d ; :status ?st ; :sponsor ?s .
+            FILTER (?st IN ("TERMINATED", "WITHDRAWN"))
+            ?s :industry true ; :name ?answer .
+            ?d :hasTarget/:gene ?g . FILTER (?g IN ("EGFR", "ERBB2", "ERBB3", "ERBB4"))
+          } GROUP BY ?answer ORDER BY DESC(?n) LIMIT 1 }
+      }

@@ -1,0 +1,14 @@
+{
+ "question": "Top 3 de sponsors de la industria por cantidad de ensayos detenidos (terminados o retirados) en cáncer de pulmón, considerando solo el sponsor principal.",
+ "attempts": [
+  {
+   "query": "SELECT sp.name\nFROM aact.sponsors sp\nJOIN aact.studies s ON s.nct_id = sp.nct_id\nWHERE sp.lead_or_collaborator = 'lead' AND sp.agency_class = 'INDUSTRY'\n  AND s.overall_status IN ('TERMINATED','WITHDRAWN')\n  AND EXISTS (SELECT 1 FROM linking.trial_condition tc\n              JOIN mesh.ancestor a ON a.id = tc.mesh_id\n              JOIN mesh.descriptor md ON md.id = a.ancestor_id\n              WHERE tc.nct_id = s.nct_id AND md.label = 'Lung Neoplasms')\nGROUP BY sp.name\nORDER BY COUNT(DISTINCT s.nct_id) DESC\nLIMIT 3",
+   "error": null
+  }
+ ],
+ "answer": [
+  "Pfizer",
+  "Novartis Pharmaceuticals",
+  "AstraZeneca"
+ ]
+}

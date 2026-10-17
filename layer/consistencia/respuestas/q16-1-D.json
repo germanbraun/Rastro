@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos fármacos diferentes aparecen en ensayos de mieloma múltiple?",
+ "attempts": [
+  {
+   "query": "SELECT COUNT(DISTINCT td.parent_chembl_id)\nFROM linking.trial_drug td\nJOIN linking.trial_condition tc ON tc.nct_id = td.nct_id\nJOIN mesh.ancestor a ON a.id = tc.mesh_id\nJOIN mesh.descriptor md ON md.id = a.ancestor_id\nWHERE md.label = 'Multiple Myeloma'",
+   "error": null
+  }
+ ],
+ "answer": 604.0
+}

@@ -1,0 +1,10 @@
+{
+ "question": "Contá los ensayos con pembrolizumab cuyo estado es activo (reclutando, activo sin reclutar, todavía sin reclutar o por invitación).",
+ "attempts": [
+  {
+   "query": "SELECT COUNT(DISTINCT s.nct_id)\nFROM aact.studies s\nJOIN linking.trial_drug td ON td.nct_id = s.nct_id\nJOIN linking.drug d ON d.chembl_id = td.parent_chembl_id\nWHERE d.pref_name = 'PEMBROLIZUMAB'\n  AND s.overall_status IN ('RECRUITING','ACTIVE_NOT_RECRUITING','NOT_YET_RECRUITING','ENROLLING_BY_INVITATION')",
+   "error": null
+  }
+ ],
+ "answer": 961.0
+}

@@ -185,3 +185,11 @@ La audiencia son consultores que saben SQL y no conocen tecnologías semánticas
 
 También se simplificó todo: 9 diapositivas en lugar de 13, 14 preguntas frecuentes en lugar de 22, y un guion con la comparación con SQL en el centro.
 
+## 2026-10-17 — La línea de base justa cambia el mensaje
+
+Siguiendo una revisión externa, se agregó un enfoque más: SQL sobre las fuentes más las tablas de enlaces de Rastro, documentadas. Acertó 20 de 20, fue tan consistente como Rastro (10 de 10) y resolvió las 5 preguntas de 3 o 4 cruces. Su consulta es tan corta y tan rápida como la de Rastro.
+
+Conclusión: **la precisión viene de integrar una vez, no de SPARQL.** El mensaje comercial pasa a ser «integramos una vez y lo mantenemos como una capa estándar», con tres ventajas medidas de la capa semántica sobre las tablas solas: el cambio de una fuente se arregla en un lugar (también con SQL + enlaces se rompen 5 consultas), cada dato trae su fuente, y una consulta une Rastro con Wikidata en vivo (`layer/externo/`). Se dice de entrada que una capa de vistas SQL resolvería parte de esto.
+
+Para que Wikidata acepte las consultas federadas, GraphDB se identifica con `-Dhttp.agent`.
+

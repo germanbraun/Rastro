@@ -1,0 +1,10 @@
+{
+ "question": "¿En cuántos ensayos de leucemia se prueba algún fármaco que actúa sobre BTK?",
+ "attempts": [
+  {
+   "query": "SELECT COUNT(DISTINCT td.nct_id)\nFROM linking.trial_drug td\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nJOIN linking.trial_condition tc ON tc.nct_id = td.nct_id\nJOIN mesh.ancestor a ON a.id = tc.mesh_id\nJOIN mesh.descriptor md ON md.id = a.ancestor_id\nWHERE tg.gene_symbol = 'BTK' AND md.label = 'Leukemia'",
+   "error": null
+  }
+ ],
+ "answer": 269.0
+}

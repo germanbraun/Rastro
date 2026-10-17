@@ -1,0 +1,10 @@
+{
+ "question": "Contá los ensayos de linfoma con fecha de inicio en 2020 o después que incluyen rituximab.",
+ "attempts": [
+  {
+   "query": "SELECT COUNT(DISTINCT s.nct_id)\nFROM aact.studies s\nJOIN linking.trial_drug td ON td.nct_id = s.nct_id\nJOIN linking.drug d ON d.chembl_id = td.parent_chembl_id AND d.pref_name = 'RITUXIMAB'\nWHERE s.start_date >= DATE '2020-01-01'\n  AND EXISTS (\n  SELECT 1 FROM linking.trial_condition tc\n  JOIN mesh.ancestor a ON a.id = tc.mesh_id\n  JOIN mesh.descriptor md ON md.id = a.ancestor_id AND md.label = 'Lymphoma'\n  WHERE tc.nct_id = s.nct_id)",
+   "error": null
+  }
+ ],
+ "answer": 309.0
+}

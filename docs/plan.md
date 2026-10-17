@@ -125,10 +125,13 @@ Para el MVP 1, solo con Rastro Layer.
 
 - [x] Guion de 5 minutos (`docs/demo-guion.md`)
 - [x] Una página con los números de la Fase 3 (`docs/one-pager.md`)
-- [x] Diapositivas simples para acompañar el guion (`docs/slides/`, 9 diapositivas, en Times New Roman)
+- [x] Diapositivas simples para acompañar el guion (`docs/slides/`, 10 diapositivas, en Times New Roman)
 - [x] Para consultores que saben SQL: la capa en términos de SQL, por qué no vistas, dónde queda la complejidad
 - [x] Prueba de consistencia: la misma pregunta de 4 formas (`layer/consistencia/`)
 - [x] Demo de cambio: una versión nueva de AACT, ensayada (`layer/cambio/`, `docs/demo-cambio.md`)
+- [x] Línea de base justa: SQL + tablas de enlaces (acierta igual; el mensaje se ajustó)
+- [x] Prueba de composición: 5 preguntas de 3 o 4 cruces (`layer/composicion/`)
+- [x] Datos de afuera: una consulta une Rastro, MeSH y Wikidata (`layer/externo/`)
 - [ ] Verificación humana de las referencias de la evaluación (`docs/verificacion-humana.md`)
 - [ ] Video de respaldo: lo graba una persona siguiendo el guion
 - [ ] Que alguien de ventas dé la demo siguiendo solo el guion

@@ -1,0 +1,10 @@
+{
+ "question": "Contá los fármacos distintos que se prueban en ensayos clínicos de mieloma múltiple.",
+ "attempts": [
+  {
+   "query": "SELECT COUNT(DISTINCT td.parent_chembl_id)\nFROM linking.trial_drug td\nWHERE EXISTS (\n  SELECT 1 FROM linking.trial_condition tc\n  JOIN mesh.ancestor a ON a.id = tc.mesh_id\n  JOIN mesh.descriptor md ON md.id = a.ancestor_id AND md.label = 'Multiple Myeloma'\n  WHERE tc.nct_id = td.nct_id)",
+   "error": null
+  }
+ ],
+ "answer": 604.0
+}

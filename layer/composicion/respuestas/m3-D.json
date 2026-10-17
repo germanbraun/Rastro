@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos reportes serios de eventos adversos en FAERS (openFDA) suman, entre todos, los fármacos que actúan sobre EGFR y se prueban en ensayos activos (reclutando, activos sin reclutar, todavía sin reclutar o por invitación) de cáncer de pulmón? Cada fármaco se cuenta una sola vez.",
+ "attempts": [
+  {
+   "query": "SELECT sum(r.serious)\nFROM openfda.reports_by_year r\nWHERE r.query_id IN (\n  SELECT td.parent_chembl_id\n  FROM aact.studies s\n  JOIN linking.trial_condition tc ON tc.nct_id = s.nct_id\n  JOIN mesh.ancestor a ON a.id = tc.mesh_id\n  JOIN mesh.descriptor d ON d.id = a.ancestor_id AND d.label = 'Lung Neoplasms'\n  JOIN linking.trial_drug td ON td.nct_id = s.nct_id\n  JOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\n  JOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\n  WHERE tg.gene_symbol = 'EGFR'\n    AND s.overall_status IN ('RECRUITING','ACTIVE_NOT_RECRUITING','NOT_YET_RECRUITING','ENROLLING_BY_INVITATION')\n)",
+   "error": null
+  }
+ ],
+ "answer": 68911.0
+}

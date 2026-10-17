@@ -1,7 +1,7 @@
 """Demo de cambio: vuelve a ejecutar las 20 queries guardadas y dice cuáles siguen igual.
 
-Compara cada respuesta con la guardada en layer/eval/results.json, para el SQL directo
-y para Rastro. No escribe nada.
+Compara cada respuesta con la guardada en layer/eval/results.json, para el SQL directo,
+el SQL con las tablas de enlaces y Rastro. No escribe nada.
 
     docker compose run --rm layer-eval python /layer/cambio/probar.py
 """
@@ -51,21 +51,22 @@ def short(value):
 
 
 def main():
-    print(f"{'':5}{'SQL directo':26}{'Rastro':26}Pregunta")
-    totals = {"B": {}, "C": {}}
+    names = {"B": "SQL directo", "D": "SQL + enlaces", "C": "Rastro"}
+    print(f"{'':5}" + "".join(f"{n:22}" for n in names.values()) + "Pregunta")
+    totals = {k: {} for k in names}
     for qid, entry in SAVED.items():
         kind = "lista" if isinstance(entry["reference"], list) else "número"
         cells = {}
-        for key in "BC":
+        for key in names:
             cells[key] = check(entry, key, kind) or "—"
             status = cells[key].split(" ")[0]
             totals[key][status] = totals[key].get(status, 0) + 1
-        print(f"{qid:5}{cells['B']:26}{cells['C']:26}{entry['question'][:60]}")
+        print(f"{qid:5}" + "".join(f"{cells[k]:22}" for k in names) + entry["question"][:50])
 
     print()
-    for key, name in (("B", "SQL directo"), ("C", "Rastro")):
+    for key, name in names.items():
         labels = {"✅": "igual", "🟡": "distinto, sin avisar", "❌": "con error", "—": "sin query"}
-        print(f"{name:12} " + " · ".join(f"{v} {labels[k]}" for k, v in sorted(totals[key].items())))
+        print(f"{name:14} " + " · ".join(f"{v} {labels[k]}" for k, v in sorted(totals[key].items())))
 
     # Control del vocabulario: ¿hay estados que la ontología no documenta?
     try:

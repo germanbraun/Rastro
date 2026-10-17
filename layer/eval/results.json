@@ -57,7 +57,7 @@
       "error": null
      }
     ],
-    "seconds": 5.32
+    "seconds": 7.77
    },
    "C": {
     "answer": [
@@ -81,7 +81,31 @@
       "error": null
      }
     ],
-    "seconds": 0.34
+    "seconds": 0.2
+   },
+   "D": {
+    "answer": [
+     "AFATINIB",
+     "DISITAMAB VEDOTIN",
+     "GANCOTAMAB",
+     "KN-026",
+     "LAPATINIB",
+     "NERATINIB",
+     "PERTUZUMAB",
+     "PYROTINIB",
+     "TRASTUZUMAB",
+     "TRASTUZUMAB DERUXTECAN",
+     "TRASTUZUMAB DUOCARMAZINE",
+     "TRASTUZUMAB EMTANSINE",
+     "TUCATINIB"
+    ],
+    "attempts": [
+     {
+      "query": "SELECT DISTINCT d.pref_name\nFROM linking.trial_drug td\nJOIN linking.drug d ON d.chembl_id = td.parent_chembl_id\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nJOIN aact.studies s ON s.nct_id = td.nct_id\nJOIN linking.trial_condition tc ON tc.nct_id = td.nct_id\nJOIN mesh.ancestor a ON a.id = tc.mesh_id\nJOIN mesh.descriptor md ON md.id = a.ancestor_id\nWHERE tg.gene_symbol = 'ERBB2'\n  AND s.phase IN ('PHASE3','PHASE2/PHASE3')\n  AND md.label = 'Breast Neoplasms'\nORDER BY 1",
+      "error": null
+     }
+    ],
+    "seconds": 0.54
    }
   },
   "q02": {
@@ -103,7 +127,7 @@
       "error": null
      }
     ],
-    "seconds": 4.13
+    "seconds": 5.31
    },
    "C": {
     "answer": 438.0,
@@ -113,7 +137,17 @@
       "error": null
      }
     ],
-    "seconds": 0.18
+    "seconds": 0.08
+   },
+   "D": {
+    "answer": 438.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT s.nct_id)\nFROM aact.studies s\nJOIN linking.trial_drug td ON td.nct_id = s.nct_id\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nWHERE tg.gene_symbol = 'EGFR' AND s.phase IN ('PHASE3','PHASE2/PHASE3')",
+      "error": null
+     }
+    ],
+    "seconds": 0.11
    }
   },
   "q03": {
@@ -143,7 +177,7 @@
       "error": null
      }
     ],
-    "seconds": 0.27
+    "seconds": 1.46
    },
    "C": {
     "answer": [
@@ -157,7 +191,21 @@
       "error": null
      }
     ],
-    "seconds": 0.26
+    "seconds": 0.45
+   },
+   "D": {
+    "answer": [
+     "Pfizer",
+     "Novartis Pharmaceuticals",
+     "AstraZeneca"
+    ],
+    "attempts": [
+     {
+      "query": "SELECT sp.name\nFROM aact.sponsors sp\nJOIN aact.studies s ON s.nct_id = sp.nct_id\nWHERE sp.lead_or_collaborator = 'lead' AND sp.agency_class = 'INDUSTRY'\n  AND s.overall_status IN ('TERMINATED','WITHDRAWN')\n  AND EXISTS (SELECT 1 FROM linking.trial_condition tc\n              JOIN mesh.ancestor a ON a.id = tc.mesh_id\n              JOIN mesh.descriptor md ON md.id = a.ancestor_id\n              WHERE tc.nct_id = s.nct_id AND md.label = 'Lung Neoplasms')\nGROUP BY sp.name\nORDER BY count(DISTINCT s.nct_id) DESC\nLIMIT 3",
+      "error": null
+     }
+    ],
+    "seconds": 0.2
    }
   },
   "q04": {
@@ -181,7 +229,7 @@
       "error": null
      }
     ],
-    "seconds": 0.01
+    "seconds": 0.1
    },
    "C": {
     "answer": [
@@ -193,7 +241,19 @@
       "error": null
      }
     ],
-    "seconds": 0.01
+    "seconds": 0.02
+   },
+   "D": {
+    "answer": [
+     "DEATH"
+    ],
+    "attempts": [
+     {
+      "query": "SELECT r.reaction\nFROM openfda.reactions r\nJOIN linking.drug d ON d.chembl_id = r.query_id\nWHERE d.pref_name = 'IMATINIB'\nORDER BY r.reports DESC\nLIMIT 1",
+      "error": null
+     }
+    ],
+    "seconds": 0.02
    }
   },
   "q05": {
@@ -232,7 +292,7 @@
       "error": null
      }
     ],
-    "seconds": 0.01
+    "seconds": 0.02
    },
    "C": {
     "answer": [
@@ -246,6 +306,23 @@
     "attempts": [
      {
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?d a :Drug ;\n     :name ?name ;\n     :approved true ;\n     :hasTarget ?t .\n  ?t :gene \"BRAF\" .\n}\nORDER BY ?name",
+      "error": null
+     }
+    ],
+    "seconds": 0.01
+   },
+   "D": {
+    "answer": [
+     "DABRAFENIB",
+     "ENCORAFENIB",
+     "REGORAFENIB",
+     "SORAFENIB",
+     "TOVORAFENIB",
+     "VEMURAFENIB"
+    ],
+    "attempts": [
+     {
+      "query": "SELECT DISTINCT d.pref_name\nFROM linking.drug d\nJOIN linking.drug_target dt ON dt.parent_chembl_id = d.chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nWHERE tg.gene_symbol = 'BRAF' AND d.approved\nORDER BY 1",
       "error": null
      }
     ],
@@ -267,7 +344,7 @@
       "error": null
      }
     ],
-    "seconds": 0.14
+    "seconds": 0.25
    },
    "C": {
     "answer": 14405.0,
@@ -277,7 +354,17 @@
       "error": null
      }
     ],
-    "seconds": 0.05
+    "seconds": 0.06
+   },
+   "D": {
+    "answer": 14405.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT tc.nct_id)\nFROM linking.trial_condition tc\nJOIN mesh.ancestor a ON a.id = tc.mesh_id\nJOIN mesh.descriptor md ON md.id = a.ancestor_id\nWHERE md.label = 'Breast Neoplasms'",
+      "error": null
+     }
+    ],
+    "seconds": 0.06
    }
   },
   "q07": {
@@ -306,6 +393,16 @@
      }
     ],
     "seconds": 0.01
+   },
+   "D": {
+    "answer": 50504.0,
+    "attempts": [
+     {
+      "query": "SELECT sum(y.reports)\nFROM openfda.reports_by_year y\nJOIN linking.drug d ON d.chembl_id = y.query_id\nWHERE d.pref_name = 'LENALIDOMIDE' AND y.year < 2015",
+      "error": null
+     }
+    ],
+    "seconds": 0.01
    }
   },
   "q08": {
@@ -323,7 +420,7 @@
       "error": null
      }
     ],
-    "seconds": 0.1
+    "seconds": 0.12
    },
    "C": {
     "answer": 28.10810810810811,
@@ -333,7 +430,17 @@
       "error": null
      }
     ],
-    "seconds": 0.13
+    "seconds": 0.15
+   },
+   "D": {
+    "answer": 28.1,
+    "attempts": [
+     {
+      "query": "SELECT round(100.0 * count(DISTINCT s.nct_id) FILTER (WHERE s.overall_status IN ('TERMINATED','WITHDRAWN'))\n       / count(DISTINCT s.nct_id), 1)\nFROM aact.studies s\nJOIN aact.sponsors sp ON sp.nct_id = s.nct_id\nWHERE sp.lead_or_collaborator = 'lead' AND sp.name = 'Pfizer'\n  AND s.phase IN ('PHASE2','PHASE1/PHASE2','PHASE2/PHASE3')\n  AND s.overall_status IN ('COMPLETED','TERMINATED','WITHDRAWN')",
+      "error": null
+     }
+    ],
+    "seconds": 0.02
    }
   },
   "q09": {
@@ -351,13 +458,23 @@
       "error": null
      }
     ],
-    "seconds": 0.6
+    "seconds": 0.45
    },
    "C": {
     "answer": 961.0,
     "attempts": [
      {
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :testsDrug ?d ;\n     :status ?s .\n  ?d :name \"PEMBROLIZUMAB\" .\n  FILTER(?s IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n}",
+      "error": null
+     }
+    ],
+    "seconds": 0.02
+   },
+   "D": {
+    "answer": 961.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT s.nct_id)\nFROM aact.studies s\nJOIN linking.trial_drug td ON td.nct_id = s.nct_id\nJOIN linking.drug d ON d.chembl_id = td.parent_chembl_id\nWHERE d.pref_name = 'PEMBROLIZUMAB'\n  AND s.overall_status IN ('RECRUITING','ACTIVE_NOT_RECRUITING','NOT_YET_RECRUITING','ENROLLING_BY_INVITATION')",
       "error": null
      }
     ],
@@ -383,7 +500,7 @@
       "error": null
      }
     ],
-    "seconds": 2.26
+    "seconds": 1.96
    },
    "C": {
     "answer": 269.0,
@@ -393,7 +510,17 @@
       "error": null
      }
     ],
-    "seconds": 0.12
+    "seconds": 0.11
+   },
+   "D": {
+    "answer": 269.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT td.nct_id)\nFROM linking.trial_drug td\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nJOIN linking.trial_condition tc ON tc.nct_id = td.nct_id\nJOIN mesh.ancestor a ON a.id = tc.mesh_id\nJOIN mesh.descriptor md ON md.id = a.ancestor_id\nWHERE tg.gene_symbol = 'BTK' AND md.label = 'Leukemia'",
+      "error": null
+     }
+    ],
+    "seconds": 0.05
    }
   },
   "q11": {
@@ -429,7 +556,19 @@
       "error": null
      }
     ],
-    "seconds": 0.15
+    "seconds": 0.82
+   },
+   "D": {
+    "answer": [
+     "Hoffmann-La Roche"
+    ],
+    "attempts": [
+     {
+      "query": "SELECT s.name FROM aact.sponsors s\nJOIN aact.studies st ON st.nct_id = s.nct_id\nWHERE s.lead_or_collaborator = 'lead' AND s.agency_class = 'INDUSTRY'\n  AND st.phase IN ('PHASE3','PHASE2/PHASE3')\n  AND st.nct_id IN (SELECT tc.nct_id FROM linking.trial_condition tc\n     JOIN mesh.ancestor a ON a.id = tc.mesh_id\n     JOIN mesh.descriptor d ON d.id = a.ancestor_id\n     WHERE d.label = 'Colorectal Neoplasms')\nGROUP BY s.name ORDER BY count(DISTINCT st.nct_id) DESC LIMIT 1",
+      "error": null
+     }
+    ],
+    "seconds": 0.1
    }
   },
   "q12": {
@@ -447,7 +586,7 @@
       "error": null
      }
     ],
-    "seconds": 1.26
+    "seconds": 1.32
    },
    "C": {
     "answer": 293.0,
@@ -457,7 +596,17 @@
       "error": null
      }
     ],
-    "seconds": 0.09
+    "seconds": 0.07
+   },
+   "D": {
+    "answer": 293.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT td.nct_id) FROM linking.trial_drug td JOIN linking.drug dr ON dr.chembl_id = td.parent_chembl_id\nWHERE dr.pref_name = 'NIVOLUMAB' AND td.nct_id IN (SELECT tc.nct_id FROM linking.trial_condition tc JOIN mesh.ancestor a ON a.id = tc.mesh_id JOIN mesh.descriptor d ON d.id = a.ancestor_id WHERE d.label = 'Melanoma')",
+      "error": null
+     }
+    ],
+    "seconds": 0.1
    }
   },
   "q13": {
@@ -479,7 +628,7 @@
       "error": null
      }
     ],
-    "seconds": 1.81
+    "seconds": 1.89
    },
    "C": {
     "answer": 658.0,
@@ -489,7 +638,17 @@
       "error": null
      }
     ],
-    "seconds": 0.07
+    "seconds": 0.06
+   },
+   "D": {
+    "answer": 658.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT td.nct_id) FROM linking.trial_drug td JOIN linking.drug dr ON dr.chembl_id = td.parent_chembl_id\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nWHERE dr.approved AND tg.gene_symbol = 'AR' AND td.nct_id IN (SELECT tc.nct_id FROM linking.trial_condition tc JOIN mesh.ancestor a ON a.id = tc.mesh_id JOIN mesh.descriptor d ON d.id = a.ancestor_id WHERE d.label = 'Prostatic Neoplasms')",
+      "error": null
+     }
+    ],
+    "seconds": 0.13
    }
   },
   "q14": {
@@ -507,13 +666,23 @@
       "error": null
      }
     ],
-    "seconds": 0.07
+    "seconds": 0.09
    },
    "C": {
     "answer": 569.0,
     "attempts": [
      {
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :status ?status ;\n     :condition ?c .\n  ?c :within ?pancreas .\n  ?pancreas rdfs:label \"Pancreatic Neoplasms\"@en .\n  FILTER(?status IN (\"TERMINATED\", \"WITHDRAWN\"))\n}",
+      "error": null
+     }
+    ],
+    "seconds": 0.03
+   },
+   "D": {
+    "answer": 569.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT st.nct_id) FROM aact.studies st\nWHERE st.overall_status IN ('TERMINATED','WITHDRAWN') AND st.nct_id IN (SELECT tc.nct_id FROM linking.trial_condition tc JOIN mesh.ancestor a ON a.id = tc.mesh_id JOIN mesh.descriptor d ON d.id = a.ancestor_id WHERE d.label = 'Pancreatic Neoplasms')",
       "error": null
      }
     ],
@@ -546,6 +715,16 @@
      }
     ],
     "seconds": 0.01
+   },
+   "D": {
+    "answer": 30448.0,
+    "attempts": [
+     {
+      "query": "SELECT sum(r.serious) FROM openfda.reports_by_year r JOIN linking.drug dr ON dr.chembl_id = r.query_id\nWHERE dr.pref_name = 'OSIMERTINIB'",
+      "error": null
+     }
+    ],
+    "seconds": 0.01
    }
   },
   "q16": {
@@ -563,13 +742,23 @@
       "error": null
      }
     ],
-    "seconds": 0.3
+    "seconds": 0.36
    },
    "C": {
     "answer": 604.0,
     "attempts": [
      {
       "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?drug) AS ?n) WHERE {\n  ?mm rdfs:label \"Multiple Myeloma\"@en .\n  ?c :within ?mm .\n  ?trial a :Trial ;\n         :condition ?c ;\n         :testsDrug ?drug .\n}",
+      "error": null
+     }
+    ],
+    "seconds": 0.05
+   },
+   "D": {
+    "answer": 604.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT td.parent_chembl_id) FROM linking.trial_drug td WHERE td.nct_id IN (SELECT tc.nct_id FROM linking.trial_condition tc JOIN mesh.ancestor a ON a.id = tc.mesh_id JOIN mesh.descriptor d ON d.id = a.ancestor_id WHERE d.label = 'Multiple Myeloma')",
       "error": null
      }
     ],
@@ -591,7 +780,7 @@
       "error": null
      }
     ],
-    "seconds": 2.24
+    "seconds": 3.61
    },
    "C": {
     "answer": 34.0,
@@ -601,7 +790,17 @@
       "error": null
      }
     ],
-    "seconds": 0.02
+    "seconds": 0.1
+   },
+   "D": {
+    "answer": 34.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT td.nct_id) FROM linking.trial_drug td JOIN aact.studies st ON st.nct_id = td.nct_id\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nWHERE tg.gene_symbol = 'TIGIT' AND st.overall_status IN ('RECRUITING','ACTIVE_NOT_RECRUITING','NOT_YET_RECRUITING','ENROLLING_BY_INVITATION')",
+      "error": null
+     }
+    ],
+    "seconds": 0.06
    }
   },
   "q18": {
@@ -688,7 +887,7 @@
       "error": null
      }
     ],
-    "seconds": 0.56
+    "seconds": 1.0
    },
    "C": {
     "answer": [
@@ -721,7 +920,40 @@
       "error": null
      }
     ],
-    "seconds": 0.06
+    "seconds": 0.04
+   },
+   "D": {
+    "answer": [
+     "ADEBRELIMAB",
+     "ATEZOLIZUMAB",
+     "AVELUMAB",
+     "BINTRAFUSP ALFA",
+     "BUDIGALIMAB",
+     "CADONILIMAB",
+     "CAMRELIZUMAB",
+     "CEMIPLIMAB",
+     "COSIBELIMAB",
+     "DOSTARLIMAB",
+     "DURVALUMAB",
+     "NIVOLUMAB",
+     "PEMBROLIZUMAB",
+     "PENPULIMAB",
+     "RETIFANLIMAB",
+     "SERPLULIMAB",
+     "SINTILIMAB",
+     "SOCAZOLIMAB",
+     "SUGEMALIMAB",
+     "TISLELIZUMAB",
+     "TORIPALIMAB",
+     "ZIMBERELIMAB"
+    ],
+    "attempts": [
+     {
+      "query": "SELECT DISTINCT dr.pref_name FROM linking.trial_drug td JOIN aact.studies st ON st.nct_id = td.nct_id\nJOIN linking.drug dr ON dr.chembl_id = td.parent_chembl_id\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nWHERE tg.gene_symbol IN ('PDCD1','CD274') AND st.phase IN ('PHASE3','PHASE2/PHASE3') AND td.nct_id IN (SELECT tc.nct_id FROM linking.trial_condition tc JOIN mesh.ancestor a ON a.id = tc.mesh_id JOIN mesh.descriptor d ON d.id = a.ancestor_id WHERE d.label = 'Lung Neoplasms')",
+      "error": null
+     }
+    ],
+    "seconds": 0.09
    }
   },
   "q19": {
@@ -739,7 +971,7 @@
       "error": null
      }
     ],
-    "seconds": 0.62
+    "seconds": 1.88
    },
    "C": {
     "answer": 309.0,
@@ -749,7 +981,17 @@
       "error": null
      }
     ],
-    "seconds": 0.15
+    "seconds": 0.31
+   },
+   "D": {
+    "answer": 309.0,
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT td.nct_id) FROM linking.trial_drug td JOIN linking.drug dr ON dr.chembl_id = td.parent_chembl_id\nJOIN aact.studies st ON st.nct_id = td.nct_id\nWHERE dr.pref_name = 'RITUXIMAB' AND st.start_date >= DATE '2020-01-01'\n  AND td.nct_id IN (SELECT tc.nct_id FROM linking.trial_condition tc JOIN mesh.ancestor a ON a.id = tc.mesh_id JOIN mesh.descriptor d ON d.id = a.ancestor_id WHERE d.label = 'Lymphoma')",
+      "error": null
+     }
+    ],
+    "seconds": 0.22
    }
   },
   "q20": {
@@ -892,7 +1134,7 @@
       "error": null
      }
     ],
-    "seconds": 0.02
+    "seconds": 0.03
    },
    "C": {
     "answer": [
@@ -952,6 +1194,65 @@
      }
     ],
     "seconds": 0.01
+   },
+   "D": {
+    "answer": [
+     "AMUVATINIB",
+     "ASCIMINIB",
+     "AT-9283",
+     "AVAPRITINIB",
+     "AZD-0424",
+     "BAFETINIB",
+     "BOSUTINIB",
+     "CATEQUENTINIB",
+     "CEDIRANIB",
+     "CM-082",
+     "DASATINIB ANHYDROUS",
+     "DOVITINIB",
+     "ENMD-2076",
+     "FAMITINIB",
+     "FLUMATINIB",
+     "FORETINIB",
+     "JI-101",
+     "KW-2449",
+     "MASITINIB",
+     "MIDOSTAURIN",
+     "MOTESANIB",
+     "NILOTINIB",
+     "OLVEREMBATINIB",
+     "OSI-930",
+     "PAZOPANIB",
+     "PEXIDARTINIB",
+     "PONATINIB",
+     "QUIZARTINIB",
+     "RADOTINIB",
+     "REBASTINIB",
+     "REGORAFENIB",
+     "RG-1530",
+     "RIPRETINIB",
+     "RUSERONTINIB",
+     "SARACATINIB",
+     "SEMAXANIB",
+     "SORAFENIB",
+     "SU-014813",
+     "SUNITINIB",
+     "TANDUTINIB",
+     "TELATINIB",
+     "TIVOZANIB",
+     "UMBRALISIB",
+     "VATALANIB",
+     "VODOBATINIB",
+     "XL-228",
+     "XL-820",
+     "XL-999"
+    ],
+    "attempts": [
+     {
+      "query": "SELECT DISTINCT d2.pref_name FROM linking.drug d1\nJOIN linking.drug_target t1 ON t1.parent_chembl_id = d1.chembl_id\nJOIN linking.drug_target t2 ON t2.target_chembl_id = t1.target_chembl_id\nJOIN linking.drug d2 ON d2.chembl_id = t2.parent_chembl_id\nWHERE d1.pref_name = 'IMATINIB' AND d2.chembl_id <> d1.chembl_id",
+      "error": null
+     }
+    ],
+    "seconds": 0.02
    }
   }
  },

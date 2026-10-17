@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos fármacos aprobados se prueban en ensayos de fase 3 (incluye fase 2/3) tanto de cáncer de mama como de cáncer de pulmón?",
+ "attempts": [
+  {
+   "query": "WITH t AS (\n  SELECT td.parent_chembl_id, d.label\n  FROM aact.studies s\n  JOIN linking.trial_condition tc ON tc.nct_id = s.nct_id\n  JOIN mesh.ancestor a ON a.id = tc.mesh_id\n  JOIN mesh.descriptor d ON d.id = a.ancestor_id AND d.label IN ('Breast Neoplasms','Lung Neoplasms')\n  JOIN linking.trial_drug td ON td.nct_id = s.nct_id\n  JOIN linking.drug dr ON dr.chembl_id = td.parent_chembl_id AND dr.approved\n  WHERE s.phase IN ('PHASE3','PHASE2/PHASE3')\n)\nSELECT count(*) FROM (\n  SELECT parent_chembl_id FROM t GROUP BY parent_chembl_id HAVING count(DISTINCT label) = 2\n) x",
+   "error": null
+  }
+ ],
+ "answer": 78.0
+}

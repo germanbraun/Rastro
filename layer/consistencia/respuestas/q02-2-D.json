@@ -1,0 +1,10 @@
+{
+ "question": "Contá los ensayos de fase 3 o fase 2/3 que prueban al menos un fármaco que actúa sobre el gen EGFR.",
+ "attempts": [
+  {
+   "query": "SELECT COUNT(DISTINCT s.nct_id)\nFROM aact.studies s\nJOIN linking.trial_drug td ON td.nct_id = s.nct_id\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nWHERE tg.gene_symbol = 'EGFR' AND s.phase IN ('PHASE3','PHASE2/PHASE3')",
+   "error": null
+  }
+ ],
+ "answer": 438.0
+}

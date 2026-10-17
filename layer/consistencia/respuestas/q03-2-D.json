@@ -1,0 +1,14 @@
+{
+ "question": "¿Qué tres empresas de la industria, como sponsor principal, acumulan más ensayos terminados o retirados (detenidos) de cáncer de pulmón?",
+ "attempts": [
+  {
+   "query": "SELECT sp.name\nFROM aact.studies s\nJOIN aact.sponsors sp ON sp.nct_id = s.nct_id AND sp.lead_or_collaborator = 'lead' AND sp.agency_class = 'INDUSTRY'\nWHERE s.overall_status IN ('TERMINATED','WITHDRAWN')\n  AND EXISTS (\n    SELECT 1 FROM linking.trial_condition tc\n    JOIN mesh.ancestor a ON a.id = tc.mesh_id\n    JOIN mesh.descriptor md ON md.id = a.ancestor_id AND md.label = 'Lung Neoplasms'\n    WHERE tc.nct_id = s.nct_id)\nGROUP BY sp.name\nORDER BY COUNT(DISTINCT s.nct_id) DESC\nLIMIT 3",
+   "error": null
+  }
+ ],
+ "answer": [
+  "Pfizer",
+  "Novartis Pharmaceuticals",
+  "AstraZeneca"
+ ]
+}

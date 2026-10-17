@@ -26,7 +26,7 @@ ANSWERS = HERE / "respuestas"
 PARAPHRASES = yaml.safe_load((HERE / "parafrasis.yaml").read_text())
 QUESTIONS = {q["id"]: q for q in yaml.safe_load((HERE.parent / "eval" / "questions.yaml").read_text())["questions"]}
 SAVED = json.loads((HERE.parent / "eval" / "results.json").read_text())["questions"]
-NAMES = {"B": "SQL directo", "C": "Rastro"}
+NAMES = {"B": "SQL directo", "D": "SQL + enlaces", "C": "Rastro"}
 
 
 def text(qid, n):
@@ -76,9 +76,9 @@ def score_all():
                 totals[k]["consistent"] += same
                 cells.append(f"{sum(oks)}/{len(oks)} correctas · " + " / ".join(fmt(a) for a in answers))
             rows.append((qid, cells))
-    print(f"{'':5}{'SQL directo':48}Rastro")
+    print(f"{'':5}" + "".join(f"{name:48}" for name in NAMES.values()))
     for qid, cells in rows:
-        print(f"{qid:5}{cells[0]:48}{cells[1]}")
+        print(f"{qid:5}" + "".join(f"{c:48}" for c in cells))
     print()
     for k, name in NAMES.items():
         t = totals[k]

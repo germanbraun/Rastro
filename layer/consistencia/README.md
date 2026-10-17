@@ -1,14 +1,16 @@
 # Prueba de consistencia
 
-¿El mismo LLM da la misma respuesta si la pregunta se escribe de otra forma? Diez de las 20 preguntas de la evaluación, cada una en su versión original y en 3 paráfrasis con el mismo significado (`parafrasis.yaml`), respondidas con SQL directo y con Rastro.
+¿El mismo LLM da la misma respuesta si la pregunta se escribe de otra forma? Diez de las 20 preguntas de la evaluación, cada una en su versión original y en 3 paráfrasis con el mismo significado (`parafrasis.yaml`), respondidas con SQL directo, con SQL sobre las tablas de enlaces de Rastro y con Rastro.
 
 ## Resultado (17 oct 2026)
 
-| | SQL directo | Rastro |
-|---|---|---|
-| Correctas (10 preguntas × 4 versiones) | 32 de 40 | **40 de 40** |
-| Misma respuesta en las 4 versiones | 1 de 10 preguntas | **10 de 10** |
-| Consultas que necesitaron reintento (de las 30 nuevas) | 3, por tiempo límite | 1, por un error de formato al pasar la consulta |
+| | SQL directo | SQL + enlaces | Rastro |
+|---|---|---|---|
+| Correctas (10 preguntas × 4 versiones) | 32 de 40 | **40 de 40** | **40 de 40** |
+| Misma respuesta en las 4 versiones | 1 de 10 preguntas | **10 de 10** | **10 de 10** |
+| Consultas que necesitaron reintento (de las 30 nuevas) | 3, por tiempo límite | 0 | 1, por un error de formato al pasar la consulta |
+
+**Lo que significa:** la consistencia viene de integrar una vez. Con las mismas tablas de enlaces, el SQL es tan consistente como Rastro.
 
 Respuestas por versión (original / paráfrasis 1 / 2 / 3; en las listas, cantidad de nombres):
 
@@ -26,7 +28,7 @@ q18  4/4 correctas · 22 / 22 / 21 / 22               4/4 correctas · 22 / 22 /
 q19  4/4 correctas · 304 / 297 / 295 / 297           4/4 correctas · 309 / 309 / 309 / 309
 ```
 
-El SQL directo inventa en cada consulta cómo reconocer un fármaco en el texto del ensayo, y cada forma da otro número. Rastro usa siempre el mismo enlace.
+El SQL directo inventa en cada consulta cómo reconocer un fármaco en el texto del ensayo, y cada forma da otro número. Rastro y el SQL con enlaces usan siempre el mismo enlace. (La tabla de arriba muestra SQL directo y Rastro; `puntaje` muestra las tres columnas.)
 
 ## Cómo se hizo
 

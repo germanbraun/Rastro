@@ -61,6 +61,21 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
+<section id="beneficios" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Qué gana una empresa</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Los datos se integran una vez y se usan en todas las preguntas</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px">
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Respuestas consistentes</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Una sola definición de cada concepto. La misma pregunta, la misma respuesta.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Preguntas en lenguaje de negocio</p><p style="font-size:27px;line-height:1.4;color:#4A5568">El LLM lee un vocabulario, no cientos de columnas.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Cada dato con su fuente</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Respuestas auditables, con la licencia de cada fuente.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Menos mantenimiento</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Si una fuente cambia, se arregla en un lugar, no en cada consulta.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Datos de afuera, sin cargarlos</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Se conecta con datos abiertos como Wikidata por identificadores compartidos.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Sin atarse a un proveedor</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Estándares abiertos del W3C, que entienden otras herramientas.</p></div>
+</div>
+<aside>Lo que se lleva el cliente, en una diapositiva. Todo lo que sigue es la evidencia de cada punto. Consistencia: la misma pregunta escrita de cuatro formas da la misma respuesta. Lenguaje de negocio: el LLM recibe la ontología, no el esquema. Fuente: cada columna dice de dónde sale. Mantenimiento: el conocimiento de cada fuente está en los mapeos. Datos de afuera: una consulta une Rastro con Wikidata. Estándares: OWL, R2RML y SPARQL.</aside>
+</section>
+</div>
+<div class="slide">
 <section id="ejemplo" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Una pregunta de la demo</p>
 <h2 style="font-size:56px;font-weight:700;line-height:1.15;width:1664px">«¿Qué fármacos anti-HER2 se prueban en fase 3 de cáncer de mama?»</h2>
@@ -74,30 +89,30 @@ addEventListener('resize', fit); fit();
 <p style="font-size:28px;color:#4A5568">y otros 9 · fuentes: AACT, ChEMBL, MeSH</p>
 </div>
 <div style="flex:1.3;display:flex;flex-direction:column;gap:16px">
-<p style="font-size:28px;color:#4A5568">Largo de la consulta, en caracteres</p>
-<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL escrito por el LLM</p><div style="width:420px;height:48px;background:#D99A2B;border-radius:10px"></div><p style="font-size:36px;font-weight:700">1.543</p></div>
+<p style="font-size:28px;color:#4A5568">Lo que escribió el LLM, en caracteres</p>
+<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL sin integración</p><div style="width:420px;height:48px;background:#D99A2B;border-radius:10px"></div><p style="font-size:36px;font-weight:700">1.543</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL sobre los enlaces</p><div style="width:155px;height:48px;background:#9AA5B8;border-radius:10px"></div><p style="font-size:36px;font-weight:700">571</p></div>
 <div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px;font-weight:700">SPARQL sobre Rastro</p><div style="width:118px;height:48px;background:#2F6FB5;border-radius:10px"></div><p style="font-size:36px;font-weight:700">435</p></div>
-<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL que genera Ontop</p><div style="width:202px;height:48px;background:#9AA5B8;border-radius:10px"></div><p style="font-size:36px;font-weight:700">742</p></div>
-<p style="font-size:30px;line-height:1.4;margin-top:12px">La consulta es corta porque la complejidad está en la capa, escrita una vez. El SQL lo genera Ontop: nadie lo escribe ni lo mantiene.</p>
+<p style="font-size:30px;line-height:1.4;margin-top:12px">Sin integración, el LLM adivina qué fármaco nombra cada ensayo, con texto. Con la integración hecha una vez, solo nombra conceptos.</p>
 </div>
 </div>
-<aside>Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. El LLM escribió 1.543 caracteres de SQL, adivinando qué fármaco nombra cada ensayo. Con Rastro escribió 435 de SPARQL, solo conceptos. Ontop generó 742 de SQL: joins simples sobre enlaces revisados. En las 20 preguntas, el SPARQL promedia la mitad que el SQL (368 contra 726). En preguntas muy simples el SQL puede ser más corto: la ventaja aparece al cruzar fuentes.</aside>
+<aside>Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto. Con las tablas de enlaces, 571. Con Rastro, 435 de SPARQL, solo conceptos, y Ontop genera el SQL. La gran diferencia la hace integrar una vez; SPARQL la hace un poco más corta y en palabras de negocio.</aside>
 </section>
 </div>
 <div class="slide">
-<section id="confianza" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:36px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El mismo LLM, con SQL directo o con Rastro</p>
-<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">No es cuántas acierta, sino cuánto podés confiar</h2>
-<div style="display:grid;grid-template-columns:640px 1fr 1fr;font-size:32px;background:#FFFFFF;border-radius:20px;padding:16px 40px">
-<p style="padding:16px 0"></p><p style="padding:16px 0;color:#4A5568;font-weight:600">SQL directo</p><p style="padding:16px 0;color:#2F6FB5;font-weight:700">Rastro</p>
-<p style="padding:16px 0;border-top:2px solid #E5E7EB">Correctas, de 20 preguntas</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">18</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">20</p>
-<p style="padding:16px 0;border-top:2px solid #E5E7EB">La misma pregunta escrita de 4 formas: ¿da lo mismo?</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">En 1 de 10</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">En 10 de 10</p>
-<p style="padding:16px 0;border-top:2px solid #E5E7EB">Cómo reconoce un fármaco</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">4 formas distintas</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">1, siempre la misma</p>
-<p style="padding:16px 0;border-top:2px solid #E5E7EB">Cuando se equivoca</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">No avisa: 488 en vez de 438</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">—</p>
-<p style="padding:16px 0;border-top:2px solid #E5E7EB">Tiempo de las 20 consultas</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">20 s</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">2 s</p>
-<p style="padding:16px 0;border-top:2px solid #E5E7EB">De dónde sale cada dato</p><p style="padding:16px 0;border-top:2px solid #E5E7EB">No lo dice</p><p style="padding:16px 0;border-top:2px solid #E5E7EB;font-weight:700">Fuente por columna</p>
+<section id="confianza" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El mismo LLM, tres formas de darle los datos</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.1;width:1664px">Los enlaces dan la precisión; la capa, lo demás</h2>
+<div style="display:grid;grid-template-columns:600px 1fr 1fr 1fr;font-size:29px;background:#FFFFFF;border-radius:20px;padding:12px 36px">
+<p style="padding:14px 0"></p><p style="padding:14px 0;color:#4A5568;font-weight:600">SQL directo</p><p style="padding:14px 0;color:#4A5568;font-weight:600">SQL + enlaces de Rastro</p><p style="padding:14px 0;color:#2F6FB5;font-weight:700">Rastro</p>
+<p style="padding:14px 0;border-top:2px solid #E5E7EB">Correctas, de 20 preguntas</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">18</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">20</p><p style="padding:14px 0;border-top:2px solid #E5E7EB;font-weight:700">20</p>
+<p style="padding:14px 0;border-top:2px solid #E5E7EB">Misma respuesta, preguntando de 4 formas</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">1 de 10</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">10 de 10</p><p style="padding:14px 0;border-top:2px solid #E5E7EB;font-weight:700">10 de 10</p>
+<p style="padding:14px 0;border-top:2px solid #E5E7EB">Una columna de la fuente cambia de nombre</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">5 consultas rotas</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">5 consultas rotas</p><p style="padding:14px 0;border-top:2px solid #E5E7EB;font-weight:700">1 línea del mapeo</p>
+<p style="padding:14px 0;border-top:2px solid #E5E7EB">Un valor cambia de formato</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">5 respuestas en 0, sin aviso</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">igual</p><p style="padding:14px 0;border-top:2px solid #E5E7EB;font-weight:700">avisa; 1 línea</p>
+<p style="padding:14px 0;border-top:2px solid #E5E7EB">De dónde sale cada dato</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">No lo dice</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">No lo dice</p><p style="padding:14px 0;border-top:2px solid #E5E7EB;font-weight:700">Fuente por columna</p>
+<p style="padding:14px 0;border-top:2px solid #E5E7EB">Une datos de Wikidata en la misma consulta</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">No</p><p style="padding:14px 0;border-top:2px solid #E5E7EB">No</p><p style="padding:14px 0;border-top:2px solid #E5E7EB;font-weight:700">Sí</p>
 </div>
-<aside>El mismo LLM respondió 20 preguntas. Solo, sin datos, acierta 5. Con SQL directo, 18. Con Rastro, 20. Pero lo importante es la consistencia: escribimos 10 preguntas de 4 formas distintas, con el mismo significado. Con SQL directo, la respuesta cambia según cómo se pregunte en 9 de 10: los ensayos anti-EGFR dan 488, 488, 409 o 488. Con Rastro, siempre lo mismo. El SQL directo inventa cómo reconocer un fármaco en cada consulta; Rastro usa siempre el mismo enlace.</aside>
+<aside>La comparación honesta. Sin integración, el SQL directo inventa cómo reconocer un fármaco en cada consulta: acierta 18 y cambia de respuesta según cómo se pregunte. Si al SQL le damos las tablas de enlaces de Rastro, acierta todo y es consistente: la precisión viene de integrar una vez. Lo que agrega la capa semántica es el resto: el conocimiento de cada fuente queda en los mapeos y no en cada consulta, cada dato trae su fuente, y se puede consultar junto con datos de otras organizaciones. Una capa de vistas SQL bien hecha resolvería parte de esto; la capa semántica lo hace con estándares y suma procedencia y datos de afuera.</aside>
 </section>
 </div>
 <div class="slide">
@@ -106,20 +121,41 @@ addEventListener('resize', fit); fit();
 <h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">AACT publica una versión nueva. ¿Cuánto hay que arreglar?</h2>
 <div style="display:flex;gap:32px">
 <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:18px">
-<p style="font-size:26px;color:#2F6FB5;font-weight:700;text-transform:uppercase;letter-spacing:1px">Acto 1 · Cambia un nombre</p>
+<p style="font-size:26px;color:#2F6FB5;font-weight:700;text-transform:uppercase;letter-spacing:1px">Cambia un nombre</p>
 <p style="font-size:30px;line-height:1.35">overall_status pasa a llamarse status</p>
-<p style="font-size:30px;line-height:1.4">SQL directo: <b>5 queries fallan</b>, hay que reescribirlas.</p>
-<p style="font-size:30px;line-height:1.4">Rastro: falla todo, y se arregla con <b>1 línea del mapeo</b>. Vuelve a 20 de 20.</p>
+<p style="font-size:30px;line-height:1.4">SQL, con o sin enlaces: <b>5 consultas fallan</b> y hay que reescribirlas.</p>
+<p style="font-size:30px;line-height:1.4">Rastro: <b>1 línea del mapeo</b>, y vuelve a 20 de 20.</p>
 </div>
 <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:18px">
-<p style="font-size:26px;color:#C96B6B;font-weight:700;text-transform:uppercase;letter-spacing:1px">Acto 2 · Cambia un valor</p>
+<p style="font-size:26px;color:#C96B6B;font-weight:700;text-transform:uppercase;letter-spacing:1px">Cambia un valor</p>
 <p style="font-size:30px;line-height:1.35">TERMINATED pasa a escribirse Terminated</p>
-<p style="font-size:30px;line-height:1.4">SQL directo: <b>nada falla</b>, pero 5 respuestas pasan a 0. «569 ensayos detenidos» se vuelve 0, sin aviso.</p>
+<p style="font-size:30px;line-height:1.4">SQL: <b>nada falla</b>, pero «569 ensayos detenidos» pasa a 0, sin aviso.</p>
 <p style="font-size:30px;line-height:1.4">Rastro: el control de vocabulario <b>avisa</b>, y se arregla con <b>1 línea</b>.</p>
 </div>
 </div>
-<p style="font-size:30px;color:#4A5568;width:1664px">Medido sobre las 20 queries guardadas. Se reproduce en vivo con layer/cambio/cambio.sh.</p>
-<aside>Para consultores, esto es lo que cuesta plata: mantener. Con SQL directo, cada query sabe cómo se llaman las columnas y cómo se escriben los valores; si la fuente cambia, hay que encontrar y arreglar cada una. En el acto 2 ni siquiera fallan: devuelven cero y nadie se entera. En Rastro ese conocimiento está en un solo lugar, el mapeo. Honestidad: el acto 2 también afecta a Rastro hasta que se arregla; la diferencia es que la capa tiene un lugar natural para controlar el vocabulario y avisar.</aside>
+<p style="font-size:28px;color:#4A5568;width:1664px">Medido sobre las 20 consultas guardadas. Se reproduce en vivo con layer/cambio/cambio.sh.</p>
+<aside>Con SQL, cada consulta sabe cómo se llaman las columnas y cómo se escriben los valores. Si la fuente cambia, hay que encontrar y arreglar cada una; en el segundo caso ni siquiera fallan, devuelven cero. Tener las tablas de enlaces no cambia esto: las consultas igual leen las columnas de la fuente. En Rastro ese conocimiento está en un solo lugar, el mapeo. Honestidad: una capa de vistas SQL también centralizaría el cambio; y hasta que se arregla, Rastro también da cero, pero la capa es el lugar natural para avisar.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="externo" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Datos de afuera, sin cargarlos</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Una consulta, tres grafos: Rastro, MeSH y Wikidata</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1.4;background:#FFFFFF;border-radius:20px;padding:32px;display:grid;grid-template-columns:260px 130px 1fr;font-size:27px;row-gap:14px">
+<p style="color:#4A5568">Fármaco anti-HER2</p><p style="color:#4A5568">Ensayos de mama</p><p style="color:#4A5568">Trata, según Wikidata</p>
+<p>Trastuzumab</p><p>670</p><p>cáncer de mama</p>
+<p>Neratinib</p><p>40</p><p>cáncer de mama</p>
+<p>Afatinib</p><p>16</p><p><b>cáncer de pulmón</b></p>
+<p>Vandetanib</p><p>8</p><p><b>cáncer de tiroides</b></p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px;font-size:30px;line-height:1.4">
+<p>Rastro y Wikidata usan el <b>mismo identificador</b> de fármaco. GraphDB une los dos en vivo, sin cargar nada.</p>
+<p>Afatinib y vandetanib están aprobados para otros cánceres y se prueban en mama: un dato que ninguna fuente de Rastro tiene.</p>
+</div>
+</div>
+<p style="font-size:26px;color:#4A5568">Consulta en layer/externo/wikidata.rq. Tarda unos 10 segundos y necesita internet.</p>
+<aside>Esto es lo que una base SQL no hace en una sola consulta: unir, en vivo, datos de otra organización. Funciona porque Rastro usa identificadores compartidos, el ChEMBL ID, que Wikidata también tiene. La consulta corre en GraphDB y combina tres grafos: Rastro a través de Ontop, MeSH en el propio GraphDB y Wikidata en internet. Para la demo hay una copia del resultado por si no hay red.</aside>
 </section>
 </div>
 <div class="slide">
@@ -145,38 +181,15 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
-<section id="vistas" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:36px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">La pregunta obvia</p>
-<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">¿Y por qué no vistas SQL sobre las tablas de enlaces?</h2>
-<div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px">
-<p style="font-size:34px;font-weight:700">Las vistas ya te dan</p>
-<p style="font-size:30px;line-height:1.4">· Una capa con nombres de negocio</p>
-<p style="font-size:30px;line-height:1.4">· Una sola definición de cada cosa</p>
-<p style="font-size:30px;line-height:1.4">· Un lugar donde absorber un cambio de nombre</p>
-</div>
-<div style="flex:1;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px">
-<p style="font-size:34px;font-weight:700">La capa semántica agrega</p>
-<p style="font-size:30px;line-height:1.4">· Cualquier combinación de conceptos, sin una vista para cada una</p>
-<p style="font-size:30px;line-height:1.4">· Jerarquías: «cáncer de pulmón» incluye sus subtipos</p>
-<p style="font-size:30px;line-height:1.4">· La fuente de cada columna de la respuesta</p>
-<p style="font-size:30px;line-height:1.4">· Un vocabulario documentado como contexto para el LLM</p>
-<p style="font-size:30px;line-height:1.4">· Estándares abiertos, no atados a una base</p>
-</div>
-</div>
-<aside>Conviene decirlo antes de que lo pregunten: unas buenas vistas SQL resuelven buena parte del problema, y para un caso chico pueden alcanzar. La capa semántica suma lo que las vistas no traen: componer conceptos libremente sin crear una vista por pregunta, jerarquías como la de MeSH, procedencia por columna, un vocabulario con definiciones que el LLM lee como contexto, y estándares del W3C que otras herramientas entienden.</aside>
-</section>
-</div>
-<div class="slide">
 <section id="limites" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
 <p style="font-size:28px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Límites y próximo paso</p>
 <div style="display:flex;flex-direction:column;gap:22px;font-size:34px;line-height:1.4;width:1664px">
-<p><b>Honesto:</b> con las mismas tablas de enlaces, el SQL directo acertaría casi igual. El valor está en la integración revisada, expuesta como vocabulario estándar.</p>
+<p><b>Probado:</b> con las tablas de enlaces de Rastro, el SQL acierta igual. El valor está en integrar una vez y en mantener esa integración como una capa estándar.</p>
 <p><b>Cobertura:</b> 81 % de las intervenciones de tipo fármaco enlazadas. Una foto de octubre de 2026, no datos en vivo.</p>
-<p><b>Evaluación:</b> 20 preguntas propias. Las referencias las hizo un asistente de IA; falta la confirmación humana.</p>
+<p><b>Evaluación:</b> preguntas propias. Las referencias las hizo un asistente de IA; falta la confirmación humana.</p>
 </div>
 <h2 style="font-size:64px;font-weight:700;line-height:1.15;width:1664px;margin-top:20px">Próximo paso: un piloto con datos del cliente sumados a las fuentes públicas</h2>
-<aside>Decir los límites antes de que los pregunten. El valor no es magia del LLM: es la integración hecha una vez y expuesta como vocabulario. Cerrar con la propuesta de piloto y una pregunta abierta: ¿qué le preguntarían a sus datos?</aside>
+<aside>Decir los límites antes de que los pregunten. Lo medimos: si al SQL le damos los enlaces de Rastro, acierta igual. Lo que vendemos es la integración hecha una vez, mantenida en un lugar, con fuente y conectada con datos de afuera. Cerrar con la propuesta de piloto.</aside>
 </section>
 </div>
 </body></html>

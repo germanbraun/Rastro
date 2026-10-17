@@ -45,46 +45,55 @@
 
 # --- Frente a SQL -----------------------------------------------------
 
-- question: Si el SQL directo acierta 18 de 20 y Rastro 20, ¿cuál es la ventaja?
+- question: Si con SQL también se puede, ¿qué aporta la capa semántica?
   answer: |-
-    No está en cuántas acierta, sino en cuánto podés confiar en cada respuesta:
-    - **Una sola definición.** En {reinvented} de 20 preguntas, el SQL directo tuvo que inventar cómo reconocer un fármaco en el texto del ensayo, y lo hizo de {n_methods} formas distintas. Rastro usa siempre el mismo enlace.
-    - **Errores que no avisan.** Buscando pedazos de nombres, el SQL directo encontró «humab» dentro de «rhuMAb HER2» y contó 488 ensayos anti-EGFR en vez de 438. Parece razonable.
-    - **Más lento y más frágil.** Sus 20 consultas tardan {secs_b} s y {retries_b} necesitaron reintento; las de Rastro, {secs_c} s y {retries_c}.
-    - **Procedencia.** Rastro dice de qué fuente sale cada dato.
+    Lo medimos con tres formas de darle los datos al mismo LLM:
+
+    | | SQL directo | SQL + enlaces de Rastro | Rastro |
+    |---|---|---|---|
+    | Correctas, de 20 | 18 | 20 | 20 |
+    | Misma respuesta, preguntando de 4 formas | 1 de 10 | 10 de 10 | 10 de 10 |
+    | Una columna de la fuente cambia de nombre | 5 consultas rotas | 5 consultas rotas | 1 línea del mapeo |
+    | De dónde sale cada dato | no | no | por columna |
+    | Une datos de Wikidata en la misma consulta | no | no | sí |
+
+    **La precisión y la consistencia vienen de integrar una vez** (las tablas de enlaces): con ellas, el SQL acierta igual, incluso en preguntas de 3 o 4 cruces (layer/composicion/). **La capa semántica aporta el resto:** el conocimiento de cada fuente queda en los mapeos y no repartido en cada consulta, cada dato trae su fuente, y se puede consultar junto con datos de otras organizaciones, con estándares abiertos.
 
 - question: ¿Da la misma respuesta si pregunto lo mismo de otra forma?
   answer: |-
-    Con Rastro, sí. Escribimos 10 de las preguntas de 4 formas distintas, con el mismo significado, y el mismo LLM respondió cada una sin ver las otras:
-    - **SQL directo:** la respuesta cambia según cómo se pregunte en 9 de las 10. Los ensayos anti-EGFR dan 488, 488, 409 o 488. Acierta 32 de 40.
-    - **Rastro:** la misma respuesta en las 4 versiones de las 10 preguntas. Acierta 40 de 40.
+    Con la integración hecha, sí. Escribimos 10 de las preguntas de 4 formas distintas:
+    - **SQL directo:** la respuesta cambia según cómo se pregunte en 9 de las 10 (los ensayos anti-EGFR dan 488, 488, 409 o 488). En {reinvented} de las 20 preguntas originales tuvo que inventar cómo reconocer un fármaco, de {n_methods} formas distintas.
+    - **SQL + enlaces y Rastro:** la misma respuesta en las 4 versiones de las 10 preguntas.
 
-    El SQL directo inventa en cada consulta cómo reconocer un fármaco en el texto del ensayo; Rastro usa siempre el mismo enlace. Detalle en layer/consistencia/.
+    Detalle en layer/consistencia/.
 
 - question: ¿Por qué no vistas SQL sobre las tablas de enlaces?
   answer: |-
-    Con las mismas tablas de enlaces, el SQL directo acertaría casi igual, y unas buenas vistas dan una capa con nombres de negocio y una sola definición de cada cosa. Para un caso chico pueden alcanzar.
+    Para un caso chico pueden alcanzar: unas buenas vistas dan nombres de negocio, una sola definición de cada cosa y un lugar donde absorber un cambio de la fuente.
 
-    La capa semántica agrega:
-    - **Composición:** cualquier combinación de conceptos funciona sin crear una vista para cada pregunta.
-    - **Jerarquías:** «cáncer de pulmón» incluye sus subtipos.
-    - **Procedencia:** la fuente de cada columna de la respuesta.
-    - **Contexto para el LLM:** un vocabulario con definiciones, no nombres de tablas.
-    - **Estándares abiertos** (W3C), que otras herramientas entienden, no atados a una base.
+    La capa semántica suma:
+    - **Procedencia:** la fuente de cada columna de la respuesta, sin programarla.
+    - **Datos de afuera:** identificadores compartidos que permiten unir, en una consulta, datos de otras organizaciones (Wikidata).
+    - **Jerarquías y composición:** «cáncer de pulmón» incluye sus subtipos, y cualquier combinación de conceptos funciona sin una vista por pregunta.
+    - **Estándares abiertos** (W3C): la misma capa la leen otras herramientas, no está atada a una base.
 
 - question: ¿Dónde quedó la complejidad del SQL?
   answer: |-
-    En la capa. El SPARQL es corto porque solo nombra conceptos: promedia 368 caracteres, contra 726 del SQL que escribió el LLM. En la pregunta de HER2: 435 contra 1.543.
-
-    La complejidad se escribe una vez, en los mapeos y en los enlaces, y Ontop genera el SQL (742 caracteres para HER2): joins simples sobre tablas revisadas, que nadie escribe ni mantiene. En preguntas muy simples el SQL directo puede ser más corto; la ventaja aparece al cruzar fuentes.
+    En la integración, hecha una vez. En la pregunta de HER2, el LLM escribió 1.543 caracteres de SQL sin integración, 571 de SQL sobre las tablas de enlaces y 435 de SPARQL sobre Rastro. La gran diferencia la hace integrar; SPARQL la hace un poco más corta y en palabras de negocio, y Ontop genera el SQL.
 
 - question: ¿Qué pasa si una fuente cambia?
   answer: |-
     Lo probamos con las 20 consultas guardadas, simulando una versión nueva de AACT:
-    - **Cambia el nombre de una columna:** 5 consultas del SQL directo fallan y hay que reescribirlas. En Rastro, **una línea del mapeo**.
-    - **Cambia cómo se escribe un valor** (`TERMINATED` → `Terminated`): el SQL directo no falla, pero 5 respuestas pasan a 0 sin aviso. Rastro también, hasta que se arregla, pero su control de vocabulario avisa. Y se arregla con una línea.
+    - **Cambia el nombre de una columna:** 5 consultas de SQL fallan, con o sin las tablas de enlaces, porque igual leen las columnas de la fuente. En Rastro, **una línea del mapeo**.
+    - **Cambia cómo se escribe un valor** (`TERMINATED` → `Terminated`): el SQL no falla, pero 5 respuestas pasan a 0 sin aviso. Rastro también, hasta que se arregla, pero su control de vocabulario avisa. Y se arregla con una línea.
 
-    Detalle en docs/demo-cambio.md.
+    Una capa de vistas SQL también centralizaría el cambio. Detalle en docs/demo-cambio.md.
+
+- question: ¿Puede consultar datos que no están en Rastro?
+  answer: |-
+    Sí, si comparten identificadores. Una sola consulta en GraphDB combina Rastro, MeSH y **Wikidata**, en vivo y sin cargar nada: por ejemplo, para cada fármaco anti-HER2, qué enfermedades trata según Wikidata. El cruce es el ChEMBL ID, que Rastro y Wikidata usan igual. Así aparece que afatinib (aprobado para cáncer de pulmón) y vandetanib (tiroides) se prueban en cáncer de mama.
+
+    Detalle en layer/externo/.
 
 # --- Cómo integra -----------------------------------------------------
 

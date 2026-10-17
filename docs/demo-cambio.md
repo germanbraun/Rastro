@@ -16,13 +16,15 @@ Muestra el costo de mantener: qué pasa con las 20 queries guardadas cuando AACT
 
 ## Lo que pasa (ensayado el 16 oct 2026)
 
-| | SQL directo | Rastro |
-|---|---|---|
-| Antes del cambio | 20 de 20 iguales | 20 de 20 iguales |
-| **Acto 1**, columna renombrada | 5 queries con error | 14 con error: falla todo junto |
-| … después de arreglar | sigue con 5 errores: hay que reescribir 5 queries | **20 de 20**, con 1 línea del mapeo |
-| **Acto 2**, valores en otro formato | 5 respuestas pasan a 0, **sin error** | igual, pero el **control de vocabulario avisa** |
-| … después de arreglar | sigue dando 0 hasta que alguien lo note | **20 de 20**, con 1 línea del mapeo |
+| | SQL directo | SQL + enlaces | Rastro |
+|---|---|---|---|
+| Antes del cambio | 20 de 20 iguales | 20 de 20 iguales | 20 de 20 iguales |
+| **Acto 1**, columna renombrada | 5 con error | 5 con error | 13 con error: falla todo junto |
+| … después de arreglar | sigue con 5 errores: hay que reescribir 5 consultas | igual | **20 de 20**, con 1 línea del mapeo |
+| **Acto 2**, valores en otro formato | 5 respuestas pasan a 0, **sin error** | 4 en 0 y 1 error | igual, pero el **control de vocabulario avisa** |
+| … después de arreglar | sigue dando 0 hasta que alguien lo note | igual | **20 de 20**, con 1 línea del mapeo |
+
+Las tablas de enlaces no cambian esto: las consultas SQL igual leen las columnas de la fuente.
 
 Las preguntas afectadas son las que filtran por estado: q03, q08, q09, q14 y q17. Por ejemplo, «ensayos detenidos en cáncer de páncreas» pasa de 569 a 0.
 

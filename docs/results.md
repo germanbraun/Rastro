@@ -56,3 +56,21 @@ Demo en http://localhost:8501:
 | Un valor cambia de formato | 5 respuestas pasan a 0 sin aviso | el control de vocabulario avisa; **1 línea** | [demo-cambio.md](demo-cambio.md) |
 | Largo promedio de la consulta del LLM | 726 caracteres | **368** (el SQL de Ontop: 633) | Las 20 consultas guardadas |
 
+## La línea de base justa: SQL con las tablas de enlaces (17 oct 2026)
+
+Para separar lo que aporta la integración de lo que aporta la capa semántica, el mismo LLM respondió con SQL sobre las fuentes **más las tablas de enlaces de Rastro**, documentadas (`layer/sql-enlaces-notes.md`).
+
+| Qué | SQL directo | SQL + enlaces | Rastro |
+|---|---|---|---|
+| Correctas, de 20 | 18 | **20** | **20** |
+| Misma respuesta, preguntando de 4 formas | 1 de 10 | **10 de 10** | **10 de 10** |
+| Preguntas de 3 o 4 cruces (layer/composicion/) | — | **5 de 5** | **5 de 5** |
+| Largo promedio de la consulta del LLM | 726 | 348 | 368 |
+| Tiempo de las 20 consultas | 28 s | 1,9 s | 2,6 s |
+| Una columna de la fuente cambia de nombre | 5 rotas | 5 rotas | **1 línea del mapeo** |
+| Un valor cambia de formato | 5 en 0, sin aviso | 4 en 0 y 1 error, sin aviso | **avisa; 1 línea** |
+| De dónde sale cada dato | no | no | **por columna** |
+| Une datos de Wikidata en la misma consulta (layer/externo/) | no | no | **sí** |
+
+**Interpretación:** la precisión, la consistencia, el largo de la consulta y la velocidad vienen de **integrar una vez**. Con esas tablas, el SQL es tan bueno como Rastro. La capa semántica aporta que esa integración se mantiene en un solo lugar (los mapeos), trae la procedencia de cada dato y se conecta con datos de otras organizaciones con estándares abiertos. Una capa de vistas SQL resolvería parte de lo primero, no lo último.
+

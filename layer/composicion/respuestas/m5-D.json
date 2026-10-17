@@ -1,0 +1,12 @@
+{
+ "question": "¿Qué sponsor de la industria, contando solo al sponsor principal de cada ensayo, tiene más ensayos detenidos (terminados o retirados) que prueban fármacos que actúan sobre algún gen de la familia ERBB (EGFR, ERBB2, ERBB3 o ERBB4)?",
+ "attempts": [
+  {
+   "query": "SELECT sp.name\nFROM aact.sponsors sp\nJOIN linking.sponsor ls ON ls.name = sp.name AND ls.industry\nJOIN aact.studies s ON s.nct_id = sp.nct_id\nWHERE sp.lead_or_collaborator = 'lead'\n  AND s.overall_status IN ('TERMINATED','WITHDRAWN')\n  AND EXISTS (\n    SELECT 1 FROM linking.trial_drug td\n    JOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\n    JOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\n    WHERE td.nct_id = s.nct_id AND tg.gene_symbol IN ('EGFR','ERBB2','ERBB3','ERBB4')\n  )\nGROUP BY sp.name\nORDER BY count(DISTINCT s.nct_id) DESC\nLIMIT 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "Hoffmann-La Roche"
+ ]
+}

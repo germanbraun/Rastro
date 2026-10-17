@@ -11,12 +11,12 @@
 <p style="font-size:28px;color:#4A5568">y otros 9 · fuentes: AACT, ChEMBL, MeSH</p>
 </div>
 <div style="flex:1.3;display:flex;flex-direction:column;gap:16px">
-<p style="font-size:28px;color:#4A5568">Largo de la consulta, en caracteres</p>
-<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL escrito por el LLM</p><div style="width:420px;height:48px;background:#D99A2B;border-radius:10px"></div><p style="font-size:36px;font-weight:700">1.543</p></div>
+<p style="font-size:28px;color:#4A5568">Lo que escribió el LLM, en caracteres</p>
+<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL sin integración</p><div style="width:420px;height:48px;background:#D99A2B;border-radius:10px"></div><p style="font-size:36px;font-weight:700">1.543</p></div>
+<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL sobre los enlaces</p><div style="width:155px;height:48px;background:#9AA5B8;border-radius:10px"></div><p style="font-size:36px;font-weight:700">571</p></div>
 <div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px;font-weight:700">SPARQL sobre Rastro</p><div style="width:118px;height:48px;background:#2F6FB5;border-radius:10px"></div><p style="font-size:36px;font-weight:700">435</p></div>
-<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL que genera Ontop</p><div style="width:202px;height:48px;background:#9AA5B8;border-radius:10px"></div><p style="font-size:36px;font-weight:700">742</p></div>
-<p style="font-size:30px;line-height:1.4;margin-top:12px">La consulta es corta porque la complejidad está en la capa, escrita una vez. El SQL lo genera Ontop: nadie lo escribe ni lo mantiene.</p>
+<p style="font-size:30px;line-height:1.4;margin-top:12px">Sin integración, el LLM adivina qué fármaco nombra cada ensayo, con texto. Con la integración hecha una vez, solo nombra conceptos.</p>
 </div>
 </div>
-<aside>Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. El LLM escribió 1.543 caracteres de SQL, adivinando qué fármaco nombra cada ensayo. Con Rastro escribió 435 de SPARQL, solo conceptos. Ontop generó 742 de SQL: joins simples sobre enlaces revisados. En las 20 preguntas, el SPARQL promedia la mitad que el SQL (368 contra 726). En preguntas muy simples el SQL puede ser más corto: la ventaja aparece al cruzar fuentes.</aside>
+<aside>Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto. Con las tablas de enlaces, 571. Con Rastro, 435 de SPARQL, solo conceptos, y Ontop genera el SQL. La gran diferencia la hace integrar una vez; SPARQL la hace un poco más corta y en palabras de negocio.</aside>
 </section>

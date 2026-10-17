@@ -1,0 +1,26 @@
+# Una consulta, tres grafos: Rastro (Ontop), MeSH (GraphDB) y Wikidata (internet).
+# Se ejecuta en GraphDB: http://localhost:7210/repositories/rastro
+# Fármacos anti-HER2 aprobados que se prueban en cáncer de mama, con las enfermedades
+# que trata cada uno según Wikidata (en español). El cruce es el ChEMBL ID, que Rastro
+# y Wikidata comparten.
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?farmaco ?ensayos (GROUP_CONCAT(DISTINCT ?trata; separator=", ") AS ?trata_segun_wikidata) WHERE {
+  # Rastro, a través de Ontop: los fármacos y sus ensayos de cáncer de mama
+  SERVICE <http://ontop:8080/sparql> {
+    SELECT ?farmaco ?chembl (COUNT(DISTINCT ?t) AS ?ensayos) WHERE {
+      ?d :hasTarget/:gene "ERBB2" ; :approved true ; :name ?farmaco ; :chemblId ?chembl .
+      ?t :testsDrug ?d ; :condition ?c .
+      ?c :within <http://id.nlm.nih.gov/mesh/2026/D001943> .
+    } GROUP BY ?farmaco ?chembl
+  }
+  # MeSH, en GraphDB: el descriptor de cáncer de mama existe en el MeSH completo
+  <http://id.nlm.nih.gov/mesh/2026/D001943> rdfs:label "Breast Neoplasms"@en .
+  # Wikidata, en internet: qué enfermedades trata cada fármaco, en español
+  SERVICE <https://query.wikidata.org/sparql> {
+    ?item wdt:P592 ?chembl .
+    OPTIONAL { ?item wdt:P2175 ?cond . ?cond rdfs:label ?trata . FILTER (LANG(?trata) = "es") }
+  }
+} GROUP BY ?farmaco ?ensayos
+ORDER BY DESC(?ensayos)

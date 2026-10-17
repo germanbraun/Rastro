@@ -3,6 +3,9 @@
   A. solo:   el LLM responde con lo que sabe, sin acceso a datos
   B. sql:    el LLM escribe SQL sobre las tablas de las fuentes tal como se cargaron
   C. rastro: el LLM escribe SPARQL sobre la ontología de Rastro (Ontop)
+  D. sql + enlaces: el LLM escribe SQL sobre las mismas tablas, más las tablas de enlaces
+             de Rastro, documentadas. Es la línea de base justa: los mismos datos que C,
+             sin la capa semántica
 
 Las tres usan el mismo modelo, las mismas instrucciones de base y, para B y C, los
 mismos reintentos: si la query falla, el LLM ve el error y tiene dos intentos más.
@@ -46,9 +49,9 @@ def system_prompt(approach):
     if approach == "A":
         return (BASE + "\n\nNo tenés acceso a ninguna base de datos: respondé con lo que sabés. "
                 "Si no sabés un número exacto, da tu mejor estimación.")
-    if approach == "B":
+    if approach in "BD":
         return (BASE + "\n\nEscribí una sola query SQL para PostgreSQL que responda la pregunta. "
-                + QUERY_RULES + "\n\n" + sql_schema())
+                + QUERY_RULES + "\n\n" + sql_schema(approach))
     ontology = (ROOT / "ontology" / "rastro.ttl").read_text()
     notes = (HERE / "sparql-notes.md").read_text()
     return (BASE + "\n\nEscribí una sola query SPARQL sobre la ontología de Rastro que responda "
@@ -135,7 +138,7 @@ def retry_message(error):
 def try_query(approach, query, kind):
     """Ejecuta la query de B (SQL) o C (SPARQL) y devuelve la respuesta o el error."""
     try:
-        column = (run_sql if approach == "B" else run_sparql)(query)
+        column = run_sparql(query) if approach == "C" else run_sql(query, approach)
     except Exception as e:  # noqa: BLE001 - el error se le devuelve al modelo tal cual
         return {"answer": None, "attempt": {"query": query, "error": str(e).strip()[:2000]}}
     return {"answer": to_answer(column, kind), "attempt": {"query": query, "error": None}}
@@ -149,27 +152,33 @@ def to_answer(column, kind):
 
 # --- Dónde corren las queries --------------------------------------
 
-READER = "host=postgres port=5432 dbname=%s user=rastro_reader password=rastro_reader"
+# B ve las fuentes tal como se cargaron; D, además, las tablas de enlaces de Rastro
+READERS = {"B": "rastro_reader", "D": "rastro_reader_links"}
+READER = "host=postgres port=5432 dbname=%s user={0} password={0}"
 
 
-def run_sql(query):
-    with psycopg.connect(READER % os.environ["PG_DB"]) as conn:
+def run_sql(query, approach="B"):
+    with psycopg.connect(READER.format(READERS[approach]) % os.environ["PG_DB"]) as conn:
         return [row[0] for row in conn.execute(query).fetchall()]
 
 
-def sql_schema():
+def sql_schema(approach="B"):
     """El esquema de las tablas que ve el usuario de solo lectura, con su documentación."""
-    with psycopg.connect(READER % os.environ["PG_DB"]) as conn:
+    user = READERS[approach]
+    with psycopg.connect(READER.format(user) % os.environ["PG_DB"]) as conn:
         rows = conn.execute("""
             SELECT c.table_schema, c.table_name, string_agg(c.column_name || ' ' || c.data_type, ', '
                                                           ORDER BY c.ordinal_position)
             FROM information_schema.columns c
             JOIN information_schema.table_privileges p
               ON p.table_schema = c.table_schema AND p.table_name = c.table_name
-             AND p.grantee = 'rastro_reader' AND p.privilege_type = 'SELECT'
-            GROUP BY 1, 2 ORDER BY 1, 2""").fetchall()
+             AND p.grantee = %s AND p.privilege_type = 'SELECT'
+            GROUP BY 1, 2 ORDER BY 1, 2""", (user,)).fetchall()
     tables = "\n".join(f"{s}.{t}({cols})" for s, t, cols in rows)
-    return f"{(HERE / 'sql-notes.md').read_text()}\n\nTablas:\n{tables}"
+    notes = (HERE / "sql-notes.md").read_text()
+    if approach == "D":
+        notes += "\n" + (HERE / "sql-enlaces-notes.md").read_text()
+    return f"{notes}\n\nTablas:\n{tables}"
 
 
 def run_sparql(query):

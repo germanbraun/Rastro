@@ -32,7 +32,7 @@ HERE = Path(__file__).parent
 RESULTS = HERE / "results.json"
 TOLERANCE = 0.05    # números: correcto si está a menos del 5 % de la referencia
 MIN_F1 = 0.8        # listas: correcto si coincide en al menos un 80 % (F1)
-NAMES = {"A": "LLM solo", "B": "LLM + SQL crudo", "C": "LLM + Rastro"}
+NAMES = {"A": "LLM solo", "B": "LLM + SQL crudo", "D": "LLM + SQL + enlaces", "C": "LLM + Rastro"}
 
 
 def admin():
@@ -105,7 +105,7 @@ def main():
         entry["question"] = q["question"]
         entry["reference"] = to_answer(run_sparql(spec["prefixes"] + q["reference"]), q["kind"])
         if args.rerun:
-            for key in ("B", "C"):
+            for key in ("B", "D", "C"):
                 ok = [a for a in entry.get(key, {}).get("attempts", []) if a["error"] is None]
                 if ok:
                     start = time.time()

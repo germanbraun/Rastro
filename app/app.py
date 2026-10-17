@@ -203,7 +203,7 @@ def friendly_error(error):
 
 
 def pretty(query, approach):
-    if approach == "B":
+    if approach in "BD":
         return sqlparse.format(query, reindent=True, keyword_case="upper", indent_width=2)
     return query.strip()
 
@@ -306,16 +306,18 @@ with compare_tab:
     totals, per_question = scores()
     data = saved()["questions"]
     n = len(questions())
-    st.markdown("El mismo LLM respondió las mismas 20 preguntas de tres formas:")
-    cols = st.columns(3)
+    st.markdown("El mismo LLM respondió las mismas 20 preguntas de cuatro formas:")
+    cols = st.columns(len(NAMES))
     help_text = {"A": "Sin datos: responde de memoria.",
                  "B": "SQL sobre las tablas de las fuentes; resuelve los cruces por su cuenta.",
+                 "D": "SQL sobre las mismas tablas más los enlaces de Rastro: la línea de base justa.",
                  "C": "Consulta sobre los conceptos de Rastro; los cruces ya están resueltos."}
     for col, k in zip(cols, NAMES):
-        col.metric(NAMES[k], f"{totals[k]} de {n} correctas")
+        col.metric(NAMES[k], f"{totals[k]}/{n}")
         col.caption(help_text[k])
-    st.info("La diferencia no está en cuántas acierta, sino en **cuánto podés confiar en cada "
-            "respuesta**. " + FAQ_HINT)
+    st.info("Con los enlaces de Rastro, el SQL acierta igual: la precisión viene de la integración "
+            "hecha una vez. La capa semántica suma que esa integración se mantiene en un solo "
+            "lugar, dice de dónde sale cada dato y se conecta con datos de afuera. " + FAQ_HINT)
     with st.expander("Cómo responde cada forma", expanded=True):
         svg = base64.b64encode(Path("/app/como-funciona.svg").read_bytes()).decode()
         st.markdown(f'<img src="data:image/svg+xml;base64,{svg}" style="width:100%">',
@@ -361,7 +363,7 @@ with compare_tab:
                 + (f" y agrega {len(got_set - ref_set)} que no corresponden." if got_set - ref_set else "."))
 
     st.markdown(f"**Respuesta correcta:** {fmt(entry['reference'])}")
-    cols = st.columns(3)
+    cols = st.columns(len(NAMES))
     for col, k in zip(cols, NAMES):
         with col:
             ok = per_question[q["id"]].get(k)
@@ -375,6 +377,8 @@ with compare_tab:
                 continue
             if k == "B" and query and link_method(query):
                 st.caption(f"Para reconocer los fármacos, los buscó {LINK_METHODS[link_method(query)]}.")
+            if k == "D" and query and "linking." in query:
+                st.caption("Para reconocer los fármacos usó las tablas de enlaces de Rastro.")
             if k == "C" and query and ":testsDrug" in query:
                 st.caption("Para reconocer los fármacos usó el enlace de Rastro: el mismo en todas "
                            "las preguntas.")
@@ -385,7 +389,7 @@ with compare_tab:
                 st.caption(f"{len(shown.splitlines())} líneas"
                            + (f" · {seconds:.1f} s" if seconds is not None else "")
                            + f" · {attempts} intento{'s' if attempts != 1 else ''}")
-                st.code(shown, language="sql" if k == "B" else "sparql")
+                st.code(shown, language="sql" if k in "BD" else "sparql")
                 history = entry[k]["attempts"]
                 if len(history) > 1:
                     with st.expander(f"🔁 Ver los {len(history)} intentos hasta dar con el resultado"):
@@ -397,7 +401,7 @@ with compare_tab:
                                 st.error(friendly_error(attempt["error"]))
                             else:
                                 st.markdown(f"**Intento {i}: ✅ funcionó**")
-                            st.code(pretty(attempt["query"], k), language="sql" if k == "B" else "sparql")
+                            st.code(pretty(attempt["query"], k), language="sql" if k in "BD" else "sparql")
                 if k == "C":
                     with st.expander("El SQL que Rastro generó a partir de esta consulta"):
                         st.caption("Ontop traduce la consulta a SQL sobre Postgres usando los "

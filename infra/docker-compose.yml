@@ -70,7 +70,8 @@ services:
     restart: unless-stopped
     environment:
       GDB_HEAP_SIZE: ${GRAPHDB_HEAP:-2g}
-      GDB_JAVA_OPTS: -Dgraphdb.workbench.importDirectory=/import
+      # http.agent: Wikidata exige identificarse en las consultas federadas (SERVICE)
+      GDB_JAVA_OPTS: -Dgraphdb.workbench.importDirectory=/import -Dhttp.agent=RastroMVP/0.1+https://github.com/germanbraun/Rastro
     ports:
       - "${GRAPHDB_PORT:-7210}:7200"
     volumes:

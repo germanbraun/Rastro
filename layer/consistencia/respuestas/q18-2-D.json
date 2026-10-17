@@ -1,0 +1,33 @@
+{
+ "question": "En cáncer de pulmón, ¿qué fármacos dirigidos a PDCD1 o CD274 (PD-1 o PD-L1) aparecen en ensayos de fase 3 o fase 2/3?",
+ "attempts": [
+  {
+   "query": "SELECT DISTINCT d.pref_name\nFROM linking.trial_drug td\nJOIN aact.studies s ON s.nct_id = td.nct_id\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id AND tg.gene_symbol IN ('PDCD1','CD274')\nJOIN linking.drug d ON d.chembl_id = td.parent_chembl_id\nWHERE s.phase IN ('PHASE3','PHASE2/PHASE3')\n  AND EXISTS (\n  SELECT 1 FROM linking.trial_condition tc\n  JOIN mesh.ancestor a ON a.id = tc.mesh_id\n  JOIN mesh.descriptor md ON md.id = a.ancestor_id AND md.label = 'Lung Neoplasms'\n  WHERE tc.nct_id = td.nct_id)\nORDER BY 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "ADEBRELIMAB",
+  "ATEZOLIZUMAB",
+  "AVELUMAB",
+  "BINTRAFUSP ALFA",
+  "BUDIGALIMAB",
+  "CADONILIMAB",
+  "CAMRELIZUMAB",
+  "CEMIPLIMAB",
+  "COSIBELIMAB",
+  "DOSTARLIMAB",
+  "DURVALUMAB",
+  "NIVOLUMAB",
+  "PEMBROLIZUMAB",
+  "PENPULIMAB",
+  "RETIFANLIMAB",
+  "SERPLULIMAB",
+  "SINTILIMAB",
+  "SOCAZOLIMAB",
+  "SUGEMALIMAB",
+  "TISLELIZUMAB",
+  "TORIPALIMAB",
+  "ZIMBERELIMAB"
+ ]
+}

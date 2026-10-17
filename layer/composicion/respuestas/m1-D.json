@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos sponsors de la industria distintos, contando solo al sponsor principal de cada ensayo, tienen ensayos que prueban algún fármaco que actúa sobre BRAF?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT s.name)\nFROM aact.sponsors s\nJOIN linking.sponsor ls ON ls.name = s.name AND ls.industry\nJOIN linking.trial_drug td ON td.nct_id = s.nct_id\nJOIN linking.drug_target dt ON dt.parent_chembl_id = td.parent_chembl_id\nJOIN linking.target_gene tg ON tg.target_chembl_id = dt.target_chembl_id\nWHERE s.lead_or_collaborator = 'lead' AND tg.gene_symbol = 'BRAF'",
+   "error": null
+  }
+ ],
+ "answer": 100.0
+}
