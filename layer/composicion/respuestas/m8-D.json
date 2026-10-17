@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos ensayos detenidos (terminados o retirados) prueban, en el mismo ensayo, una quimioterapia y una terapia dirigida?",
+ "attempts": [
+  {
+   "query": "SELECT count(*)\nFROM aact.studies s\nWHERE s.overall_status IN ('TERMINATED','WITHDRAWN')\n  AND EXISTS (SELECT 1 FROM linking.trial_drug td JOIN linking.drug_class dc ON dc.chembl_id = td.parent_chembl_id\n              WHERE td.nct_id = s.nct_id AND dc.class = 'Chemotherapy')\n  AND EXISTS (SELECT 1 FROM linking.trial_drug td JOIN linking.drug_class dc ON dc.chembl_id = td.parent_chembl_id\n              WHERE td.nct_id = s.nct_id AND dc.class IN ('KinaseInhibitor','MonoclonalAntibody'))",
+   "error": null
+  }
+ ],
+ "answer": 1011.0
+}

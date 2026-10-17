@@ -71,3 +71,39 @@ questions:
             ?d :hasTarget/:gene ?g . FILTER (?g IN ("EGFR", "ERBB2", "ERBB3", "ERBB4"))
           } GROUP BY ?answer ORDER BY DESC(?n) LIMIT 1 }
       }
+
+  # Preguntas con clases de fármaco (ATC). «Terapia dirigida» no tiene mapeo en Rastro:
+  # Ontop la deduce de la ontología. El SQL con enlaces tiene la misma tabla y la misma
+  # definición en su documentación.
+
+  - id: m6
+    question: ¿Cuántos ensayos de fase 3 (incluye fase 2/3) de cáncer de mama prueban alguna terapia dirigida?
+    kind: número
+    items: ensayos
+    reference: |
+      SELECT (COUNT(DISTINCT ?t) AS ?answer) WHERE {
+        ?t :testsDrug ?d ; :phase ?p ; :condition ?c . ?d a :TargetedTherapy .
+        FILTER (CONTAINS(?p, "PHASE3"))
+        ?x rdfs:label "Breast Neoplasms"@en . ?c :within ?x .
+      }
+
+  - id: m7
+    question: ¿Cuántos anticuerpos monoclonales distintos se prueban en ensayos de cáncer de pulmón?
+    kind: número
+    items: fármacos
+    reference: |
+      SELECT (COUNT(DISTINCT ?d) AS ?answer) WHERE {
+        ?t :testsDrug ?d ; :condition ?c . ?d a :MonoclonalAntibody .
+        ?x rdfs:label "Lung Neoplasms"@en . ?c :within ?x .
+      }
+
+  - id: m8
+    question: ¿Cuántos ensayos detenidos (terminados o retirados) prueban, en el mismo ensayo, una quimioterapia y una terapia dirigida?
+    kind: número
+    items: ensayos
+    reference: |
+      SELECT (COUNT(DISTINCT ?t) AS ?answer) WHERE {
+        ?t :status ?st ; :testsDrug ?q, ?d .
+        FILTER (?st IN ("TERMINATED", "WITHDRAWN"))
+        ?q a :Chemotherapy . ?d a :TargetedTherapy .
+      }

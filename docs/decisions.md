@@ -193,3 +193,7 @@ Conclusión: **la precisión viene de integrar una vez, no de SPARQL.** El mensa
 
 Para que Wikidata acepte las consultas federadas, GraphDB se identifica con `-Dhttp.agent`.
 
+## 2026-10-17 — Clases de fármaco y razonamiento en Ontop
+
+Para mostrar que el conocimiento vive en el modelo, se sumaron clases de fármaco según ATC (`linking.drug_class`, con un mapeo por clase) y la clase «terapia dirigida» sin mapeo: Ontop aplica las reglas de la ontología (OWL 2 QL, `rdfs:subClassOf`) y genera el SQL con las dos clases. Cambiar la definición es una línea de la ontología. La prueba con 3 preguntas no mostró diferencia de precisión con el SQL con enlaces, que tenía la misma definición documentada.
+

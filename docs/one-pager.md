@@ -30,6 +30,7 @@
 | Misma respuesta, preguntando de 4 formas | 1 de 10 | 10 de 10 | **10 de 10** |
 | Una columna de la fuente cambia de nombre | 5 consultas rotas | 5 consultas rotas | **1 línea del mapeo** |
 | Un valor cambia de formato | 5 respuestas en 0, sin aviso | igual | **avisa; 1 línea** |
+| El negocio cambia una definición | cada consulta | cada consulta | **1 línea de la ontología** |
 | De dónde sale cada dato | no | no | **por columna** |
 | Une datos de Wikidata en la misma consulta | no | no | **sí** |
 

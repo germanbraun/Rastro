@@ -42,7 +42,11 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 > «AACT publica una versión nueva: los estados pasan de TERMINATED a Terminated. Con SQL, con o sin nuestros enlaces, nada falla, pero cinco respuestas pasan a cero: "569 ensayos detenidos" ahora es 0, y nadie se entera. Rastro también da cero, pero avisa: hay estados que la ontología no conoce. Se arregla con una línea del mapeo, y las 20 preguntas vuelven a funcionar. El SQL sigue mal hasta que alguien arregle cada consulta.»
 
-2. Elegir **Se suma una fuente: Wikidata**.
+2. Elegir **Cambia una definición de negocio**.
+
+> «"Terapia dirigida" no está en ninguna tabla ni en ningún mapeo: está definida en la ontología, en dos líneas, y Ontop la deduce. Miren el SQL que generó: nadie lo escribió. Si el negocio decide que la terapia hormonal también cuenta, es una línea más, y todas las preguntas cambian a la vez: de 156 a 188 fármacos.»
+
+3. Elegir **Se suma una fuente: Wikidata**.
 
 > «Una consulta, tres grafos: Rastro, MeSH y Wikidata, unidos en vivo por el identificador del fármaco. Wikidata nos dice que afatinib está aprobado para pulmón y se prueba en mama. Eso no está en ninguna de nuestras fuentes, y no cargamos nada.»
 

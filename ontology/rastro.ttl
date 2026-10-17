@@ -21,6 +21,31 @@ sin clase propia."""@es ;
     rdfs:label "Fármaco"@es ;
     rdfs:comment "Un fármaco de ChEMBL. Sus sales cuentan como el mismo fármaco."@es .
 
+:TargetedTherapy a owl:Class ;
+    rdfs:subClassOf :Drug ;
+    rdfs:label "Terapia dirigida"@es ;
+    rdfs:comment "Un fármaco que actúa sobre una proteína que el tumor necesita. Ningún mapeo la asigna: se deduce de sus subclases."@es .
+
+:KinaseInhibitor a owl:Class ;
+    rdfs:subClassOf :TargetedTherapy ;
+    rdfs:label "Inhibidor de quinasa"@es ;
+    rdfs:comment "Molécula pequeña que bloquea una enzima del tumor (ATC L01E). Sus nombres terminan en -nib."@es .
+
+:MonoclonalAntibody a owl:Class ;
+    rdfs:subClassOf :TargetedTherapy ;
+    rdfs:label "Anticuerpo monoclonal"@es ;
+    rdfs:comment "Anticuerpo que se une a una proteína específica, incluidos los conjugados (ATC L01F). Sus nombres terminan en -mab."@es .
+
+:Chemotherapy a owl:Class ;
+    rdfs:subClassOf :Drug ;
+    rdfs:label "Quimioterapia"@es ;
+    rdfs:comment "Fármaco citotóxico clásico: alquilantes, antimetabolitos, alcaloides y antibióticos citotóxicos (ATC L01A a L01D)."@es .
+
+:HormoneTherapy a owl:Class ;
+    rdfs:subClassOf :Drug ;
+    rdfs:label "Terapia hormonal"@es ;
+    rdfs:comment "Fármaco que actúa sobre hormonas, como los antiandrógenos o los antiestrógenos (ATC L02)."@es .
+
 :Target a owl:Class ;
     rdfs:label "Target"@es ;
     rdfs:comment "La proteína sobre la que actúa un fármaco (ChEMBL)."@es .

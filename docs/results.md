@@ -74,3 +74,15 @@ Para separar lo que aporta la integración de lo que aporta la capa semántica, 
 
 **Interpretación:** la precisión, la consistencia, el largo de la consulta y la velocidad vienen de **integrar una vez**. Con esas tablas, el SQL es tan bueno como Rastro. La capa semántica aporta que esa integración se mantiene en un solo lugar (los mapeos), trae la procedencia de cada dato y se conecta con datos de otras organizaciones con estándares abiertos. Una capa de vistas SQL resolvería parte de lo primero, no lo último.
 
+## El conocimiento en el modelo: clases de fármaco (17 oct 2026)
+
+Se sumaron cuatro clases de fármaco según la clasificación ATC (inhibidor de quinasa, anticuerpo monoclonal, quimioterapia, terapia hormonal) y una que **no tiene mapeo**: «terapia dirigida». La ontología dice, en dos líneas, que los inhibidores de quinasa y los anticuerpos monoclonales son terapias dirigidas, y Ontop lo deduce al responder.
+
+| Qué | Resultado |
+|---|---|
+| Fármacos que son terapia dirigida, sin mapeo ni SQL para ese concepto | 156 |
+| Si la terapia hormonal también cuenta (una línea más en la ontología) | 188 fármacos; ensayos de fase 3 de cáncer de mama con terapia dirigida, de 336 a 547 |
+| 3 preguntas con estas clases | SQL + enlaces 3 de 3, Rastro 3 de 3 |
+
+**Interpretación:** con la definición documentada, el SQL también acierta. La diferencia es dónde vive la definición: en Rastro, en un solo lugar del modelo; en SQL, dentro de cada consulta o en una vista.
+

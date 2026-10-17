@@ -443,7 +443,8 @@ with change_tab:
     st.caption("Qué pasa con las 20 consultas guardadas cuando una fuente cambia, y cuánto cuesta "
                "arreglarlo. Resultados medidos sobre los datos reales; se reproducen en vivo con "
                "`layer/cambio/cambio.sh`.")
-    scenario = st.radio("Escenario", list(CHANGES) + ["Se suma una fuente: Wikidata"],
+    scenario = st.radio("Escenario", list(CHANGES) + ["Cambia una definición de negocio",
+                                                      "Se suma una fuente: Wikidata"],
                         horizontal=True, label_visibility="collapsed")
     if scenario in CHANGES:
         change = CHANGES[scenario]
@@ -477,6 +478,26 @@ with change_tab:
                 "aunque use las tablas de enlaces. En Rastro ese conocimiento está en un solo lugar: "
                 "el mapeo. Una capa de vistas SQL también lo centralizaría; la capa semántica suma la "
                 "procedencia y los datos de afuera.")
+    elif scenario == "Cambia una definición de negocio":
+        st.markdown("«Terapia dirigida» no está en ninguna tabla ni en ningún mapeo. Está definida en "
+                    "la **ontología**, en dos líneas: los inhibidores de quinasa y los anticuerpos "
+                    "monoclonales son terapias dirigidas. Ontop lo deduce al responder.")
+        st.code(":KinaseInhibitor    rdfs:subClassOf :TargetedTherapy .\n"
+                ":MonoclonalAntibody rdfs:subClassOf :TargetedTherapy .", language="turtle")
+        st.markdown("El SQL que genera Ontop para «fármacos que son terapia dirigida»: nadie lo escribió.")
+        st.code("SELECT DISTINCT v1.chembl_id, v3.pref_name\n"
+                "FROM linking.drug_class v1,\n"
+                "     (VALUES ('KinaseInhibitor'), ('MonoclonalAntibody')) AS v2 (v0m0),\n"
+                "     linking.drug v3\n"
+                "WHERE v1.class = v2.v0m0 AND v1.chembl_id = v3.chembl_id", language="sql")
+        st.markdown("**Si el negocio decide que la terapia hormonal también cuenta, es una línea más:**")
+        st.code(":HormoneTherapy rdfs:subClassOf :TargetedTherapy .", language="turtle")
+        cols = st.columns(2)
+        cols[0].metric("Fármacos que son terapia dirigida", "188", "+32 (antes, 156)")
+        cols[1].metric("Ensayos de fase 3 de cáncer de mama con terapia dirigida", "547", "+211 (antes, 336)")
+        st.info("Todas las preguntas que dicen «terapia dirigida» cambian a la vez, sin tocar SQL ni "
+                "consultas. Con SQL, esa definición vive en cada consulta, o en una vista que hay que "
+                "mantener. En Rastro vive en el modelo, documentada, y el LLM la lee.")
     else:
         st.markdown("Una consulta une, en vivo, **Rastro**, **MeSH** y **Wikidata**: para cada fármaco "
                     "anti-HER2, qué enfermedades trata según Wikidata. No se carga nada: Rastro y "

@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos anticuerpos monoclonales distintos se prueban en ensayos de cáncer de pulmón?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?d) AS ?n) WHERE {\n  ?t a :Trial ; :condition ?c ; :testsDrug ?d .\n  ?c :within ?pulmon . ?pulmon rdfs:label \"Lung Neoplasms\"@en .\n  ?d a :MonoclonalAntibody .\n}",
+   "error": null
+  }
+ ],
+ "answer": 41.0
+}

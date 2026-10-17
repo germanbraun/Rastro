@@ -37,3 +37,17 @@ SELECT name, bool_or(agency_class = 'INDUSTRY') AS industry
 FROM aact.sponsors WHERE lead_or_collaborator = 'lead'
 GROUP BY name;
 ALTER TABLE linking.sponsor ADD PRIMARY KEY (name);
+
+-- Clase de cada fármaco según la clasificación ATC de la OMS (la trae ChEMBL), a nivel de
+-- molécula padre. La ontología decide qué clase es una terapia dirigida.
+DROP TABLE IF EXISTS linking.drug_class;
+CREATE TABLE linking.drug_class AS
+SELECT DISTINCT coalesce(m.parent_chembl_id, m.chembl_id) AS chembl_id,
+       CASE WHEN a.level5 LIKE 'L01E%' THEN 'KinaseInhibitor'
+            WHEN a.level5 LIKE 'L01F%' THEN 'MonoclonalAntibody'
+            WHEN a.level5 ~ '^L01[ABCD]' THEN 'Chemotherapy'
+            WHEN a.level5 LIKE 'L02%' THEN 'HormoneTherapy' END AS class
+FROM chembl.molecule_atc_classification a
+JOIN chembl.molecule_dictionary m ON m.chembl_id = a.chembl_id
+WHERE a.level5 ~ '^L01[ABCDEF]' OR a.level5 LIKE 'L02%';
+

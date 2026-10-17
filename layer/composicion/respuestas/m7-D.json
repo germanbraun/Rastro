@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos anticuerpos monoclonales distintos se prueban en ensayos de cáncer de pulmón?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT td.parent_chembl_id)\nFROM linking.trial_drug td\nJOIN linking.drug_class dc ON dc.chembl_id = td.parent_chembl_id AND dc.class = 'MonoclonalAntibody'\nJOIN linking.trial_condition tc ON tc.nct_id = td.nct_id\nJOIN mesh.ancestor a ON a.id = tc.mesh_id\nJOIN mesh.descriptor d ON d.id = a.ancestor_id AND d.label = 'Lung Neoplasms'",
+   "error": null
+  }
+ ],
+ "answer": 41.0
+}

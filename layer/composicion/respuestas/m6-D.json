@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos ensayos de fase 3 (incluye fase 2/3) de cáncer de mama prueban alguna terapia dirigida?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT s.nct_id)\nFROM aact.studies s\nJOIN linking.trial_condition tc ON tc.nct_id = s.nct_id\nJOIN mesh.ancestor a ON a.id = tc.mesh_id\nJOIN mesh.descriptor d ON d.id = a.ancestor_id AND d.label = 'Breast Neoplasms'\nJOIN linking.trial_drug td ON td.nct_id = s.nct_id\nJOIN linking.drug_class dc ON dc.chembl_id = td.parent_chembl_id AND dc.class IN ('KinaseInhibitor','MonoclonalAntibody')\nWHERE s.phase IN ('PHASE3','PHASE2/PHASE3')",
+   "error": null
+  }
+ ],
+ "answer": 336.0
+}

@@ -96,6 +96,24 @@
     rr:predicateObjectMap [ rr:predicate :approved ; rr:objectMap [ rr:column "approved" ] ] ;
     rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/chembl> ] ] .
 
+# Clases de fármaco, según ATC. «Terapia dirigida» no tiene mapeo: Ontop la deduce de la
+# ontología (inhibidores de quinasa y anticuerpos monoclonales son terapias dirigidas).
+<#DrugKinaseInhibitor> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT chembl_id FROM linking.drug_class WHERE class = 'KinaseInhibitor'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :KinaseInhibitor ] .
+
+<#DrugMonoclonalAntibody> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT chembl_id FROM linking.drug_class WHERE class = 'MonoclonalAntibody'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :MonoclonalAntibody ] .
+
+<#DrugChemotherapy> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT chembl_id FROM linking.drug_class WHERE class = 'Chemotherapy'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :Chemotherapy ] .
+
+<#DrugHormoneTherapy> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT chembl_id FROM linking.drug_class WHERE class = 'HormoneTherapy'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :HormoneTherapy ] .
+
 <#DrugTarget> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.drug_target" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ;

@@ -29,5 +29,5 @@ GRANT USAGE ON SCHEMA aact, chembl, openfda, mesh, linking TO rastro_reader_link
 GRANT SELECT ON ALL TABLES IN SCHEMA aact, chembl, openfda TO rastro_reader_links;
 GRANT SELECT ON mesh.descriptor, mesh.broader, mesh.ancestor TO rastro_reader_links;
 GRANT SELECT ON linking.trial_drug, linking.trial_condition, linking.drug, linking.drug_target,
-                linking.target_gene, linking.sponsor TO rastro_reader_links;
+                linking.target_gene, linking.sponsor, linking.drug_class TO rastro_reader_links;
 
