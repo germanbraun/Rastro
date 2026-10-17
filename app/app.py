@@ -271,7 +271,8 @@ with st.sidebar:
                     unsafe_allow_html=True)
     st.caption("🐘 Postgres · 🕸️ GraphDB")
 
-ask_tab, compare_tab, faq_tab = st.tabs(["Preguntar", "Con y sin Rastro", "Preguntas frecuentes"])
+ask_tab, compare_tab, change_tab, faq_tab = st.tabs(
+    ["Preguntar", "Con y sin Rastro", "Cuando las fuentes cambian", "Preguntas frecuentes"])
 FAQ_HINT = "¿Dudas? Mirá la pestaña **Preguntas frecuentes**."
 
 with ask_tab:
@@ -411,6 +412,86 @@ with compare_tab:
                             st.code(pretty(answer.ontop_sql(query), "B"), language="sql")
                         except requests.RequestException:
                             st.caption("Ontop no devolvió la traducción.")
+
+# Escenarios de cambio: resultados medidos con layer/cambio/cambio.sh registrar
+CHANGES = {
+    "Cambia el nombre de una columna": {
+        "what": "AACT publica una versión nueva y la columna del estado del ensayo cambia de nombre.",
+        "sql": "ALTER TABLE aact.studies RENAME COLUMN overall_status TO status;",
+        "before": "renombrar", "after": "renombrar-arreglado",
+        "fix": ("SELECT nct_id, brief_title, phase, overall_status, start_date, why_stopped",
+                "SELECT nct_id, brief_title, phase, status AS overall_status, start_date, why_stopped"),
+    },
+    "Cambia cómo se escribe un valor": {
+        "what": "AACT publica una versión nueva y los estados pasan de TERMINATED a Terminated.",
+        "sql": "UPDATE aact.studies SET overall_status = initcap(overall_status);",
+        "before": "valores", "after": "valores-arreglado",
+        "fix": ("SELECT nct_id, brief_title, phase, overall_status, start_date, why_stopped",
+                "SELECT nct_id, brief_title, phase, upper(overall_status) AS overall_status, start_date, why_stopped"),
+    },
+}
+CHANGE_NAMES = {"B": "SQL directo", "D": "SQL + enlaces", "C": "Rastro"}
+STATUS = {"✅": "igual", "🟡": "distintas, sin aviso", "❌": "con error"}
+
+
+def change_summary(totals):
+    return " · ".join(f"{v} {STATUS.get(s, s)}" for s, v in sorted(totals.items(), key=lambda x: x[0] != "✅"))
+
+
+with change_tab:
+    st.markdown("### Los datos cambian. Tus preguntas, no.")
+    st.caption("Qué pasa con las 20 consultas guardadas cuando una fuente cambia, y cuánto cuesta "
+               "arreglarlo. Resultados medidos sobre los datos reales; se reproducen en vivo con "
+               "`layer/cambio/cambio.sh`.")
+    scenario = st.radio("Escenario", list(CHANGES) + ["Se suma una fuente: Wikidata"],
+                        horizontal=True, label_visibility="collapsed")
+    if scenario in CHANGES:
+        change = CHANGES[scenario]
+        recorded = json.loads(Path("/layer/cambio/resultado.json").read_text())
+        before, after = recorded[change["before"]], recorded[change["after"]]
+        st.markdown(change["what"])
+        st.code(change["sql"], language="sql")
+        st.markdown("**Antes de arreglar nada:**")
+        for col, k in zip(st.columns(3), CHANGE_NAMES):
+            col.metric(CHANGE_NAMES[k], f"{before['totals'][k].get('✅', 0)}/20")
+            col.caption(change_summary(before["totals"][k]))
+        if before["totals"]["C"].get("❌", 0) > before["totals"]["B"].get("❌", 0):
+            st.caption("Rastro falla más, y todo junto: la primera consulta con error deja la conexión "
+                       "de Ontop en error y arrastra a las demás. Falla en voz alta, y se arregla en un lugar.")
+        if "Control de vocabulario" in before["vocabulary"] and "🟡" in before["vocabulary"]:
+            st.warning("Rastro avisa: " + before["vocabulary"].replace("🟡 Control de vocabulario: ", ""))
+        st.markdown("**El arreglo en Rastro: una línea del mapeo**")
+        st.code(f"- {change['fix'][0]}\n+ {change['fix'][1]}", language="diff")
+        st.markdown("**Después del arreglo:**")
+        for col, k in zip(st.columns(3), CHANGE_NAMES):
+            col.metric(CHANGE_NAMES[k], f"{after['totals'][k].get('✅', 0)}/20")
+            col.caption(change_summary(after["totals"][k]) if k == "C" else
+                        change_summary(after["totals"][k]) + ". Hay que encontrar y reescribir cada consulta.")
+        with st.expander("Las preguntas afectadas"):
+            rows = [{"Pregunta": data[qid]["question"],
+                     **{CHANGE_NAMES[k]: before["cells"][qid][k] for k in CHANGE_NAMES}}
+                    for qid in before["cells"]
+                    if any(not before["cells"][qid][k].startswith("✅") for k in CHANGE_NAMES)]
+            st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+        st.info("Con SQL, cada consulta sabe cómo se llaman las columnas y cómo se escriben los valores, "
+                "aunque use las tablas de enlaces. En Rastro ese conocimiento está en un solo lugar: "
+                "el mapeo. Una capa de vistas SQL también lo centralizaría; la capa semántica suma la "
+                "procedencia y los datos de afuera.")
+    else:
+        st.markdown("Una consulta une, en vivo, **Rastro**, **MeSH** y **Wikidata**: para cada fármaco "
+                    "anti-HER2, qué enfermedades trata según Wikidata. No se carga nada: Rastro y "
+                    "Wikidata comparten el identificador del fármaco (ChEMBL ID).")
+        table = pd.read_csv("/layer/externo/resultado-2026-10-17.csv").rename(columns={
+            "farmaco": "Fármaco", "ensayos": "Ensayos de cáncer de mama",
+            "trata_segun_wikidata": "Trata, según Wikidata"})
+        st.dataframe(table.fillna("—"), hide_index=True, use_container_width=True)
+        st.caption("Afatinib (pulmón) y vandetanib (tiroides) están aprobados para otros cánceres y se "
+                   "prueban en mama: un dato que ninguna de las cuatro fuentes de Rastro tiene. "
+                   "Resultado guardado el 17 oct 2026; la consulta en vivo tarda unos 10 segundos.")
+        with st.expander("La consulta: tres grafos en una"):
+            st.code(Path("/layer/externo/wikidata.rq").read_text(), language="sparql")
+        st.info("Con SQL, sumar una fuente de otra organización es cargarla y mantener una copia. "
+                "Con identificadores compartidos, se consulta en el lugar.")
 
 with faq_tab:
     data = saved()["questions"]

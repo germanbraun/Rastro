@@ -1,0 +1,710 @@
+{
+ "antes": {
+  "cells": {
+   "q01": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q02": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q03": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q04": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q05": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q06": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q07": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q08": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q09": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q10": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q11": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q12": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q13": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q14": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q15": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q16": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q17": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q18": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q19": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q20": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 20
+   },
+   "D": {
+    "✅": 20
+   },
+   "C": {
+    "✅": 20
+   }
+  },
+  "vocabulary": "✅ Control de vocabulario: todos los estados son los que documenta la ontología."
+ },
+ "renombrar": {
+  "cells": {
+   "q01": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q02": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q03": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "❌ error"
+   },
+   "q04": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "❌ error"
+   },
+   "q05": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "❌ error"
+   },
+   "q06": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "❌ error"
+   },
+   "q07": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "❌ error"
+   },
+   "q08": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "❌ error"
+   },
+   "q09": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "❌ error"
+   },
+   "q10": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "❌ error"
+   },
+   "q11": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "❌ error"
+   },
+   "q12": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q13": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q14": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "❌ error"
+   },
+   "q15": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "❌ error"
+   },
+   "q16": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "❌ error"
+   },
+   "q17": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "❌ error"
+   },
+   "q18": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "❌ error"
+   },
+   "q19": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q20": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 15,
+    "❌": 5
+   },
+   "D": {
+    "✅": 15,
+    "❌": 5
+   },
+   "C": {
+    "✅": 6,
+    "❌": 14
+   }
+  },
+  "vocabulary": "Control de vocabulario: Rastro no responde (it.unibz.inf.ontop.exception.OntopQueryEvaluationException: org.postgresql.util.PSQLException: ERROR: column v1.overall_)"
+ },
+ "renombrar-arreglado": {
+  "cells": {
+   "q01": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q02": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q03": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "✅ igual"
+   },
+   "q04": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q05": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q06": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q07": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q08": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "✅ igual"
+   },
+   "q09": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "✅ igual"
+   },
+   "q10": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q11": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q12": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q13": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q14": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "✅ igual"
+   },
+   "q15": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q16": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q17": {
+    "B": "❌ error",
+    "D": "❌ error",
+    "C": "✅ igual"
+   },
+   "q18": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q19": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q20": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 15,
+    "❌": 5
+   },
+   "D": {
+    "✅": 15,
+    "❌": 5
+   },
+   "C": {
+    "✅": 20
+   }
+  },
+  "vocabulary": "✅ Control de vocabulario: todos los estados son los que documenta la ontología."
+ },
+ "valores": {
+  "cells": {
+   "q01": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q02": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q03": {
+    "B": "🟡 ninguno, era 3 nombres",
+    "D": "🟡 ninguno, era 3 nombres",
+    "C": "🟡 ninguno, era 3 nombres"
+   },
+   "q04": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q05": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q06": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q07": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q08": {
+    "B": "🟡 nada, era 28",
+    "D": "❌ error",
+    "C": "🟡 nada, era 28.1"
+   },
+   "q09": {
+    "B": "🟡 0, era 973",
+    "D": "🟡 0, era 961",
+    "C": "🟡 0, era 961"
+   },
+   "q10": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q11": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q12": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q13": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q14": {
+    "B": "🟡 0, era 569",
+    "D": "🟡 0, era 569",
+    "C": "🟡 0, era 569"
+   },
+   "q15": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q16": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q17": {
+    "B": "🟡 0, era 34",
+    "D": "🟡 0, era 34",
+    "C": "🟡 0, era 34"
+   },
+   "q18": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q19": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q20": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 15,
+    "🟡": 5
+   },
+   "D": {
+    "✅": 15,
+    "🟡": 4,
+    "❌": 1
+   },
+   "C": {
+    "✅": 15,
+    "🟡": 5
+   }
+  },
+  "vocabulary": "🟡 Control de vocabulario: 13 estados que la ontología no documenta: Active_Not_Recruiting, Approved_For_Marketing, Available, Completed, Enrolling_By_Invitation, No_Longer_Available"
+ },
+ "valores-arreglado": {
+  "cells": {
+   "q01": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q02": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q03": {
+    "B": "🟡 ninguno, era 3 nombres",
+    "D": "🟡 ninguno, era 3 nombres",
+    "C": "✅ igual"
+   },
+   "q04": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q05": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q06": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q07": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q08": {
+    "B": "🟡 nada, era 28",
+    "D": "❌ error",
+    "C": "✅ igual"
+   },
+   "q09": {
+    "B": "🟡 0, era 973",
+    "D": "🟡 0, era 961",
+    "C": "✅ igual"
+   },
+   "q10": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q11": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q12": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q13": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q14": {
+    "B": "🟡 0, era 569",
+    "D": "🟡 0, era 569",
+    "C": "✅ igual"
+   },
+   "q15": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q16": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q17": {
+    "B": "🟡 0, era 34",
+    "D": "🟡 0, era 34",
+    "C": "✅ igual"
+   },
+   "q18": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q19": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q20": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 15,
+    "🟡": 5
+   },
+   "D": {
+    "✅": 15,
+    "🟡": 4,
+    "❌": 1
+   },
+   "C": {
+    "✅": 20
+   }
+  },
+  "vocabulary": "✅ Control de vocabulario: todos los estados son los que documenta la ontología."
+ },
+ "despues": {
+  "cells": {
+   "q01": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q02": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q03": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q04": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q05": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q06": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q07": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q08": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q09": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q10": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q11": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q12": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q13": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q14": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q15": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q16": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q17": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q18": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q19": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   },
+   "q20": {
+    "B": "✅ igual",
+    "D": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 20
+   },
+   "D": {
+    "✅": 20
+   },
+   "C": {
+    "✅": 20
+   }
+  },
+  "vocabulary": "✅ Control de vocabulario: todos los estados son los que documenta la ontología."
+ }
+}

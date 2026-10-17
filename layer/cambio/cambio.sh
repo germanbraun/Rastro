@@ -6,6 +6,8 @@
 #   layer/cambio/cambio.sh valores             acto 2: TERMINATED pasa a ser Terminated
 #   layer/cambio/cambio.sh arreglar <acto>     cambia una línea del mapeo y reinicia Ontop
 #   layer/cambio/cambio.sh deshacer            deja la base y el mapeo como estaban
+#   layer/cambio/cambio.sh registrar           corre los dos actos y guarda el resultado
+#                                              para la app (layer/cambio/resultado.json)
 #
 # Se corre desde cualquier carpeta del repo. Siempre terminar con "deshacer".
 set -euo pipefail
@@ -49,7 +51,16 @@ has_column() {
 
 case "${1:-}" in
   probar)
-    compose run --rm -T layer-eval python /layer/cambio/probar.py ;;
+    compose run --rm -T layer-eval python /layer/cambio/probar.py ${2:+--guardar "$2"} ;;
+  registrar)
+    "$0" probar antes
+    "$0" renombrar && "$0" probar renombrar
+    "$0" arreglar renombrar && "$0" probar renombrar-arreglado
+    "$0" deshacer
+    "$0" valores && "$0" probar valores
+    "$0" arreglar valores && "$0" probar valores-arreglado
+    "$0" deshacer
+    "$0" probar despues ;;
   renombrar)
     sql "ALTER TABLE aact.studies RENAME COLUMN overall_status TO status"
     echo "Hecho: aact.studies.overall_status ahora se llama status." ;;

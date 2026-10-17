@@ -1,5 +1,9 @@
 # Demo de cambio: cuando la fuente cambia
 
+> **Los datos cambian. Tus preguntas, no.**
+
+Para la demo comercial, la app muestra estos resultados ya medidos en la pestaña **Cuando las fuentes cambian**, sin tocar la base. Lo que sigue es para hacerlo en vivo, ante una audiencia técnica.
+
 Muestra el costo de mantener: qué pasa con las 20 queries guardadas cuando AACT publica una versión nueva, y dónde se arregla. Todo con `layer/cambio/cambio.sh`, desde la carpeta del repo.
 
 ## Comandos
@@ -11,6 +15,7 @@ Muestra el costo de mantener: qué pasa con las 20 queries guardadas cuando AACT
 | `cambio.sh valores` | Acto 2: `TERMINATED` pasa a escribirse `Terminated` (todos los estados) |
 | `cambio.sh arreglar renombrar` / `arreglar valores` | Cambia **una línea** del mapeo (`mappings/rastro.r2rml.ttl`) y reinicia Ontop |
 | `cambio.sh deshacer` | Deja la base y el mapeo como estaban. **Correrlo siempre al terminar.** |
+| `cambio.sh registrar` | Corre los dos actos y guarda el resultado para la app (`layer/cambio/resultado.json`) |
 
 `probar` tarda medio minuto. Reiniciar Ontop, otro medio minuto.
 

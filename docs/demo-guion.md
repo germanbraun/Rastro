@@ -1,4 +1,6 @@
-# Guion de la demo de Rastro Layer (6 minutos + 3 de cambio)
+# Guion de la demo de Rastro Layer (8 minutos)
+
+> **Los datos cambian. Tus preguntas, no.**
 
 Para consultores que saben SQL y no conocen tecnologías semánticas. Las diapositivas están en `docs/slides/` (abrir `index.html`).
 
@@ -8,8 +10,7 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 1. Levantar todo: `cd infra && docker compose up -d` (lo hace alguien técnico, una vez).
 2. Abrir http://localhost:8501 en la pestaña **Preguntar** y probar una pregunta de ejemplo.
-3. Para la parte de cambio, una terminal en la carpeta del repo: correr una vez `layer/cambio/cambio.sh probar`.
-4. Si algo falla en vivo, las diapositivas tienen las mismas respuestas.
+3. Si algo falla en vivo, las diapositivas tienen las mismas respuestas. No hace falta la terminal.
 
 ## 0:00 – 1:30 · Problema, capa y beneficios (diapositivas 1 a 4)
 
@@ -35,29 +36,23 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 >
 > «La capa semántica agrega lo que las tablas solas no dan: cuando la fuente cambia se arregla en un lugar, cada dato trae su fuente, y se puede consultar junto con datos de afuera.»
 
-## 4:30 – 6:00 · Datos de afuera y cierre (diapositivas 8 a 10)
+## 4:30 – 6:30 · Cuando las fuentes cambian (pestaña Cuando las fuentes cambian, diapositivas 7 y 8)
+
+1. Elegir **Cambia cómo se escribe un valor**.
+
+> «AACT publica una versión nueva: los estados pasan de TERMINATED a Terminated. Con SQL, con o sin nuestros enlaces, nada falla, pero cinco respuestas pasan a cero: "569 ensayos detenidos" ahora es 0, y nadie se entera. Rastro también da cero, pero avisa: hay estados que la ontología no conoce. Se arregla con una línea del mapeo, y las 20 preguntas vuelven a funcionar. El SQL sigue mal hasta que alguien arregle cada consulta.»
+
+2. Elegir **Se suma una fuente: Wikidata**.
 
 > «Una consulta, tres grafos: Rastro, MeSH y Wikidata, unidos en vivo por el identificador del fármaco. Wikidata nos dice que afatinib está aprobado para pulmón y se prueba en mama. Eso no está en ninguna de nuestras fuentes, y no cargamos nada.»
->
-> «Los límites, dichos de entrada: con nuestros enlaces, el SQL acierta igual; lo que vendemos es la integración hecha una vez, mantenida en un lugar, con fuente y conectada. El siguiente paso: un piloto con datos del cliente.»
 
-## Extra, 3 minutos · Cuando la fuente cambia (terminal, diapositiva 7)
+## 6:30 – 8:00 · Cierre (diapositiva 10)
 
-Detalle en [demo-cambio.md](demo-cambio.md).
+> «Los datos cambian; tus preguntas, no. Lo que vendemos es la integración hecha una vez, mantenida en un lugar, con fuente y conectada con datos de afuera. Con nuestros enlaces, el SQL acierta igual: lo decimos de entrada. El siguiente paso: un piloto con datos del cliente.»
 
-1. `layer/cambio/cambio.sh valores`
+## En vivo, para audiencias técnicas
 
-> «AACT publica una versión nueva: los estados pasan de TERMINATED a Terminated.»
-
-2. `layer/cambio/cambio.sh probar`
-
-> «Ninguna consulta SQL falla, con o sin enlaces, pero cinco respuestas pasan a cero: "569 ensayos detenidos" ahora es 0, y nadie se entera. Rastro también da cero, pero el control de vocabulario avisa.»
-
-3. `layer/cambio/cambio.sh arreglar valores`, y otra vez `probar`.
-
-> «Una línea en el mapeo. Rastro vuelve a 20 de 20. El SQL sigue mal hasta que alguien arregle cada consulta.»
-
-4. **Siempre al final:** `layer/cambio/cambio.sh deshacer`.
+El cambio se puede hacer de verdad sobre la base, desde una terminal. Detalle en [demo-cambio.md](demo-cambio.md): `cambio.sh valores`, `probar`, `arreglar valores`, `probar`, y **siempre** `deshacer` al final.
 
 ## Si preguntan
 
