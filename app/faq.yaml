@@ -33,6 +33,15 @@
 
     Las consultas corren en vivo sobre Postgres: Ontop traduce cada pregunta a SQL.
 
+- question: ¿Qué tiene cada fuente, en palabras simples?
+  answer: |-
+    - **AACT** es el registro público de **ensayos clínicos**, los estudios en personas para probar un tratamiento. Trae la fase (1: ¿es seguro?, 2: ¿funciona?, 3: ¿es mejor que lo que hay?), el estado (por ejemplo terminado antes de tiempo), quién lo paga (el sponsor) y qué se prueba, escrito como texto libre.
+    - **ChEMBL** es una base europea de **fármacos**: sus nombres y códigos, si están aprobados, y sobre qué **proteína del cuerpo** actúan (el target, con el nombre corto de su gen, como HER2 o EGFR).
+    - **openFDA** trae los **reportes de efectos adversos** que médicos y pacientes envían a la FDA. Son avisos espontáneos, no porcentajes de riesgo.
+    - **MeSH** es el **vocabulario médico** de la Biblioteca Nacional de Medicina de EE. UU.: sabe que «cáncer de pulmón de células no pequeñas» es un tipo de «cáncer de pulmón».
+
+    Más detalle, ejemplos y un glosario en docs/fuentes.md.
+
 - question: ¿Necesito un LLM o una API key?
   answer: >-
     Para las 20 preguntas de ejemplo, no: usan consultas ya escritas por el LLM, que se

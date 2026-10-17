@@ -113,6 +113,20 @@ def faq():
 
 
 @st.cache_data
+def plain():
+    return yaml.safe_load(Path("/app/preguntas-simples.yaml").read_text()) or {}
+
+
+def show_plain(question_id):
+    """La pregunta en palabras simples y qué significa cada término, para quien no es del dominio."""
+    entry = plain().get(question_id)
+    if not entry:
+        return
+    terms = "\n".join(f"- **{term}:** {meaning}" for term, meaning in entry.get("terms", {}).items())
+    st.info(f"**En palabras simples:** {entry['simple']}\n\n{terms}")
+
+
+@st.cache_data
 def explanations():
     return yaml.safe_load((EVAL / "explanations.yaml").read_text()) or {}
 
@@ -266,6 +280,7 @@ with ask_tab:
     if mode == "Una pregunta de ejemplo":
         options = {q["question"]: q for q in questions()}
         chosen = st.selectbox("Pregunta", list(options), key="ask_question")
+        show_plain(options[chosen]["id"])
         query = last_ok_query(saved()["questions"][options[chosen]["id"]], "C")
         if st.button("Responder", type="primary"):
             columns, rows = answer.run_sparql_table(query)
@@ -316,6 +331,7 @@ with compare_tab:
     options = {option_label(q): q for q in questions()}
     chosen = st.selectbox("Pregunta", list(options), label_visibility="collapsed", key="compare_question")
     q = options[chosen]
+    show_plain(q["id"])
     entry = data[q["id"]]
 
     def fmt(value):

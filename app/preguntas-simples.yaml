@@ -1,0 +1,113 @@
+# Las 20 preguntas de ejemplo en palabras simples, para quien no es del dominio.
+# La app lo muestra debajo de cada pregunta. Las preguntas originales no cambian:
+# son las de la evaluación (layer/eval/questions.yaml). Glosario completo: docs/fuentes.md.
+
+q01:
+  simple: ¿Qué medicamentos contra HER2 se están probando en estudios grandes (fase 3) de cáncer de mama?
+  terms:
+    HER2: una proteína que hace crecer rápido algunos tumores de mama, cerca de uno de cada cinco. Hay fármacos que la bloquean.
+    Fase 3: el estudio grande que compara el tratamiento nuevo con el que ya existe; decide si se aprueba.
+
+q02:
+  simple: ¿Cuántos estudios grandes (fase 3) prueban algún medicamento que bloquea EGFR?
+  terms:
+    EGFR: una proteína que impulsa algunos cánceres de pulmón, de colon y de cabeza y cuello.
+
+q03:
+  simple: ¿Qué tres farmacéuticas tienen más estudios de cáncer de pulmón cortados antes de tiempo?
+  terms:
+    Sponsor: quien organiza y paga el estudio. Se cuenta solo el principal.
+    Detenido: el estudio terminó antes de lo previsto o se canceló antes de empezar.
+
+q04:
+  simple: ¿Qué problema reportan más los médicos y pacientes que usan imatinib?
+  terms:
+    Imatinib: una pastilla para un tipo de leucemia y algunos tumores digestivos. Fue de los primeros fármacos dirigidos.
+    FAERS: el sistema de la FDA donde se reportan problemas con medicamentos. Son avisos, no porcentajes de riesgo.
+
+q05:
+  simple: ¿Qué medicamentos ya aprobados bloquean BRAF?
+  terms:
+    BRAF: un gen que está alterado en cerca de la mitad de los melanomas y en otros tumores.
+    Aprobado: autorizado para venderse en algún país.
+
+q06:
+  simple: ¿Cuántos estudios de cáncer de mama hay registrados?
+  terms:
+    Cáncer de mama: incluye todos sus subtipos, según el vocabulario médico MeSH.
+
+q07:
+  simple: ¿Cuántos reportes de problemas recibió la FDA sobre lenalidomida hasta 2014?
+  terms:
+    Lenalidomida: una pastilla para el mieloma múltiple, un cáncer de la médula ósea.
+
+q08:
+  simple: De los estudios de fase 2 que organizó Pfizer y que ya cerraron, ¿qué porcentaje se cortó antes de tiempo?
+  terms:
+    Fase 2: el estudio mediano que busca ver si el tratamiento funciona.
+    Cerrado: completado, terminado antes de tiempo o cancelado.
+
+q09:
+  simple: ¿Cuántos estudios en marcha prueban pembrolizumab?
+  terms:
+    Pembrolizumab: una inmunoterapia (nombre comercial Keytruda) que ayuda a las defensas del cuerpo a atacar el tumor. Se usa en muchos cánceres.
+    Activo: el estudio está buscando pacientes o en curso.
+
+q10:
+  simple: ¿Cuántos estudios de leucemia prueban medicamentos que bloquean BTK?
+  terms:
+    BTK: una proteína de los glóbulos blancos tipo B. Bloquearla frena algunas leucemias y linfomas.
+    Leucemia: cáncer de la sangre.
+
+q11:
+  simple: ¿Qué farmacéutica organiza más estudios grandes (fase 3) de cáncer de colon y recto?
+  terms:
+    Colorrectal: cáncer de colon o de recto.
+
+q12:
+  simple: ¿Cuántos estudios de melanoma prueban nivolumab?
+  terms:
+    Nivolumab: una inmunoterapia (nombre comercial Opdivo) que quita un freno a las defensas del cuerpo para que ataquen el tumor.
+    Melanoma: el cáncer de piel más agresivo.
+
+q13:
+  simple: ¿Cuántos estudios de cáncer de próstata prueban algún medicamento aprobado que bloquea la acción de la testosterona?
+  terms:
+    Receptor de andrógenos (AR): la proteína que recibe la testosterona y hace crecer el cáncer de próstata. Fármacos como enzalutamida o bicalutamida lo bloquean.
+
+q14:
+  simple: ¿Cuántos estudios de cáncer de páncreas se cortaron antes de tiempo?
+  terms:
+    Detenido: el estudio terminó antes de lo previsto o se canceló antes de empezar.
+
+q15:
+  simple: ¿Cuántos reportes de problemas graves recibió la FDA sobre osimertinib?
+  terms:
+    Osimertinib: una pastilla (nombre comercial Tagrisso) para cáncer de pulmón con EGFR alterado.
+    Serio: el problema causó muerte, internación, discapacidad o riesgo de vida.
+
+q16:
+  simple: ¿Cuántos medicamentos distintos se prueban en estudios de mieloma múltiple?
+  terms:
+    Mieloma múltiple: un cáncer de las células de la médula ósea que producen anticuerpos.
+
+q17:
+  simple: ¿Cuántos estudios en marcha prueban medicamentos contra TIGIT?
+  terms:
+    TIGIT: otro freno de las defensas del cuerpo. Es un blanco nuevo de inmunoterapia, todavía en investigación.
+
+q18:
+  simple: ¿Qué inmunoterapias del tipo anti-PD-1 o anti-PD-L1 se prueban en estudios grandes (fase 3) de cáncer de pulmón?
+  terms:
+    PD-1 y PD-L1: un freno que el tumor usa para esconderse de las defensas del cuerpo. Los fármacos que lo bloquean, como pembrolizumab o nivolumab, son la inmunoterapia más conocida.
+
+q19:
+  simple: ¿Cuántos estudios de linfoma que empezaron desde 2020 prueban rituximab?
+  terms:
+    Rituximab: un anticuerpo contra los glóbulos blancos tipo B. Es la base del tratamiento de muchos linfomas.
+    Linfoma: un cáncer de los glóbulos blancos que suele aparecer en los ganglios.
+
+q20:
+  simple: ¿Qué medicamentos actúan sobre alguna de las mismas proteínas que imatinib?
+  terms:
+    Target: la proteína del cuerpo sobre la que actúa un fármaco. Imatinib actúa sobre BCR-ABL, KIT y PDGFR.

@@ -4,6 +4,8 @@ Para quien da la demo, sin conocimientos técnicos. Las diapositivas acompañan 
 
 ## Antes de empezar
 
+Si no sos del dominio, leé primero [fuentes.md](fuentes.md): qué tiene cada fuente, con ejemplos y un glosario (10 minutos).
+
 1. Levantar todo: `cd infra && docker compose up -d` (lo hace alguien técnico, una vez).
 2. Abrir http://localhost:8501 en el navegador y dejarlo en la pestaña **Preguntar**.
 3. Probar una pregunta de ejemplo: si responde, está todo listo.
