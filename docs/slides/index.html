@@ -152,6 +152,164 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
+<section id="arquitectura" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Cómo está armado</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">De cuatro fuentes a una capa semántica</h2>
+<div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 680" width="100%" font-family="'Times New Roman', Times, serif">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
+<marker id="sub" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/></marker>
+<marker id="white" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+</defs>
+<text x="132" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">FUENTES PÚBLICAS</text>
+<text x="440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">ALMACENAMIENTO</text>
+<text x="900" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">CAPA SEMÁNTICA</text>
+<text x="1440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">QUIÉN LA USA</text>
+<rect x="20" y="60" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="130.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">AACT</text>
+<text x="130.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568">ensayos clínicos</text>
+<rect x="20" y="210" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="130.0" y="248" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">ChEMBL</text>
+<text x="130.0" y="278" text-anchor="middle" font-size="22" fill="#4A5568">fármacos y targets</text>
+<rect x="20" y="360" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="130.0" y="398" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">openFDA</text>
+<text x="130.0" y="428" text-anchor="middle" font-size="22" fill="#4A5568">eventos adversos</text>
+<rect x="20" y="510" width="220" height="120" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="130.0" y="548" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">MeSH</text>
+<text x="130.0" y="578" text-anchor="middle" font-size="22" fill="#4A5568">enfermedades</text>
+<rect x="320" y="60" width="240" height="420" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="440.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Postgres</text>
+<text x="440.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568">aact · chembl</text>
+<text x="440.0" y="158" text-anchor="middle" font-size="22" fill="#4A5568">openfda</text>
+<text x="440.0" y="188" text-anchor="middle" font-size="22" fill="#4A5568">copia de la</text>
+<text x="440.0" y="218" text-anchor="middle" font-size="22" fill="#4A5568">jerarquía MeSH</text>
+<text x="440.0" y="248" text-anchor="middle" font-size="22" fill="#4A5568"></text>
+<text x="440.0" y="278" text-anchor="middle" font-size="22" fill="#4A5568">linking:</text>
+<text x="440.0" y="308" text-anchor="middle" font-size="22" fill="#4A5568">los enlaces</text>
+<rect x="320" y="510" width="240" height="120" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="440.0" y="548" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB</text>
+<text x="440.0" y="578" text-anchor="middle" font-size="22" fill="#4A5568">MeSH completo</text>
+<line x1="240" y1="120" x2="318" y2="120" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="240" y1="270" x2="318" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="240" y1="420" x2="318" y2="330" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="240" y1="570" x2="318" y2="570" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="130" y="668" text-anchor="middle" font-size="20" fill="#4A5568">un cargador por fuente</text>
+<rect x="620" y="50" width="560" height="590" rx="20" fill="#2F6FB5"/>
+<rect x="650" y="80" width="500" height="120" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="900.0" y="118" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Entity linking</text>
+<text x="900.0" y="148" text-anchor="middle" font-size="22" fill="#FFFFFF">ensayo → fármaco · ensayo → MeSH</text>
+<text x="900.0" y="178" text-anchor="middle" font-size="22" fill="#FFFFFF">clases de fármaco (ATC)</text>
+<rect x="650" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="770.0" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Ontología</text>
+<text x="770.0" y="288" text-anchor="middle" font-size="22" fill="#FFFFFF">conceptos de</text>
+<text x="770.0" y="318" text-anchor="middle" font-size="22" fill="#FFFFFF">negocio (OWL)</text>
+<rect x="910" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="1030.0" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Mapeos</text>
+<text x="1030.0" y="288" text-anchor="middle" font-size="22" fill="#FFFFFF">columna →</text>
+<text x="1030.0" y="318" text-anchor="middle" font-size="22" fill="#FFFFFF">concepto (R2RML)</text>
+<rect x="650" y="400" width="500" height="130" rx="14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2"/>
+<text x="900.0" y="438" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Ontop</text>
+<text x="900.0" y="468" text-anchor="middle" font-size="22" fill="#4A5568">traduce cada consulta SPARQL</text>
+<text x="900.0" y="498" text-anchor="middle" font-size="22" fill="#4A5568">a SQL sobre Postgres</text>
+<text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>
+<line x1="562" y1="270" x2="618" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="900" y1="352" x2="900" y2="396" stroke="#FFFFFF" stroke-width="2.5" marker-end="url(#white)"/>
+<rect x="1250" y="60" width="380" height="170" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">App Rastro Layer</text>
+<text x="1440.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568">el LLM lee la ontología</text>
+<text x="1440.0" y="158" text-anchor="middle" font-size="22" fill="#4A5568">y escribe SPARQL</text>
+<text x="1440.0" y="188" text-anchor="middle" font-size="22" fill="#4A5568">cada dato con su fuente</text>
+<rect x="1250" y="260" width="380" height="120" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="298" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Otras herramientas</text>
+<text x="1440.0" y="328" text-anchor="middle" font-size="22" fill="#4A5568">cualquier cliente SPARQL</text>
+<rect x="1250" y="410" width="380" height="120" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="448" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB federa</text>
+<text x="1440.0" y="478" text-anchor="middle" font-size="22" fill="#4A5568">Rastro + MeSH + Wikidata</text>
+<rect x="1250" y="560" width="380" height="90" rx="14" fill="#F7F6F2" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
+<text x="1440.0" y="613.6666666666666" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Wikidata</text>
+<line x1="1182" y1="145" x2="1248" y2="145" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="320" x2="1248" y2="320" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="470" x2="1248" y2="470" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1440" y1="532" x2="1440" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<polyline points="562,600 600,600 600,662 1215,662 1215,500 1246,500" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+</svg>
+</div>
+<aside>De izquierda a derecha. Cuatro fuentes públicas se cargan tal como vienen: tres en Postgres y MeSH en GraphDB. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usan la app, cualquier herramienta que hable SPARQL, y GraphDB, que puede unirla con MeSH y con Wikidata en una sola consulta.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="ontologia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">La ontología</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">Los conceptos de negocio y cómo se relacionan</h2>
+<div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 740" width="100%" font-family="'Times New Roman', Times, serif">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
+<marker id="sub" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/></marker>
+<marker id="white" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+</defs>
+<rect x="700" y="10" width="250" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="825.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Inhibidor de quinasa</text>
+<rect x="970" y="10" width="270" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1105.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Anticuerpo monoclonal</text>
+<rect x="840" y="130" width="250" height="80" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
+<text x="965.0" y="168" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Terapia dirigida</text>
+<text x="965.0" y="195" text-anchor="middle" font-size="19" fill="#4A5568">deducida, sin mapeo</text>
+<rect x="1120" y="135" width="200" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1220.0" y="178.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Quimioterapia</text>
+<rect x="1340" y="135" width="230" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1455.0" y="178.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Terapia hormonal</text>
+<line x1="825" y1="80" x2="930" y2="128" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
+<line x1="1105" y1="80" x2="1010" y2="128" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
+<line x1="965" y1="212" x2="1090" y2="298" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
+<line x1="1220" y1="207" x2="1150" y2="298" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
+<line x1="1455" y1="207" x2="1210" y2="298" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
+<text x="1600" y="60" text-anchor="end" font-size="20" fill="#4A5568">▷ es un tipo de (subclase)</text>
+<rect x="540" y="300" width="300" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="690.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Ensayo</text>
+<text x="690.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">fase · estado</text>
+<text x="690.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">fecha de inicio · título</text>
+<rect x="1010" y="300" width="280" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="1150.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Fármaco</text>
+<text x="1150.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">nombre · ChEMBL ID</text>
+<text x="1150.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">aprobado</text>
+<rect x="1400" y="300" width="240" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="1520.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Target</text>
+<text x="1520.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">nombre · gen</text>
+<rect x="40" y="320" width="260" height="120" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="170.0" y="358" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Sponsor</text>
+<text x="170.0" y="388" text-anchor="middle" font-size="22" fill="#14213D">nombre · es industria</text>
+<rect x="540" y="560" width="300" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="690.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Condición</text>
+<text x="690.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">descriptor de MeSH</text>
+<rect x="940" y="580" width="250" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1065.0" y="618" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Reportes por año</text>
+<text x="1065.0" y="646" text-anchor="middle" font-size="20" fill="#4A5568">año · reportes · serios</text>
+<rect x="1220" y="580" width="260" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1350.0" y="618" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Reacción reportada</text>
+<text x="1350.0" y="646" text-anchor="middle" font-size="20" fill="#4A5568">reacción · reportes</text>
+<line x1="842" y1="380" x2="1006" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="924.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">prueba el fármaco</text>
+<line x1="1292" y1="380" x2="1396" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1344.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">actúa sobre</text>
+<line x1="538" y1="380" x2="304" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="421.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">sponsor</text>
+<line x1="690" y1="462" x2="690" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="750" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">condición</text>
+<path d="M 842 600 C 905 600 905 660 842 660" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="690" y="725" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">está dentro de <tspan fill="#4A5568" font-style="normal" font-size="19">(sus subtipos)</tspan></text>
+<line x1="1065" y1="578" x2="1100" y2="464" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1050" y="530" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">fármaco</text>
+<line x1="1350" y1="578" x2="1200" y2="464" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="40" y="560" width="380" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="230.0" y="598" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Fuente</text>
+<text x="230.0" y="626" text-anchor="middle" font-size="20" fill="#4A5568">cada dato apunta a su fuente</text>
+<text x="230.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">y su licencia (proviene de)</text>
+</svg>
+</div>
+<aside>Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre targets y tiene reportes de eventos adversos. Arriba, las clases de fármaco: terapia dirigida no tiene ningún mapeo, Ontop la deduce de sus subclases. Cada dato apunta a su fuente y su licencia.</aside>
+</section>
+</div>
+<div class="slide">
 <section id="porque" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;gap:48px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué funciona</p>
 <h2 style="font-size:72px;font-weight:700;line-height:1.1;width:1600px">Lo difícil se hace una vez, y se revisa</h2>
