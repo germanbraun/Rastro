@@ -1,0 +1,13 @@
+# 10. ¿Por qué Rastro dice que un ensayo prueba un fármaco?
+# La evidencia de cada enlace, con PROV-O: el texto del sponsor, lo que coincidió y la regla.
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?nct ?intervention ?matched ?rule ?source WHERE {
+  VALUES ?name { "TRASTUZUMAB" }   # el fármaco a consultar
+  ?link a :DrugLink ; :linkDrug ?drug ; :linkTrial ?trial ;
+        :interventionText ?intervention ; :matchedText ?matched ; :linkRule ?rule ;
+        prov:wasDerivedFrom ?src .
+  ?drug :name ?name . ?trial :nctId ?nct . ?src :name ?source .
+}
+LIMIT 10

@@ -41,12 +41,17 @@
 <rect x="540" y="560" width="300" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
 <text x="690.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Condición</text>
 <text x="690.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">descriptor de MeSH</text>
-<rect x="940" y="580" width="250" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1065.0" y="618" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Reportes por año</text>
-<text x="1065.0" y="646" text-anchor="middle" font-size="20" fill="#4A5568">año · reportes · serios</text>
-<rect x="1220" y="580" width="260" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1350.0" y="618" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Reacción reportada</text>
-<text x="1350.0" y="646" text-anchor="middle" font-size="20" fill="#4A5568">reacción · reportes</text>
+<rect x="1180" y="580" width="230" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1295.0" y="618" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Reportes por año</text>
+<text x="1295.0" y="646" text-anchor="middle" font-size="20" fill="#4A5568">año · reportes · serios</text>
+<rect x="1430" y="580" width="230" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1545.0" y="618" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Reacción reportada</text>
+<text x="1545.0" y="646" text-anchor="middle" font-size="20" fill="#4A5568">reacción · reportes</text>
+<rect x="930" y="560" width="230" height="140" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
+<text x="1045.0" y="598" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Enlace</text>
+<text x="1045.0" y="625" text-anchor="middle" font-size="19" fill="#4A5568">evidencia: texto del</text>
+<text x="1045.0" y="652" text-anchor="middle" font-size="19" fill="#4A5568">sponsor, coincidencia</text>
+<text x="1045.0" y="679" text-anchor="middle" font-size="19" fill="#4A5568">y regla (PROV-O)</text>
 <line x1="842" y1="380" x2="1006" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="924.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">prueba el fármaco</text>
 <line x1="1292" y1="380" x2="1396" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
@@ -57,14 +62,17 @@
 <text x="750" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">condición</text>
 <path d="M 842 600 C 905 600 905 660 842 660" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="690" y="725" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">está dentro de <tspan fill="#4A5568" font-style="normal" font-size="19">(sus subtipos)</tspan></text>
-<line x1="1065" y1="578" x2="1100" y2="464" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1050" y="530" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">fármaco</text>
-<line x1="1350" y1="578" x2="1200" y2="464" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="960" y1="558" x2="842" y2="462" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="880" y="500" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">ensayo</text>
+<line x1="1060" y1="558" x2="1100" y2="464" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1112" y="520" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">fármaco</text>
+<line x1="1290" y1="578" x2="1200" y2="464" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1540" y1="578" x2="1285" y2="450" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <rect x="40" y="560" width="380" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="230.0" y="598" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Fuente</text>
 <text x="230.0" y="626" text-anchor="middle" font-size="20" fill="#4A5568">cada dato apunta a su fuente</text>
 <text x="230.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">y su licencia (proviene de)</text>
 </svg>
 </div>
-<aside>Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre targets y tiene reportes de eventos adversos. Arriba, las clases de fármaco: terapia dirigida no tiene ningún mapeo, Ontop la deduce de sus subclases. Cada dato apunta a su fuente y su licencia.</aside>
+<aside>Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre targets y tiene reportes de eventos adversos. Arriba, las clases de fármaco: terapia dirigida no tiene ningún mapeo, Ontop la deduce de sus subclases. Abajo, el enlace: cada «ensayo prueba fármaco» guarda su evidencia (el texto del sponsor, lo que coincidió y la regla) con PROV-O, el estándar del W3C para procedencia. Cada dato apunta a su fuente y su licencia.</aside>
 </section>

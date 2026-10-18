@@ -106,16 +106,19 @@ def ontology():
     b.append(box(1400, 300, 240, 160, "Target", ["nombre · gen"], fill=LIGHT, stroke=INK))
     b.append(box(40, 320, 260, 120, "Sponsor", ["nombre · es industria"], fill=LIGHT, stroke=INK))
     b.append(box(540, 560, 300, 130, "Condición", ["descriptor de MeSH"], fill=LIGHT, stroke=INK))
-    b.append(box(940, 580, 250, 110, "Reportes por año", ["año · reportes · serios"], size=24, sub=20))
-    b.append(box(1220, 580, 260, 110, "Reacción reportada", ["reacción · reportes"], size=24, sub=20))
+    b.append(box(1180, 580, 230, 110, "Reportes por año", ["año · reportes · serios"], size=24, sub=20))
+    b.append(box(1430, 580, 230, 110, "Reacción reportada", ["reacción · reportes"], size=24, sub=20))
+    b.append(box(930, 560, 230, 140, "Enlace", ["evidencia: texto del", "sponsor, coincidencia", "y regla (PROV-O)"], size=24, sub=19, dash=True))
     b.append(arrow(842, 380, 1006, 380, "prueba el fármaco"))
     b.append(arrow(1292, 380, 1396, 380, "actúa sobre"))
     b.append(arrow(538, 380, 304, 380, "sponsor"))
     b.append(arrow(690, 462, 690, 556, "condición", lx=750, ly=515))
     b.append(f'<path d="M 842 600 C 905 600 905 660 842 660" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
     b.append(f'<text x="690" y="725" text-anchor="middle" font-size="22" fill="{BLUE}" font-style="italic">está dentro de <tspan fill="{GRAY}" font-style="normal" font-size="19">(sus subtipos)</tspan></text>')
-    b.append(arrow(1065, 578, 1100, 464, "fármaco", lx=1050, ly=530))
-    b.append(arrow(1350, 578, 1200, 464))
+    b.append(arrow(960, 558, 842, 462, "ensayo", lx=880, ly=500))
+    b.append(arrow(1060, 558, 1100, 464, "fármaco", lx=1112, ly=520))
+    b.append(arrow(1290, 578, 1200, 464))
+    b.append(arrow(1540, 578, 1285, 450))
     # Procedencia
     b.append(box(40, 560, 380, 130, "Fuente", ["cada dato apunta a su fuente", "y su licencia (proviene de)"], size=24, sub=20))
     return svg(1680, 740, "\n".join(b))
@@ -141,7 +144,9 @@ for name, drawing, sid, label, title, notes in [
      "Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una "
      "condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre "
      "targets y tiene reportes de eventos adversos. Arriba, las clases de fármaco: terapia dirigida no tiene ningún "
-     "mapeo, Ontop la deduce de sus subclases. Cada dato apunta a su fuente y su licencia."),
+     "mapeo, Ontop la deduce de sus subclases. Abajo, el enlace: cada «ensayo prueba fármaco» guarda su evidencia "
+     "(el texto del sponsor, lo que coincidió y la regla) con PROV-O, el estándar del W3C para procedencia. "
+     "Cada dato apunta a su fuente y su licencia."),
 ]:
     (HERE / f"{name}.svg").write_text(drawing)
     (ROOT / "app" / f"{name}.svg").write_text(drawing)

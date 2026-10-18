@@ -9,8 +9,10 @@
     rdfs:label "Ontología de Rastro"@es ;
     rdfs:comment """Lo mínimo para responder las preguntas de competencia: ensayos, fármacos,
 targets, sponsors y eventos adversos. Las condiciones son los descriptores de MeSH,
-sin clase propia."""@es ;
-    owl:versionInfo "0.2" .
+sin clase propia. Los fármacos tienen clases según ATC; «terapia dirigida» no tiene
+mapeo: Ontop la deduce de sus subclases. Cada enlace ensayo → fármaco lleva su
+evidencia, con PROV-O."""@es ;
+    owl:versionInfo "0.3" .
 
 # Clases ---------------------------------------------------------
 
