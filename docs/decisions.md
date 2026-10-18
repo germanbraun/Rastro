@@ -197,3 +197,7 @@ Para que Wikidata acepte las consultas federadas, GraphDB se identifica con `-Dh
 
 Para mostrar que el conocimiento vive en el modelo, se sumaron clases de fármaco según ATC (`linking.drug_class`, con un mapeo por clase) y la clase «terapia dirigida» sin mapeo: Ontop aplica las reglas de la ontología (OWL 2 QL, `rdfs:subClassOf`) y genera el SQL con las dos clases. Cambiar la definición es una línea de la ontología. La prueba con 3 preguntas no mostró diferencia de precisión con el SQL con enlaces, que tenía la misma definición documentada.
 
+## 2026-10-18 — Evidencia de cada enlace, con PROV-O
+
+La procedencia por columna se puede imitar en SQL con el nombre del esquema. Lo que convence es la evidencia por registro: por qué Rastro dice que un ensayo prueba un fármaco. `linking.trial_drug` guarda ahora también el texto de la intervención, y un mapeo nuevo expone cada enlace como `:DrugLink` (subclase de `prov:Entity`) con el texto, lo que coincidió, la regla, `prov:wasDerivedFrom` AACT y ChEMBL, y `prov:wasGeneratedBy` el entity linking. La app lo muestra en «¿Por qué?».
+

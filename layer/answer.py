@@ -210,6 +210,7 @@ TERM_SOURCE = {
                               "reaction", "year", "drug")},
     "within": "mesh",
     "testsDrug": "rastro",   # enlace de Rastro entre AACT y ChEMBL
+    **{t: "rastro" for t in ("DrugLink", "linkTrial", "linkDrug", "interventionText", "matchedText", "linkRule")},
 }
 
 

@@ -3,6 +3,7 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix meshv: <http://id.nlm.nih.gov/mesh/vocab#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 
 <https://w3id.org/rastro/ontology> a owl:Ontology ;
     rdfs:label "Ontología de Rastro"@es ;
@@ -132,3 +133,25 @@ sin clase propia."""@es ;
 :seriousReports a owl:DatatypeProperty ; rdfs:label "reportes serios"@es ; rdfs:domain :YearlyReports ; rdfs:range xsd:integer .
 :reaction a owl:DatatypeProperty ; rdfs:label "reacción"@es ; rdfs:domain :ReportedReaction ; rdfs:range xsd:string .
 :license a owl:DatatypeProperty ; rdfs:label "licencia"@es ; rdfs:domain :DataSource ; rdfs:range xsd:string .
+
+# Procedencia de los enlaces (PROV-O, el estándar del W3C) ---------
+
+prov:Entity a owl:Class ; rdfs:label "entidad (PROV)"@es .
+prov:wasDerivedFrom a owl:ObjectProperty ; rdfs:label "deriva de"@es .
+prov:wasGeneratedBy a owl:ObjectProperty ; rdfs:label "generado por"@es .
+
+:DrugLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Enlace ensayo → fármaco"@es ;
+    rdfs:comment "La evidencia de que un ensayo prueba un fármaco: qué texto de la intervención coincidió con qué nombre de ChEMBL, y con qué regla. Lo genera el entity linking y deriva de AACT y de ChEMBL."@es .
+
+:linkTrial a owl:ObjectProperty ; rdfs:label "ensayo del enlace"@es ; rdfs:domain :DrugLink ; rdfs:range :Trial .
+:linkDrug a owl:ObjectProperty ; rdfs:label "fármaco del enlace"@es ; rdfs:domain :DrugLink ; rdfs:range :Drug .
+:interventionText a owl:DatatypeProperty ; rdfs:label "texto de la intervención"@es ;
+    rdfs:comment "Lo que escribió el sponsor en ClinicalTrials.gov, por ejemplo «Bevacizumab (drug), Herceptin (drug)»."@es ;
+    rdfs:domain :DrugLink ; rdfs:range xsd:string .
+:matchedText a owl:DatatypeProperty ; rdfs:label "texto que coincidió"@es ; rdfs:domain :DrugLink ; rdfs:range xsd:string .
+:linkRule a owl:DatatypeProperty ; rdfs:label "regla"@es ;
+    rdfs:comment "Cómo se reconoció el fármaco: nombre, alias, combinación, régimen o palabras (nombre como palabra entera)."@es ;
+    rdfs:domain :DrugLink ; rdfs:range xsd:string .
+

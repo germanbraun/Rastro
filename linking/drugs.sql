@@ -114,12 +114,16 @@ WHERE NOT EXISTS (
       AND (' ' || longer.phrase || ' ') LIKE ('% ' || m.phrase || ' %')
 );
 
--- Un fármaco por ensayo, con la regla más directa que lo encontró
+-- Un fármaco por ensayo, con la regla más directa que lo encontró. Guarda la evidencia del
+-- enlace: el texto de la intervención, el texto que coincidió y la regla (la procedencia
+-- que muestra «¿Por qué?» en la app).
 DROP TABLE IF EXISTS linking.trial_drug;
 CREATE TABLE linking.trial_drug AS
-SELECT DISTINCT ON (nct_id, family) nct_id, family AS parent_chembl_id, matched, rule
-FROM linking.intervention_drug
-ORDER BY nct_id, family, array_position(ARRAY['nombre', 'alias', 'combinación', 'régimen', 'palabras'], rule);
+SELECT DISTINCT ON (d.nct_id, d.family) d.nct_id, d.family AS parent_chembl_id, d.matched, d.rule,
+       i.name AS intervention
+FROM linking.intervention_drug d
+JOIN linking.intervention i ON i.id = d.id
+ORDER BY d.nct_id, d.family, array_position(ARRAY['nombre', 'alias', 'combinación', 'régimen', 'palabras'], d.rule);
 
 CREATE INDEX ON linking.trial_drug (nct_id);
 CREATE INDEX ON linking.trial_drug (parent_chembl_id);

@@ -28,6 +28,10 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 2. Abrir **¿Cómo lo supe?**
 
+3. Debajo de la tabla, en **¿Por qué?**, elegir **TRASTUZUMAB**.
+
+> «¿Por qué dice Rastro que estos ensayos prueban trastuzumab? Acá está la evidencia de cada enlace: lo que escribió el sponsor, con qué coincidió y con qué regla. Se puede abrir cada ensayo. Esta procedencia está en el grafo, con un estándar del W3C: una respuesta auditable.»
+
 > «El LLM no vio tablas: recibió la ontología y escribió esta consulta corta, en conceptos. Abajo, el SQL que generó Ontop. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto; con la integración hecha, 435.»
 
 ## 3:00 – 4:30 · La comparación honesta (diapositiva 6)

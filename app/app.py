@@ -215,6 +215,56 @@ def last_ok_query(entry, approach):
 
 # --- Mostrar una respuesta ----------------------------------------
 
+RULES = {
+    "nombre": "el nombre del fármaco o un sinónimo de ChEMBL",
+    "alias": "un alias que el sponsor declaró en ClinicalTrials.gov",
+    "combinación": "una de las partes de una combinación",
+    "régimen": "un régimen conocido, como FOLFOX",
+    "palabras": "el nombre como palabra entera dentro de un texto más largo",
+}
+EVIDENCE = """PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?nct ?intervencion ?coincidio ?regla WHERE {{
+  ?enlace a :DrugLink ; :linkDrug ?farmaco ; :linkTrial ?ensayo ;
+          :interventionText ?intervencion ; :matchedText ?coincidio ; :linkRule ?regla ;
+          prov:wasDerivedFrom <https://w3id.org/rastro/source/aact> .
+  ?farmaco :name "{name}" . ?ensayo :nctId ?nct .
+}}"""
+
+
+@st.cache_data
+def drug_names():
+    with admin() as conn:
+        return {r[0] for r in conn.execute("SELECT pref_name FROM linking.drug WHERE pref_name IS NOT NULL")}
+
+
+def show_evidence(rows):
+    """«¿Por qué?»: la evidencia de cada enlace ensayo → fármaco, leída del grafo (PROV-O)."""
+    names = sorted({v for row in rows for v in row if isinstance(v, str) and v in drug_names()})
+    if not names:
+        return
+    st.markdown("**¿Por qué? La evidencia de cada fármaco**")
+    name = st.selectbox("Fármaco", names, label_visibility="collapsed", key="evidence_drug")
+    query = EVIDENCE.format(name=name)
+    columns, links = answer.run_sparql_table(query)
+    by_rule = {}
+    for nct, text, matched, rule in links:
+        by_rule.setdefault(rule, []).append((nct, text, matched))
+    st.markdown(f"Rastro reconoció **{name}** en **{len(links)}** ensayos. Así:")
+    st.markdown("\n".join(f"- **{len(v)}** por {RULES.get(rule, rule)}"
+                           for rule, v in sorted(by_rule.items(), key=lambda x: -len(x[1]))))
+    examples = [{"Ensayo": f"https://clinicaltrials.gov/study/{nct}", "Lo que escribió el sponsor": text,
+                 "Coincidió con": matched, "Regla": rule}
+                for rule, v in sorted(by_rule.items(), key=lambda x: -len(x[1])) for nct, text, matched in v[:3]]
+    st.dataframe(pd.DataFrame(examples), hide_index=True, use_container_width=True,
+                 column_config={"Ensayo": st.column_config.LinkColumn(display_text=r"study/(.*)")})
+    st.caption("Ejemplos de cada regla. Cada enlace está en el grafo con su evidencia y su origen "
+               "(PROV-O, el estándar del W3C para procedencia): cualquier consulta puede pedirla, "
+               "y cualquiera puede auditarla abriendo el ensayo.")
+    with st.expander("La consulta que trae esta evidencia"):
+        st.code(query, language="sparql")
+
+
 def show_answer(query, columns, rows, note=None):
     used, col_sources = answer.column_sources(query)
 
@@ -226,6 +276,8 @@ def show_answer(query, columns, rows, note=None):
         st.dataframe(pd.DataFrame(rows, columns=headers), hide_index=True, use_container_width=True)
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}. "
                    "Cada columna dice de qué fuente sale.")
+        if ":testsDrug" in query:
+            show_evidence(rows)
 
     with st.expander("¿Cómo lo supe?"):
         if note:
@@ -283,8 +335,11 @@ with ask_tab:
         chosen = st.selectbox("Pregunta", list(options), key="ask_question")
         show_plain(options[chosen]["id"])
         query = last_ok_query(saved()["questions"][options[chosen]["id"]], "C")
+        # La respuesta queda guardada para que «¿Por qué?» pueda elegir un fármaco sin perderla
         if st.button("Responder", type="primary"):
-            columns, rows = answer.run_sparql_table(query)
+            st.session_state["shown"] = (chosen, query, *answer.run_sparql_table(query))
+        if st.session_state.get("shown", (None,))[0] == chosen:
+            _, query, columns, rows = st.session_state["shown"]
             show_answer(query, columns, rows,
                         note="La query la escribió el LLM durante la evaluación y quedó guardada; "
                              "se ejecuta ahora, en vivo, sobre los datos.")

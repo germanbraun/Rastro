@@ -90,6 +90,14 @@
 
     Una capa de vistas SQL también centralizaría el cambio. Detalle en docs/demo-cambio.md.
 
+- question: ¿Cómo sé por qué Rastro dice que un ensayo prueba un fármaco?
+  answer: |-
+    Debajo de cada respuesta con fármacos está **«¿Por qué?»**: elegís un fármaco y ves cómo lo reconoció Rastro en cada ensayo, con ejemplos que se pueden abrir en ClinicalTrials.gov. Por ejemplo, trastuzumab aparece en 854 ensayos: 689 por su nombre o un sinónimo de ChEMBL, 93 como parte de una combinación, 40 como palabra dentro de un texto más largo y 32 por un alias que declaró el sponsor.
+
+    Esa evidencia está en el grafo, descrita con **PROV-O**, el estándar del W3C para procedencia: cada enlace ensayo → fármaco guarda el texto que escribió el sponsor, el texto que coincidió, la regla, y de qué fuentes deriva. Cualquier consulta puede pedirla. También muestra lo discutible: «[89Zr]-Df-Trastuzumab» es un trazador de imágenes, no el tratamiento, y cualquiera puede verlo y corregir la regla.
+
+    Con SQL también se puede guardar, pero hay que programarlo en cada consulta y no lo entiende ninguna otra herramienta.
+
 - question: ¿Qué significa que «el conocimiento vive en el modelo»?
   answer: |-
     Que una definición de negocio se escribe una vez, en la ontología, y todas las preguntas la usan. Ejemplo: «terapia dirigida» no está en ninguna tabla ni en ningún mapeo. La ontología dice, en dos líneas, que los inhibidores de quinasa y los anticuerpos monoclonales son terapias dirigidas, y Ontop lo deduce al responder: 156 fármacos.

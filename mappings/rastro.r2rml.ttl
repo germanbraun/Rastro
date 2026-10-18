@@ -4,6 +4,7 @@
 @prefix : <https://w3id.org/rastro/ontology#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix meshv: <http://id.nlm.nih.gov/mesh/vocab#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 # --- Fuentes (rastro_meta) -------------------------------------
@@ -83,6 +84,19 @@
     rr:logicalTable [ rr:tableName "linking.trial_drug" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ;
     rr:predicateObjectMap [ rr:predicate :testsDrug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ] .
+
+# La evidencia de cada enlace, con PROV-O: de qué texto salió, con qué regla y de qué fuentes
+<#DrugLink> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "linking.trial_drug" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/link/{nct_id}/{parent_chembl_id}" ; rr:class :DrugLink ] ;
+    rr:predicateObjectMap [ rr:predicate :linkTrial ; rr:objectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkDrug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :interventionText ; rr:objectMap [ rr:column "intervention" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :matchedText ; rr:objectMap [ rr:column "matched" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkRule ; rr:objectMap [ rr:column "rule" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/aact> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/chembl> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/entity-linking> ] ] .
 
 # --- Fármacos y targets (ChEMBL) --------------------------------
 
