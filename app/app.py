@@ -238,37 +238,36 @@ EVIDENCE_EXAMPLES = RASTRO_PREFIX + PROV_PREFIX + """SELECT ?name ?nct ?text ?ma
 }} LIMIT 400"""
 
 
-EVIDENCE_ONE = RASTRO_PREFIX + """SELECT ?propiedad ?valor WHERE {{
-  ?enlace a :DrugLink ; :linkTrial ?ensayo ; :linkDrug ?farmaco ; ?propiedad ?valor .
+EVIDENCE_ONE = RASTRO_PREFIX + PROV_PREFIX + """SELECT ?textoDelSponsor ?coincidioCon ?regla ?derivaDe ?generadoPor WHERE {{
+  ?enlace a prov:Entity ; :linkTrial ?ensayo ; :linkDrug ?farmaco ;
+          :interventionText ?textoDelSponsor ; :matchedText ?coincidioCon ; :linkRule ?regla ;
+          prov:wasDerivedFrom ?derivaDe ; prov:wasGeneratedBy ?generadoPor .
   ?ensayo :nctId "{nct}" . ?farmaco :name "{name}" .
 }}"""
-PROPERTIES = {   # IRI → (cómo se lee, de qué vocabulario es)
-    "https://w3id.org/rastro/ontology#linkTrial": ("ensayo", "Rastro"),
-    "https://w3id.org/rastro/ontology#linkDrug": ("fármaco", "Rastro"),
-    "https://w3id.org/rastro/ontology#interventionText": ("texto del sponsor", "Rastro"),
-    "https://w3id.org/rastro/ontology#matchedText": ("coincidió con", "Rastro"),
-    "https://w3id.org/rastro/ontology#linkRule": ("regla", "Rastro"),
-    "http://www.w3.org/ns/prov#wasDerivedFrom": ("deriva de", "PROV-O"),
-    "http://www.w3.org/ns/prov#wasGeneratedBy": ("generado por", "PROV-O"),
-    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": ("es un", "RDF"),
-}
-VALUES = {
+NAMES_OF = {
     "https://w3id.org/rastro/source/aact": "AACT (ClinicalTrials.gov)",
     "https://w3id.org/rastro/source/chembl": "ChEMBL",
     "https://w3id.org/rastro/activity/entity-linking": "el entity linking de Rastro",
-    "https://w3id.org/rastro/ontology#DrugLink": "enlace ensayo → fármaco",
-    "http://www.w3.org/ns/prov#Entity": "prov:Entity (lo deduce la ontología)",
 }
 
 
 def evidence_of(nct, name):
-    """Toda la evidencia de un enlace, tal como está en el grafo."""
+    """La evidencia de un enlace, pedida con PROV-O. Una fila por cada fuente de la que deriva."""
     query = EVIDENCE_ONE.format(nct=nct, name=name)
     _, rows = answer.run_sparql_table(query)
-    order = list(PROPERTIES)
-    rows = sorted(rows, key=lambda r: order.index(r[0]) if r[0] in order else len(order))
-    table = [{"Propiedad": PROPERTIES.get(p, (p, ""))[0], "Vocabulario": PROPERTIES.get(p, ("", ""))[1],
-              "Valor": VALUES.get(v, v.rsplit("/", 1)[-1] if v.startswith("http") else v)} for p, v in rows]
+    if not rows:
+        return query, []
+    text, matched, rule, _, activity = rows[0]
+    derived = ", ".join(NAMES_OF.get(r[3], r[3]) for r in rows)
+    table = [
+        {"Propiedad": "es un", "Vocabulario": "PROV-O", "Valor": "prov:Entity (lo deduce la ontología)"},
+        {"Propiedad": "texto del sponsor", "Vocabulario": "Rastro", "Valor": text},
+        {"Propiedad": "coincidió con", "Vocabulario": "Rastro", "Valor": matched},
+        {"Propiedad": "regla", "Vocabulario": "Rastro", "Valor": rule},
+        {"Propiedad": "deriva de (prov:wasDerivedFrom)", "Vocabulario": "PROV-O", "Valor": derived},
+        {"Propiedad": "generado por (prov:wasGeneratedBy)", "Vocabulario": "PROV-O",
+         "Valor": NAMES_OF.get(activity, activity)},
+    ]
     return query, table
 
 
@@ -376,11 +375,14 @@ def show_answer(query, columns, rows, note=None):
                 query, table = evidence_of(nct, name)
                 st.markdown(f"La evidencia está en el grafo, descrita con **PROV-O** (el estándar del W3C "
                             f"para procedencia), así que cualquier consulta puede pedirla. Por ejemplo, esta "
-                            f"pide todo lo que Rastro sabe del enlace entre {nct} y {name.lower()}:")
+                            f"pide la evidencia del enlace entre {nct} y {name.lower()}: de qué deriva "
+                            f"(`prov:wasDerivedFrom`) y qué lo generó (`prov:wasGeneratedBy`):")
                 st.code(query, language="sparql")
                 st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True)
-                st.caption("Cualquiera puede auditarlo abriendo el ensayo. «prov:Entity» no está en ningún "
-                           "mapeo: Ontop lo deduce de la ontología, donde un enlace es un tipo de entidad PROV.")
+                st.caption("La consulta de la respuesta no necesita PROV-O: usa `:testsDrug`. La procedencia "
+                           "se pide aparte, como acá. «?enlace a prov:Entity» no está en ningún mapeo: Ontop "
+                           "lo deduce de la ontología, donde un enlace es un tipo de entidad PROV. Cualquiera "
+                           "puede auditarlo abriendo el ensayo.")
 
 
 # --- Pantalla ------------------------------------------------------
@@ -409,8 +411,15 @@ with ask_tab:
     mode = st.radio("¿Qué querés preguntar?", ["Una pregunta de ejemplo", "Mi propia pregunta"],
                     horizontal=True, label_visibility="collapsed")
     if mode == "Una pregunta de ejemplo":
-        options = {q["question"]: q for q in questions()}
+        # 🧾 marca las preguntas cuya respuesta trae la evidencia de cada enlace (PROV-O)
+        def ask_label(q):
+            linked = ":testsDrug" in (last_ok_query(saved()["questions"][q["id"]], "C") or "")
+            return ("🧾 " if linked else "") + q["question"]
+
+        options = {ask_label(q): q for q in questions()}
         chosen = st.selectbox("Pregunta", list(options), key="ask_question")
+        st.caption("🧾 La respuesta trae la evidencia de cada enlace ensayo → fármaco, con PROV-O "
+                   "(en «¿Cómo lo supe?»).")
         show_plain(options[chosen]["id"])
         query = last_ok_query(saved()["questions"][options[chosen]["id"]], "C")
         # La respuesta queda guardada para que «¿Por qué?» pueda elegir un fármaco sin perderla
