@@ -185,10 +185,13 @@ def render(cfg_path, tech):
     ask_tab, trust_tab, faq_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"])
 
     with ask_tab:
-        modes = ["Una pregunta de ejemplo"] + (["Una pregunta sobre textos"] if cfg.get("texto") else [])
+        modes = ((["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Una pregunta de ejemplo"]
+                 + (["Una pregunta sobre textos"] if cfg.get("texto") else []))
         mode = st.radio("¿Qué querés preguntar?", modes + ["Mi propia pregunta"],
                         horizontal=True, label_visibility="collapsed", key=f"{domain}_mode")
-        if mode == "Una pregunta sobre textos":
+        if mode == "Demo en 3 pasos":
+            show_demo(cfg, tech)
+        elif mode == "Una pregunta sobre textos":
             show_text_question(cfg, tech)
         elif mode == "Una pregunta de ejemplo":
             options = {(q["tecnica"] if tech else q["simple"]): q for q in questions}
@@ -203,6 +206,8 @@ def render(cfg_path, tech):
             shown = st.session_state.get(f"{domain}_shown", (None,))
             if shown[0] == chosen:
                 _, query, columns, rows = shown
+                if item.get("antes_despues"):
+                    before_after(item["antes_despues"])
                 show_answer(cfg, tech, query, columns, rows, item,
                             note="Se ejecuta ahora, en vivo, sobre los datos.")
         else:
@@ -243,20 +248,61 @@ def render(cfg_path, tech):
             st.caption("Hay más preguntas para técnicos: activá «Ver detalles técnicos» en la barra lateral.")
 
 
-def show_text_question(cfg, tech):
+def before_after(card):
+    """La misma tarjeta en cada momento de la demo: sin Rastro a la izquierda, con Rastro a la derecha."""
+    left, right = st.columns(2)
+    for col, key, title in [(left, "sin", card.get("titulo_sin", "Sin Rastro")), (right, "con", "Con Rastro")]:
+        with col.container(border=True):
+            st.caption(title)
+            st.markdown(f"### {'⚪' if key == 'sin' else '🟢'} {md(card[key]['valor'])}")
+            st.markdown(md(card[key]["detalle"]))
+
+
+def show_demo(cfg, tech):
+    """La demo en tres pasos, todos sobre Leidos: une, explica, lee. Cada paso corre en vivo."""
+    domain, steps = cfg["domain"], cfg["demo"]
+    key = f"{domain}_demo_step"
+    i = st.session_state.get(key, 0)
+    st.markdown(" → ".join(f"**{n + 1} · {s['paso']}**" if n == i else f"{n + 1} · {s['paso']}"
+                           for n, s in enumerate(steps)))
+    step = steps[i]
+    st.subheader(step["titulo"])
+    if step.get("texto"):
+        show_text_question(cfg, tech, demo=True)
+    else:
+        item = next(q for q in cfg["preguntas"] if q["id"] == step["pregunta"])
+        st.info(f"**{item['tecnica'] if tech else item['simple']}**")
+        query = Path(item["query"]).read_text()
+        columns, rows = run(query, domain)
+        if item.get("antes_despues"):
+            before_after(item["antes_despues"])
+        show_answer(cfg, tech, query, columns, rows, item, note="Se ejecuta ahora, en vivo, sobre los datos.")
+    back, _, forward = st.columns([1, 4, 1])
+    if i > 0 and back.button("← Anterior", key=f"{key}_back"):
+        st.session_state[key] = i - 1
+        st.rerun()
+    if i < len(steps) - 1 and forward.button("Siguiente →", type="primary", key=f"{key}_next"):
+        st.session_state[key] = i + 1
+        st.rerun()
+
+
+def show_text_question(cfg, tech, demo=False):
     """Una pregunta sobre textos: el grafo elige los contratos con una consulta exacta y un asistente de
     IA resume solo sus descripciones en temas, citando cada contrato. El resumen está guardado; los
     contratos y sus montos se leen en vivo."""
     domain = cfg["domain"]
     item = read_json(cfg["texto"])
     st.info(f"**{item['pregunta'] if tech else item['simple']}**")
-    if st.button("Responder", type="primary", key=f"{domain}_text_answer"):
-        st.session_state[f"{domain}_text_shown"] = True
-    if not st.session_state.get(f"{domain}_text_shown"):
-        return
+    if not demo:
+        if st.button("Responder", type="primary", key=f"{domain}_text_answer"):
+            st.session_state[f"{domain}_text_shown"] = True
+        if not st.session_state.get(f"{domain}_text_shown"):
+            return
     query = Path(item["consulta"]).read_text()
     _, rows = run(query, domain)
     contracts = {c: (float(m), a, e, d) for c, m, a, e, d in rows}
+    if demo and item.get("busqueda_texto"):
+        compare_text_search(item, contracts, domain, tech, always=True)
     total = sum(m for m, *_ in contracts.values())
     st.markdown(f"Rastro eligió los **{len(contracts)} contratos más grandes** del grupo "
                 f"(US\\$ {money(total / 1e6)} millones). En qué trabaja:")
@@ -265,7 +311,7 @@ def show_text_question(cfg, tech):
         amount = sum(contracts[c][0] for c in found)
         st.markdown(f"- **{md(theme['tema'])}** · {len(found)} {'contrato' if len(found) == 1 else 'contratos'}, US\\$ {money(amount / 1e6)} millones. "
                     f"{md(theme['detalle'])}  \n<small>{', '.join(found)}</small>", unsafe_allow_html=True)
-    if item.get("busqueda_texto"):
+    if item.get("busqueda_texto") and not demo:
         compare_text_search(item, contracts, domain, tech)
     with st.expander("¿Cómo lo supe?"):
         st.markdown(md(item["como"]))
@@ -289,26 +335,24 @@ def company(name):
     return " ".join(w if len(w) <= 3 and w.isupper() else w.capitalize() for w in name.split())
 
 
-def compare_text_search(item, contracts, domain, tech):
+def compare_text_search(item, contracts, domain, tech, always=False):
     """Lo mismo, buscando «Leidos» en los textos en vez de usar el grafo (lo que haría un RAG común)."""
-    if not st.toggle("¿Y si buscamos «Leidos» en los textos?", key=f"{domain}_text_search"):
+    if not always and not st.toggle("¿Y si buscamos «Leidos» en los textos?", key=f"{domain}_text_search"):
         return
     query = Path(item["busqueda_texto"]).read_text()
     _, rows = run(query, domain)
     found = {c for c, *_ in rows}
     missing = {c: v for c, v in contracts.items() if c not in found}
-    left, right = st.columns(2)
-    left.metric("Buscando «Leidos» en los textos", f"{len(contracts) - len(missing)} de {len(contracts)}",
-                help="Contratos del grupo que encuentra, de los 40 más grandes.")
-    right.metric("Rastro", f"{len(contracts)} de {len(contracts)}")
-    if not missing:
-        return
     lost = [t["tema"] for t in item["temas"] if t["contratos"] and all(c in missing for c in t["contratos"])]
     companies = sorted({company(e) for _, _, e, _ in missing.values()})
-    st.markdown(f"La búsqueda por texto pierde **{len(missing)} contratos** "
-                f"(US\\$ {money(sum(m for m, *_ in missing.values()) / 1e6)} millones), de empresas del grupo "
-                f"que no se llaman Leidos: {', '.join(companies)}."
-                + (f" Desaparecen temas enteros: {', '.join(lost).lower()}." if lost else ""))
+    before_after({
+        "titulo_sin": "Sin Rastro: buscando «Leidos» en los textos",
+        "sin": {"valor": f"{len(contracts) - len(missing)} de {len(contracts)}",
+                "detalle": (f"Pierde {len(missing)} contratos (US$ {money(sum(m for m, *_ in missing.values()) / 1e6)} "
+                            f"millones) de empresas del grupo que no se llaman Leidos: {', '.join(companies)}."
+                            + (f" Desaparecen temas enteros: {', '.join(lost).lower()}." if lost else ""))},
+        "con": {"valor": f"{len(contracts)} de {len(contracts)}",
+                "detalle": "Los 40 contratos más grandes del grupo, elegidos con una consulta exacta."}})
     st.caption("La búsqueda mira la descripción del contrato y el nombre de la empresa, como lo haría alguien "
                "con SQL o un buscador. Rastro sabe que esas empresas son del grupo porque lo armó una vez, con "
                "la evidencia de cada enlace.")

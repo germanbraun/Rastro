@@ -323,3 +323,13 @@ El mismo GraphRAG anclado que en oncología, en el dominio de proveedores: «¿E
 Por qué con el grafo y no buscando en los textos: de esos 40 contratos, solo 1 nombra a Leidos en su descripción, y 7 son de empresas del grupo con otro nombre (QTC, Dynetics, Mission Support Alliance). Una búsqueda por texto no los encuentra, no puede elegir «los más grandes» y podría traer contratos de la SAIC de hoy. No se convirtió en dato del grafo (temas clasificados): por ahora alcanza con el resumen citado.
 
 Para que se vea, la app compara en vivo con una búsqueda por texto (`leidos-texto.rq`: «Leidos» en la descripción o en el nombre de la empresa, como haría alguien con SQL o un buscador). Encuentra 33 de los 40 contratos del grupo: pierde 7 (5.607 millones de dólares, de QTC, Dynetics y Mission Support Alliance) y dos temas enteros. Se eligió una búsqueda por palabra y no un RAG con vectores: muestra lo mismo sin otra dependencia, y cualquiera puede leer la consulta.
+
+## 2026-10-19 — La demo en tres momentos: une, explica, lee
+
+La demo tenía demasiadas piezas para recordar. Ahora son tres momentos, todos con el grupo Leidos, y cada uno termina en la misma tarjeta: sin Rastro a la izquierda, con Rastro a la derecha.
+
+- **Une:** US$56.400 M buscando «Leidos» en los nombres (faltan QTC, Dynetics, Gibbs & Cox y 1901 Group, US$7.700 M, y entra un consorcio que no es del grupo) contra US$63.400 M con el grupo de Rastro.
+- **Explica:** US$97.800 M cuando el SQL siguió las matrices viejas y sumó US$41.400 M de la SAIC de hoy, contra US$63.400 M con Rastro y la evidencia de por qué.
+- **Lee:** 33 de 40 contratos buscando en los textos, contra 40 de 40.
+
+Los números «sin Rastro» de los dos primeros salen de la evaluación (`layer/proveedores/resultados.json`, SQL sin enlaces) y están guardados en `app/dominios/proveedores.yaml`; los del tercero se calculan en vivo. La app tiene un modo **Demo en 3 pasos** con «Siguiente», para no elegir preguntas en vivo. El mazo principal quedó en ocho diapositivas, con oncología en una; las pruebas y oncología completa pasaron a «Si preguntan».

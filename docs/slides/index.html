@@ -52,26 +52,62 @@ addEventListener('resize', fit); fit();
 </div>
 <div class="slide">
 <section id="leidos" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El ejemplo</p>
-<h2 style="font-size:56px;font-weight:700;line-height:1.15;width:1664px">«¿Cuánto le contrata el gobierno al grupo Leidos?»</h2>
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">1 · Une</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">«¿Cuánto le contrata el gobierno al grupo Leidos?»</h2>
 <div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">El grupo se arma solo</p><p style="font-size:56px;font-weight:700;color:#2F6FB5">US$63.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">30 empresas. La base de contratos reparte a Leidos en 13 «matrices» distintas; Rastro las une, con la evidencia de cada una.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">Sin caer en la trampa</p><p style="font-size:56px;font-weight:700;color:#2F6FB5">US$41.000 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">En 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. Sin Rastro, una consulta le sumó a Leidos los contratos de la SAIC de hoy.</p></div>
-<div style="flex:1.2;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:28px;color:#4A5568">Y por qué lo dice</p><p style="font-size:30px;line-height:1.4">«Science Applications International Corporation» → <b>grupo SAIC</b>: coincide su nombre legal de hoy.</p><p style="font-size:30px;line-height:1.4">Descartado: <b>Leidos</b>, que solo coincide por su nombre anterior.</p><p style="font-size:26px;color:#4A5568">Con el identificador de Leidos, Wikidata suma que cotiza en Nueva York.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">US$56.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Buscando «Leidos» en los nombres faltan empresas del grupo con otro nombre: QTC, Dynetics, Gibbs &amp; Cox, 1901 Group (US$7.700 M). Y entra un consorcio que no es del grupo.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">US$63.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">30 empresas. La base de contratos reparte a Leidos en 13 «matrices»; Rastro las une en un grupo, con la evidencia de cada una.</p></div>
 </div>
-<aside>El ejemplo estrella. Una pregunta que cualquiera entiende. Primero, el grupo: la base de contratos reparte a Leidos en 13 matrices, y Rastro las une en un grupo de 30 empresas: con el registro global de empresas y, para las compras que ninguna base registra, como Dynetics, con una corrección revisada. Segundo, la trampa: la vieja SAIC hoy se llama Leidos, y una empresa nueva se llama SAIC. Sin Rastro, una de las consultas le sumó a Leidos 41.000 millones que son de SAIC. Rastro no, y dice por qué: el nombre legal de hoy le gana al nombre anterior. Tercero, con el identificador global de la empresa, traemos datos de otra organización, Wikidata, sin integrarla a mano.</aside>
+<p style="font-size:34px;line-height:1.35;width:1664px"><b>El grupo se arma una vez, y vale para todas las preguntas.</b></p>
+<aside>Primer momento: une. La pregunta que cualquiera entiende. Un SQL que busca la palabra Leidos en los nombres da 56.400 millones: le faltan las empresas del grupo que se llaman de otra forma, como QTC o Dynetics, compradas por Leidos, y suma un consorcio que no es del grupo. Rastro arma el grupo una vez, con el registro global de empresas y, para las compras que ninguna base registra, con una corrección revisada: 30 empresas, 63.400 millones. Cada empresa tiene la evidencia de por qué es parte del grupo.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="saic" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">2 · Explica</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">«Science Applications International Corporation», ¿es de Leidos o de SAIC?</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">US$97.800 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Preguntando por Leidos de otra forma, el SQL siguió las matrices viejas y le sumó US$41.400 M de la SAIC de hoy.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">US$63.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">SAIC queda en su grupo: coincide su nombre legal de hoy. Leidos solo coincide por su nombre anterior, y queda descartado a la vista.</p></div>
+</div>
+<p style="font-size:34px;line-height:1.35;width:1664px"><b>Cada respuesta dice por qué.</b> <span style="color:#4A5568">En 2013 la vieja SAIC pasó a llamarse Leidos, y una empresa nueva tomó el nombre SAIC.</span></p>
+<aside>Segundo momento: explica. La trampa: en 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. Preguntando lo mismo de otra forma, un SQL siguió las matrices viejas y le sumó a Leidos 41.400 millones que son de la SAIC de hoy. Rastro no, y muestra por qué: el nombre legal de hoy le gana al nombre anterior, y lo descartado queda a la vista. Cada respuesta se puede auditar.</aside>
 </section>
 </div>
 <div class="slide">
 <section id="textos2" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">También responde sobre textos</p>
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">3 · Lee</p>
 <h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">«¿En qué trabaja el grupo Leidos para el gobierno?» Buscar en el texto no alcanza</h2>
 <div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Buscando «Leidos» en los textos</p><p style="font-size:72px;font-weight:700;color:#4A5568">33 de 40</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Pierde 7 contratos, 5.607 millones de dólares, de empresas del grupo que no se llaman Leidos: QTC, Dynetics, Mission Support Alliance. Desaparecen dos temas: exámenes médicos para veteranos y armamento.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">40 de 40</p><p style="font-size:28px;line-height:1.4;color:#4A5568">El grafo elige los contratos del grupo con una consulta exacta. La IA lee solo esas descripciones y las agrupa en temas, citando cada contrato.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro: buscando «Leidos» en los textos</p><p style="font-size:72px;font-weight:700;color:#4A5568">33 de 40</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Pierde 7 contratos, 5.607 millones de dólares, de empresas del grupo que no se llaman Leidos: QTC, Dynetics, Mission Support Alliance. Desaparecen dos temas: exámenes médicos para veteranos y armamento.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">40 de 40</p><p style="font-size:28px;line-height:1.4;color:#4A5568">El grafo elige los contratos del grupo con una consulta exacta. La IA lee solo esas descripciones y las agrupa en temas, citando cada contrato.</p></div>
 </div>
 <p style="font-size:34px;line-height:1.35;width:1664px"><b>Un RAG común decide qué leer por cómo se ven los textos. Rastro, por lo que significan los datos.</b> <span style="color:#4A5568">De esos 40 contratos, solo 1 dice «Leidos» en su descripción.</span></p>
 <aside>La misma pregunta, los mismos datos, dos formas de elegir qué leer. Buscando la palabra «Leidos» en la descripción y en el nombre de la empresa, como haría cualquiera con SQL o un buscador, se pierden 7 de los 40 contratos más grandes del grupo: los de QTC, Dynetics y Mission Support Alliance, empresas del grupo con otro nombre. Son 5.607 millones de dólares y dos temas enteros que el resumen nunca vería. Rastro sabe que son del grupo porque lo armó una vez, con la evidencia de cada enlace. En la app se ve en vivo: «Una pregunta sobre textos», y el interruptor «¿Y si buscamos Leidos en los textos?».</aside>
+</section>
+</div>
+<div class="slide">
+<section id="onco" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El mismo Rastro, otro dominio</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">Ensayos clínicos de cáncer: «¿Qué fármacos contra HER2 se prueban en cáncer de mama?»</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">9 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">preguntas cambiaron de respuesta al hacerlas de cuatro formas distintas. El mismo fármaco aparece como «Pembrolizumab 200 mg», como un código o como «KEYTRUDA».</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">0 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">La misma respuesta siempre, porque cada fármaco se unió una vez, con su evidencia.</p></div>
+</div>
+<p style="font-size:34px;line-height:1.35;width:1664px"><b>Funciona en cualquier dominio: lo mostramos en dos.</b></p>
+<aside>El mismo Rastro, con datos de otro mundo: ensayos clínicos de cáncer, fármacos, efectos adversos y enfermedades, de cuatro fuentes públicas. El problema es el mismo: el mismo fármaco escrito de varias formas. Haciendo cada pregunta de cuatro formas, sin Rastro la respuesta cambió en 9 de 10 preguntas; con Rastro, en ninguna. Si hay tiempo, mostrarlo en la app cambiando el dominio a Oncología.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="limites" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:28px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Lo que hay que saber</p>
+<div style="display:flex;flex-direction:column;gap:22px;font-size:36px;line-height:1.4;width:1664px">
+<p>El valor está en integrar los datos una vez y mantenerlos en un lugar, no en la tecnología por sí misma.</p>
+<p>Es una demo con datos públicos de octubre de 2026, en dos dominios.</p>
+<p>Las pruebas las armó un asistente de IA; falta que una persona las confirme.</p>
+</div>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;width:1664px;margin-top:20px">Próximo paso: un piloto con tus datos sumados a las fuentes públicas</h2>
+<aside>Decir los límites antes de que los pregunten, en palabras simples. Para técnicos: con las mismas tablas de enlaces, un SQL bien hecho acierta igual; eso está en el anexo. Cerrar con la propuesta de piloto.</aside>
 </section>
 </div>
 <div class="slide">
@@ -154,18 +190,6 @@ addEventListener('resize', fit); fit();
 </div>
 </div>
 <aside>Muchos preguntan por GraphRAG. Rastro hace la parte que permite confiar: el grafo elige con una consulta exacta qué registros importan, y el asistente de IA resume solo esos textos, citando cada uno. Y si el texto se puede clasificar, lo convertimos en un dato del grafo, con su evidencia: entonces «cuántos ensayos se detuvieron por falta de pacientes» es una consulta exacta sobre los 12.611 ensayos detenidos, no una estimación del LLM.</aside>
-</section>
-</div>
-<div class="slide">
-<section id="limites" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:28px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Lo que hay que saber</p>
-<div style="display:flex;flex-direction:column;gap:22px;font-size:36px;line-height:1.4;width:1664px">
-<p>El valor está en integrar los datos una vez y mantenerlos en un lugar, no en la tecnología por sí misma.</p>
-<p>Es una demo con datos públicos de octubre de 2026, en dos dominios.</p>
-<p>Las pruebas las armó un asistente de IA; falta que una persona las confirme.</p>
-</div>
-<h2 style="font-size:64px;font-weight:700;line-height:1.15;width:1664px;margin-top:20px">Próximo paso: un piloto con tus datos sumados a las fuentes públicas</h2>
-<aside>Decir los límites antes de que los pregunten, en palabras simples. Para técnicos: con las mismas tablas de enlaces, un SQL bien hecho acierta igual; eso está en el anexo. Cerrar con la propuesta de piloto.</aside>
 </section>
 </div>
 <div class="slide">

@@ -11,6 +11,12 @@ cambio: /layer/proveedores/cambio/resultado.json
 ontologia: /ontology/proveedores/proveedores.ttl
 texto: /layer/proveedores/textos/leidos.json   # la pregunta sobre textos (GraphRAG anclado)
 
+# La demo en tres pasos, todos sobre Leidos: une, explica, lee
+demo:
+  - {paso: Une, titulo: "Un grupo, no 13 pedazos", pregunta: p01}
+  - {paso: Explica, titulo: "La trampa de SAIC, con el porqué", pregunta: p08}
+  - {paso: Lee, titulo: "En qué trabaja, leyendo los contratos", texto: true}
+
 # Fuentes: nombre corto para los encabezados del modo técnico
 fuentes:
   usaspending: USAspending
@@ -64,6 +70,9 @@ preguntas:
     ventaja: "El grupo se arma solo. USAspending reparte a Leidos en 13 matrices distintas; Rastro las une con la matriz final que registra GLEIF y, para las compras que ninguna fuente registra (Dynetics, QTC, Gibbs & Cox), con una corrección revisada."
     terminos:
       Grupo: la empresa matriz y todas sus filiales.
+    antes_despues:              # medido en layer/proveedores/resultados.json (SQL sin Rastro, 2026-10-19)
+      sin: {valor: "US$ 56.400 M", detalle: "Buscando «Leidos» en los nombres faltan empresas del grupo con otro nombre (QTC, Dynetics, Gibbs & Cox, 1901 Group: US$ 7.700 M) y entra un consorcio que no es del grupo."}
+      con: {valor: "US$ 63.400 M", detalle: "30 empresas: las 13 «matrices» de la base de contratos, unidas en un grupo, con la evidencia de cada una."}
     evidencia:
       texto: "Por qué cada empresa es parte del grupo Leidos (algunos ejemplos):"
       formato: "**{proveedor}**: {evidencia}"
@@ -81,6 +90,9 @@ preguntas:
     terminos:
       UEI: el número con el que cada empresa se registra para venderle al gobierno de EE. UU.
       LEI: el identificador global de empresas (GLEIF), el mismo en todo el mundo.
+    antes_despues:              # la misma pregunta del grupo Leidos, hecha de otra forma (consistencia, 2026-10-19)
+      sin: {valor: "Leidos: US$ 97.800 M", detalle: "Preguntando por Leidos de otra forma, el SQL siguió las matrices viejas y le sumó US$ 41.400 M de la SAIC de hoy."}
+      con: {valor: "Leidos: US$ 63.400 M", detalle: "SAIC queda en su propio grupo: coincide su nombre legal de hoy. Leidos solo coincide por su nombre anterior, y queda descartado a la vista."}
     evidencia:
       texto: "Por qué la SAIC de hoy (UEI MMLKPW9JLX64) es del grupo SAIC y no de Leidos:"
       formato: "{evidencia}"
