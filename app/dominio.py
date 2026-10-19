@@ -5,6 +5,7 @@ con los dos modos (negocio por defecto, técnico con el interruptor). Todo lo pr
 dominio (preguntas, columnas, evidencia, tarjetas, escenarios de cambio) está en el YAML.
 """
 
+import base64
 import json
 from pathlib import Path
 
@@ -224,6 +225,13 @@ def render(cfg_path, tech):
                 st.markdown(md(item["respuesta"]))
         if tech:
             st.markdown("##### Para técnicos")
+            with st.expander("Cómo está armado Rastro: arquitectura y diccionario de proveedores"):
+                for name, caption in [("arquitectura", "De las fuentes de cada dominio a una capa semántica."),
+                                      ("ontologia-proveedores", "El diccionario de proveedores: lo que lee el LLM.")]:
+                    st.caption(caption)
+                    image = base64.b64encode(Path(f"/app/{name}.svg").read_bytes()).decode()
+                    st.markdown(f'<img src="data:image/svg+xml;base64,{image}" style="width:100%;margin-bottom:24px">',
+                                unsafe_allow_html=True)
             for item in [i for i in cfg.get("faq", []) if i.get("tecnico")]:
                 with st.expander(item["pregunta"]):
                     st.markdown(md(item["respuesta"]))

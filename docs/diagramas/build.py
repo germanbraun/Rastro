@@ -49,40 +49,37 @@ def svg(w, h, body):
 
 def architecture():
     b = []
-    # Encabezados de columna
-    for x, t in [(132, "FUENTES PÚBLICAS"), (440, "ALMACENAMIENTO"), (900, "CAPA SEMÁNTICA"), (1440, "QUIÉN LA USA")]:
+    for x, t in [(140, "FUENTES PÚBLICAS"), (440, "ALMACENAMIENTO"), (900, "CAPA SEMÁNTICA"), (1440, "QUIÉN LA USA")]:
         b.append(f'<text x="{x}" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="{BLUE}">{t}</text>')
-    # Fuentes
-    for i, (t, s) in enumerate([("AACT", "ensayos clínicos"), ("ChEMBL", "fármacos y targets"),
-                                ("openFDA", "eventos adversos"), ("MeSH", "enfermedades")]):
-        b.append(box(20, 60 + i * 150, 220, 120, t, [s]))
+    # Fuentes, por dominio
+    b.append(box(20, 60, 240, 250, "Proveedores", ["(EE. UU.)", "", "USAspending", "NAICS · GLEIF", "listas de control", "Wikidata"]))
+    b.append(box(20, 340, 240, 250, "Oncología", ["", "AACT", "ChEMBL", "openFDA", "MeSH"]))
     # Almacenamiento
-    b.append(box(320, 60, 240, 420, "Postgres", ["aact · chembl", "openfda", "copia de la", "jerarquía MeSH", "", "linking:", "los enlaces"]))
-    b.append(box(320, 510, 240, 120, "GraphDB", ["MeSH completo"]))
-    for i in range(3):
-        b.append(arrow(240, 120 + i * 150, 318, 120 + i * 150 if i < 2 else 330))
-    b.append(arrow(240, 570, 318, 570))
-    b.append(f'<text x="130" y="668" text-anchor="middle" font-size="20" fill="{GRAY}">un cargador por fuente</text>')
+    b.append(box(320, 60, 240, 400, "Postgres", ["un esquema", "por fuente", "", "+ los enlaces", "de Rastro,", "con su evidencia"]))
+    b.append(box(320, 490, 240, 100, "GraphDB", ["MeSH completo"]))
+    b.append(arrow(262, 185, 318, 185))
+    b.append(arrow(262, 420, 318, 380))
+    b.append(arrow(262, 540, 318, 540))
+    b.append(f'<text x="140" y="628" text-anchor="middle" font-size="20" fill="{GRAY}">un cargador por fuente</text>')
     # Capa semántica
     b.append(f'<rect x="620" y="50" width="560" height="590" rx="20" fill="{BLUE}"/>')
-    b.append(box(650, 80, 500, 120, "Entity linking", ["ensayo → fármaco · ensayo → MeSH", "clases de fármaco (ATC)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
-    b.append(box(650, 220, 240, 130, "Ontología", ["conceptos de", "negocio (OWL)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
-    b.append(box(910, 220, 240, 130, "Mapeos", ["columna →", "concepto (R2RML)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
-    b.append(box(650, 400, 500, 130, "Ontop", ["traduce cada consulta SPARQL", "a SQL sobre Postgres"], fill="#FFFFFF", color=INK, stroke="#FFFFFF"))
+    b.append(box(650, 80, 500, 120, "Entity linking", ["empresa → LEI → grupo · ensayo → fármaco", "cada enlace con su evidencia (PROV-O)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
+    b.append(box(650, 220, 240, 130, "Ontología", ["el diccionario", "de cada dominio"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
+    b.append(box(910, 220, 240, 130, "Mapeos", ["columna → concepto", "(R2RML)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
+    b.append(box(650, 400, 500, 130, "Ontop, uno por dominio", ["traduce cada consulta SPARQL", "a SQL sobre Postgres"], fill="#FFFFFF", color=INK, stroke="#FFFFFF"))
     b.append(f'<text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>')
     b.append(arrow(562, 270, 618, 270))
     b.append(arrow(900, 352, 900, 396, color="#FFFFFF", head="white"))
     # Quién la usa
-    b.append(box(1250, 60, 380, 170, "App Rastro Layer", ["el LLM lee la ontología", "y escribe SPARQL", "cada dato con su fuente"]))
-    b.append(box(1250, 260, 380, 120, "Otras herramientas", ["cualquier cliente SPARQL"]))
-    b.append(box(1250, 410, 380, 120, "GraphDB federa", ["Rastro + MeSH + Wikidata"]))
-    b.append(box(1250, 560, 380, 90, "Wikidata", [], fill=LIGHT, dash=True))
-    b.append(arrow(1182, 145, 1248, 145))
-    b.append(arrow(1182, 320, 1248, 320))
+    b.append(box(1250, 50, 380, 230, "App Rastro (dos dominios)", ["preguntas: el LLM lee el", "diccionario y escribe SPARQL", "textos: el grafo elige los", "registros; el LLM los resume", "y cita cada uno"]))
+    b.append(box(1250, 300, 380, 100, "Otras herramientas", ["cualquier cliente SPARQL"]))
+    b.append(box(1250, 420, 380, 110, "GraphDB federa", ["Rastro + MeSH + Wikidata"]))
+    b.append(box(1250, 560, 380, 80, "Wikidata", [], fill=LIGHT, dash=True))
+    b.append(arrow(1182, 165, 1248, 165))
+    b.append(arrow(1182, 350, 1248, 350))
     b.append(arrow(1182, 470, 1248, 470))
     b.append(arrow(1440, 532, 1440, 556))
-    # MeSH de GraphDB entra a la consulta federada por debajo de la capa
-    b.append(f'<polyline points="562,600 600,600 600,662 1215,662 1215,500 1246,500" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
+    b.append(f'<polyline points="562,560 600,560 600,662 1215,662 1215,500 1246,500" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
     return svg(1664, 680, "\n".join(b))
 
 
@@ -124,6 +121,40 @@ def ontology():
     return svg(1680, 740, "\n".join(b))
 
 
+def ontology_suppliers():
+    b = []
+    # Clases de proveedor
+    b.append(box(560, 10, 300, 70, "Con matriz extranjera", [], size=24))
+    b.append(box(900, 10, 300, 70, "Coincide con una lista", [], size=24))
+    b.append(box(720, 130, 320, 80, "Proveedor para revisar", ["deducida, sin mapeo"], dash=True, size=24, sub=19))
+    b.append(arrow(710, 80, 830, 128, head="sub"))
+    b.append(arrow(1050, 80, 930, 128, head="sub"))
+    b.append(arrow(880, 212, 880, 298, head="sub"))
+    b.append(f'<text x="1640" y="40" text-anchor="end" font-size="20" fill="{GRAY}">▷ es un tipo de (subclase)</text>')
+    # Centro
+    b.append(box(40, 320, 240, 120, "Agencia", ["nombre"], fill=LIGHT, stroke=INK))
+    b.append(box(380, 300, 300, 160, "Contrato", ["monto · fechas", "descripción"], fill=LIGHT, stroke=INK))
+    b.append(box(760, 300, 240, 160, "Proveedor", ["nombre · UEI", "estado"], fill=LIGHT, stroke=INK))
+    b.append(box(1120, 300, 280, 160, "Grupo", ["nombre · cotiza", "sede (Wikidata)"], fill=LIGHT, stroke=INK))
+    b.append(box(380, 560, 300, 130, "Sector", ["código NAICS"], fill=LIGHT, stroke=INK))
+    b.append(box(1120, 560, 280, 130, "Entidad legal", ["LEI · país"], fill=LIGHT, stroke=INK))
+    b.append(box(760, 560, 240, 130, "Lista de control", ["entrada · alias"], fill=LIGHT, stroke=INK))
+    b.append(arrow(378, 380, 284, 380, "agencia"))
+    b.append(arrow(682, 380, 756, 380, "proveedor"))
+    b.append(arrow(1002, 380, 1116, 380, "grupo"))
+    b.append(arrow(530, 462, 530, 556, "sector", lx=580, ly=515))
+    b.append(f'<path d="M 682 600 C 745 600 745 660 682 660" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
+    b.append(f'<text x="530" y="725" text-anchor="middle" font-size="22" fill="{BLUE}" font-style="italic">está dentro de <tspan fill="{GRAY}" font-style="normal" font-size="19">(sus subsectores)</tspan></text>')
+    b.append(arrow(880, 462, 880, 556, "coincide con", lx=950, ly=515))
+    b.append(arrow(1260, 462, 1260, 556, "entidad legal", lx=1340, ly=515))
+    b.append(f'<path d="M 1402 600 C 1465 600 1465 660 1402 660" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
+    b.append(f'<text x="1260" y="725" text-anchor="middle" font-size="22" fill="{BLUE}" font-style="italic">matriz final</text>')
+    # Evidencia y fuente
+    b.append(box(1450, 300, 210, 160, "Enlaces", ["evidencia de", "cada unión", "(PROV-O)"], size=24, sub=19, dash=True))
+    b.append(box(40, 560, 260, 130, "Fuente", ["cada dato apunta", "a su fuente"], size=24, sub=20))
+    return svg(1680, 740, "\n".join(b))
+
+
 # Las mismas imágenes van a la app y, dentro de una diapositiva cada una, al mazo
 ROOT = HERE.parent.parent
 SLIDE = """<section id="{id}" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
@@ -135,12 +166,21 @@ SLIDE = """<section id="{id}" style="background:#F7F6F2;color:#14213D;font-famil
 """
 for name, drawing, sid, label, title, notes in [
     ("arquitectura", architecture(), "arquitectura", "Cómo está armado", "De cuatro fuentes a una capa semántica",
-     "De izquierda a derecha. Cuatro fuentes públicas se cargan tal como vienen: tres en Postgres y MeSH en GraphDB. "
+     "De izquierda a derecha. Las fuentes públicas de cada dominio se cargan tal como vienen, en Postgres; MeSH, también en GraphDB. "
      "La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la "
      "ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce "
-     "cada consulta a SQL. Los datos no se mueven. La usan la app, cualquier herramienta que hable SPARQL, y GraphDB, "
-     "que puede unirla con MeSH y con Wikidata en una sola consulta."),
-    ("ontologia", ontology(), "ontologia", "La ontología", "Los conceptos de negocio y cómo se relacionan",
+     "cada consulta a SQL; hay uno por dominio. Los datos no se mueven. La usa la app, de dos formas: para preguntas, el LLM "
+     "lee el diccionario y escribe la consulta; para textos, el grafo elige los registros con una consulta exacta y "
+     "el LLM resume solo esos textos, citando cada uno (GraphRAG anclado en la capa). También la usan otras "
+     "herramientas que hablen SPARQL, y GraphDB, que puede unirla con MeSH y Wikidata en una sola consulta."),
+    ("ontologia-proveedores", ontology_suppliers(), "ontologiaprov", "El diccionario de proveedores",
+     "Contratos, empresas y grupos",
+     "El diccionario del dominio de proveedores. Un contrato tiene una agencia, un sector y un proveedor; "
+     "el proveedor pertenece a un grupo, y el grupo y el proveedor tienen su entidad legal en el registro "
+     "global (LEI), con su país y su matriz final. Los sectores incluyen sus subsectores. Arriba, una regla "
+     "de negocio: «proveedor para revisar» no tiene mapeo; Ontop la deduce de dos clases: matriz extranjera "
+     "o coincidencia con una lista de control. Cada unión guarda su evidencia, con PROV-O."),
+    ("ontologia", ontology(), "ontologia", "El diccionario de oncología", "Ensayos, fármacos y enfermedades",
      "Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una "
      "condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre "
      "targets y tiene reportes de eventos adversos. Arriba, las clases de fármaco: terapia dirigida no tiene ningún "

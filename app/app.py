@@ -865,7 +865,7 @@ with faq_tab:
     else:
         st.markdown("##### Para técnicos")
         with st.expander("Cómo está armado Rastro: arquitectura y ontología", expanded=False):
-            for name, caption in [("arquitectura", "De cuatro fuentes a una capa semántica."),
+            for name, caption in [("arquitectura", "De las fuentes de cada dominio a una capa semántica."),
                                   ("ontologia", "Los conceptos de negocio que lee el LLM, en lugar de las tablas.")]:
                 st.caption(caption)
                 image = base64.b64encode(Path(f"/app/{name}.svg").read_bytes()).decode()
