@@ -350,3 +350,7 @@ Para operadoras y consultoras del sector. Dos fuentes públicas de la Secretarí
 - **Punto dentro de polígono en Python** (`linking/energia/link.py`): Postgres no tiene PostGIS acá y son 300 contornos. Se guarda la concesión de cada punto, con su evidencia.
 - **Sin evaluación medida todavía:** los números «sin Rastro» salen de SQL directo y legible (`layer/energia/sin-rastro.sql`), no de un LLM. La pestaña «Por qué confiar» no se muestra en este dominio hasta que haya una evaluación.
 - **Referencia:** una tesis de la UTDT usa los mismos datos abiertos para predecir la productividad de pozos de shale gas en Vaca Muerta; es un antecedente para un paso de predicción (Rastro Lab), no para esta demo.
+
+## 2026-10-19 — PROV-O visible en la evidencia
+
+Ocho tipos de enlace son entidades PROV-O (`prov:Entity`, con `prov:wasDerivedFrom` y `prov:wasGeneratedBy`): `:DrugLink` y `:StopReasonLink` en oncología; `:GroupLink`, `:LeiLink` y `:WatchlistLink` en proveedores; `:Stake`, `:OperatorLink` y `:CompanyName` en petróleo y gas. Se suma `:LocationLink` (en qué concesión cae cada venteo), que antes era solo un texto del venteo. Las consultas de evidencia ahora piden la fuente con `prov:wasDerivedFrom`, y la app dice «entidad PROV-O» solo cuando la consulta la usa.

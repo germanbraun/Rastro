@@ -10,7 +10,7 @@
 la producción de 2025 pozo por pozo, las concesiones con sus socios, quién opera cada pozo y los
 venteos de gas. Cada enlace entre fuentes lleva su evidencia, con PROV-O. «Producción no
 convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight)."""@es ;
-    owl:versionInfo "0.1" .
+    owl:versionInfo "0.2" .
 
 # Clases ---------------------------------------------------------
 
@@ -60,6 +60,11 @@ convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight).
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Nombre de una empresa en una fuente"@es ;
     rdfs:comment "Cómo aparece una empresa en una fuente, y por qué Rastro sabe que es esa empresa."@es .
+
+:LocationLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Ubicación de un venteo"@es ;
+    rdfs:comment "En qué concesión cae un venteo y por qué: el punto está dentro del contorno de la concesión en el mapa."@es .
 
 :Venting a owl:Class ;
     rdfs:label "Venteo"@es ;
@@ -115,5 +120,6 @@ convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight).
 :rule a owl:DatatypeProperty ; rdfs:label "regla"@es .
 :sourceText a owl:DatatypeProperty ; rdfs:label "evidencia"@es .
 
+:aboutVenting a owl:ObjectProperty ; rdfs:domain :LocationLink ; rdfs:range :Venting ; rdfs:label "sobre el venteo"@es .
 :date a owl:DatatypeProperty ; rdfs:domain :Venting ; rdfs:label "fecha"@es .
 :satellite a owl:DatatypeProperty ; rdfs:domain :DetectedVenting ; rdfs:label "satélite"@es .

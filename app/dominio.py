@@ -149,7 +149,9 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
             st.markdown("**4. La regla de negocio, en la ontología.** Ningún mapeo la asigna: Ontop la deduce.")
             st.code(item["definicion"], language="turtle")
         if evidence:
-            st.markdown("**4. La evidencia**, pedida al grafo (los enlaces son entidades PROV-O):")
+            st.markdown("**4. La evidencia**, pedida al grafo"
+                        + (" (cada enlace es una entidad PROV-O, con la fuente de la que se derivó):"
+                           if "prov:" in evidence["query"] else ":"))
             ev_query = prefixed(evidence["query"], domain)
             st.code(ev_query, language="sparql")
             ev_cols, ev_rows = run(ev_query, domain)

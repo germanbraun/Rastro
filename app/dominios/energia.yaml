@@ -59,8 +59,9 @@ preguntas:
       texto: "Los socios de cada concesión, tal como los informa el mapa (algunos ejemplos):"
       formato: "**{concesion}**: {texto}"
       query: |
-        SELECT ?concesion ?texto WHERE {
-          ?s a :Stake ; :inConcession/:name ?concesion ; :sourceText ?texto .
+        SELECT ?concesion ?texto ?fuente WHERE {
+          ?s a :Stake ; :inConcession/:name ?concesion ; :sourceText ?texto ;
+             prov:wasDerivedFrom/:name ?fuente .
           FILTER (?concesion IN ("LOMA CAMPANA", "LA AMARGA CHICA"))
         } ORDER BY ?concesion ?texto
 
@@ -79,9 +80,9 @@ preguntas:
       texto: "Pozos donde las fuentes no coinciden (algunos ejemplos):"
       formato: "**Pozo {pozo}**: {evidencia}"
       query: |
-        SELECT ?pozo ?evidencia WHERE {
+        SELECT ?pozo ?evidencia ?fuente WHERE {
           ?l a :OperatorLink ; :aboutWell/:wellId ?pozo ; :company/:name "YPF S.A." ;
-             :rule "rige la declaración jurada" ; :sourceText ?evidencia .
+             :rule "rige la declaración jurada" ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
         } ORDER BY ?pozo LIMIT 5
 
   - id: e03
@@ -99,8 +100,10 @@ preguntas:
       texto: "Por qué cada detección está en La Calera (algunos ejemplos):"
       formato: "**{fecha}**: {evidencia}"
       query: |
-        SELECT ?fecha ?evidencia WHERE {
-          ?d a :DetectedVenting ; :inConcession/:name "LA CALERA" ; :date ?fecha ; :sourceText ?evidencia .
+        SELECT ?fecha ?evidencia ?fuente WHERE {
+          ?d a :DetectedVenting ; :date ?fecha .
+          ?l a :LocationLink ; :aboutVenting ?d ; :inConcession/:name "LA CALERA" ; :sourceText ?evidencia ;
+             prov:wasDerivedFrom/:name ?fuente .
         } ORDER BY DESC(?fecha) LIMIT 4
 
   - id: e04

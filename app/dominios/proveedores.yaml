@@ -78,9 +78,10 @@ preguntas:
       texto: "Por qué cada empresa es parte del grupo Leidos (algunos ejemplos):"
       formato: "**{proveedor}**: {evidencia}"
       query: |
-        SELECT (MIN(?n) AS ?proveedor) ?evidencia WHERE {
+        SELECT (MIN(?n) AS ?proveedor) ?evidencia (SAMPLE(?f) AS ?fuente) WHERE {
           ?g :name "LEIDOS HOLDINGS, INC." .
-          ?l a :GroupLink ; :linkTo ?g ; :linkFrom/:name ?n ; :sourceText ?evidencia .
+          ?l a :GroupLink ; :linkTo ?g ; :linkFrom/:name ?n ; :sourceText ?evidencia ;
+             prov:wasDerivedFrom/:name ?f .
         } GROUP BY ?evidencia ORDER BY ?proveedor LIMIT 6
 
   - id: p08
@@ -98,8 +99,9 @@ preguntas:
       texto: "Por qué la SAIC de hoy (UEI MMLKPW9JLX64) es del grupo SAIC y no de Leidos:"
       formato: "{evidencia}"
       query: |
-        SELECT ?evidencia WHERE {
-          ?s :uei "MMLKPW9JLX64" . ?l a :GroupLink ; :linkFrom ?s ; :sourceText ?evidencia .
+        SELECT ?evidencia ?fuente WHERE {
+          ?s :uei "MMLKPW9JLX64" .
+          ?l a :GroupLink ; :linkFrom ?s ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
         }
 
   - id: p02
@@ -134,9 +136,9 @@ preguntas:
       texto: "Cómo sabe Rastro dónde está la matriz final (algunos ejemplos):"
       formato: "**{proveedor}**: {evidencia}"
       query: |
-        SELECT (MIN(?n) AS ?proveedor) ?evidencia WHERE {
+        SELECT (MIN(?n) AS ?proveedor) ?evidencia (SAMPLE(?f) AS ?fuente) WHERE {
           ?s a :ForeignParentSupplier ; :name ?n .
-          ?l a :GroupLink ; :linkFrom ?s ; :sourceText ?evidencia .
+          ?l a :GroupLink ; :linkFrom ?s ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?f .
           FILTER (CONTAINS(?evidencia, "matriz final en GLEIF es"))
         } GROUP BY ?evidencia ORDER BY ?proveedor LIMIT 5
 
@@ -151,9 +153,10 @@ preguntas:
       texto: "Lo que dice cada fuente, lado a lado:"
       formato: "{evidencia} → {regla}"
       query: |
-        SELECT DISTINCT ?evidencia ?regla WHERE {
-          ?l a :WatchlistLink ; :linkFrom ?x ; :sourceText ?evidencia ; :linkRule ?regla . ?x a :Supplier .
-        } ORDER BY ?evidencia
+        SELECT ?evidencia ?regla (GROUP_CONCAT(DISTINCT ?f; separator=" + ") AS ?fuentes) WHERE {
+          ?l a :WatchlistLink ; :linkFrom ?x ; :sourceText ?evidencia ; :linkRule ?regla ;
+             prov:wasDerivedFrom/:name ?f . ?x a :Supplier .
+        } GROUP BY ?evidencia ?regla ORDER BY ?evidencia
 
   - id: p06
     query: /ontology/proveedores/queries/cq6.rq

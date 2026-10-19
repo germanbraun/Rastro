@@ -93,18 +93,26 @@
     rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-stake-parsing> ] ] .
 
 <#DetectedVenting> a rr:TriplesMap ;
-    rr:logicalTable [ rr:sqlQuery "SELECT id, fecha, satelite, id_concesion, evidencia FROM energia.venteo WHERE tipo = 'detectado'" ] ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, fecha, satelite, id_concesion FROM energia.venteo WHERE tipo = 'detectado'" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/venting/{id}" ; rr:class :DetectedVenting ] ;
     rr:predicateObjectMap [ rr:predicate :date ; rr:objectMap [ rr:column "fecha" ] ] ;
     rr:predicateObjectMap [ rr:predicate :satellite ; rr:objectMap [ rr:column "satelite" ] ] ;
     rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
     rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] .
 
 <#DeclaredVenting> a rr:TriplesMap ;
-    rr:logicalTable [ rr:sqlQuery "SELECT id, nombre, id_concesion, evidencia FROM energia.venteo WHERE tipo = 'declarado'" ] ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, nombre, id_concesion FROM energia.venteo WHERE tipo = 'declarado'" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/venting/{id}" ; rr:class :DeclaredVenting ] ;
     rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "nombre" ] ] ;
     rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
     rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] .
+
+<#LocationLink> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, id_concesion, evidencia FROM energia.venteo" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/locationlink/{id}" ; rr:class :LocationLink ] ;
+    rr:predicateObjectMap [ rr:predicate :aboutVenting ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/venting/{id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :rule ; rr:objectMap [ rr:constant "punto dentro del contorno" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-point-in-polygon> ] ] .

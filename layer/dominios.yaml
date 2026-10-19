@@ -65,5 +65,5 @@ energia:
                 formation, basin, province, wellId, well, concession, declaredBy, aboutWell]
     sig_energia: [Concession, concessionId, reportedBy, operatorOnMap, DetectedVenting, DeclaredVenting, Venting,
                   date, satellite]
-    rastro: [Stake, partner, percent, OperatorLink, operator, inConcession, company, registryCompany, CompanyName,
+    rastro: [Stake, partner, percent, OperatorLink, LocationLink, aboutVenting, operator, inConcession, company, registryCompany, CompanyName,
              nameInSource, rule, sourceText, Company]
