@@ -8,6 +8,7 @@ dominio (preguntas, columnas, evidencia, tarjetas, escenarios de cambio) está e
 import base64
 import json
 import re
+import time
 from pathlib import Path
 
 import pandas as pd
@@ -178,6 +179,48 @@ def explain(query, sql, domain, item=None):
         st.info(md(st.session_state[key]))
 
 
+# La consola SPARQL de la vista técnica: dónde están las consultas de ejemplo y el puerto que se
+# abre en la computadora para otras herramientas
+CONSOLE = {"oncologia": ("/ontology/queries", 8080), "proveedores": ("/ontology/proveedores/queries", 8081),
+           "energia": ("/ontology/energia/queries", 8082)}
+
+
+def sparql_console(domain):
+    """Una consola para escribir y ejecutar SPARQL sobre el Ontop del dominio, con el SQL que genera."""
+    folder, port = CONSOLE[domain]
+    st.markdown("### Consola SPARQL")
+    st.caption(f"Corre sobre el Ontop de este dominio. Otras herramientas pueden usar el mismo endpoint: "
+               f"`http://localhost:{port}/sparql`.")
+    examples = {}
+    for f in sorted(Path(folder).glob("*.rq")):
+        text = f.read_text()
+        title = next((l.lstrip("# ").strip() for l in text.splitlines() if l.startswith("#")), f.stem)
+        examples[title] = text
+    key = f"{domain}_console"
+    chosen = st.selectbox("Empezar desde una consulta de ejemplo", ["(en blanco)"] + list(examples),
+                          key=f"{key}_ejemplo")
+    if st.session_state.get(f"{key}_cargada") != chosen:   # al cambiar de ejemplo, se carga en el editor
+        st.session_state[f"{key}_cargada"] = chosen
+        st.session_state[f"{key}_texto"] = examples.get(
+            chosen, f"PREFIX : <{answer.DOMAINS[domain]['namespace']}>\nSELECT * WHERE {{ ?s ?p ?o }} LIMIT 10")
+    query = st.text_area("Consulta", key=f"{key}_texto", height=280)
+    if st.button("Ejecutar", type="primary", key=f"{key}_ejecutar"):
+        started = time.time()
+        try:
+            columns, rows = run(query, domain)
+        except Exception as e:  # noqa: BLE001 - el error de Ontop se muestra tal cual
+            st.error(str(e).strip()[:2000])
+            return
+        st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''} en {time.time() - started:.1f} s.")
+        st.dataframe(pd.DataFrame(rows, columns=columns), hide_index=True, use_container_width=True)
+        with st.expander("El SQL que Ontop generó y ejecutó en Postgres"):
+            try:
+                st.code(sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper",
+                                        indent_width=2), language="sql")
+            except requests.RequestException:
+                st.caption("Ontop no devolvió la traducción.")
+
+
 def short(value):
     if value is None:
         return "—"
@@ -205,10 +248,13 @@ def render(cfg_path, tech):
             st.caption(md(cfg["resumen"]))
 
     # «Por qué confiar» necesita una evaluación medida; un dominio sin ella no muestra la pestaña
-    if cfg.get("tarjetas"):
-        ask_tab, trust_tab, faq_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"])
-    else:
-        (ask_tab, faq_tab), trust_tab = st.tabs(["Preguntar", "Preguntas frecuentes"]), None
+    names = ["Preguntar"] + (["Por qué confiar"] if cfg.get("tarjetas") else []) + ["Preguntas frecuentes"] \
+        + (["Consola SPARQL"] if tech else [])
+    tabs = dict(zip(names, st.tabs(names)))
+    ask_tab, trust_tab, faq_tab = tabs["Preguntar"], tabs.get("Por qué confiar"), tabs["Preguntas frecuentes"]
+    if tech:
+        with tabs["Consola SPARQL"]:
+            sparql_console(domain)
 
     with ask_tab:
         modes = ((["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Una pregunta de ejemplo"]

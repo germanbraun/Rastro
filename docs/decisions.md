@@ -386,3 +386,8 @@ El diccionario tenía `:concession` (la producción) e `:inConcession` (particip
 - **Es un arreglo hecho después de medir.** Se volvieron a medir solo las 4 respuestas de Rastro de e01, con subagentes nuevos que solo vieron el prompt; las viejas se descartaron. Las 4 dieron 12.581.213.
 - **Antes y después (Rastro):** correctas 6 de 7 → 7 de 7; misma respuesta en 4 formas, 5 de 5 (antes las 4 daban 0, igual de mal) → 5 de 5; correctas en la prueba de consistencia, 16 de 20 → 20 de 20. Sin Rastro y SQL + enlaces no se tocaron (5 de 7 y 7 de 7).
 - **Cómo leerlo:** el 7 de 7 es después de corregir el diccionario con la pregunta a la vista; las otras seis no se volvieron a medir. Lo que muestra es que un error del diccionario se arregla en un lugar y vale para todas las formas de preguntar, no que Rastro acierte todo a la primera.
+
+## 2026-10-19 — Consola SPARQL y petróleo y gas como dominio de inicio
+
+- **Consola SPARQL** en la vista técnica de los tres dominios: un editor que arranca desde cualquier consulta de ejemplo, ejecuta sobre el Ontop del dominio y muestra el resultado y el SQL que generó Ontop. Dice también la dirección del endpoint (`http://localhost:8080`, `8081`, `8082`/sparql) para usarlo desde otras herramientas.
+- **La app abre en petróleo y gas** (el primero de `app/dominios.yaml`).

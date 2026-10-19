@@ -513,7 +513,12 @@ with st.sidebar:
         st.caption("Datos públicos de oncología: ensayos clínicos (AACT), fármacos (ChEMBL), "
                    "efectos adversos (openFDA) y enfermedades (MeSH).")
 
-ask_tab, trust_tab, faq_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"])
+ask_tab, trust_tab, faq_tab, *console_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"]
+                                                   + (["Consola SPARQL"] if TECH else []))
+if console_tab:
+    import dominio  # la consola es la misma en los tres dominios
+    with console_tab[0]:
+        dominio.sparql_console("oncologia")
 FAQ_HINT = "Para dudas, consulte la pestaña **Preguntas frecuentes**."
 
 with ask_tab:
