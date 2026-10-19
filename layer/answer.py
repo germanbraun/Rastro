@@ -299,6 +299,10 @@ def column_sources(query, domain="oncologia"):
 
     walk(algebra)
     ns, sources_of_term = DOMAINS[domain]["namespace"], term_sources(domain)
+    link_from = {}   # término de un enlace de Rastro → las fuentes de las que sale
+    for source, terms in DOMAINS[domain].get("link_sources", {}).items():
+        for term in terms:
+            link_from.setdefault(term, set()).add(source)
     types = {s: str(o) for s, p, o in triples if str(p).endswith("#type") and isinstance(o, URIRef)}
 
     def direct_source(predicate):
@@ -322,9 +326,19 @@ def column_sources(query, domain="oncologia"):
         """Los términos de un camino (:supplier/:group) o el término solo."""
         return [x for a in predicate.args for x in steps(a)] if hasattr(predicate, "args") else [predicate]
 
-    all_sources = {source_of(s, q) for s, p, o in triples for q in steps(p)} - {None}
+    def sources_for(subject, predicate):
+        """La fuente del término y, si es un enlace de Rastro, también las fuentes de las que sale el enlace."""
+        found = source_of(subject, predicate)
+        if found != "rastro":
+            return {found} - {None}
+        term = str(predicate).replace(ns, "")
+        if term.endswith("#type"):
+            term = types.get(subject, "").replace(ns, "")
+        return {"rastro"} | link_from.get(term, set())
+
+    all_sources = set().union(*(sources_for(s, q) for s, p, o in triples for q in steps(p)))
     per_column = {}
     for var in algebra.get("PV", []):
-        direct = {source_of(s, steps(p)[-1]) for s, p, o in triples if o == var} - {None}
+        direct = set().union(*(sources_for(s, steps(p)[-1]) for s, p, o in triples if o == var))
         per_column[str(var)] = sorted(direct or all_sources)
     return sorted(all_sources), per_column

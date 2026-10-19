@@ -13,7 +13,7 @@ Para operadoras y consultoras del sector, sin conocimientos técnicos. Tres mome
 
 > «Las bases de datos del sector no están conectadas entre sí. Rastro incorpora un diccionario de negocio: pozo, concesión, empresa, participación. Cada fuente se traduce a esos términos una sola vez.»
 >
-> «La demo usa cinco fuentes públicas de cuatro organismos: la producción declarada pozo por pozo y los mapas de la Secretaría de Energía, los gasoductos de ENARGAS, el Instituto Geográfico Nacional y el registro global de empresas.»
+> «La demo usa seis fuentes públicas de cuatro organismos: la producción declarada pozo por pozo, los mapas y los estudios ambientales de la Secretaría de Energía, los gasoductos de ENARGAS, el Instituto Geográfico Nacional y el registro global de empresas.»
 
 ## 1:00 – 2:00 · 1 · Integración (app, paso 1; diapositiva 5)
 

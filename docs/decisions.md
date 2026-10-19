@@ -435,3 +435,11 @@ En la prueba de cambio, Rastro seguía en 7 de 7 aunque la fuente renombrara una
 - **La prueba de cambio, medida de nuevo** (`layer/energia/cambio/resultado.json`): con la columna renombrada, sin Rastro se rompen 2 consultas y con Rastro 3; una línea del mapeo deja a Rastro en 7 de 7, y sin Rastro hay que reescribir cada consulta. Con el petróleo en barriles, las dos formas dan 79 millones de m³ en lugar de 12,6, pero Rastro avisa; una línea del mapeo lo arregla.
 - **SQL + enlaces** sigue leyendo la tabla de enlaces con la producción sumada, como en la evaluación; la prueba de cambio compara sin Rastro y con Rastro.
 - **«Por qué confiar», en la vista técnica:** las tres pruebas (correctas, consistencia y cambios) quedaron en tres pestañas, en los tres dominios. Antes estaban una debajo de la otra, y elegir una pregunta de la evaluación parecía cambiar los escenarios de cambio, que son siempre de todas las preguntas. Los escenarios suman una tabla pregunta por pregunta.
+
+## 2026-10-19 — Cada respuesta nombra las fuentes de las que salen los enlaces
+
+En la demo de petróleo y gas, el paso de integración decía «Fuentes: Capítulo IV, enlaces de Rastro», aunque los socios salen del mapa de concesiones: el enlace tapaba su fuente.
+
+- **`link_sources` en `layer/dominios.yaml`:** para cada término de un enlace de Rastro, las fuentes de las que sale (por ejemplo, la participación sale del mapa; el cambio de operadora, del Capítulo IV; la distancia al gasoducto, de ENARGAS). Cada respuesta nombra esas fuentes y, además, los enlaces de Rastro. Vale para los tres dominios.
+- **Nombres de fuente que dicen qué traen:** «Capítulo IV: producción y padrón de pozos» y «Mapas de la Secretaría de Energía: concesiones, socios y venteos por satélite». El paso 2 cruza la producción declarada con el padrón y el paso 3, el contorno de las concesiones con la capa satelital: son dos conjuntos de datos de la misma fuente, y ahora se ve.
+- **Seis fuentes, no cinco:** la FAQ, la descripción del dominio, la diapositiva del dominio y el guion no contaban los estudios ambientales. Las notas para el LLM quedan como se midieron.

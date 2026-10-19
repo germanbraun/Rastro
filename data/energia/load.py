@@ -190,9 +190,9 @@ def main():
     with psycopg.connect(conninfo) as conn:
         conn.execute("""
             INSERT INTO rastro_meta.source (id, name, homepage, license, db_schema) VALUES
-              ('capitulo4', 'Producción por pozo, Capítulo IV (Secretaría de Energía)',
+              ('capitulo4', 'Capítulo IV: producción y padrón de pozos (Secretaría de Energía)',
                'http://datos.energia.gob.ar/dataset/produccion-de-petroleo-y-gas-por-pozo', 'CC-BY 4.0', 'capitulo4'),
-              ('sig_energia', 'Mapas de la Secretaría de Energía (WFS)',
+              ('sig_energia', 'Mapas de la Secretaría de Energía: concesiones, socios y venteos por satélite (WFS)',
                'https://sig.energia.gob.ar/wfsenergia', 'Datos públicos (Secretaría de Energía)', 'sig_energia'),
               ('enargas', 'Gasoductos de transporte (ENARGAS)', 'https://www.enargas.gob.ar/',
                'Datos públicos (ENARGAS, vía el WFS de la Secretaría de Energía)', 'enargas'),
@@ -201,7 +201,7 @@ def main():
               ('gleif', 'GLEIF (LEI)', 'https://www.gleif.org/', 'CC0 1.0', 'gleif'),
               ('ambiental', 'Estudios ambientales de petróleo y gas (Secretaría de Energía)',
                'http://datos.energia.gob.ar/dataset/actividad-ambiental-petroleo-y-gas', 'CC-BY 4.0', 'ambiental')
-            ON CONFLICT (id) DO NOTHING""")
+            ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name""")
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
 
         def copy(table, rows, source, version):

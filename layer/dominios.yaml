@@ -22,6 +22,10 @@ oncologia:
     openfda: [YearlyReports, ReportedReaction, reports, seriousReports, reaction, year, drug]
     mesh: [within]
     rastro: [testsDrug, DrugLink, linkTrial, linkDrug, interventionText, matchedText, linkRule]
+  # De qué fuentes sale cada enlace de Rastro: cada respuesta nombra esas fuentes, además de los enlaces
+  link_sources:
+    aact: [testsDrug, DrugLink, linkTrial, interventionText]
+    chembl: [testsDrug, DrugLink, linkDrug]
 
 proveedores:
   base: >-
@@ -46,6 +50,10 @@ proveedores:
     wikidata: [listed, wikidataId, stockExchange, headquarters]
     rastro: [group, legalEntity, watchlistMatch, GroupLink, LeiLink, WatchlistLink, linkFrom, linkTo,
              sourceText, matchedText, linkRule, SupplierToReview, ForeignParentSupplier, WatchlistSupplier]
+  link_sources:
+    usaspending: [group, GroupLink]
+    gleif: [group, GroupLink, legalEntity, LeiLink, ForeignParentSupplier, SupplierToReview]
+    csl: [watchlistMatch, WatchlistLink, WatchlistSupplier, SupplierToReview]
 
 energia:
   base: >-
@@ -74,3 +82,11 @@ energia:
              ConcessionToReview, VentingFarFromPipeline, VentingWithoutReports, reviewReason, Stake, partner, percent, OperatorLink, LocationLink, PipelineLink, SurroundingsLink, LeiLink, StudyLink, aboutStudy, aboutVenting,
              aboutConcession, distanceKm, operator, inConcession, company, registryCompany, CompanyName,
              nameInSource, rule, sourceText, Company]
+  link_sources:
+    sig_energia: [Stake, partner, percent, inConcession, LocationLink, aboutVenting, ConcessionToReview, reviewReason]
+    capitulo4: [OperatorLink, operator, aboutWell, OperatorChange, previousCompany, newCompany, month,
+                oilBefore, oilAfter, gasBefore, gasAfter, CompanyName]
+    enargas: [PipelineLink, aboutConcession, VentingFarFromPipeline, ConcessionToReview]
+    ign: [SurroundingsLink]
+    ambiental: [StudyLink, aboutStudy, VentingWithoutReports, ConcessionToReview]
+    gleif: [LeiLink, registryCompany]

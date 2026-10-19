@@ -5,7 +5,7 @@ domain: energia                # el de layer/dominios.yaml: endpoint, diccionari
 resumen: >-
   Datos públicos de Argentina: la producción de 2025 pozo por pozo (Capítulo IV, con 2023 y 2024
   para ver quién operó cada concesión) y los mapas de
-  concesiones, socios y venteos de gas de la Secretaría de Energía, los gasoductos de ENARGAS, las
+  concesiones, socios y venteos de gas y los estudios ambientales de la Secretaría de Energía, los gasoductos de ENARGAS, las
   localidades y áreas protegidas del IGN, y el identificador global de empresas (GLEIF).
 ejemplo_libre: "Por ejemplo: ¿qué empresas producen más gas en la cuenca Neuquina?"
 evaluacion: /layer/energia/resultados.json
@@ -297,9 +297,10 @@ cambios:
 faq:
   - pregunta: ¿De dónde salen los datos?
     respuesta: >-
-      De cinco fuentes públicas. De la Secretaría de Energía: las declaraciones juradas mensuales de
-      producción de cada pozo en 2025 y el padrón de pozos (Capítulo IV, datos.energia.gob.ar), y el
-      servicio de mapas (WFS) con las concesiones, sus socios y los venteos de gas. Del mismo servicio,
+      De seis fuentes públicas de cuatro organismos. De la Secretaría de Energía: las declaraciones juradas mensuales de
+      producción de cada pozo en 2025 y el padrón de pozos (Capítulo IV, datos.energia.gob.ar), el
+      servicio de mapas (WFS) con las concesiones, sus socios y los venteos de gas, y el listado de estudios
+      ambientales presentados en cada concesión. Del mismo servicio,
       los gasoductos de transporte de ENARGAS. Del Instituto Geográfico Nacional (listado en IDERA), las
       localidades y las áreas protegidas. Y de GLEIF, el identificador global de las empresas. Se usa 2025
       porque el archivo de 2026 todavía no trae a todas las operadoras. Las de 2023 y 2024 se usan solo
