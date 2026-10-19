@@ -324,10 +324,11 @@ addEventListener('resize', fit); fit();
 <line x1="262" y1="540" x2="318" y2="540" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="140" y="628" text-anchor="middle" font-size="20" fill="#4A5568">un cargador por fuente</text>
 <rect x="620" y="50" width="560" height="590" rx="20" fill="#2F6FB5"/>
-<rect x="650" y="80" width="500" height="120" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
-<text x="900.0" y="118" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Entity linking</text>
-<text x="900.0" y="148" text-anchor="middle" font-size="22" fill="#FFFFFF">empresa → LEI → grupo · ensayo → fármaco</text>
-<text x="900.0" y="178" text-anchor="middle" font-size="22" fill="#FFFFFF">cada enlace con su evidencia (PROV-O)</text>
+<rect x="650" y="72" width="500" height="136" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="900.0" y="110" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Entity linking y texto → dato</text>
+<text x="900.0" y="138" text-anchor="middle" font-size="20" fill="#FFFFFF">empresa → LEI → grupo · ensayo → fármaco</text>
+<text x="900.0" y="166" text-anchor="middle" font-size="20" fill="#FFFFFF">motivo escrito → motivo clasificado</text>
+<text x="900.0" y="194" text-anchor="middle" font-size="20" fill="#FFFFFF">cada uno con su evidencia (PROV-O)</text>
 <rect x="650" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
 <text x="770.0" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Ontología</text>
 <text x="770.0" y="288" text-anchor="middle" font-size="22" fill="#FFFFFF">el diccionario</text>
@@ -343,29 +344,32 @@ addEventListener('resize', fit); fit();
 <text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>
 <line x1="562" y1="270" x2="618" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <line x1="900" y1="352" x2="900" y2="396" stroke="#FFFFFF" stroke-width="2.5" marker-end="url(#white)"/>
-<rect x="1250" y="50" width="380" height="230" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<rect x="1250" y="50" width="380" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="1440.0" y="88" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">App Rastro (dos dominios)</text>
-<text x="1440.0" y="118" text-anchor="middle" font-size="22" fill="#4A5568">preguntas: el LLM lee el</text>
-<text x="1440.0" y="148" text-anchor="middle" font-size="22" fill="#4A5568">diccionario y escribe SPARQL</text>
-<text x="1440.0" y="178" text-anchor="middle" font-size="22" fill="#4A5568">textos: el grafo elige los</text>
-<text x="1440.0" y="208" text-anchor="middle" font-size="22" fill="#4A5568">registros; el LLM los resume</text>
-<text x="1440.0" y="238" text-anchor="middle" font-size="22" fill="#4A5568">y cita cada uno</text>
-<rect x="1250" y="300" width="380" height="100" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1440.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Otras herramientas</text>
-<text x="1440.0" y="368" text-anchor="middle" font-size="22" fill="#4A5568">cualquier cliente SPARQL</text>
-<rect x="1250" y="420" width="380" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1440.0" y="458" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB federa</text>
-<text x="1440.0" y="488" text-anchor="middle" font-size="22" fill="#4A5568">Rastro + MeSH + Wikidata</text>
-<rect x="1250" y="560" width="380" height="80" rx="14" fill="#F7F6F2" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
-<text x="1440.0" y="608.6666666666666" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Wikidata</text>
-<line x1="1182" y1="165" x2="1248" y2="165" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="1182" y1="350" x2="1248" y2="350" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="1182" y1="470" x2="1248" y2="470" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="1440" y1="532" x2="1440" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<polyline points="562,560 600,560 600,662 1215,662 1215,500 1246,500" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1440.0" y="118" text-anchor="middle" font-size="22" fill="#4A5568">el LLM lee el diccionario</text>
+<text x="1440.0" y="148" text-anchor="middle" font-size="22" fill="#4A5568">y escribe la consulta SPARQL</text>
+<rect x="1250" y="196" width="380" height="150" rx="14" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="1440.0" y="234" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphRAG anclado</text>
+<text x="1440.0" y="264" text-anchor="middle" font-size="22" fill="#14213D">el grafo elige los registros;</text>
+<text x="1440.0" y="294" text-anchor="middle" font-size="22" fill="#14213D">el LLM resume solo sus textos</text>
+<text x="1440.0" y="324" text-anchor="middle" font-size="22" fill="#14213D">y cita cada uno</text>
+<rect x="1250" y="362" width="380" height="76" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="400" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Otras herramientas</text>
+<text x="1440.0" y="428" text-anchor="middle" font-size="20" fill="#4A5568">cualquier cliente SPARQL</text>
+<rect x="1250" y="454" width="380" height="90" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="492" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB federa</text>
+<text x="1440.0" y="520" text-anchor="middle" font-size="20" fill="#4A5568">Rastro + MeSH + Wikidata</text>
+<rect x="1250" y="572" width="380" height="70" rx="14" fill="#F7F6F2" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
+<text x="1440.0" y="615.6666666666666" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Wikidata</text>
+<line x1="1182" y1="115" x2="1248" y2="115" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="270" x2="1248" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="400" x2="1248" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="490" x2="1248" y2="490" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1440" y1="546" x2="1440" y2="568" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<polyline points="562,560 600,560 600,662 1215,662 1215,515 1246,515" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 </svg>
 </div>
-<aside>De izquierda a derecha. Las fuentes públicas de cada dominio se cargan tal como vienen, en Postgres; MeSH, también en GraphDB. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL; hay uno por dominio. Los datos no se mueven. La usa la app, de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; para textos, el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno (GraphRAG anclado en la capa). También la usan otras herramientas que hablen SPARQL, y GraphDB, que puede unirla con MeSH y Wikidata en una sola consulta.</aside>
+<aside>De izquierda a derecha. Las fuentes públicas de cada dominio se cargan tal como vienen, en Postgres; MeSH, también en GraphDB. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL; hay uno por dominio. Los datos no se mueven. El entity linking también convierte texto en datos: el motivo escrito de cada ensayo detenido pasa a ser un motivo clasificado, con su evidencia. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la usan otras herramientas que hablen SPARQL, y GraphDB, que puede unirla con MeSH y Wikidata en una sola consulta.</aside>
 </section>
 </div>
 <div class="slide">
@@ -472,8 +476,8 @@ addEventListener('resize', fit); fit();
 <text x="1600" y="60" text-anchor="end" font-size="20" fill="#4A5568">▷ es un tipo de (subclase)</text>
 <rect x="540" y="300" width="300" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
 <text x="690.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Ensayo</text>
-<text x="690.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">fase · estado</text>
-<text x="690.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">fecha de inicio · título</text>
+<text x="690.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">fase · estado · título</text>
+<text x="690.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">motivo (clasificado)</text>
 <rect x="1010" y="300" width="280" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
 <text x="1150.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Fármaco</text>
 <text x="1150.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">nombre · ChEMBL ID</text>
@@ -494,10 +498,10 @@ addEventListener('resize', fit); fit();
 <text x="1545.0" y="618" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Reacción reportada</text>
 <text x="1545.0" y="646" text-anchor="middle" font-size="20" fill="#4A5568">reacción · reportes</text>
 <rect x="930" y="560" width="230" height="140" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
-<text x="1045.0" y="598" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Enlace</text>
-<text x="1045.0" y="625" text-anchor="middle" font-size="19" fill="#4A5568">evidencia: texto del</text>
-<text x="1045.0" y="652" text-anchor="middle" font-size="19" fill="#4A5568">sponsor, coincidencia</text>
-<text x="1045.0" y="679" text-anchor="middle" font-size="19" fill="#4A5568">y regla (PROV-O)</text>
+<text x="1045.0" y="598" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Evidencia</text>
+<text x="1045.0" y="625" text-anchor="middle" font-size="19" fill="#4A5568">de cada enlace y</text>
+<text x="1045.0" y="652" text-anchor="middle" font-size="19" fill="#4A5568">de cada motivo:</text>
+<text x="1045.0" y="679" text-anchor="middle" font-size="19" fill="#4A5568">texto y regla (PROV-O)</text>
 <line x1="842" y1="380" x2="1006" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="924.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">prueba el fármaco</text>
 <line x1="1292" y1="380" x2="1396" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>

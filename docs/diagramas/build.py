@@ -63,7 +63,7 @@ def architecture():
     b.append(f'<text x="140" y="628" text-anchor="middle" font-size="20" fill="{GRAY}">un cargador por fuente</text>')
     # Capa semántica
     b.append(f'<rect x="620" y="50" width="560" height="590" rx="20" fill="{BLUE}"/>')
-    b.append(box(650, 80, 500, 120, "Entity linking", ["empresa → LEI → grupo · ensayo → fármaco", "cada enlace con su evidencia (PROV-O)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
+    b.append(box(650, 72, 500, 136, "Entity linking y texto → dato", ["empresa → LEI → grupo · ensayo → fármaco", "motivo escrito → motivo clasificado", "cada uno con su evidencia (PROV-O)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4", sub=20))
     b.append(box(650, 220, 240, 130, "Ontología", ["el diccionario", "de cada dominio"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
     b.append(box(910, 220, 240, 130, "Mapeos", ["columna → concepto", "(R2RML)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
     b.append(box(650, 400, 500, 130, "Ontop, uno por dominio", ["traduce cada consulta SPARQL", "a SQL sobre Postgres"], fill="#FFFFFF", color=INK, stroke="#FFFFFF"))
@@ -71,15 +71,17 @@ def architecture():
     b.append(arrow(562, 270, 618, 270))
     b.append(arrow(900, 352, 900, 396, color="#FFFFFF", head="white"))
     # Quién la usa
-    b.append(box(1250, 50, 380, 230, "App Rastro (dos dominios)", ["preguntas: el LLM lee el", "diccionario y escribe SPARQL", "textos: el grafo elige los", "registros; el LLM los resume", "y cita cada uno"]))
-    b.append(box(1250, 300, 380, 100, "Otras herramientas", ["cualquier cliente SPARQL"]))
-    b.append(box(1250, 420, 380, 110, "GraphDB federa", ["Rastro + MeSH + Wikidata"]))
-    b.append(box(1250, 560, 380, 80, "Wikidata", [], fill=LIGHT, dash=True))
-    b.append(arrow(1182, 165, 1248, 165))
-    b.append(arrow(1182, 350, 1248, 350))
-    b.append(arrow(1182, 470, 1248, 470))
-    b.append(arrow(1440, 532, 1440, 556))
-    b.append(f'<polyline points="562,560 600,560 600,662 1215,662 1215,500 1246,500" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
+    b.append(box(1250, 50, 380, 130, "App Rastro (dos dominios)", ["el LLM lee el diccionario", "y escribe la consulta SPARQL"]))
+    b.append(box(1250, 196, 380, 150, "GraphRAG anclado", ["el grafo elige los registros;", "el LLM resume solo sus textos", "y cita cada uno"], fill="#E8F0FA", stroke=BLUE))
+    b.append(box(1250, 362, 380, 76, "Otras herramientas", ["cualquier cliente SPARQL"], sub=20))
+    b.append(box(1250, 454, 380, 90, "GraphDB federa", ["Rastro + MeSH + Wikidata"], sub=20))
+    b.append(box(1250, 572, 380, 70, "Wikidata", [], fill=LIGHT, dash=True))
+    b.append(arrow(1182, 115, 1248, 115))
+    b.append(arrow(1182, 270, 1248, 270))
+    b.append(arrow(1182, 400, 1248, 400))
+    b.append(arrow(1182, 490, 1248, 490))
+    b.append(arrow(1440, 546, 1440, 568))
+    b.append(f'<polyline points="562,560 600,560 600,662 1215,662 1215,515 1246,515" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
     return svg(1664, 680, "\n".join(b))
 
 
@@ -98,14 +100,14 @@ def ontology():
     b.append(arrow(1455, 207, 1210, 298, head="sub"))
     b.append(f'<text x="1600" y="60" text-anchor="end" font-size="20" fill="{GRAY}">▷ es un tipo de (subclase)</text>')
     # Centro
-    b.append(box(540, 300, 300, 160, "Ensayo", ["fase · estado", "fecha de inicio · título"], fill=LIGHT, stroke=INK))
+    b.append(box(540, 300, 300, 160, "Ensayo", ["fase · estado · título", "motivo (clasificado)"], fill=LIGHT, stroke=INK))
     b.append(box(1010, 300, 280, 160, "Fármaco", ["nombre · ChEMBL ID", "aprobado"], fill=LIGHT, stroke=INK))
     b.append(box(1400, 300, 240, 160, "Target", ["nombre · gen"], fill=LIGHT, stroke=INK))
     b.append(box(40, 320, 260, 120, "Sponsor", ["nombre · es industria"], fill=LIGHT, stroke=INK))
     b.append(box(540, 560, 300, 130, "Condición", ["descriptor de MeSH"], fill=LIGHT, stroke=INK))
     b.append(box(1180, 580, 230, 110, "Reportes por año", ["año · reportes · serios"], size=24, sub=20))
     b.append(box(1430, 580, 230, 110, "Reacción reportada", ["reacción · reportes"], size=24, sub=20))
-    b.append(box(930, 560, 230, 140, "Enlace", ["evidencia: texto del", "sponsor, coincidencia", "y regla (PROV-O)"], size=24, sub=19, dash=True))
+    b.append(box(930, 560, 230, 140, "Evidencia", ["de cada enlace y", "de cada motivo:", "texto y regla (PROV-O)"], size=24, sub=19, dash=True))
     b.append(arrow(842, 380, 1006, 380, "prueba el fármaco"))
     b.append(arrow(1292, 380, 1396, 380, "actúa sobre"))
     b.append(arrow(538, 380, 304, 380, "sponsor"))
@@ -169,9 +171,11 @@ for name, drawing, sid, label, title, notes in [
      "De izquierda a derecha. Las fuentes públicas de cada dominio se cargan tal como vienen, en Postgres; MeSH, también en GraphDB. "
      "La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la "
      "ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce "
-     "cada consulta a SQL; hay uno por dominio. Los datos no se mueven. La usa la app, de dos formas: para preguntas, el LLM "
-     "lee el diccionario y escribe la consulta; para textos, el grafo elige los registros con una consulta exacta y "
-     "el LLM resume solo esos textos, citando cada uno (GraphRAG anclado en la capa). También la usan otras "
+     "cada consulta a SQL; hay uno por dominio. Los datos no se mueven. El entity linking también convierte texto en "
+     "datos: el motivo escrito de cada ensayo detenido pasa a ser un motivo clasificado, con su evidencia. La usa la "
+     "app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en "
+     "la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada "
+     "uno. También la usan otras "
      "herramientas que hablen SPARQL, y GraphDB, que puede unirla con MeSH y Wikidata en una sola consulta."),
     ("ontologia-proveedores", ontology_suppliers(), "ontologiaprov", "El diccionario de proveedores",
      "Contratos, empresas y grupos",
