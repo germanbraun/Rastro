@@ -1,0 +1,256 @@
+# Lo propio del dominio de proveedores en la app (lo dibuja app/dominio.py).
+# Rutas dentro del contenedor de la app.
+
+domain: proveedores            # el de layer/dominios.yaml: endpoint, diccionario y notas para el LLM
+resumen: >-
+  Datos públicos de EE. UU.: contratos federales (USAspending), sectores (NAICS),
+  identificador global de empresas (GLEIF), listas de control (trade.gov) y Wikidata.
+ejemplo_libre: "Por ejemplo: ¿qué grupos tienen más contratos con la NASA?"
+evaluacion: /layer/proveedores/resultados.json
+cambio: /layer/proveedores/cambio/resultado.json
+ontologia: /ontology/proveedores/proveedores.ttl
+
+# Fuentes: nombre corto para los encabezados del modo técnico
+fuentes:
+  usaspending: USAspending
+  naics: NAICS
+  gleif: GLEIF
+  csl: Lista Consolidada
+  wikidata: Wikidata
+  rastro: enlace Rastro
+nota_rastro: >-
+  Los grupos y los enlaces entre fuentes, que Rastro resuelve una vez y guarda con su evidencia
+
+# Cómo se muestran las columnas de las respuestas
+columnas:
+  group: Grupo
+  companies: Empresas
+  contracts: Contratos
+  total: Monto total (US$)
+  agency: Agencia
+  groupTotal: Con el grupo (US$)
+  agencyTotal: Total de la agencia (US$)
+  share: Parte del grupo
+  supplier: Proveedor
+  finalParent: Matriz final
+  country: País
+  who: Quién
+  name: Nombre
+  entry: Entrada de la lista
+  list: Lista
+  matched: Coincidió
+  rule: Regla
+  suppliers: Proveedores
+  stockExchange: Bolsa
+  headquarters: Sede
+  wikidata: Wikidata
+  uei: UEI
+  sourceText: Evidencia
+  source: Fuente
+formatos:                      # dinero: separador de miles; porcentaje: 0,67 → 67 %
+  total: dinero
+  groupTotal: dinero
+  agencyTotal: dinero
+  share: porcentaje
+
+# Las preguntas de ejemplo: la consulta de ontology/proveedores/queries/, la pregunta en
+# palabras simples (modo negocio) y la evidencia que muestra «¿Cómo lo supe?»
+preguntas:
+  - id: p01
+    query: /ontology/proveedores/queries/cq1.rq
+    simple: ¿Cuánto le contrata el gobierno al grupo Leidos, contando todas sus empresas?
+    tecnica: ¿Cuánto suman los contratos del grupo Leidos, contando todas sus empresas?
+    ventaja: El grupo se arma solo. USAspending reparte a Leidos en seis matrices distintas; Rastro las une con la matriz final que registra GLEIF.
+    terminos:
+      Grupo: la empresa matriz y todas sus filiales.
+    evidencia:
+      texto: "Por qué cada empresa es parte del grupo Leidos (algunos ejemplos):"
+      formato: "**{proveedor}**: {evidencia}"
+      query: |
+        SELECT (MIN(?n) AS ?proveedor) ?evidencia WHERE {
+          ?g :name "LEIDOS HOLDINGS, INC." .
+          ?l a :GroupLink ; :linkTo ?g ; :linkFrom/:name ?n ; :sourceText ?evidencia .
+        } GROUP BY ?evidencia ORDER BY ?proveedor LIMIT 6
+
+  - id: p08
+    query: /ontology/proveedores/queries/cq8.rq
+    simple: «Science Applications International Corporation», ¿es de Leidos o de SAIC?
+    tecnica: ¿A qué grupo pertenece «Science Applications International Corporation», y por qué?
+    ventaja: El nombre confuso se resuelve una vez. En 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. Rastro no le suma a Leidos los contratos de la SAIC de hoy, y la evidencia dice por qué.
+    terminos:
+      UEI: el número con el que cada empresa se registra para venderle al gobierno de EE. UU.
+      LEI: el identificador global de empresas (GLEIF), el mismo en todo el mundo.
+    evidencia:
+      texto: "Por qué la SAIC de hoy (UEI MMLKPW9JLX64) es del grupo SAIC y no de Leidos:"
+      formato: "{evidencia}"
+      query: |
+        SELECT ?evidencia WHERE {
+          ?s :uei "MMLKPW9JLX64" . ?l a :GroupLink ; :linkFrom ?s ; :sourceText ?evidencia .
+        }
+
+  - id: p02
+    query: /ontology/proveedores/queries/cq2.rq
+    simple: ¿Qué cinco grupos le venden más servicios informáticos al gobierno?
+    tecnica: ¿Cuáles son los 5 grupos con más contratos en servicios informáticos, incluidos sus subsectores?
+    ventaja: «Servicios informáticos» incluye solo todos sus subsectores, y cada contrato se suma a su grupo.
+    terminos:
+      Servicios informáticos: el sector 5415 de la clasificación NAICS (diseño de sistemas, programación a medida, administración de equipos…).
+    evidencia:
+      texto: "«Servicios informáticos» incluye estos sectores:"
+      formato: "{codigo} · {sector}"
+      query: |
+        SELECT ?codigo ?sector WHERE {
+          ?it :code "5415" . ?s :within ?it ; :code ?codigo ; :name ?sector .
+        } ORDER BY ?codigo
+
+  - id: p03
+    query: /ontology/proveedores/queries/cq3.rq
+    simple: ¿Qué organismos le dan más de un tercio de su gasto a un solo grupo?
+    tecnica: ¿Qué agencias concentran más de un tercio de su gasto en un solo grupo?
+    ventaja: "La concentración se mide por grupo, no por cada empresa suelta: si no, se esconde."
+
+  - id: p04
+    query: /ontology/proveedores/queries/cq4.rq
+    simple: ¿Qué proveedores pertenecen a grupos con su casa matriz fuera de EE. UU.?
+    tecnica: ¿Qué proveedores tienen su matriz final fuera de EE. UU.?
+    ventaja: «Matriz extranjera» está definida una vez y la usan varias preguntas; el LEI une USAspending con GLEIF.
+    terminos:
+      Matriz final: la empresa que está arriba de todo en el grupo, según GLEIF.
+    evidencia:
+      texto: "Cómo sabe Rastro dónde está la matriz final (algunos ejemplos):"
+      formato: "**{proveedor}**: {evidencia}"
+      query: |
+        SELECT (MIN(?n) AS ?proveedor) ?evidencia WHERE {
+          ?s a :ForeignParentSupplier ; :name ?n .
+          ?l a :GroupLink ; :linkFrom ?s ; :sourceText ?evidencia .
+          FILTER (CONTAINS(?evidencia, "matriz final en GLEIF es"))
+        } GROUP BY ?evidencia ORDER BY ?proveedor LIMIT 5
+
+  - id: p05
+    query: /ontology/proveedores/queries/cq5.rq
+    simple: ¿Algún proveedor, o su grupo, aparece en una lista de control del gobierno?
+    tecnica: ¿Algún proveedor, o su grupo, aparece en una lista de control del gobierno?
+    ventaja: Cada coincidencia dice qué nombre coincidió y con qué regla, para que compliance la revise en un minuto.
+    terminos:
+      Lista de control: las listas de sanciones y restricciones del gobierno de EE. UU. (OFAC, Comercio, Estado).
+    evidencia:
+      texto: "Lo que dice cada fuente, lado a lado:"
+      formato: "{evidencia} → {regla}"
+      query: |
+        SELECT DISTINCT ?evidencia ?regla WHERE {
+          ?l a :WatchlistLink ; :linkFrom ?x ; :sourceText ?evidencia ; :linkRule ?regla . ?x a :Supplier .
+        } ORDER BY ?evidencia
+
+  - id: p06
+    query: /ontology/proveedores/queries/cq6.rq
+    simple: ¿Con cuántas empresas contrata obras el Departamento de Defensa?
+    tecnica: ¿Cuántos proveedores distintos tiene el Departamento de Defensa en construcción?
+    ventaja: «Construcción» incluye solo todos sus subsectores (edificios, obras viales, instalaciones…).
+    evidencia:
+      texto: "«Construcción» incluye, entre otros, estos sectores:"
+      formato: "{codigo} · {sector}"
+      query: |
+        SELECT ?codigo ?sector WHERE {
+          ?c :code "23" . ?s :within ?c ; :code ?codigo ; :name ?sector . FILTER (STRLEN(?codigo) = 3)
+        } ORDER BY ?codigo
+
+  - id: p07
+    query: /ontology/proveedores/queries/cq7.rq
+    simple: ¿Qué grupos que cotizan en bolsa le facturan más de mil millones de dólares al gobierno?
+    tecnica: ¿Qué grupos que cotizan en bolsa tienen contratos por más de US$1.000 millones, y dónde tienen su sede?
+    ventaja: Un identificador compartido (el LEI) trae datos de otra organización, Wikidata, sin integrarla a mano.
+    evidencia:
+      texto: "Cada grupo se une con Wikidata por su LEI (algunos ejemplos):"
+      formato: "**{grupo}** · LEI {lei} → Wikidata {wikidata}"
+      query: |
+        SELECT ?grupo ?lei ?wikidata WHERE {
+          ?g :listed true ; :name ?grupo ; :wikidataId ?wikidata ; :legalEntity/:lei ?lei .
+        } ORDER BY ?grupo LIMIT 5
+
+  - id: p09
+    query: /ontology/proveedores/queries/cq9.rq
+    simple: ¿Cuánto le contrata cada organismo a proveedores que compliance tendría que mirar?
+    tecnica: ¿Cuánto contrata cada agencia con proveedores para revisar?
+    ventaja: «Proveedor para revisar» es una regla de negocio escrita una vez en el diccionario; Rastro la aplica sola.
+    terminos:
+      Proveedor para revisar: su casa matriz está fuera de EE. UU. o su nombre coincide con una lista de control.
+    definicion: |
+      :ForeignParentSupplier rdfs:subClassOf :SupplierToReview .
+      :WatchlistSupplier     rdfs:subClassOf :SupplierToReview .
+
+# «Por qué confiar»: {números} se completan con la evaluación y la prueba de cambio
+tarjetas:
+  - titulo: La misma pregunta, la misma respuesta
+    valor: "{c_consistent} de {n_consistency}"
+    compara: "Sin Rastro: {b_consistent} de {n_consistency}"
+  - titulo: Si una base cambia, se arregla con
+    valor: 1 línea
+    compara: "Sin Rastro: reescribir {b_broken} consultas"
+  - titulo: Cada respuesta se puede auditar
+    valor: Sí
+    compara: Con la evidencia de cada grupo y cada enlace
+
+cambios:
+  - titulo: Cambia cómo se escribe un valor
+    que: USAspending publica una versión nueva y los montos pasan a estar en miles de dólares.
+    sql: UPDATE usaspending.contract SET amount = amount / 1000;
+    antes: valores
+    despues: valores-arreglado
+    arreglo:
+      - "naics_code, amount, start_date, end_date, description"
+      - "naics_code, amount * 1000 AS amount, start_date, end_date, description"
+  - titulo: Cambia el nombre de una columna
+    que: USAspending publica una versión nueva y la columna de la agencia cambia de nombre.
+    sql: ALTER TABLE usaspending.contract RENAME COLUMN awarding_agency TO agency_name;
+    antes: renombrar
+    despues: renombrar-arreglado
+    arreglo:
+      - "SELECT generated_internal_id, award_id, recipient_uei, awarding_agency, awarding_sub_agency,"
+      - "SELECT generated_internal_id, award_id, recipient_uei, agency_name AS awarding_agency, awarding_sub_agency,"
+
+faq:
+  - pregunta: ¿Qué muestra este segundo dominio?
+    respuesta: >-
+      Que Rastro sirve para cualquier dominio. Es el mismo Rastro, con otros datos: los contratos
+      federales de EE. UU. de más de US$10 millones del año fiscal 2025 (36.145), las empresas que los
+      reciben, sus grupos y las listas de control del gobierno. Un caso de compras, riesgo y compliance.
+  - pregunta: ¿Qué es un grupo, y por qué cuesta armarlo?
+    respuesta: >-
+      Un grupo es una empresa matriz con todas sus filiales. USAspending registra la matriz de cada
+      proveedor, pero reparte un mismo grupo en varias matrices: Leidos figura en seis. Rastro las une
+      con el identificador global de empresas (LEI) y la matriz final que registra GLEIF, y guarda por
+      qué. Sin Rastro, cada consulta tiene que resolverlo de nuevo.
+  - pregunta: ¿Por qué no se cuentan los contratos de SAIC en Leidos?
+    respuesta: >-
+      En 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. USAspending
+      todavía registra a Leidos como una matriz anterior de la SAIC de hoy, y GLEIF, al buscar el nombre,
+      devuelve primero a Leidos (es su nombre anterior). Rastro usa el nombre legal actual y deja a SAIC en
+      su grupo; la evidencia muestra lo que se descartó y por qué.
+  - pregunta: ¿Una coincidencia con una lista de control significa que la empresa está sancionada?
+    respuesta: >-
+      No. Es un nombre igual después de quitar mayúsculas, puntuación y «Inc.» o «LLC». Rastro muestra lo
+      que dice cada fuente, con el país de cada lado, para que alguien lo revise. En estos datos, todas
+      las coincidencias son homónimos de otros países.
+  - pregunta: ¿Qué tan seguros son los enlaces con GLEIF?
+    respuesta: >-
+      En una muestra al azar de 50 enlaces proveedor → LEI, 46 son seguros, 3 probables (la misma empresa
+      con otra forma societaria) y 1 dudoso: entre 92 % y 98 %. La revisó un asistente de IA; falta que la
+      confirme una persona.
+  - pregunta: ¿Qué es «monto»?
+    respuesta: >-
+      El monto total de cada contrato en toda su vida, como lo publica USAspending, no solo lo que se
+      pagó en 2025.
+  - pregunta: ¿Cómo se midió la comparación con y sin Rastro?
+    tecnico: true
+    respuesta: >-
+      El mismo LLM (subagentes de Claude Code, Claude Opus 5.5, que solo vieron el prompt) respondió las 9
+      preguntas de dos formas: SQL sobre las tablas de las fuentes tal como se cargaron, y SPARQL sobre el
+      segundo Ontop. Las referencias salen de Rastro y las escribió un asistente de IA, así que donde las
+      dos formas difieren se revisó con los datos (`layer/proveedores/adjudicacion.md`).
+  - pregunta: ¿Dónde está cada pieza?
+    tecnico: true
+    respuesta: >-
+      Datos en Postgres, un esquema por fuente (`usaspending`, `naics`, `csl`, `gleif`, `wikidata`); grupos
+      y enlaces en el esquema `proveedores` (`linking/proveedores/`); un segundo Ontop en el puerto 8081 con
+      su ontología (`ontology/proveedores/`) y sus mapeos (`mappings/proveedores.r2rml.ttl`). Cada enlace
+      se expone con PROV-O.

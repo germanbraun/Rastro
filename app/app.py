@@ -1,6 +1,9 @@
 """Rastro Layer: la demo.
 
-Dos pestañas:
+Un selector de dominio (app/dominios.yaml): oncología se dibuja acá; los demás dominios,
+con dominio.py y su archivo de configuración.
+
+Pestañas de oncología:
   Preguntar          una pregunta en lenguaje natural; la respuesta trae la fuente de
                      cada columna y un "¿cómo lo supe?" con la query
   Con y sin Rastro   las 20 preguntas de la evaluación, respondidas por el LLM solo,
@@ -142,7 +145,8 @@ def sources():
         PREFIX : <https://w3id.org/rastro/ontology#>
         SELECT ?id ?name ?license WHERE { ?s a :DataSource ; :name ?name ; :license ?license .
           BIND (STRAFTER(STR(?s), "/source/") AS ?id) }""")
-    return {r[0]: {"name": r[1], "license": r[2]} for r in rows}
+    # rastro_meta.source tiene las fuentes de todos los dominios: acá van las de oncología
+    return {r[0]: {"name": r[1], "license": r[2]} for r in rows if r[0] in STORAGE}
 
 
 def admin():
@@ -424,10 +428,22 @@ def show_answer(query, columns, rows, note=None):
 st.title("Rastro")
 st.markdown("**Los datos cambian. Tus preguntas, no.**")
 
+# Dominios: oncología tiene su pantalla en este archivo; los demás se dibujan con dominio.py
+# a partir de su configuración (app/dominios.yaml)
+DOMAINS = yaml.safe_load(Path("/app/dominios.yaml").read_text())
 available, status = llm_status()
 with st.sidebar:
+    DOMAIN = st.radio("Dominio", DOMAINS, format_func=lambda d: d["name"], key="domain")
     TECH = st.toggle("Ver detalles técnicos", value=False,
                      help="Muestra las consultas, el SQL, la evidencia en PROV-O y la comparación completa.")
+if DOMAIN.get("config"):
+    sys.path.insert(0, "/app")
+    import dominio  # noqa: E402
+
+    dominio.render(DOMAIN["config"], TECH)
+    st.stop()
+
+with st.sidebar:
     if TECH:
         st.subheader("LLM")
         st.markdown(("🟢 " if available else "⚪ ") + status)

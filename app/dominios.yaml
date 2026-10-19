@@ -1,0 +1,7 @@
+# Los dominios que muestra la app. Oncología tiene su propia pantalla (app.py); los demás
+# se dibujan con dominio.py a partir de su archivo de configuración.
+- id: oncologia
+  name: Oncología
+- id: proveedores
+  name: Proveedores del Estado de EE. UU.
+  config: /app/dominios/proveedores.yaml

@@ -304,9 +304,13 @@ def column_sources(query, domain="oncologia"):
         others = {direct_source(p) for s, p, o in triples if s == subject} - {None, "rastro", "mesh"}
         return others.pop() if len(others) == 1 else None
 
-    all_sources = {source_of(s, p) for s, p, o in triples} - {None}
+    def steps(predicate):
+        """Los términos de un camino (:supplier/:group) o el término solo."""
+        return [x for a in predicate.args for x in steps(a)] if hasattr(predicate, "args") else [predicate]
+
+    all_sources = {source_of(s, q) for s, p, o in triples for q in steps(p)} - {None}
     per_column = {}
     for var in algebra.get("PV", []):
-        direct = {source_of(s, p) for s, p, o in triples if o == var} - {None}
+        direct = {source_of(s, steps(p)[-1]) for s, p, o in triples if o == var} - {None}
         per_column[str(var)] = sorted(direct or all_sources)
     return sorted(all_sources), per_column

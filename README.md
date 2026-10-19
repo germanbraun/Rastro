@@ -29,7 +29,7 @@ docker compose up -d
 
 | Servicio | URL local | Qué es |
 |---|---|---|
-| **Demo de Rastro Layer** | **http://localhost:8501** | Preguntar en lenguaje natural y comparar con y sin Rastro |
+| **Demo de Rastro Layer** | **http://localhost:8501** | Preguntar en lenguaje natural y comparar con y sin Rastro; un selector cambia de dominio (oncología o proveedores del Estado) |
 | Postgres | `localhost:5434` (usuario y clave `rastro`) | Fuentes relacionales, un esquema por fuente, y `rastro_meta` con el registro de fuentes y cargas |
 | Ontop | http://localhost:8080 | Endpoint SPARQL virtual sobre Postgres; recarga `ontology/` y `mappings/` al editarlos |
 | Ontop de proveedores | http://localhost:8081 | El segundo dominio (proveedores del Estado), con su ontología y sus mapeos |
