@@ -8,7 +8,7 @@ LANGUAGE sql IMMUTABLE AS $$
     SELECT trim(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
         replace(replace(upper(coalesce(name, '')), '.', ''), '&', ' AND '),
         '[^A-Z0-9 ]', ' ', 'g'),
-        '\m(THE|INC|INCORPORATED|LLC|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC|PLLC|PC|GMBH|AG|SA|NV|BV)\M', ' ', 'g'),
+        '\m(THE|INC|INCORPORATED|LLC|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC|PLLC|PC|GMBH|AG|SA|NV|BV|SPA|SRL|SAS|PTY|SE)\M', ' ', 'g'),
         '\s+', ' ', 'g'), '^\s+|\s+$', '', 'g'))
 $$;
 
@@ -47,7 +47,14 @@ JOIN gleif.lei_record r ON r.lei = c.lei
 CROSS JOIN LATERAL (SELECT r.legal_name AS gleif_name, true AS legal
                     UNION ALL SELECT unnest(r.other_names), false) o
 WHERE length(proveedores.normalize(n.name)) >= 3
-  AND proveedores.normalize(o.gleif_name) = proveedores.normalize(n.name);
+  AND proveedores.normalize(o.gleif_name) = proveedores.normalize(n.name)
+UNION ALL
+-- LEI revisados (data/gleif/lei-revisados.csv): le ganan a cualquier regla
+SELECT n.kind, n.uei, n.name, r.lei, r.legal_name, r.legal_name, true, r.entity_status, 0,
+       n.state, r.region, r.hq_region
+FROM proveedores.company_name n
+JOIN gleif.lei_reviewed v ON v.name = n.name
+JOIN gleif.lei_record r ON r.lei = v.lei;
 DELETE FROM proveedores.lei_candidate WHERE priority IS NULL;
 -- Sin ubicación para comparar, solo se aceptan entidades activas
 DELETE FROM proveedores.lei_candidate WHERE priority >= 5 AND entity_status <> 'ACTIVE';
@@ -69,7 +76,8 @@ SELECT kind, uei, lei,
        'USAspending: ' || rtrim(name, '.') || coalesce(' (' || state || ')', '')
        || '. GLEIF: ' || gleif_name || coalesce(' (' || coalesce(hq_region, region) || ')', '')
        || CASE WHEN entity_status <> 'ACTIVE' THEN ', inactiva' ELSE '' END AS source_text,
-       CASE priority WHEN 1 THEN 'nombre legal y estado'
+       CASE priority WHEN 0 THEN 'LEI revisado: ' || (SELECT v.reason FROM gleif.lei_reviewed v WHERE v.name = r.name)
+                     WHEN 1 THEN 'nombre legal y estado'
                      WHEN 2 THEN 'nombre legal y país'
                      WHEN 3 THEN 'nombre anterior y estado'
                      WHEN 4 THEN 'nombre legal (proveedor fuera de EE. UU.)'
@@ -103,6 +111,15 @@ FROM proveedores.lei_link l
 JOIN proveedores.lei_final_parent f ON f.lei = l.lei
 JOIN gleif.lei_record top ON top.lei = f.final_lei
 WHERE l.kind = 'group' AND l.uei = sg.matrix_uei;
+
+-- Correcciones revisadas (correcciones.csv): proveedores que hoy son de un grupo y que ni
+-- USAspending ni GLEIF ponen ahí. Cada una dice por qué; se aplica al proveedor o a su matriz.
+UPDATE proveedores.supplier_group sg
+SET group_id = c.group_lei,
+    source_text = sg.source_text || '. Corrección revisada: ' || c.reason,
+    rule = 'corrección revisada'
+FROM proveedores.correction c
+WHERE c.uei IN (sg.supplier_uei, sg.matrix_uei);
 
 DROP TABLE IF EXISTS proveedores.group_company;
 CREATE TABLE proveedores.group_company AS

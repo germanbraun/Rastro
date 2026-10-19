@@ -3,16 +3,20 @@
 Las respuestas las escribe un LLM que solo ve el prompt (subagentes, a mano o con otro
 asistente): este script le da el prompt, ejecuta cada query que propone y puntúa.
 
-    prompt <q> <n> <B|C>   el prompt de la pregunta q; n = 0 es la pregunta de la evaluación
+    prompt <q> <n> <B|D|C> el prompt de la pregunta q; n = 0 es la pregunta de la evaluación
                            y n = 1, 2, 3 son sus otras formas (consistencia/parafrasis.yaml)
-    try <q> <n> <B|C>      ejecuta una query (por stdin), guarda el intento y muestra el
+    try <q> <n> <B|D|C>    ejecuta una query (por stdin), guarda el intento y muestra el
                            resultado o el error, con el mensaje para devolverle al LLM
+    rerun                  vuelve a ejecutar las queries guardadas (si cambiaron los datos), sin
+                           pedirle nada nuevo al LLM
     puntaje                calcula las referencias, puntúa todo y escribe resultados.json
                            (lo lee la app) y resultados.md
 
 B es sin Rastro: SQL sobre las tablas de las fuentes tal como se cargaron.
+D es la línea de base justa: SQL sobre las mismas tablas más las tablas de Rastro
+(esquema proveedores), documentadas con lo mismo que dice el diccionario.
 C es con Rastro: SPARQL sobre el segundo Ontop. Cada respuesta queda en
-respuestas/<q>-<n>-<B|C>.json.
+respuestas/<q>-<n>-<B|D|C>.json.
 
     docker compose run --rm -T layer-eval python /layer/proveedores/evaluar.py prompt p01 0 C
 """
@@ -36,7 +40,7 @@ ANSWERS = HERE / "respuestas"
 SPEC = yaml.safe_load((HERE / "eval" / "questions.yaml").read_text())
 QUESTIONS = {q["id"]: q for q in SPEC["questions"]}
 PARAPHRASES = yaml.safe_load((HERE / "consistencia" / "parafrasis.yaml").read_text()) or {}
-NAMES = {"B": "Sin Rastro (SQL)", "C": "Con Rastro"}
+NAMES = {"B": "Sin Rastro (SQL)", "D": "SQL + enlaces de Rastro", "C": "Con Rastro"}
 TOLERANCE = 0.05    # números: correcto si está a menos del 5 % de la referencia
 MIN_F1 = 0.8        # listas: correcto si coincide en al menos un 80 % (F1)
 
@@ -76,6 +80,17 @@ def attempt(qid, n, approach):
         print(f"ERROR (quedan {left} intentos). Mensaje para el LLM:\n" + retry_message(result["attempt"]["error"]))
     else:
         print(f"OK. Respuesta: {json.dumps(result['answer'], ensure_ascii=False)[:500]}")
+
+
+def rerun():
+    for path in sorted(ANSWERS.glob("*.json")):
+        entry = json.loads(path.read_text())
+        ok = [a for a in entry["attempts"] if a["error"] is None]
+        if ok:
+            qid, _, approach = path.stem.split("-")
+            entry["answer"] = try_query(approach, ok[-1]["query"], QUESTIONS[qid]["kind"], DOMAIN)["answer"]
+            path.write_text(json.dumps(entry, ensure_ascii=False, indent=1))
+    print("Queries guardadas ejecutadas de nuevo.")
 
 
 def normalize(values, items, conn):
@@ -122,12 +137,13 @@ def same(values):
 
 
 def score_all():
+    names = {k: v for k, v in NAMES.items() if any(ANSWERS.glob(f"*-{k}.json"))}  # los que ya tienen respuestas
     results = {"date": date.today().isoformat(), "questions": {}, "totals": {}, "consistency": {}}
     with admin() as conn:
         for qid, q in QUESTIONS.items():
             reference = to_answer(run_sparql(SPEC["prefixes"] + q["reference"], DOMAIN), q["kind"])
             entry = {"question": q["question"], "kind": q["kind"], "reference": reference}
-            for k in NAMES:
+            for k in names:
                 saved = load(qid, 0, k)
                 if saved:
                     entry[k] = {**saved, "ok": score(q, reference, saved.get("answer"), conn)}
@@ -135,12 +151,12 @@ def score_all():
         for qid, others in PARAPHRASES.items():
             q, reference = QUESTIONS[qid], results["questions"][qid]["reference"]
             row = {"texts": [q["question"], *others]}
-            for k in NAMES:
+            for k in names:
                 answers = [(load(qid, n, k) or {}).get("answer") for n in range(len(others) + 1)]
                 row[k] = {"answers": answers, "ok": [score(q, reference, a, conn) for a in answers],
                           "same": same(answers)}
             results["consistency"][qid] = row
-    for k in NAMES:
+    for k in names:
         results["totals"][k] = {
             "correct": sum(e.get(k, {}).get("ok", False) for e in results["questions"].values()),
             "consistent": sum(r[k]["same"] for r in results["consistency"].values()),
@@ -154,21 +170,21 @@ def score_all():
              f"Fecha: {results['date']}. Respuestas escritas por subagentes de Claude Code (Claude Opus 5.5) "
              "que solo vieron el prompt. Las referencias las escribió un asistente de IA; falta que las "
              "confirme una persona.", "",
-             "| | " + " | ".join(NAMES.values()) + " |", "|---|---|---|",
-             f"| Correctas (de {n}) | " + " | ".join(str(results["totals"][k]["correct"]) for k in NAMES) + " |",
+             "| | " + " | ".join(names.values()) + " |", "|---|" + "---|" * len(names),
+             f"| Correctas (de {n}) | " + " | ".join(str(results["totals"][k]["correct"]) for k in names) + " |",
              f"| Misma respuesta en las 4 formas (de {m} preguntas) | "
-             + " | ".join(str(results["totals"][k]["consistent"]) for k in NAMES) + " |",
+             + " | ".join(str(results["totals"][k]["consistent"]) for k in names) + " |",
              f"| Correctas en la prueba de consistencia (de {4 * m}) | "
-             + " | ".join(str(results["totals"][k]["consistent_correct"]) for k in NAMES) + " |",
-             "", "| # | Pregunta | Referencia | " + " | ".join(NAMES.values()) + " |", "|---|---|---|---|---|"]
+             + " | ".join(str(results["totals"][k]["consistent_correct"]) for k in names) + " |",
+             "", "| # | Pregunta | Referencia | " + " | ".join(names.values()) + " |", "|---|---|---|" + "---|" * len(names)]
     for qid, e in results["questions"].items():
-        cells = [("✅ " if e[k]["ok"] else "❌ ") + short(e[k].get("answer")) if k in e else "—" for k in NAMES]
+        cells = [("✅ " if e[k]["ok"] else "❌ ") + short(e[k].get("answer")) if k in e else "—" for k in names]
         lines.append(f"| {qid} | {e['question']} | {short(e['reference'])} | " + " | ".join(cells) + " |")
     lines += ["", "## Consistencia", "", "Respuestas por forma (la de la evaluación y sus 3 otras formas; "
-              "en las listas, cantidad de nombres):", "", "| # | " + " | ".join(NAMES.values()) + " |", "|---|---|---|"]
+              "en las listas, cantidad de nombres):", "", "| # | " + " | ".join(names.values()) + " |", "|---|" + "---|" * len(names)]
     for qid, r in results["consistency"].items():
         cells = [f"{'✅' if r[k]['same'] else '❌'} {sum(r[k]['ok'])}/4 correctas · "
-                 + " / ".join(fmt(a) for a in r[k]["answers"]) for k in NAMES]
+                 + " / ".join(fmt(a) for a in r[k]["answers"]) for k in names]
         lines.append(f"| {qid} | " + " | ".join(cells) + " |")
     (HERE / "resultados.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))
@@ -193,5 +209,7 @@ if __name__ == "__main__":
         prompt(sys.argv[2], int(sys.argv[3]), sys.argv[4])
     elif command == "try":
         attempt(sys.argv[2], int(sys.argv[3]), sys.argv[4])
+    elif command == "rerun":
+        rerun()
     elif command == "puntaje":
         score_all()

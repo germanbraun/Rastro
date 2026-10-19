@@ -4,7 +4,7 @@
   "p01": {
    "question": "¿Cuánto suman, en dólares, los contratos del grupo empresario Leidos, es decir de Leidos Holdings y de todas sus empresas?",
    "kind": "número",
-   "reference": 54748523688.93,
+   "reference": 63362671930.71,
    "B": {
     "question": "¿Cuánto suman, en dólares, los contratos del grupo empresario Leidos, es decir de Leidos Holdings y de todas sus empresas?",
     "attempts": [
@@ -14,7 +14,7 @@
      }
     ],
     "answer": 56388914831.91,
-    "ok": true
+    "ok": false
    },
    "C": {
     "question": "¿Cuánto suman, en dólares, los contratos del grupo empresario Leidos, es decir de Leidos Holdings y de todas sus empresas?",
@@ -24,7 +24,7 @@
       "error": null
      }
     ],
-    "answer": 55646331151.18,
+    "answer": 64085535830.01,
     "ok": true
    }
   },
@@ -33,8 +33,8 @@
    "kind": "lista",
    "reference": [
     "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
-    "GENERAL DYNAMICS CORP",
     "LEIDOS HOLDINGS, INC.",
+    "GENERAL DYNAMICS CORP",
     "ACCENTURE PLC",
     "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
    ],
@@ -65,8 +65,8 @@
     ],
     "answer": [
      "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
-     "GENERAL DYNAMICS CORP",
      "LEIDOS HOLDINGS, INC.",
+     "GENERAL DYNAMICS CORP",
      "ACCENTURE PLC",
      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
     ],
@@ -77,23 +77,23 @@
    "question": "¿Qué agencias tienen más de un tercio de su monto en contratos con un solo grupo empresario, sumando todas las empresas de ese grupo?",
    "kind": "lista",
    "reference": [
+    "Agency for International Development",
+    "Commodity Futures Trading Commission",
+    "Court Services and Offender Supervision Agency",
+    "Defense Nuclear Facilities Safety Board",
+    "Equal Employment Opportunity Commission",
+    "Executive Office of the President",
+    "Federal Trade Commission",
+    "Government Accountability Office",
     "International Trade Commission",
     "Millennium Challenge Corporation",
     "National Gallery of Art",
+    "National Science Foundation",
     "Peace Corps",
-    "Federal Trade Commission",
-    "Court Services and Offender Supervision Agency",
-    "Government Accountability Office",
-    "Commodity Futures Trading Commission",
-    "Smithsonian Institution",
-    "Executive Office of the President",
-    "U.S. International Development Finance Corporation",
-    "Equal Employment Opportunity Commission",
-    "Small Business Administration",
-    "Defense Nuclear Facilities Safety Board",
-    "Agency for International Development",
     "Railroad Retirement Board",
-    "National Science Foundation"
+    "Small Business Administration",
+    "Smithsonian Institution",
+    "U.S. International Development Finance Corporation"
    ],
    "B": {
     "question": "¿Qué agencias tienen más de un tercio de su monto en contratos con un solo grupo empresario, sumando todas las empresas de ese grupo?",
@@ -133,23 +133,23 @@
      }
     ],
     "answer": [
+     "Agency for International Development",
+     "Commodity Futures Trading Commission",
+     "Court Services and Offender Supervision Agency",
+     "Defense Nuclear Facilities Safety Board",
+     "Equal Employment Opportunity Commission",
+     "Executive Office of the President",
+     "Federal Trade Commission",
+     "Government Accountability Office",
      "International Trade Commission",
      "Millennium Challenge Corporation",
      "National Gallery of Art",
+     "National Science Foundation",
      "Peace Corps",
-     "Federal Trade Commission",
-     "Court Services and Offender Supervision Agency",
-     "Government Accountability Office",
-     "Commodity Futures Trading Commission",
-     "Smithsonian Institution",
-     "Executive Office of the President",
-     "U.S. International Development Finance Corporation",
-     "Equal Employment Opportunity Commission",
-     "Small Business Administration",
-     "Defense Nuclear Facilities Safety Board",
-     "Agency for International Development",
      "Railroad Retirement Board",
-     "National Science Foundation"
+     "Small Business Administration",
+     "Smithsonian Institution",
+     "U.S. International Development Finance Corporation"
     ],
     "ok": true
    }
@@ -157,7 +157,7 @@
   "p04": {
    "question": "¿Cuántos proveedores (UEI distintos) tienen su matriz final, según GLEIF, fuera de EE. UU.? La matriz final es la de su grupo empresario o, si el grupo no tiene registro en GLEIF, la del propio proveedor.",
    "kind": "número",
-   "reference": 147.0,
+   "reference": 173.0,
    "B": {
     "question": "¿Cuántos proveedores (UEI distintos) tienen su matriz final, según GLEIF, fuera de EE. UU.? La matriz final es la de su grupo empresario o, si el grupo no tiene registro en GLEIF, la del propio proveedor.",
     "attempts": [
@@ -166,7 +166,7 @@
       "error": null
      }
     ],
-    "answer": 587.0,
+    "answer": 807.0,
     "ok": false
    },
    "C": {
@@ -177,7 +177,7 @@
       "error": null
      }
     ],
-    "answer": 147.0,
+    "answer": 173.0,
     "ok": true
    }
   },
@@ -239,8 +239,10 @@
    "question": "¿Qué grupos empresarios cotizan en bolsa, según Wikidata, y tienen contratos por más de US$1.000 millones en total, sumando todas sus empresas?",
    "kind": "lista",
    "reference": [
+    "AECOM",
     "Aerojet Rocketdyne Holdings, Inc.",
     "AEROVIRONMENT, INC.",
+    "AT&T INC.",
     "BAE SYSTEMS PLC",
     "BAVARIAN NORDIC A/S",
     "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
@@ -250,24 +252,34 @@
     "CORECIVIC, INC.",
     "CSL LIMITED",
     "Dell Technologies Inc.",
+    "Dominion Energy, Inc.",
     "Elbit Systems Ltd.",
+    "ELEVANCE HEALTH, INC.",
     "EMERGENT BIOSOLUTIONS INC.",
     "FLUOR CORPORATION",
     "GENERAL DYNAMICS CORPORATION",
+    "GENERAL ELECTRIC COMPANY",
     "HEALTH NET, INC.",
     "HONEYWELL INTERNATIONAL INC.",
     "ICF INTERNATIONAL, INC.",
     "INTERNATIONAL BUSINESS MACHINES CORPORATION",
+    "KBR, INC.",
     "KONGSBERG GRUPPEN ASA",
     "KRATOS DEFENSE & SECURITY SOLUTIONS, INC.",
+    "L3HARRIS TECHNOLOGIES, INC.",
     "LEIDOS HOLDINGS, INC.",
+    "LEONARDO - SOCIETA' PER AZIONI",
+    "LOCKHEED MARTIN CORPORATION",
     "MCKESSON CORPORATION",
+    "MICROSOFT CORPORATION",
     "MODERNA, INC.",
     "Nelnet, Inc.",
     "NORTHROP GRUMMAN CORPORATION",
     "PALANTIR TECHNOLOGIES INC.",
+    "RAYTHEON COMPANY",
     "REGENERON PHARMACEUTICALS, INC.",
     "ROLLS-ROYCE HOLDINGS PLC",
+    "RTX CORPORATION",
     "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION",
     "SERCO GROUP PLC",
     "SPACE EXPLORATION TECHNOLOGIES CORP.",
@@ -311,7 +323,9 @@
      "KONGSBERG GRUPPEN ASA",
      "LEIDOS HOLDINGS, INC.",
      "LEIDOS, INC.",
+     "LOCKHEED MARTIN CORP",
      "MODERNATX, INC.",
+     "NORTHROP GRUMMAN SYSTEMS CORP",
      "NORTHROP GRUMMAN SYSTEMS CORPORATION",
      "PALANTIR TECHNOLOGIES INC.",
      "REGENERON PHARMACEUTICALS INC",
@@ -338,8 +352,10 @@
      }
     ],
     "answer": [
+     "AECOM",
      "Aerojet Rocketdyne Holdings, Inc.",
      "AEROVIRONMENT, INC.",
+     "AT&T INC.",
      "BAE SYSTEMS PLC",
      "BAVARIAN NORDIC A/S",
      "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
@@ -349,24 +365,34 @@
      "CORECIVIC, INC.",
      "CSL LIMITED",
      "Dell Technologies Inc.",
+     "Dominion Energy, Inc.",
      "Elbit Systems Ltd.",
+     "ELEVANCE HEALTH, INC.",
      "EMERGENT BIOSOLUTIONS INC.",
      "FLUOR CORPORATION",
      "GENERAL DYNAMICS CORPORATION",
+     "GENERAL ELECTRIC COMPANY",
      "HEALTH NET, INC.",
      "HONEYWELL INTERNATIONAL INC.",
      "ICF INTERNATIONAL, INC.",
      "INTERNATIONAL BUSINESS MACHINES CORPORATION",
+     "KBR, INC.",
      "KONGSBERG GRUPPEN ASA",
      "KRATOS DEFENSE & SECURITY SOLUTIONS, INC.",
+     "L3HARRIS TECHNOLOGIES, INC.",
      "LEIDOS HOLDINGS, INC.",
+     "LEONARDO - SOCIETA' PER AZIONI",
+     "LOCKHEED MARTIN CORPORATION",
      "MCKESSON CORPORATION",
+     "MICROSOFT CORPORATION",
      "MODERNA, INC.",
      "Nelnet, Inc.",
      "NORTHROP GRUMMAN CORPORATION",
      "PALANTIR TECHNOLOGIES INC.",
+     "RAYTHEON COMPANY",
      "REGENERON PHARMACEUTICALS, INC.",
      "ROLLS-ROYCE HOLDINGS PLC",
+     "RTX CORPORATION",
      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION",
      "SERCO GROUP PLC",
      "SPACE EXPLORATION TECHNOLOGIES CORP.",
@@ -419,7 +445,7 @@
   "p09": {
    "question": "¿Cuánto suman, en dólares, los contratos del Departamento de Defensa con proveedores para revisar? Un proveedor es para revisar si su matriz final según GLEIF está fuera de EE. UU. (la de su grupo o, si el grupo no tiene registro en GLEIF, la propia) o si su nombre, o el de su grupo, es igual al de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias.",
    "kind": "número",
-   "reference": 106473826697.79,
+   "reference": 116901124121.56,
    "B": {
     "question": "¿Cuánto suman, en dólares, los contratos del Departamento de Defensa con proveedores para revisar? Un proveedor es para revisar si su matriz final según GLEIF está fuera de EE. UU. (la de su grupo o, si el grupo no tiene registro en GLEIF, la propia) o si su nombre, o el de su grupo, es igual al de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias.",
     "attempts": [
@@ -428,7 +454,7 @@
       "error": null
      }
     ],
-    "answer": 279967641067.19,
+    "answer": 390761358533.69,
     "ok": false
    },
    "C": {
@@ -439,16 +465,16 @@
       "error": null
      }
     ],
-    "answer": 105527844900.7,
+    "answer": 115955142324.47,
     "ok": true
    }
   }
  },
  "totals": {
   "B": {
-   "correct": 5,
+   "correct": 4,
    "consistent": 3,
-   "consistent_correct": 15,
+   "consistent_correct": 12,
    "retries": 0
   },
   "C": {
@@ -474,19 +500,19 @@
      56388914831.91
     ],
     "ok": [
-     true,
      false,
-     true,
-     true
+     false,
+     false,
+     false
     ],
     "same": false
    },
    "C": {
     "answers": [
-     55646331151.18,
-     55646331151.18,
-     55646331151.18,
-     54748523688.93
+     64085535830.01,
+     64085535830.01,
+     64085535830.01,
+     63362671930.71
     ],
     "ok": [
      true,
@@ -547,29 +573,29 @@
     "answers": [
      [
       "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
-      "GENERAL DYNAMICS CORP",
       "LEIDOS HOLDINGS, INC.",
+      "GENERAL DYNAMICS CORP",
       "ACCENTURE PLC",
       "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
      ],
      [
       "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
-      "GENERAL DYNAMICS CORP",
       "LEIDOS HOLDINGS, INC.",
+      "GENERAL DYNAMICS CORP",
       "ACCENTURE PLC",
       "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
      ],
      [
       "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
-      "GENERAL DYNAMICS CORP",
       "LEIDOS HOLDINGS, INC.",
+      "GENERAL DYNAMICS CORP",
       "ACCENTURE PLC",
       "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
      ],
      [
       "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
-      "GENERAL DYNAMICS CORP",
       "LEIDOS HOLDINGS, INC.",
+      "GENERAL DYNAMICS CORP",
       "ACCENTURE PLC",
       "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
      ]

@@ -19,7 +19,7 @@ Para cualquier audiencia, sin conocimientos técnicos. Nueve diapositivas (`docs
 
 1. Elegir *¿cuánto le contrata el gobierno al grupo Leidos?* y apretar **Responder**.
 
-> «Un solo grupo: 21 empresas, 54.700 millones de dólares. La base de contratos reparte a Leidos en seis "matrices" distintas; Rastro las une.»
+> «Un solo grupo: 30 empresas, 63.400 millones de dólares. La base de contratos reparte a Leidos en 13 "matrices" distintas; Rastro las une, y dice por qué cada una es parte del grupo.»
 
 2. Elegir *«Science Applications International Corporation», ¿es de Leidos o de SAIC?*, apretar **Responder** y abrir **¿Cómo lo supe?**
 
@@ -27,7 +27,7 @@ Para cualquier audiencia, sin conocimientos técnicos. Nueve diapositivas (`docs
 
 ## 3:00 – 4:00 · Por qué confiar (app, pestaña Por qué confiar; diapositiva 5)
 
-> «Tres pruebas, medidas. Con Rastro, 8 de 9 respuestas correctas; sin Rastro, 5 de 9. La misma pregunta hecha de cuatro formas da la misma respuesta. Y si una base cambia, se arregla en una línea.»
+> «Tres pruebas, medidas. Con Rastro, 8 de 9 respuestas correctas; sin Rastro, 4 de 9. La misma pregunta hecha de cuatro formas da la misma respuesta. Y si una base cambia, se arregla en una línea.»
 >
 > «Con honestidad: Rastro también se equivocó en una, y la revisión encontró empresas que todavía no une. Se ve en la evidencia y se corrige en un solo lugar.»
 

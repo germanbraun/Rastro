@@ -5,12 +5,14 @@ SELECT ?supplier ?finalParent ?country (COUNT(?contract) AS ?contracts) (SUM(?am
 WHERE {
   # «Proveedor con matriz extranjera» está definido una vez en el diccionario
   ?s a :ForeignParentSupplier ; :name ?supplier .
-  # La matriz final según GLEIF: la del LEI del grupo o, si no tiene, la del proveedor
+  # La matriz final según GLEIF: la del LEI del grupo o la del proveedor (sin repetir)
   OPTIONAL {
-    { ?s :group/:legalEntity ?le } UNION { ?s :legalEntity ?le }
-    ?le :ultimateParent ?top .
-    ?top :name ?finalParent ; :country/:code ?country .
-    FILTER (?country != "US")
+    SELECT DISTINCT ?s ?finalParent ?country WHERE {
+      { ?s :group/:legalEntity ?le } UNION { ?s :legalEntity ?le }
+      ?le :ultimateParent ?top .
+      ?top :name ?finalParent ; :country/:code ?country .
+      FILTER (?country != "US")
+    }
   }
   ?contract :supplier ?s ; :amount ?amount .
 }

@@ -16,7 +16,9 @@ CREATE TABLE gleif.name_query (
     fetched_at  timestamptz NOT NULL
 );
 
--- Candidatos en el orden de relevancia de GLEIF (rank 1 = el más parecido según GLEIF)
+-- Candidatos en el orden de relevancia de GLEIF (rank 1 = el más parecido según GLEIF).
+-- Los rank 6 a 10 son de una segunda búsqueda con el nombre normalizado, si ninguno coincidía,
+-- y los 11 a 20, de una tercera por nombre legal, solo para los grupos grandes.
 CREATE TABLE gleif.candidate (
     name    text NOT NULL REFERENCES gleif.name_query,
     rank    int NOT NULL,
@@ -38,4 +40,12 @@ CREATE TABLE gleif.lei_record (
     entity_status       text,              -- ACTIVE | INACTIVE
     registration_status text,              -- ISSUED, LAPSED, RETIRED...
     ultimate_parent_lei text               -- matriz final, si GLEIF la tiene
+);
+
+-- LEI revisados: nombres que las búsquedas no encuentran, con el LEI pedido directo a GLEIF
+-- (lei-revisados.csv) y por qué
+CREATE TABLE gleif.lei_reviewed (
+    name    text PRIMARY KEY,   -- tal como está en USAspending
+    lei     text NOT NULL REFERENCES gleif.lei_record,
+    reason  text NOT NULL
 );

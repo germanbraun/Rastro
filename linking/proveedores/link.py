@@ -1,12 +1,14 @@
 """Arma las tablas del dominio de proveedores que leen los mapeos, y los enlaces.
 
 entities.sql: una fila por proveedor, grupo y agencia, y proveedor → grupo con su evidencia.
-links.sql: proveedor o grupo → LEI, → lista de control, y grupo → Wikidata, con su evidencia.
+links.sql: proveedor o grupo → LEI, → lista de control, y grupo → Wikidata, con su evidencia;
+y las correcciones revisadas de correcciones.csv.
 Todo está en SQL legible; este script los corre y muestra cuánto enlazó.
 
 Se corre con: docker compose run --rm proveedores-linker
 """
 
+import csv
 import os
 from pathlib import Path
 
@@ -27,6 +29,12 @@ def main():
         if not conn.execute("SELECT to_regclass('gleif.lei_record')").fetchone()[0]:
             print("GLEIF todavía no está cargado: no se arman los enlaces.")
             return
+        # Correcciones revisadas, con su motivo (correcciones.csv)
+        conn.execute("DROP TABLE IF EXISTS proveedores.correction")
+        conn.execute("CREATE TABLE proveedores.correction (uei text PRIMARY KEY, group_lei text, group_name text, reason text)")
+        with conn.cursor().copy("COPY proveedores.correction FROM STDIN") as copy:
+            for row in csv.DictReader((HERE / "correcciones.csv").open()):
+                copy.write_row((row["uei"], row["grupo_lei"], row["grupo"], row["motivo"]))
         conn.execute((HERE / "links.sql").read_text())
         print("Enlaces con LEI (GLEIF)")
         for kind, searched, linked in conn.execute("""
@@ -39,6 +47,8 @@ def main():
             print(f"    por {rule}: {n}")
         n = conn.execute("SELECT count(*) FROM proveedores.watchlist_link").fetchone()[0]
         print(f"Coincidencias con listas de control: {n}")
+        n = conn.execute("SELECT count(*) FROM proveedores.supplier_group WHERE rule = 'corrección revisada'").fetchone()[0]
+        print(f"Proveedores con corrección revisada: {n}")
         n, listed = conn.execute("SELECT count(*), count(*) FILTER (WHERE listed) FROM proveedores.group_wikidata").fetchone()
         print(f"Grupos con Wikidata: {n}, cotizan en bolsa: {listed}")
 

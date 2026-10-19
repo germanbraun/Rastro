@@ -60,7 +60,7 @@ preguntas:
     query: /ontology/proveedores/queries/cq1.rq
     simple: ¿Cuánto le contrata el gobierno al grupo Leidos, contando todas sus empresas?
     tecnica: ¿Cuánto suman los contratos del grupo Leidos, contando todas sus empresas?
-    ventaja: El grupo se arma solo. USAspending reparte a Leidos en seis matrices distintas; Rastro las une con la matriz final que registra GLEIF.
+    ventaja: "El grupo se arma solo. USAspending reparte a Leidos en 13 matrices distintas; Rastro las une con la matriz final que registra GLEIF y, para las compras que ninguna fuente registra (Dynetics, QTC, Gibbs & Cox), con una corrección revisada."
     terminos:
       Grupo: la empresa matriz y todas sus filiales.
     evidencia:
@@ -217,7 +217,7 @@ faq:
   - pregunta: ¿Qué es un grupo, y por qué cuesta armarlo?
     respuesta: >-
       Un grupo es una empresa matriz con todas sus filiales. USAspending registra la matriz de cada
-      proveedor, pero reparte un mismo grupo en varias matrices: Leidos figura en seis. Rastro las une
+      proveedor, pero reparte un mismo grupo en varias matrices: Leidos figura en 13. Rastro las une
       con el identificador global de empresas (LEI) y la matriz final que registra GLEIF, y guarda por
       qué. Sin Rastro, cada consulta tiene que resolverlo de nuevo.
   - pregunta: ¿Por qué no se cuentan los contratos de SAIC en Leidos?

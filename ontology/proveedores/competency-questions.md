@@ -20,20 +20,20 @@ Cada pregunta muestra al menos una ventaja de tener la capa, dicha sin jerga.
 
 | # | Respuesta |
 |---|---|
-| 1 | El grupo Leidos: 21 empresas, 510 contratos, US$54.700 millones. Con las matrices de USAspending solas, Leidos queda partido en seis grupos. |
-| 2 | Booz Allen Hamilton, General Dynamics, Leidos, Accenture y SAIC. |
+| 1 | El grupo Leidos: 30 empresas, 611 contratos, US$63.400 millones. Con las matrices de USAspending solas, Leidos queda partido en 13 grupos. |
+| 2 | Booz Allen Hamilton, Leidos, General Dynamics, Accenture y SAIC. |
 | 3 | 20 casos agencia–grupo; por ejemplo, la National Science Foundation concentra el 67 % en Leidos. |
-| 4 | 147 proveedores, encabezados por empresas de BAE Systems (Reino Unido), Accenture (Irlanda), Austal (Australia) y Serco (Reino Unido). |
+| 4 | 173 proveedores, encabezados por empresas de BAE Systems (Reino Unido), Accenture (Irlanda), Austal (Australia) y Serco (Reino Unido). |
 | 5 | 8 proveedores con un nombre igual a una entrada de una lista; en todos los que se pueden comparar, la entrada es de otro país: son homónimos. |
 | 6 | 1.060 proveedores, 2.587 contratos. |
-| 7 | 41 grupos que cotizan en bolsa con más de US$1.000 millones, encabezados por Boeing, Fluor, Honeywell, BAE Systems y Leidos, con su bolsa y su sede. |
+| 7 | 53 grupos que cotizan en bolsa con más de US$1.000 millones, encabezados por Boeing, Fluor, Honeywell, BAE Systems y Leidos, con su bolsa y su sede. |
 | 8 | Las cinco «Science Applications International Corporation» son del grupo SAIC, no de Leidos, y la evidencia dice por qué. |
-| 9 | Defensa contrata US$106.500 millones con 115 proveedores para revisar. |
+| 9 | Defensa contrata US$116.900 millones con 139 proveedores para revisar. |
 
 ## Notas
 
 - **Monto:** es el monto total de cada contrato en toda su vida («Award Amount» de USAspending), no solo lo que se obligó en 2025. Los contratos son los que tuvieron actividad en el año fiscal 2025 y suman más de US$10 millones.
-- **Grupo = matriz actual en USAspending, consolidada con GLEIF.** USAspending reparte un mismo grupo en varias matrices (Leidos figura en seis). Si la matriz tiene LEI, el grupo es su matriz final en GLEIF; si no, queda la matriz de USAspending. USAspending también guarda las matrices que tuvo cada proveedor: Rastro no las usa para sumar (meterían a la SAIC de hoy en Leidos) y las muestra como evidencia (pregunta 8).
+- **Grupo = matriz actual en USAspending, consolidada con GLEIF.** USAspending reparte un mismo grupo en varias matrices (Leidos figura en 13). Si la matriz tiene LEI, el grupo es su matriz final en GLEIF; si no, queda la matriz de USAspending. Las compras que ninguna fuente registra entran con una corrección revisada (`linking/proveedores/correcciones.csv`). USAspending también guarda las matrices que tuvo cada proveedor: Rastro no las usa para sumar (meterían a la SAIC de hoy en Leidos) y las muestra como evidencia (pregunta 8).
 - **Los sectores son NAICS 2022**, más los códigos viejos que usan algunos contratos, colgados de su prefijo más largo. `:within` dice que un sector está dentro de sí mismo y de los más amplios; se precalcula en `proveedores.sector_ancestor` porque Ontop no recorre caminos de largo arbitrario.
 - **Matriz final (GLEIF):** si GLEIF no registra una matriz, la entidad es su propia matriz final.
 - **«Proveedor para revisar» no tiene mapeo.** El diccionario dice que lo son los proveedores con matriz extranjera y los que coinciden con una lista de control, y Ontop lo deduce (`rdfs:subClassOf`), como «terapia dirigida» en oncología.

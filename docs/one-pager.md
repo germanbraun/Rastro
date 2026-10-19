@@ -22,7 +22,7 @@ Pone un **diccionario de negocio** entre tus bases y tus preguntas: ensayo, fár
 
 Sin datos integrados, un asistente de IA solo acierta 5 de 20 preguntas: responde de memoria.
 
-**Funciona en otro dominio.** Con contratos del gobierno de EE. UU., sus empresas y sus grupos, el mismo asistente acierta 8 de 9 preguntas con Rastro y 5 de 9 sin Rastro, y Rastro no cae en la trampa de dos empresas con el mismo nombre (SAIC y Leidos).
+**Funciona en otro dominio.** Con contratos del gobierno de EE. UU., sus empresas y sus grupos, el mismo asistente acierta 8 de 9 preguntas con Rastro y 4 de 9 sin Rastro, y Rastro no cae en la trampa de dos empresas con el mismo nombre (SAIC y Leidos).
 
 ## Lo que hay que saber
 
