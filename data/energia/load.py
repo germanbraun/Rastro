@@ -10,8 +10,9 @@ satélite. El certificado del servidor viene sin la cadena completa, así que se
 verificarlo: son datos públicos de solo lectura.
 
 Del mismo WFS salen también los gasoductos de transporte de ENARGAS. Del WFS del Instituto
-Geográfico Nacional (listado en IDERA), las localidades y las áreas protegidas. Y de GLEIF, el
-identificador global (LEI) de las empresas que más producen, buscado por nombre en Argentina.
+Geográfico Nacional (listado en IDERA), las localidades y las áreas protegidas. De GLEIF, el
+identificador global (LEI) de las empresas que más producen, buscado por nombre en Argentina. Y
+el listado de estudios ambientales que presentan las empresas, con sus observaciones.
 
 Cada descarga se guarda en data/raw/energia/ y no se vuelve a pedir.
 
@@ -34,6 +35,7 @@ CACHE = Path("/data/raw/energia")
 CKAN = "http://datos.energia.gob.ar/api/3/action/resource_show?id="
 PRODUCCION_2025 = "d774b5d7-0756-48fe-88f2-8729b57b22da"
 PADRON_POZOS = "cb5c0f04-7835-45cd-b982-3e25ca7d7751"
+ESTUDIOS_AMBIENTALES = "7b8583fe-8994-4efa-9fbf-79c4a3f2f467"   # «Actividad ambiental de petróleo y gas»
 WFS = "https://sig.energia.gob.ar/mapserv?map=/etc/mapserver/mapase.map"
 PAGE = 10_000
 IGN = "https://wms.ign.gob.ar/geoserver/ows?service=wfs&version=2.0.0&request=GetFeature&outputFormat=application/json"
@@ -156,6 +158,7 @@ def main():
 
     produccion = ckan(PRODUCCION_2025, "produccion-2025.csv")
     padron = ckan(PADRON_POZOS, "pozos.csv")
+    estudios = ckan(ESTUDIOS_AMBIENTALES, "estudios-ambientales.csv")
     concesiones = [(prop(f, "id_concesion"), prop(f, "areapermisoconcesion"), prop(f, "empresa_informante"),
                     prop(f, "empresa_operadora"), prop(f, "participacion"), prop(f, "estadodearea"),
                     prop(f, "observaciones"), ring(f))
@@ -190,7 +193,9 @@ def main():
                'Datos públicos (ENARGAS, vía el WFS de la Secretaría de Energía)', 'enargas'),
               ('ign', 'Instituto Geográfico Nacional (IGN)', 'https://www.ign.gob.ar/',
                'CC-BY 4.0 (IGN)', 'ign'),
-              ('gleif', 'GLEIF (LEI)', 'https://www.gleif.org/', 'CC0 1.0', 'gleif')
+              ('gleif', 'GLEIF (LEI)', 'https://www.gleif.org/', 'CC0 1.0', 'gleif'),
+              ('ambiental', 'Estudios ambientales de petróleo y gas (Secretaría de Energía)',
+               'http://datos.energia.gob.ar/dataset/actividad-ambiental-petroleo-y-gas', 'CC-BY 4.0', 'ambiental')
             ON CONFLICT (id) DO NOTHING""")
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
 
@@ -225,6 +230,12 @@ def main():
         copy("enargas.gasoducto", gasoductos, "enargas", "WFS de la Secretaría de Energía")
         copy("ign.localidad", localidades, "ign", "WFS del IGN (BAHRA)")
         copy("ign.area_protegida", areas, "ign", "WFS del IGN")
+        with estudios.open(encoding="utf-8-sig", errors="replace", newline="") as fh:
+            copy("ambiental.estudio",
+                 ([r["id_estudio"], r["fecha_estudio"] or None, r["tipo_estudio"] or None, (r["concesion"] or "").strip() or None,
+                   r["yacimiento"] or None, r["empresa"] or None, r["objeto_estudio"] or None, r["nombre_objeto"] or None,
+                   (r["observaciones"] or "").strip() or None] for r in csv.DictReader(fh)),
+                 "ambiental", "listado de estudios ambientales")
 
         # Las empresas que más producen u operan, con su nombre de las declaraciones juradas
         # Se busca sin forma societaria («YPF S.A.» → «YPF»): GLEIF busca por palabras

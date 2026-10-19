@@ -1,0 +1,10 @@
+{
+ "question": "¿En cuántas concesiones con algún posible venteo satelital desde 2024 el gasoducto de transporte de ENARGAS más cercano está a 10 km o más del contorno?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT cg.id_concesion)\nFROM energia.concesion_gasoducto cg\nWHERE cg.distancia_km >= 10\n  AND EXISTS (SELECT 1 FROM energia.venteo v\n              WHERE v.id_concesion = cg.id_concesion\n                AND v.tipo = 'detectado'\n                AND v.fecha >= DATE '2024-01-01')",
+   "error": null
+  }
+ ],
+ "answer": 33.0
+}

@@ -31,13 +31,13 @@ Abrir **¿De dónde sale la respuesta?** para mostrar un pozo en desacuerdo.
 
 ## 4:00 – 5:00 · Más fuentes y cierre (diapositivas 8 y 9)
 
-> «Sumar fuentes no rehace nada: con ENARGAS, 38 concesiones con posibles venteos tienen el gasoducto de transporte más cercano a 10 km o más; con el IGN, 60 caen en áreas protegidas; con GLEIF, 12 empresas tienen identificador global.»
+> «Sumar fuentes no rehace nada: con ENARGAS, 29 concesiones con posibles venteos tienen el gasoducto de transporte más cercano a 10 km o más; con el IGN, 60 caen en áreas protegidas; con GLEIF, 12 empresas tienen identificador global.»
 >
 > «En síntesis: el valor está en integrar los datos una sola vez y mantenerlos en un único lugar. El siguiente paso es un piloto con datos propios.»
 
 ## Si preguntan
 
-- **«¿Cómo saben que es correcto?»** Los números «sin Rastro» salen de SQL directo y legible (`layer/energia/sin-rastro.sql`). Todavía no hay una evaluación medida como en los otros dominios, y las correcciones de nombres (Chevron, Pluspetrol, CGC) las revisó un asistente de IA: falta que una persona las confirme.
+- **«¿Cómo saben que es correcto?»** Tres pruebas medidas (diapositiva 10 y pestaña **Por qué confiar**): Rastro acierta 6 de 7 y sin Rastro 5 de 7; la misma pregunta de cuatro formas da la misma respuesta en 5 de 5 (sin Rastro, 3 de 5); un cambio en una fuente se arregla en una línea. Rastro falló la pregunta de la participación de YPF: el diccionario tenía dos palabras parecidas para «concesión». Las armó un asistente de IA; falta que una persona las confirme (`layer/energia/adjudicacion.md`).
 - **«¿Por qué rige la declaración jurada?»** Es una decisión de negocio, escrita una vez y a la vista. Si se prefiere otra, se cambia en un solo lugar y vale para todas las preguntas.
 - **«¿Los grupos salen de un registro?»** No: GLEIF no registra la matriz de estas empresas argentinas y Wikidata tampoco. Son correcciones revisadas, con su motivo.
-- **«¿Y GraphRAG?»** En este dominio no hay todavía una fuente de textos. La misma idea que en proveedores y oncología (el grafo elige qué leer, la IA resume y cita) se aplicaría, por ejemplo, a resoluciones o informes de cada concesión.
+- **«¿Y GraphRAG?»** En «Una pregunta sobre textos» (diapositiva 9): el grafo elige las cinco concesiones con más posibles venteos y los 72 estudios ambientales presentados en ellas desde 2022; la IA resume solo esos textos, citando cada estudio. Pluspetrol presenta las planillas de venteo cada semestre; en las de YPF, el listado solo muestra el informe anual (una pregunta para hacer, no una conclusión).

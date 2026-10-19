@@ -1,0 +1,10 @@
+{
+ "question": "Contá las concesiones que tienen posibles venteos detectados por satélite desde el 1/1/2024 y ningún gasoducto de transporte de ENARGAS a menos de 10 km de su contorno.",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?c) AS ?n) WHERE {\n  ?v a :DetectedVenting ; :inConcession ?c ; :date ?d .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  FILTER NOT EXISTS {\n    ?p a :PipelineLink ; :aboutConcession ?c ; :distanceKm ?km .\n    FILTER(?km < 10)\n  }\n}",
+   "error": null
+  }
+ ],
+ "answer": 33.0
+}

@@ -66,6 +66,10 @@ formatos:                      # dinero: separador de miles; porcentaje: 0,67 �
 preguntas:
   - id: p01
     query: /ontology/proveedores/queries/cq1.rq
+    explicacion: |
+      - **Qué busca:** los grupos cuyo nombre incluye «Leidos», todas sus empresas y los contratos de cada una.
+      - **Qué calcula:** por grupo, cuántas empresas, cuántos contratos y el monto total.
+      - **Lo que en SQL habría que hacer a mano:** armar la lista de empresas del grupo (con nombres distintos en cada fuente). Acá «grupo» ya está resuelto, con la evidencia de cada empresa.
     simple: ¿Cuánto contrata el gobierno con el grupo Leidos, considerando todas sus empresas?
     tecnica: ¿Cuánto suman los contratos del grupo Leidos, contando todas sus empresas?
     ventaja: "El grupo se arma solo. USAspending reparte a Leidos en 13 matrices distintas; Rastro las une con la matriz final que registra GLEIF y, para las compras que ninguna fuente registra (Dynetics, QTC, Gibbs & Cox), con una corrección revisada."
@@ -86,6 +90,10 @@ preguntas:
 
   - id: p08
     query: /ontology/proveedores/queries/cq8.rq
+    explicacion: |
+      - **Qué busca:** los proveedores llamados «Science Applications International Corporation» y el enlace que dice a qué grupo pertenece cada uno.
+      - **Qué devuelve:** el grupo, la evidencia (qué dice cada fuente), la regla y la fuente de la que se derivó el enlace (PROV-O).
+      - **Lo particular:** la respuesta no es solo el dato: es el porqué, que se puede auditar.
     simple: «Science Applications International Corporation», ¿es de Leidos o de SAIC?
     tecnica: ¿A qué grupo pertenece «Science Applications International Corporation», y por qué?
     ventaja: El nombre confuso se resuelve una vez. En 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. Rastro no le suma a Leidos los contratos de la SAIC de hoy, y la evidencia dice por qué.
@@ -106,6 +114,10 @@ preguntas:
 
   - id: p02
     query: /ontology/proveedores/queries/cq2.rq
+    explicacion: |
+      - **Qué busca:** los contratos del sector 5415 (servicios informáticos) y de todos sus subsectores, con el grupo de cada proveedor.
+      - **Qué devuelve:** los 5 grupos con más monto.
+      - **Lo particular:** «está dentro de» incluye los subsectores solo; en SQL habría que recorrer la jerarquía de NAICS en cada consulta.
     simple: ¿Qué cinco grupos le venden más servicios informáticos al gobierno?
     tecnica: ¿Cuáles son los 5 grupos con más contratos en servicios informáticos, incluidos sus subsectores?
     ventaja: «Servicios informáticos» incluye solo todos sus subsectores, y cada contrato se suma a su grupo.
@@ -121,12 +133,20 @@ preguntas:
 
   - id: p03
     query: /ontology/proveedores/queries/cq3.rq
+    explicacion: |
+      - **Qué calcula:** para cada agencia, su gasto total y lo que gasta con cada grupo; la parte de cada grupo es la división de las dos.
+      - **Qué filtra:** los casos donde un solo grupo tiene más de un tercio del gasto de la agencia.
+      - **Lo particular:** la concentración se mide por grupo, no por empresa suelta.
     simple: ¿Qué organismos le dan más de un tercio de su gasto a un solo grupo?
     tecnica: ¿Qué agencias concentran más de un tercio de su gasto en un solo grupo?
     ventaja: "La concentración se mide por grupo, no por cada empresa suelta: si no, se esconde."
 
   - id: p04
     query: /ontology/proveedores/queries/cq4.rq
+    explicacion: |
+      - **Qué busca:** los «proveedores con matriz extranjera», una clase definida una vez en el diccionario, con su matriz final según GLEIF.
+      - **Qué devuelve:** cada proveedor, su matriz final, el país y lo que contrata.
+      - **Lo particular:** la regla de «matriz extranjera» está en un solo lugar y la usan varias preguntas.
     simple: ¿Qué proveedores pertenecen a grupos con su casa matriz fuera de EE. UU.?
     tecnica: ¿Qué proveedores tienen su matriz final fuera de EE. UU.?
     ventaja: «Matriz extranjera» está definida una vez y la usan varias preguntas; el LEI une USAspending con GLEIF.
@@ -144,6 +164,10 @@ preguntas:
 
   - id: p05
     query: /ontology/proveedores/queries/cq5.rq
+    explicacion: |
+      - **Qué busca:** proveedores o grupos con un enlace a una entrada de la Lista Consolidada de Control.
+      - **Qué devuelve:** quién, qué entrada, qué lista, qué coincidió y con qué regla.
+      - **Lo particular:** una coincidencia de nombre no es una confirmación; por eso se muestra la evidencia.
     simple: ¿Algún proveedor, o su grupo, aparece en una lista de control del gobierno?
     tecnica: ¿Algún proveedor, o su grupo, aparece en una lista de control del gobierno?
     ventaja: Cada coincidencia dice qué nombre coincidió y con qué regla, para que compliance la revise en un minuto.
@@ -160,6 +184,9 @@ preguntas:
 
   - id: p06
     query: /ontology/proveedores/queries/cq6.rq
+    explicacion: |
+      - **Qué busca:** los contratos del Departamento de Defensa en construcción (sector 23 y todos sus subsectores).
+      - **Qué devuelve:** cuántos proveedores distintos, cuántos contratos y el monto.
     simple: ¿Con cuántas empresas contrata obras el Departamento de Defensa?
     tecnica: ¿Cuántos proveedores distintos tiene el Departamento de Defensa en construcción?
     ventaja: «Construcción» incluye solo todos sus subsectores (edificios, obras viales, instalaciones…).
@@ -173,6 +200,10 @@ preguntas:
 
   - id: p07
     query: /ontology/proveedores/queries/cq7.rq
+    explicacion: |
+      - **Qué busca:** los grupos que cotizan en bolsa según Wikidata (unidos por su LEI) y sus contratos.
+      - **Qué filtra:** los que suman más de US$1.000 millones, con su bolsa y su sede.
+      - **Lo particular:** los datos de Wikidata se unen por un identificador compartido, sin cargarlos a mano.
     simple: ¿Qué grupos que cotizan en bolsa le facturan más de mil millones de dólares al gobierno?
     tecnica: ¿Qué grupos que cotizan en bolsa tienen contratos por más de US$1.000 millones, y dónde tienen su sede?
     ventaja: Un identificador compartido (el LEI) trae datos de otra organización, Wikidata, sin integrarla a mano.
@@ -186,6 +217,9 @@ preguntas:
 
   - id: p09
     query: /ontology/proveedores/queries/cq9.rq
+    explicacion: |
+      - **Qué busca:** los «proveedores para revisar», una clase sin mapeo propio: Ontop la deduce de dos reglas (matriz extranjera o coincidencia con una lista).
+      - **Qué devuelve:** por agencia, cuántos de esos proveedores, cuántos contratos y el monto.
     simple: ¿Cuánto le contrata cada organismo a proveedores que compliance tendría que mirar?
     tecnica: ¿Cuánto contrata cada agencia con proveedores para revisar?
     ventaja: «Proveedor para revisar» es una regla de negocio escrita una vez en el diccionario; Rastro la aplica sola.

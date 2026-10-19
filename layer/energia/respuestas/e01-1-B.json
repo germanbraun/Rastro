@@ -1,0 +1,10 @@
+{
+ "question": "Sumá, concesión por concesión, el petróleo de 2025 multiplicado por el porcentaje de participación de YPF. ¿Cuántos metros cúbicos da?",
+ "attempts": [
+  {
+   "query": "WITH socios AS (\n  SELECT c.id_concesion,\n         trim(split_part(p, ':', 1)) AS empresa,\n         replace(trim(regexp_replace(split_part(p, ':', 2), '[^0-9.,]', '', 'g')), ',', '.')::numeric AS pct\n  FROM sig_energia.concesion c,\n       regexp_split_to_table(c.participacion, '<br>') AS p\n  WHERE trim(p) <> '' AND p LIKE '%:%' AND regexp_replace(split_part(p, ':', 2), '[^0-9.,]', '', 'g') <> ''\n),\nypf AS (\n  SELECT id_concesion, sum(pct) AS pct\n  FROM socios\n  WHERE upper(empresa) ~ '^\\s*YPF\\M'\n  GROUP BY id_concesion\n),\nprod AS (\n  SELECT idareapermisoconcesion AS id, sum(prod_pet) AS pet\n  FROM capitulo4.produccion\n  WHERE anio = 2025\n  GROUP BY idareapermisoconcesion\n)\nSELECT round(sum(prod.pet * ypf.pct / 100), 0) AS m3\nFROM prod JOIN ypf ON ypf.id_concesion = prod.id",
+   "error": null
+  }
+ ],
+ "answer": 12581213.0
+}

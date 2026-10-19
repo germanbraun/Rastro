@@ -1,0 +1,10 @@
+{
+ "question": "Contá los pozos que declararon producción en 2025 cuya última declaración del año la presentó YPF.",
+ "attempts": [
+  {
+   "query": "select count(distinct o.idpozo)\nfrom energia.operador_pozo o\njoin energia.empresa e on e.empresa_id = o.empresa_id\nwhere e.nombre ilike 'YPF%'",
+   "error": null
+  }
+ ],
+ "answer": 15809.0
+}

@@ -1,0 +1,21 @@
+# Otras tres formas de hacer cada pregunta, con el mismo significado (prueba de consistencia).
+e01:
+  - Sumá, concesión por concesión, el petróleo de 2025 multiplicado por el porcentaje de participación de YPF. ¿Cuántos metros cúbicos da?
+  - ¿Qué volumen de petróleo de 2025, en m³, es de YPF si se reparte la producción de cada concesión entre sus socios según su porcentaje?
+  - Si cada concesión reparte su petróleo de 2025 entre sus socios según su participación, ¿cuántos metros cúbicos le tocan a YPF?
+e02:
+  - Tomando como operadora de cada pozo a quien declara su producción en el último mes de 2025 en que el pozo figura, ¿cuántos pozos opera YPF?
+  - ¿En cuántos pozos con producción en 2025 es YPF la empresa que declara el último mes de producción del pozo?
+  - Contá los pozos que declararon producción en 2025 cuya última declaración del año la presentó YPF.
+e03:
+  - Nombrá las 5 concesiones donde el satélite detectó más posibles venteos desde enero de 2024, contando los puntos que caen dentro del contorno de cada una.
+  - ¿Qué cinco concesiones concentran más anomalías térmicas detectadas por satélite desde el 1/1/2024, ubicando cada punto dentro de su contorno?
+  - Top 5 de concesiones por cantidad de posibles venteos satelitales desde 2024, según el contorno de la concesión.
+e05:
+  - ¿En cuántas concesiones con algún posible venteo satelital desde 2024 el gasoducto de transporte de ENARGAS más cercano está a 10 km o más del contorno?
+  - Contá las concesiones que tienen posibles venteos detectados por satélite desde el 1/1/2024 y ningún gasoducto de transporte de ENARGAS a menos de 10 km de su contorno.
+  - ¿Cuántas concesiones con al menos una anomalía térmica desde enero de 2024 están a 10 km o más del gasoducto de transporte de ENARGAS más cercano?
+e06:
+  - De los posibles venteos detectados por satélite desde 2024 dentro de alguna concesión, ¿cuántos están dentro de un área protegida del IGN?
+  - ¿Cuántas anomalías térmicas satelitales desde el 1/1/2024, ubicadas en una concesión, caen en áreas protegidas según el Instituto Geográfico Nacional?
+  - Contá los posibles venteos satelitales desde enero de 2024, dentro de concesiones, que están adentro de un área protegida del IGN.

@@ -1,0 +1,10 @@
+{
+ "question": "¿Qué volumen de petróleo de 2025, en m³, es de YPF si se reparte la producción de cada concesión entre sus socios según su porcentaje?",
+ "attempts": [
+  {
+   "query": "WITH prod AS (\n  SELECT id_concesion, SUM(petroleo_m3) AS pet\n  FROM energia.produccion_pozo\n  GROUP BY id_concesion\n), ypf AS (\n  SELECT empresa_id FROM energia.empresa\n  WHERE upper(trim(nombre)) ~ '^YPF( S\\.?A\\.?)?$'\n)\nSELECT ROUND(SUM(p.pet * pa.porcentaje / 100.0), 0)\nFROM prod p\nJOIN energia.participacion pa ON pa.id_concesion = p.id_concesion\nWHERE pa.empresa_id IN (SELECT empresa_id FROM ypf)",
+   "error": null
+  }
+ ],
+ "answer": 12581213.0
+}

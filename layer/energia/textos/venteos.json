@@ -1,0 +1,118 @@
+{
+ "pregunta": "¿Qué estudios ambientales presentaron desde 2022 las cinco concesiones donde el satélite vio más posibles venteos desde 2024?",
+ "simple": "¿Qué informes ambientales presentan las concesiones con más posibles venteos?",
+ "consulta": "/layer/energia/textos/venteos.rq",
+ "como": "Rastro eligió con una consulta exacta las cinco concesiones con más posibles venteos vistos por satélite desde 2024 (ubicados en su contorno) y los estudios ambientales que se presentaron en ellas desde 2022 (unidos por el nombre de la concesión). Un asistente de IA (Claude) leyó solo esos textos y los agrupó en temas; cada tema cita sus estudios por número.",
+ "fecha": "2026-10-19",
+ "intro": "Rastro encontró **{n} estudios** presentados desde 2022 en las cinco concesiones con más posibles venteos. Qué dicen:",
+ "unidad": [
+  "estudio",
+  "estudios"
+ ],
+ "columnas": [
+  "Estudio",
+  "Concesión",
+  "Operadora",
+  "Fecha",
+  "Tipo",
+  "Texto"
+ ],
+ "temas": [
+  {
+   "tema": "Planillas de venteo de gas (Res. 143/98)",
+   "detalle": "Pluspetrol las presenta cada semestre en La Calera (de 2022 a 2026) y en Bajo del Choique - La Invernada. En las tres concesiones de YPF, el listado no muestra ninguna desde 2022: puede que se presenten por otra vía, y es una pregunta para hacer, no una conclusión.",
+   "registros": [
+    "8563",
+    "9773",
+    "9774",
+    "9775",
+    "9776",
+    "10448",
+    "13199",
+    "8972",
+    "9734",
+    "10155",
+    "10738",
+    "11176",
+    "11609",
+    "12646",
+    "13178"
+   ]
+  },
+  {
+   "tema": "Informes anuales de monitoreo ambiental",
+   "detalle": "Las cinco concesiones presentan su informe anual (IMAA). En las de YPF es lo único que aparece en el listado desde 2022.",
+   "registros": [
+    "10441",
+    "10452",
+    "11474",
+    "13287",
+    "13288",
+    "12457",
+    "13325",
+    "9363",
+    "10429",
+    "11347",
+    "12335",
+    "13295",
+    "9646",
+    "10559",
+    "11517",
+    "12458",
+    "13413",
+    "10053",
+    "10437",
+    "11358",
+    "12575",
+    "13412"
+   ]
+  },
+  {
+   "tema": "Abandono de pozos (Res. 05/96)",
+   "detalle": "Pluspetrol informa cada año los abandonos ejecutados y el cronograma del año siguiente en La Calera y en Bajo del Choique - La Invernada.",
+   "registros": [
+    "12748",
+    "12757",
+    "12758",
+    "12764",
+    "12765",
+    "9402",
+    "9400",
+    "9935",
+    "9932",
+    "9931",
+    "10014",
+    "10013",
+    "10336",
+    "10335",
+    "10337",
+    "11086",
+    "11083",
+    "11085",
+    "11084",
+    "11087",
+    "11968",
+    "11970",
+    "11969",
+    "12020",
+    "12018",
+    "12019",
+    "12803",
+    "12801",
+    "12802",
+    "12811",
+    "12815",
+    "12814",
+    "12812",
+    "12813"
+   ]
+  },
+  {
+   "tema": "Otros estudios",
+   "detalle": "Un estudio de impacto ambiental para un nuevo repositorio de residuos de la actividad hidrocarburífera, en La Calera.",
+   "registros": [
+    "12220"
+   ]
+  }
+ ]
+}

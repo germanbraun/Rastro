@@ -1,0 +1,79 @@
+# Preguntas de evaluación del dominio de petróleo y gas: las de
+# ontology/energia/competency-questions.md, escritas para que la respuesta sea una lista
+# de nombres o un número.
+#
+#   kind: "lista" o "número"
+#   items: qué se nombra en una lista. Las empresas se comparan por nombre normalizado
+#          (sin acentos, puntuación ni formas societarias); el resto, sin mayúsculas.
+#   reference: SPARQL sobre Rastro (tercer Ontop) con la respuesta correcta, en una sola
+#              columna ?answer. La escribió un asistente de IA (Claude Code), no el LLM
+#              evaluado; falta que la confirme una persona. Como sale de Rastro, donde las
+#              dos formas difieren se revisa con datos reales (adjudicacion.md).
+#
+# Las preguntas dicen explícitamente sus definiciones (qué es la participación, quién es
+# la operadora, desde cuándo cuentan los venteos), para que las dos formas puedan contestarlas.
+
+prefixes: |
+  PREFIX : <https://w3id.org/rastro/energia#>
+
+questions:
+
+  - id: e01
+    question: ¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?
+    kind: número
+    reference: |
+      SELECT (SUM(?oil * ?pct / 100) AS ?answer) WHERE {
+        ?p a :WellProduction ; :concession ?c ; :oil ?oil .
+        ?s a :Stake ; :inConcession ?c ; :partner/:name "YPF S.A." ; :percent ?pct .
+      }
+
+  - id: e02
+    question: ¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?w) AS ?answer) WHERE { ?w a :Well ; :operator/:name "YPF S.A." . }
+
+  - id: e03
+    question: ¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión?
+    kind: lista
+    items: concesiones
+    reference: |
+      SELECT ?answer WHERE {
+        { SELECT ?answer (COUNT(?d) AS ?n) WHERE { ?d a :DetectedVenting ; :inConcession/:name ?answer . }
+          GROUP BY ?answer }
+      } ORDER BY DESC(?n) LIMIT 5
+
+  - id: e04
+    question: ¿Cuáles son las 5 empresas que declararon más petróleo no convencional (shale o tight) en 2025, contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.?
+    kind: lista
+    items: empresas
+    reference: |
+      SELECT ?answer WHERE {
+        { SELECT ?answer (SUM(?oil) AS ?t) WHERE { ?p a :UnconventionalProduction ; :declaredBy/:name ?answer ; :oil ?oil . }
+          GROUP BY ?answer }
+      } ORDER BY DESC(?t) LIMIT 5
+
+  - id: e05
+    question: ¿Cuántas concesiones tienen al menos un posible venteo detectado por satélite desde el 1 de enero de 2024 dentro de su contorno y tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más de su contorno?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?c) AS ?answer) WHERE {
+        ?d a :DetectedVenting ; :inConcession ?c .
+        ?g a :PipelineLink ; :aboutConcession ?c ; :distanceKm ?km .
+        FILTER (?km >= 10)
+      }
+
+  - id: e06
+    question: ¿Cuántos posibles venteos detectados por satélite desde el 1 de enero de 2024, dentro del contorno de alguna concesión, caen dentro de un área protegida del Instituto Geográfico Nacional?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?d) AS ?answer) WHERE {
+        ?d a :DetectedVenting . ?s a :SurroundingsLink ; :aboutVenting ?d ; :protectedArea ?a .
+      }
+
+  - id: e07
+    question: ¿Qué empresas que declaran producción en 2025 tienen un LEI activo en GLEIF cuyo nombre legal es el de la empresa?
+    kind: lista
+    items: empresas
+    reference: |
+      SELECT DISTINCT ?answer WHERE { ?e :name ?answer ; :lei ?lei . ?p :declaredBy ?e . }

@@ -1,0 +1,10 @@
+{
+ "question": "Si cada concesión reparte su petróleo de 2025 entre sus socios según su participación, ¿cuántos metros cúbicos le tocan a YPF?",
+ "attempts": [
+  {
+   "query": "WITH pet AS (\n  SELECT id_concesion, sum(petroleo_m3) AS m3\n  FROM energia.produccion_pozo\n  GROUP BY id_concesion\n)\nSELECT round(sum(pet.m3 * p.porcentaje / 100.0)) AS ypf_m3\nFROM pet\nJOIN energia.participacion p ON p.id_concesion = pet.id_concesion\nJOIN energia.empresa e ON e.empresa_id = p.empresa_id\nWHERE upper(e.nombre) LIKE 'YPF%'",
+   "error": null
+  }
+ ],
+ "answer": 12581213.0
+}

@@ -1,0 +1,24 @@
+{
+ "question": "¿Qué empresas que declaran producción en 2025 tienen un LEI activo en GLEIF cuyo nombre legal es el de la empresa?",
+ "attempts": [
+  {
+   "query": "WITH e AS (\n  SELECT DISTINCT empresa,\n    regexp_replace(trim(regexp_replace(regexp_replace(upper(translate(empresa,'áéíóúÁÉÍÓÚñÑüÜ','aeiouAEIOUnNuU')),'[^A-Z0-9]+',' ','g'),'\\s+',' ','g')),\n      '( S ?A ?U| S ?A| S ?R ?L| S ?E| INC| LLC| LTD| LIMITED| SUCURSAL ARGENTINA| ARGENTINA SUCURSAL)+$','') AS n\n  FROM capitulo4.produccion WHERE anio = 2025 AND empresa IS NOT NULL\n), g AS (\n  SELECT DISTINCT\n    regexp_replace(trim(regexp_replace(regexp_replace(upper(translate(nombre_legal,'áéíóúÁÉÍÓÚñÑüÜ','aeiouAEIOUnNuU')),'[^A-Z0-9]+',' ','g'),'\\s+',' ','g')),\n      '( S ?A ?U| S ?A| S ?R ?L| S ?E| INC| LLC| LTD| LIMITED| SUCURSAL ARGENTINA| ARGENTINA SUCURSAL)+$','') AS n\n  FROM gleif_energia.candidato\n  WHERE upper(estado) = 'ACTIVE' AND lei IS NOT NULL\n)\nSELECT DISTINCT e.empresa FROM e JOIN g ON e.n = g.n ORDER BY 1",
+   "error": "canceling statement due to statement timeout"
+  },
+  {
+   "query": "WITH emp AS (\n  SELECT empresa FROM capitulo4.produccion WHERE anio = 2025 AND empresa IS NOT NULL GROUP BY empresa\n), e AS (\n  SELECT empresa,\n    regexp_replace(trim(regexp_replace(upper(translate(empresa,'áéíóúÁÉÍÓÚñÑüÜ','aeiouAEIOUnNuU')),'[^A-Z0-9]+',' ','g')),\n      '( S ?A ?U| S ?A| S ?R ?L| S ?E| INC| LLC| LTD| LIMITED| SUCURSAL ARGENTINA| ARGENTINA SUCURSAL)+$','') AS n\n  FROM emp\n), g AS (\n  SELECT DISTINCT\n    regexp_replace(trim(regexp_replace(upper(translate(nombre_legal,'áéíóúÁÉÍÓÚñÑüÜ','aeiouAEIOUnNuU')),'[^A-Z0-9]+',' ','g')),\n      '( S ?A ?U| S ?A| S ?R ?L| S ?E| INC| LLC| LTD| LIMITED| SUCURSAL ARGENTINA| ARGENTINA SUCURSAL)+$','') AS n\n  FROM gleif_energia.candidato\n  WHERE upper(estado) = 'ACTIVE' AND lei IS NOT NULL\n)\nSELECT DISTINCT e.empresa FROM e JOIN g ON e.n = g.n ORDER BY 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "CAPEX S.A.",
+  "COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.",
+  "PAMPA ENERGIA S.A.",
+  "PECOM SERVICIOS ENERGIA SAU",
+  "PETROQUIMICA COMODORO RIVADAVIA S.A.",
+  "PLUSPETROL S.A.",
+  "ROCH S.A.",
+  "SHELL ARGENTINA S.A.",
+  "VISTA ENERGY ARGENTINA SAU"
+ ]
+}

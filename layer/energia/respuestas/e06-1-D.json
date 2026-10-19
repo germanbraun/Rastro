@@ -1,0 +1,10 @@
+{
+ "question": "De los posibles venteos detectados por satélite desde 2024 dentro de alguna concesión, ¿cuántos están dentro de un área protegida del IGN?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT v.id)\nFROM energia.venteo v\nJOIN energia.venteo_entorno e ON e.id = v.id\nWHERE v.tipo = 'detectado' AND v.id_concesion IS NOT NULL\n  AND e.area_protegida IS NOT NULL AND e.area_protegida <> ''",
+   "error": null
+  }
+ ],
+ "answer": 60.0
+}

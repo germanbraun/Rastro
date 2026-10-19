@@ -1,0 +1,16 @@
+{
+ "question": "¿Qué cinco concesiones concentran más anomalías térmicas detectadas por satélite desde el 1/1/2024, ubicando cada punto dentro de su contorno?",
+ "attempts": [
+  {
+   "query": "with poli as (\n  select c.id_concesion, c.areapermisoconcesion,\n         ('(' || string_agg('(' || (p.v->>0) || ',' || (p.v->>1) || ')', ',' order by p.ord) || ')')::polygon as pg\n  from sig_energia.concesion c\n  cross join lateral jsonb_array_elements(c.anillo::jsonb) with ordinality as p(v, ord)\n  where c.anillo is not null and jsonb_typeof(c.anillo::jsonb) = 'array'\n  group by c.id_concesion, c.areapermisoconcesion\n  having count(*) >= 3\n)\nselect pl.areapermisoconcesion\nfrom poli pl\njoin sig_energia.venteo_detectado d\n  on d.fecha >= date '2024-01-01'\n and pl.pg @> point(d.lon, d.lat)\ngroup by pl.id_concesion, pl.areapermisoconcesion\norder by count(*) desc\nlimit 5",
+   "error": null
+  }
+ ],
+ "answer": [
+  "LOMA CAMPANA",
+  "LOMA LA LATA - SIERRA BARROSA",
+  "BAJO DEL CHOIQUE - LA INVERNADA",
+  "LA CALERA",
+  "LA ANGOSTURA SUR I"
+ ]
+}

@@ -1,0 +1,10 @@
+{
+ "question": "Tomando como operadora de cada pozo a quien declara su producción en el último mes de 2025 en que el pozo figura, ¿cuántos pozos opera YPF?",
+ "attempts": [
+  {
+   "query": "select count(distinct o.idpozo) from energia.operador_pozo o join energia.empresa e on e.empresa_id = o.empresa_id where e.nombre ilike 'YPF%'",
+   "error": null
+  }
+ ],
+ "answer": 15809.0
+}

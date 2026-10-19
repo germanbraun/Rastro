@@ -1,0 +1,10 @@
+{
+ "question": "De los posibles venteos detectados por satélite desde 2024 dentro de alguna concesión, ¿cuántos están dentro de un área protegida del IGN?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?v) AS ?n) WHERE {\n  ?v a :DetectedVenting ; :inConcession ?c .\n  ?s a :SurroundingsLink ; :aboutVenting ?v ; :protectedArea ?a .\n  FILTER(STR(?a) != \"\")\n}",
+   "error": null
+  }
+ ],
+ "answer": 60.0
+}

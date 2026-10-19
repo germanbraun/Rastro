@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?",
+ "attempts": [
+  {
+   "query": "WITH ultimo AS (\n  SELECT idpozo, max(mes) AS mes FROM capitulo4.produccion WHERE anio = 2025 GROUP BY idpozo\n)\nSELECT count(DISTINCT p.idpozo)\nFROM capitulo4.produccion p\nJOIN ultimo u ON u.idpozo = p.idpozo AND u.mes = p.mes\nWHERE p.anio = 2025 AND upper(p.empresa) LIKE 'YPF%'",
+   "error": null
+  }
+ ],
+ "answer": 15809.0
+}

@@ -51,7 +51,7 @@ STORAGE_NOTE = {
 def label(source):
     return f"{STORAGE.get(source, '')} {SOURCE_LABEL.get(source, source)}".strip()
 
-st.set_page_config(page_title="Rastro", page_icon="🔎", layout="wide")
+st.set_page_config(page_title="Rastro", page_icon="/app/logo.svg", layout="wide")
 
 
 # --- Datos ---------------------------------------------------------
@@ -397,7 +397,9 @@ def show_answer(query, columns, rows, note=None):
             names = [next((v for v in row if v in summary), None) for row in rows]
             column = "Cómo lo reconoce Rastro, en todos sus ensayos" if TECH else "Cómo lo reconoció Rastro"
             table[column] = [summary.get(n, "") for n in names]
-        st.dataframe(table, hide_index=True, use_container_width=True)
+        import logos  # el favicon de cada empresa (sponsor)
+        table, logo_config = logos.with_logos(table, list(columns))
+        st.dataframe(table, hide_index=True, use_container_width=True, column_config=logo_config)
         if TECH:
             st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}. Cada columna dice de qué fuente sale."
                        + (" La evidencia de cada enlace está en «¿De dónde sale la respuesta?»." if drugs else ""))
@@ -431,10 +433,14 @@ def show_answer(query, columns, rows, note=None):
         st.code(query, language="sparql")
         st.markdown("**2. El SQL que Rastro generó y ejecutó en Postgres** (lo traduce Ontop "
                     "con los mapeos; los datos no se copian a otro lado):")
+        sql = None
         try:
-            st.code(pretty(answer.ontop_sql(query), "B"), language="sql")
+            sql = pretty(answer.ontop_sql(query), "B")
+            st.code(sql, language="sql")
         except requests.RequestException:
             st.caption("Ontop no devolvió la traducción.")
+        import dominio  # el botón «Explicame la consulta» es el mismo en todos los dominios
+        dominio.explain(query, sql, "oncologia")
         st.markdown("**3. Las fuentes:**")
         info = sources()
         for s in used:
@@ -473,7 +479,8 @@ def show_answer(query, columns, rows, note=None):
 
 # --- Pantalla ------------------------------------------------------
 
-st.title("Rastro")
+st.markdown('<img src="data:image/svg+xml;base64,' + base64.b64encode(Path("/app/logo-horizontal.svg").read_bytes()).decode()
+            + '" style="height:56px;margin:8px 0 4px 0" alt="Rastro">', unsafe_allow_html=True)
 st.markdown("**Los datos cambian. Las preguntas, no.**")
 
 # Dominios: oncología tiene su pantalla en este archivo; los demás se dibujan con dominio.py

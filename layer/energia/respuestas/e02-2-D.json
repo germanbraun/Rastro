@@ -1,0 +1,10 @@
+{
+ "question": "¿En cuántos pozos con producción en 2025 es YPF la empresa que declara el último mes de producción del pozo?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT o.idpozo)\nFROM energia.operador_pozo o\nJOIN energia.empresa e ON e.empresa_id = o.empresa_id\nWHERE upper(e.nombre) LIKE 'YPF%'\n  AND o.idpozo IN (SELECT idpozo FROM energia.produccion_pozo)",
+   "error": null
+  }
+ ],
+ "answer": 15809.0
+}

@@ -48,16 +48,17 @@ FROM capitulo4.produccion p
 JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = trim(p.empresa)
 GROUP BY p.idpozo, p.idareapermisoconcesion, en.empresa_id, p.formacion, p.tipo_de_recurso, p.sub_tipo_recurso;
 
--- Concesiones del mapa
+-- Concesiones del mapa (algunas tienen dos polígonos en el mapa: una fila por concesión)
 CREATE TABLE energia.concesion AS
-SELECT c.id_concesion, c.areapermisoconcesion AS nombre, en.empresa_id AS operadora_mapa,
+SELECT DISTINCT ON (c.id_concesion) c.id_concesion, c.areapermisoconcesion AS nombre, en.empresa_id AS operadora_mapa,
        c.empresa_informante AS informante, c.estadodearea AS estado
 FROM sig_energia.concesion c
-LEFT JOIN energia.empresa_nombre en ON en.fuente = 'sig_energia' AND en.nombre = trim(c.empresa_operadora);
+LEFT JOIN energia.empresa_nombre en ON en.fuente = 'sig_energia' AND en.nombre = trim(c.empresa_operadora)
+ORDER BY c.id_concesion;
 
 -- Participaciones: el texto del mapa, separado en socios y porcentajes
 CREATE TABLE energia.participacion AS
-SELECT c.id_concesion, en.empresa_id, replace(m[2], ',', '.')::numeric AS porcentaje,
+SELECT DISTINCT c.id_concesion, en.empresa_id, replace(m[2], ',', '.')::numeric AS porcentaje,
        trim(m[1]) || ': ' || m[2] || ' %' AS texto
 FROM sig_energia.concesion c,
      regexp_matches(c.participacion, '<br>\s*([^:<]+?)\s*:\s*([0-9.,]+)\s*%', 'g') m
@@ -105,16 +106,30 @@ WHERE c.estado = 'ACTIVE';
 -- Gasoducto de transporte más cercano a cada concesión y venteos con su entorno (IGN): las
 -- calcula link.py (concesion_gasoducto_calc y venteo_entorno_calc); acá se les pone la evidencia
 CREATE TABLE energia.concesion_gasoducto AS
-SELECT g.id_concesion, g.gasoducto, g.licenciataria, round(g.distancia_km::numeric, 1) AS distancia_km,
+SELECT DISTINCT ON (g.id_concesion) g.id_concesion, g.gasoducto, g.licenciataria, round(g.distancia_km::numeric, 1) AS distancia_km,
        CASE WHEN g.distancia_km = 0 THEN 'El gasoducto de transporte «' || g.gasoducto || '» (' || g.licenciataria
                  || ') cruza el contorno de la concesión ' || c.areapermisoconcesion || '.'
             ELSE 'El gasoducto de transporte más cercano es «' || g.gasoducto || '» (' || g.licenciataria || '), a '
                  || round(g.distancia_km::numeric, 1) || ' km del contorno de la concesión ' || c.areapermisoconcesion || '.'
        END AS evidencia
-FROM energia.concesion_gasoducto_calc g JOIN sig_energia.concesion c USING (id_concesion);
+FROM energia.concesion_gasoducto_calc g JOIN sig_energia.concesion c USING (id_concesion)
+ORDER BY g.id_concesion, g.distancia_km;   -- con dos polígonos, el más cercano
 
 CREATE TABLE energia.venteo_entorno AS
 SELECT v.id, v.localidad, v.provincia, round(v.distancia_km::numeric, 1) AS distancia_km, v.area_protegida,
        'La localidad más cercana es ' || v.localidad || ' (' || v.provincia || '), a ' || round(v.distancia_km::numeric, 1)
        || ' km.' || coalesce(' El punto está dentro del área protegida «' || v.area_protegida || '».', '') AS evidencia
 FROM energia.venteo_entorno_calc v;
+
+-- Estudios ambientales: el listado nombra la concesión como texto. Se une con la concesión del
+-- mapa por nombre normalizado; los que no coinciden quedan sin concesión (no se adivina).
+CREATE TABLE energia.estudio AS
+SELECT md5(concat_ws('|', e.id_estudio, e.nombre_objeto, e.observaciones)) AS id, e.id_estudio, e.fecha_estudio, e.tipo_estudio, e.nombre_objeto, e.observaciones, en.empresa_id,
+       c.id_concesion,
+       CASE WHEN c.id_concesion IS NOT NULL
+            THEN 'El estudio nombra la concesión «' || e.concesion || '», igual al nombre del mapa: ' || c.nombre || '.'
+       END AS evidencia
+FROM ambiental.estudio e
+LEFT JOIN energia.concesion c ON energia.normalizar(c.nombre) = energia.normalizar(e.concesion)
+LEFT JOIN (SELECT DISTINCT nombre, empresa_id FROM energia.empresa_nombre) en ON en.nombre = trim(e.empresa)
+WHERE e.id_estudio IS NOT NULL;   -- un estudio puede tener varios objetos: una fila por objeto

@@ -27,8 +27,8 @@ Detalle por pregunta: [resultados.md](resultados.md). La app lee `resultados.jso
 ## Repetir
 
 ```bash
-docker compose run --rm -T layer-eval python /layer/proveedores/evaluar.py prompt p01 0 C   # el prompt (0 = la pregunta; 1-3 = otras formas)
-docker compose run --rm -T layer-eval python /layer/proveedores/evaluar.py try p01 0 C      # una consulta por stdin
-docker compose run --rm -T layer-eval python /layer/proveedores/evaluar.py puntaje          # puntúa y escribe resultados.json y .md
+docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores prompt p01 0 C   # el prompt (0 = la pregunta; 1-3 = otras formas)
+docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores try p01 0 C      # una consulta por stdin
+docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores puntaje          # puntúa y escribe resultados.json y .md
 layer/proveedores/cambio/cambio.sh registrar                                                # la prueba de cambio (deja todo como estaba)
 ```

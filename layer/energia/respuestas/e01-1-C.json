@@ -1,0 +1,10 @@
+{
+ "question": "Sumá, concesión por concesión, el petróleo de 2025 multiplicado por el porcentaje de participación de YPF. ¿Cuántos metros cúbicos da?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (SUM(?oilC * ?pct / 100) AS ?total) WHERE {\n  {\n    SELECT ?c (SUM(?oil) AS ?oilC) WHERE {\n      ?p a :WellProduction ; :concession ?c ; :oil ?oil .\n    } GROUP BY ?c\n  }\n  {\n    SELECT DISTINCT ?s ?c ?pct WHERE {\n      ?s a :Stake ; :concession ?c ; :partner ?co ; :percent ?pct .\n      ?co :name ?n .\n      FILTER(REGEX(?n, \"^YPF( S\\\\.?A\\\\.?)?$\", \"i\"))\n    }\n  }\n}",
+   "error": null
+  }
+ ],
+ "answer": 0.0
+}

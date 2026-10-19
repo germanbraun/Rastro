@@ -1,7 +1,9 @@
-"""Evaluación del dominio de proveedores: sin Rastro (SQL) y con Rastro (SPARQL).
+"""Evaluación de un dominio (proveedores, energia): sin Rastro (SQL) y con Rastro (SPARQL).
 
 Las respuestas las escribe un LLM que solo ve el prompt (subagentes, a mano o con otro
 asistente): este script le da el prompt, ejecuta cada query que propone y puntúa.
+
+    El primer argumento es el dominio; sus archivos están en layer/<dominio>/.
 
     prompt <q> <n> <B|D|C> el prompt de la pregunta q; n = 0 es la pregunta de la evaluación
                            y n = 1, 2, 3 son sus otras formas (consistencia/parafrasis.yaml)
@@ -14,11 +16,11 @@ asistente): este script le da el prompt, ejecuta cada query que propone y puntú
 
 B es sin Rastro: SQL sobre las tablas de las fuentes tal como se cargaron.
 D es la línea de base justa: SQL sobre las mismas tablas más las tablas de Rastro
-(esquema proveedores), documentadas con lo mismo que dice el diccionario.
-C es con Rastro: SPARQL sobre el segundo Ontop. Cada respuesta queda en
-respuestas/<q>-<n>-<B|D|C>.json.
+(esquema del dominio), documentadas con lo mismo que dice el diccionario.
+C es con Rastro: SPARQL sobre el Ontop del dominio. Cada respuesta queda en
+layer/<dominio>/respuestas/<q>-<n>-<B|D|C>.json.
 
-    docker compose run --rm -T layer-eval python /layer/proveedores/evaluar.py prompt p01 0 C
+    docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores prompt p01 0 C
 """
 
 import json
@@ -30,12 +32,14 @@ from pathlib import Path
 import psycopg
 import yaml
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from answer import MAX_ATTEMPTS, output_schema, retry_message, run_sparql, system_prompt, to_answer, try_query  # noqa: E402
 
-DOMAIN = "proveedores"
-HERE = Path(__file__).parent
+DOMAIN = sys.argv[1]
+HERE = Path(__file__).parent / DOMAIN
+NORMALIZE = {"proveedores": "proveedores.normalize", "energia": "energia.normalizar"}[DOMAIN]
+TITLE = {"proveedores": "proveedores del Estado", "energia": "petróleo y gas en Argentina"}[DOMAIN]
 ANSWERS = HERE / "respuestas"
 SPEC = yaml.safe_load((HERE / "eval" / "questions.yaml").read_text())
 QUESTIONS = {q["id"]: q for q in SPEC["questions"]}
@@ -99,7 +103,7 @@ def normalize(values, items, conn):
     out = set()
     for v in values or []:
         if items == "empresas":
-            out.add(conn.execute("SELECT proveedores.normalize(%s)", (v,)).fetchone()[0])
+            out.add(conn.execute(f"SELECT {NORMALIZE}(%s)", (v,)).fetchone()[0])
         else:
             out.add(" ".join(str(v).lower().split()))
     return out
@@ -132,6 +136,9 @@ def load(qid, n, k):
 
 
 def same(values):
+    """¿Las respuestas son la misma? Los números, salvo redondeo (una parte en un millón)."""
+    if all(isinstance(v, (int, float)) for v in values):
+        return max(values) - min(values) <= 1e-6 * max(1, abs(max(values)))
     keys = {json.dumps(sorted(v), ensure_ascii=False) if isinstance(v, list) else json.dumps(v) for v in values}
     return len(keys) == 1
 
@@ -166,7 +173,7 @@ def score_all():
     (HERE / "resultados.json").write_text(json.dumps(results, ensure_ascii=False, indent=1))
 
     n, m = len(QUESTIONS), len(PARAPHRASES)
-    lines = ["# Resultados: proveedores del Estado, sin Rastro y con Rastro", "",
+    lines = [f"# Resultados: {TITLE}, sin Rastro y con Rastro", "",
              f"Fecha: {results['date']}. Respuestas escritas por subagentes de Claude Code (Claude Opus 5.5) "
              "que solo vieron el prompt. Las referencias las escribió un asistente de IA; falta que las "
              "confirme una persona.", "",
@@ -204,11 +211,11 @@ if __name__ == "__main__":
             c.execute((HERE / "reader.sql").read_text())
     except psycopg.Error:
         pass   # otro proceso los está dando al mismo tiempo ("tuple concurrently updated")
-    command = sys.argv[1]
+    command = sys.argv[2]
     if command == "prompt":
-        prompt(sys.argv[2], int(sys.argv[3]), sys.argv[4])
+        prompt(sys.argv[3], int(sys.argv[4]), sys.argv[5])
     elif command == "try":
-        attempt(sys.argv[2], int(sys.argv[3]), sys.argv[4])
+        attempt(sys.argv[3], int(sys.argv[4]), sys.argv[5])
     elif command == "rerun":
         rerun()
     elif command == "puntaje":

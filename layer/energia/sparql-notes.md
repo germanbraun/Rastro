@@ -10,4 +10,5 @@ Endpoint SPARQL de Rastro (Ontop) sobre cinco fuentes públicas: la producción 
 - `:PipelineLink` (`:aboutConcession`, `:pipeline`, `:distanceKm`): el gasoducto de transporte de ENARGAS más cercano a cada concesión; 0 km si la cruza.
 - `:SurroundingsLink` (`:aboutVenting`, `:nearestTown`, `:distanceKm`, `:protectedArea`): la localidad más cercana a cada posible venteo y su área protegida, según el IGN.
 - `:lei` de una `:Company` es su identificador global en GLEIF (solo las que lo tienen).
+- Los nombres de empresas están como en cada fuente, casi siempre en mayúsculas y con su forma societaria («S.A.», «SAU», «S.R.L.»).
 - El endpoint no soporta caminos de largo arbitrario (`*`, `+`).

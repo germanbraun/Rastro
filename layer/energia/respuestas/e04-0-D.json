@@ -1,0 +1,16 @@
+{
+ "question": "¿Cuáles son las 5 empresas que declararon más petróleo no convencional (shale o tight) en 2025, contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.?",
+ "attempts": [
+  {
+   "query": "SELECT e.nombre\nFROM energia.produccion_pozo p\nJOIN energia.empresa e ON e.empresa_id = p.empresa_id\nWHERE p.tipo_recurso = 'NO CONVENCIONAL'\nGROUP BY e.empresa_id, e.nombre\nORDER BY SUM(p.petroleo_m3) DESC NULLS LAST\nLIMIT 5",
+   "error": null
+  }
+ ],
+ "answer": [
+  "YPF S.A.",
+  "VISTA ENERGY ARGENTINA SAU",
+  "PLUSPETROL",
+  "PAN AMERICAN ENERGY SL",
+  "SHELL ARGENTINA S.A."
+ ]
+}

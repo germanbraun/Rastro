@@ -1,0 +1,10 @@
+{
+ "question": "Tomando como operadora de cada pozo a quien declara su producción en el último mes de 2025 en que el pozo figura, ¿cuántos pozos opera YPF?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?w) AS ?n) WHERE {\n  ?w a :Well ; :operator ?c .\n  FILTER EXISTS { ?c :name ?nm . FILTER(STRSTARTS(UCASE(STR(?nm)), \"YPF\")) }\n}",
+   "error": null
+  }
+ ],
+ "answer": 15809.0
+}

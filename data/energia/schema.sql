@@ -68,3 +68,12 @@ CREATE SCHEMA gleif_energia;
 CREATE TABLE gleif_energia.candidato (   -- lo que devolvió GLEIF para cada nombre buscado
     nombre_buscado text, lei text, nombre_legal text, otros_nombres text, estado text, pais text
 );
+
+-- Estudios ambientales que presentan las empresas (Secretaría de Energía, «Actividad ambiental
+-- de petróleo y gas»): fecha, tipo, concesión y empresa como texto, y observaciones libres
+DROP SCHEMA IF EXISTS ambiental CASCADE;
+CREATE SCHEMA ambiental;
+CREATE TABLE ambiental.estudio (
+    id_estudio text, fecha_estudio date, tipo_estudio text, concesion text, yacimiento text, empresa text,
+    objeto_estudio text, nombre_objeto text, observaciones text
+);

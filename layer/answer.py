@@ -133,6 +133,20 @@ def answer(approach, question, kind, domain="oncologia"):
     return {"answer": None, "attempts": attempts}
 
 
+def explain_query(query, sql, domain="oncologia"):
+    """Explica en palabras simples una consulta SPARQL y el SQL que generó Ontop, para alguien que
+    sabe SQL pero no tecnologías semánticas. Devuelve viñetas en Markdown."""
+    system = ("Explicás consultas a una persona de negocio que sabe SQL pero no conoce tecnologías "
+              "semánticas. En español, en 3 a 5 viñetas cortas: qué busca, qué une o filtra, qué "
+              "devuelve, y qué habría que hacer a mano en SQL que acá ya resuelve el diccionario de "
+              "negocio. Sin jerga: no digas RDF, tripletas ni IRI.\n\n" + (ROOT / DOMAINS[domain]["sparql_notes"]).read_text())
+    content = f"Consulta SPARQL:\n{query}" + (f"\n\nSQL que generó Ontop:\n{sql}" if sql else "")
+    _, data = ask(system, [{"role": "user", "content": content}],
+                  {"type": "object", "properties": {"explicacion": {"type": "string"}},
+                   "required": ["explicacion"], "additionalProperties": False})
+    return data["explicacion"]
+
+
 def retry_message(error):
     return f"La query falló con este error:\n{error}\n\nCorregila."
 

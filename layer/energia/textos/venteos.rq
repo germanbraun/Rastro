@@ -1,0 +1,12 @@
+# Los estudios ambientales presentados desde 2022 en las 5 concesiones donde el satélite vio más
+# posibles venteos desde 2024. El grafo elige exacto; el asistente de IA resume solo estos textos.
+PREFIX : <https://w3id.org/rastro/energia#>
+SELECT ?estudio ?concesion ?operadora ?fecha ?tipo ?texto WHERE {
+  { SELECT ?c (COUNT(?d) AS ?n) WHERE { ?d a :DetectedVenting ; :inConcession ?c . }
+    GROUP BY ?c ORDER BY DESC(?n) LIMIT 5 }
+  ?c :name ?concesion ; :operatorOnMap/:name ?operadora .
+  ?e a :EnvironmentalStudy ; :inConcession ?c ; :studyId ?estudio ; :date ?fecha ; :studyType ?tipo .
+  OPTIONAL { ?e :sourceText ?texto }
+  FILTER (?fecha >= "2022-01-01"^^<http://www.w3.org/2001/XMLSchema#date>)
+}
+ORDER BY ?concesion ?fecha

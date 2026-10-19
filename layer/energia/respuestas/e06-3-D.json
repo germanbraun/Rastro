@@ -1,0 +1,10 @@
+{
+ "question": "Contá los posibles venteos satelitales desde enero de 2024, dentro de concesiones, que están adentro de un área protegida del IGN.",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT v.id) FROM energia.venteo v JOIN energia.venteo_entorno e ON e.id = v.id WHERE v.tipo = 'detectado' AND v.fecha >= DATE '2024-01-01' AND v.id_concesion IS NOT NULL AND coalesce(e.area_protegida, '') <> ''",
+   "error": null
+  }
+ ],
+ "answer": 60.0
+}

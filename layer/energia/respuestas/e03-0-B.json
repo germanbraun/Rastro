@@ -1,0 +1,16 @@
+{
+ "question": "¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión?",
+ "attempts": [
+  {
+   "query": "with pts as (\n  select c.id_concesion, c.areapermisoconcesion, (p.value->>0)::float8 as x, (p.value->>1)::float8 as y, p.ord\n  from sig_energia.concesion c,\n       jsonb_array_elements(c.anillo::jsonb) with ordinality as p(value, ord)\n  where c.anillo is not null and jsonb_typeof(p.value->0) = 'number'\n),\nedges as (\n  select id_concesion, areapermisoconcesion, x as x1, y as y1,\n         coalesce(lead(x) over w, first_value(x) over w) as x2,\n         coalesce(lead(y) over w, first_value(y) over w) as y2\n  from pts\n  window w as (partition by id_concesion order by ord)\n),\nbbox as (\n  select id_concesion, min(x1) minx, max(x1) maxx, min(y1) miny, max(y1) maxy\n  from edges group by id_concesion\n),\ncand as (\n  select b.id_concesion, v.gml_id, v.lon, v.lat\n  from bbox b join sig_energia.venteo_detectado v\n    on v.lon between b.minx and b.maxx and v.lat between b.miny and b.maxy\n  where v.fecha >= date '2024-01-01'\n),\ninside as (\n  select c.id_concesion, c.gml_id\n  from cand c join edges e on e.id_concesion = c.id_concesion\n  where (e.y1 > c.lat) <> (e.y2 > c.lat)\n    and c.lon < (e.x2 - e.x1) * (c.lat - e.y1) / (e.y2 - e.y1) + e.x1\n  group by c.id_concesion, c.gml_id\n  having count(*) % 2 = 1\n)\nselect max(e.areapermisoconcesion) as concesion\nfrom inside i join (select distinct id_concesion, areapermisoconcesion from edges) e on e.id_concesion = i.id_concesion\ngroup by i.id_concesion\norder by count(distinct i.gml_id) desc\nlimit 5",
+   "error": null
+  }
+ ],
+ "answer": [
+  "LOMA CAMPANA",
+  "LOMA LA LATA - SIERRA BARROSA",
+  "BAJO DEL CHOIQUE - LA INVERNADA",
+  "LA CALERA",
+  "LA ANGOSTURA SUR I"
+ ]
+}

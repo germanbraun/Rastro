@@ -1,0 +1,10 @@
+{
+ "question": "Tomando como operadora de cada pozo a quien declara su producción en el último mes de 2025 en que el pozo figura, ¿cuántos pozos opera YPF?",
+ "attempts": [
+  {
+   "query": "with ultimo as (\n  select idpozo, max(mes) as mes from capitulo4.produccion where anio = 2025 group by idpozo\n)\nselect count(distinct p.idpozo)\nfrom capitulo4.produccion p\njoin ultimo u on u.idpozo = p.idpozo and u.mes = p.mes\nwhere p.anio = 2025 and upper(p.empresa) like 'YPF%'",
+   "error": null
+  }
+ ],
+ "answer": 15809.0
+}

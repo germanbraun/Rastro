@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (SUM(?oil * ?pct / 100) AS ?total) WHERE {\n  { SELECT DISTINCT ?c WHERE { ?c a :Company ; :name ?n . FILTER(REGEX(?n, \"^YPF( S\\\\.?A\\\\.?)?$\", \"i\")) } }\n  ?s a :Stake ; :partner ?c ; :concession ?con ; :percent ?pct .\n  ?p a :WellProduction ; :concession ?con ; :oil ?oil .\n}",
+   "error": null
+  }
+ ],
+ "answer": 0.0
+}

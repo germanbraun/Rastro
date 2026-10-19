@@ -1,0 +1,10 @@
+{
+ "question": "Sumá, concesión por concesión, el petróleo de 2025 multiplicado por el porcentaje de participación de YPF. ¿Cuántos metros cúbicos da?",
+ "attempts": [
+  {
+   "query": "SELECT round(sum(c.petroleo * p.porcentaje / 100.0), 2)\nFROM (SELECT id_concesion, sum(petroleo_m3) AS petroleo FROM energia.produccion_pozo GROUP BY id_concesion) c\nJOIN energia.participacion p ON p.id_concesion = c.id_concesion\nJOIN energia.empresa e ON e.empresa_id = p.empresa_id\nWHERE upper(e.nombre) LIKE 'YPF%'",
+   "error": null
+  }
+ ],
+ "answer": 12581212.57
+}

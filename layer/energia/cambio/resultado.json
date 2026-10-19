@@ -1,0 +1,258 @@
+{
+ "antes": {
+  "cells": {
+   "e01": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e04": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e05": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e07": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 6,
+    "—": 1
+   },
+   "C": {
+    "✅": 7
+   }
+  },
+  "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
+ },
+ "renombrar": {
+  "cells": {
+   "e01": {
+    "B": "❌ error",
+    "C": "✅ igual"
+   },
+   "e02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e04": {
+    "B": "❌ error",
+    "C": "✅ igual"
+   },
+   "e05": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e07": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "❌": 2,
+    "✅": 4,
+    "—": 1
+   },
+   "C": {
+    "✅": 7
+   }
+  },
+  "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
+ },
+ "renombrar-arreglado": {
+  "cells": {
+   "e01": {
+    "B": "❌ error",
+    "C": "✅ igual"
+   },
+   "e02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e04": {
+    "B": "❌ error",
+    "C": "✅ igual"
+   },
+   "e05": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e07": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "❌": 2,
+    "✅": 4,
+    "—": 1
+   },
+   "C": {
+    "✅": 7
+   }
+  },
+  "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
+ },
+ "valores": {
+  "cells": {
+   "e01": {
+    "B": "🟡 79.133.311, era 12.581.213",
+    "C": "✅ igual"
+   },
+   "e02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e04": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e05": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e07": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "🟡": 1,
+    "✅": 5,
+    "—": 1
+   },
+   "C": {
+    "✅": 7
+   }
+  },
+  "vocabulary": "🟡 Control de unidades: el petróleo de 2025 suma 293,2 millones de m³, y la producción nacional ronda los 46,6: ¿cambió la unidad?"
+ },
+ "valores-arreglado": {
+  "cells": {
+   "e01": {
+    "B": "🟡 79.133.311, era 12.581.213",
+    "C": "✅ igual"
+   },
+   "e02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e04": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e05": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e07": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "🟡": 1,
+    "✅": 5,
+    "—": 1
+   },
+   "C": {
+    "✅": 7
+   }
+  },
+  "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
+ },
+ "despues": {
+  "cells": {
+   "e01": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e04": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e05": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "e07": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 6,
+    "—": 1
+   },
+   "C": {
+    "✅": 7
+   }
+  },
+  "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
+ }
+}

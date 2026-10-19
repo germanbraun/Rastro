@@ -7,7 +7,10 @@ resumen: >-
   concesiones, socios y venteos de gas de la Secretaría de Energía, los gasoductos de ENARGAS, las
   localidades y áreas protegidas del IGN, y el identificador global de empresas (GLEIF).
 ejemplo_libre: "Por ejemplo: ¿qué empresas producen más gas en la cuenca Neuquina?"
+evaluacion: /layer/energia/resultados.json
+cambio: /layer/energia/cambio/resultado.json
 ontologia: /ontology/energia/energia.ttl
+texto: /layer/energia/textos/venteos.json   # la pregunta sobre textos (GraphRAG anclado)
 diagrama: {archivo: ontologia-energia, titulo: diccionario de petróleo y gas}   # app/ontologia-energia.svg, lo dibuja docs/diagramas/build.py
 
 # La demo en tres pasos: integración, trazabilidad y cruce con mapas
@@ -54,6 +57,11 @@ formatos:
 preguntas:
   - id: e01
     query: /ontology/energia/queries/cq1.rq
+    explicacion: |
+      - **Qué busca:** la producción de petróleo de 2025 de cada pozo, la concesión donde está y los socios de esa concesión con su porcentaje.
+      - **Qué calcula:** por cada empresa, la producción multiplicada por su porcentaje, sumada en todas sus concesiones; al lado, lo que opera (la producción que declara).
+      - **Lo que en SQL habría que hacer a mano:** separar el texto de socios del mapa («YPF S.A.: 50 %») y unir los nombres de empresa entre fuentes. Acá ya son conceptos: «Participación» y «Empresa».
+      - **El SQL de abajo:** Ontop traduce cada concepto a las tablas de enlaces de Rastro y une todo en una sola consulta.
     simple: ¿Cuánto petróleo de 2025 le corresponde a cada empresa, según su participación?
     tecnica: ¿Cuánto petróleo de 2025 le corresponde a cada empresa, multiplicando la producción de cada concesión por su porcentaje?
     ventaja: "Los socios están en un texto del mapa de concesiones; Rastro los separa una vez, con su porcentaje, y une los nombres de cada empresa entre fuentes. Chevron participa con dos razones sociales; una corrección revisada las agrupa."
@@ -75,6 +83,10 @@ preguntas:
 
   - id: e02
     query: /ontology/energia/queries/cq2.rq
+    explicacion: |
+      - **Qué busca:** los enlaces «operadora de un pozo» que nombran a YPF, agrupados por la regla que se aplicó.
+      - **Qué devuelve:** cuántos pozos opera YPF cuando las fuentes coinciden y cuántos cuando rige la declaración jurada porque el padrón dice otra cosa.
+      - **Lo que en SQL habría que hacer a mano:** decidir en cada consulta qué fuente manda (padrón o declaraciones). Acá la regla está escrita una vez, y cada pozo guarda su evidencia.
     simple: ¿Cuántos pozos opera hoy YPF?
     tecnica: ¿Cuántos pozos con producción en 2025 opera hoy YPF, y en cuántos no coinciden las fuentes?
     ventaja: "El padrón de pozos y las declaraciones juradas no siempre nombran a la misma operadora. Rastro aplica una regla escrita una vez (rige quien declara la producción del último mes) y deja a la vista lo que dice el padrón en cada pozo."
@@ -95,6 +107,10 @@ preguntas:
 
   - id: e03
     query: /ontology/energia/queries/cq3.rq
+    explicacion: |
+      - **Qué busca:** los posibles venteos vistos por satélite y la concesión en la que cae cada uno, con su operadora en el mapa y sus puntos de venteo declarados.
+      - **Qué devuelve:** las 10 concesiones con más detecciones.
+      - **Lo que en SQL habría que hacer a mano:** ubicar cada punto dentro del contorno de cada concesión (punto dentro de polígono). Rastro lo calculó una vez; la consulta solo dice «en la concesión».
     simple: ¿En qué concesiones vio el satélite más posibles venteos de gas desde 2024, y quién las opera?
     tecnica: ¿En qué concesiones hay más anomalías térmicas detectadas por satélite desde 2024, con su operadora y sus puntos de venteo declarados?
     ventaja: "La capa del satélite solo dice fecha y provincia. Rastro ubica cada punto dentro del contorno de su concesión, una vez, y así llega a la operadora y a los venteos declarados."
@@ -116,6 +132,10 @@ preguntas:
 
   - id: e04
     query: /ontology/energia/queries/cq4.rq
+    explicacion: |
+      - **Qué busca:** la producción de cada pozo que es «no convencional» y la empresa que la declara.
+      - **Qué devuelve:** las 10 empresas con más petróleo no convencional.
+      - **Lo particular:** «no convencional» no es una columna. El diccionario dice que shale y tight son tipos de no convencional, y Ontop lo deduce. Si mañana se suma otro tipo, se cambia una línea del diccionario, no cada consulta.
     simple: ¿Quiénes producen más petróleo no convencional (shale y tight)?
     tecnica: ¿Qué empresas declaran más petróleo no convencional en 2025 (la clase deducida, sin mapeo propio)?
     ventaja: "«No convencional» se define una vez, en el diccionario de negocio: shale o tight. Ningún mapeo la asigna; vale para todas las preguntas."
@@ -128,6 +148,10 @@ preguntas:
 
   - id: e05
     query: /ontology/energia/queries/cq5.rq
+    explicacion: |
+      - **Qué busca:** las concesiones con posibles venteos y, para cada una, el gasoducto de transporte de ENARGAS más cercano y a cuántos km está.
+      - **Qué filtra:** solo las que tienen ese gasoducto a 10 km o más.
+      - **Lo que en SQL habría que hacer a mano:** medir distancias entre contornos y caños de dos organismos distintos. Rastro las calculó una vez y las guarda con su evidencia.
     simple: ¿Qué concesiones con posibles venteos no tienen un gasoducto de transporte cerca?
     tecnica: ¿Qué concesiones con posibles venteos detectados por satélite tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más?
     ventaja: "Los gasoductos son de otro organismo (ENARGAS). Rastro calcula una vez la distancia de cada concesión al gasoducto más cercano y la une con los venteos: una pista de dónde el gas no tiene salida."
@@ -144,6 +168,10 @@ preguntas:
 
   - id: e06
     query: /ontology/energia/queries/cq6.rq
+    explicacion: |
+      - **Qué busca:** los posibles venteos con su entorno según el IGN: la localidad más cercana y el área protegida, si cae en una.
+      - **Qué filtra:** los que están en un área protegida o a menos de 3 km de una localidad, y los cuenta por concesión y operadora.
+      - **Lo particular:** el entorno viene de otra fuente (IGN) y se unió una vez por ubicación; la consulta lo usa como cualquier otro dato.
     simple: ¿Qué posibles venteos están dentro de un área protegida o cerca de una localidad?
     tecnica: ¿Qué posibles venteos detectados por satélite caen dentro de un área protegida o a menos de 3 km de una localidad, según el IGN?
     ventaja: "Las localidades y las áreas protegidas son del Instituto Geográfico Nacional. Rastro ubica cada posible venteo respecto de ellas una vez, con la evidencia, y llega a la concesión y a su operadora."
@@ -159,6 +187,10 @@ preguntas:
 
   - id: e07
     query: /ontology/energia/queries/cq7.rq
+    explicacion: |
+      - **Qué busca:** las empresas que tienen LEI (el identificador global de GLEIF) y la producción que declaran.
+      - **Qué devuelve:** cada empresa con su LEI y lo que opera, de mayor a menor.
+      - **Lo particular:** el LEI se aceptó solo si coincide el nombre legal; los candidatos descartados quedan en la evidencia.
     simple: ¿Qué empresas tienen identificador global (LEI)?
     tecnica: ¿Qué empresas que producen en Argentina tienen LEI en GLEIF, y cuánto petróleo operan?
     ventaja: "El LEI une cada empresa con el registro global de GLEIF, el mismo que usan bancos y reguladores. Rastro lo acepta solo si coincide el nombre legal, y deja a la vista lo que descartó."
@@ -172,6 +204,42 @@ preguntas:
           ?l a :LeiLink ; :company/:name ?e ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
           FILTER (?e IN ("YPF S.A.", "SHELL ARGENTINA S.A.", "PAN AMERICAN ENERGY SL"))
         }
+
+# «Por qué confiar»: los números salen de la evaluación (layer/energia/resultados.json) y de la
+# prueba de cambio (layer/energia/cambio/resultado.json)
+tarjetas:
+  - titulo: Respuestas correctas
+    valor: "{c_correct} de {n_questions}"
+    compara: "Sin Rastro: {b_correct} de {n_questions}"
+  - titulo: La misma pregunta, la misma respuesta
+    valor: "{c_consistent} de {n_consistency}"
+    compara: "Sin Rastro: {b_consistent} de {n_consistency}"
+  - titulo: Si una fuente cambia, se arregla con
+    valor: 1 línea
+    compara: "Sin Rastro: reescribir {b_broken} consultas"
+  - titulo: Cada respuesta se puede auditar
+    valor: Sí
+    compara: Con la evidencia de cada socio, operadora, ubicación y nombre
+
+cambios:
+  - titulo: Cambia cómo se escribe un valor
+    que: La Secretaría de Energía publica una versión nueva del Capítulo IV y el petróleo pasa a estar en barriles.
+    sql: UPDATE capitulo4.produccion SET prod_pet = prod_pet * 6.2898;
+    antes: valores
+    despues: valores-arreglado
+    donde: "de los enlaces (linking/energia/links.sql), y se vuelven a armar"
+    arreglo:
+      - "sum(p.prod_pet) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
+      - "sum(p.prod_pet / 6.2898) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
+  - titulo: Cambia el nombre de una columna
+    que: La Secretaría de Energía publica una versión nueva del Capítulo IV y la columna del petróleo cambia de nombre.
+    sql: ALTER TABLE capitulo4.produccion RENAME COLUMN prod_pet TO petroleo;
+    antes: renombrar
+    despues: renombrar-arreglado
+    donde: "de los enlaces (linking/energia/links.sql), y se vuelven a armar"
+    arreglo:
+      - "sum(p.prod_pet) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
+      - "sum(p.petroleo) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
 
 faq:
   - pregunta: ¿De dónde salen los datos?

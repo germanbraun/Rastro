@@ -1,0 +1,16 @@
+{
+ "question": "Nombrá las 5 concesiones donde el satélite detectó más posibles venteos desde enero de 2024, contando los puntos que caen dentro del contorno de cada una.",
+ "attempts": [
+  {
+   "query": "SELECT c.nombre FROM energia.venteo v JOIN energia.concesion c ON c.id_concesion = v.id_concesion WHERE v.tipo = 'detectado' AND v.fecha >= DATE '2024-01-01' GROUP BY c.id_concesion, c.nombre ORDER BY count(*) DESC LIMIT 5",
+   "error": null
+  }
+ ],
+ "answer": [
+  "LOMA CAMPANA",
+  "LOMA LA LATA - SIERRA BARROSA",
+  "BAJO DEL CHOIQUE - LA INVERNADA",
+  "LA CALERA",
+  "LA ANGOSTURA SUR I"
+ ]
+}

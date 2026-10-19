@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?w) AS ?n) WHERE {\n  ?w a :Well ; :operator ?c .\n  ?c :name ?name .\n  FILTER(REGEX(?name, \"^YPF( |$)\", \"i\"))\n}",
+   "error": null
+  }
+ ],
+ "answer": 15809.0
+}

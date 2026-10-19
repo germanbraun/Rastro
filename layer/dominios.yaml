@@ -57,9 +57,9 @@ energia:
   ontop: http://ontop-energia:8080/sparql
   ontology: ontology/energia/energia.ttl
   sparql_notes: layer/energia/sparql-notes.md
-  sql_notes: layer/energia/sparql-notes.md        # sin evaluación SQL todavía
-  links_notes: layer/energia/sparql-notes.md
-  readers: {B: rastro_reader, D: rastro_reader}
+  sql_notes: layer/energia/sql-notes.md
+  links_notes: layer/energia/sql-enlaces-notes.md
+  readers: {B: energia_reader, D: energia_reader_links}
   namespace: https://w3id.org/rastro/energia#
   term_sources:
     capitulo4: [WellProduction, ShaleProduction, TightProduction, UnconventionalProduction, Well, oil, gas,
@@ -69,6 +69,7 @@ energia:
     enargas: [pipeline, pipelineOperator]
     ign: [nearestTown, protectedArea]
     gleif: [lei, legalName]
-    rastro: [Stake, partner, percent, OperatorLink, LocationLink, PipelineLink, SurroundingsLink, LeiLink, aboutVenting,
+    ambiental: [EnvironmentalStudy, studyId, studyType]
+    rastro: [Stake, partner, percent, OperatorLink, LocationLink, PipelineLink, SurroundingsLink, LeiLink, StudyLink, aboutStudy, aboutVenting,
              aboutConcession, distanceKm, operator, inConcession, company, registryCompany, CompanyName,
              nameInSource, rule, sourceText, Company]

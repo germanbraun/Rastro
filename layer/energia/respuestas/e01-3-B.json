@@ -1,0 +1,10 @@
+{
+ "question": "Si cada concesión reparte su petróleo de 2025 entre sus socios según su participación, ¿cuántos metros cúbicos le tocan a YPF?",
+ "attempts": [
+  {
+   "query": "WITH pet AS (\n  SELECT idareapermisoconcesion AS id, SUM(prod_pet) AS pet\n  FROM capitulo4.produccion WHERE anio = 2025\n  GROUP BY idareapermisoconcesion\n),\nsocios AS (\n  SELECT c.id_concesion AS id,\n         trim(split_part(p, ':', 1)) AS empresa,\n         replace(regexp_replace(split_part(p, ':', 2), '[^0-9,.]', '', 'g'), ',', '.')::numeric AS pct\n  FROM sig_energia.concesion c,\n       LATERAL regexp_split_to_table(c.participacion, '<br>') AS p\n  WHERE c.participacion IS NOT NULL AND p ~ ':' AND split_part(p, ':', 2) ~ '[0-9]'\n)\nSELECT ROUND(SUM(pet.pet * s.pct / 100), 2)\nFROM pet JOIN socios s ON s.id = pet.id\nWHERE upper(s.empresa) ~ '^YPF( |$|\\.)'",
+   "error": null
+  }
+ ],
+ "answer": 12581212.57
+}

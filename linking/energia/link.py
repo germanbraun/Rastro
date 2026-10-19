@@ -88,6 +88,11 @@ def main():
                 d = min(to_segment(px, py, ax, ay, bx, by) for px, py in ring[::max(1, len(ring) // 60)])
                 if d < best[0]:
                     best = (d, name, lic)
+            if not best[1]:   # ningún gasoducto en la ventana de 1°: se mide contra todos
+                for name, lic, (ax, ay), (bx, by) in segs:
+                    d = min(to_segment(px, py, ax, ay, bx, by) for px, py in ring[::max(1, len(ring) // 20)])
+                    if d < best[0]:
+                        best = (d, name, lic)
             if best[1]:
                 gasoducto.append((cid, best[1], best[2], best[0]))
 

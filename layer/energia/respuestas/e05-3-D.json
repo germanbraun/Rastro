@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántas concesiones con al menos una anomalía térmica desde enero de 2024 están a 10 km o más del gasoducto de transporte de ENARGAS más cercano?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT v.id_concesion)\nFROM energia.venteo v\nJOIN energia.concesion_gasoducto g ON g.id_concesion = v.id_concesion\nWHERE v.tipo = 'detectado' AND v.fecha >= DATE '2024-01-01' AND g.distancia_km >= 10",
+   "error": null
+  }
+ ],
+ "answer": 33.0
+}

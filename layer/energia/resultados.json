@@ -1,0 +1,747 @@
+{
+ "date": "2026-10-19",
+ "questions": {
+  "e01": {
+   "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
+   "kind": "número",
+   "reference": 12581212.573201405,
+   "B": {
+    "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
+    "attempts": [
+     {
+      "query": "with fila as (\n  select c.id_concesion, c.ctid as r,\n         sum(replace(substring(part from ':\\s*([0-9]+(?:[.,][0-9]+)?)\\s*%'), ',', '.')::numeric) as pct\n  from sig_energia.concesion c,\n       regexp_split_to_table(c.participacion, '<br>') as part\n  where upper(trim(part)) ~ '^YPF[^A-Z]' and part ~ ':\\s*[0-9]'\n  group by c.id_concesion, c.ctid\n),\nypf as (select id_concesion, max(pct) as pct from fila group by id_concesion),\nprod as (\n  select idareapermisoconcesion as id, sum(prod_pet) as pet\n  from capitulo4.produccion where anio = 2025 group by idareapermisoconcesion\n)\nselect round(sum(prod.pet * ypf.pct / 100), 2)\nfrom prod join ypf on ypf.id_concesion = prod.id",
+      "error": null
+     }
+    ],
+    "answer": 12581212.57,
+    "ok": true
+   },
+   "D": {
+    "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
+    "attempts": [
+     {
+      "query": "with ypf as (\n  select empresa_id from energia.empresa where nombre ~* '^\\s*YPF(\\s+S\\.?\\s*A\\.?)?\\s*$'\n), prod as (\n  select id_concesion, sum(petroleo_m3) as pet from energia.produccion_pozo group by id_concesion\n)\nselect sum(p.pet * pa.porcentaje / 100.0) as petroleo_ypf_m3\nfrom prod p\njoin energia.participacion pa on pa.id_concesion = p.id_concesion\nwhere pa.empresa_id in (select empresa_id from ypf)",
+      "error": null
+     }
+    ],
+    "answer": 12581212.573201405,
+    "ok": true
+   },
+   "C": {
+    "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
+    "attempts": [
+     {
+      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (SUM(?oil * ?pct / 100) AS ?total) WHERE {\n  { SELECT DISTINCT ?c WHERE { ?c a :Company ; :name ?n . FILTER(REGEX(?n, \"^YPF( S\\\\.?A\\\\.?)?$\", \"i\")) } }\n  ?s a :Stake ; :partner ?c ; :concession ?con ; :percent ?pct .\n  ?p a :WellProduction ; :concession ?con ; :oil ?oil .\n}",
+      "error": null
+     }
+    ],
+    "answer": 0.0,
+    "ok": false
+   }
+  },
+  "e02": {
+   "question": "¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?",
+   "kind": "número",
+   "reference": 15809.0,
+   "B": {
+    "question": "¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?",
+    "attempts": [
+     {
+      "query": "WITH ultimo AS (\n  SELECT idpozo, max(mes) AS mes FROM capitulo4.produccion WHERE anio = 2025 GROUP BY idpozo\n)\nSELECT count(DISTINCT p.idpozo)\nFROM capitulo4.produccion p\nJOIN ultimo u ON u.idpozo = p.idpozo AND u.mes = p.mes\nWHERE p.anio = 2025 AND upper(p.empresa) LIKE 'YPF%'",
+      "error": null
+     }
+    ],
+    "answer": 15809.0,
+    "ok": true
+   },
+   "D": {
+    "question": "¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?",
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT o.idpozo)\nFROM energia.operador_pozo o\nJOIN energia.empresa e ON e.empresa_id = o.empresa_id\nWHERE upper(e.nombre) LIKE 'YPF%'\n  AND o.idpozo IN (SELECT idpozo FROM energia.produccion_pozo)",
+      "error": null
+     }
+    ],
+    "answer": 15809.0,
+    "ok": true
+   },
+   "C": {
+    "question": "¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?",
+    "attempts": [
+     {
+      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?w) AS ?n) WHERE {\n  ?w a :Well ; :operator ?c .\n  ?c :name ?name .\n  FILTER(REGEX(?name, \"^YPF( |$)\", \"i\"))\n}",
+      "error": null
+     }
+    ],
+    "answer": 15809.0,
+    "ok": true
+   }
+  },
+  "e03": {
+   "question": "¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión?",
+   "kind": "lista",
+   "reference": [
+    "LOMA CAMPANA",
+    "LOMA LA LATA - SIERRA BARROSA",
+    "BAJO DEL CHOIQUE - LA INVERNADA",
+    "LA CALERA",
+    "LA ANGOSTURA SUR I"
+   ],
+   "B": {
+    "question": "¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión?",
+    "attempts": [
+     {
+      "query": "with pts as (\n  select c.id_concesion, c.areapermisoconcesion, (p.value->>0)::float8 as x, (p.value->>1)::float8 as y, p.ord\n  from sig_energia.concesion c,\n       jsonb_array_elements(c.anillo::jsonb) with ordinality as p(value, ord)\n  where c.anillo is not null and jsonb_typeof(p.value->0) = 'number'\n),\nedges as (\n  select id_concesion, areapermisoconcesion, x as x1, y as y1,\n         coalesce(lead(x) over w, first_value(x) over w) as x2,\n         coalesce(lead(y) over w, first_value(y) over w) as y2\n  from pts\n  window w as (partition by id_concesion order by ord)\n),\nbbox as (\n  select id_concesion, min(x1) minx, max(x1) maxx, min(y1) miny, max(y1) maxy\n  from edges group by id_concesion\n),\ncand as (\n  select b.id_concesion, v.gml_id, v.lon, v.lat\n  from bbox b join sig_energia.venteo_detectado v\n    on v.lon between b.minx and b.maxx and v.lat between b.miny and b.maxy\n  where v.fecha >= date '2024-01-01'\n),\ninside as (\n  select c.id_concesion, c.gml_id\n  from cand c join edges e on e.id_concesion = c.id_concesion\n  where (e.y1 > c.lat) <> (e.y2 > c.lat)\n    and c.lon < (e.x2 - e.x1) * (c.lat - e.y1) / (e.y2 - e.y1) + e.x1\n  group by c.id_concesion, c.gml_id\n  having count(*) % 2 = 1\n)\nselect max(e.areapermisoconcesion) as concesion\nfrom inside i join (select distinct id_concesion, areapermisoconcesion from edges) e on e.id_concesion = i.id_concesion\ngroup by i.id_concesion\norder by count(distinct i.gml_id) desc\nlimit 5",
+      "error": null
+     }
+    ],
+    "answer": [
+     "LOMA CAMPANA",
+     "LOMA LA LATA - SIERRA BARROSA",
+     "BAJO DEL CHOIQUE - LA INVERNADA",
+     "LA CALERA",
+     "LA ANGOSTURA SUR I"
+    ],
+    "ok": true
+   },
+   "D": {
+    "question": "¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión?",
+    "attempts": [
+     {
+      "query": "SELECT c.nombre FROM energia.venteo v JOIN energia.concesion c ON c.id_concesion = v.id_concesion WHERE v.tipo = 'detectado' AND v.fecha >= DATE '2024-01-01' GROUP BY c.id_concesion, c.nombre ORDER BY count(*) DESC LIMIT 5",
+      "error": null
+     }
+    ],
+    "answer": [
+     "LOMA CAMPANA",
+     "LOMA LA LATA - SIERRA BARROSA",
+     "BAJO DEL CHOIQUE - LA INVERNADA",
+     "LA CALERA",
+     "LA ANGOSTURA SUR I"
+    ],
+    "ok": true
+   },
+   "C": {
+    "question": "¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión?",
+    "attempts": [
+     {
+      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  {\n    SELECT ?c (COUNT(DISTINCT ?v) AS ?n) WHERE {\n      ?v a :DetectedVenting ; :inConcession ?c ; :date ?d .\n      FILTER(STR(?d) >= \"2024-01-01\")\n    } GROUP BY ?c\n  }\n  ?c :name ?nombre .\n}\nORDER BY DESC(?n)\nLIMIT 5",
+      "error": null
+     }
+    ],
+    "answer": [
+     "LOMA CAMPANA",
+     "LOMA LA LATA - SIERRA BARROSA",
+     "BAJO DEL CHOIQUE - LA INVERNADA",
+     "LA CALERA",
+     "LA ANGOSTURA SUR I"
+    ],
+    "ok": true
+   }
+  },
+  "e04": {
+   "question": "¿Cuáles son las 5 empresas que declararon más petróleo no convencional (shale o tight) en 2025, contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.?",
+   "kind": "lista",
+   "reference": [
+    "YPF S.A.",
+    "VISTA ENERGY ARGENTINA SAU",
+    "PLUSPETROL",
+    "PAN AMERICAN ENERGY SL",
+    "SHELL ARGENTINA S.A."
+   ],
+   "B": {
+    "question": "¿Cuáles son las 5 empresas que declararon más petróleo no convencional (shale o tight) en 2025, contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.?",
+    "attempts": [
+     {
+      "query": "SELECT empresa FROM (\n  SELECT CASE WHEN upper(empresa) LIKE 'PLUSPETROL%' THEN 'PLUSPETROL S.A.' ELSE empresa END AS empresa,\n         sum(prod_pet) AS pet\n  FROM capitulo4.produccion\n  WHERE anio = 2025 AND upper(sub_tipo_recurso) IN ('SHALE','TIGHT')\n  GROUP BY 1\n) t\nORDER BY pet DESC NULLS LAST\nLIMIT 5",
+      "error": null
+     }
+    ],
+    "answer": [
+     "YPF S.A.",
+     "VISTA ENERGY ARGENTINA SAU",
+     "PLUSPETROL S.A.",
+     "PAN AMERICAN ENERGY SL",
+     "SHELL ARGENTINA S.A."
+    ],
+    "ok": true
+   },
+   "D": {
+    "question": "¿Cuáles son las 5 empresas que declararon más petróleo no convencional (shale o tight) en 2025, contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.?",
+    "attempts": [
+     {
+      "query": "SELECT e.nombre\nFROM energia.produccion_pozo p\nJOIN energia.empresa e ON e.empresa_id = p.empresa_id\nWHERE p.tipo_recurso = 'NO CONVENCIONAL'\nGROUP BY e.empresa_id, e.nombre\nORDER BY SUM(p.petroleo_m3) DESC NULLS LAST\nLIMIT 5",
+      "error": null
+     }
+    ],
+    "answer": [
+     "YPF S.A.",
+     "VISTA ENERGY ARGENTINA SAU",
+     "PLUSPETROL",
+     "PAN AMERICAN ENERGY SL",
+     "SHELL ARGENTINA S.A."
+    ],
+    "ok": true
+   },
+   "C": {
+    "question": "¿Cuáles son las 5 empresas que declararon más petróleo no convencional (shale o tight) en 2025, contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.?",
+    "attempts": [
+     {
+      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  { SELECT ?c (SUM(?oil) AS ?total) WHERE {\n      ?p a :UnconventionalProduction ; :declaredBy ?c ; :oil ?oil .\n    } GROUP BY ?c }\n  ?c :name ?nombre .\n}\nORDER BY DESC(?total)\nLIMIT 5",
+      "error": null
+     }
+    ],
+    "answer": [
+     "YPF S.A.",
+     "VISTA ENERGY ARGENTINA SAU",
+     "PLUSPETROL",
+     "PAN AMERICAN ENERGY SL",
+     "SHELL ARGENTINA S.A."
+    ],
+    "ok": true
+   }
+  },
+  "e05": {
+   "question": "¿Cuántas concesiones tienen al menos un posible venteo detectado por satélite desde el 1 de enero de 2024 dentro de su contorno y tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más de su contorno?",
+   "kind": "número",
+   "reference": 33.0,
+   "B": {
+    "question": "¿Cuántas concesiones tienen al menos un posible venteo detectado por satélite desde el 1 de enero de 2024 dentro de su contorno y tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más de su contorno?",
+    "attempts": [
+     {
+      "query": "WITH c AS (\n  SELECT id_concesion,\n         CASE WHEN jsonb_typeof(anillo::jsonb->0->0)='array' THEN anillo::jsonb->0 ELSE anillo::jsonb END AS ring\n  FROM sig_energia.concesion WHERE anillo IS NOT NULL AND anillo <> ''\n),\ncv AS (\n  SELECT id_concesion, ord, (p->>0)::float8 AS x, (p->>1)::float8 AS y\n  FROM c, jsonb_array_elements(ring) WITH ORDINALITY t(p, ord)\n),\nce AS (\n  SELECT a.id_concesion, a.x x1, a.y y1, b.x x2, b.y y2\n  FROM cv a JOIN cv b ON a.id_concesion=b.id_concesion AND b.ord=a.ord+1\n),\nbb AS (\n  SELECT id_concesion, min(x) minx, max(x) maxx, min(y) miny, max(y) maxy FROM cv GROUP BY id_concesion\n),\nv AS (\n  SELECT gml_id, lon, lat FROM sig_energia.venteo_detectado WHERE fecha >= DATE '2024-01-01'\n),\ncon_venteo AS (\n  SELECT DISTINCT id_concesion FROM (\n    SELECT bb.id_concesion, v.gml_id\n    FROM v JOIN bb ON v.lon BETWEEN bb.minx AND bb.maxx AND v.lat BETWEEN bb.miny AND bb.maxy\n    JOIN ce ON ce.id_concesion=bb.id_concesion\n    WHERE (ce.y1 > v.lat) <> (ce.y2 > v.lat)\n      AND v.lon < (ce.x2-ce.x1)*(v.lat-ce.y1)/(ce.y2-ce.y1)+ce.x1\n    GROUP BY bb.id_concesion, v.gml_id\n    HAVING count(*) % 2 = 1\n  ) s\n),\ngl AS (\n  SELECT g.gml_id, l.lord, l.line\n  FROM enargas.gasoducto g,\n       jsonb_array_elements(CASE WHEN jsonb_typeof(g.lineas::jsonb->0->0)='array' THEN g.lineas::jsonb ELSE jsonb_build_array(g.lineas::jsonb) END) WITH ORDINALITY l(line, lord)\n  WHERE g.lineas IS NOT NULL AND g.lineas <> ''\n),\ngv AS (\n  SELECT gml_id, lord, ord, (p->>0)::float8 x, (p->>1)::float8 y\n  FROM gl, jsonb_array_elements(line) WITH ORDINALITY t(p, ord)\n),\nge AS (\n  SELECT a.x x1, a.y y1, b.x x2, b.y y2\n  FROM gv a JOIN gv b ON a.gml_id=b.gml_id AND a.lord=b.lord AND b.ord=a.ord+1\n),\n-- distancia punto-segmento en km (proyección equirectangular local)\nd1 AS ( -- vértices de gasoducto contra bordes de concesión\n  SELECT ce.id_concesion, gv.x px, gv.y py, ce.x1, ce.y1, ce.x2, ce.y2\n  FROM gv JOIN ce ON ce.id_concesion IN (SELECT id_concesion FROM con_venteo)\n),\nd2 AS ( -- vértices de concesión contra segmentos de gasoducto\n  SELECT cv.id_concesion, cv.x px, cv.y py, ge.x1, ge.y1, ge.x2, ge.y2\n  FROM cv JOIN ge ON true WHERE cv.id_concesion IN (SELECT id_concesion FROM con_venteo)\n),\ndd AS (SELECT * FROM d1 UNION ALL SELECT * FROM d2),\ndk AS (\n  SELECT id_concesion,\n    (px-x1)*111.32*cos(radians(py)) ax, (py-y1)*110.574 ay,\n    (x2-x1)*111.32*cos(radians(py)) bx, (y2-y1)*110.574 by_\n  FROM dd\n),\ndist AS (\n  SELECT id_concesion,\n    min(sqrt(power(ax - bx*t, 2) + power(ay - by_*t, 2))) dmin\n  FROM (\n    SELECT *, CASE WHEN bx*bx+by_*by_ = 0 THEN 0\n              ELSE greatest(0, least(1, (ax*bx+ay*by_)/(bx*bx+by_*by_))) END t\n    FROM dk\n  ) s\n  GROUP BY id_concesion\n),\ngas_dentro AS ( -- algún vértice de gasoducto dentro del contorno\n  SELECT DISTINCT id_concesion FROM (\n    SELECT ce.id_concesion, gv.gml_id, gv.lord, gv.ord\n    FROM gv JOIN bb ON gv.x BETWEEN bb.minx AND bb.maxx AND gv.y BETWEEN bb.miny AND bb.maxy\n    JOIN ce ON ce.id_concesion=bb.id_concesion\n    WHERE bb.id_concesion IN (SELECT id_concesion FROM con_venteo)\n      AND (ce.y1 > gv.y) <> (ce.y2 > gv.y)\n      AND gv.x < (ce.x2-ce.x1)*(gv.y-ce.y1)/(ce.y2-ce.y1)+ce.x1\n    GROUP BY ce.id_concesion, gv.gml_id, gv.lord, gv.ord\n    HAVING count(*) % 2 = 1\n  ) s\n)\nSELECT count(*) FROM con_venteo cvt\nJOIN dist ON dist.id_concesion = cvt.id_concesion\nWHERE dist.dmin >= 10\n  AND cvt.id_concesion NOT IN (SELECT id_concesion FROM gas_dentro)",
+      "error": "canceling statement due to statement timeout"
+     },
+     {
+      "query": "WITH c AS MATERIALIZED (\n  SELECT id_concesion,\n         CASE WHEN jsonb_typeof(anillo::jsonb->0->0)='array' THEN anillo::jsonb->0 ELSE anillo::jsonb END AS ring\n  FROM sig_energia.concesion WHERE anillo IS NOT NULL AND anillo <> ''\n),\ncv AS MATERIALIZED (\n  SELECT id_concesion, ord, (p->>0)::float8 AS x, (p->>1)::float8 AS y\n  FROM c, jsonb_array_elements(ring) WITH ORDINALITY t(p, ord)\n),\nce AS MATERIALIZED (\n  SELECT a.id_concesion, a.x x1, a.y y1, b.x x2, b.y y2,\n         least(a.y,b.y) ylo, greatest(a.y,b.y) yhi\n  FROM cv a JOIN cv b ON a.id_concesion=b.id_concesion AND b.ord=a.ord+1\n),\nbb AS MATERIALIZED (\n  SELECT id_concesion, min(x) minx, max(x) maxx, min(y) miny, max(y) maxy FROM cv GROUP BY id_concesion\n),\nvb AS MATERIALIZED (\n  SELECT bb.id_concesion, v.gml_id, v.lon, v.lat\n  FROM sig_energia.venteo_detectado v\n  JOIN bb ON v.lon BETWEEN bb.minx AND bb.maxx AND v.lat BETWEEN bb.miny AND bb.maxy\n  WHERE v.fecha >= DATE '2024-01-01'\n),\ncon_venteo AS MATERIALIZED (\n  SELECT DISTINCT id_concesion FROM (\n    SELECT vb.id_concesion, vb.gml_id\n    FROM vb JOIN ce ON ce.id_concesion=vb.id_concesion\n         AND vb.lat > ce.ylo AND vb.lat <= ce.yhi\n    WHERE (ce.y1 > vb.lat) <> (ce.y2 > vb.lat)\n      AND vb.lon < (ce.x2-ce.x1)*(vb.lat-ce.y1)/(ce.y2-ce.y1)+ce.x1\n    GROUP BY vb.id_concesion, vb.gml_id\n    HAVING count(*) % 2 = 1\n  ) s\n),\ngl AS MATERIALIZED (\n  SELECT g.gml_id, l.lord, l.line\n  FROM enargas.gasoducto g,\n       jsonb_array_elements(CASE WHEN jsonb_typeof(g.lineas::jsonb->0->0)='array' THEN g.lineas::jsonb ELSE jsonb_build_array(g.lineas::jsonb) END) WITH ORDINALITY l(line, lord)\n  WHERE g.lineas IS NOT NULL AND g.lineas <> ''\n),\ngv AS MATERIALIZED (\n  SELECT gml_id, lord, ord, (p->>0)::float8 x, (p->>1)::float8 y\n  FROM gl, jsonb_array_elements(line) WITH ORDINALITY t(p, ord)\n),\nge AS MATERIALIZED (\n  SELECT a.x x1, a.y y1, b.x x2, b.y y2,\n         least(a.x,b.x) gminx, greatest(a.x,b.x) gmaxx, least(a.y,b.y) gminy, greatest(a.y,b.y) gmaxy\n  FROM gv a JOIN gv b ON a.gml_id=b.gml_id AND a.lord=b.lord AND b.ord=a.ord+1\n),\n-- segmentos de gasoducto cuya caja toca la caja de la concesión ampliada ~0,2°\ncand AS MATERIALIZED (\n  SELECT bb.id_concesion, ge.*\n  FROM bb JOIN con_venteo cvt ON cvt.id_concesion=bb.id_concesion\n  JOIN ge ON ge.gmaxx >= bb.minx-0.2 AND ge.gminx <= bb.maxx+0.2\n         AND ge.gmaxy >= bb.miny-0.2 AND ge.gminy <= bb.maxy+0.2\n),\ndd AS (\n  -- extremos de los segmentos de gasoducto contra bordes de la concesión\n  SELECT ce.id_concesion, p.px, p.py, ce.x1, ce.y1, ce.x2, ce.y2\n  FROM cand k CROSS JOIN LATERAL (VALUES (k.x1,k.y1),(k.x2,k.y2)) p(px,py)\n  JOIN ce ON ce.id_concesion=k.id_concesion\n  UNION ALL\n  -- vértices de la concesión contra segmentos de gasoducto\n  SELECT k.id_concesion, cv.x, cv.y, k.x1, k.y1, k.x2, k.y2\n  FROM cand k JOIN cv ON cv.id_concesion=k.id_concesion\n),\ndk AS (\n  SELECT id_concesion,\n    (px-x1)*111.32*cos(radians(py)) ax, (py-y1)*110.574 ay,\n    (x2-x1)*111.32*cos(radians(py)) bx, (y2-y1)*110.574 by_\n  FROM dd\n),\ncerca AS (\n  SELECT DISTINCT id_concesion FROM (\n    SELECT id_concesion, ax, ay, bx, by_,\n      CASE WHEN bx*bx+by_*by_ = 0 THEN 0\n           ELSE greatest(0, least(1, (ax*bx+ay*by_)/(bx*bx+by_*by_))) END t\n    FROM dk\n  ) s\n  WHERE sqrt(power(ax - bx*t, 2) + power(ay - by_*t, 2)) < 10\n)\nSELECT count(*) FROM con_venteo\nWHERE id_concesion NOT IN (SELECT id_concesion FROM cerca)",
+      "error": "canceling statement due to statement timeout"
+     },
+     {
+      "query": "WITH c AS MATERIALIZED (\n  SELECT id_concesion,\n         CASE WHEN jsonb_typeof(anillo::jsonb->0->0)='array' THEN anillo::jsonb->0 ELSE anillo::jsonb END AS ring\n  FROM sig_energia.concesion WHERE anillo IS NOT NULL AND anillo <> ''\n),\ncv AS MATERIALIZED (\n  SELECT id_concesion, ord, (p->>0)::float8 AS x, (p->>1)::float8 AS y\n  FROM c, jsonb_array_elements(ring) WITH ORDINALITY t(p, ord)\n),\nbb AS MATERIALIZED (\n  SELECT id_concesion, min(x) minx, max(x) maxx, min(y) miny, max(y) maxy FROM cv GROUP BY id_concesion\n),\nvd AS MATERIALIZED (\n  SELECT DISTINCT round(lon::numeric,3)::float8 lon, round(lat::numeric,3)::float8 lat\n  FROM sig_energia.venteo_detectado WHERE fecha >= DATE '2024-01-01'\n),\nvb AS MATERIALIZED (\n  SELECT bb.id_concesion, vd.lon, vd.lat\n  FROM vd JOIN bb ON vd.lon BETWEEN bb.minx AND bb.maxx AND vd.lat BETWEEN bb.miny AND bb.maxy\n),\nconc AS MATERIALIZED (SELECT DISTINCT id_concesion FROM vb),\nce AS MATERIALIZED (\n  SELECT a.id_concesion, a.x x1, a.y y1, b.x x2, b.y y2\n  FROM cv a JOIN cv b ON a.id_concesion=b.id_concesion AND b.ord=a.ord+1\n  WHERE a.id_concesion IN (SELECT id_concesion FROM conc)\n),\ngl AS MATERIALIZED (\n  SELECT g.gml_id, l.lord, l.line\n  FROM enargas.gasoducto g,\n       jsonb_array_elements(CASE WHEN jsonb_typeof(g.lineas::jsonb->0->0)='array' THEN g.lineas::jsonb ELSE jsonb_build_array(g.lineas::jsonb) END) WITH ORDINALITY l(line, lord)\n  WHERE g.lineas IS NOT NULL AND g.lineas <> ''\n),\ngv AS MATERIALIZED (\n  SELECT gml_id, lord, ord, (p->>0)::float8 x, (p->>1)::float8 y\n  FROM gl, jsonb_array_elements(line) WITH ORDINALITY t(p, ord)\n),\nge AS MATERIALIZED (\n  SELECT a.x x1, a.y y1, b.x x2, b.y y2\n  FROM gv a JOIN gv b ON a.gml_id=b.gml_id AND a.lord=b.lord AND b.ord=a.ord+1\n),\ncand AS MATERIALIZED (\n  SELECT bb.id_concesion, ge.x1, ge.y1, ge.x2, ge.y2\n  FROM bb JOIN conc ON conc.id_concesion=bb.id_concesion\n  JOIN ge ON greatest(ge.x1,ge.x2) >= bb.minx-0.15 AND least(ge.x1,ge.x2) <= bb.maxx+0.15\n         AND greatest(ge.y1,ge.y2) >= bb.miny-0.12 AND least(ge.y1,ge.y2) <= bb.maxy+0.12\n),\ndd AS (\n  SELECT ce.id_concesion, p.px, p.py, ce.x1, ce.y1, ce.x2, ce.y2\n  FROM cand k CROSS JOIN LATERAL (VALUES (k.x1,k.y1),(k.x2,k.y2)) p(px,py)\n  JOIN ce ON ce.id_concesion=k.id_concesion\n  WHERE p.px BETWEEN least(ce.x1,ce.x2)-0.15 AND greatest(ce.x1,ce.x2)+0.15\n    AND p.py BETWEEN least(ce.y1,ce.y2)-0.12 AND greatest(ce.y1,ce.y2)+0.12\n  UNION ALL\n  SELECT k.id_concesion, cv.x, cv.y, k.x1, k.y1, k.x2, k.y2\n  FROM cand k JOIN cv ON cv.id_concesion=k.id_concesion\n  WHERE cv.x BETWEEN least(k.x1,k.x2)-0.15 AND greatest(k.x1,k.x2)+0.15\n    AND cv.y BETWEEN least(k.y1,k.y2)-0.12 AND greatest(k.y1,k.y2)+0.12\n),\ndk AS (\n  SELECT id_concesion,\n    (px-x1)*111.32*cos(radians(py)) ax, (py-y1)*110.574 ay,\n    (x2-x1)*111.32*cos(radians(py)) bx, (y2-y1)*110.574 by_\n  FROM dd\n),\ncerca AS MATERIALIZED (\n  SELECT DISTINCT id_concesion FROM (\n    SELECT id_concesion, ax, ay, bx, by_,\n      CASE WHEN bx*bx+by_*by_ = 0 THEN 0\n           ELSE greatest(0, least(1, (ax*bx+ay*by_)/(bx*bx+by_*by_))) END t\n    FROM dk\n  ) s\n  WHERE sqrt(power(ax - bx*t, 2) + power(ay - by_*t, 2)) < 10\n),\nlejos AS MATERIALIZED (\n  SELECT id_concesion FROM conc WHERE id_concesion NOT IN (SELECT id_concesion FROM cerca)\n),\ndentro AS (\n  SELECT DISTINCT id_concesion FROM (\n    SELECT vb.id_concesion, vb.lon, vb.lat\n    FROM vb JOIN lejos l ON l.id_concesion=vb.id_concesion\n    JOIN ce ON ce.id_concesion=vb.id_concesion\n    WHERE (ce.y1 > vb.lat) <> (ce.y2 > vb.lat)\n      AND vb.lon < (ce.x2-ce.x1)*(vb.lat-ce.y1)/(ce.y2-ce.y1)+ce.x1\n    GROUP BY vb.id_concesion, vb.lon, vb.lat\n    HAVING count(*) % 2 = 1\n  ) s\n)\nSELECT count(*) FROM dentro",
+      "error": "canceling statement due to statement timeout"
+     }
+    ],
+    "answer": null,
+    "ok": false
+   },
+   "D": {
+    "question": "¿Cuántas concesiones tienen al menos un posible venteo detectado por satélite desde el 1 de enero de 2024 dentro de su contorno y tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más de su contorno?",
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT v.id_concesion)\nFROM energia.venteo v\nJOIN energia.concesion_gasoducto g ON g.id_concesion = v.id_concesion\nWHERE v.tipo = 'detectado' AND v.fecha >= DATE '2024-01-01'\n  AND g.distancia_km >= 10",
+      "error": null
+     }
+    ],
+    "answer": 33.0,
+    "ok": true
+   },
+   "C": {
+    "question": "¿Cuántas concesiones tienen al menos un posible venteo detectado por satélite desde el 1 de enero de 2024 dentro de su contorno y tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más de su contorno?",
+    "attempts": [
+     {
+      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?c) AS ?n) WHERE {\n  ?v a :DetectedVenting ; :inConcession ?c ; :date ?d .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  ?p a :PipelineLink ; :aboutConcession ?c ; :distanceKm ?km .\n  FILTER(?km >= 10)\n}",
+      "error": null
+     }
+    ],
+    "answer": 33.0,
+    "ok": true
+   }
+  },
+  "e06": {
+   "question": "¿Cuántos posibles venteos detectados por satélite desde el 1 de enero de 2024, dentro del contorno de alguna concesión, caen dentro de un área protegida del Instituto Geográfico Nacional?",
+   "kind": "número",
+   "reference": 60.0,
+   "B": {
+    "question": "¿Cuántos posibles venteos detectados por satélite desde el 1 de enero de 2024, dentro del contorno de alguna concesión, caen dentro de un área protegida del Instituto Geográfico Nacional?",
+    "attempts": [
+     {
+      "query": "with v as (\n  select gml_id, lon as x, lat as y from sig_energia.venteo_detectado\n  where fecha >= date '2024-01-01' and lon is not null and lat is not null\n),\ncpts as (\n  select c.id_concesion as pid, (p->>0)::float8 as lon, (p->>1)::float8 as lat, n\n  from sig_energia.concesion c, jsonb_array_elements(c.anillo::jsonb) with ordinality t(p, n)\n  where c.anillo is not null and jsonb_typeof(c.anillo::jsonb) = 'array'\n),\ncedges as (\n  select pid, lon as x1, lat as y1,\n         coalesce(lead(lon) over w, first_value(lon) over w) as x2,\n         coalesce(lead(lat) over w, first_value(lat) over w) as y2\n  from cpts window w as (partition by pid order by n)\n),\ncbox as (select pid, min(x1) mnx, max(x1) mxx, min(y1) mny, max(y1) mxy from cedges group by pid),\nen_conc as (\n  select distinct v.gml_id, v.x, v.y\n  from v join cbox b on v.x between b.mnx and b.mxx and v.y between b.mny and b.mxy\n  join cedges e on e.pid = b.pid\n  group by v.gml_id, v.x, v.y, b.pid\n  having sum(case when ((e.y1 > v.y) <> (e.y2 > v.y))\n                   and v.x < (e.x2 - e.x1) * (v.y - e.y1) / (e.y2 - e.y1) + e.x1\n             then 1 else 0 end) % 2 = 1\n),\napts as (\n  select a.gid as pid, r.rn, (p->>0)::float8 as lon, (p->>1)::float8 as lat, n\n  from ign.area_protegida a,\n       jsonb_array_elements(a.anillos::jsonb) with ordinality r(ring, rn),\n       jsonb_array_elements(r.ring) with ordinality t(p, n)\n  where a.anillos is not null\n),\naedges as (\n  select pid, lon as x1, lat as y1,\n         coalesce(lead(lon) over w, first_value(lon) over w) as x2,\n         coalesce(lead(lat) over w, first_value(lat) over w) as y2\n  from apts window w as (partition by pid, rn order by n)\n),\nabox as (select pid, min(x1) mnx, max(x1) mxx, min(y1) mny, max(y1) mxy from aedges group by pid),\nen_area as (\n  select distinct c.gml_id\n  from en_conc c join abox b on c.x between b.mnx and b.mxx and c.y between b.mny and b.mxy\n  join aedges e on e.pid = b.pid\n  group by c.gml_id, c.x, c.y, b.pid\n  having sum(case when ((e.y1 > c.y) <> (e.y2 > c.y))\n                   and c.x < (e.x2 - e.x1) * (c.y - e.y1) / (e.y2 - e.y1) + e.x1\n             then 1 else 0 end) % 2 = 1\n)\nselect count(*) from en_area",
+      "error": "canceling statement due to statement timeout"
+     },
+     {
+      "query": "with v as materialized (\n  select gml_id, lon as x, lat as y from sig_energia.venteo_detectado\n  where fecha >= date '2024-01-01' and lon is not null and lat is not null\n),\ncpts as materialized (\n  select c.id_concesion as pid, (p->>0)::float8 as lon, (p->>1)::float8 as lat, n\n  from sig_energia.concesion c, jsonb_array_elements(c.anillo::jsonb) with ordinality t(p, n)\n  where c.anillo is not null and jsonb_typeof(c.anillo::jsonb) = 'array'\n),\ncedges as materialized (\n  select pid, x1, y1, x2, y2, least(y1, y2) as ylo, greatest(y1, y2) as yhi from (\n    select pid, lon as x1, lat as y1,\n           coalesce(lead(lon) over w, first_value(lon) over w) as x2,\n           coalesce(lead(lat) over w, first_value(lat) over w) as y2\n    from cpts window w as (partition by pid order by n)) s\n  where y1 <> y2\n),\ncbox as materialized (select pid, min(x1) mnx, max(x1) mxx, min(y1) mny, max(y1) mxy from cedges group by pid),\nvc as materialized (\n  select v.gml_id, v.x, v.y, b.pid from v join cbox b\n  on v.x between b.mnx and b.mxx and v.y between b.mny and b.mxy\n),\nen_conc as materialized (\n  select distinct vc.gml_id, vc.x, vc.y from (\n    select vc.gml_id, vc.x, vc.y, vc.pid\n    from vc join cedges e on e.pid = vc.pid\n     and vc.y > e.ylo and vc.y <= e.yhi\n     and ((e.y1 > vc.y) <> (e.y2 > vc.y))\n     and vc.x < (e.x2 - e.x1) * (vc.y - e.y1) / (e.y2 - e.y1) + e.x1\n    group by vc.gml_id, vc.x, vc.y, vc.pid\n    having count(*) % 2 = 1) s\n),\napts as materialized (\n  select a.gid as pid, r.rn, (p->>0)::float8 as lon, (p->>1)::float8 as lat, n\n  from ign.area_protegida a,\n       jsonb_array_elements(a.anillos::jsonb) with ordinality r(ring, rn),\n       jsonb_array_elements(r.ring) with ordinality t(p, n)\n  where a.anillos is not null\n),\naedges as materialized (\n  select pid, x1, y1, x2, y2, least(y1, y2) as ylo, greatest(y1, y2) as yhi from (\n    select pid, lon as x1, lat as y1,\n           coalesce(lead(lon) over w, first_value(lon) over w) as x2,\n           coalesce(lead(lat) over w, first_value(lat) over w) as y2\n    from apts window w as (partition by pid, rn order by n)) s\n  where y1 <> y2\n),\nabox as materialized (select pid, min(x1) mnx, max(x1) mxx, min(y1) mny, max(y1) mxy from aedges group by pid),\nca as materialized (\n  select c.gml_id, c.x, c.y, b.pid from en_conc c join abox b\n  on c.x between b.mnx and b.mxx and c.y between b.mny and b.mxy\n)\nselect count(distinct gml_id) from (\n  select ca.gml_id, ca.pid\n  from ca join aedges e on e.pid = ca.pid\n   and ca.y > e.ylo and ca.y <= e.yhi\n   and ca.x < (e.x2 - e.x1) * (ca.y - e.y1) / (e.y2 - e.y1) + e.x1\n  group by ca.gml_id, ca.pid\n  having count(*) % 2 = 1) s",
+      "error": "missing FROM-clause entry for table \"vc\"\nLINE 24:   select distinct vc.gml_id, vc.x, vc.y from (\n                           ^"
+     },
+     {
+      "query": "with v as materialized (\n  select gml_id, lon as x, lat as y from sig_energia.venteo_detectado\n  where fecha >= date '2024-01-01' and lon is not null and lat is not null\n),\ncpts as materialized (\n  select c.id_concesion as pid, (p->>0)::float8 as lon, (p->>1)::float8 as lat, n\n  from sig_energia.concesion c, jsonb_array_elements(c.anillo::jsonb) with ordinality t(p, n)\n  where c.anillo is not null and jsonb_typeof(c.anillo::jsonb) = 'array'\n),\ncedges as materialized (\n  select pid, x1, y1, x2, y2, least(y1, y2) as ylo, greatest(y1, y2) as yhi from (\n    select pid, lon as x1, lat as y1,\n           coalesce(lead(lon) over w, first_value(lon) over w) as x2,\n           coalesce(lead(lat) over w, first_value(lat) over w) as y2\n    from cpts window w as (partition by pid order by n)) s\n  where y1 <> y2\n),\ncbox as materialized (select pid, min(x1) mnx, max(x1) mxx, min(y1) mny, max(y1) mxy from cedges group by pid),\nvc as materialized (\n  select v.gml_id, v.x, v.y, b.pid from v join cbox b\n  on v.x between b.mnx and b.mxx and v.y between b.mny and b.mxy\n),\nen_conc as materialized (\n  select distinct s.gml_id, s.x, s.y from (\n    select vc.gml_id, vc.x, vc.y, vc.pid\n    from vc join cedges e on e.pid = vc.pid\n     and vc.y > e.ylo and vc.y <= e.yhi\n     and vc.x < (e.x2 - e.x1) * (vc.y - e.y1) / (e.y2 - e.y1) + e.x1\n    group by vc.gml_id, vc.x, vc.y, vc.pid\n    having count(*) % 2 = 1) s\n),\napts as materialized (\n  select a.gid as pid, r.rn, (p->>0)::float8 as lon, (p->>1)::float8 as lat, n\n  from ign.area_protegida a,\n       jsonb_array_elements(a.anillos::jsonb) with ordinality r(ring, rn),\n       jsonb_array_elements(r.ring) with ordinality t(p, n)\n  where a.anillos is not null\n),\naedges as materialized (\n  select pid, x1, y1, x2, y2, least(y1, y2) as ylo, greatest(y1, y2) as yhi from (\n    select pid, lon as x1, lat as y1,\n           coalesce(lead(lon) over w, first_value(lon) over w) as x2,\n           coalesce(lead(lat) over w, first_value(lat) over w) as y2\n    from apts window w as (partition by pid, rn order by n)) s\n  where y1 <> y2\n),\nabox as materialized (select pid, min(x1) mnx, max(x1) mxx, min(y1) mny, max(y1) mxy from aedges group by pid),\nca as materialized (\n  select c.gml_id, c.x, c.y, b.pid from en_conc c join abox b\n  on c.x between b.mnx and b.mxx and c.y between b.mny and b.mxy\n)\nselect count(distinct gml_id) from (\n  select ca.gml_id, ca.pid\n  from ca join aedges e on e.pid = ca.pid\n   and ca.y > e.ylo and ca.y <= e.yhi\n   and ca.x < (e.x2 - e.x1) * (ca.y - e.y1) / (e.y2 - e.y1) + e.x1\n  group by ca.gml_id, ca.pid\n  having count(*) % 2 = 1) s",
+      "error": null
+     }
+    ],
+    "answer": 43.0,
+    "ok": false
+   },
+   "D": {
+    "question": "¿Cuántos posibles venteos detectados por satélite desde el 1 de enero de 2024, dentro del contorno de alguna concesión, caen dentro de un área protegida del Instituto Geográfico Nacional?",
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT v.id)\nFROM energia.venteo v\nJOIN energia.venteo_entorno e ON e.id = v.id\nWHERE v.tipo = 'detectado'\n  AND v.fecha >= DATE '2024-01-01'\n  AND v.id_concesion IS NOT NULL\n  AND coalesce(e.area_protegida, '') <> ''",
+      "error": null
+     }
+    ],
+    "answer": 60.0,
+    "ok": true
+   },
+   "C": {
+    "question": "¿Cuántos posibles venteos detectados por satélite desde el 1 de enero de 2024, dentro del contorno de alguna concesión, caen dentro de un área protegida del Instituto Geográfico Nacional?",
+    "attempts": [
+     {
+      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?v) AS ?n) WHERE {\n  ?v a :DetectedVenting ; :inConcession ?c ; :date ?d .\n  ?s a :SurroundingsLink ; :aboutVenting ?v ; :protectedArea ?a .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  FILTER(STR(?a) != \"\")\n}",
+      "error": null
+     }
+    ],
+    "answer": 60.0,
+    "ok": true
+   }
+  },
+  "e07": {
+   "question": "¿Qué empresas que declaran producción en 2025 tienen un LEI activo en GLEIF cuyo nombre legal es el de la empresa?",
+   "kind": "lista",
+   "reference": [
+    "CAPEX S.A.",
+    "COMPAÑIA GENERAL DE COMBUSTIBLES",
+    "PAMPA ENERGIA S.A.",
+    "PAN AMERICAN ENERGY SL",
+    "PECOM SERVICIOS ENERGIA SAU",
+    "PETROQUIMICA COMODORO RIVADAVIA S.A.",
+    "PLUSPETROL",
+    "ROCH S.A.",
+    "SHELL ARGENTINA S.A.",
+    "TECPETROL S.A.",
+    "VISTA ENERGY ARGENTINA SAU",
+    "YPF S.A."
+   ],
+   "B": {
+    "question": "¿Qué empresas que declaran producción en 2025 tienen un LEI activo en GLEIF cuyo nombre legal es el de la empresa?",
+    "attempts": [
+     {
+      "query": "WITH e AS (\n  SELECT DISTINCT empresa,\n    regexp_replace(trim(regexp_replace(regexp_replace(upper(translate(empresa,'áéíóúÁÉÍÓÚñÑüÜ','aeiouAEIOUnNuU')),'[^A-Z0-9]+',' ','g'),'\\s+',' ','g')),\n      '( S ?A ?U| S ?A| S ?R ?L| S ?E| INC| LLC| LTD| LIMITED| SUCURSAL ARGENTINA| ARGENTINA SUCURSAL)+$','') AS n\n  FROM capitulo4.produccion WHERE anio = 2025 AND empresa IS NOT NULL\n), g AS (\n  SELECT DISTINCT\n    regexp_replace(trim(regexp_replace(regexp_replace(upper(translate(nombre_legal,'áéíóúÁÉÍÓÚñÑüÜ','aeiouAEIOUnNuU')),'[^A-Z0-9]+',' ','g'),'\\s+',' ','g')),\n      '( S ?A ?U| S ?A| S ?R ?L| S ?E| INC| LLC| LTD| LIMITED| SUCURSAL ARGENTINA| ARGENTINA SUCURSAL)+$','') AS n\n  FROM gleif_energia.candidato\n  WHERE upper(estado) = 'ACTIVE' AND lei IS NOT NULL\n)\nSELECT DISTINCT e.empresa FROM e JOIN g ON e.n = g.n ORDER BY 1",
+      "error": "canceling statement due to statement timeout"
+     },
+     {
+      "query": "WITH emp AS (\n  SELECT empresa FROM capitulo4.produccion WHERE anio = 2025 AND empresa IS NOT NULL GROUP BY empresa\n), e AS (\n  SELECT empresa,\n    regexp_replace(trim(regexp_replace(upper(translate(empresa,'áéíóúÁÉÍÓÚñÑüÜ','aeiouAEIOUnNuU')),'[^A-Z0-9]+',' ','g')),\n      '( S ?A ?U| S ?A| S ?R ?L| S ?E| INC| LLC| LTD| LIMITED| SUCURSAL ARGENTINA| ARGENTINA SUCURSAL)+$','') AS n\n  FROM emp\n), g AS (\n  SELECT DISTINCT\n    regexp_replace(trim(regexp_replace(upper(translate(nombre_legal,'áéíóúÁÉÍÓÚñÑüÜ','aeiouAEIOUnNuU')),'[^A-Z0-9]+',' ','g')),\n      '( S ?A ?U| S ?A| S ?R ?L| S ?E| INC| LLC| LTD| LIMITED| SUCURSAL ARGENTINA| ARGENTINA SUCURSAL)+$','') AS n\n  FROM gleif_energia.candidato\n  WHERE upper(estado) = 'ACTIVE' AND lei IS NOT NULL\n)\nSELECT DISTINCT e.empresa FROM e JOIN g ON e.n = g.n ORDER BY 1",
+      "error": null
+     }
+    ],
+    "answer": [
+     "CAPEX S.A.",
+     "COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.",
+     "PAMPA ENERGIA S.A.",
+     "PECOM SERVICIOS ENERGIA SAU",
+     "PETROQUIMICA COMODORO RIVADAVIA S.A.",
+     "PLUSPETROL S.A.",
+     "ROCH S.A.",
+     "SHELL ARGENTINA S.A.",
+     "VISTA ENERGY ARGENTINA SAU"
+    ],
+    "ok": true
+   },
+   "D": {
+    "question": "¿Qué empresas que declaran producción en 2025 tienen un LEI activo en GLEIF cuyo nombre legal es el de la empresa?",
+    "attempts": [
+     {
+      "query": "SELECT DISTINCT e.nombre\nFROM energia.empresa e\nJOIN energia.empresa_lei l ON l.empresa_id = e.empresa_id\nWHERE EXISTS (SELECT 1 FROM energia.produccion_pozo p WHERE p.empresa_id = e.empresa_id)\n  AND EXISTS (SELECT 1 FROM gleif_energia.candidato c WHERE c.lei = l.lei AND upper(c.estado) = 'ACTIVE')\nORDER BY e.nombre",
+      "error": null
+     }
+    ],
+    "answer": [
+     "CAPEX S.A.",
+     "COMPAÑIA GENERAL DE COMBUSTIBLES",
+     "PAMPA ENERGIA S.A.",
+     "PAN AMERICAN ENERGY SL",
+     "PECOM SERVICIOS ENERGIA SAU",
+     "PETROQUIMICA COMODORO RIVADAVIA S.A.",
+     "PLUSPETROL",
+     "ROCH S.A.",
+     "SHELL ARGENTINA S.A.",
+     "TECPETROL S.A.",
+     "VISTA ENERGY ARGENTINA SAU",
+     "YPF S.A."
+    ],
+    "ok": true
+   },
+   "C": {
+    "question": "¿Qué empresas que declaran producción en 2025 tienen un LEI activo en GLEIF cuyo nombre legal es el de la empresa?",
+    "attempts": [
+     {
+      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT DISTINCT ?nombre WHERE {\n  ?p a :WellProduction ; :declaredBy ?e .\n  ?e :lei ?lei ; :name ?nombre .\n}",
+      "error": null
+     }
+    ],
+    "answer": [
+     "CAPEX S.A.",
+     "COMPAÑIA GENERAL DE COMBUSTIBLES",
+     "PAMPA ENERGIA S.A.",
+     "PAN AMERICAN ENERGY SL",
+     "PECOM SERVICIOS ENERGIA SAU",
+     "PETROQUIMICA COMODORO RIVADAVIA S.A.",
+     "PLUSPETROL",
+     "ROCH S.A.",
+     "SHELL ARGENTINA S.A.",
+     "TECPETROL S.A.",
+     "VISTA ENERGY ARGENTINA SAU",
+     "YPF S.A."
+    ],
+    "ok": true
+   }
+  }
+ },
+ "totals": {
+  "B": {
+   "correct": 5,
+   "consistent": 3,
+   "consistent_correct": 11,
+   "retries": 3
+  },
+  "D": {
+   "correct": 7,
+   "consistent": 5,
+   "consistent_correct": 20,
+   "retries": 0
+  },
+  "C": {
+   "correct": 6,
+   "consistent": 5,
+   "consistent_correct": 16,
+   "retries": 0
+  }
+ },
+ "consistency": {
+  "e01": {
+   "texts": [
+    "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
+    "Sumá, concesión por concesión, el petróleo de 2025 multiplicado por el porcentaje de participación de YPF. ¿Cuántos metros cúbicos da?",
+    "¿Qué volumen de petróleo de 2025, en m³, es de YPF si se reparte la producción de cada concesión entre sus socios según su porcentaje?",
+    "Si cada concesión reparte su petróleo de 2025 entre sus socios según su participación, ¿cuántos metros cúbicos le tocan a YPF?"
+   ],
+   "B": {
+    "answers": [
+     12581212.57,
+     12581213.0,
+     12581213.0,
+     12581212.57
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "D": {
+    "answers": [
+     12581212.573201405,
+     12581212.57,
+     12581213.0,
+     12581213.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "C": {
+    "answers": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "ok": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "same": true
+   }
+  },
+  "e02": {
+   "texts": [
+    "¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?",
+    "Tomando como operadora de cada pozo a quien declara su producción en el último mes de 2025 en que el pozo figura, ¿cuántos pozos opera YPF?",
+    "¿En cuántos pozos con producción en 2025 es YPF la empresa que declara el último mes de producción del pozo?",
+    "Contá los pozos que declararon producción en 2025 cuya última declaración del año la presentó YPF."
+   ],
+   "B": {
+    "answers": [
+     15809.0,
+     15809.0,
+     6263.0,
+     15809.0
+    ],
+    "ok": [
+     true,
+     true,
+     false,
+     true
+    ],
+    "same": false
+   },
+   "D": {
+    "answers": [
+     15809.0,
+     15809.0,
+     15809.0,
+     15809.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "C": {
+    "answers": [
+     15809.0,
+     15809.0,
+     15809.0,
+     15809.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   }
+  },
+  "e03": {
+   "texts": [
+    "¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión?",
+    "Nombrá las 5 concesiones donde el satélite detectó más posibles venteos desde enero de 2024, contando los puntos que caen dentro del contorno de cada una.",
+    "¿Qué cinco concesiones concentran más anomalías térmicas detectadas por satélite desde el 1/1/2024, ubicando cada punto dentro de su contorno?",
+    "Top 5 de concesiones por cantidad de posibles venteos satelitales desde 2024, según el contorno de la concesión."
+   ],
+   "B": {
+    "answers": [
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ],
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ],
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ],
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ]
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "D": {
+    "answers": [
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ],
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ],
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ],
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ]
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "C": {
+    "answers": [
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ],
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ],
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ],
+     [
+      "LOMA CAMPANA",
+      "LOMA LA LATA - SIERRA BARROSA",
+      "BAJO DEL CHOIQUE - LA INVERNADA",
+      "LA CALERA",
+      "LA ANGOSTURA SUR I"
+     ]
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   }
+  },
+  "e05": {
+   "texts": [
+    "¿Cuántas concesiones tienen al menos un posible venteo detectado por satélite desde el 1 de enero de 2024 dentro de su contorno y tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más de su contorno?",
+    "¿En cuántas concesiones con algún posible venteo satelital desde 2024 el gasoducto de transporte de ENARGAS más cercano está a 10 km o más del contorno?",
+    "Contá las concesiones que tienen posibles venteos detectados por satélite desde el 1/1/2024 y ningún gasoducto de transporte de ENARGAS a menos de 10 km de su contorno.",
+    "¿Cuántas concesiones con al menos una anomalía térmica desde enero de 2024 están a 10 km o más del gasoducto de transporte de ENARGAS más cercano?"
+   ],
+   "B": {
+    "answers": [
+     null,
+     null,
+     null,
+     null
+    ],
+    "ok": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "same": true
+   },
+   "D": {
+    "answers": [
+     33.0,
+     33.0,
+     33.0,
+     33.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "C": {
+    "answers": [
+     33.0,
+     33.0,
+     33.0,
+     33.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   }
+  },
+  "e06": {
+   "texts": [
+    "¿Cuántos posibles venteos detectados por satélite desde el 1 de enero de 2024, dentro del contorno de alguna concesión, caen dentro de un área protegida del Instituto Geográfico Nacional?",
+    "De los posibles venteos detectados por satélite desde 2024 dentro de alguna concesión, ¿cuántos están dentro de un área protegida del IGN?",
+    "¿Cuántas anomalías térmicas satelitales desde el 1/1/2024, ubicadas en una concesión, caen en áreas protegidas según el Instituto Geográfico Nacional?",
+    "Contá los posibles venteos satelitales desde enero de 2024, dentro de concesiones, que están adentro de un área protegida del IGN."
+   ],
+   "B": {
+    "answers": [
+     43.0,
+     41.0,
+     42.0,
+     null
+    ],
+    "ok": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "same": false
+   },
+   "D": {
+    "answers": [
+     60.0,
+     60.0,
+     60.0,
+     60.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "C": {
+    "answers": [
+     60.0,
+     60.0,
+     60.0,
+     60.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   }
+  }
+ }
+}

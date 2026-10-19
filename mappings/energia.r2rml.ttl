@@ -9,7 +9,7 @@
 
 <#DataSource> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery """
-        SELECT id, name, license FROM rastro_meta.source WHERE id IN ('capitulo4', 'sig_energia', 'enargas', 'ign', 'gleif')""" ] ;
+        SELECT id, name, license FROM rastro_meta.source WHERE id IN ('capitulo4', 'sig_energia', 'enargas', 'ign', 'gleif', 'ambiental')""" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/source/{id}" ; rr:class :DataSource ] ;
     rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
     rr:predicateObjectMap [ rr:predicate :license ; rr:objectMap [ rr:column "license" ] ] .
@@ -159,3 +159,30 @@
     rr:logicalTable [ rr:tableName "energia.empresa_lei" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ;
     rr:predicateObjectMap [ rr:predicate :lei ; rr:objectMap [ rr:column "lei" ] ] .
+
+# --- Estudios ambientales (Secretaría de Energía) ----------------
+
+<#EnvironmentalStudy> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery """
+        SELECT id, id_estudio, fecha_estudio, tipo_estudio, id_concesion, empresa_id,
+               CAST(coalesce(observaciones, nombre_objeto) AS text) AS texto
+        FROM energia.estudio""" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/study/{id}" ; rr:class :EnvironmentalStudy ] ;
+    rr:predicateObjectMap [ rr:predicate :studyId ; rr:objectMap [ rr:column "id_estudio" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :date ; rr:objectMap [ rr:column "fecha_estudio" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :studyType ; rr:objectMap [ rr:column "tipo_estudio" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "texto" ; rr:datatype xsd:string ] ] ;
+    rr:predicateObjectMap [ rr:predicate :company ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/ambiental> ] ] .
+
+<#StudyLink> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, id_concesion, evidencia FROM energia.estudio WHERE id_concesion IS NOT NULL" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/studylink/{id}" ; rr:class :StudyLink ] ;
+    rr:predicateObjectMap [ rr:predicate :aboutStudy ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/study/{id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :rule ; rr:objectMap [ rr:constant "mismo nombre de concesión" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/ambiental> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-study-names> ] ] .

@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántas concesiones con al menos una anomalía térmica desde enero de 2024 están a 10 km o más del gasoducto de transporte de ENARGAS más cercano?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?c) AS ?n) WHERE {\n  ?v a :DetectedVenting ; :inConcession ?c .\n  ?p a :PipelineLink ; :aboutConcession ?c ; :distanceKm ?d .\n  FILTER(?d >= 10)\n}",
+   "error": null
+  }
+ ],
+ "answer": 33.0
+}

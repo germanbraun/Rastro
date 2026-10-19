@@ -1,0 +1,54 @@
+# Sitios web de empresas que no salen de Wikidata. Revisado por un asistente de IA (Claude Code);
+# falta que lo confirme una persona. Las claves son el nombre como aparece en las fuentes.
+energia:
+  YPF S.A.: ypf.com
+  PAN AMERICAN ENERGY SL: pan-energy.com
+  VISTA ENERGY ARGENTINA SAU: vistaenergy.com
+  CHEVRON: chevron.com
+  SHELL ARGENTINA S.A.: shell.com.ar
+  petronas e&p argentina s.a.: petronas.com
+  PLUSPETROL: pluspetrol.net
+  COMPAÑIA GENERAL DE COMBUSTIBLES: cgc.energy
+  PECOM SERVICIOS ENERGIA SAU: pecomenergia.com.ar
+  TECPETROL S.A.: tecpetrol.com
+  PAMPA ENERGIA S.A.: pampaenergia.com
+  CAPEX S.A.: capex.com.ar
+  PETROQUIMICA COMODORO RIVADAVIA S.A.: pcr.energy
+  TOTAL AUSTRAL S.A.: totalenergies.com.ar
+  PETROLEOS SUDAMERICANOS S.A.: petrosud.com.ar
+  PHOENIX GLOBAL RESOURCES S.A.: phoenixglobalresources.com
+oncologia:
+  Novartis Pharmaceuticals: novartis.com
+  AstraZeneca: astrazeneca.com
+  Hoffmann-La Roche: roche.com
+  Pfizer: pfizer.com
+  Bristol-Myers Squibb: bms.com
+  Merck Sharp & Dohme LLC: merck.com
+  Eli Lilly and Company: lilly.com
+  GlaxoSmithKline: gsk.com
+  Bayer: bayer.com
+  Amgen: amgen.com
+  Sanofi: sanofi.com
+  Celgene: bms.com
+  AbbVie: abbvie.com
+  Janssen Research & Development, LLC: janssen.com
+  Boehringer Ingelheim: boehringer-ingelheim.com
+  Genentech, Inc.: gene.com
+  Daiichi Sankyo: daiichisankyo.com
+  Incyte Corporation: incyte.com
+  Eisai Inc.: eisai.com
+  Gilead Sciences: gilead.com
+  Takeda: takeda.com
+  Regeneron Pharmaceuticals: regeneron.com
+  Seagen Inc.: seagen.com
+  Ipsen: ipsen.com
+  BeiGene: beigene.com
+  Merck KGaA, Darmstadt, Germany: merckgroup.com
+  Jazz Pharmaceuticals: jazzpharma.com
+proveedores:
+  GENERAL DYNAMICS CORP: gd.com
+  LOCKHEED MARTIN CORP: lockheedmartin.com
+  BECHTEL GROUP, INC.: bechtel.com
+  Jacobs Solutions Inc.: jacobs.com
+  ACCENTURE PLC: accenture.com
+  HUMANA GOVERNMENT BUSINESS INC: humana.com

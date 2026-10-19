@@ -11,7 +11,7 @@ la producción de 2025 pozo por pozo, las concesiones con sus socios, quién ope
 venteos de gas, con los gasoductos de transporte (ENARGAS), las localidades y áreas protegidas (IGN)
 y el identificador global de las empresas (GLEIF). Cada enlace entre fuentes lleva su evidencia, con PROV-O. «Producción no
 convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight)."""@es ;
-    owl:versionInfo "0.3" .
+    owl:versionInfo "0.4" .
 
 # Clases ---------------------------------------------------------
 
@@ -147,3 +147,16 @@ convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight).
 :legalName a owl:DatatypeProperty ; rdfs:domain :LeiLink ; rdfs:label "nombre legal en GLEIF"@es .
 :date a owl:DatatypeProperty ; rdfs:domain :Venting ; rdfs:label "fecha"@es .
 :satellite a owl:DatatypeProperty ; rdfs:domain :DetectedVenting ; rdfs:label "satélite"@es .
+
+:EnvironmentalStudy a owl:Class ;
+    rdfs:label "Estudio ambiental"@es ;
+    rdfs:comment "Un estudio o informe ambiental que presentó una empresa (monitoreo, abandono de pozos, planillas de venteo de gas…), según el listado de la Secretaría de Energía."@es .
+
+:StudyLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Concesión de un estudio ambiental"@es ;
+    rdfs:comment "A qué concesión del mapa corresponde un estudio: el listado nombra la concesión como texto, y se une si el nombre coincide."@es .
+
+:studyId a owl:DatatypeProperty ; rdfs:domain :EnvironmentalStudy ; rdfs:label "número del estudio"@es .
+:studyType a owl:DatatypeProperty ; rdfs:domain :EnvironmentalStudy ; rdfs:label "tipo de estudio"@es .
+:aboutStudy a owl:ObjectProperty ; rdfs:domain :StudyLink ; rdfs:range :EnvironmentalStudy ; rdfs:label "sobre el estudio"@es .

@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
+ "attempts": [
+  {
+   "query": "with ypf as (\n  select empresa_id from energia.empresa where nombre ~* '^\\s*YPF(\\s+S\\.?\\s*A\\.?)?\\s*$'\n), prod as (\n  select id_concesion, sum(petroleo_m3) as pet from energia.produccion_pozo group by id_concesion\n)\nselect sum(p.pet * pa.porcentaje / 100.0) as petroleo_ypf_m3\nfrom prod p\njoin energia.participacion pa on pa.id_concesion = p.id_concesion\nwhere pa.empresa_id in (select empresa_id from ypf)",
+   "error": null
+  }
+ ],
+ "answer": 12581212.573201405
+}

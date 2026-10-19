@@ -17,6 +17,7 @@ import streamlit as st
 import yaml
 
 import answer
+import logos
 
 PROV = "PREFIX prov: <http://www.w3.org/ns/prov#>\n"
 
@@ -102,7 +103,8 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
     if not rows:
         st.info("La consulta no devolvió resultados.")
     else:
-        st.dataframe(as_table(columns, rows, cfg, tech, col_sources), hide_index=True, use_container_width=True)
+        table, config = logos.with_logos(as_table(columns, rows, cfg, tech, col_sources), columns)
+        st.dataframe(table, hide_index=True, use_container_width=True, column_config=config)
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}."
                    + (" La evidencia está en «¿De dónde sale la respuesta?»." if item and item.get("evidencia") else ""))
 
@@ -134,11 +136,13 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
         st.markdown("**1. La consulta**, sobre los conceptos de Rastro (SPARQL):")
         st.code(query, language="sparql")
         st.markdown("**2. El SQL que Rastro generó y ejecutó en Postgres** (lo traduce Ontop con los mapeos):")
+        sql = None
         try:
-            st.code(sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper",
-                                    indent_width=2), language="sql")
+            sql = sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper", indent_width=2)
+            st.code(sql, language="sql")
         except requests.RequestException:
             st.caption("Ontop no devolvió la traducción.")
+        explain(query, sql, domain, item)
         st.markdown("**3. Las fuentes:**")
         for s in used:
             if s == "rastro":
@@ -156,6 +160,22 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
             st.code(ev_query, language="sparql")
             ev_cols, ev_rows = run(ev_query, domain)
             st.dataframe(pd.DataFrame(ev_rows, columns=ev_cols), hide_index=True, use_container_width=True)
+
+
+def explain(query, sql, domain, item=None):
+    """«Explicame la consulta»: las preguntas de ejemplo traen su explicación guardada; las propias
+    se explican en vivo si hay un LLM configurado."""
+    key = f"explain_{abs(hash(query))}"
+    stored = (item or {}).get("explicacion")
+    available, _ = llm_status()
+    if st.button("💬 Explicame la consulta", key=key, disabled=not stored and not available,
+                 help=None if stored or available else "Para explicar preguntas propias hace falta un LLM."):
+        st.session_state[key] = stored
+        if not stored:
+            with st.spinner("El LLM está leyendo la consulta..."):
+                st.session_state[key] = answer.explain_query(query, sql, domain)
+    if st.session_state.get(key):
+        st.info(md(st.session_state[key]))
 
 
 def short(value):
@@ -310,6 +330,9 @@ def show_text_question(cfg, tech, demo=False):
             return
     query = Path(item["consulta"]).read_text()
     _, rows = run(query, domain)
+    if "columnas" in item:   # registros cualesquiera (no contratos): temas que citan registros por su id
+        show_records(item, query, rows, tech)
+        return
     contracts = {c: (float(m), a, e, d) for c, m, a, e, d in rows}
     if demo and item.get("busqueda_texto"):
         compare_text_search(item, contracts, domain, tech, always=True)
@@ -337,6 +360,29 @@ def show_text_question(cfg, tech, demo=False):
                      hide_index=True, use_container_width=True)
         st.caption(f"Resumen guardado el {item['fecha']}. Los contratos y montos se leen en vivo; si cambian "
                    "los datos, el resumen hay que volver a generarlo.")
+
+
+def show_records(item, query, rows, tech):
+    """La pregunta sobre textos para registros cualesquiera: la consulta devuelve una fila por registro
+    (la primera columna es su id), y el resumen guardado los agrupa en temas que los citan."""
+    records = {r[0]: r for r in rows}
+    st.markdown(md(item["intro"].format(n=len(records))))
+    for theme in item["temas"]:
+        found = [r for r in theme["registros"] if r in records]
+        st.markdown(f"- **{md(theme['tema'])}** · {len(found)} {item['unidad'][0] if len(found) == 1 else item['unidad'][1]}. "
+                    f"{md(theme['detalle'])}  \n<small>{', '.join(found)}</small>", unsafe_allow_html=True)
+    with st.expander("¿De dónde sale la respuesta?"):
+        st.markdown(md(item["como"]))
+        if tech:
+            st.markdown("**1. La consulta que elige los registros** (exacta, sobre el grafo):")
+            st.code(query, language="sparql")
+            st.markdown("**2. Los textos que leyó el asistente**, tal como están en el grafo:")
+        else:
+            st.markdown("**Los textos analizados**, tal como están en la fuente:")
+        st.dataframe(pd.DataFrame([list(r) for r in records.values()], columns=item["columnas"]),
+                     hide_index=True, use_container_width=True)
+        st.caption(f"Resumen guardado el {item['fecha']}. Los registros se leen en vivo; si cambian los datos, "
+                   "el resumen hay que volver a generarlo.")
 
 
 def company(name):
@@ -386,11 +432,13 @@ def llm_status():
 def trust(cfg, tech, evaluation, changes):
     totals = evaluation.get("totals", {})
     consistency = evaluation.get("consistency", {})
-    broken = max((sum(n for s, n in changes.get(c["antes"], {}).get("totals", {}).get("B", {}).items() if s != "✅")
+    broken = max((sum(n for s, n in changes.get(c["antes"], {}).get("totals", {}).get("B", {}).items() if s not in ("✅", "—"))
                   for c in cfg.get("cambios", [])), default=0)
     numbers = {"c_consistent": totals.get("C", {}).get("consistent", "—"),
                "b_consistent": totals.get("B", {}).get("consistent", "—"),
-               "n_consistency": len(consistency), "b_broken": broken}
+               "n_consistency": len(consistency), "b_broken": broken,
+               "c_correct": totals.get("C", {}).get("correct", "—"), "b_correct": totals.get("B", {}).get("correct", "—"),
+               "n_questions": len(evaluation.get("questions", {}))}
     st.markdown("### Por qué confiar")
     st.caption("El mismo asistente de IA, sin Rastro (escribe SQL sobre las bases tal como vienen) y con Rastro.")
     for col, card in zip(st.columns(len(cfg["tarjetas"])), cfg["tarjetas"]):
@@ -456,7 +504,7 @@ def trust(cfg, tech, evaluation, changes):
             if "🟡" in before.get("vocabulary", ""):
                 st.warning("Rastro avisa: " + md(before["vocabulary"].split(": ", 1)[-1]))
             if tech:
-                st.markdown("**El arreglo en Rastro: una línea del mapeo**")
+                st.markdown(f"**El arreglo en Rastro: una línea {change.get('donde', 'del mapeo')}**")
                 st.code(f"- {change['arreglo'][0]}\n+ {change['arreglo'][1]}", language="diff")
             else:
                 st.markdown("**El arreglo en Rastro:** una línea, en la traducción de esa base al diccionario de negocio.")

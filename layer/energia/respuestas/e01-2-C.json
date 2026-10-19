@@ -1,0 +1,10 @@
+{
+ "question": "¿Qué volumen de petróleo de 2025, en m³, es de YPF si se reparte la producción de cada concesión entre sus socios según su porcentaje?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (SUM(?o * ?p / 100) AS ?volumen) WHERE {\n  { SELECT ?c (SUM(?oil) AS ?o) WHERE { ?wp a :WellProduction ; :concession ?c ; :oil ?oil } GROUP BY ?c }\n  ?s a :Stake ; :concession ?c ; :partner ?co ; :percent ?p .\n  { SELECT DISTINCT ?co WHERE { ?co a :Company ; :name ?n FILTER(STRSTARTS(UCASE(STR(?n)), \"YPF\")) } }\n}",
+   "error": null
+  }
+ ],
+ "answer": 0.0
+}

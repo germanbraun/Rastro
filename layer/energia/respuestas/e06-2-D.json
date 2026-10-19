@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántas anomalías térmicas satelitales desde el 1/1/2024, ubicadas en una concesión, caen en áreas protegidas según el Instituto Geográfico Nacional?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT v.id)\nFROM energia.venteo v\nJOIN energia.venteo_entorno e ON e.id = v.id\nWHERE v.tipo = 'detectado'\n  AND v.fecha >= DATE '2024-01-01'\n  AND v.id_concesion IS NOT NULL\n  AND coalesce(e.area_protegida, '') <> ''",
+   "error": null
+  }
+ ],
+ "answer": 60.0
+}

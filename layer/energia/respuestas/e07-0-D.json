@@ -1,0 +1,23 @@
+{
+ "question": "¿Qué empresas que declaran producción en 2025 tienen un LEI activo en GLEIF cuyo nombre legal es el de la empresa?",
+ "attempts": [
+  {
+   "query": "SELECT DISTINCT e.nombre\nFROM energia.empresa e\nJOIN energia.empresa_lei l ON l.empresa_id = e.empresa_id\nWHERE EXISTS (SELECT 1 FROM energia.produccion_pozo p WHERE p.empresa_id = e.empresa_id)\n  AND EXISTS (SELECT 1 FROM gleif_energia.candidato c WHERE c.lei = l.lei AND upper(c.estado) = 'ACTIVE')\nORDER BY e.nombre",
+   "error": null
+  }
+ ],
+ "answer": [
+  "CAPEX S.A.",
+  "COMPAÑIA GENERAL DE COMBUSTIBLES",
+  "PAMPA ENERGIA S.A.",
+  "PAN AMERICAN ENERGY SL",
+  "PECOM SERVICIOS ENERGIA SAU",
+  "PETROQUIMICA COMODORO RIVADAVIA S.A.",
+  "PLUSPETROL",
+  "ROCH S.A.",
+  "SHELL ARGENTINA S.A.",
+  "TECPETROL S.A.",
+  "VISTA ENERGY ARGENTINA SAU",
+  "YPF S.A."
+ ]
+}
