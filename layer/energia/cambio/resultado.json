@@ -45,7 +45,7 @@
   "cells": {
    "e01": {
     "B": "❌ error",
-    "C": "✅ igual"
+    "C": "❌ error"
    },
    "e02": {
     "B": "✅ igual",
@@ -57,11 +57,11 @@
    },
    "e04": {
     "B": "❌ error",
-    "C": "✅ igual"
+    "C": "❌ error"
    },
    "e05": {
     "B": "—",
-    "C": "✅ igual"
+    "C": "❌ error"
    },
    "e06": {
     "B": "✅ igual",
@@ -79,10 +79,11 @@
     "—": 1
    },
    "C": {
-    "✅": 7
+    "❌": 3,
+    "✅": 4
    }
   },
-  "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
+  "vocabulary": "Control de unidades: Rastro no responde (it.unibz.inf.ontop.exception.OntopQueryEvaluationException: org.postgresql.util.PSQLException: ERROR: column p.prod_pet )"
  },
  "renombrar-arreglado": {
   "cells": {
@@ -131,7 +132,7 @@
   "cells": {
    "e01": {
     "B": "🟡 79.133.311, era 12.581.213",
-    "C": "✅ igual"
+    "C": "🟡 79.133.311, era 12.581.213"
    },
    "e02": {
     "B": "✅ igual",
@@ -165,7 +166,8 @@
     "—": 1
    },
    "C": {
-    "✅": 7
+    "🟡": 1,
+    "✅": 6
    }
   },
   "vocabulary": "🟡 Control de unidades: el petróleo de 2025 suma 293,2 millones de m³, y la producción nacional ronda los 46,6: ¿cambió la unidad?"

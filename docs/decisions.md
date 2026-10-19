@@ -426,3 +426,12 @@ Para mostrar los cambios de operadora (por ejemplo, las áreas maduras que YPF v
 - **Verificación humana de los tres dominios** (`docs/verificacion-humana.md`, partes 5 y 6): las empresas de Leidos, Austal, los socios de cuatro concesiones, los grupos, los venteos en áreas protegidas, tres LEI, tres cambios de operadora y los resúmenes de textos, con enlaces para comprobar.
 - **Un número viejo:** la diapositiva de fuentes de petróleo y gas, el guion y las preguntas de competencia decían 29 concesiones sin gasoducto cerca; desde el arreglo de distancias son 33.
 - README y `CLAUDE.md` describen los tres dominios, un mapeo por dominio y un prefijo por dominio.
+
+## 2026-10-19 — Petróleo y gas: el petróleo y el gas se leen de la tabla original, como en oncología
+
+En la prueba de cambio, Rastro seguía en 7 de 7 aunque la fuente renombrara una columna: los mapeos leían la producción ya sumada en una tabla de enlaces (`energia.produccion_pozo`), que no se entera del cambio hasta que se vuelve a armar. No se veía el impacto ni dónde se arregla.
+
+- **Ahora el mapeo lee el petróleo y el gas de `capitulo4.produccion`** (`<#WellProductionAmounts>` en `mappings/energia.r2rml.ttl`), como oncología lee el estado de AACT. Los enlaces siguen haciendo lo difícil: quién declara (el nombre de la empresa unido entre fuentes), el pozo y la concesión. Las respuestas no cambian (Rastro 7 de 7; las consultas guardadas dan lo mismo).
+- **La prueba de cambio, medida de nuevo** (`layer/energia/cambio/resultado.json`): con la columna renombrada, sin Rastro se rompen 2 consultas y con Rastro 3; una línea del mapeo deja a Rastro en 7 de 7, y sin Rastro hay que reescribir cada consulta. Con el petróleo en barriles, las dos formas dan 79 millones de m³ en lugar de 12,6, pero Rastro avisa; una línea del mapeo lo arregla.
+- **SQL + enlaces** sigue leyendo la tabla de enlaces con la producción sumada, como en la evaluación; la prueba de cambio compara sin Rastro y con Rastro.
+- **«Por qué confiar», en la vista técnica:** las tres pruebas (correctas, consistencia y cambios) quedaron en tres pestañas, en los tres dominios. Antes estaban una debajo de la otra, y elegir una pregunta de la evaluación parecía cambiar los escenarios de cambio, que son siempre de todas las preguntas. Los escenarios suman una tabla pregunta por pregunta.

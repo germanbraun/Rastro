@@ -609,7 +609,13 @@ with trust_tab:
             st.markdown(f'<p style="font-size:2.4rem;line-height:1.1;margin:0">{value}</p>',
                         unsafe_allow_html=True)
             st.caption(compare)
-    with st.container() if TECH else st.expander("Ver las 40 respuestas"):
+    # Las tres pruebas, separadas: en la vista técnica, una pestaña cada una, para que elegir una pregunta
+    # en una prueba no parezca cambiar las otras
+    if TECH:
+        trust_correct, trust_same, trust_change = st.tabs(["1 · Correctas (20 preguntas)",
+                                                           "2 · Misma respuesta de 4 formas (10 preguntas)",
+                                                           "3 · Cuando una base cambia (las 20 preguntas)"])
+    with trust_same if TECH else st.expander("Ver las 40 respuestas"):
         st.caption("10 preguntas, cada una hecha de 4 formas con el mismo significado.")
         approaches = {"B": "Sin Rastro", "D": "SQL + enlaces", "C": "Con Rastro"} if TECH else \
                      {"B": "Sin Rastro", "C": "Con Rastro"}
@@ -635,115 +641,116 @@ with trust_tab:
         st.dataframe(pd.DataFrame(detail), hide_index=True, use_container_width=True,
                      column_config={"Cómo se preguntó": st.column_config.TextColumn(width="large")})
         if TECH:
-            st.markdown("##### Detalle técnico: las cuatro formas, pregunta por pregunta")
-            totals, per_question = scores()
-            data = saved()["questions"]
-            n = len(questions())
-            st.markdown("El mismo LLM respondió las mismas 20 preguntas de cuatro formas:")
-            cols = st.columns(len(NAMES))
-            help_text = {"A": "Sin datos: responde de memoria.",
-                         "B": "SQL sobre las tablas de las fuentes; resuelve los cruces por su cuenta.",
-                         "D": "SQL sobre las mismas tablas más los enlaces de Rastro: la línea de base justa.",
-                         "C": "Consulta sobre los conceptos de Rastro; los cruces ya están resueltos."}
-            for col, k in zip(cols, NAMES):
-                col.metric(NAMES[k], f"{totals[k]}/{n}")
-                col.caption(help_text[k])
-            st.info("Con los enlaces de Rastro, el SQL acierta igual: la precisión viene de la integración "
-                    "hecha una vez. La capa semántica suma que esa integración se mantiene en un solo "
-                    "lugar, dice de dónde sale cada dato y se conecta con datos de afuera. " + FAQ_HINT)
-            with st.expander("Cómo responde cada forma", expanded=True):
-                svg = base64.b64encode(Path("/app/como-funciona.svg").read_bytes()).decode()
-                st.markdown(f'<img src="data:image/svg+xml;base64,{svg}" style="width:100%">',
-                            unsafe_allow_html=True)
+            with trust_correct:
+                st.markdown("##### Detalle técnico: las cuatro formas, pregunta por pregunta")
+                totals, per_question = scores()
+                data = saved()["questions"]
+                n = len(questions())
+                st.markdown("El mismo LLM respondió las mismas 20 preguntas de cuatro formas:")
+                cols = st.columns(len(NAMES))
+                help_text = {"A": "Sin datos: responde de memoria.",
+                             "B": "SQL sobre las tablas de las fuentes; resuelve los cruces por su cuenta.",
+                             "D": "SQL sobre las mismas tablas más los enlaces de Rastro: la línea de base justa.",
+                             "C": "Consulta sobre los conceptos de Rastro; los cruces ya están resueltos."}
+                for col, k in zip(cols, NAMES):
+                    col.metric(NAMES[k], f"{totals[k]}/{n}")
+                    col.caption(help_text[k])
+                st.info("Con los enlaces de Rastro, el SQL acierta igual: la precisión viene de la integración "
+                        "hecha una vez. La capa semántica suma que esa integración se mantiene en un solo "
+                        "lugar, dice de dónde sale cada dato y se conecta con datos de afuera. " + FAQ_HINT)
+                with st.expander("Cómo responde cada forma", expanded=True):
+                    svg = base64.b64encode(Path("/app/como-funciona.svg").read_bytes()).decode()
+                    st.markdown(f'<img src="data:image/svg+xml;base64,{svg}" style="width:100%">',
+                                unsafe_allow_html=True)
 
-            st.subheader("Pregunta por pregunta")
-            st.caption("🔁 marca las preguntas en las que el SQL directo necesitó más de un intento.")
+                st.subheader("Pregunta por pregunta")
+                st.caption("🔁 marca las preguntas en las que el SQL directo necesitó más de un intento.")
 
-            def option_label(q):
-                retried = len(data[q["id"]]["B"]["attempts"]) > 1
-                return ("🔁 " if retried else "") + q["question"]
+                def option_label(q):
+                    retried = len(data[q["id"]]["B"]["attempts"]) > 1
+                    return ("🔁 " if retried else "") + q["question"]
 
-            options = {option_label(q): q for q in questions()}
-            chosen = st.selectbox("Pregunta", list(options), label_visibility="collapsed", key="compare_question")
-            q = options[chosen]
-            show_plain(q["id"])
-            entry = data[q["id"]]
+                options = {option_label(q): q for q in questions()}
+                chosen = st.selectbox("Pregunta", list(options), label_visibility="collapsed", key="compare_question")
+                q = options[chosen]
+                show_plain(q["id"])
+                entry = data[q["id"]]
 
-            def fmt(value):
-                if value is None:
-                    return "sin respuesta"
-                if isinstance(value, list):
-                    return ", ".join(value[:12]) + (f" y {len(value) - 12} más" if len(value) > 12 else "")
-                return f"{value:,.0f}" if value >= 10 else f"{value:.1f}"
+                def fmt(value):
+                    if value is None:
+                        return "sin respuesta"
+                    if isinstance(value, list):
+                        return ", ".join(value[:12]) + (f" y {len(value) - 12} más" if len(value) > 12 else "")
+                    return f"{value:,.0f}" if value >= 10 else f"{value:.1f}"
 
-            def why_wrong(k):
-                custom = explanations().get(q["id"], {}).get(k)
-                if custom:
-                    return custom
-                ref, got = entry["reference"], entry[k]["answer"]
-                if got is None:
-                    return "No logró una consulta que funcione."
-                if q["kind"] == "número":
-                    gap = abs(got - ref) / abs(ref) * 100 if ref else 100
-                    prefix = "Respondió de memoria, sin acceso a los datos: " if k == "A" else ""
-                    return f"{prefix}dijo {fmt(got)} y la cifra real es {fmt(ref)} (un {gap:.0f} % de diferencia)."
-                with admin() as conn:
-                    ref_set = normalize(ref, q["items"], conn)
-                    got_set = normalize(got, q["items"], conn)
-                hits = len(ref_set & got_set)
-                prefix = "Nombró de memoria los más conocidos: " if k == "A" else ""
-                return (f"{prefix}coincide en {hits} de los {len(ref_set)} correctos"
-                        + (f" y agrega {len(got_set - ref_set)} que no corresponden." if got_set - ref_set else "."))
+                def why_wrong(k):
+                    custom = explanations().get(q["id"], {}).get(k)
+                    if custom:
+                        return custom
+                    ref, got = entry["reference"], entry[k]["answer"]
+                    if got is None:
+                        return "No logró una consulta que funcione."
+                    if q["kind"] == "número":
+                        gap = abs(got - ref) / abs(ref) * 100 if ref else 100
+                        prefix = "Respondió de memoria, sin acceso a los datos: " if k == "A" else ""
+                        return f"{prefix}dijo {fmt(got)} y la cifra real es {fmt(ref)} (un {gap:.0f} % de diferencia)."
+                    with admin() as conn:
+                        ref_set = normalize(ref, q["items"], conn)
+                        got_set = normalize(got, q["items"], conn)
+                    hits = len(ref_set & got_set)
+                    prefix = "Nombró de memoria los más conocidos: " if k == "A" else ""
+                    return (f"{prefix}coincide en {hits} de los {len(ref_set)} correctos"
+                            + (f" y agrega {len(got_set - ref_set)} que no corresponden." if got_set - ref_set else "."))
 
-            st.markdown(f"**Respuesta correcta:** {fmt(entry['reference'])}")
-            cols = st.columns(len(NAMES))
-            for col, k in zip(cols, NAMES):
-                with col:
-                    ok = per_question[q["id"]].get(k)
-                    st.markdown(f"#### {NAMES[k]}")
-                    st.markdown(("✅ " if ok else "❌ ") + fmt(entry[k]["answer"]))
-                    if not ok:
-                        st.warning("**¿Por qué falló?** " + why_wrong(k))
-                    query = last_ok_query(entry, k)
-                    if k == "A":
-                        st.caption("Respondió de memoria, sin consultar datos.")
-                        continue
-                    if k == "B" and query and link_method(query):
-                        st.caption(f"Para reconocer los fármacos, los buscó {LINK_METHODS[link_method(query)]}.")
-                    if k == "D" and query and "linking." in query:
-                        st.caption("Para reconocer los fármacos usó las tablas de enlaces de Rastro.")
-                    if k == "C" and query and "oncologia:testsDrug" in query:
-                        st.caption("Para reconocer los fármacos usó el enlace de Rastro: el mismo en todas "
-                                   "las preguntas.")
-                    if query:
-                        shown = pretty(query, k)
-                        attempts = len(entry[k]["attempts"])
-                        seconds = entry[k].get("seconds")
-                        st.caption(f"{len(shown.splitlines())} líneas"
-                                   + (f" · {seconds:.1f} s" if seconds is not None else "")
-                                   + f" · {attempts} intento{'s' if attempts != 1 else ''}")
-                        st.code(shown, language="sql" if k in "BD" else "sparql")
-                        history = entry[k]["attempts"]
-                        if len(history) > 1:
-                            with st.expander(f"🔁 Ver los {len(history)} intentos hasta dar con el resultado"):
-                                st.caption("Cada vez que una query falló, el LLM recibió el error y "
-                                           "escribió otra. Hasta tres intentos, igual para SQL y para Rastro.")
-                                for i, attempt in enumerate(history, start=1):
-                                    if attempt["error"]:
-                                        st.markdown(f"**Intento {i}: ❌ falló**")
-                                        st.error(friendly_error(attempt["error"]))
-                                    else:
-                                        st.markdown(f"**Intento {i}: ✅ funcionó**")
-                                    st.code(pretty(attempt["query"], k), language="sql" if k in "BD" else "sparql")
-                        if k == "C":
-                            with st.expander("El SQL que Rastro generó a partir de esta consulta"):
-                                st.caption("Ontop traduce la consulta a SQL sobre Postgres usando los "
-                                           "mapeos. Comparalo con el que el LLM tuvo que escribir a mano: "
-                                           "los cruces ya resueltos son tablas simples.")
-                                try:
-                                    st.code(pretty(answer.ontop_sql(query), "B"), language="sql")
-                                except requests.RequestException:
-                                    st.caption("Ontop no devolvió la traducción.")
+                st.markdown(f"**Respuesta correcta:** {fmt(entry['reference'])}")
+                cols = st.columns(len(NAMES))
+                for col, k in zip(cols, NAMES):
+                    with col:
+                        ok = per_question[q["id"]].get(k)
+                        st.markdown(f"#### {NAMES[k]}")
+                        st.markdown(("✅ " if ok else "❌ ") + fmt(entry[k]["answer"]))
+                        if not ok:
+                            st.warning("**¿Por qué falló?** " + why_wrong(k))
+                        query = last_ok_query(entry, k)
+                        if k == "A":
+                            st.caption("Respondió de memoria, sin consultar datos.")
+                            continue
+                        if k == "B" and query and link_method(query):
+                            st.caption(f"Para reconocer los fármacos, los buscó {LINK_METHODS[link_method(query)]}.")
+                        if k == "D" and query and "linking." in query:
+                            st.caption("Para reconocer los fármacos usó las tablas de enlaces de Rastro.")
+                        if k == "C" and query and "oncologia:testsDrug" in query:
+                            st.caption("Para reconocer los fármacos usó el enlace de Rastro: el mismo en todas "
+                                       "las preguntas.")
+                        if query:
+                            shown = pretty(query, k)
+                            attempts = len(entry[k]["attempts"])
+                            seconds = entry[k].get("seconds")
+                            st.caption(f"{len(shown.splitlines())} líneas"
+                                       + (f" · {seconds:.1f} s" if seconds is not None else "")
+                                       + f" · {attempts} intento{'s' if attempts != 1 else ''}")
+                            st.code(shown, language="sql" if k in "BD" else "sparql")
+                            history = entry[k]["attempts"]
+                            if len(history) > 1:
+                                with st.expander(f"🔁 Ver los {len(history)} intentos hasta dar con el resultado"):
+                                    st.caption("Cada vez que una query falló, el LLM recibió el error y "
+                                               "escribió otra. Hasta tres intentos, igual para SQL y para Rastro.")
+                                    for i, attempt in enumerate(history, start=1):
+                                        if attempt["error"]:
+                                            st.markdown(f"**Intento {i}: ❌ falló**")
+                                            st.error(friendly_error(attempt["error"]))
+                                        else:
+                                            st.markdown(f"**Intento {i}: ✅ funcionó**")
+                                        st.code(pretty(attempt["query"], k), language="sql" if k in "BD" else "sparql")
+                            if k == "C":
+                                with st.expander("El SQL que Rastro generó a partir de esta consulta"):
+                                    st.caption("Ontop traduce la consulta a SQL sobre Postgres usando los "
+                                               "mapeos. Comparalo con el que el LLM tuvo que escribir a mano: "
+                                               "los cruces ya resueltos son tablas simples.")
+                                    try:
+                                        st.code(pretty(answer.ontop_sql(query), "B"), language="sql")
+                                    except requests.RequestException:
+                                        st.caption("Ontop no devolvió la traducción.")
 
 # Escenarios de cambio: resultados medidos con layer/cambio/cambio.sh registrar
 CHANGES = {
@@ -771,8 +778,8 @@ def change_summary(totals):
 
 
 with trust_tab:
-    with st.container() if TECH else st.expander("Ver los escenarios de cambio"):
-        st.caption("Qué pasa con las 20 preguntas de ejemplo cuando una base cambia."
+    with trust_change if TECH else st.expander("Ver los escenarios de cambio"):
+        st.caption("Qué pasa con las 20 preguntas de ejemplo, todas juntas, cuando una base cambia."
                    + (" Se reproduce en vivo con `layer/cambio/cambio.sh`." if TECH else ""))
         names = CHANGE_NAMES if TECH else {"B": "Sin Rastro", "C": "Con Rastro"}
         scenario = st.radio("Escenario", list(CHANGES) + ["Cambia una definición de negocio"]

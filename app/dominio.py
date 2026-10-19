@@ -623,7 +623,17 @@ def trust(cfg, tech, evaluation, changes):
     names = {k: v for k, v in names.items() if all(k in r for r in consistency.values())}
     change_names = {"B": "Sin Rastro", "C": "Con Rastro"}
     simple = {q["id"]: q["simple"] for q in cfg["preguntas"]}
-    with st.container() if tech else st.expander(f"Ver las {4 * len(consistency)} respuestas"):
+    n = len(evaluation.get("questions", {}))
+    # Las tres pruebas, separadas: en la vista técnica, una pestaña cada una, para que elegir una pregunta
+    # en una prueba no parezca cambiar las otras
+    if tech:
+        tab_correct, tab_same, tab_change = st.tabs([f"1 · Correctas ({n} preguntas)",
+                                                     f"2 · Misma respuesta de 4 formas ({len(consistency)} preguntas)",
+                                                     f"3 · Cuando una base cambia (las {n} preguntas)"])
+        with tab_correct:
+            if evaluation.get("questions"):
+                evaluation_detail(evaluation, totals)
+    with tab_same if tech else st.expander(f"Ver las {4 * len(consistency)} respuestas"):
         st.caption(f"{len(consistency)} preguntas, cada una hecha de 4 formas con el mismo significado.")
         table = []
         for qid, row in consistency.items():
@@ -646,13 +656,10 @@ def trust(cfg, tech, evaluation, changes):
                                        for i, t in enumerate(row["texts"])]),
                          hide_index=True, use_container_width=True,
                          column_config={"Cómo se preguntó": st.column_config.TextColumn(width="large")})
-        if tech and evaluation.get("questions"):
-            evaluation_detail(evaluation, totals)
 
-    with st.container() if tech else st.expander("Ver los escenarios de cambio"):
+    with tab_change if tech else st.expander("Ver los escenarios de cambio"):
         scenarios = {c["titulo"]: c for c in cfg.get("cambios", [])}
-        n = len(evaluation.get("questions", {}))
-        st.caption(f"Qué pasa con las {n} preguntas de la evaluación cuando una base cambia.")
+        st.caption(f"Qué pasa con las {n} preguntas de la evaluación, todas juntas, cuando una base cambia.")
         picked = st.radio("Escenario", list(scenarios), horizontal=True, label_visibility="collapsed",
                           key=f"{cfg['domain']}_scenario")
         change = scenarios[picked]
@@ -681,6 +688,14 @@ def trust(cfg, tech, evaluation, changes):
             for col, k in zip(st.columns(2), change_names):
                 col.metric(change_names[k], f"{after['totals'][k].get('✅', 0)}/{n}")
                 col.caption(summary(after["totals"][k]) + ("" if k == "C" else ". Hay que encontrar y reescribir cada consulta."))
+            if tech:
+                st.markdown("**Pregunta por pregunta**")
+                st.dataframe(pd.DataFrame([{"Pregunta": simple.get(qid, qid),
+                                            **{f"{change_names[k]}, antes": before["cells"][qid][k] for k in change_names},
+                                            **{f"{change_names[k]}, después": after["cells"][qid][k] for k in change_names}}
+                                           for qid in before["cells"]]),
+                             hide_index=True, use_container_width=True,
+                             column_config={"Pregunta": st.column_config.TextColumn(width="medium")})
         st.info("Sin Rastro, cada consulta sabe cómo se llaman las columnas y en qué unidad están los valores: si la "
                 "base cambia, hay que encontrar y arreglar cada una. Con Rastro, eso está en un solo lugar.")
 

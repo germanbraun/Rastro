@@ -280,7 +280,7 @@ cambios:
     sql: UPDATE capitulo4.produccion SET prod_pet = prod_pet * 6.2898;
     antes: valores
     despues: valores-arreglado
-    donde: "de los enlaces (linking/energia/links.sql), y se vuelven a armar"
+    donde: "del mapeo (mappings/energia.r2rml.ttl)"
     arreglo:
       - "sum(p.prod_pet) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
       - "sum(p.prod_pet / 6.2898) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
@@ -289,7 +289,7 @@ cambios:
     sql: ALTER TABLE capitulo4.produccion RENAME COLUMN prod_pet TO petroleo;
     antes: renombrar
     despues: renombrar-arreglado
-    donde: "de los enlaces (linking/energia/links.sql), y se vuelven a armar"
+    donde: "del mapeo (mappings/energia.r2rml.ttl)"
     arreglo:
       - "sum(p.prod_pet) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
       - "sum(p.petroleo) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
