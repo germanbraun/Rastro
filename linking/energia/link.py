@@ -146,7 +146,8 @@ def main():
             dentro = sum(1 for p in ubicados if p[1] == tipo and p[5])
             print(f"  venteos {tipo}s: {total}, dentro de una concesión: {dentro}")
         for table in ("empresa", "empresa_nombre", "empresa_lei", "produccion_pozo", "concesion", "participacion",
-                      "operador_pozo", "venteo", "concesion_gasoducto", "venteo_entorno"):
+                      "operador_pozo", "venteo", "gasoducto", "concesion_gasoducto", "venteo_entorno", "estudio",
+                      "concesion_revisar"):
             n = conn.execute(f"SELECT count(*) FROM energia.{table}").fetchone()[0]
             print(f"  energia.{table:<16}{n:>8} filas")
         for regla, n in conn.execute("SELECT regla, count(*) FROM energia.operador_pozo GROUP BY 1 ORDER BY 2 DESC"):

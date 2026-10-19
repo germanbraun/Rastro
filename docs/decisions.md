@@ -395,3 +395,9 @@ El diccionario tenía `:concession` (la producción) e `:inConcession` (particip
 ## 2026-10-19 — «Así se ve un dato del grafo»
 
 Para que se entienda qué es una instancia: en la vista técnica (pestaña «Consola SPARQL») se elige una entidad real de ejemplo (una concesión, una empresa, una participación con su evidencia, la operadora de un pozo, un venteo y dónde cae; un grupo, un proveedor y su enlace; un fármaco, un ensayo y su enlace) y se ven todas sus propiedades, cada una con su nombre en el diccionario de negocio, y la misma entidad en Turtle. Cada mazo suma una diapositiva de anexo con un enlace real y su evidencia, generada desde los datos.
+
+## 2026-10-19 — Petróleo y gas: mapa y «concesión para revisar»
+
+- **Geometrías en el grafo, con el estándar de OGC (GeoSPARQL, `geo:asWKT`):** los contornos de las concesiones, los puntos de venteo y el trazado de los gasoductos de ENARGAS (`:Pipeline`). La app dibuja el mapa leyendo solo de Rastro (pydeck), y cualquier herramienta de mapas puede leer lo mismo.
+- **«Concesión para revisar» (`:ConcessionToReview`)**, una clase sin mapeo que Ontop deduce de dos reglas escritas una vez (`linking/energia/links.sql`, `energia.concesion_revisar`): posibles venteos desde 2024 y el gasoducto más cercano a 10 km o más (33), o 20 o más posibles venteos y ninguna planilla de venteo presentada desde 2022 (21). 45 concesiones, 9 con las dos. Pregunta nueva (e08), en el mapa en rojo y en una diapositiva. Es un indicio, no una conclusión; el umbral de 20 es una decisión de negocio.
+- **Duplicados de venteos:** los venteos se unían con la tabla del mapa, que tiene siete concesiones con dos polígonos; quedaban 131 filas repetidas (7.959 en lugar de 7.828). Ahora se unen con `energia.concesion`, una fila por concesión. Las respuestas medidas contaban puntos distintos y no cambian.

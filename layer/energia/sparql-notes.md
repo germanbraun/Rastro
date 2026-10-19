@@ -12,4 +12,6 @@ Endpoint SPARQL de Rastro (Ontop) sobre cinco fuentes públicas: la producción 
 - `:SurroundingsLink` (`:aboutVenting`, `:nearestTown`, `:distanceKm`, `:protectedArea`): la localidad más cercana a cada posible venteo y su área protegida, según el IGN.
 - `:lei` de una `:Company` es su identificador global en GLEIF (solo las que lo tienen).
 - Los nombres de empresas están como en cada fuente, casi siempre en mayúsculas y con su forma societaria («S.A.», «SAU», «S.R.L.»).
+- `:ConcessionToReview` (concesión para revisar) se deduce de `:VentingFarFromPipeline` y `:VentingWithoutReports`; `:reviewReason` dice el motivo.
+- Las concesiones, los venteos y los gasoductos (`:Pipeline`) tienen su geometría en `geo:asWKT` (GeoSPARQL; prefijo `PREFIX geo: <http://www.opengis.net/ont/geosparql#>`).
 - El endpoint no soporta caminos de largo arbitrario (`*`, `+`).

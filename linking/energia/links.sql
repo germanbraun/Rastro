@@ -51,7 +51,10 @@ GROUP BY p.idpozo, p.idareapermisoconcesion, en.empresa_id, p.formacion, p.tipo_
 -- Concesiones del mapa (algunas tienen dos polígonos en el mapa: una fila por concesión)
 CREATE TABLE energia.concesion AS
 SELECT DISTINCT ON (c.id_concesion) c.id_concesion, c.areapermisoconcesion AS nombre, en.empresa_id AS operadora_mapa,
-       c.empresa_informante AS informante, c.estadodearea AS estado
+       c.empresa_informante AS informante, c.estadodearea AS estado,
+       -- el contorno en WKT (el estándar de OGC que leen GeoSPARQL y cualquier herramienta de mapas)
+       (SELECT 'POLYGON((' || string_agg(p->>0 || ' ' || (p->>1), ', ' ORDER BY n) || '))'
+          FROM jsonb_array_elements(c.anillo::jsonb) WITH ORDINALITY AS a(p, n)) AS wkt
 FROM sig_energia.concesion c
 LEFT JOIN energia.empresa_nombre en ON en.fuente = 'sig_energia' AND en.nombre = trim(c.empresa_operadora)
 ORDER BY c.id_concesion;
@@ -86,10 +89,19 @@ LEFT JOIN energia.empresa_nombre pn ON pn.fuente = 'capitulo4' AND pn.nombre = t
 -- Venteos: los detectados por satélite desde 2024 y los declarados, cada uno en su concesión
 CREATE TABLE energia.venteo AS
 SELECT v.gml_id AS id, v.tipo, v.fecha, v.satelite, v.nombre, v.id_concesion,
+       'POINT(' || v.lon || ' ' || v.lat || ')' AS wkt,
        'El punto (' || round(v.lon::numeric, 4) || ', ' || round(v.lat::numeric, 4)
-       || ') cae dentro del contorno de la concesión ' || c.areapermisoconcesion || ' en el mapa.' AS evidencia
+       || ') cae dentro del contorno de la concesión ' || c.nombre || ' en el mapa.' AS evidencia
 FROM energia.venteo_ubicado v
-JOIN sig_energia.concesion c USING (id_concesion);
+JOIN energia.concesion c USING (id_concesion);   -- una fila por concesión (algunas tienen dos polígonos)
+
+-- Gasoductos de transporte (ENARGAS), con su trazado en WKT
+CREATE TABLE energia.gasoducto AS
+SELECT g.gml_id AS id, trim(coalesce(g.nombregaso, g.nombretram)) AS nombre, trim(g.licenciata) AS licenciataria,
+       'MULTILINESTRING(' || (SELECT string_agg('(' || (SELECT string_agg(p->>0 || ' ' || (p->>1), ', ' ORDER BY n)
+                                                        FROM jsonb_array_elements(l) WITH ORDINALITY AS b(p, n)) || ')', ', ')
+                              FROM jsonb_array_elements(g.lineas::jsonb) AS a(l)) || ')' AS wkt
+FROM enargas.gasoducto g;
 
 -- LEI de GLEIF: se acepta el candidato cuyo nombre legal, normalizado, es igual al de la empresa.
 -- La evidencia guarda los candidatos descartados (por ejemplo, consorcios que nombran a varias empresas)
@@ -133,3 +145,22 @@ FROM ambiental.estudio e
 LEFT JOIN energia.concesion c ON energia.normalizar(c.nombre) = energia.normalizar(e.concesion)
 LEFT JOIN (SELECT DISTINCT nombre, empresa_id FROM energia.empresa_nombre) en ON en.nombre = trim(e.empresa)
 WHERE e.id_estudio IS NOT NULL;   -- un estudio puede tener varios objetos: una fila por objeto
+
+-- Concesiones para revisar: las dos reglas de negocio, cada una con su motivo. El diccionario dice que
+-- las dos son «concesión para revisar»; esa clase no tiene mapeo, Ontop la deduce
+CREATE TABLE energia.concesion_revisar AS
+SELECT c.id_concesion, 'sin gasoducto cerca' AS motivo,
+       count(*) || ' posibles venteos desde 2024 y el gasoducto de transporte más cercano a ' || g.distancia_km || ' km.' AS evidencia
+FROM energia.concesion c
+JOIN energia.venteo v ON v.id_concesion = c.id_concesion AND v.tipo = 'detectado'
+JOIN energia.concesion_gasoducto g ON g.id_concesion = c.id_concesion AND g.distancia_km >= 10
+GROUP BY c.id_concesion, g.distancia_km
+UNION ALL
+SELECT c.id_concesion, 'sin planillas de venteo',
+       count(*) || ' posibles venteos desde 2024 y ninguna planilla de venteo de gas (Res. 143/98) presentada desde 2022.'
+FROM energia.concesion c
+JOIN energia.venteo v ON v.id_concesion = c.id_concesion AND v.tipo = 'detectado'
+WHERE NOT EXISTS (SELECT 1 FROM energia.estudio e WHERE e.id_concesion = c.id_concesion
+                  AND e.tipo_estudio ILIKE '%aventamiento%' AND e.fecha_estudio >= DATE '2022-01-01')
+GROUP BY c.id_concesion
+HAVING count(*) >= 20;   -- al menos 20 detecciones: un caso aislado no alcanza para revisar

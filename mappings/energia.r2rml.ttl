@@ -3,6 +3,7 @@
 @prefix rr: <http://www.w3.org/ns/r2rml#> .
 @prefix : <https://w3id.org/rastro/energia#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 # --- Fuentes (rastro_meta) -------------------------------------
@@ -186,3 +187,33 @@
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/ambiental> ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-study-names> ] ] .
+
+# --- Geometrías (GeoSPARQL) y concesiones para revisar ------------
+
+<#ConcessionGeometry> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id_concesion, wkt FROM energia.concesion WHERE wkt IS NOT NULL" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ;
+    rr:predicateObjectMap [ rr:predicate geo:asWKT ; rr:objectMap [ rr:column "wkt" ; rr:datatype geo:wktLiteral ] ] .
+
+<#VentingGeometry> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, wkt FROM energia.venteo" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/venting/{id}" ] ;
+    rr:predicateObjectMap [ rr:predicate geo:asWKT ; rr:objectMap [ rr:column "wkt" ; rr:datatype geo:wktLiteral ] ] .
+
+<#Pipeline> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.gasoducto" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/pipeline/{id}" ; rr:class :Pipeline ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "nombre" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :pipelineOperator ; rr:objectMap [ rr:column "licenciataria" ] ] ;
+    rr:predicateObjectMap [ rr:predicate geo:asWKT ; rr:objectMap [ rr:column "wkt" ; rr:datatype geo:wktLiteral ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/enargas> ] ] .
+
+<#VentingFarFromPipeline> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id_concesion, evidencia FROM energia.concesion_revisar WHERE motivo = 'sin gasoducto cerca'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ; rr:class :VentingFarFromPipeline ] ;
+    rr:predicateObjectMap [ rr:predicate :reviewReason ; rr:objectMap [ rr:column "evidencia" ] ] .
+
+<#VentingWithoutReports> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id_concesion, evidencia FROM energia.concesion_revisar WHERE motivo = 'sin planillas de venteo'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ; rr:class :VentingWithoutReports ] ;
+    rr:predicateObjectMap [ rr:predicate :reviewReason ; rr:objectMap [ rr:column "evidencia" ] ] .

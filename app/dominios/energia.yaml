@@ -47,6 +47,7 @@ columnas:
   pipeline: Gasoducto
   place: Dónde
   lei: LEI
+  why: Por qué revisarla
 formatos:
   share: numero
   operated: numero
@@ -107,6 +108,7 @@ preguntas:
 
   - id: e03
     query: /ontology/energia/queries/cq3.rq
+    mapa: true
     explicacion: |
       - **Qué busca:** los posibles venteos vistos por satélite y la concesión en la que cae cada uno, con su operadora en el mapa y sus puntos de venteo declarados.
       - **Qué devuelve:** las 10 concesiones con más detecciones.
@@ -204,6 +206,23 @@ preguntas:
           ?l a :LeiLink ; :company/:name ?e ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
           FILTER (?e IN ("YPF S.A.", "SHELL ARGENTINA S.A.", "PAN AMERICAN ENERGY SL"))
         }
+
+  - id: e08
+    query: /ontology/energia/queries/cq8.rq
+    explicacion: |
+      - **Qué busca:** las «concesiones para revisar», con su operadora y el motivo.
+      - **Lo particular:** «concesión para revisar» no es una columna ni tiene mapeo. El diccionario dice que lo son las que tienen posibles venteos y además no tienen un gasoducto cerca, o no presentaron planillas de venteo de gas. Ontop la deduce de esas dos reglas.
+      - **Lo que en SQL habría que hacer a mano:** repetir las dos reglas, con las distancias y los estudios, en cada consulta que las use. Acá se escriben una vez y valen para todas.
+    mapa: true
+    simple: ¿Qué concesiones hay que revisar por venteos, y por qué?
+    tecnica: ¿Qué concesiones son «para revisar» (clase deducida, sin mapeo propio), con su operadora y su motivo?
+    ventaja: "La regla se escribe una vez en el diccionario de negocio: posibles venteos y, además, ningún gasoducto de transporte cerca o ninguna planilla de venteo presentada. Ontop la deduce; vale para esta pregunta, para el mapa y para cualquier otra que la use."
+    terminos:
+      Concesión para revisar: una concesión que conviene mirar por sus posibles venteos. Es un indicio, no una conclusión.
+    definicion: |
+      :ConcessionToReview rdfs:label "Concesión para revisar"@es .
+      :VentingFarFromPipeline rdfs:subClassOf :ConcessionToReview .   # venteos y gasoducto a 10 km o más
+      :VentingWithoutReports  rdfs:subClassOf :ConcessionToReview .   # 20+ venteos y sin planillas desde 2022
 
 # «Por qué confiar»: los números salen de la evaluación (layer/energia/resultados.json) y de la
 # prueba de cambio (layer/energia/cambio/resultado.json)

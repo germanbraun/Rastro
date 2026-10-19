@@ -106,6 +106,8 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
     else:
         table, config = logos.with_logos(as_table(columns, rows, cfg, tech, col_sources), columns)
         st.dataframe(table, hide_index=True, use_container_width=True, column_config=config)
+        if item and item.get("mapa"):
+            show_map(domain)
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}."
                    + (" La evidencia está en «¿De dónde sale la respuesta?»." if item and item.get("evidencia") else ""))
 
@@ -289,6 +291,56 @@ def sparql_console(domain):
                                         indent_width=2), language="sql")
             except requests.RequestException:
                 st.caption("Ontop no devolvió la traducción.")
+
+
+GEO = "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\n"
+
+
+def wkt_coords(wkt):
+    """Las coordenadas de un WKT simple: POINT → [x, y]; POLYGON → [[x, y], ...]; MULTILINESTRING → [[[x, y], ...], ...]."""
+    groups = [[[float(v) for v in pair.split()] for pair in part.split(",")]
+              for part in re.findall(r"\(([^()]+)\)", wkt)]
+    if wkt.startswith("POINT"):
+        return groups[0][0]
+    return groups[0] if wkt.startswith("POLYGON") else groups
+
+
+@st.cache_data(show_spinner="Armando el mapa…")
+def map_data(domain):
+    concessions = run(prefixed(GEO + """SELECT ?name ?operator ?wkt (COUNT(DISTINCT ?d) AS ?n) (SAMPLE(?why) AS ?reason) WHERE {
+        ?c a :Concession ; :name ?name ; geo:asWKT ?wkt .
+        OPTIONAL { ?c :operatorOnMap/:name ?operator }
+        OPTIONAL { ?d a :DetectedVenting ; :inConcession ?c }
+        OPTIONAL { ?c a :ConcessionToReview ; :reviewReason ?why }
+    } GROUP BY ?name ?operator ?wkt""", domain), domain)[1]
+    points = run(prefixed(GEO + "SELECT ?wkt WHERE { ?d a :DetectedVenting ; geo:asWKT ?wkt }", domain), domain)[1]
+    pipes = run(prefixed(GEO + "SELECT ?name ?wkt WHERE { ?p a :Pipeline ; :name ?name ; geo:asWKT ?wkt }", domain), domain)[1]
+    return concessions, points, pipes
+
+
+def show_map(domain):
+    """Concesiones, posibles venteos vistos por satélite y gasoductos de transporte, todo leído de Rastro."""
+    import pydeck as pdk
+    concessions, points, pipes = map_data(domain)
+    polys = [{"contorno": wkt_coords(w), "nombre": n, "operadora": o or "—", "venteos": int(v or 0),
+              "revisar": "Para revisar: " + r if r else "",
+              "color": [214, 96, 77, 120] if r else ([47, 111, 181, 90] if int(v or 0) else [143, 184, 232, 40])}
+             for n, o, w, v, r in concessions]
+    dots = [{"pos": wkt_coords(w)} for (w,) in points]
+    lines = [{"nombre": n, "trazado": path} for n, w in pipes for path in wkt_coords(w)]
+    layers = [
+        pdk.Layer("PolygonLayer", polys, get_polygon="contorno", get_fill_color="color", get_line_color=[20, 33, 61, 160],
+                  line_width_min_pixels=1, pickable=True),
+        pdk.Layer("PathLayer", lines, get_path="trazado", get_color=[245, 166, 35, 230], width_min_pixels=3, pickable=True),
+        pdk.Layer("ScatterplotLayer", dots, get_position="pos", get_fill_color=[214, 39, 40, 170], radius_min_pixels=2,
+                  get_radius=400),
+    ]
+    st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=pdk.ViewState(latitude=-38.4, longitude=-68.9, zoom=6.4),
+                             tooltip={"html": "<b>{nombre}</b><br>{operadora}<br>{venteos} posibles venteos<br>{revisar}"}),
+                    use_container_width=True)
+    st.caption("Puntos rojos: posibles venteos vistos por satélite desde 2024. Líneas ámbar: gasoductos de transporte "
+               "(ENARGAS). Concesiones en rojo: para revisar, según la regla del diccionario; en azul, con posibles "
+               "venteos. Todo sale de Rastro, con geometrías en el estándar de OGC (GeoSPARQL).")
 
 
 def short(value):
