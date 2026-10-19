@@ -1,6 +1,6 @@
 # Demo de cambio: cuando la fuente cambia
 
-> **Los datos cambian. Tus preguntas, no.**
+> **Los datos cambian. Las preguntas, no.**
 
 Para la demo comercial, la app muestra estos resultados ya medidos en la pestaña **Cuando las fuentes cambian**, sin tocar la base. Lo que sigue es para hacerlo en vivo, ante una audiencia técnica.
 

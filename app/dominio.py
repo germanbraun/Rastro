@@ -104,9 +104,9 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
     else:
         st.dataframe(as_table(columns, rows, cfg, tech, col_sources), hide_index=True, use_container_width=True)
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}."
-                   + (" La evidencia está en «¿Cómo lo supe?»." if item and item.get("evidencia") else ""))
+                   + (" La evidencia está en «¿De dónde sale la respuesta?»." if item and item.get("evidencia") else ""))
 
-    with st.expander("¿Cómo lo supe?"):
+    with st.expander("¿De dónde sale la respuesta?"):
         evidence = (item or {}).get("evidencia")
         if not tech:
             st.markdown("**Dónde buscó Rastro:**")
@@ -116,7 +116,7 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
                 elif s in info:
                     st.markdown(f"- **{info[s]['name']}** · licencia: {info[s]['license']}")
             if item and item.get("ventaja"):
-                st.markdown("**Qué hizo Rastro por vos:** " + md(item["ventaja"]))
+                st.markdown("**Qué aportó Rastro:** " + md(item["ventaja"]))
             if item and item.get("definicion"):
                 st.markdown("La regla está escrita una sola vez, en el **diccionario de negocio**, y vale para "
                             "todas las preguntas que la usan.")
@@ -127,7 +127,7 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
                     st.markdown("- " + md(evidence["formato"].format(**dict(zip(ev_cols, r)))))
                 st.caption("Cada respuesta se puede auditar: la evidencia dice qué dice cada fuente y con qué regla "
                            "se unieron.")
-            st.caption("¿Querés ver la consulta y el SQL? Activá «Ver detalles técnicos» en la barra lateral.")
+            st.caption("Para ver la consulta y el SQL, active «Ver detalles técnicos» en la barra lateral.")
             return
         if note:
             st.caption(note)
@@ -187,7 +187,7 @@ def render(cfg_path, tech):
     with ask_tab:
         modes = ((["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Una pregunta de ejemplo"]
                  + (["Una pregunta sobre textos"] if cfg.get("texto") else []))
-        mode = st.radio("¿Qué querés preguntar?", modes + ["Mi propia pregunta"],
+        mode = st.radio("Tipo de pregunta", modes + ["Mi propia pregunta"],
                         horizontal=True, label_visibility="collapsed", key=f"{domain}_mode")
         if mode == "Demo en 3 pasos":
             show_demo(cfg, tech)
@@ -223,7 +223,7 @@ def render(cfg_path, tech):
                     show_answer(cfg, tech, result["query"], result["columns"], result["rows"],
                                 note=f"Intentos: {len(result['attempts'])}.")
             if not available:
-                st.info("Para preguntas libres hace falta un LLM. Mientras tanto, probá las preguntas de ejemplo.")
+                st.info("Para preguntas libres hace falta un LLM. Mientras tanto, pueden usarse las preguntas de ejemplo.")
 
     with trust_tab:
         trust(cfg, tech, evaluation, changes)
@@ -245,7 +245,7 @@ def render(cfg_path, tech):
                 with st.expander(item["pregunta"]):
                     st.markdown(md(item["respuesta"]))
         else:
-            st.caption("Hay más preguntas para técnicos: activá «Ver detalles técnicos» en la barra lateral.")
+            st.caption("Hay más preguntas para perfiles técnicos: active «Ver detalles técnicos» en la barra lateral.")
 
 
 def before_after(card):
@@ -259,7 +259,7 @@ def before_after(card):
 
 
 def show_demo(cfg, tech):
-    """La demo en tres pasos, todos sobre Leidos: une, explica, lee. Cada paso corre en vivo."""
+    """La demo en tres pasos, todos sobre Leidos: integración, trazabilidad y análisis de textos. Cada paso corre en vivo."""
     domain, steps = cfg["domain"], cfg["demo"]
     key = f"{domain}_demo_step"
     i = st.session_state.get(key, 0)
@@ -304,8 +304,8 @@ def show_text_question(cfg, tech, demo=False):
     if demo and item.get("busqueda_texto"):
         compare_text_search(item, contracts, domain, tech, always=True)
     total = sum(m for m, *_ in contracts.values())
-    st.markdown(f"Rastro eligió los **{len(contracts)} contratos más grandes** del grupo "
-                f"(US\\$ {money(total / 1e6)} millones). En qué trabaja:")
+    st.markdown(f"Rastro seleccionó los **{len(contracts)} contratos más grandes** del grupo "
+                f"(US\\$ {money(total / 1e6)} millones). Actividades principales:")
     for theme in item["temas"]:
         found = [c for c in theme["contratos"] if c in contracts]
         amount = sum(contracts[c][0] for c in found)
@@ -313,14 +313,14 @@ def show_text_question(cfg, tech, demo=False):
                     f"{md(theme['detalle'])}  \n<small>{', '.join(found)}</small>", unsafe_allow_html=True)
     if item.get("busqueda_texto") and not demo:
         compare_text_search(item, contracts, domain, tech)
-    with st.expander("¿Cómo lo supe?"):
+    with st.expander("¿De dónde sale la respuesta?"):
         st.markdown(md(item["como"]))
         if tech:
             st.markdown("**1. La consulta que elige los contratos** (exacta: usa el grupo que arma Rastro):")
             st.code(query, language="sparql")
             st.markdown("**2. Las descripciones que leyó el asistente**, tal como están en el grafo (`:description`):")
         else:
-            st.markdown("**Las descripciones que leyó**, tal como están en la base de contratos:")
+            st.markdown("**Las descripciones analizadas**, tal como están en la base de contratos:")
         st.dataframe(pd.DataFrame([{"Contrato": c, "Millones de US$": round(m / 1e6, 1), "Agencia": a.title(),
                                     "Empresa": e.title(), "Descripción": d.capitalize()}
                                    for c, (m, a, e, d) in contracts.items()]),
@@ -337,7 +337,7 @@ def company(name):
 
 def compare_text_search(item, contracts, domain, tech, always=False):
     """Lo mismo, buscando «Leidos» en los textos en vez de usar el grafo (lo que haría un RAG común)."""
-    if not always and not st.toggle("¿Y si buscamos «Leidos» en los textos?", key=f"{domain}_text_search"):
+    if not always and not st.toggle("Comparar con una búsqueda por texto", key=f"{domain}_text_search"):
         return
     query = Path(item["busqueda_texto"]).read_text()
     _, rows = run(query, domain)
@@ -346,16 +346,16 @@ def compare_text_search(item, contracts, domain, tech, always=False):
     lost = [t["tema"] for t in item["temas"] if t["contratos"] and all(c in missing for c in t["contratos"])]
     companies = sorted({company(e) for _, _, e, _ in missing.values()})
     before_after({
-        "titulo_sin": "Sin Rastro: buscando «Leidos» en los textos",
+        "titulo_sin": "Sin Rastro: búsqueda de «Leidos» en los textos",
         "sin": {"valor": f"{len(contracts) - len(missing)} de {len(contracts)}",
-                "detalle": (f"Pierde {len(missing)} contratos (US$ {money(sum(m for m, *_ in missing.values()) / 1e6)} "
-                            f"millones) de empresas del grupo que no se llaman Leidos: {', '.join(companies)}."
-                            + (f" Desaparecen temas enteros: {', '.join(lost).lower()}." if lost else ""))},
+                "detalle": (f"Omite {len(missing)} contratos (US$ {money(sum(m for m, *_ in missing.values()) / 1e6)} M) "
+                            f"de empresas del grupo con otra razón social: {', '.join(companies)}."
+                            + (f" Se pierden temas completos: {', '.join(lost).lower()}." if lost else ""))},
         "con": {"valor": f"{len(contracts)} de {len(contracts)}",
-                "detalle": "Los 40 contratos más grandes del grupo, elegidos con una consulta exacta."}})
-    st.caption("La búsqueda mira la descripción del contrato y el nombre de la empresa, como lo haría alguien "
-               "con SQL o un buscador. Rastro sabe que esas empresas son del grupo porque lo armó una vez, con "
-               "la evidencia de cada enlace.")
+                "detalle": "Los 40 contratos más grandes del grupo, seleccionados con una consulta exacta."}})
+    st.caption("La búsqueda considera la descripción del contrato y el nombre de la empresa, como lo haría una "
+               "consulta SQL o un buscador. Rastro identifica esas empresas como parte del grupo porque el grupo "
+               "se definió una sola vez, con la evidencia de cada vínculo.")
     if tech:
         st.code(query, language="sparql")
 

@@ -43,7 +43,7 @@ Cómo se midió: `layer/eval/` (preguntas, respuestas guardadas y puntaje) y `la
 
 Demo en http://localhost:8501:
 
-- **Preguntar:** las 20 preguntas de ejemplo funcionan sin LLM (queries guardadas, ejecutadas en vivo). Muestra la fuente de cada columna y dónde vive cada fuente (🐘 Postgres, 🕸️ GraphDB). "¿Cómo lo supe?" tiene tres pasos: la consulta que escribió el LLM, el SQL que Ontop generó y ejecutó, y las fuentes con su licencia.
+- **Preguntar:** las 20 preguntas de ejemplo funcionan sin LLM (queries guardadas, ejecutadas en vivo). Muestra la fuente de cada columna y dónde vive cada fuente (🐘 Postgres, 🕸️ GraphDB). "¿De dónde sale la respuesta?" tiene tres pasos: la consulta que escribió el LLM, el SQL que Ontop generó y ejecutó, y las fuentes con su licencia.
 - **Con y sin Rastro:** el puntaje y qué significa, y cada pregunta con las tres respuestas lado a lado. Para cada respuesta incorrecta explica por qué falló; para cada query del SQL directo, cómo reconoció los fármacos; y para Rastro, el SQL que generó Ontop, para compararlo con el escrito a mano.
 
 ## Consistencia y cambio (17 oct 2026)

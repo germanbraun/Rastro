@@ -1,6 +1,6 @@
 # Guion de la demo de Rastro Layer, versión técnica (8 minutos)
 
-> **Los datos cambian. Tus preguntas, no.**
+> **Los datos cambian. Las preguntas, no.**
 
 Para consultores que saben SQL y no conocen tecnologías semánticas. Las diapositivas están en `docs/slides/` (abrir `index.html`).
 
@@ -26,9 +26,9 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 > «Trastuzumab, pertuzumab, lapatinib… Cruza tres fuentes, y cada columna dice de qué fuente sale.»
 
-2. Abrir **¿Cómo lo supe?**
+2. Abrir **¿De dónde sale la respuesta?**
 
-3. Señalar la última columna y abrir el paso 4 de **¿Cómo lo supe?**.
+3. Señalar la última columna y abrir el paso 4 de **¿De dónde sale la respuesta?**.
 
 > «¿Por qué dice Rastro que un ensayo prueba trastuzumab? Cada enlace guarda su evidencia: lo que escribió el sponsor, con qué coincidió y con qué regla. Acá, "Adjuvant Systemic Therapy" es trastuzumab emtansina porque el sponsor lo declaró como alias. Se puede abrir cada ensayo. Esta procedencia está en el grafo, con un estándar del W3C: una respuesta auditable.»
 
@@ -62,11 +62,11 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 En la barra lateral, **Dominio** → **Proveedores del Estado de EE. UU.**, con «Ver detalles técnicos» prendido. Es otro Ontop (puerto 8081), con su ontología (`ontology/proveedores/`) y sus mapeos (`mappings/proveedores.r2rml.ttl`) sobre el mismo Postgres; la app lee lo propio del dominio de `app/dominios/proveedores.yaml`.
 
-1. Pregunta del grupo Leidos → **Responder** → **¿Cómo lo supe?**
+1. Pregunta del grupo Leidos → **Responder** → **¿De dónde sale la respuesta?**
 
 > «La consulta es corta: `?supplier :group ?g`. Abajo, el SQL que generó Ontop: une `group_company`, `supplier_group` y los contratos. El grupo está consolidado una vez: USAspending reparte a Leidos en 13 matrices, y las unimos con el LEI de cada matriz y la matriz final que registra GLEIF, más una tabla corta de correcciones revisadas para las compras que ninguna fuente registra (Dynetics, QTC, Gibbs & Cox). La evidencia de cada empresa es un `:GroupLink` en PROV-O.»
 
-2. Pregunta de SAIC → **¿Cómo lo supe?**
+2. Pregunta de SAIC → **¿De dónde sale la respuesta?**
 
 > «GLEIF, al buscar "Science Applications International Corporation", devuelve primero a Leidos, Inc.: es su nombre anterior. La regla prefiere el nombre legal, y la evidencia guarda lo descartado. Sin Rastro, un SQL que siguió las matrices históricas de USAspending le sumó a Leidos 41.000 millones de SAIC.»
 

@@ -140,7 +140,7 @@ El SQL directo con un LLM fuerte acierta casi tanto como Rastro. El argumento de
 
 ## 2026-10-16 — Mostrar el SQL que genera Ontop
 
-"¿Cómo lo supe?" muestra la consulta del LLM, el SQL que Ontop genera y ejecuta (`/ontop/reformulate`, disponible en modo desarrollo) y las fuentes. Hace visible que Rastro no copia datos: traduce la pregunta a SQL sobre las tablas originales y los enlaces, con uniones simples. En la comparación, ese SQL queda al lado del que el LLM escribió a mano.
+"¿De dónde sale la respuesta?" muestra la consulta del LLM, el SQL que Ontop genera y ejecuta (`/ontop/reformulate`, disponible en modo desarrollo) y las fuentes. Hace visible que Rastro no copia datos: traduce la pregunta a SQL sobre las tablas originales y los enlaces, con uniones simples. En la comparación, ese SQL queda al lado del que el LLM escribió a mano.
 
 Cada fuente lleva un ícono según dónde vive: 🐘 Postgres (AACT, ChEMBL, openFDA, enlaces de Rastro) y 🕸️ GraphDB (MeSH completo, con su jerarquía copiada en Postgres).
 
@@ -265,15 +265,15 @@ El mismo método que oncología, en `layer/proveedores/`: las 9 preguntas respon
 ## 2026-10-19 — Proveedores, P4: un selector de dominio en la app
 
 - **Selector de dominio** en la barra lateral (Oncología / Proveedores del Estado de EE. UU.), definido en `app/dominios.yaml`. Oncología sigue con su pantalla de siempre, sin cambios. Proveedores se dibuja con `app/dominio.py`, una pantalla genérica con las mismas tres pestañas y los mismos dos modos (negocio por defecto, técnico con el interruptor).
-- **Lo propio del dominio va en configuración** (`app/dominios/proveedores.yaml`): las preguntas en palabras simples y su versión técnica, qué ventaja muestra cada una, el glosario, los nombres de negocio de las columnas, la evidencia de «¿Cómo lo supe?» (una consulta y un formato por pregunta), las tres tarjetas de «Por qué confiar» con sus números tomados de la evaluación y de la prueba de cambio, los escenarios de cambio y las preguntas frecuentes. Sumar un dominio es escribir un YAML así, sin tocar código.
+- **Lo propio del dominio va en configuración** (`app/dominios/proveedores.yaml`): las preguntas en palabras simples y su versión técnica, qué ventaja muestra cada una, el glosario, los nombres de negocio de las columnas, la evidencia de «¿De dónde sale la respuesta?» (una consulta y un formato por pregunta), las tres tarjetas de «Por qué confiar» con sus números tomados de la evaluación y de la prueba de cambio, los escenarios de cambio y las preguntas frecuentes. Sumar un dominio es escribir un YAML así, sin tocar código.
 - **Oncología no se migró** a la pantalla genérica: funciona y tiene detalles propios (evidencia por fármaco, escenarios de Wikidata y de definición de negocio). Queda para cuando haga falta.
 - **Arreglos que aparecieron al probar:** la barra lateral de oncología listaba también las fuentes de proveedores (su mapeo lee todo `rastro_meta.source`; se filtra en la app, sin tocar el mapeo); las fuentes de una respuesta no contaban los términos dentro de caminos como `:supplier/:group` (se corrigió en `answer.py`, también mejora oncología); dos «US$» en un mismo texto Streamlit los toma como fórmula (se escapa `$`).
-- Probado en el navegador: los dos dominios, los dos modos, «¿Cómo lo supe?», «Por qué confiar» y las preguntas frecuentes.
+- Probado en el navegador: los dos dominios, los dos modos, «¿De dónde sale la respuesta?», «Por qué confiar» y las preguntas frecuentes.
 
 ## 2026-10-19 — Proveedores, P5: el segundo dominio en la demo
 
 - **Tres diapositivas** después de las 6 de oncología y antes del anexo (`docs/slides/slides/dominio2.html`, `leidos.html`, `pruebas2.html`; sección nueva en `deck.json`): la misma idea con otros datos, el ejemplo de Leidos (grupo de 21 empresas y US$54.700 millones; sin Rastro, una consulta sumó US$41.000 millones de SAIC; la evidencia de por qué) y las tres pruebas con los números de P3, con lo que encontró la adjudicación. Mismo estilo; ninguna se sale de 1920×1080. Las de oncología no cambiaron.
-- **Guiones:** una parte opcional de 2 minutos en `docs/demo-guion.md` (cambiar el dominio, la pregunta de Leidos y «¿Cómo lo supe?» de SAIC) y su versión técnica en `docs/demo-guion-tecnico.md`.
+- **Guiones:** una parte opcional de 2 minutos en `docs/demo-guion.md` (cambiar el dominio, la pregunta de Leidos y «¿De dónde sale la respuesta?» de SAIC) y su versión técnica en `docs/demo-guion-tecnico.md`.
 - **One-pager:** una línea con el resultado en el segundo dominio (8 de 9 contra 5 de 9), y una fila en la versión técnica.
 - Se eligieron 3 diapositivas y no 4: con el ejemplo y las pruebas alcanza para mostrar que Rastro sirve en otro dominio; el detalle queda en la app y en el anexo.
 
@@ -324,12 +324,17 @@ Por qué con el grafo y no buscando en los textos: de esos 40 contratos, solo 1 
 
 Para que se vea, la app compara en vivo con una búsqueda por texto (`leidos-texto.rq`: «Leidos» en la descripción o en el nombre de la empresa, como haría alguien con SQL o un buscador). Encuentra 33 de los 40 contratos del grupo: pierde 7 (5.607 millones de dólares, de QTC, Dynetics y Mission Support Alliance) y dos temas enteros. Se eligió una búsqueda por palabra y no un RAG con vectores: muestra lo mismo sin otra dependencia, y cualquiera puede leer la consulta.
 
-## 2026-10-19 — La demo en tres momentos: une, explica, lee
+## 2026-10-19 — La demo en tres momentos: integración, trazabilidad y análisis de textos
 
 La demo tenía demasiadas piezas para recordar. Ahora son tres momentos, todos con el grupo Leidos, y cada uno termina en la misma tarjeta: sin Rastro a la izquierda, con Rastro a la derecha.
 
-- **Une:** US$56.400 M buscando «Leidos» en los nombres (faltan QTC, Dynetics, Gibbs & Cox y 1901 Group, US$7.700 M, y entra un consorcio que no es del grupo) contra US$63.400 M con el grupo de Rastro.
-- **Explica:** US$97.800 M cuando el SQL siguió las matrices viejas y sumó US$41.400 M de la SAIC de hoy, contra US$63.400 M con Rastro y la evidencia de por qué.
-- **Lee:** 33 de 40 contratos buscando en los textos, contra 40 de 40.
+- **Integración:** US$56.400 M buscando «Leidos» en los nombres (faltan QTC, Dynetics, Gibbs & Cox y 1901 Group, US$7.700 M, y entra un consorcio que no es del grupo) contra US$63.400 M con el grupo de Rastro.
+- **Trazabilidad:** US$97.800 M cuando el SQL siguió las matrices viejas y sumó US$41.400 M de la SAIC de hoy, contra US$63.400 M con Rastro y la evidencia de por qué.
+- **Análisis de textos:** 33 de 40 contratos buscando en los textos, contra 40 de 40.
 
 Los números «sin Rastro» de los dos primeros salen de la evaluación (`layer/proveedores/resultados.json`, SQL sin enlaces) y están guardados en `app/dominios/proveedores.yaml`; los del tercero se calculan en vivo. La app tiene un modo **Demo en 3 pasos** con «Siguiente», para no elegir preguntas en vivo. El mazo principal quedó en ocho diapositivas, con oncología en una; las pruebas y oncología completa pasaron a «Si preguntan».
+
+
+## 2026-10-19 — Un registro más formal
+
+El texto visible (app, diapositivas principales y guion) pasó a un registro formal e impersonal: «Los datos cambian. Las preguntas, no.», «¿De dónde sale la respuesta?» en lugar de «¿Cómo lo supe?», imperativos con usted y sin expresiones coloquiales («pedazos», «trampa», «no alcanza»). Las notas del orador (`<aside>`), que no se ven en pantalla, conservan un tono más conversacional.

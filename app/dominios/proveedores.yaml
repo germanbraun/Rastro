@@ -11,11 +11,11 @@ cambio: /layer/proveedores/cambio/resultado.json
 ontologia: /ontology/proveedores/proveedores.ttl
 texto: /layer/proveedores/textos/leidos.json   # la pregunta sobre textos (GraphRAG anclado)
 
-# La demo en tres pasos, todos sobre Leidos: une, explica, lee
+# La demo en tres pasos, todos sobre Leidos: integración, trazabilidad y análisis de textos
 demo:
-  - {paso: Une, titulo: "Un grupo, no 13 pedazos", pregunta: p01}
-  - {paso: Explica, titulo: "La trampa de SAIC, con el porqué", pregunta: p08}
-  - {paso: Lee, titulo: "En qué trabaja, leyendo los contratos", texto: true}
+  - {paso: Integración, titulo: "Un grupo consolidado a partir de 13 matrices", pregunta: p01}
+  - {paso: Trazabilidad, titulo: "El caso SAIC: una asignación justificada", pregunta: p08}
+  - {paso: Análisis de textos, titulo: "Las actividades del grupo, a partir de sus contratos", texto: true}
 
 # Fuentes: nombre corto para los encabezados del modo técnico
 fuentes:
@@ -61,18 +61,18 @@ formatos:                      # dinero: separador de miles; porcentaje: 0,67 �
   share: porcentaje
 
 # Las preguntas de ejemplo: la consulta de ontology/proveedores/queries/, la pregunta en
-# palabras simples (modo negocio) y la evidencia que muestra «¿Cómo lo supe?»
+# palabras simples (modo negocio) y la evidencia que muestra «¿De dónde sale la respuesta?»
 preguntas:
   - id: p01
     query: /ontology/proveedores/queries/cq1.rq
-    simple: ¿Cuánto le contrata el gobierno al grupo Leidos, contando todas sus empresas?
+    simple: ¿Cuánto contrata el gobierno con el grupo Leidos, considerando todas sus empresas?
     tecnica: ¿Cuánto suman los contratos del grupo Leidos, contando todas sus empresas?
     ventaja: "El grupo se arma solo. USAspending reparte a Leidos en 13 matrices distintas; Rastro las une con la matriz final que registra GLEIF y, para las compras que ninguna fuente registra (Dynetics, QTC, Gibbs & Cox), con una corrección revisada."
     terminos:
       Grupo: la empresa matriz y todas sus filiales.
     antes_despues:              # medido en layer/proveedores/resultados.json (SQL sin Rastro, 2026-10-19)
-      sin: {valor: "US$ 56.400 M", detalle: "Buscando «Leidos» en los nombres faltan empresas del grupo con otro nombre (QTC, Dynetics, Gibbs & Cox, 1901 Group: US$ 7.700 M) y entra un consorcio que no es del grupo."}
-      con: {valor: "US$ 63.400 M", detalle: "30 empresas: las 13 «matrices» de la base de contratos, unidas en un grupo, con la evidencia de cada una."}
+      sin: {valor: "US$ 56.400 M", detalle: "Una búsqueda por el nombre «Leidos» omite empresas del grupo con otra razón social (QTC, Dynetics, Gibbs & Cox y 1901 Group: US$ 7.700 M) e incluye un consorcio ajeno al grupo."}
+      con: {valor: "US$ 63.400 M", detalle: "30 empresas: las 13 «matrices» de la base de contratos, consolidadas en un grupo, con la evidencia de cada vínculo."}
     evidencia:
       texto: "Por qué cada empresa es parte del grupo Leidos (algunos ejemplos):"
       formato: "**{proveedor}**: {evidencia}"
@@ -91,8 +91,8 @@ preguntas:
       UEI: el número con el que cada empresa se registra para venderle al gobierno de EE. UU.
       LEI: el identificador global de empresas (GLEIF), el mismo en todo el mundo.
     antes_despues:              # la misma pregunta del grupo Leidos, hecha de otra forma (consistencia, 2026-10-19)
-      sin: {valor: "Leidos: US$ 97.800 M", detalle: "Preguntando por Leidos de otra forma, el SQL siguió las matrices viejas y le sumó US$ 41.400 M de la SAIC de hoy."}
-      con: {valor: "Leidos: US$ 63.400 M", detalle: "SAIC queda en su propio grupo: coincide su nombre legal de hoy. Leidos solo coincide por su nombre anterior, y queda descartado a la vista."}
+      sin: {valor: "Leidos: US$ 97.800 M", detalle: "Con otra formulación de la pregunta, la consulta SQL siguió matrices históricas y atribuyó a Leidos US$ 41.400 M de la actual SAIC."}
+      con: {valor: "Leidos: US$ 63.400 M", detalle: "SAIC se asigna a su propio grupo por su razón social vigente. Leidos coincide solo con su denominación anterior y se descarta de forma explícita."}
     evidencia:
       texto: "Por qué la SAIC de hoy (UEI MMLKPW9JLX64) es del grupo SAIC y no de Leidos:"
       formato: "{evidencia}"
@@ -244,7 +244,7 @@ faq:
       Sí, en «Una pregunta sobre textos». Rastro elige primero, con una consulta exacta, los contratos del
       grupo Leidos (todas sus empresas, incluidas Dynetics y QTC). Después un asistente de IA lee solo la
       descripción de esos contratos y los agrupa en temas, citando cada contrato. Buscar «Leidos» en los
-      textos no alcanza: de esos 40 contratos, solo 1 nombra a Leidos en su descripción.
+      textos resulta insuficiente: de esos 40 contratos, solo uno menciona a Leidos en su descripción.
   - pregunta: ¿Una coincidencia con una lista de control significa que la empresa está sancionada?
     respuesta: >-
       No. Es un nombre igual después de quitar mayúsculas, puntuación y «Inc.» o «LLC». Rastro muestra lo

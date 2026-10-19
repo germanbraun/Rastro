@@ -41,11 +41,11 @@
 
 - question: ¿Cómo sé por qué Rastro dice algo?
   answer: |-
-    En cada respuesta con fármacos, «¿Cómo lo supe?» muestra cómo reconoció Rastro cada fármaco en los ensayos: lo que escribió quien registró el ensayo, y qué fármaco es. Por ejemplo, «Adjuvant Systemic Therapy» es trastuzumab emtansina porque el sponsor lo declaró así. Se puede abrir cada ensayo y comprobarlo.
+    En cada respuesta con fármacos, «¿De dónde sale la respuesta?» muestra cómo reconoció Rastro cada fármaco en los ensayos: lo que escribió quien registró el ensayo, y qué fármaco es. Por ejemplo, «Adjuvant Systemic Therapy» es trastuzumab emtansina porque el sponsor lo declaró así. Se puede abrir cada ensayo y comprobarlo.
 
 - question: ¿Rastro también responde sobre textos?
   answer: |-
-    Sí, con cuidado. En «Una pregunta sobre textos», Rastro primero elige con una consulta exacta los ensayos que importan (por ejemplo, los de fase 3 de cáncer de pulmón con inhibidores de quinasa que se detuvieron: 26). Después, un asistente de IA lee solo los motivos que escribió cada sponsor y los agrupa: falta de pacientes, decisión de la empresa, el tratamiento no funcionó… Cada grupo cita sus ensayos, y en «¿Cómo lo supe?» están todos los textos que leyó.
+    Sí, con cuidado. En «Una pregunta sobre textos», Rastro primero elige con una consulta exacta los ensayos que importan (por ejemplo, los de fase 3 de cáncer de pulmón con inhibidores de quinasa que se detuvieron: 26). Después, un asistente de IA lee solo los motivos que escribió cada sponsor y los agrupa: falta de pacientes, decisión de la empresa, el tratamiento no funcionó… Cada grupo cita sus ensayos, y en «¿De dónde sale la respuesta?» están todos los textos que leyó.
 
     Además, el motivo de cada uno de los 12.611 ensayos detenidos pasó a ser un dato del grafo, clasificado con reglas y con su evidencia. Así, «¿cuántos ensayos se detuvieron por falta de pacientes?» se responde con una consulta exacta. Las reglas aciertan 9 de cada 10 en una muestra revisada.
 
@@ -77,12 +77,12 @@
 
     Los datos no se mueven: siguen en Postgres, y cada pregunta se ejecuta como SQL.
 
-- question: ¿Qué pasa cuando hago una pregunta?
+- question: ¿Qué sucede al hacer una pregunta?
   tecnico: true
   answer: |-
     1. El LLM recibe la **ontología** como contexto: los conceptos, cómo se relacionan y qué significa cada uno. Con eso escribe una consulta SPARQL. No ve tablas, así que no tiene que adivinar cómo se cruzan.
     2. Ontop la traduce a SQL y la ejecuta en vivo sobre Postgres.
-    3. Ves la respuesta y la fuente de cada columna. En «¿Cómo lo supe?» están la consulta y el SQL exactos, para revisarlos: el LLM todavía puede elegir mal un concepto o un filtro.
+    3. La respuesta se muestra con la fuente de cada columna. En «¿De dónde sale la respuesta?» están la consulta y el SQL exactos, para revisarlos: el LLM todavía puede elegir mal un concepto o un filtro.
 
 - question: ¿Qué tiene cada fuente, y dónde está?
   tecnico: true
@@ -156,7 +156,7 @@
 - question: ¿Cómo sé por qué Rastro dice que un ensayo prueba un fármaco?
   tecnico: true
   answer: |-
-    En cada respuesta con fármacos, una columna dice cómo lo reconoce Rastro (por ejemplo, trastuzumab: 854 ensayos, 81 % por su nombre), y el paso 4 de **«¿Cómo lo supe?»** muestra ejemplos no obvios, que se pueden abrir en ClinicalTrials.gov: «Bevacizumab (drug), Herceptin (drug)» es trastuzumab como parte de una combinación; «Adjuvant Systemic Therapy» es trastuzumab emtansina por un alias que declaró el sponsor.
+    En cada respuesta con fármacos, una columna dice cómo lo reconoce Rastro (por ejemplo, trastuzumab: 854 ensayos, 81 % por su nombre), y el paso 4 de **«¿De dónde sale la respuesta?»** muestra ejemplos no obvios, que se pueden abrir en ClinicalTrials.gov: «Bevacizumab (drug), Herceptin (drug)» es trastuzumab como parte de una combinación; «Adjuvant Systemic Therapy» es trastuzumab emtansina por un alias que declaró el sponsor.
 
     Esa evidencia está en el grafo, descrita con **PROV-O**, el estándar del W3C para procedencia: cada enlace ensayo → fármaco guarda el texto que escribió el sponsor, el texto que coincidió, la regla, y de qué fuentes deriva. Cualquier consulta puede pedirla. También muestra lo discutible: «[89Zr]-Df-Trastuzumab» es un trazador de imágenes, no el tratamiento, y cualquiera puede verlo y corregir la regla.
 

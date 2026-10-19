@@ -356,7 +356,7 @@ def show_text_question():
     st.caption("Cada motivo es un hecho del grafo, clasificado con reglas a partir del texto del sponsor y "
                "con su evidencia. Un ensayo puede tener varios motivos. Las reglas aciertan 9 de cada 10 en "
                "una muestra revisada por un asistente de IA.")
-    with st.expander("¿Cómo lo supe?"):
+    with st.expander("¿De dónde sale la respuesta?"):
         st.markdown(item["como"])
         if TECH:
             st.markdown("**El conteo**, sobre el motivo clasificado (`:stopReason`), con su evidencia en "
@@ -400,12 +400,12 @@ def show_answer(query, columns, rows, note=None):
         st.dataframe(table, hide_index=True, use_container_width=True)
         if TECH:
             st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}. Cada columna dice de qué fuente sale."
-                       + (" La evidencia de cada enlace está en «¿Cómo lo supe?»." if drugs else ""))
+                       + (" La evidencia de cada enlace está en «¿De dónde sale la respuesta?»." if drugs else ""))
         else:
             st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}."
-                       + (" La evidencia está en «¿Cómo lo supe?»." if drugs else ""))
+                       + (" La evidencia está en «¿De dónde sale la respuesta?»." if drugs else ""))
 
-    with st.expander("¿Cómo lo supe?"):
+    with st.expander("¿De dónde sale la respuesta?"):
         if not TECH:
             st.markdown("**Dónde buscó Rastro:**")
             for s in used:
@@ -423,7 +423,7 @@ def show_answer(query, columns, rows, note=None):
                     st.markdown(f"- «{text}» → **{name.lower()}**, {RULES.get(rule, rule)} · "
                                 f"[{nct}](https://clinicaltrials.gov/study/{nct})")
                 st.caption("Cada respuesta se puede auditar: abrí el ensayo y comprobalo.")
-            st.caption("¿Querés ver la consulta y el SQL? Activá «Ver detalles técnicos» en la barra lateral.")
+            st.caption("Para ver la consulta y el SQL, active «Ver detalles técnicos» en la barra lateral.")
             return
         if note:
             st.caption(note)
@@ -474,7 +474,7 @@ def show_answer(query, columns, rows, note=None):
 # --- Pantalla ------------------------------------------------------
 
 st.title("Rastro")
-st.markdown("**Los datos cambian. Tus preguntas, no.**")
+st.markdown("**Los datos cambian. Las preguntas, no.**")
 
 # Dominios: oncología tiene su pantalla en este archivo; los demás se dibujan con dominio.py
 # a partir de su configuración (app/dominios.yaml)
@@ -507,10 +507,10 @@ with st.sidebar:
                    "efectos adversos (openFDA) y enfermedades (MeSH).")
 
 ask_tab, trust_tab, faq_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"])
-FAQ_HINT = "¿Dudas? Mirá la pestaña **Preguntas frecuentes**."
+FAQ_HINT = "Para dudas, consulte la pestaña **Preguntas frecuentes**."
 
 with ask_tab:
-    mode = st.radio("¿Qué querés preguntar?",
+    mode = st.radio("Tipo de pregunta",
                     ["Una pregunta de ejemplo", "Una pregunta sobre textos", "Mi propia pregunta"],
                     horizontal=True, label_visibility="collapsed")
     if mode == "Una pregunta sobre textos":
@@ -548,7 +548,7 @@ with ask_tab:
                 show_answer(result["query"], result["columns"], result["rows"],
                             note=f"Intentos: {len(result['attempts'])}.")
         if not available:
-            st.info("Para preguntas libres hace falta un LLM. Mientras tanto, probá las preguntas de ejemplo.")
+            st.info("Para preguntas libres hace falta un LLM. Mientras tanto, pueden usarse las preguntas de ejemplo.")
 
 @st.cache_data
 def consistency():
@@ -855,7 +855,7 @@ with trust_tab:
     with st.expander("Ver un ejemplo de evidencia"):
         st.markdown("«Adjuvant Systemic Therapy» → **trastuzumab emtansina**, porque el sponsor lo declaró así "
                     "([NCT07421141](https://clinicaltrials.gov/study/NCT07421141)).")
-        st.caption("En cada respuesta con fármacos (marcadas con 🧾), «¿Cómo lo supe?» muestra ejemplos como "
+        st.caption("En cada respuesta con fármacos (marcadas con 🧾), «¿De dónde sale la respuesta?» muestra ejemplos como "
                    "este. Cada ensayo se puede abrir y comprobar.")
 
 with faq_tab:
@@ -874,7 +874,7 @@ with faq_tab:
         with st.expander(item["question"]):
             st.markdown(item["answer"].format(**numbers))
     if not TECH:
-        st.caption("Hay más preguntas para técnicos: activá «Ver detalles técnicos» en la barra lateral.")
+        st.caption("Hay más preguntas para perfiles técnicos: active «Ver detalles técnicos» en la barra lateral.")
     else:
         st.markdown("##### Para técnicos")
         with st.expander("Cómo está armado Rastro: arquitectura y ontología", expanded=False):

@@ -1,8 +1,8 @@
 # Guion de la demo de Rastro (5 minutos)
 
-> **Los datos cambian. Tus preguntas, no.**
+> **Los datos cambian. Las preguntas, no.**
 
-Para cualquier audiencia, sin conocimientos técnicos. Tres momentos, todos con el mismo ejemplo, el grupo Leidos: **une, explica, lee**. Cada momento termina en un número: sin Rastro, con Rastro. Ocho diapositivas (`docs/slides/`, abrir `index.html`) y la app en **Demo en 3 pasos**, con «Ver detalles técnicos» apagado. Lo demás (pruebas, oncología en vivo, anexo) queda para las preguntas. Para una audiencia técnica: [demo-guion-tecnico.md](demo-guion-tecnico.md).
+Para cualquier audiencia, sin conocimientos técnicos. Tres momentos, todos con el mismo ejemplo, el grupo Leidos: **integración, trazabilidad y análisis de textos**. Cada momento termina en un número: sin Rastro y con Rastro. Ocho diapositivas (`docs/slides/`, abrir `index.html`) y la app en **Demo en 3 pasos**, con «Ver detalles técnicos» apagado. Lo demás (pruebas, oncología en vivo, anexo) queda para las preguntas. Para una audiencia técnica: [demo-guion-tecnico.md](demo-guion-tecnico.md).
 
 ## Antes de empezar
 
@@ -11,29 +11,29 @@ Para cualquier audiencia, sin conocimientos técnicos. Tres momentos, todos con 
 
 ## 0:00 – 1:00 · Qué es Rastro (diapositivas 1 a 3)
 
-> «Las bases de datos no se hablan entre sí. Rastro pone un diccionario de negocio entre tus bases y tus preguntas: contrato, empresa, grupo, agencia. Traduce cada base a esas palabras una sola vez, y después preguntás con esas palabras.»
+> «Las bases de datos de una organización no están conectadas entre sí. Rastro incorpora un diccionario de negocio entre las bases y las preguntas: contrato, empresa, grupo, agencia. Cada base se traduce a esos términos una sola vez, y las preguntas se formulan con ellos.»
 >
-> «La demo: ¿con quién hace negocios el gobierno de EE. UU.? Datos públicos de contratos federales, y un solo ejemplo: el grupo Leidos. Tres momentos.»
+> «La demo responde una pregunta concreta: ¿con quién contrata el gobierno de EE. UU.? Con datos públicos de contratos federales y un solo ejemplo, el grupo Leidos, en tres momentos.»
 
-## 1:00 – 2:00 · 1 · Une (app, paso 1; diapositiva 4)
+## 1:00 – 2:00 · 1 · Integración (app, paso 1; diapositiva 4)
 
-> «¿Cuánto le contrata el gobierno a Leidos? Buscando la palabra "Leidos", un SQL da 56.400 millones: le faltan las empresas del grupo que se llaman de otra forma, como QTC o Dynetics. Rastro arma el grupo una vez: 30 empresas, 63.400 millones, y dice por qué cada una es parte.»
+> «¿Cuánto contrata el gobierno con el grupo Leidos? Una consulta SQL que busca el nombre "Leidos" obtiene 56.400 millones: omite las empresas del grupo con otra razón social, como QTC o Dynetics. Rastro define el grupo una sola vez: 30 empresas y 63.400 millones, con la justificación de cada vínculo.»
 
-## 2:00 – 3:00 · 2 · Explica (app, paso 2; diapositiva 5)
+## 2:00 – 3:00 · 2 · Trazabilidad (app, paso 2; diapositiva 5)
 
-> «La trampa: en 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. Preguntando de otra forma, el SQL le sumó a Leidos 41.400 millones que son de SAIC. Rastro no, y muestra por qué: el nombre legal de hoy le gana al nombre anterior.»
+> «Un caso que suele inducir a error: en 2013, la antigua SAIC adoptó el nombre Leidos y una nueva empresa tomó el nombre SAIC. Con otra formulación de la pregunta, la consulta SQL atribuyó a Leidos 41.400 millones que corresponden a SAIC. Rastro asigna cada empresa correctamente y muestra el motivo: la razón social vigente prevalece sobre la denominación anterior.»
 
-Abrir **¿Cómo lo supe?** para mostrar la evidencia.
+Abrir **¿De dónde sale la respuesta?** para mostrar la evidencia.
 
-## 3:00 – 4:00 · 3 · Lee (app, paso 3; diapositiva 6)
+## 3:00 – 4:00 · 3 · Análisis de textos (app, paso 3; diapositiva 6)
 
-> «Ahora sobre textos: ¿en qué trabaja Leidos? Si buscamos la palabra "Leidos" en los contratos, como haría un buscador, encontramos 33 de los 40 más grandes: se pierden 5.600 millones y dos temas enteros. Rastro elige los 40 con una consulta exacta, y la IA lee solo esos textos, citando cada contrato. Un RAG común decide qué leer por cómo se ven los textos; Rastro, por lo que significan los datos.»
+> «Por último, el análisis de textos: ¿en qué trabaja Leidos para el gobierno? Una búsqueda de la palabra "Leidos" en los contratos, como la de un buscador, encuentra 33 de los 40 más grandes: omite 5.600 millones y dos temas completos. Rastro selecciona los 40 con una consulta exacta, y la IA analiza solo esos textos, con la cita de cada contrato. Un RAG convencional decide qué leer según la similitud de los textos; Rastro, según el significado de los datos.»
 
 ## 4:00 – 5:00 · Otro dominio y cierre (diapositivas 7 y 8)
 
-> «El mismo Rastro funciona con ensayos clínicos de cáncer: haciendo cada pregunta de cuatro formas, sin Rastro la respuesta cambió en 9 de 10; con Rastro, en ninguna.»
+> «El mismo enfoque se aplica a ensayos clínicos de cáncer: con cada pregunta formulada de cuatro maneras, sin Rastro la respuesta cambió en 9 de 10 casos; con Rastro, en ninguno.»
 >
-> «Lo que hay que saber: el valor está en integrar los datos una vez y mantenerlos en un lugar. El siguiente paso es un piloto con tus datos.»
+> «En síntesis: el valor está en integrar los datos una sola vez y mantenerlos en un único lugar. El siguiente paso es un piloto con datos propios.»
 
 ## Si preguntan
 

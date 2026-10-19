@@ -1,6 +1,6 @@
 # Rastro · en una página
 
-> **Los datos cambian. Tus preguntas, no.**
+> **Los datos cambian. Las preguntas, no.**
 
 **Rastro integra tus datos una vez. Preguntás en lenguaje de negocio, y cada respuesta dice de dónde sale y se puede auditar.**
 

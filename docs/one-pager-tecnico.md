@@ -1,6 +1,6 @@
 # Rastro Layer · en una página (versión técnica)
 
-> **Los datos cambian. Tus preguntas, no.**
+> **Los datos cambian. Las preguntas, no.**
 
 **Una capa semántica sobre cuatro fuentes públicas de oncología. Los datos se integran una vez; un LLM pregunta en conceptos de negocio, y cada respuesta dice de qué fuente sale.**
 
