@@ -31,7 +31,7 @@
     "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (SUM(?oilC * ?pct / 100) AS ?total) WHERE {\n  { SELECT ?c (SUM(?oil) AS ?oilC) WHERE {\n      ?p a :WellProduction ; :inConcession ?c ; :oil ?oil .\n    } GROUP BY ?c }\n  { SELECT ?c (SUM(?pc) AS ?pct) WHERE {\n      ?s a :Stake ; :inConcession ?c ; :partner ?co ; :percent ?pc .\n      { SELECT DISTINCT ?co WHERE {\n          ?co a :Company ; :name ?n .\n          FILTER(STRSTARTS(UCASE(STR(?n)), \"YPF\"))\n      } }\n    } GROUP BY ?c }\n}",
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (SUM(?oilC * ?pct / 100) AS ?total) WHERE {\n  { SELECT ?c (SUM(?oil) AS ?oilC) WHERE {\n      ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil .\n    } GROUP BY ?c }\n  { SELECT ?c (SUM(?pc) AS ?pct) WHERE {\n      ?s a energia:Stake ; energia:inConcession ?c ; energia:partner ?co ; energia:percent ?pc .\n      { SELECT DISTINCT ?co WHERE {\n          ?co a energia:Company ; energia:name ?n .\n          FILTER(STRSTARTS(UCASE(STR(?n)), \"YPF\"))\n      } }\n    } GROUP BY ?c }\n}",
       "error": null
      }
     ],
@@ -69,7 +69,7 @@
     "question": "¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?w) AS ?n) WHERE {\n  ?w a :Well ; :operator ?c .\n  ?c :name ?name .\n  FILTER(REGEX(?name, \"^YPF( |$)\", \"i\"))\n}",
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?w) AS ?n) WHERE {\n  ?w a energia:Well ; energia:operator ?c .\n  ?c energia:name ?name .\n  FILTER(REGEX(?name, \"^YPF( |$)\", \"i\"))\n}",
       "error": null
      }
     ],
@@ -125,7 +125,7 @@
     "question": "¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  {\n    SELECT ?c (COUNT(DISTINCT ?v) AS ?n) WHERE {\n      ?v a :DetectedVenting ; :inConcession ?c ; :date ?d .\n      FILTER(STR(?d) >= \"2024-01-01\")\n    } GROUP BY ?c\n  }\n  ?c :name ?nombre .\n}\nORDER BY DESC(?n)\nLIMIT 5",
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  {\n    SELECT ?c (COUNT(DISTINCT ?v) AS ?n) WHERE {\n      ?v a energia:DetectedVenting ; energia:inConcession ?c ; energia:date ?d .\n      FILTER(STR(?d) >= \"2024-01-01\")\n    } GROUP BY ?c\n  }\n  ?c energia:name ?nombre .\n}\nORDER BY DESC(?n)\nLIMIT 5",
       "error": null
      }
     ],
@@ -187,7 +187,7 @@
     "question": "¿Cuáles son las 5 empresas que declararon más petróleo no convencional (shale o tight) en 2025, contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  { SELECT ?c (SUM(?oil) AS ?total) WHERE {\n      ?p a :UnconventionalProduction ; :declaredBy ?c ; :oil ?oil .\n    } GROUP BY ?c }\n  ?c :name ?nombre .\n}\nORDER BY DESC(?total)\nLIMIT 5",
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  { SELECT ?c (SUM(?oil) AS ?total) WHERE {\n      ?p a energia:UnconventionalProduction ; energia:declaredBy ?c ; energia:oil ?oil .\n    } GROUP BY ?c }\n  ?c energia:name ?nombre .\n}\nORDER BY DESC(?total)\nLIMIT 5",
       "error": null
      }
     ],
@@ -239,7 +239,7 @@
     "question": "¿Cuántas concesiones tienen al menos un posible venteo detectado por satélite desde el 1 de enero de 2024 dentro de su contorno y tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más de su contorno?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?c) AS ?n) WHERE {\n  ?v a :DetectedVenting ; :inConcession ?c ; :date ?d .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  ?p a :PipelineLink ; :aboutConcession ?c ; :distanceKm ?km .\n  FILTER(?km >= 10)\n}",
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?c) AS ?n) WHERE {\n  ?v a energia:DetectedVenting ; energia:inConcession ?c ; energia:date ?d .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  ?p a energia:PipelineLink ; energia:aboutConcession ?c ; energia:distanceKm ?km .\n  FILTER(?km >= 10)\n}",
       "error": null
      }
     ],
@@ -285,7 +285,7 @@
     "question": "¿Cuántos posibles venteos detectados por satélite desde el 1 de enero de 2024, dentro del contorno de alguna concesión, caen dentro de un área protegida del Instituto Geográfico Nacional?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?v) AS ?n) WHERE {\n  ?v a :DetectedVenting ; :inConcession ?c ; :date ?d .\n  ?s a :SurroundingsLink ; :aboutVenting ?v ; :protectedArea ?a .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  FILTER(STR(?a) != \"\")\n}",
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?v) AS ?n) WHERE {\n  ?v a energia:DetectedVenting ; energia:inConcession ?c ; energia:date ?d .\n  ?s a energia:SurroundingsLink ; energia:aboutVenting ?v ; energia:protectedArea ?a .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  FILTER(STR(?a) != \"\")\n}",
       "error": null
      }
     ],
@@ -363,7 +363,7 @@
     "question": "¿Qué empresas que declaran producción en 2025 tienen un LEI activo en GLEIF cuyo nombre legal es el de la empresa?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT DISTINCT ?nombre WHERE {\n  ?p a :WellProduction ; :declaredBy ?e .\n  ?e :lei ?lei ; :name ?nombre .\n}",
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT DISTINCT ?nombre WHERE {\n  ?p a energia:WellProduction ; energia:declaredBy ?e .\n  ?e energia:lei ?lei ; energia:name ?nombre .\n}",
       "error": null
      }
     ],

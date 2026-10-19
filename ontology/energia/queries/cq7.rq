@@ -1,10 +1,10 @@
 # 7. ¿Qué empresas que producen en Argentina tienen identificador global (LEI) en GLEIF?
-PREFIX : <https://w3id.org/rastro/energia#>
+PREFIX energia: <https://w3id.org/rastro/energia#>
 
 SELECT ?company ?lei (SUM(?oil) AS ?operated)
 WHERE {
-  ?e :name ?company ; :lei ?lei .
-  ?p :declaredBy ?e ; :oil ?oil .
+  ?e energia:name ?company ; energia:lei ?lei .
+  ?p energia:declaredBy ?e ; energia:oil ?oil .
 }
 GROUP BY ?company ?lei
 ORDER BY DESC(?operated)

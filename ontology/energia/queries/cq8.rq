@@ -1,10 +1,10 @@
 # 8. ¿Qué concesiones hay que revisar por venteos, quién las opera y por qué?
-PREFIX : <https://w3id.org/rastro/energia#>
+PREFIX energia: <https://w3id.org/rastro/energia#>
 
 SELECT ?concession ?operator (GROUP_CONCAT(?reason; separator=" · ") AS ?why)
 WHERE {
-  ?c a :ConcessionToReview ; :name ?concession ; :reviewReason ?reason .
-  OPTIONAL { ?c :operatorOnMap/:name ?operator }
+  ?c a energia:ConcessionToReview ; energia:name ?concession ; energia:reviewReason ?reason .
+  OPTIONAL { ?c energia:operatorOnMap/energia:name ?operator }
 }
 GROUP BY ?concession ?operator
 ORDER BY ?operator ?concession

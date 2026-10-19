@@ -2,7 +2,7 @@
  "question": "Contá los pozos que declararon producción en 2025 cuya última declaración del año la presentó YPF.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?w) AS ?n) WHERE {\n  ?w a :Well ; :operator ?c .\n  FILTER EXISTS { ?c :name ?nm . FILTER(STRSTARTS(UCASE(STR(?nm)), \"YPF\")) }\n}",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?w) AS ?n) WHERE {\n  ?w a energia:Well ; energia:operator ?c .\n  FILTER EXISTS { ?c energia:name ?nm . FILTER(STRSTARTS(UCASE(STR(?nm)), \"YPF\")) }\n}",
    "error": null
   }
  ],

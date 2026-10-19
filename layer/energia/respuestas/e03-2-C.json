@@ -2,7 +2,7 @@
  "question": "¿Qué cinco concesiones concentran más anomalías térmicas detectadas por satélite desde el 1/1/2024, ubicando cada punto dentro de su contorno?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  { SELECT ?c (COUNT(DISTINCT ?v) AS ?n) WHERE {\n      ?v a :DetectedVenting ; :inConcession ?c .\n    } GROUP BY ?c }\n  ?c :name ?nombre .\n} ORDER BY DESC(?n) LIMIT 5",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  { SELECT ?c (COUNT(DISTINCT ?v) AS ?n) WHERE {\n      ?v a energia:DetectedVenting ; energia:inConcession ?c .\n    } GROUP BY ?c }\n  ?c energia:name ?nombre .\n} ORDER BY DESC(?n) LIMIT 5",
    "error": null
   }
  ],

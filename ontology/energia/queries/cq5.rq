@@ -1,11 +1,11 @@
 # 5. ¿Qué concesiones con posibles venteos tienen el gasoducto de transporte más cercano a 10 km o más?
-PREFIX : <https://w3id.org/rastro/energia#>
+PREFIX energia: <https://w3id.org/rastro/energia#>
 
 SELECT ?concession ?operator (COUNT(DISTINCT ?d) AS ?detected) ?distanceKm ?pipeline
 WHERE {
-  ?d a :DetectedVenting ; :inConcession ?c .
-  ?c :name ?concession ; :operatorOnMap/:name ?operator .
-  ?g a :PipelineLink ; :aboutConcession ?c ; :distanceKm ?distanceKm ; :pipeline ?pipeline .
+  ?d a energia:DetectedVenting ; energia:inConcession ?c .
+  ?c energia:name ?concession ; energia:operatorOnMap/energia:name ?operator .
+  ?g a energia:PipelineLink ; energia:aboutConcession ?c ; energia:distanceKm ?distanceKm ; energia:pipeline ?pipeline .
   FILTER (?distanceKm >= 10)
 }
 GROUP BY ?concession ?operator ?distanceKm ?pipeline

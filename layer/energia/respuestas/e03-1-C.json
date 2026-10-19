@@ -2,7 +2,7 @@
  "question": "Nombrá las 5 concesiones donde el satélite detectó más posibles venteos desde enero de 2024, contando los puntos que caen dentro del contorno de cada una.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  {\n    SELECT ?c (COUNT(DISTINCT ?v) AS ?n) WHERE {\n      ?v a :DetectedVenting ;\n         :inConcession ?c .\n    }\n    GROUP BY ?c\n  }\n  ?c :name ?nombre .\n}\nORDER BY DESC(?n)\nLIMIT 5",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  {\n    SELECT ?c (COUNT(DISTINCT ?v) AS ?n) WHERE {\n      ?v a energia:DetectedVenting ;\n         energia:inConcession ?c .\n    }\n    GROUP BY ?c\n  }\n  ?c energia:name ?nombre .\n}\nORDER BY DESC(?n)\nLIMIT 5",
    "error": null
   }
  ],

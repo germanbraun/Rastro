@@ -2,7 +2,7 @@
  "question": "¿Cuántos posibles venteos detectados por satélite desde el 1 de enero de 2024, dentro del contorno de alguna concesión, caen dentro de un área protegida del Instituto Geográfico Nacional?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?v) AS ?n) WHERE {\n  ?v a :DetectedVenting ; :inConcession ?c ; :date ?d .\n  ?s a :SurroundingsLink ; :aboutVenting ?v ; :protectedArea ?a .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  FILTER(STR(?a) != \"\")\n}",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?v) AS ?n) WHERE {\n  ?v a energia:DetectedVenting ; energia:inConcession ?c ; energia:date ?d .\n  ?s a energia:SurroundingsLink ; energia:aboutVenting ?v ; energia:protectedArea ?a .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  FILTER(STR(?a) != \"\")\n}",
    "error": null
   }
  ],

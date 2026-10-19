@@ -1,12 +1,12 @@
 # 6. ¿Qué posibles venteos caen dentro de un área protegida o a menos de 3 km de una localidad?
-PREFIX : <https://w3id.org/rastro/energia#>
+PREFIX energia: <https://w3id.org/rastro/energia#>
 
 SELECT ?concession ?operator ?place (COUNT(DISTINCT ?d) AS ?detected)
 WHERE {
-  ?d a :DetectedVenting ; :inConcession ?c .
-  ?c :name ?concession ; :operatorOnMap/:name ?operator .
-  ?s a :SurroundingsLink ; :aboutVenting ?d ; :nearestTown ?town ; :distanceKm ?km .
-  OPTIONAL { ?s :protectedArea ?area }
+  ?d a energia:DetectedVenting ; energia:inConcession ?c .
+  ?c energia:name ?concession ; energia:operatorOnMap/energia:name ?operator .
+  ?s a energia:SurroundingsLink ; energia:aboutVenting ?d ; energia:nearestTown ?town ; energia:distanceKm ?km .
+  OPTIONAL { ?s energia:protectedArea ?area }
   FILTER (BOUND(?area) || ?km < 3)
   BIND (IF(BOUND(?area), CONCAT("área protegida: ", ?area), CONCAT("cerca de ", ?town)) AS ?place)
 }

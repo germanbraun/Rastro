@@ -2,7 +2,7 @@
  "question": "Si cada concesión reparte su petróleo de 2025 entre sus socios según su participación, ¿cuántos metros cúbicos le tocan a YPF?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (SUM(?oilC * ?p / 100) AS ?m3) WHERE {\n  { SELECT ?c (SUM(?o) AS ?oilC) WHERE {\n      ?wp a :WellProduction ; :inConcession ?c ; :oil ?o .\n    } GROUP BY ?c }\n  { SELECT DISTINCT ?s ?c ?p WHERE {\n      ?s a :Stake ; :inConcession ?c ; :partner ?e ; :percent ?p .\n      ?e :name ?n .\n      FILTER(STRSTARTS(UCASE(STR(?n)), \"YPF\"))\n    } }\n}",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (SUM(?oilC * ?p / 100) AS ?m3) WHERE {\n  { SELECT ?c (SUM(?o) AS ?oilC) WHERE {\n      ?wp a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?o .\n    } GROUP BY ?c }\n  { SELECT DISTINCT ?s ?c ?p WHERE {\n      ?s a energia:Stake ; energia:inConcession ?c ; energia:partner ?e ; energia:percent ?p .\n      ?e energia:name ?n .\n      FILTER(STRSTARTS(UCASE(STR(?n)), \"YPF\"))\n    } }\n}",
    "error": null
   }
  ],

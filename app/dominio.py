@@ -59,8 +59,7 @@ def run(query, domain):
 def prefixed(query, domain):
     """Agrega los prefijos que la consulta usa: el del dominio siempre, el de PROV-O solo si hace falta."""
     ns = answer.DOMAINS[domain]["namespace"]
-    # El prefijo vacío queda mientras energía no pase a «energia:»
-    return f"PREFIX {domain}: <{ns}>\nPREFIX : <{ns}>\n" + (PROV if "prov:" in query else "") + query
+    return f"PREFIX {domain}: <{ns}>\n" + (PROV if "prov:" in query else "") + query
 
 
 def md(text):
@@ -310,13 +309,13 @@ def wkt_coords(wkt):
 @st.cache_data(show_spinner="Armando el mapa…")
 def map_data(domain):
     concessions = run(prefixed(GEO + """SELECT ?name ?operator ?wkt (COUNT(DISTINCT ?d) AS ?n) (SAMPLE(?why) AS ?reason) WHERE {
-        ?c a :Concession ; :name ?name ; geo:asWKT ?wkt .
-        OPTIONAL { ?c :operatorOnMap/:name ?operator }
-        OPTIONAL { ?d a :DetectedVenting ; :inConcession ?c }
-        OPTIONAL { ?c a :ConcessionToReview ; :reviewReason ?why }
+        ?c a energia:Concession ; energia:name ?name ; geo:asWKT ?wkt .
+        OPTIONAL { ?c energia:operatorOnMap/energia:name ?operator }
+        OPTIONAL { ?d a energia:DetectedVenting ; energia:inConcession ?c }
+        OPTIONAL { ?c a energia:ConcessionToReview ; energia:reviewReason ?why }
     } GROUP BY ?name ?operator ?wkt""", domain), domain)[1]
-    points = run(prefixed(GEO + "SELECT ?wkt WHERE { ?d a :DetectedVenting ; geo:asWKT ?wkt }", domain), domain)[1]
-    pipes = run(prefixed(GEO + "SELECT ?name ?wkt WHERE { ?p a :Pipeline ; :name ?name ; geo:asWKT ?wkt }", domain), domain)[1]
+    points = run(prefixed(GEO + "SELECT ?wkt WHERE { ?d a energia:DetectedVenting ; geo:asWKT ?wkt }", domain), domain)[1]
+    pipes = run(prefixed(GEO + "SELECT ?name ?wkt WHERE { ?p a energia:Pipeline ; energia:name ?name ; geo:asWKT ?wkt }", domain), domain)[1]
     return concessions, points, pipes
 
 

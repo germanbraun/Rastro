@@ -2,7 +2,7 @@
  "question": "¿Cuántas anomalías térmicas satelitales desde el 1/1/2024, ubicadas en una concesión, caen en áreas protegidas según el Instituto Geográfico Nacional?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?v) AS ?n) WHERE {\n  ?v a :DetectedVenting ; :inConcession ?c .\n  ?s a :SurroundingsLink ; :aboutVenting ?v ; :protectedArea ?a .\n  FILTER(STR(?a) != \"\")\n}",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?v) AS ?n) WHERE {\n  ?v a energia:DetectedVenting ; energia:inConcession ?c .\n  ?s a energia:SurroundingsLink ; energia:aboutVenting ?v ; energia:protectedArea ?a .\n  FILTER(STR(?a) != \"\")\n}",
    "error": null
   }
  ],

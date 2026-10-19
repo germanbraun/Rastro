@@ -2,7 +2,7 @@
  "question": "¿En cuántos pozos con producción en 2025 es YPF la empresa que declara el último mes de producción del pozo?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?w) AS ?n) WHERE {\n  ?w a :Well ; :operator ?c .\n  ?c :name ?name .\n  FILTER(STRSTARTS(UCASE(STR(?name)), \"YPF\"))\n}",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?w) AS ?n) WHERE {\n  ?w a energia:Well ; energia:operator ?c .\n  ?c energia:name ?name .\n  FILTER(STRSTARTS(UCASE(STR(?name)), \"YPF\"))\n}",
    "error": null
   }
  ],

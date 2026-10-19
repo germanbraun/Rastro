@@ -2,7 +2,7 @@
  "question": "Top 5 de concesiones por cantidad de posibles venteos satelitales desde 2024, según el contorno de la concesión.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  { SELECT ?c (COUNT(DISTINCT ?v) AS ?n) WHERE {\n      ?v a :DetectedVenting ; :inConcession ?c .\n    } GROUP BY ?c }\n  ?c :name ?nombre .\n}\nORDER BY DESC(?n)\nLIMIT 5",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?nombre WHERE {\n  { SELECT ?c (COUNT(DISTINCT ?v) AS ?n) WHERE {\n      ?v a energia:DetectedVenting ; energia:inConcession ?c .\n    } GROUP BY ?c }\n  ?c energia:name ?nombre .\n}\nORDER BY DESC(?n)\nLIMIT 5",
    "error": null
   }
  ],

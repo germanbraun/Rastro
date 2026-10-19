@@ -90,8 +90,8 @@ preguntas:
       formato: "**{concesion}**: {texto}"
       query: |
         SELECT ?concesion ?texto ?fuente WHERE {
-          ?s a :Stake ; :inConcession/:name ?concesion ; :sourceText ?texto ;
-             prov:wasDerivedFrom/:name ?fuente .
+          ?s a energia:Stake ; energia:inConcession/energia:name ?concesion ; energia:sourceText ?texto ;
+             prov:wasDerivedFrom/energia:name ?fuente .
           FILTER (?concesion IN ("LOMA CAMPANA", "LA AMARGA CHICA"))
         } ORDER BY ?concesion ?texto
 
@@ -115,8 +115,8 @@ preguntas:
       formato: "**Pozo {pozo}**: {evidencia}"
       query: |
         SELECT ?pozo ?evidencia ?fuente WHERE {
-          ?l a :OperatorLink ; :aboutWell/:wellId ?pozo ; :company/:name "YPF S.A." ;
-             :rule "rige la declaración jurada" ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
+          ?l a energia:OperatorLink ; energia:aboutWell/energia:wellId ?pozo ; energia:company/energia:name "YPF S.A." ;
+             energia:rule "rige la declaración jurada" ; energia:sourceText ?evidencia ; prov:wasDerivedFrom/energia:name ?fuente .
         } ORDER BY ?pozo LIMIT 5
 
   - id: e03
@@ -140,9 +140,9 @@ preguntas:
       formato: "**{fecha}**: {evidencia}"
       query: |
         SELECT ?fecha ?evidencia ?fuente WHERE {
-          ?d a :DetectedVenting ; :date ?fecha .
-          ?l a :LocationLink ; :aboutVenting ?d ; :inConcession/:name "LA CALERA" ; :sourceText ?evidencia ;
-             prov:wasDerivedFrom/:name ?fuente .
+          ?d a energia:DetectedVenting ; energia:date ?fecha .
+          ?l a energia:LocationLink ; energia:aboutVenting ?d ; energia:inConcession/energia:name "LA CALERA" ; energia:sourceText ?evidencia ;
+             prov:wasDerivedFrom/energia:name ?fuente .
         } ORDER BY DESC(?fecha) LIMIT 4
 
   - id: e04
@@ -157,9 +157,9 @@ preguntas:
     terminos:
       No convencional: petróleo de rocas poco permeables (shale, como Vaca Muerta, o tight), que se extrae con fractura hidráulica.
     definicion: |
-      :UnconventionalProduction rdfs:label "Producción no convencional"@es .
-      :ShaleProduction rdfs:subClassOf :UnconventionalProduction .
-      :TightProduction rdfs:subClassOf :UnconventionalProduction .
+      energia:UnconventionalProduction rdfs:label "Producción no convencional"@es .
+      energia:ShaleProduction rdfs:subClassOf energia:UnconventionalProduction .
+      energia:TightProduction rdfs:subClassOf energia:UnconventionalProduction .
 
   - id: e05
     query: /ontology/energia/queries/cq5.rq
@@ -177,7 +177,7 @@ preguntas:
       formato: "{evidencia}"
       query: |
         SELECT ?evidencia (GROUP_CONCAT(DISTINCT ?f; separator=" + ") AS ?fuentes) WHERE {
-          ?g a :PipelineLink ; :aboutConcession/:name ?c ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?f .
+          ?g a energia:PipelineLink ; energia:aboutConcession/energia:name ?c ; energia:sourceText ?evidencia ; prov:wasDerivedFrom/energia:name ?f .
           FILTER (?c IN ("CHIHUIDO DE LA SIERRA NEGRA", "EL TRAPIAL - CURAMCHED", "LOMA CAMPANA"))
         } GROUP BY ?evidencia
 
@@ -197,7 +197,7 @@ preguntas:
       formato: "{evidencia}"
       query: |
         SELECT DISTINCT ?evidencia (GROUP_CONCAT(DISTINCT ?f; separator=" + ") AS ?fuentes) WHERE {
-          ?s a :SurroundingsLink ; :protectedArea ?a ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?f .
+          ?s a energia:SurroundingsLink ; energia:protectedArea ?a ; energia:sourceText ?evidencia ; prov:wasDerivedFrom/energia:name ?f .
         } GROUP BY ?evidencia ORDER BY ?evidencia LIMIT 4
 
   - id: e07
@@ -216,7 +216,7 @@ preguntas:
       formato: "{evidencia}"
       query: |
         SELECT ?evidencia ?fuente WHERE {
-          ?l a :LeiLink ; :company/:name ?e ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
+          ?l a energia:LeiLink ; energia:company/energia:name ?e ; energia:sourceText ?evidencia ; prov:wasDerivedFrom/energia:name ?fuente .
           FILTER (?e IN ("YPF S.A.", "SHELL ARGENTINA S.A.", "PAN AMERICAN ENERGY SL"))
         }
 
@@ -233,9 +233,9 @@ preguntas:
     terminos:
       Concesión para revisar: una concesión que conviene mirar por sus posibles venteos. Es un indicio, no una conclusión.
     definicion: |
-      :ConcessionToReview rdfs:label "Concesión para revisar"@es .
-      :VentingFarFromPipeline rdfs:subClassOf :ConcessionToReview .   # venteos y gasoducto a 10 km o más
-      :VentingWithoutReports  rdfs:subClassOf :ConcessionToReview .   # 20+ venteos y sin planillas desde 2022
+      energia:ConcessionToReview rdfs:label "Concesión para revisar"@es .
+      energia:VentingFarFromPipeline rdfs:subClassOf energia:ConcessionToReview .   # venteos y gasoducto a 10 km o más
+      energia:VentingWithoutReports  rdfs:subClassOf energia:ConcessionToReview .   # 20+ venteos y sin planillas desde 2022
 
   - id: e09
     query: /ontology/energia/queries/cq9.rq
@@ -254,7 +254,7 @@ preguntas:
       formato: "{evidencia}"
       query: |
         SELECT ?evidencia ?fuente WHERE {
-          ?x a :OperatorChange ; :inConcession/:name ?c ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
+          ?x a energia:OperatorChange ; energia:inConcession/energia:name ?c ; energia:sourceText ?evidencia ; prov:wasDerivedFrom/energia:name ?fuente .
           FILTER (?c IN ("ESCALANTE - EL TREBOL", "BARRANCAS", "BAJO DEL CHOIQUE - LA INVERNADA"))
         } ORDER BY ?c
 

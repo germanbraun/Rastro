@@ -406,9 +406,9 @@ Para que se entienda qué es una instancia: en la vista técnica (pestaña «Con
 
 Cada dominio ya tenía su propio espacio de nombres, pero las consultas lo usaban con el prefijo vacío (`:Supplier`, `:Trial`), y en la demo no se veía de qué dominio era cada término.
 
-- **Ahora se escribe `proveedores:Supplier` y `oncologia:Trial`**, en ontologías, mapeos, consultas, notas para el LLM, la app y las diapositivas. Petróleo y gas pasa a `energia:` en un segundo paso, cuando termine el trabajo en curso sobre sus archivos; mientras tanto la app declara también el prefijo vacío.
+- **Ahora se escribe `proveedores:Supplier`, `oncologia:Trial` y `energia:Well`**, en ontologías, mapeos, consultas, notas para el LLM, la app y las diapositivas. Petróleo y gas pasó en un segundo paso, después del trabajo sobre la historia de operadoras.
 - **Oncología cambia de espacio de nombres:** `https://w3id.org/rastro/ontology#` pasa a `https://w3id.org/rastro/oncologia#`, igual que los otros dos (`proveedores#`, `energia#`). Los IRI de las instancias (`drug/…`, `trial/…`) no cambian.
-- **Las respuestas guardadas de la evaluación se tradujeron con un script** (solo el prefijo y el espacio de nombres; nada más de la consulta). Se volvieron a ejecutar: las 62 consultas de Rastro guardadas corren, y los puntajes no cambian (oncología: Rastro 20 de 20; proveedores, igual que antes).
+- **Las respuestas guardadas de la evaluación se tradujeron con un script** (solo el prefijo y el espacio de nombres; nada más de la consulta). Se volvieron a ejecutar: las 62 consultas de Rastro guardadas corren, y los puntajes no cambian (oncología: Rastro 20 de 20; proveedores y petróleo y gas, igual que antes: en petróleo y gas, Rastro 7 de 7).
 
 ## 2026-10-19 — Petróleo y gas: quién operó cada concesión, de 2023 a 2025
 

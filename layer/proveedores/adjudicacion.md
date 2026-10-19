@@ -19,7 +19,7 @@ Las referencias salen de Rastro, así que la ventaja de Rastro puede ser circula
 ## p05 · Proveedores con nombre igual a una entrada de la Lista Consolidada (fallan las dos)
 
 - **Referencia:** 8. **Con Rastro:** 4, igual en las 4 formas. **Sin Rastro:** 7, 11, 6 y 7: cada consulta normaliza los nombres a su manera.
-- **Con Rastro** filtró las entradas de tipo «Entity» y dejó afuera las que no traen tipo, como las de la Entity List de Comercio, que también son empresas u organizaciones. El diccionario de negocio no lo decía: el comentario de `:entryType` listaba los cuatro tipos sin aclarar que algunas listas lo dejan vacío. Se corrigió el comentario, sin volver a correr la prueba.
+- **Con Rastro** filtró las entradas de tipo «Entity» y dejó afuera las que no traen tipo, como las de la Entity List de Comercio, que también son empresas u organizaciones. El diccionario de negocio no lo decía: el comentario de `proveedores:entryType` listaba los cuatro tipos sin aclarar que algunas listas lo dejan vacío. Se corrigió el comentario, sin volver a correr la prueba.
 - **Con los datos:** las 8 de la referencia cumplen la definición de la pregunta (nombre o alias igual, sin mayúsculas, puntuación ni formas societarias). En todas, la entrada es de otro país: son homónimos.
 
 ## p06 · Proveedores de Defensa en construcción (las dos correctas)

@@ -14,7 +14,7 @@
 # la operadora, desde cuándo cuentan los venteos), para que las dos formas puedan contestarlas.
 
 prefixes: |
-  PREFIX : <https://w3id.org/rastro/energia#>
+  PREFIX energia: <https://w3id.org/rastro/energia#>
 
 questions:
 
@@ -23,15 +23,15 @@ questions:
     kind: número
     reference: |
       SELECT (SUM(?oil * ?pct / 100) AS ?answer) WHERE {
-        ?p a :WellProduction ; :inConcession ?c ; :oil ?oil .
-        ?s a :Stake ; :inConcession ?c ; :partner/:name "YPF S.A." ; :percent ?pct .
+        ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil .
+        ?s a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "YPF S.A." ; energia:percent ?pct .
       }
 
   - id: e02
     question: ¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?
     kind: número
     reference: |
-      SELECT (COUNT(DISTINCT ?w) AS ?answer) WHERE { ?w a :Well ; :operator/:name "YPF S.A." . }
+      SELECT (COUNT(DISTINCT ?w) AS ?answer) WHERE { ?w a energia:Well ; energia:operator/energia:name "YPF S.A." . }
 
   - id: e03
     question: ¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión?
@@ -39,7 +39,7 @@ questions:
     items: concesiones
     reference: |
       SELECT ?answer WHERE {
-        { SELECT ?answer (COUNT(?d) AS ?n) WHERE { ?d a :DetectedVenting ; :inConcession/:name ?answer . }
+        { SELECT ?answer (COUNT(?d) AS ?n) WHERE { ?d a energia:DetectedVenting ; energia:inConcession/energia:name ?answer . }
           GROUP BY ?answer }
       } ORDER BY DESC(?n) LIMIT 5
 
@@ -49,7 +49,7 @@ questions:
     items: empresas
     reference: |
       SELECT ?answer WHERE {
-        { SELECT ?answer (SUM(?oil) AS ?t) WHERE { ?p a :UnconventionalProduction ; :declaredBy/:name ?answer ; :oil ?oil . }
+        { SELECT ?answer (SUM(?oil) AS ?t) WHERE { ?p a energia:UnconventionalProduction ; energia:declaredBy/energia:name ?answer ; energia:oil ?oil . }
           GROUP BY ?answer }
       } ORDER BY DESC(?t) LIMIT 5
 
@@ -58,8 +58,8 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?c) AS ?answer) WHERE {
-        ?d a :DetectedVenting ; :inConcession ?c .
-        ?g a :PipelineLink ; :aboutConcession ?c ; :distanceKm ?km .
+        ?d a energia:DetectedVenting ; energia:inConcession ?c .
+        ?g a energia:PipelineLink ; energia:aboutConcession ?c ; energia:distanceKm ?km .
         FILTER (?km >= 10)
       }
 
@@ -68,7 +68,7 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?d) AS ?answer) WHERE {
-        ?d a :DetectedVenting . ?s a :SurroundingsLink ; :aboutVenting ?d ; :protectedArea ?a .
+        ?d a energia:DetectedVenting . ?s a energia:SurroundingsLink ; energia:aboutVenting ?d ; energia:protectedArea ?a .
       }
 
   - id: e07
@@ -76,4 +76,4 @@ questions:
     kind: lista
     items: empresas
     reference: |
-      SELECT DISTINCT ?answer WHERE { ?e :name ?answer ; :lei ?lei . ?p :declaredBy ?e . }
+      SELECT DISTINCT ?answer WHERE { ?e energia:name ?answer ; energia:lei ?lei . ?p energia:declaredBy ?e . }

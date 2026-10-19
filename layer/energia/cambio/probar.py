@@ -53,8 +53,8 @@ def check(entry, key, kind):
 def control():
     """Control de unidades: ¿la producción de petróleo de 2025 sigue rondando los 46,6 millones de m³?"""
     try:
-        values = run_sparql("PREFIX : <https://w3id.org/rastro/energia#> "
-                            "SELECT (SUM(?o) AS ?t) WHERE { ?p :oil ?o }", "energia")
+        values = run_sparql("PREFIX energia: <https://w3id.org/rastro/energia#> "
+                            "SELECT (SUM(?o) AS ?t) WHERE { ?p energia:oil ?o }", "energia")
     except Exception as e:  # noqa: BLE001 - Rastro caído también es un resultado de la demo
         return f"Control de unidades: Rastro no responde ({str(e).splitlines()[0][:120]})"
     total = float(values[0]) if values and values[0] is not None else 0

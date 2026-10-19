@@ -21,19 +21,19 @@ Todas cruzan al menos dos fuentes: es lo que una base sola no puede contestar.
 ## Notas
 
 - **La 1 es la pregunta de la demo:** corta, con una respuesta que cualquiera reconoce (trastuzumab, pertuzumab…).
-- **"Cáncer de mama", "cáncer de pulmón" y "leucemia" incluyen sus subtipos.** Eso lo resuelve la jerarquía de MeSH con `:within`: "cáncer de pulmón" incluye "carcinoma de pulmón de células no pequeñas" sin listarlo a mano.
+- **"Cáncer de mama", "cáncer de pulmón" y "leucemia" incluyen sus subtipos.** Eso lo resuelve la jerarquía de MeSH con `oncologia:within`: "cáncer de pulmón" incluye "carcinoma de pulmón de células no pequeñas" sin listarlo a mano.
 - **Los targets son los directos de ChEMBL.** Por eso la 6 lista MTOR: ChEMBL registra los rapálogos aprobados (everolimus, temsirolimus) sobre FKBP1A, la proteína a la que se unen.
 - **Los eventos adversos (4 y 7) son conteos de reportes espontáneos de FAERS**, no frecuencias clínicas. La interfaz lo tiene que decir.
 - **La 7 y la 8 son las features de Rastro Lab:** usan solo datos anteriores al inicio de cada ensayo.
 - **"Detenido" es TERMINATED o WITHDRAWN** en ClinicalTrials.gov.
 - **La 9 usa una clase deducida.** «Terapia dirigida» no tiene mapeo: la ontología dice que los inhibidores de quinasa y los anticuerpos monoclonales lo son, y Ontop lo aplica.
-- **La 11 cuenta un texto convertido en dato.** El motivo que escribió el sponsor se clasifica con reglas (`linking/stop_reasons.sql`) y queda como `:stopReason`, con su evidencia en `:StopReasonLink`.
-- **La 10 es la procedencia de un enlace.** Cada `:DrugLink` guarda el texto del sponsor, lo que coincidió, la regla y de qué fuentes deriva (PROV-O).
+- **La 11 cuenta un texto convertido en dato.** El motivo que escribió el sponsor se clasifica con reglas (`linking/stop_reasons.sql`) y queda como `oncologia:stopReason`, con su evidencia en `oncologia:StopReasonLink`.
+- **La 10 es la procedencia de un enlace.** Cada `oncologia:DrugLink` guarda el texto del sponsor, lo que coincidió, la regla y de qué fuentes deriva (PROV-O).
 - **Cada dato de una respuesta lleva su fuente.** No es una pregunta aparte: toda entidad apunta a la fuente de la que viene (`rastro:fromSource`).
 
 ## Cómo se responden
 
 Todas corren contra Ontop (http://localhost:8080/sparql) y tardan alrededor de un segundo. Los resultados de la Fase 2 están en [docs/results.md](../docs/results.md).
 
-- **Ensayo → fármaco** (`:testsDrug`) y **ensayo → condición** (`:condition`) salen de `linking/`.
+- **Ensayo → fármaco** (`oncologia:testsDrug`) y **ensayo → condición** (`oncologia:condition`) salen de `linking/`.
 - **MeSH** está copiado en Postgres, así que no hace falta federar con GraphDB.

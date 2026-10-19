@@ -1,12 +1,12 @@
 # 9. ¿Qué áreas cambiaron de operadora entre 2023 y 2025, y cuánto producían por mes antes y después?
-PREFIX : <https://w3id.org/rastro/energia#>
+PREFIX energia: <https://w3id.org/rastro/energia#>
 
 SELECT ?concession ?since ?previous ?new ?oilBefore ?oilAfter ?gasBefore ?gasAfter
 WHERE {
-  ?x a :OperatorChange ; :inConcession ?c ; :month ?month ;
-     :previousCompany/:name ?previous ; :newCompany/:name ?new ;
-     :oilBefore ?oilBefore ; :oilAfter ?oilAfter ; :gasBefore ?gasBefore ; :gasAfter ?gasAfter .
-  OPTIONAL { ?c :name ?name }
+  ?x a energia:OperatorChange ; energia:inConcession ?c ; energia:month ?month ;
+     energia:previousCompany/energia:name ?previous ; energia:newCompany/energia:name ?new ;
+     energia:oilBefore ?oilBefore ; energia:oilAfter ?oilAfter ; energia:gasBefore ?gasBefore ; energia:gasAfter ?gasAfter .
+  OPTIONAL { ?c energia:name ?name }
   BIND (COALESCE(?name, STRAFTER(STR(?c), "/concession/")) AS ?concession)   # sin nombre si no está en el mapa
   BIND (CONCAT(SUBSTR(STR(?month), 6, 2), "/", SUBSTR(STR(?month), 1, 4)) AS ?since)
 }

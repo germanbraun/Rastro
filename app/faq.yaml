@@ -224,5 +224,5 @@
 
     Para preguntas sobre texto, Rastro combina las dos cosas: el grafo elige con una consulta exacta qué registros importan (con la jerarquía de MeSH y las clases que deduce Ontop), y el LLM resume solo esos textos, citando cada registro. Es GraphRAG anclado en la capa semántica. Ejemplo: «Una pregunta sobre textos», con los motivos de los ensayos detenidos (layer/textos/).
 
-    Y un paso más, con control: cuando el texto se puede clasificar, se convierte en un hecho del grafo (`:stopReason`), con su evidencia en PROV-O (`:StopReasonLink`: qué parte del texto coincidió con qué regla) y una muestra revisada (linking/review-stop-reasons-2026-10-19.md). Es «texto → grafo», pero con reglas legibles y evidencia, no con extracción opaca.
+    Y un paso más, con control: cuando el texto se puede clasificar, se convierte en un hecho del grafo (`oncologia:stopReason`), con su evidencia en PROV-O (`oncologia:StopReasonLink`: qué parte del texto coincidió con qué regla) y una muestra revisada (linking/review-stop-reasons-2026-10-19.md). Es «texto → grafo», pero con reglas legibles y evidencia, no con extracción opaca.
 
