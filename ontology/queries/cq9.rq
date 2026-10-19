@@ -1,12 +1,12 @@
 # 9. ¿Cuántos ensayos de fase 3 de cáncer de mama prueban alguna terapia dirigida?
 # «Terapia dirigida» no tiene mapeo: Ontop la deduce de la ontología (rdfs:subClassOf).
-PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT (COUNT(DISTINCT ?trial) AS ?trials) WHERE {
-  ?trial :testsDrug ?drug ; :phase ?phase ; :condition ?condition .
-  ?drug a :TargetedTherapy .
+  ?trial oncologia:testsDrug ?drug ; oncologia:phase ?phase ; oncologia:condition ?condition .
+  ?drug a oncologia:TargetedTherapy .
   FILTER (CONTAINS(?phase, "PHASE3"))
   ?breast rdfs:label "Breast Neoplasms"@en .
-  ?condition :within ?breast .
+  ?condition oncologia:within ?breast .
 }

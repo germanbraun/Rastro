@@ -2,7 +2,7 @@
  "question": "¿Cuántos ensayos clínicos de cáncer de próstata incluyen un fármaco aprobado dirigido al receptor de andrógenos (gen AR)?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?tr) AS ?n) WHERE {\n  ?tr a :Trial ; :condition ?c ; :testsDrug ?d .\n  ?d :approved true ; :hasTarget ?t . ?t :gene \"AR\" .\n  ?c :within ?m . ?m rdfs:label \"Prostatic Neoplasms\"@en .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?tr) AS ?n) WHERE {\n  ?tr a oncologia:Trial ; oncologia:condition ?c ; oncologia:testsDrug ?d .\n  ?d oncologia:approved true ; oncologia:hasTarget ?t . ?t oncologia:gene \"AR\" .\n  ?c oncologia:within ?m . ?m rdfs:label \"Prostatic Neoplasms\"@en .\n}",
    "error": null
   }
  ],

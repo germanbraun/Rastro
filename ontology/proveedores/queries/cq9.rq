@@ -1,12 +1,12 @@
 # 9. ¿Cuánto contrata cada agencia con proveedores para revisar?
-PREFIX : <https://w3id.org/rastro/proveedores#>
+PREFIX proveedores: <https://w3id.org/rastro/proveedores#>
 
 SELECT ?agency (COUNT(DISTINCT ?s) AS ?suppliers) (COUNT(?contract) AS ?contracts) (SUM(?amount) AS ?total)
 WHERE {
   # «Proveedor para revisar» no tiene mapeo: el diccionario dice que lo son los proveedores
   # con matriz extranjera y los que coinciden con una lista de control, y Ontop lo deduce
-  ?s a :SupplierToReview .
-  ?contract :supplier ?s ; :agency/:name ?agency ; :amount ?amount .
+  ?s a proveedores:SupplierToReview .
+  ?contract proveedores:supplier ?s ; proveedores:agency/proveedores:name ?agency ; proveedores:amount ?amount .
 }
 GROUP BY ?agency
 ORDER BY DESC(?total)

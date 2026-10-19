@@ -3,7 +3,7 @@
 # van dentro de cada pregunta, como en la evaluación.
 
 prefixes: |
-  PREFIX : <https://w3id.org/rastro/ontology#>
+  PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 questions:
@@ -14,8 +14,8 @@ questions:
     items: sponsors
     reference: |
       SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE {
-        ?t :testsDrug ?d ; :sponsor ?s . ?s :industry true .
-        ?d :hasTarget/:gene "BRAF" .
+        ?t oncologia:testsDrug ?d ; oncologia:sponsor ?s . ?s oncologia:industry true .
+        ?d oncologia:hasTarget/oncologia:gene "BRAF" .
       }
 
   - id: m2
@@ -24,10 +24,10 @@ questions:
     items: genes
     reference: |
       SELECT (COUNT(DISTINCT ?g) AS ?answer) WHERE {
-        ?t :testsDrug ?d ; :status ?st ; :condition ?c .
+        ?t oncologia:testsDrug ?d ; oncologia:status ?st ; oncologia:condition ?c .
         FILTER (?st IN ("TERMINATED", "WITHDRAWN"))
-        ?x rdfs:label "Pancreatic Neoplasms"@en . ?c :within ?x .
-        ?d :hasTarget/:gene ?g .
+        ?x rdfs:label "Pancreatic Neoplasms"@en . ?c oncologia:within ?x .
+        ?d oncologia:hasTarget/oncologia:gene ?g .
       }
 
   - id: m3
@@ -37,12 +37,12 @@ questions:
     reference: |
       SELECT (SUM(?serious) AS ?answer) WHERE {
         { SELECT DISTINCT ?d WHERE {
-            ?t :testsDrug ?d ; :status ?st ; :condition ?c .
+            ?t oncologia:testsDrug ?d ; oncologia:status ?st ; oncologia:condition ?c .
             FILTER (?st IN ("RECRUITING", "ACTIVE_NOT_RECRUITING", "NOT_YET_RECRUITING", "ENROLLING_BY_INVITATION"))
-            ?x rdfs:label "Lung Neoplasms"@en . ?c :within ?x .
-            ?d :hasTarget/:gene "EGFR" .
+            ?x rdfs:label "Lung Neoplasms"@en . ?c oncologia:within ?x .
+            ?d oncologia:hasTarget/oncologia:gene "EGFR" .
         } }
-        ?y a :YearlyReports ; :drug ?d ; :seriousReports ?serious .
+        ?y a oncologia:YearlyReports ; oncologia:drug ?d ; oncologia:seriousReports ?serious .
       }
 
   - id: m4
@@ -51,11 +51,11 @@ questions:
     items: fármacos
     reference: |
       SELECT (COUNT(DISTINCT ?d) AS ?answer) WHERE {
-        ?d :approved true .
-        ?t1 :testsDrug ?d ; :phase ?p1 ; :condition ?c1 . FILTER (CONTAINS(?p1, "PHASE3"))
-        ?x1 rdfs:label "Breast Neoplasms"@en . ?c1 :within ?x1 .
-        ?t2 :testsDrug ?d ; :phase ?p2 ; :condition ?c2 . FILTER (CONTAINS(?p2, "PHASE3"))
-        ?x2 rdfs:label "Lung Neoplasms"@en . ?c2 :within ?x2 .
+        ?d oncologia:approved true .
+        ?t1 oncologia:testsDrug ?d ; oncologia:phase ?p1 ; oncologia:condition ?c1 . FILTER (CONTAINS(?p1, "PHASE3"))
+        ?x1 rdfs:label "Breast Neoplasms"@en . ?c1 oncologia:within ?x1 .
+        ?t2 oncologia:testsDrug ?d ; oncologia:phase ?p2 ; oncologia:condition ?c2 . FILTER (CONTAINS(?p2, "PHASE3"))
+        ?x2 rdfs:label "Lung Neoplasms"@en . ?c2 oncologia:within ?x2 .
       }
 
   - id: m5
@@ -65,10 +65,10 @@ questions:
     reference: |
       SELECT ?answer WHERE {
         { SELECT ?answer (COUNT(DISTINCT ?t) AS ?n) WHERE {
-            ?t :testsDrug ?d ; :status ?st ; :sponsor ?s .
+            ?t oncologia:testsDrug ?d ; oncologia:status ?st ; oncologia:sponsor ?s .
             FILTER (?st IN ("TERMINATED", "WITHDRAWN"))
-            ?s :industry true ; :name ?answer .
-            ?d :hasTarget/:gene ?g . FILTER (?g IN ("EGFR", "ERBB2", "ERBB3", "ERBB4"))
+            ?s oncologia:industry true ; oncologia:name ?answer .
+            ?d oncologia:hasTarget/oncologia:gene ?g . FILTER (?g IN ("EGFR", "ERBB2", "ERBB3", "ERBB4"))
           } GROUP BY ?answer ORDER BY DESC(?n) LIMIT 1 }
       }
 
@@ -82,9 +82,9 @@ questions:
     items: ensayos
     reference: |
       SELECT (COUNT(DISTINCT ?t) AS ?answer) WHERE {
-        ?t :testsDrug ?d ; :phase ?p ; :condition ?c . ?d a :TargetedTherapy .
+        ?t oncologia:testsDrug ?d ; oncologia:phase ?p ; oncologia:condition ?c . ?d a oncologia:TargetedTherapy .
         FILTER (CONTAINS(?p, "PHASE3"))
-        ?x rdfs:label "Breast Neoplasms"@en . ?c :within ?x .
+        ?x rdfs:label "Breast Neoplasms"@en . ?c oncologia:within ?x .
       }
 
   - id: m7
@@ -93,8 +93,8 @@ questions:
     items: fármacos
     reference: |
       SELECT (COUNT(DISTINCT ?d) AS ?answer) WHERE {
-        ?t :testsDrug ?d ; :condition ?c . ?d a :MonoclonalAntibody .
-        ?x rdfs:label "Lung Neoplasms"@en . ?c :within ?x .
+        ?t oncologia:testsDrug ?d ; oncologia:condition ?c . ?d a oncologia:MonoclonalAntibody .
+        ?x rdfs:label "Lung Neoplasms"@en . ?c oncologia:within ?x .
       }
 
   - id: m8
@@ -103,7 +103,7 @@ questions:
     items: ensayos
     reference: |
       SELECT (COUNT(DISTINCT ?t) AS ?answer) WHERE {
-        ?t :status ?st ; :testsDrug ?q, ?d .
+        ?t oncologia:status ?st ; oncologia:testsDrug ?q, ?d .
         FILTER (?st IN ("TERMINATED", "WITHDRAWN"))
-        ?q a :Chemotherapy . ?d a :TargetedTherapy .
+        ?q a oncologia:Chemotherapy . ?d a oncologia:TargetedTherapy .
       }

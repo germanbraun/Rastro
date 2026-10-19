@@ -1,12 +1,12 @@
 # 1. ¿Cuánto suman los contratos del grupo Leidos, contando todas sus empresas?
-PREFIX : <https://w3id.org/rastro/proveedores#>
+PREFIX proveedores: <https://w3id.org/rastro/proveedores#>
 
 SELECT ?group (COUNT(DISTINCT ?supplier) AS ?companies) (COUNT(?contract) AS ?contracts) (SUM(?amount) AS ?total)
 WHERE {
-  ?g a :Group ; :name ?group .
+  ?g a proveedores:Group ; proveedores:name ?group .
   FILTER (CONTAINS(UCASE(?group), "LEIDOS"))
-  ?supplier :group ?g .
-  ?contract :supplier ?supplier ; :amount ?amount .
+  ?supplier proveedores:group ?g .
+  ?contract proveedores:supplier ?supplier ; proveedores:amount ?amount .
 }
 GROUP BY ?group
 ORDER BY DESC(?total)

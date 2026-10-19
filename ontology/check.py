@@ -13,7 +13,7 @@ from rdflib.plugins.sparql import prepareQuery
 
 # Carpeta del dominio: la ontología (*.ttl) y sus queries/
 HERE = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).parent
-NS = "https://w3id.org/rastro/ontology#"
+NS = "https://w3id.org/rastro/oncologia#"
 
 
 def terms_in(node, found, seen):

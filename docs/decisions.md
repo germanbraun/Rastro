@@ -401,3 +401,11 @@ Para que se entienda qué es una instancia: en la vista técnica (pestaña «Con
 - **Geometrías en el grafo, con el estándar de OGC (GeoSPARQL, `geo:asWKT`):** los contornos de las concesiones, los puntos de venteo y el trazado de los gasoductos de ENARGAS (`:Pipeline`). La app dibuja el mapa leyendo solo de Rastro (pydeck), y cualquier herramienta de mapas puede leer lo mismo.
 - **«Concesión para revisar» (`:ConcessionToReview`)**, una clase sin mapeo que Ontop deduce de dos reglas escritas una vez (`linking/energia/links.sql`, `energia.concesion_revisar`): posibles venteos desde 2024 y el gasoducto más cercano a 10 km o más (33), o 20 o más posibles venteos y ninguna planilla de venteo presentada desde 2022 (21). 45 concesiones, 9 con las dos. Pregunta nueva (e08), en el mapa en rojo y en una diapositiva. Es un indicio, no una conclusión; el umbral de 20 es una decisión de negocio.
 - **Duplicados de venteos:** los venteos se unían con la tabla del mapa, que tiene siete concesiones con dos polígonos; quedaban 131 filas repetidas (7.959 en lugar de 7.828). Ahora se unen con `energia.concesion`, una fila por concesión. Las respuestas medidas contaban puntos distintos y no cambian.
+
+## 2026-10-19 — Un prefijo con nombre por dominio
+
+Cada dominio ya tenía su propio espacio de nombres, pero las consultas lo usaban con el prefijo vacío (`:Supplier`, `:Trial`), y en la demo no se veía de qué dominio era cada término.
+
+- **Ahora se escribe `proveedores:Supplier` y `oncologia:Trial`**, en ontologías, mapeos, consultas, notas para el LLM, la app y las diapositivas. Petróleo y gas pasa a `energia:` en un segundo paso, cuando termine el trabajo en curso sobre sus archivos; mientras tanto la app declara también el prefijo vacío.
+- **Oncología cambia de espacio de nombres:** `https://w3id.org/rastro/ontology#` pasa a `https://w3id.org/rastro/oncologia#`, igual que los otros dos (`proveedores#`, `energia#`). Los IRI de las instancias (`drug/…`, `trial/…`) no cambian.
+- **Las respuestas guardadas de la evaluación se tradujeron con un script** (solo el prefijo y el espacio de nombres; nada más de la consulta). Se volvieron a ejecutar: las 62 consultas de Rastro guardadas corren, y los puntajes no cambian (oncología: Rastro 20 de 20; proveedores, igual que antes).

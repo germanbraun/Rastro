@@ -2,7 +2,7 @@
  "question": "¿Qué agencias tienen más de un tercio de su monto en contratos con un solo grupo empresario, sumando todas las empresas de ese grupo?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT DISTINCT ?an WHERE {\n  { SELECT ?ag (SUM(?a1) AS ?total) WHERE {\n      ?c1 a :Contract ; :agency ?ag ; :amount ?a1 .\n    } GROUP BY ?ag }\n  { SELECT ?ag ?g (SUM(?a2) AS ?gtotal) WHERE {\n      ?c2 a :Contract ; :agency ?ag ; :amount ?a2 ; :supplier ?s .\n      ?s :group ?g .\n    } GROUP BY ?ag ?g }\n  ?ag :name ?an .\n  FILTER(?gtotal * 3 > ?total)\n}",
+   "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT DISTINCT ?an WHERE {\n  { SELECT ?ag (SUM(?a1) AS ?total) WHERE {\n      ?c1 a proveedores:Contract ; proveedores:agency ?ag ; proveedores:amount ?a1 .\n    } GROUP BY ?ag }\n  { SELECT ?ag ?g (SUM(?a2) AS ?gtotal) WHERE {\n      ?c2 a proveedores:Contract ; proveedores:agency ?ag ; proveedores:amount ?a2 ; proveedores:supplier ?s .\n      ?s proveedores:group ?g .\n    } GROUP BY ?ag ?g }\n  ?ag proveedores:name ?an .\n  FILTER(?gtotal * 3 > ?total)\n}",
    "error": null
   }
  ],

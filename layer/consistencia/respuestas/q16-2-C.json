@@ -2,7 +2,7 @@
  "question": "Contá los fármacos distintos que se prueban en ensayos clínicos de mieloma múltiple.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?d) AS ?n) WHERE {\n  ?mm rdfs:label \"Multiple Myeloma\"@en .\n  ?t :condition ?c . ?c :within ?mm .\n  ?t :testsDrug ?d .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?d) AS ?n) WHERE {\n  ?mm rdfs:label \"Multiple Myeloma\"@en .\n  ?t oncologia:condition ?c . ?c oncologia:within ?mm .\n  ?t oncologia:testsDrug ?d .\n}",
    "error": null
   }
  ],

@@ -1,10 +1,10 @@
 # Los contratos que lee el resumen: los 40 más grandes del grupo Leidos (todas sus empresas,
 # ya resuelto por Rastro), con su descripción y la agencia que contrata.
-PREFIX : <https://w3id.org/rastro/proveedores#>
+PREFIX proveedores: <https://w3id.org/rastro/proveedores#>
 SELECT ?contrato ?monto ?agencia ?empresa ?descripcion WHERE {
-  ?c a :Contract ; :contractId ?contrato ; :amount ?monto ; :description ?descripcion ;
-     :agency/:name ?agencia ; :supplier ?s .
-  ?s :name ?empresa ; :group/:name "LEIDOS HOLDINGS, INC." .
+  ?c a proveedores:Contract ; proveedores:contractId ?contrato ; proveedores:amount ?monto ; proveedores:description ?descripcion ;
+     proveedores:agency/proveedores:name ?agencia ; proveedores:supplier ?s .
+  ?s proveedores:name ?empresa ; proveedores:group/proveedores:name "LEIDOS HOLDINGS, INC." .
 }
 ORDER BY DESC(?monto)
 LIMIT 40

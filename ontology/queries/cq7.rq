@@ -1,16 +1,16 @@
 # 7. ¿Cuántos reportes de eventos adversos tenían los fármacos de un ensayo antes de que empezara?
 # Solo años anteriores al inicio: es una feature de Rastro Lab y no puede mirar el futuro.
-PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
 PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?drug (SUM(?n) AS ?reportsBefore) (SUM(?serious) AS ?seriousBefore)
 WHERE {
   VALUES ?nctId { "NCT02252172" }   # el ensayo a consultar (daratumumab en mieloma, 2015)
-  ?trial :nctId ?nctId ; :startDate ?start ; :testsDrug ?d .
-  ?d :name ?drug .
+  ?trial oncologia:nctId ?nctId ; oncologia:startDate ?start ; oncologia:testsDrug ?d .
+  ?d oncologia:name ?drug .
   OPTIONAL {
-    ?y :drug ?d ; :year ?year ; :reports ?n ; :seriousReports ?serious .
+    ?y oncologia:drug ?d ; oncologia:year ?year ; oncologia:reports ?n ; oncologia:seriousReports ?serious .
     FILTER (?year < YEAR(?start))
   }
 }

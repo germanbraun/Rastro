@@ -2,7 +2,7 @@
  "question": "Top 3 de sponsors de la industria por cantidad de ensayos detenidos (terminados o retirados) en cáncer de pulmón, considerando solo el sponsor principal.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?name WHERE {\n  {\n    SELECT ?s ?name (COUNT(DISTINCT ?tr) AS ?n) WHERE {\n      ?tr a :Trial ; :status ?st ; :sponsor ?s ; :condition ?c .\n      FILTER(?st IN (\"TERMINATED\", \"WITHDRAWN\"))\n      ?s :industry true ; :name ?name .\n      ?c :within ?m . ?m rdfs:label \"Lung Neoplasms\"@en .\n    } GROUP BY ?s ?name\n  }\n} ORDER BY DESC(?n) LIMIT 3",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?name WHERE {\n  {\n    SELECT ?s ?name (COUNT(DISTINCT ?tr) AS ?n) WHERE {\n      ?tr a oncologia:Trial ; oncologia:status ?st ; oncologia:sponsor ?s ; oncologia:condition ?c .\n      FILTER(?st IN (\"TERMINATED\", \"WITHDRAWN\"))\n      ?s oncologia:industry true ; oncologia:name ?name .\n      ?c oncologia:within ?m . ?m rdfs:label \"Lung Neoplasms\"@en .\n    } GROUP BY ?s ?name\n  }\n} ORDER BY DESC(?n) LIMIT 3",
    "error": null
   }
  ],

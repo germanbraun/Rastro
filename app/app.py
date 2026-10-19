@@ -142,8 +142,8 @@ def explanations():
 @st.cache_data
 def sources():
     columns, rows = answer.run_sparql_table("""
-        PREFIX : <https://w3id.org/rastro/ontology#>
-        SELECT ?id ?name ?license WHERE { ?s a :DataSource ; :name ?name ; :license ?license .
+        PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
+        SELECT ?id ?name ?license WHERE { ?s a oncologia:DataSource ; oncologia:name ?name ; oncologia:license ?license .
           BIND (STRAFTER(STR(?s), "/source/") AS ?id) }""")
     # rastro_meta.source tiene las fuentes de todos los dominios: acá van las de oncología
     return {r[0]: {"name": r[1], "license": r[2]} for r in rows if r[0] in STORAGE}
@@ -231,27 +231,27 @@ RULES = {
     "régimen": "por un régimen conocido, como FOLFOX",
     "palabras": "por su nombre dentro de un texto más largo",
 }
-RASTRO_PREFIX = "PREFIX : <https://w3id.org/rastro/ontology#>\n"
+RASTRO_PREFIX = "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\n"
 PROV_PREFIX = "PREFIX prov: <http://www.w3.org/ns/prov#>\n"
 EVIDENCE_SUMMARY = RASTRO_PREFIX + """SELECT ?name ?rule (COUNT(?link) AS ?n) WHERE {{
   VALUES ?name {{ {names} }}
-  ?link a :DrugLink ; :linkDrug ?drug ; :linkRule ?rule . ?drug :name ?name .
+  ?link a oncologia:DrugLink ; oncologia:linkDrug ?drug ; oncologia:linkRule ?rule . ?drug oncologia:name ?name .
 }} GROUP BY ?name ?rule"""
 EVIDENCE_EXAMPLES = RASTRO_PREFIX + PROV_PREFIX + """SELECT ?name ?nct ?text ?matched ?rule WHERE {{
   VALUES ?name {{ {names} }}
-  ?link a :DrugLink ; :linkDrug ?drug ; :linkTrial ?trial ;
-        :interventionText ?text ; :matchedText ?matched ; :linkRule ?rule ;
+  ?link a oncologia:DrugLink ; oncologia:linkDrug ?drug ; oncologia:linkTrial ?trial ;
+        oncologia:interventionText ?text ; oncologia:matchedText ?matched ; oncologia:linkRule ?rule ;
         prov:wasDerivedFrom <https://w3id.org/rastro/source/aact> .
-  ?drug :name ?name . ?trial :nctId ?nct .
+  ?drug oncologia:name ?name . ?trial oncologia:nctId ?nct .
   FILTER (?rule != "nombre")
 }} LIMIT 400"""
 
 
 EVIDENCE_ONE = RASTRO_PREFIX + PROV_PREFIX + """SELECT ?textoDelSponsor ?coincidioCon ?regla ?derivaDe ?generadoPor WHERE {{
-  ?enlace a prov:Entity ; :linkTrial ?ensayo ; :linkDrug ?farmaco ;
-          :interventionText ?textoDelSponsor ; :matchedText ?coincidioCon ; :linkRule ?regla ;
+  ?enlace a prov:Entity ; oncologia:linkTrial ?ensayo ; oncologia:linkDrug ?farmaco ;
+          oncologia:interventionText ?textoDelSponsor ; oncologia:matchedText ?coincidioCon ; oncologia:linkRule ?regla ;
           prov:wasDerivedFrom ?derivaDe ; prov:wasGeneratedBy ?generadoPor .
-  ?ensayo :nctId "{nct}" . ?farmaco :name "{name}" .
+  ?ensayo oncologia:nctId "{nct}" . ?farmaco oncologia:name "{name}" .
 }}"""
 NAMES_OF = {
     "https://w3id.org/rastro/source/aact": "AACT (ClinicalTrials.gov)",
@@ -359,14 +359,14 @@ def show_text_question():
     with st.expander("¿De dónde sale la respuesta?"):
         st.markdown(item["como"])
         if TECH:
-            st.markdown("**El conteo**, sobre el motivo clasificado (`:stopReason`), con su evidencia en "
-                        "`:StopReasonLink` (PROV-O):")
+            st.markdown("**El conteo**, sobre el motivo clasificado (`oncologia:stopReason`), con su evidencia en "
+                        "`oncologia:StopReasonLink` (PROV-O):")
             st.code(facts_query, language="sparql")
         if TECH:
             st.markdown("**1. La consulta que elige los ensayos** (exacta: usa la clase deducida y la "
                         "jerarquía de MeSH):")
             st.code(query, language="sparql")
-            st.markdown("**2. Los motivos que leyó el asistente**, tal como están en el grafo (`:whyStopped`):")
+            st.markdown("**2. Los motivos que leyó el asistente**, tal como están en el grafo (`oncologia:whyStopped`):")
         else:
             st.markdown("**Los motivos que leyó**, tal como los escribió cada sponsor:")
         st.dataframe(pd.DataFrame([{"Ensayo": f"https://clinicaltrials.gov/study/{nct}", "Fármacos": d.lower(),
@@ -379,7 +379,7 @@ def show_text_question():
 
 def show_answer(query, columns, rows, note=None):
     used, col_sources = answer.column_sources(query)
-    drugs = answer_drugs(rows) if rows and ":testsDrug" in query else []
+    drugs = answer_drugs(rows) if rows and "oncologia:testsDrug" in query else []
     info = sources()
 
     if TECH:
@@ -454,7 +454,7 @@ def show_answer(query, columns, rows, note=None):
         if "openfda" in used:
             st.caption("Los eventos adversos son conteos de reportes espontáneos de FAERS: "
                        "no son frecuencias clínicas y pueden incluir duplicados.")
-        drugs = answer_drugs(rows) if rows and ":testsDrug" in query else []
+        drugs = answer_drugs(rows) if rows and "oncologia:testsDrug" in query else []
         if drugs:
             st.markdown("**4. La evidencia de los enlaces ensayo → fármaco.** Cada enlace guarda qué "
                         "escribió el sponsor, con qué coincidió y con qué regla. Algunos ejemplos no obvios:")
@@ -471,7 +471,7 @@ def show_answer(query, columns, rows, note=None):
                             f"(`prov:wasDerivedFrom`) y qué lo generó (`prov:wasGeneratedBy`):")
                 st.code(query, language="sparql")
                 st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True)
-                st.caption("La consulta de la respuesta no necesita PROV-O: usa `:testsDrug`. La procedencia "
+                st.caption("La consulta de la respuesta no necesita PROV-O: usa `oncologia:testsDrug`. La procedencia "
                            "se pide aparte, como acá. «?enlace a prov:Entity» no está en ningún mapeo: Ontop "
                            "lo deduce de la ontología, donde un enlace es un tipo de entidad PROV. Cualquiera "
                            "puede auditarlo abriendo el ensayo.")
@@ -530,7 +530,7 @@ with ask_tab:
     elif mode == "Una pregunta de ejemplo":
         # 🧾 marca las preguntas cuya respuesta trae la evidencia de cada enlace (PROV-O)
         def ask_label(q):
-            linked = ":testsDrug" in (last_ok_query(saved()["questions"][q["id"]], "C") or "")
+            linked = "oncologia:testsDrug" in (last_ok_query(saved()["questions"][q["id"]], "C") or "")
             text = q["question"] if TECH else plain().get(q["id"], {}).get("simple", q["question"])
             return ("🧾 " if linked else "") + text
 
@@ -712,7 +712,7 @@ with trust_tab:
                         st.caption(f"Para reconocer los fármacos, los buscó {LINK_METHODS[link_method(query)]}.")
                     if k == "D" and query and "linking." in query:
                         st.caption("Para reconocer los fármacos usó las tablas de enlaces de Rastro.")
-                    if k == "C" and query and ":testsDrug" in query:
+                    if k == "C" and query and "oncologia:testsDrug" in query:
                         st.caption("Para reconocer los fármacos usó el enlace de Rastro: el mismo en todas "
                                    "las preguntas.")
                     if query:
@@ -831,8 +831,8 @@ with trust_tab:
             st.markdown("«Terapia dirigida» no está en ninguna tabla ni en ningún mapeo. Está definida en "
                         "la **ontología**, en dos líneas: los inhibidores de quinasa y los anticuerpos "
                         "monoclonales son terapias dirigidas. Ontop lo deduce al responder.")
-            st.code(":KinaseInhibitor    rdfs:subClassOf :TargetedTherapy .\n"
-                    ":MonoclonalAntibody rdfs:subClassOf :TargetedTherapy .", language="turtle")
+            st.code("oncologia:KinaseInhibitor    rdfs:subClassOf oncologia:TargetedTherapy .\n"
+                    "oncologia:MonoclonalAntibody rdfs:subClassOf oncologia:TargetedTherapy .", language="turtle")
             st.markdown("El SQL que genera Ontop para «fármacos que son terapia dirigida»: nadie lo escribió.")
             st.code("SELECT DISTINCT v1.chembl_id, v3.pref_name\n"
                     "FROM linking.drug_class v1,\n"
@@ -840,7 +840,7 @@ with trust_tab:
                     "     linking.drug v3\n"
                     "WHERE v1.class = v2.v0m0 AND v1.chembl_id = v3.chembl_id", language="sql")
             st.markdown("**Si el negocio decide que la terapia hormonal también cuenta, es una línea más:**")
-            st.code(":HormoneTherapy rdfs:subClassOf :TargetedTherapy .", language="turtle")
+            st.code("oncologia:HormoneTherapy rdfs:subClassOf oncologia:TargetedTherapy .", language="turtle")
             cols = st.columns(2)
             cols[0].metric("Fármacos que son terapia dirigida", "188", "+32 (antes, 156)")
             cols[1].metric("Ensayos de fase 3 de cáncer de mama con terapia dirigida", "547", "+211 (antes, 336)")

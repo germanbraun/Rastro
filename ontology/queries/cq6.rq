@@ -1,19 +1,19 @@
 # 6. ¿Qué targets tienen fármacos en ensayos activos pero ningún fármaco aprobado?
 # Usa los targets directos de ChEMBL. Ojo: ChEMBL registra los rapálogos aprobados
 # (everolimus, temsirolimus) sobre FKBP1A y no sobre MTOR, así que MTOR aparece acá.
-PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
 PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?gene (COUNT(DISTINCT ?trial) AS ?activeTrials)
 WHERE {
-  ?d :hasTarget ?t .
-  ?t :gene ?gene .
-  ?trial :testsDrug ?d ; :status ?status .
+  ?d oncologia:hasTarget ?t .
+  ?t oncologia:gene ?gene .
+  ?trial oncologia:testsDrug ?d ; oncologia:status ?status .
   FILTER (?status IN ("RECRUITING", "ACTIVE_NOT_RECRUITING", "NOT_YET_RECRUITING", "ENROLLING_BY_INVITATION"))
 
   # Por gen: un mismo gen puede estar en varios targets de ChEMBL (MTOR y el complejo mTORC1)
-  FILTER NOT EXISTS { ?approved :hasTarget/:gene ?gene ; :approved true }
+  FILTER NOT EXISTS { ?approved oncologia:hasTarget/oncologia:gene ?gene ; oncologia:approved true }
 }
 GROUP BY ?gene
 ORDER BY DESC(?activeTrials)

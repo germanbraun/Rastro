@@ -2,7 +2,7 @@
  "question": "¿Qué cinco grupos empresarios, sumando todas sus empresas, tienen el mayor monto en contratos de servicios informáticos (NAICS 5415, incluidos sus subsectores)?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT ?n WHERE {\n  { SELECT ?g (SUM(?m) AS ?total) WHERE {\n      ?c a :Contract ; :supplier ?s ; :amount ?m ; :sector ?sec .\n      ?sec :within ?x . ?x :code \"5415\" .\n      ?s :group ?g .\n    } GROUP BY ?g }\n  ?g :name ?n .\n} ORDER BY DESC(?total) LIMIT 5",
+   "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT ?n WHERE {\n  { SELECT ?g (SUM(?m) AS ?total) WHERE {\n      ?c a proveedores:Contract ; proveedores:supplier ?s ; proveedores:amount ?m ; proveedores:sector ?sec .\n      ?sec proveedores:within ?x . ?x proveedores:code \"5415\" .\n      ?s proveedores:group ?g .\n    } GROUP BY ?g }\n  ?g proveedores:name ?n .\n} ORDER BY DESC(?total) LIMIT 5",
    "error": null
   }
  ],

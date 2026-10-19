@@ -2,7 +2,7 @@
  "question": "¿Cuántos ensayos de fase 3 (incluye fase 2/3) de cáncer de mama prueban alguna terapia dirigida?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ; :phase ?p ; :condition ?c ; :testsDrug ?d .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c :within ?mama . ?mama rdfs:label \"Breast Neoplasms\"@en .\n  ?d a :TargetedTherapy .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a oncologia:Trial ; oncologia:phase ?p ; oncologia:condition ?c ; oncologia:testsDrug ?d .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c oncologia:within ?mama . ?mama rdfs:label \"Breast Neoplasms\"@en .\n  ?d a oncologia:TargetedTherapy .\n}",
    "error": null
   }
  ],

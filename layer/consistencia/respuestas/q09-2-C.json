@@ -2,7 +2,7 @@
  "question": "Contá los ensayos con pembrolizumab cuyo estado es activo (reclutando, activo sin reclutar, todavía sin reclutar o por invitación).",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t :testsDrug ?d . ?d :name \"PEMBROLIZUMAB\" .\n  ?t :status ?st . FILTER(?st IN (\"RECRUITING\",\"ACTIVE_NOT_RECRUITING\",\"NOT_YET_RECRUITING\",\"ENROLLING_BY_INVITATION\"))\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t oncologia:testsDrug ?d . ?d oncologia:name \"PEMBROLIZUMAB\" .\n  ?t oncologia:status ?st . FILTER(?st IN (\"RECRUITING\",\"ACTIVE_NOT_RECRUITING\",\"NOT_YET_RECRUITING\",\"ENROLLING_BY_INVITATION\"))\n}",
    "error": null
   }
  ],

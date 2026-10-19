@@ -1,13 +1,13 @@
 # 2. ¿Cuáles son los 5 grupos con más contratos en servicios informáticos, incluidos sus subsectores?
-PREFIX : <https://w3id.org/rastro/proveedores#>
+PREFIX proveedores: <https://w3id.org/rastro/proveedores#>
 
 SELECT ?group (COUNT(?contract) AS ?contracts) (SUM(?amount) AS ?total)
 WHERE {
   # 5415: Computer Systems Design and Related Services, y todo lo que está dentro
-  ?it :code "5415" .
-  ?sector :within ?it .
-  ?contract :sector ?sector ; :amount ?amount ; :supplier/:group ?g .
-  ?g :name ?group .
+  ?it proveedores:code "5415" .
+  ?sector proveedores:within ?it .
+  ?contract proveedores:sector ?sector ; proveedores:amount ?amount ; proveedores:supplier/proveedores:group ?g .
+  ?g proveedores:name ?group .
 }
 GROUP BY ?group
 ORDER BY DESC(?total)

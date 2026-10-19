@@ -2,11 +2,11 @@
  "question": "¿Cuáles son los fármacos que actúan sobre HER2 (gen ERBB2) y que se están probando en cáncer de mama en ensayos de fase 3, contando también los de fase 2/3?",
  "attempts": [
   {
-   "query": "{\"query\": \"PREFIX : <https://w3id.org/rastro/ontology#>\\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\\nSELECT DISTINCT ?name WHERE {\\n  ?t a :Trial ; :phase ?p ; :condition ?c ; :testsDrug ?d .\\n  FILTER(?p IN (\\\"PHASE3\\\", \\\"PHASE2/PHASE3\\\"))\\n  ?c :within ?m . ?m rdfs:label \\\"Breast Neoplasms\\\"@en .\\n  ?d :hasTarget ?tg ; :name ?name .\\n  ?tg :gene \\\"ERBB2\\\" .\\n}\"}",
+   "query": "{\"query\": \"PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\\nSELECT DISTINCT ?name WHERE {\\n  ?t a oncologia:Trial ; oncologia:phase ?p ; oncologia:condition ?c ; oncologia:testsDrug ?d .\\n  FILTER(?p IN (\\\"PHASE3\\\", \\\"PHASE2/PHASE3\\\"))\\n  ?c oncologia:within ?m . ?m rdfs:label \\\"Breast Neoplasms\\\"@en .\\n  ?d oncologia:hasTarget ?tg ; oncologia:name ?name .\\n  ?tg oncologia:gene \\\"ERBB2\\\" .\\n}\"}",
    "error": "Encountered \" \"{\" \"{ \"\" at line 1, column 1.\nWas expecting one of:\n    \"base\" ...\n    \"prefix\" ...\n    \"select\" ...\n    \"construct\" ...\n    \"describe\" ...\n    \"ask\" ..."
   },
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?t a :Trial ; :phase ?p ; :condition ?c ; :testsDrug ?d .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c :within ?m . ?m rdfs:label \"Breast Neoplasms\"@en .\n  ?d :hasTarget ?tg ; :name ?name .\n  ?tg :gene \"ERBB2\" .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?t a oncologia:Trial ; oncologia:phase ?p ; oncologia:condition ?c ; oncologia:testsDrug ?d .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c oncologia:within ?m . ?m rdfs:label \"Breast Neoplasms\"@en .\n  ?d oncologia:hasTarget ?tg ; oncologia:name ?name .\n  ?tg oncologia:gene \"ERBB2\" .\n}",
    "error": null
   }
  ],

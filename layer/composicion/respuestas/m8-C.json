@@ -2,7 +2,7 @@
  "question": "¿Cuántos ensayos detenidos (terminados o retirados) prueban, en el mismo ensayo, una quimioterapia y una terapia dirigida?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ; :status ?s ; :testsDrug ?q , ?d .\n  FILTER(?s IN (\"TERMINATED\", \"WITHDRAWN\"))\n  ?q a :Chemotherapy .\n  ?d a :TargetedTherapy .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a oncologia:Trial ; oncologia:status ?s ; oncologia:testsDrug ?q , ?d .\n  FILTER(?s IN (\"TERMINATED\", \"WITHDRAWN\"))\n  ?q a oncologia:Chemotherapy .\n  ?d a oncologia:TargetedTherapy .\n}",
    "error": null
   }
  ],

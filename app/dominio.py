@@ -45,8 +45,8 @@ def _load_json(path, mtime):
 @st.cache_data
 def sources(domain):
     ns = answer.DOMAINS[domain]["namespace"]
-    _, rows = answer.run_sparql_table(f"""PREFIX : <{ns}>
-        SELECT ?id ?name ?license WHERE {{ ?s a :DataSource ; :name ?name ; :license ?license .
+    _, rows = answer.run_sparql_table(f"""PREFIX {domain}: <{ns}>
+        SELECT ?id ?name ?license WHERE {{ ?s a {domain}:DataSource ; {domain}:name ?name ; {domain}:license ?license .
           BIND (STRAFTER(STR(?s), "/source/") AS ?id) }}""", domain)
     return {r[0]: {"name": r[1], "license": r[2]} for r in rows}
 
@@ -58,7 +58,9 @@ def run(query, domain):
 
 def prefixed(query, domain):
     """Agrega los prefijos que la consulta usa: el del dominio siempre, el de PROV-O solo si hace falta."""
-    return f"PREFIX : <{answer.DOMAINS[domain]['namespace']}>\n" + (PROV if "prov:" in query else "") + query
+    ns = answer.DOMAINS[domain]["namespace"]
+    # El prefijo vacío queda mientras energía no pase a «energia:»
+    return f"PREFIX {domain}: <{ns}>\nPREFIX : <{ns}>\n" + (PROV if "prov:" in query else "") + query
 
 
 def md(text):
@@ -225,7 +227,7 @@ def labels(domain):
 
 def short_iri(iri, domain):
     ns = answer.DOMAINS[domain]["namespace"]
-    return (iri.replace(ns, ":").replace(PROV_NS, "prov:").replace(RDF_TYPE, "a")
+    return (iri.replace(ns, f"{domain}:").replace(PROV_NS, "prov:").replace(RDF_TYPE, "a")
             .replace("https://w3id.org/rastro/", "rastro:"))
 
 
@@ -274,7 +276,7 @@ def sparql_console(domain):
     if st.session_state.get(f"{key}_cargada") != chosen:   # al cambiar de ejemplo, se carga en el editor
         st.session_state[f"{key}_cargada"] = chosen
         st.session_state[f"{key}_texto"] = examples.get(
-            chosen, f"PREFIX : <{answer.DOMAINS[domain]['namespace']}>\nSELECT * WHERE {{ ?s ?p ?o }} LIMIT 10")
+            chosen, f"PREFIX {domain}: <{answer.DOMAINS[domain]['namespace']}>\nSELECT * WHERE {{ ?s ?p ?o }} LIMIT 10")
     query = st.text_area("Consulta", key=f"{key}_texto", height=280)
     if st.button("Ejecutar", type="primary", key=f"{key}_ejecutar"):
         started = time.time()
@@ -519,7 +521,7 @@ def show_text_question(cfg, tech, demo=False):
         if tech:
             st.markdown("**1. La consulta que elige los contratos** (exacta: usa el grupo que arma Rastro):")
             st.code(query, language="sparql")
-            st.markdown("**2. Las descripciones que leyó el asistente**, tal como están en el grafo (`:description`):")
+            st.markdown("**2. Las descripciones que leyó el asistente**, tal como están en el grafo (`proveedores:description`):")
         else:
             st.markdown("**Las descripciones analizadas**, tal como están en la base de contratos:")
         st.dataframe(pd.DataFrame([{"Contrato": c, "Millones de US$": round(m / 1e6, 1), "Agencia": a.title(),

@@ -51,8 +51,8 @@ def check(entry, key, kind):
 def control():
     """Control del recorte: ¿hay contratos de menos de US$10 millones?"""
     try:
-        values = run_sparql("PREFIX : <https://w3id.org/rastro/proveedores#> "
-                            "SELECT (MIN(?a) AS ?m) WHERE { ?c :amount ?a }", "proveedores")
+        values = run_sparql("PREFIX proveedores: <https://w3id.org/rastro/proveedores#> "
+                            "SELECT (MIN(?a) AS ?m) WHERE { ?c proveedores:amount ?a }", "proveedores")
     except Exception as e:  # noqa: BLE001 - Rastro caído también es un resultado de la demo
         return f"Control del recorte: Rastro no responde ({str(e).splitlines()[0][:120]})"
     if values and values[0] is not None and float(values[0]) < MIN_AMOUNT:

@@ -2,7 +2,7 @@
  "question": "En cáncer de pulmón, ¿qué fármacos dirigidos a PDCD1 o CD274 (PD-1 o PD-L1) aparecen en ensayos de fase 3 o fase 2/3?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?pulmon rdfs:label \"Lung Neoplasms\"@en .\n  ?t :condition ?c . ?c :within ?pulmon .\n  ?t :phase ?ph . FILTER(?ph IN (\"PHASE3\",\"PHASE2/PHASE3\"))\n  ?t :testsDrug ?d . ?d :hasTarget ?tg . ?tg :gene ?g . FILTER(?g IN (\"PDCD1\",\"CD274\"))\n  ?d :name ?name .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?pulmon rdfs:label \"Lung Neoplasms\"@en .\n  ?t oncologia:condition ?c . ?c oncologia:within ?pulmon .\n  ?t oncologia:phase ?ph . FILTER(?ph IN (\"PHASE3\",\"PHASE2/PHASE3\"))\n  ?t oncologia:testsDrug ?d . ?d oncologia:hasTarget ?tg . ?tg oncologia:gene ?g . FILTER(?g IN (\"PDCD1\",\"CD274\"))\n  ?d oncologia:name ?name .\n}",
    "error": null
   }
  ],

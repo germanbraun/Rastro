@@ -1,20 +1,20 @@
 # 4. ¿Qué proveedores tienen su matriz final fuera de EE. UU.?
-PREFIX : <https://w3id.org/rastro/proveedores#>
+PREFIX proveedores: <https://w3id.org/rastro/proveedores#>
 
 SELECT ?supplier ?finalParent ?country (COUNT(?contract) AS ?contracts) (SUM(?amount) AS ?total)
 WHERE {
   # «Proveedor con matriz extranjera» está definido una vez en el diccionario
-  ?s a :ForeignParentSupplier ; :name ?supplier .
+  ?s a proveedores:ForeignParentSupplier ; proveedores:name ?supplier .
   # La matriz final según GLEIF: la del LEI del grupo o la del proveedor (sin repetir)
   OPTIONAL {
     SELECT DISTINCT ?s ?finalParent ?country WHERE {
-      { ?s :group/:legalEntity ?le } UNION { ?s :legalEntity ?le }
-      ?le :ultimateParent ?top .
-      ?top :name ?finalParent ; :country/:code ?country .
+      { ?s proveedores:group/proveedores:legalEntity ?le } UNION { ?s proveedores:legalEntity ?le }
+      ?le proveedores:ultimateParent ?top .
+      ?top proveedores:name ?finalParent ; proveedores:country/proveedores:code ?country .
       FILTER (?country != "US")
     }
   }
-  ?contract :supplier ?s ; :amount ?amount .
+  ?contract proveedores:supplier ?s ; proveedores:amount ?amount .
 }
 GROUP BY ?supplier ?finalParent ?country
 ORDER BY DESC(?total)

@@ -57,7 +57,7 @@
       "error": null
      }
     ],
-    "seconds": 7.77
+    "seconds": 7.84
    },
    "C": {
     "answer": [
@@ -77,11 +77,11 @@
     ],
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?trial a :Trial ;\n         :phase ?phase ;\n         :condition ?c ;\n         :testsDrug ?drug .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c :within ?breast .\n  ?breast rdfs:label \"Breast Neoplasms\"@en .\n  ?drug :name ?name ;\n        :hasTarget ?target .\n  ?target :gene \"ERBB2\" .\n}\nORDER BY ?name",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?trial a oncologia:Trial ;\n         oncologia:phase ?phase ;\n         oncologia:condition ?c ;\n         oncologia:testsDrug ?drug .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c oncologia:within ?breast .\n  ?breast rdfs:label \"Breast Neoplasms\"@en .\n  ?drug oncologia:name ?name ;\n        oncologia:hasTarget ?target .\n  ?target oncologia:gene \"ERBB2\" .\n}\nORDER BY ?name",
       "error": null
      }
     ],
-    "seconds": 0.2
+    "seconds": 0.46
    },
    "D": {
     "answer": [
@@ -105,7 +105,7 @@
       "error": null
      }
     ],
-    "seconds": 0.54
+    "seconds": 0.46
    }
   },
   "q02": {
@@ -127,17 +127,17 @@
       "error": null
      }
     ],
-    "seconds": 5.31
+    "seconds": 4.3
    },
    "C": {
     "answer": 438.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?trial a :Trial ;\n         :phase ?phase ;\n         :testsDrug ?drug .\n  ?drug :hasTarget ?target .\n  ?target :gene \"EGFR\" .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?trial a oncologia:Trial ;\n         oncologia:phase ?phase ;\n         oncologia:testsDrug ?drug .\n  ?drug oncologia:hasTarget ?target .\n  ?target oncologia:gene \"EGFR\" .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n}",
       "error": null
      }
     ],
-    "seconds": 0.08
+    "seconds": 0.21
    },
    "D": {
     "answer": 438.0,
@@ -147,7 +147,7 @@
       "error": null
      }
     ],
-    "seconds": 0.11
+    "seconds": 0.13
    }
   },
   "q03": {
@@ -177,7 +177,7 @@
       "error": null
      }
     ],
-    "seconds": 1.46
+    "seconds": 1.42
    },
    "C": {
     "answer": [
@@ -187,11 +187,11 @@
     ],
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?sponsorName WHERE {\n  {\n    SELECT ?sponsorName (COUNT(DISTINCT ?t) AS ?n) WHERE {\n      ?t a :Trial ;\n         :status ?st ;\n         :sponsor ?s ;\n         :condition ?c .\n      FILTER(?st IN (\"TERMINATED\", \"WITHDRAWN\"))\n      ?c :within ?lung .\n      ?lung rdfs:label \"Lung Neoplasms\"@en .\n      ?s :industry true ;\n         :name ?sponsorName .\n    }\n    GROUP BY ?sponsorName\n    ORDER BY DESC(?n)\n    LIMIT 3\n  }\n}\nORDER BY DESC(?n)",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?sponsorName WHERE {\n  {\n    SELECT ?sponsorName (COUNT(DISTINCT ?t) AS ?n) WHERE {\n      ?t a oncologia:Trial ;\n         oncologia:status ?st ;\n         oncologia:sponsor ?s ;\n         oncologia:condition ?c .\n      FILTER(?st IN (\"TERMINATED\", \"WITHDRAWN\"))\n      ?c oncologia:within ?lung .\n      ?lung rdfs:label \"Lung Neoplasms\"@en .\n      ?s oncologia:industry true ;\n         oncologia:name ?sponsorName .\n    }\n    GROUP BY ?sponsorName\n    ORDER BY DESC(?n)\n    LIMIT 3\n  }\n}\nORDER BY DESC(?n)",
       "error": null
      }
     ],
-    "seconds": 0.45
+    "seconds": 0.49
    },
    "D": {
     "answer": [
@@ -205,7 +205,7 @@
       "error": null
      }
     ],
-    "seconds": 0.2
+    "seconds": 0.17
    }
   },
   "q04": {
@@ -229,7 +229,7 @@
       "error": null
      }
     ],
-    "seconds": 0.1
+    "seconds": 0.02
    },
    "C": {
     "answer": [
@@ -237,11 +237,11 @@
     ],
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?reaction WHERE {\n  ?r a :ReportedReaction ;\n     :drug ?d ;\n     :reaction ?reaction ;\n     :reports ?n .\n  ?d :name \"IMATINIB\" .\n}\nORDER BY DESC(?n)\nLIMIT 1",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?reaction WHERE {\n  ?r a oncologia:ReportedReaction ;\n     oncologia:drug ?d ;\n     oncologia:reaction ?reaction ;\n     oncologia:reports ?n .\n  ?d oncologia:name \"IMATINIB\" .\n}\nORDER BY DESC(?n)\nLIMIT 1",
       "error": null
      }
     ],
-    "seconds": 0.02
+    "seconds": 0.06
    },
    "D": {
     "answer": [
@@ -305,11 +305,11 @@
     ],
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?d a :Drug ;\n     :name ?name ;\n     :approved true ;\n     :hasTarget ?t .\n  ?t :gene \"BRAF\" .\n}\nORDER BY ?name",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?d a oncologia:Drug ;\n     oncologia:name ?name ;\n     oncologia:approved true ;\n     oncologia:hasTarget ?t .\n  ?t oncologia:gene \"BRAF\" .\n}\nORDER BY ?name",
       "error": null
      }
     ],
-    "seconds": 0.01
+    "seconds": 0.07
    },
    "D": {
     "answer": [
@@ -344,17 +344,17 @@
       "error": null
      }
     ],
-    "seconds": 0.25
+    "seconds": 0.5
    },
    "C": {
     "answer": 14405.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n)\nWHERE {\n  ?mama rdfs:label \"Breast Neoplasms\"@en .\n  ?c :within ?mama .\n  ?trial a :Trial ;\n         :condition ?c .\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n)\nWHERE {\n  ?mama rdfs:label \"Breast Neoplasms\"@en .\n  ?c oncologia:within ?mama .\n  ?trial a oncologia:Trial ;\n         oncologia:condition ?c .\n}",
       "error": null
      }
     ],
-    "seconds": 0.06
+    "seconds": 0.07
    },
    "D": {
     "answer": 14405.0,
@@ -364,7 +364,7 @@
       "error": null
      }
     ],
-    "seconds": 0.06
+    "seconds": 0.05
    }
   },
   "q07": {
@@ -388,11 +388,11 @@
     "answer": 50504.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (SUM(?r) AS ?total) WHERE {\n  ?y a :YearlyReports ;\n     :drug ?d ;\n     :year ?year ;\n     :reports ?r .\n  ?d :name \"LENALIDOMIDE\" .\n  FILTER(?year < 2015)\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (SUM(?r) AS ?total) WHERE {\n  ?y a oncologia:YearlyReports ;\n     oncologia:drug ?d ;\n     oncologia:year ?year ;\n     oncologia:reports ?r .\n  ?d oncologia:name \"LENALIDOMIDE\" .\n  FILTER(?year < 2015)\n}",
       "error": null
      }
     ],
-    "seconds": 0.01
+    "seconds": 0.03
    },
    "D": {
     "answer": 50504.0,
@@ -420,17 +420,17 @@
       "error": null
      }
     ],
-    "seconds": 0.12
+    "seconds": 0.11
    },
    "C": {
     "answer": 28.10810810810811,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ((100.0 * ?stopped / ?closed) AS ?percentage)\nWHERE {\n  {\n    SELECT (COUNT(DISTINCT ?t) AS ?closed)\n    WHERE {\n      ?t a :Trial ;\n         :phase ?phase ;\n         :status ?status ;\n         :sponsor ?s .\n      ?s :name ?sname .\n      FILTER(LCASE(STR(?sname)) = \"pfizer\")\n      FILTER(?phase IN (\"PHASE2\", \"PHASE1/PHASE2\", \"PHASE2/PHASE3\"))\n      FILTER(?status IN (\"COMPLETED\", \"TERMINATED\", \"WITHDRAWN\"))\n    }\n  }\n  {\n    SELECT (COUNT(DISTINCT ?t2) AS ?stopped)\n    WHERE {\n      ?t2 a :Trial ;\n          :phase ?phase2 ;\n          :status ?status2 ;\n          :sponsor ?s2 .\n      ?s2 :name ?sname2 .\n      FILTER(LCASE(STR(?sname2)) = \"pfizer\")\n      FILTER(?phase2 IN (\"PHASE2\", \"PHASE1/PHASE2\", \"PHASE2/PHASE3\"))\n      FILTER(?status2 IN (\"TERMINATED\", \"WITHDRAWN\"))\n    }\n  }\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ((100.0 * ?stopped / ?closed) AS ?percentage)\nWHERE {\n  {\n    SELECT (COUNT(DISTINCT ?t) AS ?closed)\n    WHERE {\n      ?t a oncologia:Trial ;\n         oncologia:phase ?phase ;\n         oncologia:status ?status ;\n         oncologia:sponsor ?s .\n      ?s oncologia:name ?sname .\n      FILTER(LCASE(STR(?sname)) = \"pfizer\")\n      FILTER(?phase IN (\"PHASE2\", \"PHASE1/PHASE2\", \"PHASE2/PHASE3\"))\n      FILTER(?status IN (\"COMPLETED\", \"TERMINATED\", \"WITHDRAWN\"))\n    }\n  }\n  {\n    SELECT (COUNT(DISTINCT ?t2) AS ?stopped)\n    WHERE {\n      ?t2 a oncologia:Trial ;\n          oncologia:phase ?phase2 ;\n          oncologia:status ?status2 ;\n          oncologia:sponsor ?s2 .\n      ?s2 oncologia:name ?sname2 .\n      FILTER(LCASE(STR(?sname2)) = \"pfizer\")\n      FILTER(?phase2 IN (\"PHASE2\", \"PHASE1/PHASE2\", \"PHASE2/PHASE3\"))\n      FILTER(?status2 IN (\"TERMINATED\", \"WITHDRAWN\"))\n    }\n  }\n}",
       "error": null
      }
     ],
-    "seconds": 0.15
+    "seconds": 0.2
    },
    "D": {
     "answer": 28.1,
@@ -458,17 +458,17 @@
       "error": null
      }
     ],
-    "seconds": 0.45
+    "seconds": 0.53
    },
    "C": {
     "answer": 961.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :testsDrug ?d ;\n     :status ?s .\n  ?d :name \"PEMBROLIZUMAB\" .\n  FILTER(?s IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a oncologia:Trial ;\n     oncologia:testsDrug ?d ;\n     oncologia:status ?s .\n  ?d oncologia:name \"PEMBROLIZUMAB\" .\n  FILTER(?s IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n}",
       "error": null
      }
     ],
-    "seconds": 0.02
+    "seconds": 0.04
    },
    "D": {
     "answer": 961.0,
@@ -478,7 +478,7 @@
       "error": null
      }
     ],
-    "seconds": 0.05
+    "seconds": 0.03
    }
   },
   "q10": {
@@ -500,17 +500,17 @@
       "error": null
      }
     ],
-    "seconds": 1.96
+    "seconds": 1.82
    },
    "C": {
     "answer": 269.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?leucemia rdfs:label \"Leukemia\"@en .\n  ?trial a :Trial ;\n         :condition ?c ;\n         :testsDrug ?drug .\n  ?c :within ?leucemia .\n  ?drug :hasTarget ?target .\n  ?target :gene \"BTK\" .\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?leucemia rdfs:label \"Leukemia\"@en .\n  ?trial a oncologia:Trial ;\n         oncologia:condition ?c ;\n         oncologia:testsDrug ?drug .\n  ?c oncologia:within ?leucemia .\n  ?drug oncologia:hasTarget ?target .\n  ?target oncologia:gene \"BTK\" .\n}",
       "error": null
      }
     ],
-    "seconds": 0.11
+    "seconds": 0.36
    },
    "D": {
     "answer": 269.0,
@@ -520,7 +520,7 @@
       "error": null
      }
     ],
-    "seconds": 0.05
+    "seconds": 0.13
    }
   },
   "q11": {
@@ -544,7 +544,7 @@
       "error": null
      }
     ],
-    "seconds": 0.2
+    "seconds": 0.6
    },
    "C": {
     "answer": [
@@ -552,11 +552,11 @@
     ],
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?sponsorName WHERE {\n  ?t a :Trial ;\n     :phase ?phase ;\n     :sponsor ?s ;\n     :condition ?c .\n  ?c :within ?crc .\n  ?crc rdfs:label \"Colorectal Neoplasms\"@en .\n  ?s :industry true ;\n     :name ?sponsorName .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n}\nGROUP BY ?sponsorName\nORDER BY DESC(COUNT(DISTINCT ?t))\nLIMIT 1",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT ?sponsorName WHERE {\n  ?t a oncologia:Trial ;\n     oncologia:phase ?phase ;\n     oncologia:sponsor ?s ;\n     oncologia:condition ?c .\n  ?c oncologia:within ?crc .\n  ?crc rdfs:label \"Colorectal Neoplasms\"@en .\n  ?s oncologia:industry true ;\n     oncologia:name ?sponsorName .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n}\nGROUP BY ?sponsorName\nORDER BY DESC(COUNT(DISTINCT ?t))\nLIMIT 1",
       "error": null
      }
     ],
-    "seconds": 0.82
+    "seconds": 0.79
    },
    "D": {
     "answer": [
@@ -586,17 +586,17 @@
       "error": null
      }
     ],
-    "seconds": 1.32
+    "seconds": 0.97
    },
    "C": {
     "answer": 293.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :testsDrug ?d ;\n     :condition ?c .\n  ?d :name \"NIVOLUMAB\" .\n  ?c :within ?m .\n  ?m rdfs:label \"Melanoma\"@en .\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a oncologia:Trial ;\n     oncologia:testsDrug ?d ;\n     oncologia:condition ?c .\n  ?d oncologia:name \"NIVOLUMAB\" .\n  ?c oncologia:within ?m .\n  ?m rdfs:label \"Melanoma\"@en .\n}",
       "error": null
      }
     ],
-    "seconds": 0.07
+    "seconds": 0.09
    },
    "D": {
     "answer": 293.0,
@@ -606,7 +606,7 @@
       "error": null
      }
     ],
-    "seconds": 0.1
+    "seconds": 0.06
    }
   },
   "q13": {
@@ -628,17 +628,17 @@
       "error": null
      }
     ],
-    "seconds": 1.89
+    "seconds": 1.64
    },
    "C": {
     "answer": 658.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?prostata rdfs:label \"Prostatic Neoplasms\"@en .\n  ?trial a :Trial ;\n         :condition ?c ;\n         :testsDrug ?drug .\n  ?c :within ?prostata .\n  ?drug :approved true ;\n        :hasTarget ?target .\n  ?target :gene \"AR\" .\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?prostata rdfs:label \"Prostatic Neoplasms\"@en .\n  ?trial a oncologia:Trial ;\n         oncologia:condition ?c ;\n         oncologia:testsDrug ?drug .\n  ?c oncologia:within ?prostata .\n  ?drug oncologia:approved true ;\n        oncologia:hasTarget ?target .\n  ?target oncologia:gene \"AR\" .\n}",
       "error": null
      }
     ],
-    "seconds": 0.06
+    "seconds": 0.14
    },
    "D": {
     "answer": 658.0,
@@ -648,7 +648,7 @@
       "error": null
      }
     ],
-    "seconds": 0.13
+    "seconds": 0.14
    }
   },
   "q14": {
@@ -666,17 +666,17 @@
       "error": null
      }
     ],
-    "seconds": 0.09
+    "seconds": 0.12
    },
    "C": {
     "answer": 569.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :status ?status ;\n     :condition ?c .\n  ?c :within ?pancreas .\n  ?pancreas rdfs:label \"Pancreatic Neoplasms\"@en .\n  FILTER(?status IN (\"TERMINATED\", \"WITHDRAWN\"))\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a oncologia:Trial ;\n     oncologia:status ?status ;\n     oncologia:condition ?c .\n  ?c oncologia:within ?pancreas .\n  ?pancreas rdfs:label \"Pancreatic Neoplasms\"@en .\n  FILTER(?status IN (\"TERMINATED\", \"WITHDRAWN\"))\n}",
       "error": null
      }
     ],
-    "seconds": 0.03
+    "seconds": 0.06
    },
    "D": {
     "answer": 569.0,
@@ -710,11 +710,11 @@
     "answer": 30448.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (SUM(?serious) AS ?total) WHERE {\n  ?yr a :YearlyReports ;\n      :drug ?d ;\n      :seriousReports ?serious .\n  ?d :name \"OSIMERTINIB\" .\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (SUM(?serious) AS ?total) WHERE {\n  ?yr a oncologia:YearlyReports ;\n      oncologia:drug ?d ;\n      oncologia:seriousReports ?serious .\n  ?d oncologia:name \"OSIMERTINIB\" .\n}",
       "error": null
      }
     ],
-    "seconds": 0.01
+    "seconds": 0.02
    },
    "D": {
     "answer": 30448.0,
@@ -742,13 +742,13 @@
       "error": null
      }
     ],
-    "seconds": 0.36
+    "seconds": 0.46
    },
    "C": {
     "answer": 604.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?drug) AS ?n) WHERE {\n  ?mm rdfs:label \"Multiple Myeloma\"@en .\n  ?c :within ?mm .\n  ?trial a :Trial ;\n         :condition ?c ;\n         :testsDrug ?drug .\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?drug) AS ?n) WHERE {\n  ?mm rdfs:label \"Multiple Myeloma\"@en .\n  ?c oncologia:within ?mm .\n  ?trial a oncologia:Trial ;\n         oncologia:condition ?c ;\n         oncologia:testsDrug ?drug .\n}",
       "error": null
      }
     ],
@@ -780,17 +780,17 @@
       "error": null
      }
     ],
-    "seconds": 3.61
+    "seconds": 3.1
    },
    "C": {
     "answer": 34.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?trial a :Trial ;\n         :status ?status ;\n         :testsDrug ?drug .\n  ?drug :hasTarget ?target .\n  ?target :gene \"TIGIT\" .\n  FILTER(?status IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?trial) AS ?n) WHERE {\n  ?trial a oncologia:Trial ;\n         oncologia:status ?status ;\n         oncologia:testsDrug ?drug .\n  ?drug oncologia:hasTarget ?target .\n  ?target oncologia:gene \"TIGIT\" .\n  FILTER(?status IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n}",
       "error": null
      }
     ],
-    "seconds": 0.1
+    "seconds": 0.14
    },
    "D": {
     "answer": 34.0,
@@ -800,7 +800,7 @@
       "error": null
      }
     ],
-    "seconds": 0.06
+    "seconds": 0.03
    }
   },
   "q18": {
@@ -887,7 +887,7 @@
       "error": null
      }
     ],
-    "seconds": 1.0
+    "seconds": 1.34
    },
    "C": {
     "answer": [
@@ -916,11 +916,11 @@
     ],
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?pulmon rdfs:label \"Lung Neoplasms\"@en .\n  ?trial a :Trial ;\n         :phase ?phase ;\n         :condition ?c ;\n         :testsDrug ?drug .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c :within ?pulmon .\n  ?drug :name ?name ;\n        :hasTarget ?target .\n  ?target :gene ?gene .\n  FILTER(?gene IN (\"PDCD1\", \"CD274\"))\n}\nORDER BY ?name",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?pulmon rdfs:label \"Lung Neoplasms\"@en .\n  ?trial a oncologia:Trial ;\n         oncologia:phase ?phase ;\n         oncologia:condition ?c ;\n         oncologia:testsDrug ?drug .\n  FILTER(?phase IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c oncologia:within ?pulmon .\n  ?drug oncologia:name ?name ;\n        oncologia:hasTarget ?target .\n  ?target oncologia:gene ?gene .\n  FILTER(?gene IN (\"PDCD1\", \"CD274\"))\n}\nORDER BY ?name",
       "error": null
      }
     ],
-    "seconds": 0.04
+    "seconds": 0.14
    },
    "D": {
     "answer": [
@@ -953,7 +953,7 @@
       "error": null
      }
     ],
-    "seconds": 0.09
+    "seconds": 0.16
    }
   },
   "q19": {
@@ -971,17 +971,17 @@
       "error": null
      }
     ],
-    "seconds": 1.88
+    "seconds": 1.33
    },
    "C": {
     "answer": 309.0,
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ;\n     :testsDrug ?d ;\n     :condition ?c ;\n     :startDate ?date .\n  ?d :name \"RITUXIMAB\" .\n  ?l rdfs:label \"Lymphoma\"@en .\n  ?c :within ?l .\n  FILTER(?date >= \"2020-01-01\"^^xsd:date)\n}",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nPREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a oncologia:Trial ;\n     oncologia:testsDrug ?d ;\n     oncologia:condition ?c ;\n     oncologia:startDate ?date .\n  ?d oncologia:name \"RITUXIMAB\" .\n  ?l rdfs:label \"Lymphoma\"@en .\n  ?c oncologia:within ?l .\n  FILTER(?date >= \"2020-01-01\"^^xsd:date)\n}",
       "error": null
      }
     ],
-    "seconds": 0.31
+    "seconds": 0.38
    },
    "D": {
     "answer": 309.0,
@@ -991,7 +991,7 @@
       "error": null
      }
     ],
-    "seconds": 0.22
+    "seconds": 0.14
    }
   },
   "q20": {
@@ -1134,7 +1134,7 @@
       "error": null
      }
     ],
-    "seconds": 0.03
+    "seconds": 0.04
    },
    "C": {
     "answer": [
@@ -1189,11 +1189,11 @@
     ],
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?imatinib a :Drug ;\n            :name \"IMATINIB\" ;\n            :hasTarget ?target .\n  ?drug a :Drug ;\n        :hasTarget ?target ;\n        :name ?name .\n  FILTER(?drug != ?imatinib)\n}\nORDER BY ?name",
+      "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?imatinib a oncologia:Drug ;\n            oncologia:name \"IMATINIB\" ;\n            oncologia:hasTarget ?target .\n  ?drug a oncologia:Drug ;\n        oncologia:hasTarget ?target ;\n        oncologia:name ?name .\n  FILTER(?drug != ?imatinib)\n}\nORDER BY ?name",
       "error": null
      }
     ],
-    "seconds": 0.01
+    "seconds": 0.03
    },
    "D": {
     "answer": [
@@ -1252,7 +1252,7 @@
       "error": null
      }
     ],
-    "seconds": 0.02
+    "seconds": 0.01
    }
   }
  },

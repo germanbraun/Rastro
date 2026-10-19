@@ -41,7 +41,7 @@ Un **fármaco** (ChEMBL) actúa sobre una **proteína del cuerpo**, su target (C
 
 **Cuidado con:**
 - Las intervenciones son texto escrito por quien registra el ensayo. Por eso hace falta el entity linking para saber qué fármaco es.
-- Un ensayo detenido no siempre fracasó: puede cortarse por falta de pacientes, por dinero o por una decisión del sponsor. El motivo está en `:whyStopped`, también como texto.
+- Un ensayo detenido no siempre fracasó: puede cortarse por falta de pacientes, por dinero o por una decisión del sponsor. El motivo está en `oncologia:whyStopped`, también como texto.
 
 **Preguntas típicas:** ¿cuántos ensayos de fase 3 hay en cáncer de mama? ¿Qué sponsor tiene más ensayos detenidos?
 
@@ -113,7 +113,7 @@ Un **fármaco** (ChEMBL) actúa sobre una **proteína del cuerpo**, su target (C
 | **Descriptor** | Un término médico con identificador, por ejemplo «Breast Neoplasms» (neoplasias de mama). |
 | **Jerarquía** | Cada término tiene términos más generales y más específicos. «Carcinoma de pulmón de células no pequeñas» está dentro de «Neoplasias pulmonares». |
 
-**Ejemplo.** Si alguien pregunta por «cáncer de pulmón», también quiere los ensayos que dicen «carcinoma de pulmón de células no pequeñas». MeSH sabe que uno está dentro del otro, y Rastro lo usa con `:within`.
+**Ejemplo.** Si alguien pregunta por «cáncer de pulmón», también quiere los ensayos que dicen «carcinoma de pulmón de células no pequeñas». MeSH sabe que uno está dentro del otro, y Rastro lo usa con `oncologia:within`.
 
 **Qué toma Rastro.** MeSH 2026 completo en GraphDB, y su jerarquía copiada en Postgres para que Ontop la use.
 

@@ -12,7 +12,7 @@ docker compose up -d
 docker compose ps
 docker compose exec -T postgres psql -U rastro -c "select * from rastro_meta.source_counts"
 docker compose run --rm ontology-check
-curl -s -H 'Accept: text/csv' --data-urlencode 'query=PREFIX : <https://w3id.org/rastro/ontology#> SELECT (COUNT(*) AS ?n) WHERE { ?s a :DataSource }' http://localhost:8080/sparql
+curl -s -H 'Accept: text/csv' --data-urlencode 'query=PREFIX oncologia: <https://w3id.org/rastro/oncologia#> SELECT (COUNT(*) AS ?n) WHERE { ?s a oncologia:DataSource }' http://localhost:8080/sparql
 curl -s http://localhost:7210/repositories/rastro/size
 curl -s http://localhost:8501/_stcore/health
 docker compose run --rm layer-eval

@@ -1,14 +1,14 @@
 # 11. ¿Por qué se detuvieron los ensayos de fase 3 de cáncer de pulmón con inhibidores de quinasa?
-# El motivo es un hecho del grafo (:stopReason), clasificado con reglas; un ensayo puede tener varios.
-PREFIX : <https://w3id.org/rastro/ontology#>
+# El motivo es un hecho del grafo (oncologia:stopReason), clasificado con reglas; un ensayo puede tener varios.
+PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 SELECT ?motivo (COUNT(DISTINCT ?trial) AS ?ensayos) WHERE {
-  ?trial :testsDrug ?drug ; :phase ?phase ; :status ?status ; :condition ?condition ; :stopReason ?motivo .
-  ?drug a :KinaseInhibitor .
+  ?trial oncologia:testsDrug ?drug ; oncologia:phase ?phase ; oncologia:status ?status ; oncologia:condition ?condition ; oncologia:stopReason ?motivo .
+  ?drug a oncologia:KinaseInhibitor .
   FILTER (CONTAINS(?phase, "PHASE3") && ?status IN ("TERMINATED", "WITHDRAWN"))
   ?lung rdfs:label "Lung Neoplasms"@en .
-  ?condition :within ?lung .
+  ?condition oncologia:within ?lung .
 }
 GROUP BY ?motivo
 ORDER BY DESC(?ensayos)

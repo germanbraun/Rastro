@@ -2,7 +2,7 @@
  "question": "Contá los ensayos de leucemia que prueban al menos un fármaco con target BTK.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?leu rdfs:label \"Leukemia\"@en .\n  ?t :condition ?c . ?c :within ?leu .\n  ?t :testsDrug ?d . ?d :hasTarget ?tg . ?tg :gene \"BTK\" .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?leu rdfs:label \"Leukemia\"@en .\n  ?t oncologia:condition ?c . ?c oncologia:within ?leu .\n  ?t oncologia:testsDrug ?d . ?d oncologia:hasTarget ?tg . ?tg oncologia:gene \"BTK\" .\n}",
    "error": null
   }
  ],

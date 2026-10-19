@@ -2,7 +2,7 @@
  "question": "¿Cuántos genes distintos son target de los fármacos que se prueban en ensayos detenidos (terminados o retirados) de cáncer de páncreas?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?g) AS ?n) WHERE {\n  ?p rdfs:label \"Pancreatic Neoplasms\"@en .\n  ?c :within ?p .\n  ?t a :Trial ; :condition ?c ; :status ?st ; :testsDrug ?d .\n  FILTER(?st IN (\"TERMINATED\", \"WITHDRAWN\"))\n  ?d :hasTarget ?tg . ?tg :gene ?g .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?g) AS ?n) WHERE {\n  ?p rdfs:label \"Pancreatic Neoplasms\"@en .\n  ?c oncologia:within ?p .\n  ?t a oncologia:Trial ; oncologia:condition ?c ; oncologia:status ?st ; oncologia:testsDrug ?d .\n  FILTER(?st IN (\"TERMINATED\", \"WITHDRAWN\"))\n  ?d oncologia:hasTarget ?tg . ?tg oncologia:gene ?g .\n}",
    "error": null
   }
  ],

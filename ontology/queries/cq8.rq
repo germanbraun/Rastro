@@ -1,6 +1,6 @@
 # 8. ¿Qué porcentaje de los ensayos de fase 2 de un sponsor se detuvo antes de tiempo?
 # Sobre ensayos cerrados (completados o detenidos). Es una feature de Rastro Lab.
-PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
 PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
@@ -8,7 +8,7 @@ SELECT (COUNT(?trial) AS ?closed) (SUM(?isStopped) AS ?stopped)
        (ROUND(100 * SUM(?isStopped) / COUNT(?trial)) AS ?percentStopped)
 WHERE {
   VALUES ?sponsor { "Pfizer" }   # el sponsor a consultar
-  ?trial :sponsor/:name ?sponsor ; :phase ?phase ; :status ?status .
+  ?trial oncologia:sponsor/oncologia:name ?sponsor ; oncologia:phase ?phase ; oncologia:status ?status .
   FILTER (CONTAINS(?phase, "PHASE2"))
   FILTER (?status IN ("COMPLETED", "TERMINATED", "WITHDRAWN"))
   BIND (IF(?status IN ("TERMINATED", "WITHDRAWN"), 1, 0) AS ?isStopped)

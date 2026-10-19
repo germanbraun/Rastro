@@ -2,7 +2,7 @@
  "question": "¿Cuántos sponsors de la industria distintos, contando solo al sponsor principal de cada ensayo, tienen ensayos que prueban algún fármaco que actúa sobre BRAF?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nSELECT (COUNT(DISTINCT ?s) AS ?n) WHERE {\n  ?t a :Trial ; :sponsor ?s ; :testsDrug ?d .\n  ?s :industry true .\n  ?d :hasTarget ?tg . ?tg :gene \"BRAF\" .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nSELECT (COUNT(DISTINCT ?s) AS ?n) WHERE {\n  ?t a oncologia:Trial ; oncologia:sponsor ?s ; oncologia:testsDrug ?d .\n  ?s oncologia:industry true .\n  ?d oncologia:hasTarget ?tg . ?tg oncologia:gene \"BRAF\" .\n}",
    "error": null
   }
  ],

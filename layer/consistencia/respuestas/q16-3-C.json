@@ -2,7 +2,7 @@
  "question": "En mieloma múltiple, ¿cuántos fármacos distintos se están probando o se probaron en ensayos?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?d) AS ?n) WHERE {\n  ?tr a :Trial ; :condition ?c ; :testsDrug ?d .\n  ?c :within ?m . ?m rdfs:label \"Multiple Myeloma\"@en .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?d) AS ?n) WHERE {\n  ?tr a oncologia:Trial ; oncologia:condition ?c ; oncologia:testsDrug ?d .\n  ?c oncologia:within ?m . ?m rdfs:label \"Multiple Myeloma\"@en .\n}",
    "error": null
   }
  ],

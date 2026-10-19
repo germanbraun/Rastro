@@ -1,12 +1,12 @@
 # 7. ¿Qué grupos que cotizan en bolsa tienen contratos por más de US$1.000 millones, y dónde tienen su sede?
-PREFIX : <https://w3id.org/rastro/proveedores#>
+PREFIX proveedores: <https://w3id.org/rastro/proveedores#>
 
 SELECT ?group ?stockExchange ?headquarters ?wikidata (SUM(?amount) AS ?total)
 WHERE {
   # Cotiza en bolsa y sede vienen de Wikidata, unidos por el LEI del grupo
-  ?g :listed true ; :name ?group ; :wikidataId ?wikidata ; :stockExchange ?stockExchange .
-  OPTIONAL { ?g :headquarters ?headquarters }
-  ?contract :supplier/:group ?g ; :amount ?amount .
+  ?g proveedores:listed true ; proveedores:name ?group ; proveedores:wikidataId ?wikidata ; proveedores:stockExchange ?stockExchange .
+  OPTIONAL { ?g proveedores:headquarters ?headquarters }
+  ?contract proveedores:supplier/proveedores:group ?g ; proveedores:amount ?amount .
 }
 GROUP BY ?group ?stockExchange ?headquarters ?wikidata
 HAVING (SUM(?amount) > 1000000000)

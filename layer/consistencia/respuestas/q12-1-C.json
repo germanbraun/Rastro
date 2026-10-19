@@ -2,7 +2,7 @@
  "question": "¿En cuántos ensayos de melanoma se prueba nivolumab?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ; :condition ?c ; :testsDrug ?d .\n  ?c :within ?m . ?m rdfs:label \"Melanoma\"@en .\n  ?d :name \"NIVOLUMAB\" .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a oncologia:Trial ; oncologia:condition ?c ; oncologia:testsDrug ?d .\n  ?c oncologia:within ?m . ?m rdfs:label \"Melanoma\"@en .\n  ?d oncologia:name \"NIVOLUMAB\" .\n}",
    "error": null
   }
  ],

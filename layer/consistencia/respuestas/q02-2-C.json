@@ -2,7 +2,7 @@
  "question": "Contá los ensayos de fase 3 o fase 2/3 que prueban al menos un fármaco que actúa sobre el gen EGFR.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t :phase ?ph . FILTER(?ph IN (\"PHASE3\",\"PHASE2/PHASE3\"))\n  ?t :testsDrug ?d . ?d :hasTarget ?tg . ?tg :gene \"EGFR\" .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t oncologia:phase ?ph . FILTER(?ph IN (\"PHASE3\",\"PHASE2/PHASE3\"))\n  ?t oncologia:testsDrug ?d . ?d oncologia:hasTarget ?tg . ?tg oncologia:gene \"EGFR\" .\n}",
    "error": null
   }
  ],

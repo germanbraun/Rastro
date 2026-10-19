@@ -2,7 +2,7 @@
  "question": "¿En cuántos ensayos de leucemia se prueba algún fármaco que actúa sobre BTK?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a :Trial ; :condition ?c ; :testsDrug ?d .\n  ?c :within ?m . ?m rdfs:label \"Leukemia\"@en .\n  ?d :hasTarget ?tg . ?tg :gene \"BTK\" .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (COUNT(DISTINCT ?t) AS ?n) WHERE {\n  ?t a oncologia:Trial ; oncologia:condition ?c ; oncologia:testsDrug ?d .\n  ?c oncologia:within ?m . ?m rdfs:label \"Leukemia\"@en .\n  ?d oncologia:hasTarget ?tg . ?tg oncologia:gene \"BTK\" .\n}",
    "error": null
   }
  ],

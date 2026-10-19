@@ -20,7 +20,7 @@ RESULT = Path(__file__).parent / "resultado.json"
 NAMES = {"B": "SQL directo", "D": "SQL + enlaces", "C": "Rastro"}
 LABELS = {"✅": "igual", "🟡": "distinto, sin avisar", "❌": "con error", "—": "sin query"}
 
-# Los estados que documenta la ontología (:status), tal como los publica ClinicalTrials.gov
+# Los estados que documenta la ontología (oncologia:status), tal como los publica ClinicalTrials.gov
 ESTADOS = {"COMPLETED", "UNKNOWN", "RECRUITING", "TERMINATED", "ACTIVE_NOT_RECRUITING",
            "NOT_YET_RECRUITING", "WITHDRAWN", "ENROLLING_BY_INVITATION", "SUSPENDED",
            "NO_LONGER_AVAILABLE", "AVAILABLE", "APPROVED_FOR_MARKETING", "TEMPORARILY_NOT_AVAILABLE"}
@@ -57,8 +57,8 @@ def short(value):
 def vocabulary():
     """Control del vocabulario: ¿hay estados que la ontología no documenta?"""
     try:
-        values = run_sparql("PREFIX : <https://w3id.org/rastro/ontology#> "
-                            "SELECT DISTINCT ?s WHERE { ?t :status ?s }")
+        values = run_sparql("PREFIX oncologia: <https://w3id.org/rastro/oncologia#> "
+                            "SELECT DISTINCT ?s WHERE { ?t oncologia:status ?s }")
     except Exception as e:  # noqa: BLE001 - Rastro caído también es un resultado de la demo
         return f"Control de vocabulario: Rastro no responde ({str(e).splitlines()[0][:120]})"
     unknown = sorted(set(values) - ESTADOS)

@@ -19,25 +19,25 @@ Los casos concretos que aparecen en las cuatro fuentes y cómo los resuelve cada
 
 | Concepto | Columnas que lo forman | En Rastro |
 |---|---|---|
-| Fármaco | `chembl.molecule_dictionary.chembl_id`, `openfda.reports_by_year.query_id`, `openfda.reactions.query_id`, `linking.trial_drug.parent_chembl_id` | Un solo `:Drug`, con IRI `drug/{id}` |
-| Ensayo | `nct_id` en `aact.studies`, `aact.sponsors` y las tablas de enlaces | Un solo `:Trial`, con IRI `trial/{nct_id}` |
-| Target | `chembl.target_dictionary.chembl_id`, `chembl.drug_mechanism.target_chembl_id` | Un solo `:Target` |
+| Fármaco | `chembl.molecule_dictionary.chembl_id`, `openfda.reports_by_year.query_id`, `openfda.reactions.query_id`, `linking.trial_drug.parent_chembl_id` | Un solo `oncologia:Drug`, con IRI `drug/{id}` |
+| Ensayo | `nct_id` en `aact.studies`, `aact.sponsors` y las tablas de enlaces | Un solo `oncologia:Trial`, con IRI `trial/{nct_id}` |
+| Target | `chembl.target_dictionary.chembl_id`, `chembl.drug_mechanism.target_chembl_id` | Un solo `oncologia:Target` |
 | Condición | `mesh.descriptor.id` en Postgres y el mismo descriptor en GraphDB | La IRI de MeSH (`http://id.nlm.nih.gov/mesh/2026/{id}`) |
 
 ### 2. El mismo atributo, con nombres distintos
 
 | Atributo | Columnas |
 |---|---|
-| `:name` | `pref_name` (fármacos y targets de ChEMBL), `name` (sponsors de AACT y fuentes) |
-| `:reports` | `reports` en dos tablas de openFDA: por año y por reacción |
+| `oncologia:name` | `pref_name` (fármacos y targets de ChEMBL), `name` (sponsors de AACT y fuentes) |
+| `oncologia:reports` | `reports` en dos tablas de openFDA: por año y por reacción |
 
 ### 3. La misma relación, organizada distinto
 
 | Relación | En las fuentes | En Rastro |
 |---|---|---|
-| Fármaco actúa sobre un gen | Tres tablas de ChEMBL: `drug_mechanism` → `target_dictionary` → `target_components.gene_symbol` | `?fármaco :hasTarget/:gene "EGFR"` |
-| Ensayo tiene un sponsor | Una tabla aparte con filas principal y colaborador (`lead_or_collaborator`) | `:sponsor`, solo el principal |
-| Una condición y sus subtipos | AACT repite los ancestros en `browse_conditions` (`mesh-ancestor`); MeSH los tiene como jerarquía (`broaderDescriptor`) | `:within`, precalculado en `mesh.ancestor` |
+| Fármaco actúa sobre un gen | Tres tablas de ChEMBL: `drug_mechanism` → `target_dictionary` → `target_components.gene_symbol` | `?fármaco oncologia:hasTarget/oncologia:gene "EGFR"` |
+| Ensayo tiene un sponsor | Una tabla aparte con filas principal y colaborador (`lead_or_collaborator`) | `oncologia:sponsor`, solo el principal |
+| Una condición y sus subtipos | AACT repite los ancestros en `browse_conditions` (`mesh-ancestor`); MeSH los tiene como jerarquía (`broaderDescriptor`) | `oncologia:within`, precalculado en `mesh.ancestor` |
 
 ### 4. Distinto nivel de detalle
 
@@ -45,14 +45,14 @@ Los casos concretos que aparecen en las cuatro fuentes y cómo los resuelve cada
 |---|---|---|
 | Molécula y sus sales | ChEMBL registra imatinib y mesilato de imatinib por separado | Un solo fármaco: la molécula padre (`linking/entities.sql`) |
 | Prodroga | El acetato de abiraterona es otra entrada, con otros mecanismos | Actúa sobre los targets de su molécula activa |
-| Eventos adversos | openFDA tiene reportes individuales | Conteos por año y por reacción (`:YearlyReports`, `:ReportedReaction`) |
+| Eventos adversos | openFDA tiene reportes individuales | Conteos por año y por reacción (`oncologia:YearlyReports`, `oncologia:ReportedReaction`) |
 
 ### 5. Valores codificados de forma distinta
 
 | Atributo | En la fuente | En Rastro |
 |---|---|---|
-| Aprobado | `max_phase = 4` en cualquiera de las sales | `:approved true` |
-| Industria | `agency_class = 'INDUSTRY'` | `:industry true` |
+| Aprobado | `max_phase = 4` en cualquiera de las sales | `oncologia:approved true` |
+| Industria | `agency_class = 'INDUSTRY'` | `oncologia:industry true` |
 | Fase y estado | Texto de ClinicalTrials.gov (`PHASE1/PHASE2`, `TERMINATED`) | Igual, documentado en la ontología |
 
 ### 6. Distinta cobertura
@@ -77,7 +77,7 @@ Entre AACT y ChEMBL **no hay un valor en común**. AACT tiene el texto «Pembrol
 ```
 AACT: «Pembrolizumab 200 mg» ──(entity linking, una vez)──► linking.trial_drug: NCT… → CHEMBL3137343
                                                                    │
-                                          mapeo: trial/{nct_id} :testsDrug drug/{parent_chembl_id}
+                                          mapeo: trial/{nct_id} oncologia:testsDrug drug/{parent_chembl_id}
                                                                    │
                                           Ontop: unión por igualdad, automática
 ```

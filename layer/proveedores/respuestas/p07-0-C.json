@@ -2,7 +2,7 @@
  "question": "¿Qué grupos empresarios cotizan en bolsa, según Wikidata, y tienen contratos por más de US$1.000 millones en total, sumando todas sus empresas?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT ?gn WHERE {\n  ?c a :Contract ; :supplier ?s ; :amount ?amt .\n  ?s :group ?g . ?g :name ?gn ; :listed true .\n}\nGROUP BY ?g ?gn\nHAVING (SUM(?amt) > 1000000000)",
+   "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT ?gn WHERE {\n  ?c a proveedores:Contract ; proveedores:supplier ?s ; proveedores:amount ?amt .\n  ?s proveedores:group ?g . ?g proveedores:name ?gn ; proveedores:listed true .\n}\nGROUP BY ?g ?gn\nHAVING (SUM(?amt) > 1000000000)",
    "error": null
   }
  ],

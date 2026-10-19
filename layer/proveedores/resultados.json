@@ -31,7 +31,7 @@
     "question": "¿Cuánto suman, en dólares, los contratos del grupo empresario Leidos, es decir de Leidos Holdings y de todas sus empresas?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (SUM(?amt) AS ?total) WHERE {\n  ?c a :Contract ; :supplier ?s ; :amount ?amt .\n  ?s :group ?g . ?g :name ?gn .\n  FILTER(CONTAINS(UCASE(?gn), \"LEIDOS\"))\n}",
+      "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT (SUM(?amt) AS ?total) WHERE {\n  ?c a proveedores:Contract ; proveedores:supplier ?s ; proveedores:amount ?amt .\n  ?s proveedores:group ?g . ?g proveedores:name ?gn .\n  FILTER(CONTAINS(UCASE(?gn), \"LEIDOS\"))\n}",
       "error": null
      }
     ],
@@ -87,7 +87,7 @@
     "question": "¿Cuáles son los 5 grupos empresarios con más monto en contratos de servicios informáticos (sector NAICS 5415 y sus subsectores), sumando todas las empresas de cada grupo?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT ?gn WHERE {\n  ?c a :Contract ; :supplier ?s ; :amount ?amt ; :sector ?sec .\n  ?sec :within ?x . ?x :code ?code . FILTER(STR(?code) = \"5415\")\n  ?s :group ?g . ?g :name ?gn .\n}\nGROUP BY ?g ?gn\nORDER BY DESC(SUM(?amt))\nLIMIT 5",
+      "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT ?gn WHERE {\n  ?c a proveedores:Contract ; proveedores:supplier ?s ; proveedores:amount ?amt ; proveedores:sector ?sec .\n  ?sec proveedores:within ?x . ?x proveedores:code ?code . FILTER(STR(?code) = \"5415\")\n  ?s proveedores:group ?g . ?g proveedores:name ?gn .\n}\nGROUP BY ?g ?gn\nORDER BY DESC(SUM(?amt))\nLIMIT 5",
       "error": null
      }
     ],
@@ -185,7 +185,7 @@
     "question": "¿Qué agencias tienen más de un tercio de su monto en contratos con un solo grupo empresario, sumando todas las empresas de ese grupo?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT DISTINCT ?an WHERE {\n  { SELECT ?ag (SUM(?a1) AS ?total) WHERE {\n      ?c1 a :Contract ; :agency ?ag ; :amount ?a1 .\n    } GROUP BY ?ag }\n  { SELECT ?ag ?g (SUM(?a2) AS ?gtotal) WHERE {\n      ?c2 a :Contract ; :agency ?ag ; :amount ?a2 ; :supplier ?s .\n      ?s :group ?g .\n    } GROUP BY ?ag ?g }\n  ?ag :name ?an .\n  FILTER(?gtotal * 3 > ?total)\n}",
+      "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT DISTINCT ?an WHERE {\n  { SELECT ?ag (SUM(?a1) AS ?total) WHERE {\n      ?c1 a proveedores:Contract ; proveedores:agency ?ag ; proveedores:amount ?a1 .\n    } GROUP BY ?ag }\n  { SELECT ?ag ?g (SUM(?a2) AS ?gtotal) WHERE {\n      ?c2 a proveedores:Contract ; proveedores:agency ?ag ; proveedores:amount ?a2 ; proveedores:supplier ?s .\n      ?s proveedores:group ?g .\n    } GROUP BY ?ag ?g }\n  ?ag proveedores:name ?an .\n  FILTER(?gtotal * 3 > ?total)\n}",
       "error": null
      }
     ],
@@ -241,7 +241,7 @@
     "question": "¿Cuántos proveedores (UEI distintos) tienen su matriz final, según GLEIF, fuera de EE. UU.? La matriz final es la de su grupo empresario o, si el grupo no tiene registro en GLEIF, la del propio proveedor.",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?s a :ForeignParentSupplier ; :uei ?uei .\n}",
+      "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?s a proveedores:ForeignParentSupplier ; proveedores:uei ?uei .\n}",
       "error": null
      }
     ],
@@ -279,7 +279,7 @@
     "question": "¿Cuántos proveedores (UEI distintos) tienen un nombre igual al nombre o a un alias de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias como Inc., LLC o Corp.?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?s a :Supplier ; :uei ?uei ; :watchlistMatch ?e .\n  ?e :entryType ?t . FILTER(STR(?t) = \"Entity\")\n}",
+      "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?s a proveedores:Supplier ; proveedores:uei ?uei ; proveedores:watchlistMatch ?e .\n  ?e proveedores:entryType ?t . FILTER(STR(?t) = \"Entity\")\n}",
       "error": null
      }
     ],
@@ -317,7 +317,7 @@
     "question": "¿Cuántos proveedores (UEI distintos) tiene el Departamento de Defensa en contratos de construcción (sector NAICS 23 y sus subsectores)?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?c a :Contract ; :agency ?ag ; :sector ?sec ; :supplier ?s .\n  ?ag :name ?an . FILTER(STR(?an) = \"Department of Defense\")\n  ?sec :within ?x . ?x :code ?code . FILTER(STR(?code) = \"23\")\n  ?s :uei ?uei .\n}",
+      "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?c a proveedores:Contract ; proveedores:agency ?ag ; proveedores:sector ?sec ; proveedores:supplier ?s .\n  ?ag proveedores:name ?an . FILTER(STR(?an) = \"Department of Defense\")\n  ?sec proveedores:within ?x . ?x proveedores:code ?code . FILTER(STR(?code) = \"23\")\n  ?s proveedores:uei ?uei .\n}",
       "error": null
      }
     ],
@@ -502,7 +502,7 @@
     "question": "¿Qué grupos empresarios cotizan en bolsa, según Wikidata, y tienen contratos por más de US$1.000 millones en total, sumando todas sus empresas?",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT ?gn WHERE {\n  ?c a :Contract ; :supplier ?s ; :amount ?amt .\n  ?s :group ?g . ?g :name ?gn ; :listed true .\n}\nGROUP BY ?g ?gn\nHAVING (SUM(?amt) > 1000000000)",
+      "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT ?gn WHERE {\n  ?c a proveedores:Contract ; proveedores:supplier ?s ; proveedores:amount ?amt .\n  ?s proveedores:group ?g . ?g proveedores:name ?gn ; proveedores:listed true .\n}\nGROUP BY ?g ?gn\nHAVING (SUM(?amt) > 1000000000)",
       "error": null
      }
     ],
@@ -600,7 +600,7 @@
     "question": "¿A qué grupo empresario pertenece hoy el proveedor SCIENCE APPLICATIONS INTERNATIONAL CORPORATION con UEI MMLKPW9JLX64? Respondé con el nombre del grupo.",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT DISTINCT ?gn WHERE {\n  ?s :uei ?uei . FILTER(STR(?uei) = \"MMLKPW9JLX64\")\n  ?s :group ?g . ?g :name ?gn .\n}",
+      "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT DISTINCT ?gn WHERE {\n  ?s proveedores:uei ?uei . FILTER(STR(?uei) = \"MMLKPW9JLX64\")\n  ?s proveedores:group ?g . ?g proveedores:name ?gn .\n}",
       "error": null
      }
     ],
@@ -640,7 +640,7 @@
     "question": "¿Cuánto suman, en dólares, los contratos del Departamento de Defensa con proveedores para revisar? Un proveedor es para revisar si su matriz final según GLEIF está fuera de EE. UU. (la de su grupo o, si el grupo no tiene registro en GLEIF, la propia) o si su nombre, o el de su grupo, es igual al de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias.",
     "attempts": [
      {
-      "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (SUM(?amt) AS ?total) WHERE {\n  { SELECT DISTINCT ?c ?amt WHERE {\n      ?c a :Contract ; :agency ?ag ; :amount ?amt ; :supplier ?s .\n      ?ag :name ?an . FILTER(STR(?an) = \"Department of Defense\")\n      {\n        ?s a :ForeignParentSupplier .\n      } UNION {\n        ?s :watchlistMatch ?e .\n        ?e :entryType ?t . FILTER(STR(?t) = \"Entity\")\n      } UNION {\n        ?s :group ?g . ?g :watchlistMatch ?e2 .\n        ?e2 :entryType ?t2 . FILTER(STR(?t2) = \"Entity\")\n      }\n  } }\n}",
+      "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT (SUM(?amt) AS ?total) WHERE {\n  { SELECT DISTINCT ?c ?amt WHERE {\n      ?c a proveedores:Contract ; proveedores:agency ?ag ; proveedores:amount ?amt ; proveedores:supplier ?s .\n      ?ag proveedores:name ?an . FILTER(STR(?an) = \"Department of Defense\")\n      {\n        ?s a proveedores:ForeignParentSupplier .\n      } UNION {\n        ?s proveedores:watchlistMatch ?e .\n        ?e proveedores:entryType ?t . FILTER(STR(?t) = \"Entity\")\n      } UNION {\n        ?s proveedores:group ?g . ?g proveedores:watchlistMatch ?e2 .\n        ?e2 proveedores:entryType ?t2 . FILTER(STR(?t2) = \"Entity\")\n      }\n  } }\n}",
       "error": null
      }
     ],

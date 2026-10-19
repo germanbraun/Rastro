@@ -14,7 +14,7 @@
 # NOT_YET_RECRUITING o ENROLLING_BY_INVITATION; "fase 3" incluye fase 2/3.
 
 prefixes: |
-  PREFIX : <https://w3id.org/rastro/ontology#>
+  PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
   PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
 questions:
@@ -25,10 +25,10 @@ questions:
     items: fármacos
     reference: |
       SELECT DISTINCT ?answer WHERE {
-        ?d :hasTarget/:gene "ERBB2" ; :name ?answer .
-        ?trial :testsDrug ?d ; :phase ?phase ; :condition ?c .
+        ?d oncologia:hasTarget/oncologia:gene "ERBB2" ; oncologia:name ?answer .
+        ?trial oncologia:testsDrug ?d ; oncologia:phase ?phase ; oncologia:condition ?c .
         FILTER (CONTAINS(?phase, "PHASE3"))
-        ?x rdfs:label "Breast Neoplasms"@en . ?c :within ?x .
+        ?x rdfs:label "Breast Neoplasms"@en . ?c oncologia:within ?x .
       }
 
   - id: q02
@@ -36,8 +36,8 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
-        ?d :hasTarget/:gene "EGFR" .
-        ?trial :testsDrug ?d ; :phase ?phase .
+        ?d oncologia:hasTarget/oncologia:gene "EGFR" .
+        ?trial oncologia:testsDrug ?d ; oncologia:phase ?phase .
         FILTER (CONTAINS(?phase, "PHASE3"))
       }
 
@@ -47,10 +47,10 @@ questions:
     items: sponsors
     reference: |
       SELECT ?answer WHERE {
-        ?trial :sponsor ?s ; :status ?status ; :condition ?c .
-        ?s :industry true ; :name ?answer .
+        ?trial oncologia:sponsor ?s ; oncologia:status ?status ; oncologia:condition ?c .
+        ?s oncologia:industry true ; oncologia:name ?answer .
         FILTER (?status IN ("TERMINATED", "WITHDRAWN"))
-        ?x rdfs:label "Lung Neoplasms"@en . ?c :within ?x .
+        ?x rdfs:label "Lung Neoplasms"@en . ?c oncologia:within ?x .
       }
       GROUP BY ?answer ORDER BY DESC(COUNT(DISTINCT ?trial)) LIMIT 3
 
@@ -60,8 +60,8 @@ questions:
     items: reacciones
     reference: |
       SELECT ?answer WHERE {
-        ?d :name "IMATINIB" .
-        ?r :drug ?d ; :reaction ?answer ; :reports ?n .
+        ?d oncologia:name "IMATINIB" .
+        ?r oncologia:drug ?d ; oncologia:reaction ?answer ; oncologia:reports ?n .
       }
       ORDER BY DESC(?n) LIMIT 1
 
@@ -71,7 +71,7 @@ questions:
     items: fármacos
     reference: |
       SELECT DISTINCT ?answer WHERE {
-        ?d :hasTarget/:gene "BRAF" ; :approved true ; :name ?answer .
+        ?d oncologia:hasTarget/oncologia:gene "BRAF" ; oncologia:approved true ; oncologia:name ?answer .
       }
 
   - id: q06
@@ -79,8 +79,8 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
-        ?trial :condition ?c .
-        ?x rdfs:label "Breast Neoplasms"@en . ?c :within ?x .
+        ?trial oncologia:condition ?c .
+        ?x rdfs:label "Breast Neoplasms"@en . ?c oncologia:within ?x .
       }
 
   - id: q07
@@ -88,8 +88,8 @@ questions:
     kind: número
     reference: |
       SELECT (SUM(?n) AS ?answer) WHERE {
-        ?d :name "LENALIDOMIDE" .
-        ?y :drug ?d ; :year ?year ; :reports ?n .
+        ?d oncologia:name "LENALIDOMIDE" .
+        ?y oncologia:drug ?d ; oncologia:year ?year ; oncologia:reports ?n .
         FILTER (?year < 2015)
       }
 
@@ -98,7 +98,7 @@ questions:
     kind: número
     reference: |
       SELECT (100 * SUM(?isStopped) / COUNT(?trial) AS ?answer) WHERE {
-        ?trial :sponsor/:name "Pfizer" ; :phase ?phase ; :status ?status .
+        ?trial oncologia:sponsor/oncologia:name "Pfizer" ; oncologia:phase ?phase ; oncologia:status ?status .
         FILTER (CONTAINS(?phase, "PHASE2"))
         FILTER (?status IN ("COMPLETED", "TERMINATED", "WITHDRAWN"))
         BIND (IF(?status IN ("TERMINATED", "WITHDRAWN"), 1, 0) AS ?isStopped)
@@ -109,8 +109,8 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
-        ?d :name "PEMBROLIZUMAB" .
-        ?trial :testsDrug ?d ; :status ?status .
+        ?d oncologia:name "PEMBROLIZUMAB" .
+        ?trial oncologia:testsDrug ?d ; oncologia:status ?status .
         FILTER (?status IN ("RECRUITING", "ACTIVE_NOT_RECRUITING", "NOT_YET_RECRUITING", "ENROLLING_BY_INVITATION"))
       }
 
@@ -119,9 +119,9 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
-        ?d :hasTarget/:gene "BTK" .
-        ?trial :testsDrug ?d ; :condition ?c .
-        ?x rdfs:label "Leukemia"@en . ?c :within ?x .
+        ?d oncologia:hasTarget/oncologia:gene "BTK" .
+        ?trial oncologia:testsDrug ?d ; oncologia:condition ?c .
+        ?x rdfs:label "Leukemia"@en . ?c oncologia:within ?x .
       }
 
   - id: q11
@@ -130,10 +130,10 @@ questions:
     items: sponsors
     reference: |
       SELECT ?answer WHERE {
-        ?trial :sponsor ?s ; :phase ?phase ; :condition ?c .
-        ?s :industry true ; :name ?answer .
+        ?trial oncologia:sponsor ?s ; oncologia:phase ?phase ; oncologia:condition ?c .
+        ?s oncologia:industry true ; oncologia:name ?answer .
         FILTER (CONTAINS(?phase, "PHASE3"))
-        ?x rdfs:label "Colorectal Neoplasms"@en . ?c :within ?x .
+        ?x rdfs:label "Colorectal Neoplasms"@en . ?c oncologia:within ?x .
       }
       GROUP BY ?answer ORDER BY DESC(COUNT(DISTINCT ?trial)) LIMIT 1
 
@@ -142,9 +142,9 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
-        ?d :name "NIVOLUMAB" .
-        ?trial :testsDrug ?d ; :condition ?c .
-        ?x rdfs:label "Melanoma"@en . ?c :within ?x .
+        ?d oncologia:name "NIVOLUMAB" .
+        ?trial oncologia:testsDrug ?d ; oncologia:condition ?c .
+        ?x rdfs:label "Melanoma"@en . ?c oncologia:within ?x .
       }
 
   - id: q13
@@ -152,9 +152,9 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
-        ?d :hasTarget/:gene "AR" ; :approved true .
-        ?trial :testsDrug ?d ; :condition ?c .
-        ?x rdfs:label "Prostatic Neoplasms"@en . ?c :within ?x .
+        ?d oncologia:hasTarget/oncologia:gene "AR" ; oncologia:approved true .
+        ?trial oncologia:testsDrug ?d ; oncologia:condition ?c .
+        ?x rdfs:label "Prostatic Neoplasms"@en . ?c oncologia:within ?x .
       }
 
   - id: q14
@@ -162,9 +162,9 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
-        ?trial :status ?status ; :condition ?c .
+        ?trial oncologia:status ?status ; oncologia:condition ?c .
         FILTER (?status IN ("TERMINATED", "WITHDRAWN"))
-        ?x rdfs:label "Pancreatic Neoplasms"@en . ?c :within ?x .
+        ?x rdfs:label "Pancreatic Neoplasms"@en . ?c oncologia:within ?x .
       }
 
   - id: q15
@@ -172,8 +172,8 @@ questions:
     kind: número
     reference: |
       SELECT (SUM(?n) AS ?answer) WHERE {
-        ?d :name "OSIMERTINIB" .
-        ?y :drug ?d ; :seriousReports ?n .
+        ?d oncologia:name "OSIMERTINIB" .
+        ?y oncologia:drug ?d ; oncologia:seriousReports ?n .
       }
 
   - id: q16
@@ -181,8 +181,8 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?d) AS ?answer) WHERE {
-        ?trial :testsDrug ?d ; :condition ?c .
-        ?x rdfs:label "Multiple Myeloma"@en . ?c :within ?x .
+        ?trial oncologia:testsDrug ?d ; oncologia:condition ?c .
+        ?x rdfs:label "Multiple Myeloma"@en . ?c oncologia:within ?x .
       }
 
   - id: q17
@@ -190,8 +190,8 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
-        ?d :hasTarget/:gene "TIGIT" .
-        ?trial :testsDrug ?d ; :status ?status .
+        ?d oncologia:hasTarget/oncologia:gene "TIGIT" .
+        ?trial oncologia:testsDrug ?d ; oncologia:status ?status .
         FILTER (?status IN ("RECRUITING", "ACTIVE_NOT_RECRUITING", "NOT_YET_RECRUITING", "ENROLLING_BY_INVITATION"))
       }
 
@@ -202,10 +202,10 @@ questions:
     reference: |
       SELECT DISTINCT ?answer WHERE {
         VALUES ?gene { "PDCD1" "CD274" }
-        ?d :hasTarget/:gene ?gene ; :name ?answer .
-        ?trial :testsDrug ?d ; :phase ?phase ; :condition ?c .
+        ?d oncologia:hasTarget/oncologia:gene ?gene ; oncologia:name ?answer .
+        ?trial oncologia:testsDrug ?d ; oncologia:phase ?phase ; oncologia:condition ?c .
         FILTER (CONTAINS(?phase, "PHASE3"))
-        ?x rdfs:label "Lung Neoplasms"@en . ?c :within ?x .
+        ?x rdfs:label "Lung Neoplasms"@en . ?c oncologia:within ?x .
       }
 
   - id: q19
@@ -213,10 +213,10 @@ questions:
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?trial) AS ?answer) WHERE {
-        ?d :name "RITUXIMAB" .
-        ?trial :testsDrug ?d ; :startDate ?start ; :condition ?c .
+        ?d oncologia:name "RITUXIMAB" .
+        ?trial oncologia:testsDrug ?d ; oncologia:startDate ?start ; oncologia:condition ?c .
         FILTER (YEAR(?start) >= 2020)
-        ?x rdfs:label "Lymphoma"@en . ?c :within ?x .
+        ?x rdfs:label "Lymphoma"@en . ?c oncologia:within ?x .
       }
 
   - id: q20
@@ -225,7 +225,7 @@ questions:
     items: fármacos
     reference: |
       SELECT DISTINCT ?answer WHERE {
-        ?imatinib :name "IMATINIB" ; :hasTarget ?t .
-        ?other :hasTarget ?t ; :name ?answer .
+        ?imatinib oncologia:name "IMATINIB" ; oncologia:hasTarget ?t .
+        ?other oncologia:hasTarget ?t ; oncologia:name ?answer .
         FILTER (?other != ?imatinib)
       }

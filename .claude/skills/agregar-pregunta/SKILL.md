@@ -14,7 +14,7 @@ Las preguntas mandan: la ontología solo tiene lo que alguna pregunta necesita.
 3. **Escribí la query** en `ontology/queries/cq<N>.rq`:
    - Primera línea: `# <N>. <la pregunta>`.
    - Prefijos `:` (Rastro), `meshv:` y `rdfs:`.
-   - Para "una enfermedad y sus subtipos": `?x rdfs:label "..."@en . ?c :within ?x`. No uses caminos `*` o `+`: Ontop no los soporta.
+   - Para "una enfermedad y sus subtipos": `?x rdfs:label "..."@en . ?c oncologia:within ?x`. No uses caminos `*` o `+`: Ontop no los soporta.
    - Valores de ClinicalTrials.gov tal cual (`"TERMINATED"`, `"PHASE3"`).
    - Si tiene parámetro, usá `VALUES` con un comentario.
 4. **Si falta un término**, agregalo a `ontology/rastro.ttl` con `rdfs:label` en español y un comentario corto. Preferí un atributo simple a una clase nueva.

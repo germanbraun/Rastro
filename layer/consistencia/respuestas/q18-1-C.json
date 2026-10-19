@@ -2,7 +2,7 @@
  "question": "¿Cuáles son los fármacos anti-PD-1 o anti-PD-L1 (genes PDCD1 o CD274) que se prueban en cáncer de pulmón en ensayos de fase 3, contando los de fase 2/3?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?t a :Trial ; :phase ?p ; :condition ?c ; :testsDrug ?d .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c :within ?m . ?m rdfs:label \"Lung Neoplasms\"@en .\n  ?d :hasTarget ?tg ; :name ?name .\n  ?tg :gene ?g . FILTER(?g IN (\"PDCD1\", \"CD274\"))\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?t a oncologia:Trial ; oncologia:phase ?p ; oncologia:condition ?c ; oncologia:testsDrug ?d .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c oncologia:within ?m . ?m rdfs:label \"Lung Neoplasms\"@en .\n  ?d oncologia:hasTarget ?tg ; oncologia:name ?name .\n  ?tg oncologia:gene ?g . FILTER(?g IN (\"PDCD1\", \"CD274\"))\n}",
    "error": null
   }
  ],

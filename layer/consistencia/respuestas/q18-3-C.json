@@ -2,7 +2,7 @@
  "question": "Listá los fármacos con target PDCD1 o CD274 (anti-PD-1 o anti-PD-L1) que tienen ensayos de fase 3 (incluye fase 2/3) en cáncer de pulmón.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?d a :Drug ; :name ?name ; :hasTarget ?t .\n  ?t :gene ?g . FILTER(?g IN (\"PDCD1\", \"CD274\"))\n  ?tr :testsDrug ?d ; :phase ?p ; :condition ?c .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c :within ?m . ?m rdfs:label \"Lung Neoplasms\"@en .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT DISTINCT ?name WHERE {\n  ?d a oncologia:Drug ; oncologia:name ?name ; oncologia:hasTarget ?t .\n  ?t oncologia:gene ?g . FILTER(?g IN (\"PDCD1\", \"CD274\"))\n  ?tr oncologia:testsDrug ?d ; oncologia:phase ?p ; oncologia:condition ?c .\n  FILTER(?p IN (\"PHASE3\", \"PHASE2/PHASE3\"))\n  ?c oncologia:within ?m . ?m rdfs:label \"Lung Neoplasms\"@en .\n}",
    "error": null
   }
  ],

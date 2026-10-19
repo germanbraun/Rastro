@@ -2,7 +2,7 @@
  "question": "¿Cuánto suman, en dólares, los contratos del Departamento de Defensa con proveedores para revisar? Un proveedor es para revisar si su matriz final según GLEIF está fuera de EE. UU. (la de su grupo o, si el grupo no tiene registro en GLEIF, la propia) o si su nombre, o el de su grupo, es igual al de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (SUM(?amt) AS ?total) WHERE {\n  { SELECT DISTINCT ?c ?amt WHERE {\n      ?c a :Contract ; :agency ?ag ; :amount ?amt ; :supplier ?s .\n      ?ag :name ?an . FILTER(STR(?an) = \"Department of Defense\")\n      {\n        ?s a :ForeignParentSupplier .\n      } UNION {\n        ?s :watchlistMatch ?e .\n        ?e :entryType ?t . FILTER(STR(?t) = \"Entity\")\n      } UNION {\n        ?s :group ?g . ?g :watchlistMatch ?e2 .\n        ?e2 :entryType ?t2 . FILTER(STR(?t2) = \"Entity\")\n      }\n  } }\n}",
+   "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT (SUM(?amt) AS ?total) WHERE {\n  { SELECT DISTINCT ?c ?amt WHERE {\n      ?c a proveedores:Contract ; proveedores:agency ?ag ; proveedores:amount ?amt ; proveedores:supplier ?s .\n      ?ag proveedores:name ?an . FILTER(STR(?an) = \"Department of Defense\")\n      {\n        ?s a proveedores:ForeignParentSupplier .\n      } UNION {\n        ?s proveedores:watchlistMatch ?e .\n        ?e proveedores:entryType ?t . FILTER(STR(?t) = \"Entity\")\n      } UNION {\n        ?s proveedores:group ?g . ?g proveedores:watchlistMatch ?e2 .\n        ?e2 proveedores:entryType ?t2 . FILTER(STR(?t2) = \"Entity\")\n      }\n  } }\n}",
    "error": null
   }
  ],

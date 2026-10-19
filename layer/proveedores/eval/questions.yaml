@@ -14,7 +14,7 @@
 # lista), para que las dos formas de responder puedan contestarlas.
 
 prefixes: |
-  PREFIX : <https://w3id.org/rastro/proveedores#>
+  PREFIX proveedores: <https://w3id.org/rastro/proveedores#>
 
 questions:
 
@@ -23,7 +23,7 @@ questions:
     kind: número
     reference: |
       SELECT (SUM(?a) AS ?answer) WHERE {
-        ?g :name "LEIDOS HOLDINGS, INC." . ?s :group ?g . ?c :supplier ?s ; :amount ?a .
+        ?g proveedores:name "LEIDOS HOLDINGS, INC." . ?s proveedores:group ?g . ?c proveedores:supplier ?s ; proveedores:amount ?a .
       }
 
   - id: p02
@@ -32,8 +32,8 @@ questions:
     items: empresas
     reference: |
       SELECT ?answer WHERE {
-        ?it :code "5415" . ?sec :within ?it .
-        ?c :sector ?sec ; :amount ?a ; :supplier/:group ?g . ?g :name ?answer .
+        ?it proveedores:code "5415" . ?sec proveedores:within ?it .
+        ?c proveedores:sector ?sec ; proveedores:amount ?a ; proveedores:supplier/proveedores:group ?g . ?g proveedores:name ?answer .
       } GROUP BY ?answer ORDER BY DESC(SUM(?a)) LIMIT 5
 
   - id: p03
@@ -42,31 +42,31 @@ questions:
     items: agencias
     reference: |
       SELECT DISTINCT ?answer WHERE {
-        { SELECT ?ag (SUM(?a) AS ?total) WHERE { ?c :agency ?ag ; :amount ?a } GROUP BY ?ag }
-        { SELECT ?ag ?g (SUM(?b) AS ?part) WHERE { ?d :agency ?ag ; :amount ?b ; :supplier/:group ?g } GROUP BY ?ag ?g }
+        { SELECT ?ag (SUM(?a) AS ?total) WHERE { ?c proveedores:agency ?ag ; proveedores:amount ?a } GROUP BY ?ag }
+        { SELECT ?ag ?g (SUM(?b) AS ?part) WHERE { ?d proveedores:agency ?ag ; proveedores:amount ?b ; proveedores:supplier/proveedores:group ?g } GROUP BY ?ag ?g }
         FILTER (?part / ?total > 1.0 / 3)
-        ?ag :name ?answer .
+        ?ag proveedores:name ?answer .
       }
 
   - id: p04
     question: ¿Cuántos proveedores (UEI distintos) tienen su matriz final, según GLEIF, fuera de EE. UU.? La matriz final es la de su grupo empresario o, si el grupo no tiene registro en GLEIF, la del propio proveedor.
     kind: número
     reference: |
-      SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE { ?s a :ForeignParentSupplier }
+      SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE { ?s a proveedores:ForeignParentSupplier }
 
   - id: p05
     question: ¿Cuántos proveedores (UEI distintos) tienen un nombre igual al nombre o a un alias de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias como Inc., LLC o Corp.?
     kind: número
     reference: |
-      SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE { ?s a :Supplier ; :watchlistMatch ?e }
+      SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE { ?s a proveedores:Supplier ; proveedores:watchlistMatch ?e }
 
   - id: p06
     question: ¿Cuántos proveedores (UEI distintos) tiene el Departamento de Defensa en contratos de construcción (sector NAICS 23 y sus subsectores)?
     kind: número
     reference: |
       SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE {
-        ?dod :name "Department of Defense" . ?con :code "23" .
-        ?c :agency ?dod ; :sector/:within ?con ; :supplier ?s .
+        ?dod proveedores:name "Department of Defense" . ?con proveedores:code "23" .
+        ?c proveedores:agency ?dod ; proveedores:sector/proveedores:within ?con ; proveedores:supplier ?s .
       }
 
   - id: p07
@@ -75,7 +75,7 @@ questions:
     items: empresas
     reference: |
       SELECT ?answer WHERE {
-        ?g :listed true ; :name ?answer . ?c :supplier/:group ?g ; :amount ?a .
+        ?g proveedores:listed true ; proveedores:name ?answer . ?c proveedores:supplier/proveedores:group ?g ; proveedores:amount ?a .
       } GROUP BY ?answer HAVING (SUM(?a) > 1000000000)
 
   - id: p08
@@ -83,13 +83,13 @@ questions:
     kind: lista
     items: empresas
     reference: |
-      SELECT ?answer WHERE { ?s :uei "MMLKPW9JLX64" ; :group/:name ?answer }
+      SELECT ?answer WHERE { ?s proveedores:uei "MMLKPW9JLX64" ; proveedores:group/proveedores:name ?answer }
 
   - id: p09
     question: ¿Cuánto suman, en dólares, los contratos del Departamento de Defensa con proveedores para revisar? Un proveedor es para revisar si su matriz final según GLEIF está fuera de EE. UU. (la de su grupo o, si el grupo no tiene registro en GLEIF, la propia) o si su nombre, o el de su grupo, es igual al de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias.
     kind: número
     reference: |
       SELECT (SUM(?a) AS ?answer) WHERE {
-        ?s a :SupplierToReview . ?dod :name "Department of Defense" .
-        ?c :supplier ?s ; :agency ?dod ; :amount ?a .
+        ?s a proveedores:SupplierToReview . ?dod proveedores:name "Department of Defense" .
+        ?c proveedores:supplier ?s ; proveedores:agency ?dod ; proveedores:amount ?a .
       }

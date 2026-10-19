@@ -173,6 +173,6 @@ Plan aparte en [plan-proveedores.md](plan-proveedores.md): contratos federales, 
 ## Preguntas sobre textos (GraphRAG anclado en la capa)
 
 - [x] Una pregunta de oncología sobre los motivos de los ensayos detenidos: el grafo elige los ensayos con una consulta exacta y un asistente de IA resume solo sus motivos, citando cada ensayo (`layer/textos/`, opción «Una pregunta sobre textos» en la app).
-- [x] El motivo de cada ensayo detenido como dato del grafo (`:stopReason`), clasificado con reglas, con evidencia en PROV-O y una muestra revisada (92 %).
+- [x] El motivo de cada ensayo detenido como dato del grafo (`oncologia:stopReason`), clasificado con reglas, con evidencia en PROV-O y una muestra revisada (92 %).
 - [ ] El equivalente en proveedores, con la descripción de cada contrato (hay que descargarla).
 

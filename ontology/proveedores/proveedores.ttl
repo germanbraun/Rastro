@@ -1,4 +1,4 @@
-@prefix : <https://w3id.org/rastro/proveedores#> .
+@prefix proveedores: <https://w3id.org/rastro/proveedores#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -14,142 +14,142 @@ mapeo: Ontop lo deduce de sus subclases."""@es ;
 
 # Clases ---------------------------------------------------------
 
-:Contract a owl:Class ;
+proveedores:Contract a owl:Class ;
     rdfs:label "Contrato"@es ;
     rdfs:comment "Un contrato federal de USAspending con actividad en el año fiscal 2025 y monto total de más de US$10 millones."@es .
 
-:Supplier a owl:Class ;
+proveedores:Supplier a owl:Class ;
     rdfs:label "Proveedor"@es ;
     rdfs:comment "La empresa que recibe un contrato, identificada por su UEI de SAM."@es .
 
-:SupplierToReview a owl:Class ;
-    rdfs:subClassOf :Supplier ;
+proveedores:SupplierToReview a owl:Class ;
+    rdfs:subClassOf proveedores:Supplier ;
     rdfs:label "Proveedor para revisar"@es ;
     rdfs:comment "Un proveedor que compliance tiene que mirar: su matriz final está fuera de EE. UU. o su nombre coincide con una lista de control. Ningún mapeo lo asigna: se deduce de sus subclases."@es .
 
-:ForeignParentSupplier a owl:Class ;
-    rdfs:subClassOf :SupplierToReview ;
+proveedores:ForeignParentSupplier a owl:Class ;
+    rdfs:subClassOf proveedores:SupplierToReview ;
     rdfs:label "Proveedor con matriz extranjera"@es ;
     rdfs:comment "Un proveedor cuyo grupo (o él mismo) tiene su matriz final fuera de EE. UU., según GLEIF."@es .
 
-:WatchlistSupplier a owl:Class ;
-    rdfs:subClassOf :SupplierToReview ;
+proveedores:WatchlistSupplier a owl:Class ;
+    rdfs:subClassOf proveedores:SupplierToReview ;
     rdfs:label "Proveedor con coincidencia en una lista de control"@es ;
     rdfs:comment "Un proveedor cuyo nombre, o el de su grupo, coincide con una entrada de una lista de control. Una coincidencia de nombre no es una confirmación."@es .
 
-:Group a owl:Class ;
+proveedores:Group a owl:Class ;
     rdfs:label "Grupo"@es ;
     rdfs:comment "La matriz actual de un proveedor según USAspending. Un grupo incluye todas sus filiales."@es .
 
-:Agency a owl:Class ;
+proveedores:Agency a owl:Class ;
     rdfs:label "Agencia"@es ;
     rdfs:comment "El organismo que contrata: Defensa, Salud, Energía…"@es .
 
-:Sector a owl:Class ;
+proveedores:Sector a owl:Class ;
     rdfs:label "Sector"@es ;
-    rdfs:comment "Un código NAICS 2022, de 2 a 6 dígitos. Un sector incluye sus subsectores (:within)."@es .
+    rdfs:comment "Un código NAICS 2022, de 2 a 6 dígitos. Un sector incluye sus subsectores (proveedores:within)."@es .
 
-:Country a owl:Class ;
+proveedores:Country a owl:Class ;
     rdfs:label "País"@es ;
     rdfs:comment "Un país, por su código ISO de 2 letras (US, GB…)."@es .
 
-:LegalEntity a owl:Class ;
+proveedores:LegalEntity a owl:Class ;
     rdfs:label "Entidad legal (LEI)"@es ;
     rdfs:comment "Un registro del identificador global de empresas (LEI) de GLEIF."@es .
 
-:WatchlistEntry a owl:Class ;
+proveedores:WatchlistEntry a owl:Class ;
     rdfs:label "Entrada en una lista de control"@es ;
     rdfs:comment "Una persona, empresa, barco o avión en una lista de control del gobierno de EE. UU. (Lista Consolidada de trade.gov, incluida OFAC)."@es .
 
-:DataSource a owl:Class ;
+proveedores:DataSource a owl:Class ;
     rdfs:label "Fuente de datos"@es ;
     rdfs:comment "USAspending, NAICS, GLEIF, Lista Consolidada o Wikidata."@es .
 
 # Relaciones -----------------------------------------------------
 
-:supplier a owl:ObjectProperty ; rdfs:label "proveedor"@es ;
-    rdfs:domain :Contract ; rdfs:range :Supplier .
+proveedores:supplier a owl:ObjectProperty ; rdfs:label "proveedor"@es ;
+    rdfs:domain proveedores:Contract ; rdfs:range proveedores:Supplier .
 
-:agency a owl:ObjectProperty ; rdfs:label "agencia"@es ;
-    rdfs:domain :Contract ; rdfs:range :Agency .
+proveedores:agency a owl:ObjectProperty ; rdfs:label "agencia"@es ;
+    rdfs:domain proveedores:Contract ; rdfs:range proveedores:Agency .
 
-:sector a owl:ObjectProperty ; rdfs:label "sector"@es ;
-    rdfs:comment "El código NAICS del contrato. Sus sectores más amplios se encuentran con :within."@es ;
-    rdfs:domain :Contract ; rdfs:range :Sector .
+proveedores:sector a owl:ObjectProperty ; rdfs:label "sector"@es ;
+    rdfs:comment "El código NAICS del contrato. Sus sectores más amplios se encuentran con proveedores:within."@es ;
+    rdfs:domain proveedores:Contract ; rdfs:range proveedores:Sector .
 
-:within a owl:ObjectProperty ; rdfs:label "está dentro de"@es ;
-    rdfs:comment "Un sector está dentro de sí mismo y de todos sus sectores más amplios. Así «servicios informáticos y sus subsectores» es una sola condición: ?s :within ?informatica."@es ;
-    rdfs:domain :Sector ; rdfs:range :Sector .
+proveedores:within a owl:ObjectProperty ; rdfs:label "está dentro de"@es ;
+    rdfs:comment "Un sector está dentro de sí mismo y de todos sus sectores más amplios. Así «servicios informáticos y sus subsectores» es una sola condición: ?s proveedores:within ?informatica."@es ;
+    rdfs:domain proveedores:Sector ; rdfs:range proveedores:Sector .
 
-:group a owl:ObjectProperty ; rdfs:label "grupo"@es ;
+proveedores:group a owl:ObjectProperty ; rdfs:label "grupo"@es ;
     rdfs:comment "El grupo al que pertenece hoy un proveedor (su matriz actual en USAspending)."@es ;
-    rdfs:domain :Supplier ; rdfs:range :Group .
+    rdfs:domain proveedores:Supplier ; rdfs:range proveedores:Group .
 
-:legalEntity a owl:ObjectProperty ; rdfs:label "entidad legal"@es ;
-    rdfs:comment "El registro LEI de un proveedor o de un grupo, enlazado por nombre y lugar (ver :LeiLink)."@es ;
-    rdfs:range :LegalEntity .
+proveedores:legalEntity a owl:ObjectProperty ; rdfs:label "entidad legal"@es ;
+    rdfs:comment "El registro LEI de un proveedor o de un grupo, enlazado por nombre y lugar (ver proveedores:LeiLink)."@es ;
+    rdfs:range proveedores:LegalEntity .
 
-:ultimateParent a owl:ObjectProperty ; rdfs:label "matriz final"@es ;
+proveedores:ultimateParent a owl:ObjectProperty ; rdfs:label "matriz final"@es ;
     rdfs:comment "La matriz final de una entidad legal, según GLEIF."@es ;
-    rdfs:domain :LegalEntity ; rdfs:range :LegalEntity .
+    rdfs:domain proveedores:LegalEntity ; rdfs:range proveedores:LegalEntity .
 
-:country a owl:ObjectProperty ; rdfs:label "país"@es ;
-    rdfs:range :Country .
+proveedores:country a owl:ObjectProperty ; rdfs:label "país"@es ;
+    rdfs:range proveedores:Country .
 
-:watchlistMatch a owl:ObjectProperty ; rdfs:label "coincide con la entrada"@es ;
-    rdfs:comment "Un proveedor o un grupo cuyo nombre coincide con una entrada de una lista de control (ver :WatchlistLink). Una coincidencia de nombre no es una confirmación: hay que revisarla."@es ;
-    rdfs:range :WatchlistEntry .
+proveedores:watchlistMatch a owl:ObjectProperty ; rdfs:label "coincide con la entrada"@es ;
+    rdfs:comment "Un proveedor o un grupo cuyo nombre coincide con una entrada de una lista de control (ver proveedores:WatchlistLink). Una coincidencia de nombre no es una confirmación: hay que revisarla."@es ;
+    rdfs:range proveedores:WatchlistEntry .
 
-:fromSource a owl:ObjectProperty ; rdfs:label "proviene de"@es ;
+proveedores:fromSource a owl:ObjectProperty ; rdfs:label "proviene de"@es ;
     rdfs:comment "La fuente de la que viene un dato."@es ;
-    rdfs:range :DataSource .
+    rdfs:range proveedores:DataSource .
 
 # Atributos ------------------------------------------------------
 
-:name a owl:DatatypeProperty ; rdfs:label "nombre"@es ; rdfs:range xsd:string .
-:code a owl:DatatypeProperty ; rdfs:label "código"@es ;
+proveedores:name a owl:DatatypeProperty ; rdfs:label "nombre"@es ; rdfs:range xsd:string .
+proveedores:code a owl:DatatypeProperty ; rdfs:label "código"@es ;
     rdfs:comment "El código NAICS de un sector o el código ISO de un país."@es ; rdfs:range xsd:string .
 
-:contractId a owl:DatatypeProperty ; rdfs:label "número de contrato"@es ; rdfs:domain :Contract ; rdfs:range xsd:string .
-:amount a owl:DatatypeProperty ; rdfs:label "monto"@es ;
+proveedores:contractId a owl:DatatypeProperty ; rdfs:label "número de contrato"@es ; rdfs:domain proveedores:Contract ; rdfs:range xsd:string .
+proveedores:amount a owl:DatatypeProperty ; rdfs:label "monto"@es ;
     rdfs:comment "Monto total del contrato en dólares, en toda su vida (no solo lo obligado en 2025)."@es ;
-    rdfs:domain :Contract ; rdfs:range xsd:decimal .
-:startDate a owl:DatatypeProperty ; rdfs:label "fecha de inicio"@es ; rdfs:domain :Contract ; rdfs:range xsd:date .
-:endDate a owl:DatatypeProperty ; rdfs:label "fecha de fin"@es ; rdfs:domain :Contract ; rdfs:range xsd:date .
-:description a owl:DatatypeProperty ; rdfs:label "descripción"@es ; rdfs:domain :Contract ; rdfs:range xsd:string .
-:subAgency a owl:DatatypeProperty ; rdfs:label "subagencia"@es ;
+    rdfs:domain proveedores:Contract ; rdfs:range xsd:decimal .
+proveedores:startDate a owl:DatatypeProperty ; rdfs:label "fecha de inicio"@es ; rdfs:domain proveedores:Contract ; rdfs:range xsd:date .
+proveedores:endDate a owl:DatatypeProperty ; rdfs:label "fecha de fin"@es ; rdfs:domain proveedores:Contract ; rdfs:range xsd:date .
+proveedores:description a owl:DatatypeProperty ; rdfs:label "descripción"@es ; rdfs:domain proveedores:Contract ; rdfs:range xsd:string .
+proveedores:subAgency a owl:DatatypeProperty ; rdfs:label "subagencia"@es ;
     rdfs:comment "La oficina dentro de la agencia, por ejemplo Department of the Army."@es ;
-    rdfs:domain :Contract ; rdfs:range xsd:string .
+    rdfs:domain proveedores:Contract ; rdfs:range xsd:string .
 
-:uei a owl:DatatypeProperty ; rdfs:label "UEI"@es ;
+proveedores:uei a owl:DatatypeProperty ; rdfs:label "UEI"@es ;
     rdfs:comment "Identificador único de la empresa en SAM.gov."@es ; rdfs:range xsd:string .
-:state a owl:DatatypeProperty ; rdfs:label "estado"@es ;
-    rdfs:comment "Estado de EE. UU. del domicilio del proveedor, por ejemplo VA."@es ; rdfs:domain :Supplier ; rdfs:range xsd:string .
+proveedores:state a owl:DatatypeProperty ; rdfs:label "estado"@es ;
+    rdfs:comment "Estado de EE. UU. del domicilio del proveedor, por ejemplo VA."@es ; rdfs:domain proveedores:Supplier ; rdfs:range xsd:string .
 
-:lei a owl:DatatypeProperty ; rdfs:label "LEI"@es ; rdfs:domain :LegalEntity ; rdfs:range xsd:string .
+proveedores:lei a owl:DatatypeProperty ; rdfs:label "LEI"@es ; rdfs:domain proveedores:LegalEntity ; rdfs:range xsd:string .
 
-:listed a owl:DatatypeProperty ; rdfs:label "cotiza en bolsa"@es ;
+proveedores:listed a owl:DatatypeProperty ; rdfs:label "cotiza en bolsa"@es ;
     rdfs:comment "Verdadero si Wikidata registra una bolsa de valores para el grupo."@es ;
-    rdfs:domain :Group ; rdfs:range xsd:boolean .
-:wikidataId a owl:DatatypeProperty ; rdfs:label "Wikidata"@es ;
+    rdfs:domain proveedores:Group ; rdfs:range xsd:boolean .
+proveedores:wikidataId a owl:DatatypeProperty ; rdfs:label "Wikidata"@es ;
     rdfs:comment "El identificador del grupo en Wikidata (por ejemplo Q1340920), enlazado por LEI."@es ;
-    rdfs:domain :Group ; rdfs:range xsd:string .
+    rdfs:domain proveedores:Group ; rdfs:range xsd:string .
 
-:stockExchange a owl:DatatypeProperty ; rdfs:label "bolsa de valores"@es ;
+proveedores:stockExchange a owl:DatatypeProperty ; rdfs:label "bolsa de valores"@es ;
     rdfs:comment "Las bolsas donde cotiza el grupo, según Wikidata (por ejemplo New York Stock Exchange)."@es ;
-    rdfs:domain :Group ; rdfs:range xsd:string .
-:headquarters a owl:DatatypeProperty ; rdfs:label "sede"@es ;
+    rdfs:domain proveedores:Group ; rdfs:range xsd:string .
+proveedores:headquarters a owl:DatatypeProperty ; rdfs:label "sede"@es ;
     rdfs:comment "La ciudad de la sede del grupo, según Wikidata."@es ;
-    rdfs:domain :Group ; rdfs:range xsd:string .
+    rdfs:domain proveedores:Group ; rdfs:range xsd:string .
 
-:list a owl:DatatypeProperty ; rdfs:label "lista"@es ;
+proveedores:list a owl:DatatypeProperty ; rdfs:label "lista"@es ;
     rdfs:comment "La lista de control, por ejemplo «Entity List (EL) - Bureau of Industry and Security»."@es ;
-    rdfs:domain :WatchlistEntry ; rdfs:range xsd:string .
-:alias a owl:DatatypeProperty ; rdfs:label "alias"@es ; rdfs:domain :WatchlistEntry ; rdfs:range xsd:string .
-:entryType a owl:DatatypeProperty ; rdfs:label "tipo"@es ;
-    rdfs:comment "Entity, Individual, Vessel o Aircraft. Algunas listas no lo dicen (por ejemplo la Entity List de Comercio): sus entradas son empresas u organizaciones."@es ; rdfs:domain :WatchlistEntry ; rdfs:range xsd:string .
+    rdfs:domain proveedores:WatchlistEntry ; rdfs:range xsd:string .
+proveedores:alias a owl:DatatypeProperty ; rdfs:label "alias"@es ; rdfs:domain proveedores:WatchlistEntry ; rdfs:range xsd:string .
+proveedores:entryType a owl:DatatypeProperty ; rdfs:label "tipo"@es ;
+    rdfs:comment "Entity, Individual, Vessel o Aircraft. Algunas listas no lo dicen (por ejemplo la Entity List de Comercio): sus entradas son empresas u organizaciones."@es ; rdfs:domain proveedores:WatchlistEntry ; rdfs:range xsd:string .
 
-:license a owl:DatatypeProperty ; rdfs:label "licencia"@es ; rdfs:domain :DataSource ; rdfs:range xsd:string .
+proveedores:license a owl:DatatypeProperty ; rdfs:label "licencia"@es ; rdfs:domain proveedores:DataSource ; rdfs:range xsd:string .
 
 # Evidencia de los enlaces (PROV-O, el estándar del W3C) ----------
 
@@ -157,27 +157,27 @@ prov:Entity a owl:Class ; rdfs:label "entidad (PROV)"@es .
 prov:wasDerivedFrom a owl:ObjectProperty ; rdfs:label "deriva de"@es .
 prov:wasGeneratedBy a owl:ObjectProperty ; rdfs:label "generado por"@es .
 
-:GroupLink a owl:Class ;
+proveedores:GroupLink a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Enlace proveedor → grupo"@es ;
     rdfs:comment "Por qué Rastro dice que un proveedor es parte de un grupo: la matriz actual que registra USAspending, y las otras matrices que tuvo."@es .
 
-:LeiLink a owl:Class ;
+proveedores:LeiLink a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Enlace con un LEI"@es ;
     rdfs:comment "Por qué Rastro dice que un proveedor o un grupo tiene tal LEI: qué nombre coincidió, después de normalizarlo, y con qué regla."@es .
 
-:WatchlistLink a owl:Class ;
+proveedores:WatchlistLink a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Coincidencia con una lista de control"@es ;
     rdfs:comment "Por qué Rastro dice que un proveedor o un grupo coincide con una entrada de una lista: qué nombre o alias coincidió y con qué regla."@es .
 
-:linkFrom a owl:ObjectProperty ; rdfs:label "enlace desde"@es ;
+proveedores:linkFrom a owl:ObjectProperty ; rdfs:label "enlace desde"@es ;
     rdfs:comment "El proveedor o el grupo del enlace."@es .
-:linkTo a owl:ObjectProperty ; rdfs:label "enlace hacia"@es ;
+proveedores:linkTo a owl:ObjectProperty ; rdfs:label "enlace hacia"@es ;
     rdfs:comment "El grupo, la entidad legal o la entrada de la lista del enlace."@es .
-:sourceText a owl:DatatypeProperty ; rdfs:label "texto en la fuente"@es ;
+proveedores:sourceText a owl:DatatypeProperty ; rdfs:label "texto en la fuente"@es ;
     rdfs:comment "Lo que dice la fuente, por ejemplo las matrices que registra USAspending para el proveedor."@es ; rdfs:range xsd:string .
-:matchedText a owl:DatatypeProperty ; rdfs:label "texto que coincidió"@es ; rdfs:range xsd:string .
-:linkRule a owl:DatatypeProperty ; rdfs:label "regla"@es ;
+proveedores:matchedText a owl:DatatypeProperty ; rdfs:label "texto que coincidió"@es ; rdfs:range xsd:string .
+proveedores:linkRule a owl:DatatypeProperty ; rdfs:label "regla"@es ;
     rdfs:comment "Cómo se hizo el enlace, en palabras simples."@es ; rdfs:range xsd:string .

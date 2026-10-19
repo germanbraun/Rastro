@@ -2,7 +2,7 @@
  "question": "¿Cuántos proveedores (UEI distintos) tiene el Departamento de Defensa en contratos de construcción (sector NAICS 23 y sus subsectores)?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?c a :Contract ; :agency ?ag ; :sector ?sec ; :supplier ?s .\n  ?ag :name ?an . FILTER(STR(?an) = \"Department of Defense\")\n  ?sec :within ?x . ?x :code ?code . FILTER(STR(?code) = \"23\")\n  ?s :uei ?uei .\n}",
+   "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?c a proveedores:Contract ; proveedores:agency ?ag ; proveedores:sector ?sec ; proveedores:supplier ?s .\n  ?ag proveedores:name ?an . FILTER(STR(?an) = \"Department of Defense\")\n  ?sec proveedores:within ?x . ?x proveedores:code ?code . FILTER(STR(?code) = \"23\")\n  ?s proveedores:uei ?uei .\n}",
    "error": null
   }
  ],

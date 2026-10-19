@@ -64,7 +64,7 @@ En la barra lateral, **Dominio** → **Proveedores del Estado de EE. UU.**, con 
 
 1. Pregunta del grupo Leidos → **Responder** → **¿De dónde sale la respuesta?**
 
-> «La consulta es corta: `?supplier :group ?g`. Abajo, el SQL que generó Ontop: une `group_company`, `supplier_group` y los contratos. El grupo está consolidado una vez: USAspending reparte a Leidos en 13 matrices, y las unimos con el LEI de cada matriz y la matriz final que registra GLEIF, más una tabla corta de correcciones revisadas para las compras que ninguna fuente registra (Dynetics, QTC, Gibbs & Cox). La evidencia de cada empresa es un `:GroupLink` en PROV-O.»
+> «La consulta es corta: `?supplier proveedores:group ?g`. Abajo, el SQL que generó Ontop: une `group_company`, `supplier_group` y los contratos. El grupo está consolidado una vez: USAspending reparte a Leidos en 13 matrices, y las unimos con el LEI de cada matriz y la matriz final que registra GLEIF, más una tabla corta de correcciones revisadas para las compras que ninguna fuente registra (Dynetics, QTC, Gibbs & Cox). La evidencia de cada empresa es un `:GroupLink` en PROV-O.»
 
 2. Pregunta de SAIC → **¿De dónde sale la respuesta?**
 

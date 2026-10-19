@@ -2,7 +2,7 @@
  "question": "¿Cuántos reportes serios de eventos adversos en FAERS (openFDA) suman, entre todos, los fármacos que actúan sobre EGFR y se prueban en ensayos activos (reclutando, activos sin reclutar, todavía sin reclutar o por invitación) de cáncer de pulmón? Cada fármaco se cuenta una sola vez.",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (SUM(?sr) AS ?total) WHERE {\n  {\n    SELECT DISTINCT ?d WHERE {\n      ?l rdfs:label \"Lung Neoplasms\"@en .\n      ?c :within ?l .\n      ?t a :Trial ; :condition ?c ; :status ?st ; :testsDrug ?d .\n      FILTER(?st IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n      ?d :hasTarget ?tg . ?tg :gene \"EGFR\" .\n    }\n  }\n  ?y a :YearlyReports ; :drug ?d ; :seriousReports ?sr .\n}",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nPREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nSELECT (SUM(?sr) AS ?total) WHERE {\n  {\n    SELECT DISTINCT ?d WHERE {\n      ?l rdfs:label \"Lung Neoplasms\"@en .\n      ?c oncologia:within ?l .\n      ?t a oncologia:Trial ; oncologia:condition ?c ; oncologia:status ?st ; oncologia:testsDrug ?d .\n      FILTER(?st IN (\"RECRUITING\", \"ACTIVE_NOT_RECRUITING\", \"NOT_YET_RECRUITING\", \"ENROLLING_BY_INVITATION\"))\n      ?d oncologia:hasTarget ?tg . ?tg oncologia:gene \"EGFR\" .\n    }\n  }\n  ?y a oncologia:YearlyReports ; oncologia:drug ?d ; oncologia:seriousReports ?sr .\n}",
    "error": null
   }
  ],

@@ -83,9 +83,9 @@ preguntas:
       formato: "**{proveedor}**: {evidencia}"
       query: |
         SELECT (MIN(?n) AS ?proveedor) ?evidencia (SAMPLE(?f) AS ?fuente) WHERE {
-          ?g :name "LEIDOS HOLDINGS, INC." .
-          ?l a :GroupLink ; :linkTo ?g ; :linkFrom/:name ?n ; :sourceText ?evidencia ;
-             prov:wasDerivedFrom/:name ?f .
+          ?g proveedores:name "LEIDOS HOLDINGS, INC." .
+          ?l a proveedores:GroupLink ; proveedores:linkTo ?g ; proveedores:linkFrom/proveedores:name ?n ; proveedores:sourceText ?evidencia ;
+             prov:wasDerivedFrom/proveedores:name ?f .
         } GROUP BY ?evidencia ORDER BY ?proveedor LIMIT 6
 
   - id: p08
@@ -108,8 +108,8 @@ preguntas:
       formato: "{evidencia}"
       query: |
         SELECT ?evidencia ?fuente WHERE {
-          ?s :uei "MMLKPW9JLX64" .
-          ?l a :GroupLink ; :linkFrom ?s ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
+          ?s proveedores:uei "MMLKPW9JLX64" .
+          ?l a proveedores:GroupLink ; proveedores:linkFrom ?s ; proveedores:sourceText ?evidencia ; prov:wasDerivedFrom/proveedores:name ?fuente .
         }
 
   - id: p02
@@ -128,7 +128,7 @@ preguntas:
       formato: "{codigo} · {sector}"
       query: |
         SELECT ?codigo ?sector WHERE {
-          ?it :code "5415" . ?s :within ?it ; :code ?codigo ; :name ?sector .
+          ?it proveedores:code "5415" . ?s proveedores:within ?it ; proveedores:code ?codigo ; proveedores:name ?sector .
         } ORDER BY ?codigo
 
   - id: p03
@@ -157,8 +157,8 @@ preguntas:
       formato: "**{proveedor}**: {evidencia}"
       query: |
         SELECT (MIN(?n) AS ?proveedor) ?evidencia (SAMPLE(?f) AS ?fuente) WHERE {
-          ?s a :ForeignParentSupplier ; :name ?n .
-          ?l a :GroupLink ; :linkFrom ?s ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?f .
+          ?s a proveedores:ForeignParentSupplier ; proveedores:name ?n .
+          ?l a proveedores:GroupLink ; proveedores:linkFrom ?s ; proveedores:sourceText ?evidencia ; prov:wasDerivedFrom/proveedores:name ?f .
           FILTER (CONTAINS(?evidencia, "matriz final en GLEIF es"))
         } GROUP BY ?evidencia ORDER BY ?proveedor LIMIT 5
 
@@ -178,8 +178,8 @@ preguntas:
       formato: "{evidencia} → {regla}"
       query: |
         SELECT ?evidencia ?regla (GROUP_CONCAT(DISTINCT ?f; separator=" + ") AS ?fuentes) WHERE {
-          ?l a :WatchlistLink ; :linkFrom ?x ; :sourceText ?evidencia ; :linkRule ?regla ;
-             prov:wasDerivedFrom/:name ?f . ?x a :Supplier .
+          ?l a proveedores:WatchlistLink ; proveedores:linkFrom ?x ; proveedores:sourceText ?evidencia ; proveedores:linkRule ?regla ;
+             prov:wasDerivedFrom/proveedores:name ?f . ?x a proveedores:Supplier .
         } GROUP BY ?evidencia ?regla ORDER BY ?evidencia
 
   - id: p06
@@ -195,7 +195,7 @@ preguntas:
       formato: "{codigo} · {sector}"
       query: |
         SELECT ?codigo ?sector WHERE {
-          ?c :code "23" . ?s :within ?c ; :code ?codigo ; :name ?sector . FILTER (STRLEN(?codigo) = 3)
+          ?c proveedores:code "23" . ?s proveedores:within ?c ; proveedores:code ?codigo ; proveedores:name ?sector . FILTER (STRLEN(?codigo) = 3)
         } ORDER BY ?codigo
 
   - id: p07
@@ -212,7 +212,7 @@ preguntas:
       formato: "**{grupo}** · LEI {lei} → Wikidata {wikidata}"
       query: |
         SELECT ?grupo ?lei ?wikidata WHERE {
-          ?g :listed true ; :name ?grupo ; :wikidataId ?wikidata ; :legalEntity/:lei ?lei .
+          ?g proveedores:listed true ; proveedores:name ?grupo ; proveedores:wikidataId ?wikidata ; proveedores:legalEntity/proveedores:lei ?lei .
         } ORDER BY ?grupo LIMIT 5
 
   - id: p09
@@ -226,8 +226,8 @@ preguntas:
     terminos:
       Proveedor para revisar: su casa matriz está fuera de EE. UU. o su nombre coincide con una lista de control.
     definicion: |
-      :ForeignParentSupplier rdfs:subClassOf :SupplierToReview .
-      :WatchlistSupplier     rdfs:subClassOf :SupplierToReview .
+      proveedores:ForeignParentSupplier rdfs:subClassOf proveedores:SupplierToReview .
+      proveedores:WatchlistSupplier     rdfs:subClassOf proveedores:SupplierToReview .
 
 # «Por qué confiar»: {números} se completan con la evaluación y la prueba de cambio
 tarjetas:

@@ -1,11 +1,11 @@
-@prefix : <https://w3id.org/rastro/ontology#> .
+@prefix oncologia: <https://w3id.org/rastro/oncologia#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix meshv: <http://id.nlm.nih.gov/mesh/vocab#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 
-<https://w3id.org/rastro/ontology> a owl:Ontology ;
+<https://w3id.org/rastro/oncologia> a owl:Ontology ;
     rdfs:label "Ontología de Rastro"@es ;
     rdfs:comment """Lo mínimo para responder las preguntas de competencia: ensayos, fármacos,
 targets, sponsors y eventos adversos. Las condiciones son los descriptores de MeSH,
@@ -16,128 +16,128 @@ evidencia, con PROV-O."""@es ;
 
 # Clases ---------------------------------------------------------
 
-:Trial a owl:Class ;
+oncologia:Trial a owl:Class ;
     rdfs:label "Ensayo clínico"@es ;
     rdfs:comment "Un estudio de ClinicalTrials.gov (AACT)."@es .
 
-:Drug a owl:Class ;
+oncologia:Drug a owl:Class ;
     rdfs:label "Fármaco"@es ;
     rdfs:comment "Un fármaco de ChEMBL. Sus sales cuentan como el mismo fármaco."@es .
 
-:TargetedTherapy a owl:Class ;
-    rdfs:subClassOf :Drug ;
+oncologia:TargetedTherapy a owl:Class ;
+    rdfs:subClassOf oncologia:Drug ;
     rdfs:label "Terapia dirigida"@es ;
     rdfs:comment "Un fármaco que actúa sobre una proteína que el tumor necesita. Ningún mapeo la asigna: se deduce de sus subclases."@es .
 
-:KinaseInhibitor a owl:Class ;
-    rdfs:subClassOf :TargetedTherapy ;
+oncologia:KinaseInhibitor a owl:Class ;
+    rdfs:subClassOf oncologia:TargetedTherapy ;
     rdfs:label "Inhibidor de quinasa"@es ;
     rdfs:comment "Molécula pequeña que bloquea una enzima del tumor (ATC L01E). Sus nombres terminan en -nib."@es .
 
-:MonoclonalAntibody a owl:Class ;
-    rdfs:subClassOf :TargetedTherapy ;
+oncologia:MonoclonalAntibody a owl:Class ;
+    rdfs:subClassOf oncologia:TargetedTherapy ;
     rdfs:label "Anticuerpo monoclonal"@es ;
     rdfs:comment "Anticuerpo que se une a una proteína específica, incluidos los conjugados (ATC L01F). Sus nombres terminan en -mab."@es .
 
-:Chemotherapy a owl:Class ;
-    rdfs:subClassOf :Drug ;
+oncologia:Chemotherapy a owl:Class ;
+    rdfs:subClassOf oncologia:Drug ;
     rdfs:label "Quimioterapia"@es ;
     rdfs:comment "Fármaco citotóxico clásico: alquilantes, antimetabolitos, alcaloides y antibióticos citotóxicos (ATC L01A a L01D)."@es .
 
-:HormoneTherapy a owl:Class ;
-    rdfs:subClassOf :Drug ;
+oncologia:HormoneTherapy a owl:Class ;
+    rdfs:subClassOf oncologia:Drug ;
     rdfs:label "Terapia hormonal"@es ;
     rdfs:comment "Fármaco que actúa sobre hormonas, como los antiandrógenos o los antiestrógenos (ATC L02)."@es .
 
-:Target a owl:Class ;
+oncologia:Target a owl:Class ;
     rdfs:label "Target"@es ;
     rdfs:comment "La proteína sobre la que actúa un fármaco (ChEMBL)."@es .
 
-:Sponsor a owl:Class ;
+oncologia:Sponsor a owl:Class ;
     rdfs:label "Sponsor"@es ;
     rdfs:comment "La organización que lidera un ensayo."@es .
 
-:YearlyReports a owl:Class ;
+oncologia:YearlyReports a owl:Class ;
     rdfs:label "Reportes de eventos adversos por año"@es ;
     rdfs:comment "Cuántos reportes de FAERS (openFDA) mencionan un fármaco en un año. Son reportes espontáneos, no frecuencias clínicas."@es .
 
-:ReportedReaction a owl:Class ;
+oncologia:ReportedReaction a owl:Class ;
     rdfs:label "Reacción reportada"@es ;
     rdfs:comment "Una reacción adversa y cuántos reportes de FAERS la mencionan para un fármaco."@es .
 
-:DataSource a owl:Class ;
+oncologia:DataSource a owl:Class ;
     rdfs:label "Fuente de datos"@es ;
     rdfs:comment "AACT, ChEMBL, openFDA o MeSH."@es .
 
 # Relaciones -----------------------------------------------------
 
-:testsDrug a owl:ObjectProperty ;
+oncologia:testsDrug a owl:ObjectProperty ;
     rdfs:label "prueba el fármaco"@es ;
-    rdfs:domain :Trial ; rdfs:range :Drug .
+    rdfs:domain oncologia:Trial ; rdfs:range oncologia:Drug .
 
-:condition a owl:ObjectProperty ;
+oncologia:condition a owl:ObjectProperty ;
     rdfs:label "condición"@es ;
-    rdfs:comment "La enfermedad que estudia el ensayo, como descriptor de MeSH. Sus subtipos se encuentran con :within."@es ;
-    rdfs:domain :Trial ; rdfs:range meshv:Descriptor .
+    rdfs:comment "La enfermedad que estudia el ensayo, como descriptor de MeSH. Sus subtipos se encuentran con oncologia:within."@es ;
+    rdfs:domain oncologia:Trial ; rdfs:range meshv:Descriptor .
 
-:within a owl:ObjectProperty ;
+oncologia:within a owl:ObjectProperty ;
     rdfs:label "está dentro de"@es ;
-    rdfs:comment "Un descriptor de MeSH está dentro de sí mismo y de todos sus ancestros. Así \"cáncer de pulmón y sus subtipos\" es una sola condición: ?c :within ?pulmon."@es ;
+    rdfs:comment "Un descriptor de MeSH está dentro de sí mismo y de todos sus ancestros. Así \"cáncer de pulmón y sus subtipos\" es una sola condición: ?c oncologia:within ?pulmon."@es ;
     rdfs:domain meshv:Descriptor ; rdfs:range meshv:Descriptor .
 
-:sponsor a owl:ObjectProperty ;
+oncologia:sponsor a owl:ObjectProperty ;
     rdfs:label "sponsor"@es ;
-    rdfs:domain :Trial ; rdfs:range :Sponsor .
+    rdfs:domain oncologia:Trial ; rdfs:range oncologia:Sponsor .
 
-:hasTarget a owl:ObjectProperty ;
+oncologia:hasTarget a owl:ObjectProperty ;
     rdfs:label "actúa sobre"@es ;
-    rdfs:domain :Drug ; rdfs:range :Target .
+    rdfs:domain oncologia:Drug ; rdfs:range oncologia:Target .
 
-:drug a owl:ObjectProperty ;
+oncologia:drug a owl:ObjectProperty ;
     rdfs:label "fármaco"@es ;
     rdfs:comment "El fármaco al que se refiere un conteo de reportes."@es ;
-    rdfs:range :Drug .
+    rdfs:range oncologia:Drug .
 
-:fromSource a owl:ObjectProperty ;
+oncologia:fromSource a owl:ObjectProperty ;
     rdfs:label "proviene de"@es ;
     rdfs:comment "La fuente de la que viene un dato. Es la marca de procedencia que muestra Rastro Layer."@es ;
-    rdfs:range :DataSource .
+    rdfs:range oncologia:DataSource .
 
 # Atributos ------------------------------------------------------
 
-:name a owl:DatatypeProperty ; rdfs:label "nombre"@es ; rdfs:range xsd:string .
+oncologia:name a owl:DatatypeProperty ; rdfs:label "nombre"@es ; rdfs:range xsd:string .
 
-:nctId a owl:DatatypeProperty ; rdfs:label "NCT ID"@es ; rdfs:domain :Trial ; rdfs:range xsd:string .
-:title a owl:DatatypeProperty ; rdfs:label "título"@es ; rdfs:domain :Trial ; rdfs:range xsd:string .
-:phase a owl:DatatypeProperty ; rdfs:label "fase"@es ;
+oncologia:nctId a owl:DatatypeProperty ; rdfs:label "NCT ID"@es ; rdfs:domain oncologia:Trial ; rdfs:range xsd:string .
+oncologia:title a owl:DatatypeProperty ; rdfs:label "título"@es ; rdfs:domain oncologia:Trial ; rdfs:range xsd:string .
+oncologia:phase a owl:DatatypeProperty ; rdfs:label "fase"@es ;
     rdfs:comment "Como en ClinicalTrials.gov: PHASE1, PHASE2, PHASE3, PHASE4, PHASE1/PHASE2…"@es ;
-    rdfs:domain :Trial ; rdfs:range xsd:string .
-:status a owl:DatatypeProperty ; rdfs:label "estado"@es ;
+    rdfs:domain oncologia:Trial ; rdfs:range xsd:string .
+oncologia:status a owl:DatatypeProperty ; rdfs:label "estado"@es ;
     rdfs:comment "Como en ClinicalTrials.gov: RECRUITING, COMPLETED, TERMINATED, WITHDRAWN…"@es ;
-    rdfs:domain :Trial ; rdfs:range xsd:string .
-:startDate a owl:DatatypeProperty ; rdfs:label "fecha de inicio"@es ; rdfs:domain :Trial ; rdfs:range xsd:date .
-:whyStopped a owl:DatatypeProperty ; rdfs:label "motivo de detención"@es ; rdfs:domain :Trial ; rdfs:range xsd:string .
-:stopReason a owl:DatatypeProperty ; rdfs:label "motivo de detención, clasificado"@es ;
-    rdfs:comment "El motivo que escribió el sponsor, clasificado con reglas legibles (linking/stop_reasons.sql): No consiguieron pacientes, Decisión de la empresa, El tratamiento no funcionó, Problemas de seguridad… Un ensayo puede tener varios. Su evidencia está en :StopReasonLink."@es ;
-    rdfs:domain :Trial ; rdfs:range xsd:string .
+    rdfs:domain oncologia:Trial ; rdfs:range xsd:string .
+oncologia:startDate a owl:DatatypeProperty ; rdfs:label "fecha de inicio"@es ; rdfs:domain oncologia:Trial ; rdfs:range xsd:date .
+oncologia:whyStopped a owl:DatatypeProperty ; rdfs:label "motivo de detención"@es ; rdfs:domain oncologia:Trial ; rdfs:range xsd:string .
+oncologia:stopReason a owl:DatatypeProperty ; rdfs:label "motivo de detención, clasificado"@es ;
+    rdfs:comment "El motivo que escribió el sponsor, clasificado con reglas legibles (linking/stop_reasons.sql): No consiguieron pacientes, Decisión de la empresa, El tratamiento no funcionó, Problemas de seguridad… Un ensayo puede tener varios. Su evidencia está en oncologia:StopReasonLink."@es ;
+    rdfs:domain oncologia:Trial ; rdfs:range xsd:string .
 
-:chemblId a owl:DatatypeProperty ; rdfs:label "ChEMBL ID"@es ; rdfs:domain :Drug ; rdfs:range xsd:string .
-:approved a owl:DatatypeProperty ; rdfs:label "aprobado"@es ;
+oncologia:chemblId a owl:DatatypeProperty ; rdfs:label "ChEMBL ID"@es ; rdfs:domain oncologia:Drug ; rdfs:range xsd:string .
+oncologia:approved a owl:DatatypeProperty ; rdfs:label "aprobado"@es ;
     rdfs:comment "Verdadero si el fármaco está aprobado en alguna indicación (fase máxima 4 en ChEMBL)."@es ;
-    rdfs:domain :Drug ; rdfs:range xsd:boolean .
+    rdfs:domain oncologia:Drug ; rdfs:range xsd:boolean .
 
-:gene a owl:DatatypeProperty ; rdfs:label "gen"@es ;
+oncologia:gene a owl:DatatypeProperty ; rdfs:label "gen"@es ;
     rdfs:comment "Símbolo del gen del target, por ejemplo ERBB2 o EGFR."@es ;
-    rdfs:domain :Target ; rdfs:range xsd:string .
+    rdfs:domain oncologia:Target ; rdfs:range xsd:string .
 
-:industry a owl:DatatypeProperty ; rdfs:label "es industria"@es ;
-    rdfs:domain :Sponsor ; rdfs:range xsd:boolean .
+oncologia:industry a owl:DatatypeProperty ; rdfs:label "es industria"@es ;
+    rdfs:domain oncologia:Sponsor ; rdfs:range xsd:boolean .
 
-:year a owl:DatatypeProperty ; rdfs:label "año"@es ; rdfs:domain :YearlyReports ; rdfs:range xsd:integer .
-:reports a owl:DatatypeProperty ; rdfs:label "reportes"@es ; rdfs:range xsd:integer .
-:seriousReports a owl:DatatypeProperty ; rdfs:label "reportes serios"@es ; rdfs:domain :YearlyReports ; rdfs:range xsd:integer .
-:reaction a owl:DatatypeProperty ; rdfs:label "reacción"@es ; rdfs:domain :ReportedReaction ; rdfs:range xsd:string .
-:license a owl:DatatypeProperty ; rdfs:label "licencia"@es ; rdfs:domain :DataSource ; rdfs:range xsd:string .
+oncologia:year a owl:DatatypeProperty ; rdfs:label "año"@es ; rdfs:domain oncologia:YearlyReports ; rdfs:range xsd:integer .
+oncologia:reports a owl:DatatypeProperty ; rdfs:label "reportes"@es ; rdfs:range xsd:integer .
+oncologia:seriousReports a owl:DatatypeProperty ; rdfs:label "reportes serios"@es ; rdfs:domain oncologia:YearlyReports ; rdfs:range xsd:integer .
+oncologia:reaction a owl:DatatypeProperty ; rdfs:label "reacción"@es ; rdfs:domain oncologia:ReportedReaction ; rdfs:range xsd:string .
+oncologia:license a owl:DatatypeProperty ; rdfs:label "licencia"@es ; rdfs:domain oncologia:DataSource ; rdfs:range xsd:string .
 
 # Procedencia de los enlaces (PROV-O, el estándar del W3C) ---------
 
@@ -145,28 +145,28 @@ prov:Entity a owl:Class ; rdfs:label "entidad (PROV)"@es .
 prov:wasDerivedFrom a owl:ObjectProperty ; rdfs:label "deriva de"@es .
 prov:wasGeneratedBy a owl:ObjectProperty ; rdfs:label "generado por"@es .
 
-:DrugLink a owl:Class ;
+oncologia:DrugLink a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Enlace ensayo → fármaco"@es ;
     rdfs:comment "La evidencia de que un ensayo prueba un fármaco: qué texto de la intervención coincidió con qué nombre de ChEMBL, y con qué regla. Lo genera el entity linking y deriva de AACT y de ChEMBL."@es .
 
-:linkTrial a owl:ObjectProperty ; rdfs:label "ensayo del enlace"@es ; rdfs:domain :DrugLink ; rdfs:range :Trial .
-:linkDrug a owl:ObjectProperty ; rdfs:label "fármaco del enlace"@es ; rdfs:domain :DrugLink ; rdfs:range :Drug .
-:interventionText a owl:DatatypeProperty ; rdfs:label "texto de la intervención"@es ;
+oncologia:linkTrial a owl:ObjectProperty ; rdfs:label "ensayo del enlace"@es ; rdfs:domain oncologia:DrugLink ; rdfs:range oncologia:Trial .
+oncologia:linkDrug a owl:ObjectProperty ; rdfs:label "fármaco del enlace"@es ; rdfs:domain oncologia:DrugLink ; rdfs:range oncologia:Drug .
+oncologia:interventionText a owl:DatatypeProperty ; rdfs:label "texto de la intervención"@es ;
     rdfs:comment "Lo que escribió el sponsor en ClinicalTrials.gov, por ejemplo «Bevacizumab (drug), Herceptin (drug)»."@es ;
-    rdfs:domain :DrugLink ; rdfs:range xsd:string .
-:matchedText a owl:DatatypeProperty ; rdfs:label "texto que coincidió"@es ; rdfs:domain :DrugLink ; rdfs:range xsd:string .
-:linkRule a owl:DatatypeProperty ; rdfs:label "regla"@es ;
+    rdfs:domain oncologia:DrugLink ; rdfs:range xsd:string .
+oncologia:matchedText a owl:DatatypeProperty ; rdfs:label "texto que coincidió"@es ; rdfs:domain oncologia:DrugLink ; rdfs:range xsd:string .
+oncologia:linkRule a owl:DatatypeProperty ; rdfs:label "regla"@es ;
     rdfs:comment "Cómo se reconoció el fármaco: nombre, alias, combinación, régimen o palabras (nombre como palabra entera)."@es ;
-    rdfs:domain :DrugLink ; rdfs:range xsd:string .
+    rdfs:domain oncologia:DrugLink ; rdfs:range xsd:string .
 
 # Por qué se detuvo cada ensayo: un hecho del grafo, con su evidencia (PROV-O) ------
 
-:StopReasonLink a owl:Class ;
+oncologia:StopReasonLink a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Motivo de detención clasificado"@es ;
     rdfs:comment "La evidencia de un motivo: qué parte del texto del sponsor coincidió con qué regla. Lo genera la clasificación por reglas y deriva de AACT."@es .
-:aboutTrial a owl:ObjectProperty ; rdfs:label "ensayo"@es ; rdfs:domain :StopReasonLink ; rdfs:range :Trial .
-:reasonLabel a owl:DatatypeProperty ; rdfs:label "motivo"@es ; rdfs:domain :StopReasonLink ; rdfs:range xsd:string .
-:evidenceText a owl:DatatypeProperty ; rdfs:label "texto que coincidió con la regla"@es ; rdfs:domain :StopReasonLink ; rdfs:range xsd:string .
+oncologia:aboutTrial a owl:ObjectProperty ; rdfs:label "ensayo"@es ; rdfs:domain oncologia:StopReasonLink ; rdfs:range oncologia:Trial .
+oncologia:reasonLabel a owl:DatatypeProperty ; rdfs:label "motivo"@es ; rdfs:domain oncologia:StopReasonLink ; rdfs:range xsd:string .
+oncologia:evidenceText a owl:DatatypeProperty ; rdfs:label "texto que coincidió con la regla"@es ; rdfs:domain oncologia:StopReasonLink ; rdfs:range xsd:string .
 

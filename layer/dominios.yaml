@@ -14,7 +14,7 @@ oncologia:
   sql_notes: layer/sql-notes.md
   links_notes: layer/sql-enlaces-notes.md
   readers: {B: rastro_reader, D: rastro_reader_links}
-  namespace: https://w3id.org/rastro/ontology#
+  namespace: https://w3id.org/rastro/oncologia#
   # De qué fuente viene cada término de la ontología («rastro» = enlace de Rastro)
   term_sources:
     aact: [Trial, Sponsor, nctId, title, phase, status, startDate, whyStopped, sponsor, industry, condition]

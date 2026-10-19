@@ -2,7 +2,7 @@
  "question": "¿Cuántos proveedores (UEI distintos) tienen un nombre igual al nombre o a un alias de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias como Inc., LLC o Corp.?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?s a :Supplier ; :uei ?uei ; :watchlistMatch ?e .\n  ?e :entryType ?t . FILTER(STR(?t) = \"Entity\")\n}",
+   "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?s a proveedores:Supplier ; proveedores:uei ?uei ; proveedores:watchlistMatch ?e .\n  ?e proveedores:entryType ?t . FILTER(STR(?t) = \"Entity\")\n}",
    "error": null
   }
  ],

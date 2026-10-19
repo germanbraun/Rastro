@@ -1,7 +1,7 @@
 # Mapeos R2RML de Rastro: cómo se leen las tablas de Postgres como grafo.
 # Ontop lee un solo archivo, así que va una sección por fuente.
 @prefix rr: <http://www.w3.org/ns/r2rml#> .
-@prefix : <https://w3id.org/rastro/ontology#> .
+@prefix oncologia: <https://w3id.org/rastro/oncologia#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix meshv: <http://id.nlm.nih.gov/mesh/vocab#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -13,10 +13,10 @@
     rr:logicalTable [ rr:sqlQuery "SELECT id, name, license FROM rastro_meta.source" ] ;
     rr:subjectMap [
         rr:template "https://w3id.org/rastro/source/{id}" ;
-        rr:class :DataSource
+        rr:class oncologia:DataSource
     ] ;
-    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :license ; rr:objectMap [ rr:column "license" ] ] .
+    rr:predicateObjectMap [ rr:predicate oncologia:name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:license ; rr:objectMap [ rr:column "license" ] ] .
 
 # --- MeSH (copia en Postgres, esquema mesh) ---------------------
 
@@ -27,7 +27,7 @@
         rr:class meshv:TopicalDescriptor
     ] ;
     rr:predicateObjectMap [ rr:predicate rdfs:label ; rr:objectMap [ rr:column "label" ; rr:language "en" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/mesh> ] ] .
+    rr:predicateObjectMap [ rr:predicate oncologia:fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/mesh> ] ] .
 
 <#MeshBroader> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "mesh.broader" ] ;
@@ -41,7 +41,7 @@
     rr:logicalTable [ rr:tableName "mesh.ancestor" ] ;
     rr:subjectMap [ rr:template "http://id.nlm.nih.gov/mesh/2026/{id}" ] ;
     rr:predicateObjectMap [
-        rr:predicate :within ;
+        rr:predicate oncologia:within ;
         rr:objectMap [ rr:template "http://id.nlm.nih.gov/mesh/2026/{ancestor_id}" ]
     ] .
 
@@ -51,65 +51,65 @@
     rr:logicalTable [ rr:sqlQuery """
         SELECT nct_id, brief_title, phase, overall_status, start_date, why_stopped
         FROM aact.studies""" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ; rr:class :Trial ] ;
-    rr:predicateObjectMap [ rr:predicate :nctId ; rr:objectMap [ rr:column "nct_id" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :title ; rr:objectMap [ rr:column "brief_title" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :phase ; rr:objectMap [ rr:column "phase" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :status ; rr:objectMap [ rr:column "overall_status" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :startDate ; rr:objectMap [ rr:column "start_date" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :whyStopped ; rr:objectMap [ rr:column "why_stopped" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/aact> ] ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ; rr:class oncologia:Trial ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:nctId ; rr:objectMap [ rr:column "nct_id" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:title ; rr:objectMap [ rr:column "brief_title" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:phase ; rr:objectMap [ rr:column "phase" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:status ; rr:objectMap [ rr:column "overall_status" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:startDate ; rr:objectMap [ rr:column "start_date" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:whyStopped ; rr:objectMap [ rr:column "why_stopped" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/aact> ] ] .
 
 <#TrialSponsor> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery """
         SELECT nct_id, name FROM aact.sponsors WHERE lead_or_collaborator = 'lead'""" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ;
-    rr:predicateObjectMap [ rr:predicate :sponsor ; rr:objectMap [ rr:template "https://w3id.org/rastro/sponsor/{name}" ] ] .
+    rr:predicateObjectMap [ rr:predicate oncologia:sponsor ; rr:objectMap [ rr:template "https://w3id.org/rastro/sponsor/{name}" ] ] .
 
 <#Sponsor> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.sponsor" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/sponsor/{name}" ; rr:class :Sponsor ] ;
-    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :industry ; rr:objectMap [ rr:column "industry" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/aact> ] ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/sponsor/{name}" ; rr:class oncologia:Sponsor ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:industry ; rr:objectMap [ rr:column "industry" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/aact> ] ] .
 
 # --- Enlaces (linking/) -----------------------------------------
 
 <#TrialCondition> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.trial_condition" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ;
-    rr:predicateObjectMap [ rr:predicate :condition ; rr:objectMap [ rr:template "http://id.nlm.nih.gov/mesh/2026/{mesh_id}" ] ] .
+    rr:predicateObjectMap [ rr:predicate oncologia:condition ; rr:objectMap [ rr:template "http://id.nlm.nih.gov/mesh/2026/{mesh_id}" ] ] .
 
 <#TrialDrug> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.trial_drug" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ;
-    rr:predicateObjectMap [ rr:predicate :testsDrug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ] .
+    rr:predicateObjectMap [ rr:predicate oncologia:testsDrug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ] .
 
 # Por qué se detuvo cada ensayo, clasificado con reglas (linking/stop_reasons.sql)
 <#TrialStopReason> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.trial_stop_reason" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ;
-    rr:predicateObjectMap [ rr:predicate :stopReason ; rr:objectMap [ rr:column "reason" ] ] .
+    rr:predicateObjectMap [ rr:predicate oncologia:stopReason ; rr:objectMap [ rr:column "reason" ] ] .
 
 # Su evidencia, con PROV-O: qué parte del texto coincidió con qué regla
 <#StopReasonLink> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery "SELECT nct_id, reason_id, reason, matched_text AS evidence FROM linking.trial_stop_reason" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/stopreason/{nct_id}/{reason_id}" ; rr:class :StopReasonLink ] ;
-    rr:predicateObjectMap [ rr:predicate :aboutTrial ; rr:objectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :reasonLabel ; rr:objectMap [ rr:column "reason" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :evidenceText ; rr:objectMap [ rr:column "evidence" ] ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/stopreason/{nct_id}/{reason_id}" ; rr:class oncologia:StopReasonLink ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:aboutTrial ; rr:objectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:reasonLabel ; rr:objectMap [ rr:column "reason" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:evidenceText ; rr:objectMap [ rr:column "evidence" ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/aact> ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/stop-reason-rules> ] ] .
 
 # La evidencia de cada enlace, con PROV-O: de qué texto salió, con qué regla y de qué fuentes
 <#DrugLink> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.trial_drug" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/link/{nct_id}/{parent_chembl_id}" ; rr:class :DrugLink ] ;
-    rr:predicateObjectMap [ rr:predicate :linkTrial ; rr:objectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :linkDrug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :interventionText ; rr:objectMap [ rr:column "intervention" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :matchedText ; rr:objectMap [ rr:column "matched" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :linkRule ; rr:objectMap [ rr:column "rule" ] ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/link/{nct_id}/{parent_chembl_id}" ; rr:class oncologia:DrugLink ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:linkTrial ; rr:objectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:linkDrug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:interventionText ; rr:objectMap [ rr:column "intervention" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:matchedText ; rr:objectMap [ rr:column "matched" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:linkRule ; rr:objectMap [ rr:column "rule" ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/aact> ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/chembl> ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/entity-linking> ] ] .
@@ -120,61 +120,61 @@
 # no usan GROUP BY ni DISTINCT, que Ontop no maneja bien.
 <#Drug> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.drug" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :Drug ] ;
-    rr:predicateObjectMap [ rr:predicate :chemblId ; rr:objectMap [ rr:column "chembl_id" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "pref_name" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :approved ; rr:objectMap [ rr:column "approved" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/chembl> ] ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class oncologia:Drug ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:chemblId ; rr:objectMap [ rr:column "chembl_id" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:name ; rr:objectMap [ rr:column "pref_name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:approved ; rr:objectMap [ rr:column "approved" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/chembl> ] ] .
 
 # Clases de fármaco, según ATC. «Terapia dirigida» no tiene mapeo: Ontop la deduce de la
 # ontología (inhibidores de quinasa y anticuerpos monoclonales son terapias dirigidas).
 <#DrugKinaseInhibitor> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery "SELECT chembl_id FROM linking.drug_class WHERE class = 'KinaseInhibitor'" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :KinaseInhibitor ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class oncologia:KinaseInhibitor ] .
 
 <#DrugMonoclonalAntibody> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery "SELECT chembl_id FROM linking.drug_class WHERE class = 'MonoclonalAntibody'" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :MonoclonalAntibody ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class oncologia:MonoclonalAntibody ] .
 
 <#DrugChemotherapy> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery "SELECT chembl_id FROM linking.drug_class WHERE class = 'Chemotherapy'" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :Chemotherapy ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class oncologia:Chemotherapy ] .
 
 <#DrugHormoneTherapy> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery "SELECT chembl_id FROM linking.drug_class WHERE class = 'HormoneTherapy'" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class :HormoneTherapy ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{chembl_id}" ; rr:class oncologia:HormoneTherapy ] .
 
 <#DrugTarget> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.drug_target" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ;
-    rr:predicateObjectMap [ rr:predicate :hasTarget ; rr:objectMap [ rr:template "https://w3id.org/rastro/target/{target_chembl_id}" ] ] .
+    rr:predicateObjectMap [ rr:predicate oncologia:hasTarget ; rr:objectMap [ rr:template "https://w3id.org/rastro/target/{target_chembl_id}" ] ] .
 
 <#Target> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery "SELECT chembl_id, pref_name FROM chembl.target_dictionary" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/target/{chembl_id}" ; rr:class :Target ] ;
-    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "pref_name" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/chembl> ] ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/target/{chembl_id}" ; rr:class oncologia:Target ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:name ; rr:objectMap [ rr:column "pref_name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/chembl> ] ] .
 
 <#TargetGene> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.target_gene" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/target/{target_chembl_id}" ] ;
-    rr:predicateObjectMap [ rr:predicate :gene ; rr:objectMap [ rr:column "gene_symbol" ] ] .
+    rr:predicateObjectMap [ rr:predicate oncologia:gene ; rr:objectMap [ rr:column "gene_symbol" ] ] .
 
 # --- Eventos adversos (openFDA) ---------------------------------
 
 <#YearlyReports> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery "SELECT query_id, year, reports, serious FROM openfda.reports_by_year" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/reports/{query_id}/{year}" ; rr:class :YearlyReports ] ;
-    rr:predicateObjectMap [ rr:predicate :drug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{query_id}" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :year ; rr:objectMap [ rr:column "year" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :reports ; rr:objectMap [ rr:column "reports" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :seriousReports ; rr:objectMap [ rr:column "serious" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/openfda> ] ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/reports/{query_id}/{year}" ; rr:class oncologia:YearlyReports ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:drug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{query_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:year ; rr:objectMap [ rr:column "year" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:reports ; rr:objectMap [ rr:column "reports" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:seriousReports ; rr:objectMap [ rr:column "serious" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/openfda> ] ] .
 
 <#ReportedReaction> a rr:TriplesMap ;
     rr:logicalTable [ rr:sqlQuery "SELECT query_id, reaction, reports FROM openfda.reactions" ] ;
-    rr:subjectMap [ rr:template "https://w3id.org/rastro/reaction/{query_id}/{reaction}" ; rr:class :ReportedReaction ] ;
-    rr:predicateObjectMap [ rr:predicate :drug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{query_id}" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :reaction ; rr:objectMap [ rr:column "reaction" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :reports ; rr:objectMap [ rr:column "reports" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/openfda> ] ] .
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/reaction/{query_id}/{reaction}" ; rr:class oncologia:ReportedReaction ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:drug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{query_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:reaction ; rr:objectMap [ rr:column "reaction" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:reports ; rr:objectMap [ rr:column "reports" ] ] ;
+    rr:predicateObjectMap [ rr:predicate oncologia:fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/openfda> ] ] .

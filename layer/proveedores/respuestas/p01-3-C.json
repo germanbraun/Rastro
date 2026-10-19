@@ -2,7 +2,7 @@
  "question": "¿Cuántos dólares en contratos tiene el grupo Leidos, sumando Leidos Holdings y cada una de sus empresas?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (SUM(?m) AS ?total) WHERE {\n  ?c a :Contract ; :supplier ?s ; :amount ?m .\n  ?s :group ?g . ?g :name ?n .\n  FILTER(CONTAINS(UCASE(STR(?n)), \"LEIDOS HOLDINGS\"))\n}",
+   "query": "PREFIX proveedores: <https://w3id.org/rastro/proveedores#>\nSELECT (SUM(?m) AS ?total) WHERE {\n  ?c a proveedores:Contract ; proveedores:supplier ?s ; proveedores:amount ?m .\n  ?s proveedores:group ?g . ?g proveedores:name ?n .\n  FILTER(CONTAINS(UCASE(STR(?n)), \"LEIDOS HOLDINGS\"))\n}",
    "error": null
   }
  ],

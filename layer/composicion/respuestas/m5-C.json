@@ -2,7 +2,7 @@
  "question": "¿Qué sponsor de la industria, contando solo al sponsor principal de cada ensayo, tiene más ensayos detenidos (terminados o retirados) que prueban fármacos que actúan sobre algún gen de la familia ERBB (EGFR, ERBB2, ERBB3 o ERBB4)?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/ontology#>\nSELECT ?name WHERE {\n  {\n    SELECT ?s (COUNT(DISTINCT ?t) AS ?n) WHERE {\n      ?t a :Trial ; :sponsor ?s ; :status ?st ; :testsDrug ?d .\n      FILTER(?st IN (\"TERMINATED\", \"WITHDRAWN\"))\n      ?s :industry true .\n      ?d :hasTarget ?tg . ?tg :gene ?g .\n      FILTER(?g IN (\"EGFR\", \"ERBB2\", \"ERBB3\", \"ERBB4\"))\n    }\n    GROUP BY ?s\n  }\n  ?s :name ?name .\n}\nORDER BY DESC(?n)\nLIMIT 1",
+   "query": "PREFIX oncologia: <https://w3id.org/rastro/oncologia#>\nSELECT ?name WHERE {\n  {\n    SELECT ?s (COUNT(DISTINCT ?t) AS ?n) WHERE {\n      ?t a oncologia:Trial ; oncologia:sponsor ?s ; oncologia:status ?st ; oncologia:testsDrug ?d .\n      FILTER(?st IN (\"TERMINATED\", \"WITHDRAWN\"))\n      ?s oncologia:industry true .\n      ?d oncologia:hasTarget ?tg . ?tg oncologia:gene ?g .\n      FILTER(?g IN (\"EGFR\", \"ERBB2\", \"ERBB3\", \"ERBB4\"))\n    }\n    GROUP BY ?s\n  }\n  ?s oncologia:name ?name .\n}\nORDER BY DESC(?n)\nLIMIT 1",
    "error": null
   }
  ],
