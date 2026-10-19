@@ -47,6 +47,8 @@
   answer: |-
     Sí, con cuidado. En «Una pregunta sobre textos», Rastro primero elige con una consulta exacta los ensayos que importan (por ejemplo, los de fase 3 de cáncer de pulmón con inhibidores de quinasa que se detuvieron: 26). Después, un asistente de IA lee solo los motivos que escribió cada sponsor y los agrupa: falta de pacientes, decisión de la empresa, el tratamiento no funcionó… Cada grupo cita sus ensayos, y en «¿Cómo lo supe?» están todos los textos que leyó.
 
+    Además, el motivo de cada uno de los 12.611 ensayos detenidos pasó a ser un dato del grafo, clasificado con reglas y con su evidencia. Así, «¿cuántos ensayos se detuvieron por falta de pacientes?» se responde con una consulta exacta. Las reglas aciertan 9 de cada 10 en una muestra revisada.
+
 - question: ¿Los eventos adversos son frecuencias reales?
   answer: >-
     No. Son conteos de reportes espontáneos de FAERS (openFDA): no tienen denominador,
@@ -221,4 +223,6 @@
     En parte, y del lado que más importa para confiar. GraphRAG, en su versión popular, usa un LLM para armar un grafo a partir de documentos y después recupera pedazos de ese grafo para responder: sirve para texto libre, pero los errores de extracción son difíciles de rastrear. Rastro resuelve la otra mitad: datos estructurados, con un grafo que sale de mapeos y enlaces revisados, y un LLM que escribe una consulta exacta. Por eso los números son exactos y auditables.
 
     Para preguntas sobre texto, Rastro combina las dos cosas: el grafo elige con una consulta exacta qué registros importan (con la jerarquía de MeSH y las clases que deduce Ontop), y el LLM resume solo esos textos, citando cada registro. Es GraphRAG anclado en la capa semántica. Ejemplo: «Una pregunta sobre textos», con los motivos de los ensayos detenidos (layer/textos/).
+
+    Y un paso más, con control: cuando el texto se puede clasificar, se convierte en un hecho del grafo (`:stopReason`), con su evidencia en PROV-O (`:StopReasonLink`: qué parte del texto coincidió con qué regla) y una muestra revisada (linking/review-stop-reasons-2026-10-19.md). Es «texto → grafo», pero con reglas legibles y evidencia, no con extracción opaca.
 

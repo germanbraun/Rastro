@@ -347,8 +347,21 @@ def show_text_question():
         links = ", ".join(f"[{nct}](https://clinicaltrials.gov/study/{nct})" for nct in group["ensayos"])
         st.markdown(f"- **{group['motivo']}** · {len(group['ensayos'])} ensayos. {group['detalle']}  \n"
                     f"<small>{links}</small>", unsafe_allow_html=True)
+    # El mismo motivo, como hecho del grafo: clasificado con reglas y contado con una consulta exacta
+    facts_query = Path("/ontology/queries/cq11.rq").read_text()
+    _, facts = answer.run_sparql_table(facts_query)
+    st.markdown("**Y como dato del grafo**, contado con una consulta exacta:")
+    st.dataframe(pd.DataFrame([{"Motivo": m, "Ensayos": int(n)} for m, n in facts]), hide_index=True,
+                 use_container_width=True)
+    st.caption("Cada motivo es un hecho del grafo, clasificado con reglas a partir del texto del sponsor y "
+               "con su evidencia. Un ensayo puede tener varios motivos. Las reglas aciertan 9 de cada 10 en "
+               "una muestra revisada por un asistente de IA.")
     with st.expander("¿Cómo lo supe?"):
         st.markdown(item["como"])
+        if TECH:
+            st.markdown("**El conteo**, sobre el motivo clasificado (`:stopReason`), con su evidencia en "
+                        "`:StopReasonLink` (PROV-O):")
+            st.code(facts_query, language="sparql")
         if TECH:
             st.markdown("**1. La consulta que elige los ensayos** (exacta: usa la clase deducida y la "
                         "jerarquía de MeSH):")

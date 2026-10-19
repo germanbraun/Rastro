@@ -306,3 +306,12 @@ Como en oncología, el mismo LLM respondió las 9 preguntas con SQL sobre las fu
 - **Consistencia:** las diferencias son chicas. En p01, una forma filtró los grupos por nombre («leidos») y sumó un *joint venture*, como hizo Rastro en tres formas; en p05, una forma unió mal dos columnas y dio 0.
 - **Lo que suma la capa semántica**, como en oncología: la integración se mantiene en un lugar (la prueba de cambio no se repitió con esta línea de base: en oncología, las consultas con tablas de enlaces se rompían igual que las de SQL directo), la evidencia de cada enlace y los datos de afuera.
 - Se muestra en la app (modo técnico, «Por qué confiar»), en `layer/proveedores/README.md`, en el plan, en la diapositiva de las pruebas del dominio, en el one-pager técnico y en el guion técnico.
+
+## 2026-10-19 — El motivo de detención, de texto a dato del grafo
+
+El resumen de la IA sirve para leer; para contar hace falta un dato. El motivo que escribió el sponsor (12.611 ensayos detenidos) se clasifica con reglas legibles en SQL (`linking/stop_reasons.sql`, 12 motivos más «otro»), como el entity linking: explicable, repetible y sin costo por consulta. Un ensayo puede tener varios motivos. Antes de buscar se sacan las negaciones («no safety concerns» no es un problema de seguridad), con una regla más estrecha para eficacia, para no borrar «did not meet efficacy goals».
+
+Queda en el grafo como `:stopReason` del ensayo, y su evidencia como `:StopReasonLink` (subclase de `prov:Entity`): el texto que coincidió, la regla, `prov:wasDerivedFrom` AACT y `prov:wasGeneratedBy` la clasificación. Se usaron propiedades propias (`:aboutTrial`, `:evidenceText`) porque `:linkTrial` y `:matchedText` tienen dominio `:DrugLink` y Ontop habría deducido que cada motivo es un enlace de fármaco.
+
+Medición (`linking/review-stop-reasons-2026-10-19.md`, revisada por un asistente de IA): en una muestra independiente de 50, 45 de 49 motivos asignados correctos (92 %) y 42 de 50 ensayos con al menos un motivo correcto (84 %). Alrededor del 19 % queda como «otro», con su texto a la vista. Con los 26 ensayos del resumen de la IA, las reglas coinciden en los 26 (después de ajustarlas con ellos: es optimista).
+

@@ -1,6 +1,6 @@
 # Preguntas de competencia
 
-Las preguntas que Rastro tiene que poder responder. La ontología tiene solo lo necesario para estas diez, y cada una tiene su SPARQL en [`queries/`](queries/).
+Las preguntas que Rastro tiene que poder responder. La ontología tiene solo lo necesario para estas once, y cada una tiene su SPARQL en [`queries/`](queries/).
 
 Todas cruzan al menos dos fuentes: es lo que una base sola no puede contestar.
 
@@ -16,6 +16,7 @@ Todas cruzan al menos dos fuentes: es lo que una base sola no puede contestar.
 | 8 | ¿Qué porcentaje de los ensayos de fase 2 de un sponsor se detuvo antes de tiempo? | AACT | Lab |
 | 9 | ¿Cuántos ensayos de fase 3 de cáncer de mama prueban alguna terapia dirigida? | AACT, ChEMBL, MeSH | Layer |
 | 10 | ¿Por qué Rastro dice que un ensayo prueba un fármaco? | AACT, ChEMBL | Layer |
+| 11 | ¿Por qué se detuvieron los ensayos de fase 3 de cáncer de pulmón con inhibidores de quinasa? | AACT, ChEMBL, MeSH | Layer |
 
 ## Notas
 
@@ -26,6 +27,7 @@ Todas cruzan al menos dos fuentes: es lo que una base sola no puede contestar.
 - **La 7 y la 8 son las features de Rastro Lab:** usan solo datos anteriores al inicio de cada ensayo.
 - **"Detenido" es TERMINATED o WITHDRAWN** en ClinicalTrials.gov.
 - **La 9 usa una clase deducida.** «Terapia dirigida» no tiene mapeo: la ontología dice que los inhibidores de quinasa y los anticuerpos monoclonales lo son, y Ontop lo aplica.
+- **La 11 cuenta un texto convertido en dato.** El motivo que escribió el sponsor se clasifica con reglas (`linking/stop_reasons.sql`) y queda como `:stopReason`, con su evidencia en `:StopReasonLink`.
 - **La 10 es la procedencia de un enlace.** Cada `:DrugLink` guarda el texto del sponsor, lo que coincidió, la regla y de qué fuentes deriva (PROV-O).
 - **Cada dato de una respuesta lleva su fuente.** No es una pregunta aparte: toda entidad apunta a la fuente de la que viene (`rastro:fromSource`).
 

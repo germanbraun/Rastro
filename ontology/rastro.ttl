@@ -117,6 +117,9 @@ evidencia, con PROV-O."""@es ;
     rdfs:domain :Trial ; rdfs:range xsd:string .
 :startDate a owl:DatatypeProperty ; rdfs:label "fecha de inicio"@es ; rdfs:domain :Trial ; rdfs:range xsd:date .
 :whyStopped a owl:DatatypeProperty ; rdfs:label "motivo de detención"@es ; rdfs:domain :Trial ; rdfs:range xsd:string .
+:stopReason a owl:DatatypeProperty ; rdfs:label "motivo de detención, clasificado"@es ;
+    rdfs:comment "El motivo que escribió el sponsor, clasificado con reglas legibles (linking/stop_reasons.sql): No consiguieron pacientes, Decisión de la empresa, El tratamiento no funcionó, Problemas de seguridad… Un ensayo puede tener varios. Su evidencia está en :StopReasonLink."@es ;
+    rdfs:domain :Trial ; rdfs:range xsd:string .
 
 :chemblId a owl:DatatypeProperty ; rdfs:label "ChEMBL ID"@es ; rdfs:domain :Drug ; rdfs:range xsd:string .
 :approved a owl:DatatypeProperty ; rdfs:label "aprobado"@es ;
@@ -156,4 +159,14 @@ prov:wasGeneratedBy a owl:ObjectProperty ; rdfs:label "generado por"@es .
 :linkRule a owl:DatatypeProperty ; rdfs:label "regla"@es ;
     rdfs:comment "Cómo se reconoció el fármaco: nombre, alias, combinación, régimen o palabras (nombre como palabra entera)."@es ;
     rdfs:domain :DrugLink ; rdfs:range xsd:string .
+
+# Por qué se detuvo cada ensayo: un hecho del grafo, con su evidencia (PROV-O) ------
+
+:StopReasonLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Motivo de detención clasificado"@es ;
+    rdfs:comment "La evidencia de un motivo: qué parte del texto del sponsor coincidió con qué regla. Lo genera la clasificación por reglas y deriva de AACT."@es .
+:aboutTrial a owl:ObjectProperty ; rdfs:label "ensayo"@es ; rdfs:domain :StopReasonLink ; rdfs:range :Trial .
+:reasonLabel a owl:DatatypeProperty ; rdfs:label "motivo"@es ; rdfs:domain :StopReasonLink ; rdfs:range xsd:string .
+:evidenceText a owl:DatatypeProperty ; rdfs:label "texto que coincidió con la regla"@es ; rdfs:domain :StopReasonLink ; rdfs:range xsd:string .
 

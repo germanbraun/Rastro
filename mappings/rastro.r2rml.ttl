@@ -85,6 +85,22 @@
     rr:subjectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ;
     rr:predicateObjectMap [ rr:predicate :testsDrug ; rr:objectMap [ rr:template "https://w3id.org/rastro/drug/{parent_chembl_id}" ] ] .
 
+# Por qué se detuvo cada ensayo, clasificado con reglas (linking/stop_reasons.sql)
+<#TrialStopReason> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "linking.trial_stop_reason" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ;
+    rr:predicateObjectMap [ rr:predicate :stopReason ; rr:objectMap [ rr:column "reason" ] ] .
+
+# Su evidencia, con PROV-O: qué parte del texto coincidió con qué regla
+<#StopReasonLink> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT nct_id, reason_id, reason, matched_text AS evidence FROM linking.trial_stop_reason" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/stopreason/{nct_id}/{reason_id}" ; rr:class :StopReasonLink ] ;
+    rr:predicateObjectMap [ rr:predicate :aboutTrial ; rr:objectMap [ rr:template "https://w3id.org/rastro/trial/{nct_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :reasonLabel ; rr:objectMap [ rr:column "reason" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :evidenceText ; rr:objectMap [ rr:column "evidence" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/aact> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/stop-reason-rules> ] ] .
+
 # La evidencia de cada enlace, con PROV-O: de qué texto salió, con qué regla y de qué fuentes
 <#DrugLink> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "linking.trial_drug" ] ;

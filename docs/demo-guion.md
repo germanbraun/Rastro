@@ -2,7 +2,7 @@
 
 > **Los datos cambian. Tus preguntas, no.**
 
-Para cualquier audiencia, sin conocimientos técnicos. Nueve diapositivas (`docs/slides/`, abrir `index.html`) y la app en modo normal, con «Ver detalles técnicos» apagado. Primero proveedores del Estado de EE. UU., después el mismo Rastro en oncología. Para una audiencia técnica: [demo-guion-tecnico.md](demo-guion-tecnico.md).
+Para cualquier audiencia, sin conocimientos técnicos. Diez diapositivas (la 9, preguntas sobre textos, es opcional) (`docs/slides/`, abrir `index.html`) y la app en modo normal, con «Ver detalles técnicos» apagado. Primero proveedores del Estado de EE. UU., después el mismo Rastro en oncología. Para una audiencia técnica: [demo-guion-tecnico.md](demo-guion-tecnico.md).
 
 ## Antes de empezar
 
@@ -37,7 +37,7 @@ En la barra lateral, cambiar **Dominio** a **Oncología**. Elegir *fármacos con
 
 > «El mismo Rastro, con datos de otro mundo: ensayos clínicos de cáncer. El problema es el mismo: el mismo fármaco escrito como "Pembrolizumab 200 mg", como un código o como "KEYTRUDA". Rastro responde y muestra por qué. Con la misma pregunta hecha de cuatro formas, sin Rastro la respuesta cambió en 9 de 10 preguntas; con Rastro, en ninguna.»
 
-## Cierre (diapositiva 9)
+## Cierre (diapositiva 10)
 
 > «Lo que hay que saber: el valor está en integrar los datos una vez y mantenerlos en un lugar. Funciona en cualquier dominio: lo mostramos en dos. El siguiente paso es un piloto con tus datos.»
 
@@ -46,6 +46,7 @@ En la barra lateral, cambiar **Dominio** a **Oncología**. Elegir *fármacos con
 - **«¿Y esto no se puede hacer con SQL?»** Sí, en parte. Lo que da Rastro es hacerlo una vez, mantenerlo en un lugar y poder auditar cada respuesta. El detalle está en el anexo técnico y en la versión técnica del guion.
 - **«¿Quién revisó las respuestas correctas?»** Las armó un asistente de IA; falta que una persona las confirme (`docs/verificacion-humana.md`).
 - **«¿Necesito saber programar?»** No. Las preguntas de ejemplo funcionan solas; para preguntas propias se configura una vez un asistente de IA.
+- **«¿Esto es GraphRAG?»** En parte, del lado que permite confiar: el grafo elige con una consulta exacta qué registros leer, y la IA resume solo esos textos, citando cada uno. Mostralo en Oncología → «Una pregunta sobre textos» (diapositiva 9). Y si el texto se puede clasificar, se vuelve un dato que se cuenta exacto.
 - **«No sé nada de oncología.»** No hace falta: la app explica cada pregunta en palabras simples, y [fuentes.md](fuentes.md) tiene un glosario.
 
 ## Video de respaldo

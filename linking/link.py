@@ -1,6 +1,6 @@
 """Enlaza ensayos de AACT con MeSH (condiciones) y con ChEMBL (fármacos).
 
-Todo el enlace está en SQL legible: conditions.sql, drugs.sql y entities.sql (una
+Todo el enlace está en SQL legible: conditions.sql, drugs.sql, entities.sql y stop_reasons.sql (una
 fila por fármaco, sponsor y target, que leen los mapeos). Este script los corre y
 muestra cuánto enlazó.
 
@@ -36,6 +36,7 @@ def main():
         conn.execute((HERE / "conditions.sql").read_text())
         conn.execute((HERE / "drugs.sql").read_text())
         conn.execute((HERE / "entities.sql").read_text())
+        conn.execute((HERE / "stop_reasons.sql").read_text())
 
         print("Condiciones → MeSH")
         for r in conn.execute("""
