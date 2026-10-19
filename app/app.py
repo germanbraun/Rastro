@@ -48,7 +48,7 @@ STORAGE_NOTE = {
 def label(source):
     return f"{STORAGE.get(source, '')} {SOURCE_LABEL.get(source, source)}".strip()
 
-st.set_page_config(page_title="Rastro Layer", page_icon="🔎", layout="wide")
+st.set_page_config(page_title="Rastro", page_icon="🔎", layout="wide")
 
 
 # --- Datos ---------------------------------------------------------
@@ -117,12 +117,14 @@ def plain():
     return yaml.safe_load(Path("/app/preguntas-simples.yaml").read_text()) or {}
 
 
-def show_plain(question_id):
-    """La pregunta en palabras simples y qué significa cada término, para quien no es del dominio."""
+def show_plain(question_id, simple=True):
+    """La pregunta en palabras simples y qué significa cada término, para quien no es del dominio.
+    En modo negocio el selector ya muestra la versión simple: solo van los términos."""
     entry = plain().get(question_id)
     if not entry:
         return
-    st.info(f"**En palabras simples:** {entry['simple']}")
+    if simple:
+        st.info(f"**En palabras simples:** {entry['simple']}")
     terms = entry.get("terms", {})
     if terms:
         with st.expander("¿Qué significa " + ", ".join(terms) + "?"):
@@ -419,23 +421,26 @@ def show_answer(query, columns, rows, note=None):
 
 # --- Pantalla ------------------------------------------------------
 
-st.title("Rastro Layer")
+st.title("Rastro")
 st.markdown("**Los datos cambian. Tus preguntas, no.**")
 
 available, status = llm_status()
 with st.sidebar:
     TECH = st.toggle("Ver detalles técnicos", value=False,
                      help="Muestra las consultas, el SQL, la evidencia en PROV-O y la comparación completa.")
-    st.subheader("LLM")
-    st.markdown(("🟢 " if available else "⚪ ") + status)
-    if not available:
-        st.caption("Las preguntas de ejemplo funcionan igual.")
-    st.subheader("Fuentes")
-    for key, info in sources().items():
-        icon = f"{STORAGE.get(key, '')} " if TECH else ""
-        st.markdown(f"{icon}**{info['name']}**  \n<small>{info['license']}</small>", unsafe_allow_html=True)
     if TECH:
+        st.subheader("LLM")
+        st.markdown(("🟢 " if available else "⚪ ") + status)
+        if not available:
+            st.caption("Las preguntas de ejemplo funcionan igual.")
+        st.subheader("Fuentes")
+        for key, info in sources().items():
+            st.markdown(f"{STORAGE.get(key, '')} **{info['name']}**  \n<small>{info['license']}</small>",
+                        unsafe_allow_html=True)
         st.caption("🐘 Postgres · 🕸️ GraphDB")
+    else:
+        st.caption("Datos públicos de oncología: ensayos clínicos (AACT), fármacos (ChEMBL), "
+                   "efectos adversos (openFDA) y enfermedades (MeSH).")
 
 ask_tab, trust_tab, faq_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"])
 FAQ_HINT = "¿Dudas? Mirá la pestaña **Preguntas frecuentes**."
@@ -447,12 +452,13 @@ with ask_tab:
         # 🧾 marca las preguntas cuya respuesta trae la evidencia de cada enlace (PROV-O)
         def ask_label(q):
             linked = ":testsDrug" in (last_ok_query(saved()["questions"][q["id"]], "C") or "")
-            return ("🧾 " if linked else "") + q["question"]
+            text = q["question"] if TECH else plain().get(q["id"], {}).get("simple", q["question"])
+            return ("🧾 " if linked else "") + text
 
         options = {ask_label(q): q for q in questions()}
-        chosen = st.selectbox("Pregunta", list(options), key="ask_question",
+        chosen = st.selectbox("Pregunta", list(options), key=f"ask_question_{TECH}",
                               help="🧾 La respuesta muestra cómo reconoció Rastro cada fármaco: se puede auditar.")
-        show_plain(options[chosen]["id"])
+        show_plain(options[chosen]["id"], simple=TECH)
         query = last_ok_query(saved()["questions"][options[chosen]["id"]], "C")
         # La respuesta queda guardada para que «¿Por qué?» pueda elegir un fármaco sin perderla
         if st.button("Responder", type="primary"):
