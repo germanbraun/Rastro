@@ -23,7 +23,8 @@ INSERT INTO rastro_meta.source (id, name, homepage, license, db_schema) VALUES
     ('usaspending', 'USAspending (contratos federales)', 'https://www.usaspending.gov/', 'Dominio público', 'usaspending'),
     ('naics',   'NAICS 2022 (Census)',        'https://www.census.gov/naics/',        'Dominio público',                       'naics'),
     ('csl',     'Lista Consolidada de Control (trade.gov)', 'https://www.trade.gov/consolidated-screening-list', 'Dominio público', 'csl'),
-    ('gleif',   'GLEIF (LEI)',                'https://www.gleif.org/',               'CC0 1.0',                               'gleif');
+    ('gleif',   'GLEIF (LEI)',                'https://www.gleif.org/',               'CC0 1.0',                               'gleif'),
+    ('wikidata', 'Wikidata',                  'https://www.wikidata.org/',            'CC0 1.0',                               'wikidata');
 
 CREATE TABLE rastro_meta.load_run (
     id          bigserial PRIMARY KEY,

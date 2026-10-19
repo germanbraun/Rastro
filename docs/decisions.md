@@ -236,3 +236,17 @@ Cuatro cargadores nuevos, un esquema por fuente en el mismo Postgres (`data/<fue
 - **Códigos NAICS viejos:** los 2.218 contratos con códigos anteriores a 2022 (58 códigos) suman US$452.000 millones. Cada código viejo cuelga de su prefijo más largo que existe en 2022 (541712 queda dentro de 54171 y de 54), así «dentro de un sector» no los pierde.
 - **Hallazgo: USAspending fragmenta los grupos.** Su «matriz actual» reparte a Leidos en seis matrices distintas (LEIDOS HOLDINGS, LEIDOS, INC., LEIDOS INC…), así que la pregunta 1 da seis grupos. Se resuelve en P2 con la matriz final de GLEIF; es la heterogeneidad que la capa tiene que resolver y un buen ejemplo para la demo.
 - `ontology/check.py` acepta la carpeta de un dominio: `docker compose run --rm ontology-check python /ontology/check.py /ontology/proveedores`.
+
+## 2026-10-19 — Proveedores, P2: enlaces con su evidencia
+
+Todo en SQL legible (`linking/proveedores/links.sql`), cada enlace con el texto de cada fuente, lo que coincidió y la regla, expuesto con PROV-O (`:GroupLink`, `:LeiLink`, `:WatchlistLink`). Las nueve preguntas responden contra el segundo Ontop, en menos de medio segundo.
+
+- **Nombre normalizado:** mayúsculas, sin puntuación y sin formas societarias (Inc., LLC, Corp., Ltd., PLC…).
+- **Proveedor o matriz → LEI:** solo entre los candidatos que devolvió GLEIF para ese nombre. Reglas, de más fuerte a más débil: nombre legal y estado; nombre legal y país; nombre anterior y estado; nombre legal sin ubicación en USAspending (solo entidades activas). Gana la más fuerte; si empatan dos LEI distintos, no se enlaza. Resultado: 563 proveedores y 535 matrices con LEI. Así se resuelve SAIC: el nombre legal de la SAIC de hoy le gana a LEIDOS, INC., que solo coincide por su nombre anterior, y la evidencia dice qué se descartó.
+- **Grupo consolidado:** USAspending fragmenta los grupos (Leidos en seis matrices). Si la matriz tiene LEI, el grupo pasa a ser su matriz final en GLEIF: 7.302 grupos, 482 con LEI. Leidos queda con 21 empresas y US$54.700 millones.
+- **No se usa la historia de matrices para sumar.** Sin fechas, no se distingue una compra de una escisión, y metería a la SAIC de hoy en Leidos (332 contratos, US$34.300 millones). Límite conocido: 1.341 proveedores figuran como su propia matriz y tienen otra en su historia (Dynetics, QTC y Gibbs & Cox, hoy de Leidos, entre ellos); se ve en la evidencia y queda para una revisión manual.
+- **Lista de control:** nombre o alias igual, normalizado, contra entradas que son empresas (sin personas, barcos ni aviones). 8 proveedores coinciden; en todos los que se pueden comparar, la entrada es de otro país, y la regla lo dice. Son homónimos: un «ninguno confirmado» bien respaldado.
+- **Wikidata por LEI:** cargador nuevo (`data/wikidata/`): de 2.610 LEI, 353 están en Wikidata y 236 cotizan en bolsa. 201 grupos tienen Wikidata y 137 cotizan.
+- **«Proveedor para revisar»** se deduce en Ontop de dos clases mapeadas: matriz final fuera de EE. UU. (147 proveedores) y coincidencia con una lista (8).
+- **Precisión de proveedor → LEI:** muestra al azar de 50, revisada por un asistente de IA (`linking/proveedores/review-2026-10-19.md`): 46 seguros, 3 probables (la misma empresa con otra forma societaria) y 1 dudoso (nombre genérico, otro estado). Entre 92 % y 98 %. Falta que la confirme una persona.
+- **Detalle de Ontop:** `matched` es palabra reservada para su lector de SQL y rompe los mapeos con consulta; en las tablas de enlaces la columna se llama `matched_text`.

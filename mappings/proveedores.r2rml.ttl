@@ -86,3 +86,123 @@
     rr:logicalTable [ rr:tableName "proveedores.sector_ancestor" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/sector/{code}" ] ;
     rr:predicateObjectMap [ rr:predicate :within ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/sector/{ancestor_code}" ] ] .
+
+# --- Entidades legales (GLEIF) -----------------------------------
+
+<#LegalEntity> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT lei, legal_name, country FROM gleif.lei_record" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/lei/{lei}" ; rr:class :LegalEntity ] ;
+    rr:predicateObjectMap [ rr:predicate :lei ; rr:objectMap [ rr:column "lei" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "legal_name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :country ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/country/{country}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/gleif> ] ] .
+
+# Matriz final según GLEIF; si no registra una, la entidad es su propia matriz final (precalculado)
+<#UltimateParent> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.lei_final_parent" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/lei/{lei}" ] ;
+    rr:predicateObjectMap [ rr:predicate :ultimateParent ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/lei/{final_lei}" ] ] .
+
+<#Country> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.country" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/country/{code}" ; rr:class :Country ] ;
+    rr:predicateObjectMap [ rr:predicate :code ; rr:objectMap [ rr:column "code" ] ] .
+
+# --- Enlaces con LEI (linking/proveedores/links.sql) --------------
+
+<#SupplierLei> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT uei, lei FROM proveedores.lei_link WHERE kind = 'supplier'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{uei}" ] ;
+    rr:predicateObjectMap [ rr:predicate :legalEntity ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/lei/{lei}" ] ] .
+
+# El LEI de un grupo consolidado es su matriz final en GLEIF
+<#GroupLei> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT group_id, lei FROM proveedores.group_company WHERE lei IS NOT NULL" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/group/{group_id}" ] ;
+    rr:predicateObjectMap [ rr:predicate :legalEntity ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/lei/{lei}" ] ] .
+
+<#SupplierLeiLink> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery """SELECT uei, lei, matched_text, source_text, rule FROM proveedores.lei_link WHERE kind = 'supplier'""" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/link/lei/supplier/{uei}" ; rr:class :LeiLink ] ;
+    rr:predicateObjectMap [ rr:predicate :linkFrom ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{uei}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkTo ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/lei/{lei}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "source_text" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :matchedText ; rr:objectMap [ rr:column "matched_text" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkRule ; rr:objectMap [ rr:column "rule" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/usaspending> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/gleif> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/entity-linking> ] ] .
+
+# --- Listas de control (Lista Consolidada) -------------------------
+
+<#WatchlistEntry> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, source, type, name FROM csl.entry" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/watchlist/{source}/{id}" ; rr:class :WatchlistEntry ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :list ; rr:objectMap [ rr:column "source" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :entryType ; rr:objectMap [ rr:column "type" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/csl> ] ] .
+
+<#WatchlistAlias> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.watchlist_alias" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/watchlist/{source}/{id}" ] ;
+    rr:predicateObjectMap [ rr:predicate :alias ; rr:objectMap [ rr:column "alias" ] ] .
+
+<#SupplierWatchlist> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT uei, entry_id, entry_source FROM proveedores.watchlist_link WHERE kind = 'supplier'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{uei}" ] ;
+    rr:predicateObjectMap [ rr:predicate :watchlistMatch ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/watchlist/{entry_source}/{entry_id}" ] ] .
+
+<#GroupWatchlist> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT uei, entry_id, entry_source FROM proveedores.watchlist_link WHERE kind = 'group'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/group/{uei}" ] ;
+    rr:predicateObjectMap [ rr:predicate :watchlistMatch ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/watchlist/{entry_source}/{entry_id}" ] ] .
+
+<#SupplierWatchlistLink> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery """SELECT uei, entry_id, entry_source, matched_text, source_text, rule FROM proveedores.watchlist_link WHERE kind = 'supplier'""" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/link/watchlist/supplier/{uei}/{entry_source}/{entry_id}" ; rr:class :WatchlistLink ] ;
+    rr:predicateObjectMap [ rr:predicate :linkFrom ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{uei}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkTo ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/watchlist/{entry_source}/{entry_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "source_text" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :matchedText ; rr:objectMap [ rr:column "matched_text" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkRule ; rr:objectMap [ rr:column "rule" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/usaspending> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/csl> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/entity-linking> ] ] .
+
+<#GroupWatchlistLink> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery """SELECT uei, entry_id, entry_source, matched_text, source_text, rule FROM proveedores.watchlist_link WHERE kind = 'group'""" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/link/watchlist/group/{uei}/{entry_source}/{entry_id}" ; rr:class :WatchlistLink ] ;
+    rr:predicateObjectMap [ rr:predicate :linkFrom ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/group/{uei}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkTo ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/watchlist/{entry_source}/{entry_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "source_text" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :matchedText ; rr:objectMap [ rr:column "matched_text" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkRule ; rr:objectMap [ rr:column "rule" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/usaspending> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/csl> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/entity-linking> ] ] .
+
+# --- Grupo → Wikidata, por LEI --------------------------------------
+
+<#GroupWikidata> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.group_wikidata" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/group/{group_id}" ] ;
+    rr:predicateObjectMap [ rr:predicate :wikidataId ; rr:objectMap [ rr:column "qid" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :listed ; rr:objectMap [ rr:column "listed" ] ] .
+
+<#GroupWikidataDetails> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT group_id, exchanges, headquarters FROM proveedores.group_wikidata" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/group/{group_id}" ] ;
+    rr:predicateObjectMap [ rr:predicate :stockExchange ; rr:objectMap [ rr:column "exchanges" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :headquarters ; rr:objectMap [ rr:column "headquarters" ] ] .
+
+# --- Proveedores para revisar ----------------------------------------
+# Solo se mapean las dos subclases. «Proveedor para revisar» no tiene mapeo: Ontop lo
+# deduce de la ontología (rdfs:subClassOf).
+<#ForeignParentSupplier> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT uei FROM proveedores.supplier_flag WHERE flag = 'ForeignParent'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{uei}" ; rr:class :ForeignParentSupplier ] .
+
+<#WatchlistSupplier> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT uei FROM proveedores.supplier_flag WHERE flag = 'Watchlist'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{uei}" ; rr:class :WatchlistSupplier ] .

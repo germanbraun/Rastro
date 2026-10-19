@@ -56,6 +56,18 @@ Contratos del año fiscal 2025 (oct 2024 a sep 2025) de **más de US$10 millones
 
 Probablemente la 5 dé «ninguno» o casi: los contratistas grandes rara vez están en esas listas. Un «ninguno» bien respaldado también es una respuesta valiosa para compliance.
 
+## Ejemplo estrella: el grupo Leidos (y por qué no se cuenta a SAIC)
+
+El equivalente de HER2/trastuzumab en oncología. Una pregunta que cualquiera entiende, «¿cuánto contrata el gobierno con el grupo Leidos?», que muestra las cinco ventajas de punta a punta:
+
+1. **El grupo se arma solo.** USAspending reparte a Leidos en seis «matrices» distintas (LEIDOS HOLDINGS, LEIDOS, INC., LEIDOS INC…). Rastro las une con la matriz final que registra GLEIF y responde con un solo grupo: **21 empresas, 510 contratos, US$54.700 millones** (pregunta 1). Con las matrices de USAspending solas, el más grande de los seis pedazos suma US$38.200 millones.
+2. **El nombre confuso se resuelve una vez.** En 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. USAspending todavía registra a LEIDOS HOLDINGS como una de las matrices de la SAIC de hoy, y GLEIF, al buscar «Science Applications International Corporation», devuelve primero a LEIDOS, INC. (es su nombre anterior). Un SQL que siga cualquier matriz histórica le sumaría a Leidos 332 contratos y US$34.300 millones de SAIC. Rastro los deja en el grupo SAIC.
+3. **La evidencia está a la vista** (pregunta 8): «Matriz actual en USAspending: SCIENCE APPLICATIONS INTERNATIONAL CORPORATION (UEI RE7WMNV9L719). Otras matrices registradas: LEIDOS HOLDINGS, INC. La matriz tiene el LEI 549300LZPNZIXQGZPZ48 (nombre legal y país); descartado: LEIDOS, INC. (solo coincide un nombre anterior)».
+4. **Un identificador compartido trae datos de otra organización.** Con el LEI de Leidos Holdings, Wikidata dice que cotiza en la Bolsa de Nueva York y que tiene su sede en Reston (pregunta 7).
+5. **Las jerarquías y las reglas se aplican solas.** Leidos es el tercer grupo en servicios informáticos, contando todos los subsectores (pregunta 2), y la National Science Foundation concentra en Leidos el 67 % de su gasto (pregunta 3).
+
+Un límite que también se muestra: algunas empresas que hoy son de Leidos (Dynetics, QTC Management, Gibbs & Cox) figuran en USAspending como su propia matriz, y GLEIF no les registra matriz. Rastro no las suma a Leidos y su evidencia muestra que Leidos aparece en su historia: una persona puede confirmarlo y la regla se corrige en un solo lugar.
+
 ## Dónde está la heterogeneidad
 
 - **De datos (entity linking):** proveedor ↔ LEI de GLEIF, por nombre normalizado (sin «Inc.», «LLC», «Corp.») y estado; proveedor o grupo ↔ entrada de la Lista Consolidada, por nombre y alias; grupo ↔ Wikidata, por LEI.
@@ -75,7 +87,7 @@ La misma que oncología:
 |---|---|---|
 | P0 · Datos ✅ | Cargadores de USAspending (contratos y matrices), GLEIF, Lista Consolidada y NAICS | Conteos por fuente |
 | P1 · Preguntas y diccionario ✅ | Las 9 preguntas, la ontología y sus SPARQL | Las 9 responden contra el segundo Ontop (las 4, 5, 7 y 9, con los enlaces de P2) |
-| P2 · Enlaces | Proveedor ↔ LEI, proveedor ↔ lista, grupo ↔ Wikidata, con su evidencia; revisión de una muestra | Precisión medida |
+| P2 · Enlaces ✅ | Proveedor ↔ LEI, proveedor ↔ lista, grupo ↔ Wikidata, con su evidencia; revisión de una muestra | Precisión medida |
 | P3 · Evaluación | Sin Rastro (SQL directo) contra con Rastro, consistencia y cambio, igual que en oncología | Las tres pruebas con números |
 | P4 · App | El selector de dominio, las preguntas en palabras simples y la evidencia | Demo sin terminal |
 | P5 · Demo | Diapositivas y guion, con un segundo ejemplo de punta a punta | Alguien de ventas la da con el guion |

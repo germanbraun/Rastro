@@ -75,6 +75,7 @@ Los cargadores corren a demanda y necesitan credenciales en `.env` (copiado de `
 | NAICS 2022 (proveedores) | `docker compose run --rm naics-loader` | Ninguno: planilla pública del Census. Sectores de 2 a 6 dígitos con sus ancestros |
 | Lista Consolidada de Control (proveedores) | `docker compose run --rm csl-loader` | Ninguno: CSV público de trade.gov |
 | GLEIF (proveedores) | `docker compose run --rm gleif-loader` | USAspending cargado antes. Candidatos a LEI de matrices y de los 1000 proveedores que más facturan; 60 consultas por minuto, reanudable |
+| Wikidata (proveedores) | `docker compose run --rm wikidata-loader` | GLEIF cargado antes. Empresas con esos LEI en Wikidata, su sede y si cotizan en bolsa |
 | Enlaces | `docker compose run --rm linker` | Las fuentes de arriba ya cargadas. Enlaza ensayos con MeSH y con ChEMBL en unos segundos |
 | Tablas y enlaces de proveedores | `docker compose run --rm proveedores-linker` | USAspending y NAICS cargados (y GLEIF, la Lista Consolidada y Wikidata para los enlaces). Arma proveedores, grupos y sectores, y los enlaces con su evidencia |
 

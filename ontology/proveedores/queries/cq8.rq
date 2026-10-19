@@ -3,13 +3,13 @@
 PREFIX : <https://w3id.org/rastro/proveedores#>
 PREFIX prov: <http://www.w3.org/ns/prov#>
 
-SELECT ?supplier ?group ?sourceText ?rule ?source
+SELECT ?supplier ?uei ?group ?sourceText ?rule ?source
 WHERE {
-  ?s a :Supplier ; :name ?supplier .
-  FILTER (CONTAINS(?supplier, "SCIENCE APPLICATIONS INTERNATIONAL") || STRSTARTS(?supplier, "LEIDOS"))
+  ?s a :Supplier ; :name ?supplier ; :uei ?uei .
+  FILTER (CONTAINS(?supplier, "SCIENCE APPLICATIONS INTERNATIONAL"))
   ?link a :GroupLink ; :linkFrom ?s ; :linkTo ?g ; :sourceText ?sourceText ; :linkRule ?rule ;
         prov:wasDerivedFrom ?src .
   ?g :name ?group .
   ?src :name ?source .
 }
-ORDER BY ?group ?supplier
+ORDER BY ?uei

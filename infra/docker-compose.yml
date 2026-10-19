@@ -231,6 +231,20 @@ services:
       - ../data:/data
     command: ["python", "-u", "/data/gleif/load.py"]
 
+  wikidata-loader:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../data:/data
+    command: ["python", "-u", "/data/wikidata/load.py"]
+
   # Tablas y enlaces del dominio de proveedores (linking/proveedores/)
   proveedores-linker:
     build: ./loaders
