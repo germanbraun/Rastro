@@ -1,6 +1,12 @@
-# Diapositivas del MVP 1
+# Diapositivas
 
-Diez diapositivas principales (primero proveedores del Estado de EE. UU., después el mismo Rastro en oncología) y un anexo técnico, que acompañan el [guion de la demo](../demo-guion.md).
+Un mazo por caso de uso, con la misma estructura: qué es Rastro, el dominio y su problema, las preguntas, la demo en tres momentos (sin Rastro y con Rastro), por qué confiar, consideraciones y un anexo técnico (arquitectura, diccionario de negocio y por qué funciona).
 
-- **Ver:** abrir `index.html` en el navegador.
-- **Editar:** cada diapositiva está en `slides/`, en el orden de `deck.json`. Las notas del orador están en el `<aside>` de cada una. Después de editar, correr `python3 docs/slides/build.py` para regenerar `index.html`.
+| Mazo | Archivo | Guion |
+|---|---|---|
+| Proveedores del Estado de EE. UU. | `proveedores.html` | [demo-guion.md](../demo-guion.md) |
+| Petróleo y gas en Argentina | `energia.html` | [demo-guion-energia.md](../demo-guion-energia.md) |
+| Ensayos clínicos de oncología | `oncologia.html` | — |
+
+- **Ver:** abrir el `.html` del mazo en el navegador.
+- **Editar:** cada diapositiva está en `slides/`; el orden de cada mazo, en `mazos/<nombre>.json`. Las diapositivas genéricas (qué es Rastro, beneficios, arquitectura, anexo) se comparten. Las notas del orador están en el `<aside>` de cada una. Después de editar, correr `python3 docs/slides/build.py`.

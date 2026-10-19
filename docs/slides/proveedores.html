@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rastro · Proveedores del Estado de EE. UU.</title>
+<!-- Generado por build.py. No editar a mano: editar slides/ y volver a correr build.py. -->
+<style>
+*{margin:0;box-sizing:border-box}
+body{background:#3A3F4A;display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0}
+.slide{width:calc(1920px * var(--s));height:calc(1080px * var(--s));overflow:hidden}
+section{width:1920px;height:1080px;transform:scale(var(--s));transform-origin:0 0}
+aside{display:none}
+</style>
+<script>
+function fit(){document.documentElement.style.setProperty('--s', Math.min(1, (innerWidth - 48) / 1920))}
+addEventListener('resize', fit); fit();
+</script></head><body>
+<div class="slide">
+<section id="cover-proveedores" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<p style="font-size:32px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Rastro · Proveedores del Estado de EE. UU.</p>
+<h1 style="font-size:120px;font-weight:700;line-height:1.05;color:#F7F6F2">Rastro</h1>
+<p style="font-size:56px;line-height:1.2;color:#F7F6F2;width:1500px">Los datos cambian. Las preguntas, no.</p>
+<p style="font-size:36px;line-height:1.3;color:#D7DEE8;width:1400px">Una capa semántica sobre los datos de la organización: preguntas de negocio, con la fuente de cada dato.</p>
+<aside>Rastro integra bases de datos que no se hablan y deja preguntar en lenguaje de negocio. Cada respuesta dice de qué fuente sale. Esta demo usa datos públicos de los contratos del gobierno de EE. UU.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="quees" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:48px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Qué es Rastro</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Un diccionario de negocio entre las bases de datos y las preguntas</h2>
+<div style="display:flex;align-items:center;gap:28px">
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Las bases de datos</p><p style="font-size:30px;line-height:1.4;color:#4A5568">Cada una con sus nombres y su formato. Permanecen donde están.</p></div>
+<p style="font-size:64px;color:#2F6FB5">→</p>
+<div style="flex:1.2;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Diccionario de negocio</p><p style="font-size:30px;line-height:1.4">Contrato, empresa, grupo, agencia. Rastro traduce cada base a estas palabras, una vez.</p></div>
+<p style="font-size:64px;color:#2F6FB5">→</p>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Las preguntas</p><p style="font-size:30px;line-height:1.4;color:#4A5568">En lenguaje de negocio. Cada respuesta indica su fuente.</p></div>
+</div>
+<aside>Rastro es un diccionario de negocio que se pone entre las bases y quien pregunta. Las bases quedan como están. Rastro las traduce, una sola vez, a palabras que todos entienden: contrato, empresa, grupo, agencia (o, en oncología, ensayo, fármaco, enfermedad). Un asistente de IA usa esas palabras para responder, y cada respuesta dice de qué base sale. Para quien quiera el detalle técnico, está en el anexo.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="dominio2" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">La demo</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">¿Con quién hace negocios el gobierno de EE. UU.?</h2>
+<p style="font-size:34px;line-height:1.4;color:#4A5568;width:1664px">Compras, riesgo y compliance, con datos públicos.</p>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:26px;color:#4A5568">El problema</p><p style="font-size:34px;font-weight:700">La misma empresa, escrita de varias formas</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:26px;color:#4A5568">El problema</p><p style="font-size:34px;font-weight:700">Un grupo incluye todas sus empresas</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:26px;color:#4A5568">La pregunta clave</p><p style="font-size:34px;font-weight:700">¿Por qué una empresa es parte de un grupo?</p></div>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4A5568;width:1664px">36.145 contratos federales de más de US$10 millones, con cinco fuentes públicas: contratos (USAspending), sectores (NAICS), el identificador global de empresas (GLEIF), las listas de control del gobierno y Wikidata.</p>
+<aside>La pregunta que cualquiera entiende: ¿con quién está haciendo negocios el gobierno de EE. UU.? Tres problemas: la misma empresa escrita de varias formas en cada base, grupos que incluyen a sus filiales, y la pregunta de por qué Rastro dice lo que dice.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="preguntas-proveedores" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Las preguntas</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">Nueve preguntas de negocio sobre los proveedores del Estado</h2>
+<ol style="font-size:32px;line-height:1.35;width:1664px;padding-left:44px">
+<li style="margin-bottom:14px">¿Cuánto le contrata el gobierno al grupo Leidos, contando todas sus empresas?</li>
+<li style="margin-bottom:14px">¿Qué cinco grupos le venden más servicios informáticos al gobierno?</li>
+<li style="margin-bottom:14px">¿Qué agencias concentran más de un tercio de su gasto en un solo grupo?</li>
+<li style="margin-bottom:14px">¿Qué proveedores tienen su matriz final fuera de EE. UU.?</li>
+<li style="margin-bottom:14px">¿Qué proveedores coinciden con una lista de control del gobierno?</li>
+<li style="margin-bottom:14px">¿Cuántos proveedores tiene Defensa en construcción?</li>
+<li style="margin-bottom:14px">¿Qué grupos cotizan en bolsa, según Wikidata?</li>
+<li style="margin-bottom:14px">«Science Applications International Corporation», ¿es de Leidos o de SAIC?</li>
+<li style="margin-bottom:14px">¿Cuánto contrata Defensa con proveedores para revisar?</li>
+</ol>
+<p style="font-size:28px;color:#4A5568;width:1664px">En la app, cada una se responde en vivo y dice de qué fuente sale cada dato. Con un asistente de IA configurado, también se pueden hacer preguntas propias.</p>
+<aside>Las nueve preguntas de competencia del dominio. Cada una muestra al menos una ventaja de la capa: grupos que se arman solos, sectores con sus subsectores, matrices extranjeras, listas de control y datos de Wikidata.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="leidos" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">1 · Integración</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">«¿Cuánto contrata el gobierno con el grupo Leidos?»</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">US$56.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Una búsqueda por el nombre «Leidos» omite empresas del grupo con otra razón social (QTC, Dynetics, Gibbs &amp; Cox y 1901 Group: US$7.700 M) e incluye un consorcio ajeno al grupo.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">US$63.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">30 empresas. La base de contratos distribuye a Leidos en 13 «matrices»; Rastro las consolida en un grupo, con la evidencia de cada vínculo.</p></div>
+</div>
+<p style="font-size:34px;line-height:1.35;width:1664px"><b>El grupo se define una sola vez y se aplica a todas las preguntas.</b></p>
+<aside>Primer momento: une. La pregunta que cualquiera entiende. Un SQL que busca la palabra Leidos en los nombres da 56.400 millones: le faltan las empresas del grupo que se llaman de otra forma, como QTC o Dynetics, compradas por Leidos, y suma un consorcio que no es del grupo. Rastro arma el grupo una vez, con el registro global de empresas y, para las compras que ninguna base registra, con una corrección revisada: 30 empresas, 63.400 millones. Cada empresa tiene la evidencia de por qué es parte del grupo.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="saic" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">2 · Trazabilidad</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">«Science Applications International Corporation», ¿es de Leidos o de SAIC?</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">US$97.800 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Con otra formulación de la pregunta, la consulta SQL siguió matrices históricas y atribuyó a Leidos US$41.400 M de la actual SAIC.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">US$63.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">SAIC se asigna a su propio grupo por su razón social vigente. Leidos coincide solo con su denominación anterior y se descarta de forma explícita.</p></div>
+</div>
+<p style="font-size:34px;line-height:1.35;width:1664px"><b>Cada respuesta justifica su resultado.</b> <span style="color:#4A5568">En 2013, la antigua SAIC adoptó el nombre Leidos y una nueva empresa tomó el nombre SAIC.</span></p>
+<aside>Segundo momento: explica. La trampa: en 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. Preguntando lo mismo de otra forma, un SQL siguió las matrices viejas y le sumó a Leidos 41.400 millones que son de la SAIC de hoy. Rastro no, y muestra por qué: el nombre legal de hoy le gana al nombre anterior, y lo descartado queda a la vista. Cada respuesta se puede auditar.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="textos2" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">3 · Análisis de textos</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">«¿En qué trabaja el grupo Leidos para el gobierno?» Una búsqueda por texto resulta insuficiente</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro: buscando «Leidos» en los textos</p><p style="font-size:72px;font-weight:700;color:#4A5568">33 de 40</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Omite 7 contratos (US$5.607 M) de empresas del grupo con otra razón social: QTC, Dynetics y Mission Support Alliance. Se pierden dos temas completos: exámenes médicos para veteranos y armamento.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">40 de 40</p><p style="font-size:28px;line-height:1.4;color:#4A5568">El grafo selecciona los contratos del grupo con una consulta exacta. La IA analiza solo esas descripciones y las agrupa por tema, con la cita de cada contrato.</p></div>
+</div>
+<p style="font-size:34px;line-height:1.35;width:1664px"><b>Un RAG convencional decide qué leer según la similitud de los textos; Rastro, según el significado de los datos.</b> <span style="color:#4A5568">De esos 40 contratos, solo uno menciona «Leidos» en su descripción.</span></p>
+<aside>La misma pregunta, los mismos datos, dos formas de elegir qué leer. Buscando la palabra «Leidos» en la descripción y en el nombre de la empresa, como haría cualquiera con SQL o un buscador, se pierden 7 de los 40 contratos más grandes del grupo: los de QTC, Dynetics y Mission Support Alliance, empresas del grupo con otro nombre. Son 5.607 millones de dólares y dos temas enteros que el resumen nunca vería. Rastro sabe que son del grupo porque lo armó una vez, con la evidencia de cada enlace. En la app se ve en vivo: «Una pregunta sobre textos», y el interruptor «¿Y si buscamos Leidos en los textos?».</aside>
+</section>
+</div>
+<div class="slide">
+<section id="pruebas2" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué confiar</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Tres pruebas, medidas sobre datos reales</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">Respuestas correctas</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">8 de 9</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Sin Rastro, 4 de 9: los errores aparecen al cruzar bases de datos.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">La misma pregunta, la misma respuesta</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">4 de 5</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Con la pregunta formulada de 4 maneras. Sin Rastro, 3 de 5.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">Si una base cambia</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">1 línea</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Sin Rastro, 3 consultas por reescribir. Si cambia la unidad de los montos, Rastro avisa.</p></div>
+</div>
+<p style="font-size:30px;line-height:1.4;width:1664px">Limitaciones: Rastro también falló en una pregunta, y la revisión identificó empresas no vinculadas, como filiales de Leidos registradas de forma independiente; hoy se incorporan mediante una corrección revisada y documentada. Con las mismas tablas de vínculos, una consulta SQL bien construida también acierta 8 de 9: el valor está en integrar una sola vez. Las pruebas fueron elaboradas por un asistente de IA y están pendientes de validación humana.</p>
+<aside>Tres pruebas. Correctas: 8 de 9 con Rastro, 4 de 9 sin Rastro; sin Rastro falla justo cuando hay que unir la base de contratos con el registro global de empresas. Consistencia: 4 de 5 contra 3 de 5. Cambios: se arreglan en una línea. Y decirlo con honestidad: si a un SQL le damos las mismas tablas de enlaces que arma Rastro, acierta igual; lo que vendemos es la integración hecha una vez y mantenida en un lugar. Rastro no es perfecto; donde se queda corto, se ve en la evidencia y se corrige en un solo lugar.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="limites-proveedores" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:28px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Consideraciones</p>
+<div style="display:flex;flex-direction:column;gap:22px;font-size:36px;line-height:1.4;width:1664px">
+<p>El valor está en integrar los datos una vez y mantenerlos en un lugar, no en la tecnología por sí misma.</p>
+<p>Es una demo con datos públicos de contratos federales de EE. UU., de octubre de 2026.</p>
+<p>Las pruebas fueron elaboradas por un asistente de IA y están pendientes de validación humana.</p>
+</div>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;width:1664px;margin-top:20px">Próximo paso: un piloto con datos propios, integrados con las fuentes públicas</h2>
+<aside>Decir los límites antes de que los pregunten, en palabras simples. Para técnicos: con las mismas tablas de enlaces, un SQL bien hecho acierta igual; eso está en el anexo. Cerrar con la propuesta de piloto.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="anexo" style="background:#2F6FB5;color:#FFFFFF;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:36px">
+<p style="font-size:32px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#D7E6F7">Anexo técnico</p>
+<h2 style="font-size:88px;font-weight:700;line-height:1.1">Para quien quiera el detalle</h2>
+<p style="font-size:36px;line-height:1.4;width:1500px">Las piezas en términos de SQL, la comparación completa, los cambios, los datos de afuera, la arquitectura y la ontología.</p>
+<aside>A partir de acá, para audiencias técnicas o para responder preguntas.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="rastro-proveedores" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Qué es Rastro</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Una capa semántica entre los datos y quien pregunta</h2>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="background:#FFFFFF;border-radius:20px;padding:26px 40px;display:flex;align-items:center;gap:40px">
+<p style="font-size:30px;font-weight:700;width:300px">Quien pregunta</p>
+<p style="font-size:30px;line-height:1.4">El LLM lee la ontología y escribe SPARQL: <span style="color:#4A5568">como SQL, pero sobre conceptos</span></p>
+</div>
+<div style="background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:32px 40px;display:flex;flex-direction:column;gap:22px">
+<p style="font-size:38px;font-weight:700">Capa semántica · Ontop la traduce a SQL</p>
+<div style="display:flex;gap:24px">
+<div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:22px"><p style="font-size:30px;font-weight:700">Ontología</p><p style="font-size:26px;line-height:1.35">≈ el esquema de negocio que te gustaría tener</p></div>
+<div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:22px"><p style="font-size:30px;font-weight:700">Mapeos</p><p style="font-size:26px;line-height:1.35">≈ definiciones de vistas: esta columna es este concepto</p></div>
+<div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:22px"><p style="font-size:30px;font-weight:700">Enlaces</p><p style="font-size:26px;line-height:1.35">≈ las claves de join que faltaban, calculadas una vez</p></div>
+</div>
+</div>
+<div style="background:#E4E7EC;border-radius:20px;padding:26px 40px;display:flex;align-items:center;gap:40px">
+<p style="font-size:30px;font-weight:700;width:300px">Fuentes</p>
+<p style="font-size:30px">USAspending · NAICS · GLEIF · listas de control · Wikidata, en Postgres. Los datos no se mueven.</p>
+</div>
+</div>
+<aside>Rastro es una capa semántica: se pone entre las tablas y quien pregunta. Para quien sabe SQL, cada pieza tiene un equivalente. La ontología es el esquema de negocio que uno querría tener. Los mapeos son como definiciones de vistas, escritas en un estándar (R2RML). Los enlaces son las claves de join que no existían entre fuentes. SPARQL es SQL sobre conceptos, y Ontop es un compilador que lo traduce a SQL normal sobre las tablas reales.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="beneficios" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Qué gana una empresa</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Los datos se integran una vez y se usan en todas las preguntas</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px">
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Respuestas consistentes</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Una sola definición de cada concepto. La misma pregunta, la misma respuesta.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Preguntas en lenguaje de negocio</p><p style="font-size:27px;line-height:1.4;color:#4A5568">El LLM lee un vocabulario, no cientos de columnas.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Cada dato con su fuente</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Respuestas auditables, con la licencia de cada fuente.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Menos mantenimiento</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Si una fuente cambia, se arregla en un lugar, no en cada consulta.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Datos de afuera, sin cargarlos</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Se conecta con datos abiertos como Wikidata por identificadores compartidos.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Sin atarse a un proveedor</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Estándares abiertos del W3C, que entienden otras herramientas.</p></div>
+</div>
+<aside>Lo que se lleva el cliente, en una diapositiva. Todo lo que sigue es la evidencia de cada punto. Consistencia: la misma pregunta escrita de cuatro formas da la misma respuesta. Lenguaje de negocio: el LLM recibe la ontología, no el esquema. Fuente: cada columna dice de dónde sale. Mantenimiento: el conocimiento de cada fuente está en los mapeos. Datos de afuera: una consulta une Rastro con Wikidata. Estándares: OWL, R2RML y SPARQL.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="arquitectura" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Cómo está armado</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">De las fuentes de cada dominio a una capa semántica</h2>
+<div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 680" width="100%" font-family="'Times New Roman', Times, serif">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
+<marker id="sub" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/></marker>
+<marker id="white" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+</defs>
+<text x="140" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">FUENTES PÚBLICAS</text>
+<text x="440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">ALMACENAMIENTO</text>
+<text x="900" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">CAPA SEMÁNTICA</text>
+<text x="1440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">QUIÉN LA USA</text>
+<rect x="20" y="60" width="240" height="190" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="140.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Proveedores</text>
+<text x="140.0" y="126" text-anchor="middle" font-size="20" fill="#4A5568">(EE. UU.)</text>
+<text x="140.0" y="154" text-anchor="middle" font-size="20" fill="#4A5568">USAspending</text>
+<text x="140.0" y="182" text-anchor="middle" font-size="20" fill="#4A5568">NAICS · GLEIF</text>
+<text x="140.0" y="210" text-anchor="middle" font-size="20" fill="#4A5568">listas · Wikidata</text>
+<rect x="20" y="268" width="240" height="150" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="140.0" y="306" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Petróleo y gas</text>
+<text x="140.0" y="334" text-anchor="middle" font-size="20" fill="#4A5568">(Argentina)</text>
+<text x="140.0" y="362" text-anchor="middle" font-size="20" fill="#4A5568">Capítulo IV · mapas</text>
+<text x="140.0" y="390" text-anchor="middle" font-size="20" fill="#4A5568">ENARGAS · IGN · GLEIF</text>
+<rect x="20" y="436" width="240" height="154" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="140.0" y="474" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Oncología</text>
+<text x="140.0" y="502" text-anchor="middle" font-size="20" fill="#4A5568">AACT · ChEMBL</text>
+<text x="140.0" y="530" text-anchor="middle" font-size="20" fill="#4A5568">openFDA</text>
+<text x="140.0" y="558" text-anchor="middle" font-size="20" fill="#4A5568">MeSH</text>
+<rect x="320" y="60" width="240" height="400" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="440.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Postgres</text>
+<text x="440.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568">un esquema</text>
+<text x="440.0" y="158" text-anchor="middle" font-size="22" fill="#4A5568">por fuente</text>
+<text x="440.0" y="188" text-anchor="middle" font-size="22" fill="#4A5568"></text>
+<text x="440.0" y="218" text-anchor="middle" font-size="22" fill="#4A5568">+ los enlaces</text>
+<text x="440.0" y="248" text-anchor="middle" font-size="22" fill="#4A5568">de Rastro,</text>
+<text x="440.0" y="278" text-anchor="middle" font-size="22" fill="#4A5568">con su evidencia</text>
+<rect x="320" y="490" width="240" height="100" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="440.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB</text>
+<text x="440.0" y="558" text-anchor="middle" font-size="22" fill="#4A5568">MeSH completo</text>
+<line x1="262" y1="155" x2="318" y2="155" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="262" y1="343" x2="318" y2="343" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="262" y1="480" x2="318" y2="430" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="262" y1="555" x2="318" y2="545" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="140" y="628" text-anchor="middle" font-size="20" fill="#4A5568">un cargador por fuente</text>
+<rect x="620" y="50" width="560" height="590" rx="20" fill="#2F6FB5"/>
+<rect x="650" y="72" width="500" height="136" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="900.0" y="110" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Entity linking y texto → dato</text>
+<text x="900.0" y="138" text-anchor="middle" font-size="20" fill="#FFFFFF">empresa → grupo · ensayo → fármaco · socios</text>
+<text x="900.0" y="166" text-anchor="middle" font-size="20" fill="#FFFFFF">motivo escrito → motivo clasificado</text>
+<text x="900.0" y="194" text-anchor="middle" font-size="20" fill="#FFFFFF">cada uno con su evidencia (PROV-O)</text>
+<rect x="650" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="770.0" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Ontología</text>
+<text x="770.0" y="288" text-anchor="middle" font-size="22" fill="#FFFFFF">el diccionario</text>
+<text x="770.0" y="318" text-anchor="middle" font-size="22" fill="#FFFFFF">de cada dominio</text>
+<rect x="910" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="1030.0" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Mapeos</text>
+<text x="1030.0" y="288" text-anchor="middle" font-size="22" fill="#FFFFFF">columna → concepto</text>
+<text x="1030.0" y="318" text-anchor="middle" font-size="22" fill="#FFFFFF">(R2RML)</text>
+<rect x="650" y="400" width="500" height="130" rx="14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2"/>
+<text x="900.0" y="438" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Ontop, uno por dominio</text>
+<text x="900.0" y="468" text-anchor="middle" font-size="22" fill="#4A5568">traduce cada consulta SPARQL</text>
+<text x="900.0" y="498" text-anchor="middle" font-size="22" fill="#4A5568">a SQL sobre Postgres</text>
+<text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>
+<line x1="562" y1="270" x2="618" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="900" y1="352" x2="900" y2="396" stroke="#FFFFFF" stroke-width="2.5" marker-end="url(#white)"/>
+<rect x="1250" y="50" width="380" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="88" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">App Rastro (tres dominios)</text>
+<text x="1440.0" y="118" text-anchor="middle" font-size="22" fill="#4A5568">el LLM lee el diccionario</text>
+<text x="1440.0" y="148" text-anchor="middle" font-size="22" fill="#4A5568">y escribe la consulta SPARQL</text>
+<rect x="1250" y="196" width="380" height="150" rx="14" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="1440.0" y="234" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphRAG anclado</text>
+<text x="1440.0" y="264" text-anchor="middle" font-size="22" fill="#14213D">el grafo elige los registros;</text>
+<text x="1440.0" y="294" text-anchor="middle" font-size="22" fill="#14213D">el LLM resume solo sus textos</text>
+<text x="1440.0" y="324" text-anchor="middle" font-size="22" fill="#14213D">y cita cada uno</text>
+<rect x="1250" y="362" width="380" height="76" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="400" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Otras herramientas</text>
+<text x="1440.0" y="428" text-anchor="middle" font-size="20" fill="#4A5568">cualquier cliente SPARQL</text>
+<rect x="1250" y="454" width="380" height="90" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="492" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB federa</text>
+<text x="1440.0" y="520" text-anchor="middle" font-size="20" fill="#4A5568">Rastro + MeSH + Wikidata</text>
+<rect x="1250" y="572" width="380" height="70" rx="14" fill="#F7F6F2" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
+<text x="1440.0" y="615.6666666666666" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Wikidata</text>
+<line x1="1182" y1="115" x2="1248" y2="115" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="270" x2="1248" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="400" x2="1248" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="490" x2="1248" y2="490" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1440" y1="546" x2="1440" y2="568" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<polyline points="562,560 600,560 600,662 1215,662 1215,515 1246,515" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+</svg>
+</div>
+<aside>De izquierda a derecha. Las fuentes públicas de cada dominio se cargan tal como vienen, en Postgres; MeSH, también en GraphDB. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL; hay uno por dominio. Los datos no se mueven. El entity linking también convierte texto en datos: el motivo escrito de cada ensayo detenido pasa a ser un motivo clasificado, con su evidencia. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la usan otras herramientas que hablen SPARQL, y GraphDB, que puede unirla con MeSH y Wikidata en una sola consulta.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="ontologiaprov" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El diccionario de proveedores</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">Contratos, empresas y grupos</h2>
+<div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 740" width="100%" font-family="'Times New Roman', Times, serif">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
+<marker id="sub" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/></marker>
+<marker id="white" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+</defs>
+<rect x="560" y="10" width="300" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="710.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Con matriz extranjera</text>
+<rect x="900" y="10" width="300" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1050.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Coincide con una lista</text>
+<rect x="720" y="130" width="320" height="80" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
+<text x="880.0" y="168" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Proveedor para revisar</text>
+<text x="880.0" y="195" text-anchor="middle" font-size="19" fill="#4A5568">deducida, sin mapeo</text>
+<line x1="710" y1="80" x2="830" y2="128" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
+<line x1="1050" y1="80" x2="930" y2="128" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
+<line x1="880" y1="212" x2="880" y2="298" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
+<text x="1640" y="40" text-anchor="end" font-size="20" fill="#4A5568">▷ es un tipo de (subclase)</text>
+<rect x="40" y="320" width="240" height="120" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="160.0" y="358" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Agencia</text>
+<text x="160.0" y="388" text-anchor="middle" font-size="22" fill="#14213D">nombre</text>
+<rect x="380" y="300" width="300" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="530.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Contrato</text>
+<text x="530.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">monto · fechas</text>
+<text x="530.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">descripción</text>
+<rect x="760" y="300" width="240" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="880.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Proveedor</text>
+<text x="880.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">nombre · UEI</text>
+<text x="880.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">estado</text>
+<rect x="1120" y="300" width="280" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="1260.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Grupo</text>
+<text x="1260.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">nombre · cotiza</text>
+<text x="1260.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">sede (Wikidata)</text>
+<rect x="380" y="560" width="300" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="530.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Sector</text>
+<text x="530.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">código NAICS</text>
+<rect x="1120" y="560" width="280" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="1260.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Entidad legal</text>
+<text x="1260.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">LEI · país</text>
+<rect x="760" y="560" width="240" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
+<text x="880.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Lista de control</text>
+<text x="880.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">entrada · alias</text>
+<line x1="378" y1="380" x2="284" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="331.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">agencia</text>
+<line x1="682" y1="380" x2="756" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="719.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">proveedor</text>
+<line x1="1002" y1="380" x2="1116" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1059.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">grupo</text>
+<line x1="530" y1="462" x2="530" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="580" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">sector</text>
+<path d="M 682 600 C 745 600 745 660 682 660" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="530" y="725" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">está dentro de <tspan fill="#4A5568" font-style="normal" font-size="19">(sus subsectores)</tspan></text>
+<line x1="880" y1="462" x2="880" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="950" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">coincide con</text>
+<line x1="1260" y1="462" x2="1260" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1340" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">entidad legal</text>
+<path d="M 1402 600 C 1465 600 1465 660 1402 660" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="1260" y="725" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">matriz final</text>
+<rect x="1450" y="300" width="210" height="160" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
+<text x="1555.0" y="338" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Enlaces</text>
+<text x="1555.0" y="365" text-anchor="middle" font-size="19" fill="#4A5568">evidencia de</text>
+<text x="1555.0" y="392" text-anchor="middle" font-size="19" fill="#4A5568">cada unión</text>
+<text x="1555.0" y="419" text-anchor="middle" font-size="19" fill="#4A5568">(PROV-O)</text>
+<rect x="40" y="560" width="260" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="170.0" y="598" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Fuente</text>
+<text x="170.0" y="626" text-anchor="middle" font-size="20" fill="#4A5568">cada dato apunta</text>
+<text x="170.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">a su fuente</text>
+</svg>
+</div>
+<aside>El diccionario del dominio de proveedores. Un contrato tiene una agencia, un sector y un proveedor; el proveedor pertenece a un grupo, y el grupo y el proveedor tienen su entidad legal en el registro global (LEI), con su país y su matriz final. Los sectores incluyen sus subsectores. Arriba, una regla de negocio: «proveedor para revisar» no tiene mapeo; Ontop la deduce de dos clases: matriz extranjera o coincidencia con una lista de control. Cada unión guarda su evidencia, con PROV-O.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="porque-proveedores" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;gap:48px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué funciona</p>
+<h2 style="font-size:72px;font-weight:700;line-height:1.1;width:1600px">Lo difícil se hace una vez, y se revisa</h2>
+<div style="display:flex;gap:40px">
+<div style="flex:1;background:#FFFFFF;border-top:8px solid #2F6FB5;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:22px">
+<p style="font-size:26px;color:#2F6FB5;font-weight:700;text-transform:uppercase;letter-spacing:1px">Heterogeneidad de datos</p>
+<p style="font-size:32px;line-height:1.35">La misma entidad, escrita distinto en los valores</p>
+<p style="font-size:28px;line-height:1.5;background:#F7F6F2;border-radius:12px;padding:20px 24px">«SCIENCE APPLICATIONS INTERNATIONAL CORPORATION»<br>→ grupo SAIC, no Leidos</p>
+<p style="font-size:30px;line-height:1.4"><b>Lo resuelve el entity linking:</b> une cada empresa con su grupo y su LEI, una vez, con la evidencia.</p>
+</div>
+<div style="flex:1;background:#FFFFFF;border-top:8px solid #14213D;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:22px">
+<p style="font-size:26px;color:#14213D;font-weight:700;text-transform:uppercase;letter-spacing:1px">Heterogeneidad de esquema</p>
+<p style="font-size:32px;line-height:1.35">El mismo concepto, en columnas distintas</p>
+<p style="font-size:28px;line-height:1.5;background:#F7F6F2;border-radius:12px;padding:20px 24px">recipient_uei · parent_uei · lei<br>→ Proveedor y Grupo</p>
+<p style="font-size:30px;line-height:1.4"><b>Lo resuelven los mapeos:</b> columnas de tres fuentes pasan a ser dos conceptos.</p>
+</div>
+</div>
+<p style="font-size:30px;color:#4A5568">Después, Ontop une todo solo: cada pregunta usa la misma definición.</p>
+<aside>Dos tipos de heterogeneidad, cada uno con su solución. De datos: el mismo nombre puede ser dos empresas distintas (la vieja y la nueva SAIC), y una empresa puede aparecer con varios nombres; el entity linking decide una vez, con su evidencia. De esquema: USAspending, GLEIF y Wikidata guardan la empresa en columnas distintas; los mapeos las vuelven un solo concepto.</aside>
+</section>
+</div>
+</body></html>

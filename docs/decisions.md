@@ -364,3 +364,7 @@ Para que el dominio no dependa de un solo organismo:
 - **GLEIF:** el LEI de las 40 empresas que más producen, buscado por nombre en Argentina y aceptado solo si coincide el nombre legal normalizado (`:LeiLink`, guarda lo descartado): 12 empresas. En su propio esquema (`gleif_energia`), porque el cargador de proveedores borra el esquema `gleif`.
 - **Los grupos no salen de un registro:** GLEIF no registra la matriz de ninguna de estas empresas argentinas, las sociedades de Chevron no tienen LEI y Wikidata no tiene esas relaciones. Chevron, Pluspetrol y CGC siguen siendo correcciones revisadas.
 - Distancias con una aproximación plana en km, en Python (`linking/energia/link.py`), sin PostGIS.
+
+## 2026-10-19 — Un mazo por caso de uso
+
+Un solo mazo mezclaba tres dominios. Ahora hay tres (`docs/slides/mazos/`), con la misma estructura: qué es Rastro, el dominio, las preguntas, la demo en tres momentos, por qué confiar, consideraciones y un anexo con arquitectura, diccionario y por qué funciona. Comparten las diapositivas genéricas; las que nombraban datos de un dominio tienen una versión por mazo. El de petróleo y gas no tiene diapositiva de GraphRAG ni de pruebas medidas: todavía no hay una fuente de textos ni una evaluación. Publicados: proveedores en el enlace de siempre y dos mazos nuevos para petróleo y gas y para oncología.

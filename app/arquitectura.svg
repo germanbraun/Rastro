@@ -17,8 +17,8 @@
 <rect x="20" y="268" width="240" height="150" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="140.0" y="306" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Petróleo y gas</text>
 <text x="140.0" y="334" text-anchor="middle" font-size="20" fill="#4A5568">(Argentina)</text>
-<text x="140.0" y="362" text-anchor="middle" font-size="20" fill="#4A5568">Capítulo IV</text>
-<text x="140.0" y="390" text-anchor="middle" font-size="20" fill="#4A5568">mapas (WFS)</text>
+<text x="140.0" y="362" text-anchor="middle" font-size="20" fill="#4A5568">Capítulo IV · mapas</text>
+<text x="140.0" y="390" text-anchor="middle" font-size="20" fill="#4A5568">ENARGAS · IGN · GLEIF</text>
 <rect x="20" y="436" width="240" height="154" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="140.0" y="474" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Oncología</text>
 <text x="140.0" y="502" text-anchor="middle" font-size="20" fill="#4A5568">AACT · ChEMBL</text>

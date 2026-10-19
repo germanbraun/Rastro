@@ -53,7 +53,7 @@ def architecture():
         b.append(f'<text x="{x}" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="{BLUE}">{t}</text>')
     # Fuentes, por dominio
     b.append(box(20, 60, 240, 190, "Proveedores", ["(EE. UU.)", "USAspending", "NAICS · GLEIF", "listas · Wikidata"], sub=20))
-    b.append(box(20, 268, 240, 150, "Petróleo y gas", ["(Argentina)", "Capítulo IV", "mapas (WFS)"], sub=20))
+    b.append(box(20, 268, 240, 150, "Petróleo y gas", ["(Argentina)", "Capítulo IV · mapas", "ENARGAS · IGN · GLEIF"], sub=20))
     b.append(box(20, 436, 240, 154, "Oncología", ["AACT · ChEMBL", "openFDA", "MeSH"], sub=20))
     # Almacenamiento
     b.append(box(320, 60, 240, 400, "Postgres", ["un esquema", "por fuente", "", "+ los enlaces", "de Rastro,", "con su evidencia"]))
@@ -176,9 +176,9 @@ def ontology_energy():
     # Centro
     b.append(box(40, 300, 240, 160, "Pozo", ["identificador"], fill=LIGHT, stroke=INK))
     b.append(box(380, 300, 320, 160, "Producción de un pozo", ["petróleo · gas (2025)", "formación · cuenca"], fill=LIGHT, stroke=INK, size=24))
-    b.append(box(800, 300, 280, 160, "Concesión", ["nombre · código", "quién informó el mapa"], fill=LIGHT, stroke=INK))
-    b.append(box(1260, 300, 280, 160, "Venteo", ["fecha · satélite"], fill=LIGHT, stroke=INK))
-    b.append(box(380, 560, 320, 130, "Empresa", ["sus nombres en", "cada fuente"], fill=LIGHT, stroke=INK))
+    b.append(box(800, 300, 280, 160, "Concesión", ["nombre · código", "gasoducto más cercano", "(ENARGAS)"], fill=LIGHT, stroke=INK))
+    b.append(box(1260, 300, 280, 160, "Venteo", ["fecha · satélite", "localidad cercana y", "área protegida (IGN)"], fill=LIGHT, stroke=INK))
+    b.append(box(380, 560, 320, 130, "Empresa", ["sus nombres en cada", "fuente · LEI (GLEIF)"], fill=LIGHT, stroke=INK))
     b.append(box(800, 560, 280, 130, "Participación", ["porcentaje"], fill=LIGHT, stroke=INK))
     b.append(arrow(378, 380, 284, 380, "pozo"))
     b.append(arrow(702, 380, 796, 380, "concesión"))
@@ -189,7 +189,7 @@ def ontology_energy():
     b.append(arrow(940, 556, 940, 466, "en la concesión", lx=1030, ly=515))
     b.append(arrow(798, 650, 704, 650, "socia", lx=750, ly=640))
     # Evidencia y fuente
-    b.append(box(1260, 560, 280, 130, "Enlaces", ["evidencia de cada", "socio, operadora y nombre", "(PROV-O)"], size=24, sub=19, dash=True))
+    b.append(box(1260, 560, 280, 130, "Enlaces", ["evidencia de cada unión,", "ubicación y distancia", "(PROV-O)"], size=24, sub=19, dash=True))
     b.append(box(40, 560, 240, 130, "Fuente", ["cada dato apunta", "a su fuente"], size=24, sub=20))
     return svg(1680, 740, "\n".join(b))
 
@@ -204,7 +204,7 @@ SLIDE = """<section id="{id}" style="background:#F7F6F2;color:#14213D;font-famil
 </section>
 """
 for name, drawing, sid, label, title, notes in [
-    ("arquitectura", architecture(), "arquitectura", "Cómo está armado", "De cuatro fuentes a una capa semántica",
+    ("arquitectura", architecture(), "arquitectura", "Cómo está armado", "De las fuentes de cada dominio a una capa semántica",
      "De izquierda a derecha. Las fuentes públicas de cada dominio se cargan tal como vienen, en Postgres; MeSH, también en GraphDB. "
      "La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la "
      "ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce "
@@ -226,8 +226,10 @@ for name, drawing, sid, label, title, notes in [
      "El diccionario del dominio de petróleo y gas. La producción de cada pozo en 2025 la declara una empresa y "
      "pertenece a una concesión; cada concesión tiene socios, con su porcentaje, y una operadora en el mapa. Cada "
      "pozo tiene su operadora de hoy, según una regla escrita. Los venteos, vistos por satélite o declarados, caen "
-     "en una concesión. Arriba, una regla de negocio: «no convencional» no tiene mapeo; Ontop la deduce de shale y "
-     "tight. Cada unión guarda su evidencia, con PROV-O."),
+     "en una concesión. Cada concesión sabe a qué distancia está el gasoducto de transporte más cercano (ENARGAS); "
+     "cada venteo, su localidad más cercana y si cae en un área protegida (IGN); y las empresas que lo tienen, su LEI "
+     "(GLEIF). Arriba, una regla de negocio: «no convencional» no tiene mapeo; Ontop la deduce de shale y tight. Cada "
+     "unión guarda su evidencia, con PROV-O."),
     ("ontologia", ontology(), "ontologia", "El diccionario de oncología", "Ensayos, fármacos y enfermedades",
      "Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una "
      "condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre "

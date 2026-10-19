@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rastro Layer</title>
+<title>Rastro · Ensayos clínicos de oncología</title>
 <!-- Generado por build.py. No editar a mano: editar slides/ y volver a correr build.py. -->
 <style>
 *{margin:0;box-sizing:border-box}
@@ -14,12 +14,12 @@ function fit(){document.documentElement.style.setProperty('--s', Math.min(1, (in
 addEventListener('resize', fit); fit();
 </script></head><body>
 <div class="slide">
-<section id="cover" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
-<p style="font-size:32px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Rastro Layer · capa semántica · MVP</p>
+<section id="cover-oncologia" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<p style="font-size:32px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Rastro · Ensayos clínicos de oncología</p>
 <h1 style="font-size:120px;font-weight:700;line-height:1.05;color:#F7F6F2">Rastro</h1>
 <p style="font-size:56px;line-height:1.2;color:#F7F6F2;width:1500px">Los datos cambian. Las preguntas, no.</p>
 <p style="font-size:36px;line-height:1.3;color:#D7DEE8;width:1400px">Una capa semántica sobre los datos de la organización: preguntas de negocio, con la fuente de cada dato.</p>
-<aside>Rastro integra bases de datos que no se hablan y deja preguntar en lenguaje de negocio. Cada respuesta dice de qué fuente sale. La demo usa datos públicos: primero los contratos del gobierno de EE. UU., después oncología.</aside>
+<aside>Rastro integra bases de datos que no se hablan y deja preguntar en lenguaje de negocio. Cada respuesta dice de qué fuente sale. Esta demo usa datos públicos de ensayos clínicos, fármacos, eventos adversos y enfermedades.</aside>
 </section>
 </div>
 <div class="slide">
@@ -37,95 +37,8 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
-<section id="dominio2" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">La demo</p>
-<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">¿Con quién hace negocios el gobierno de EE. UU.?</h2>
-<p style="font-size:34px;line-height:1.4;color:#4A5568;width:1664px">Compras, riesgo y compliance, con datos públicos.</p>
-<div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:26px;color:#4A5568">El problema</p><p style="font-size:34px;font-weight:700">La misma empresa, escrita de varias formas</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:26px;color:#4A5568">El problema</p><p style="font-size:34px;font-weight:700">Un grupo incluye todas sus empresas</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:26px;color:#4A5568">La pregunta clave</p><p style="font-size:34px;font-weight:700">¿Por qué una empresa es parte de un grupo?</p></div>
-</div>
-<p style="font-size:28px;line-height:1.4;color:#4A5568;width:1664px">36.145 contratos federales de más de US$10 millones, con cinco fuentes públicas: contratos (USAspending), sectores (NAICS), el identificador global de empresas (GLEIF), las listas de control del gobierno y Wikidata.</p>
-<aside>La pregunta que cualquiera entiende: ¿con quién está haciendo negocios el gobierno de EE. UU.? Tres problemas: la misma empresa escrita de varias formas en cada base, grupos que incluyen a sus filiales, y la pregunta de por qué Rastro dice lo que dice.</aside>
-</section>
-</div>
-<div class="slide">
-<section id="leidos" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">1 · Integración</p>
-<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">«¿Cuánto contrata el gobierno con el grupo Leidos?»</h2>
-<div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">US$56.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Una búsqueda por el nombre «Leidos» omite empresas del grupo con otra razón social (QTC, Dynetics, Gibbs &amp; Cox y 1901 Group: US$7.700 M) e incluye un consorcio ajeno al grupo.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">US$63.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">30 empresas. La base de contratos distribuye a Leidos en 13 «matrices»; Rastro las consolida en un grupo, con la evidencia de cada vínculo.</p></div>
-</div>
-<p style="font-size:34px;line-height:1.35;width:1664px"><b>El grupo se define una sola vez y se aplica a todas las preguntas.</b></p>
-<aside>Primer momento: une. La pregunta que cualquiera entiende. Un SQL que busca la palabra Leidos en los nombres da 56.400 millones: le faltan las empresas del grupo que se llaman de otra forma, como QTC o Dynetics, compradas por Leidos, y suma un consorcio que no es del grupo. Rastro arma el grupo una vez, con el registro global de empresas y, para las compras que ninguna base registra, con una corrección revisada: 30 empresas, 63.400 millones. Cada empresa tiene la evidencia de por qué es parte del grupo.</aside>
-</section>
-</div>
-<div class="slide">
-<section id="saic" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">2 · Trazabilidad</p>
-<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">«Science Applications International Corporation», ¿es de Leidos o de SAIC?</h2>
-<div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">US$97.800 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Con otra formulación de la pregunta, la consulta SQL siguió matrices históricas y atribuyó a Leidos US$41.400 M de la actual SAIC.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">US$63.400 M</p><p style="font-size:28px;line-height:1.4;color:#4A5568">SAIC se asigna a su propio grupo por su razón social vigente. Leidos coincide solo con su denominación anterior y se descarta de forma explícita.</p></div>
-</div>
-<p style="font-size:34px;line-height:1.35;width:1664px"><b>Cada respuesta justifica su resultado.</b> <span style="color:#4A5568">En 2013, la antigua SAIC adoptó el nombre Leidos y una nueva empresa tomó el nombre SAIC.</span></p>
-<aside>Segundo momento: explica. La trampa: en 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. Preguntando lo mismo de otra forma, un SQL siguió las matrices viejas y le sumó a Leidos 41.400 millones que son de la SAIC de hoy. Rastro no, y muestra por qué: el nombre legal de hoy le gana al nombre anterior, y lo descartado queda a la vista. Cada respuesta se puede auditar.</aside>
-</section>
-</div>
-<div class="slide">
-<section id="textos2" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">3 · Análisis de textos</p>
-<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">«¿En qué trabaja el grupo Leidos para el gobierno?» Una búsqueda por texto resulta insuficiente</h2>
-<div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro: buscando «Leidos» en los textos</p><p style="font-size:72px;font-weight:700;color:#4A5568">33 de 40</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Omite 7 contratos (US$5.607 M) de empresas del grupo con otra razón social: QTC, Dynetics y Mission Support Alliance. Se pierden dos temas completos: exámenes médicos para veteranos y armamento.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">40 de 40</p><p style="font-size:28px;line-height:1.4;color:#4A5568">El grafo selecciona los contratos del grupo con una consulta exacta. La IA analiza solo esas descripciones y las agrupa por tema, con la cita de cada contrato.</p></div>
-</div>
-<p style="font-size:34px;line-height:1.35;width:1664px"><b>Un RAG convencional decide qué leer según la similitud de los textos; Rastro, según el significado de los datos.</b> <span style="color:#4A5568">De esos 40 contratos, solo uno menciona «Leidos» en su descripción.</span></p>
-<aside>La misma pregunta, los mismos datos, dos formas de elegir qué leer. Buscando la palabra «Leidos» en la descripción y en el nombre de la empresa, como haría cualquiera con SQL o un buscador, se pierden 7 de los 40 contratos más grandes del grupo: los de QTC, Dynetics y Mission Support Alliance, empresas del grupo con otro nombre. Son 5.607 millones de dólares y dos temas enteros que el resumen nunca vería. Rastro sabe que son del grupo porque lo armó una vez, con la evidencia de cada enlace. En la app se ve en vivo: «Una pregunta sobre textos», y el interruptor «¿Y si buscamos Leidos en los textos?».</aside>
-</section>
-</div>
-<div class="slide">
-<section id="onco" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El mismo Rastro, otro dominio</p>
-<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">Ensayos clínicos de cáncer: «¿Qué fármacos contra HER2 se prueban en cáncer de mama?»</h2>
-<div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">9 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">preguntas cambiaron de respuesta al formularse de cuatro maneras distintas. El mismo fármaco figura como «Pembrolizumab 200 mg», como un código o como «KEYTRUDA».</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">0 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">La respuesta se mantiene, porque cada fármaco se vinculó una sola vez, con su evidencia.</p></div>
-</div>
-<p style="font-size:34px;line-height:1.35;width:1664px"><b>El enfoque es aplicable a cualquier dominio; la demo lo muestra en dos.</b></p>
-<aside>El mismo Rastro, con datos de otro mundo: ensayos clínicos de cáncer, fármacos, efectos adversos y enfermedades, de cuatro fuentes públicas. El problema es el mismo: el mismo fármaco escrito de varias formas. Haciendo cada pregunta de cuatro formas, sin Rastro la respuesta cambió en 9 de 10 preguntas; con Rastro, en ninguna. Si hay tiempo, mostrarlo en la app cambiando el dominio a Oncología.</aside>
-</section>
-</div>
-<div class="slide">
-<section id="limites" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:28px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Consideraciones</p>
-<div style="display:flex;flex-direction:column;gap:22px;font-size:36px;line-height:1.4;width:1664px">
-<p>El valor está en integrar los datos una vez y mantenerlos en un lugar, no en la tecnología por sí misma.</p>
-<p>Es una demo con datos públicos de octubre de 2026, en dos dominios.</p>
-<p>Las pruebas fueron elaboradas por un asistente de IA y están pendientes de validación humana.</p>
-</div>
-<h2 style="font-size:64px;font-weight:700;line-height:1.15;width:1664px;margin-top:20px">Próximo paso: un piloto con datos propios, integrados con las fuentes públicas</h2>
-<aside>Decir los límites antes de que los pregunten, en palabras simples. Para técnicos: con las mismas tablas de enlaces, un SQL bien hecho acierta igual; eso está en el anexo. Cerrar con la propuesta de piloto.</aside>
-</section>
-</div>
-<div class="slide">
-<section id="pruebas2" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué confiar</p>
-<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Tres pruebas, medidas sobre datos reales</h2>
-<div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">Respuestas correctas</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">8 de 9</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Sin Rastro, 4 de 9: los errores aparecen al cruzar bases de datos.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">La misma pregunta, la misma respuesta</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">4 de 5</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Con la pregunta formulada de 4 maneras. Sin Rastro, 3 de 5.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">Si una base cambia</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">1 línea</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Sin Rastro, 3 consultas por reescribir. Si cambia la unidad de los montos, Rastro avisa.</p></div>
-</div>
-<p style="font-size:30px;line-height:1.4;width:1664px">Limitaciones: Rastro también falló en una pregunta, y la revisión identificó empresas no vinculadas, como filiales de Leidos registradas de forma independiente; hoy se incorporan mediante una corrección revisada y documentada. Con las mismas tablas de vínculos, una consulta SQL bien construida también acierta 8 de 9: el valor está en integrar una sola vez. Las pruebas fueron elaboradas por un asistente de IA y están pendientes de validación humana.</p>
-<aside>Tres pruebas. Correctas: 8 de 9 con Rastro, 4 de 9 sin Rastro; sin Rastro falla justo cuando hay que unir la base de contratos con el registro global de empresas. Consistencia: 4 de 5 contra 3 de 5. Cambios: se arreglan en una línea. Y decirlo con honestidad: si a un SQL le damos las mismas tablas de enlaces que arma Rastro, acierta igual; lo que vendemos es la integración hecha una vez y mantenida en un lugar. Rastro no es perfecto; donde se queda corto, se ve en la evidencia y se corrige en un solo lugar.</aside>
-</section>
-</div>
-<div class="slide">
 <section id="problema" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;gap:56px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El mismo Rastro, otro dominio: oncología</p>
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El problema</p>
 <h2 style="font-size:72px;font-weight:700;line-height:1.1;width:1500px">Los datos existen, pero no se hablan entre sí</h2>
 <div style="display:flex;gap:32px">
 <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Ensayos</p><p style="font-size:28px;color:#4A5568">AACT · ClinicalTrials.gov</p><p style="font-size:28px">«Pembrolizumab 200 mg»</p></div>
@@ -135,6 +48,23 @@ addEventListener('resize', fit); fit();
 </div>
 <p style="font-size:36px;line-height:1.4;width:1500px">El mismo fármaco se escribe de tres formas. Sin unirlas, cada pregunta empieza de cero.</p>
 <aside>Cuatro fuentes públicas. AACT: el registro de ensayos clínicos, los estudios en personas para probar tratamientos. ChEMBL: la base europea de fármacos y de las proteínas sobre las que actúan. openFDA: los reportes de efectos adversos que llegan a la FDA. MeSH: el vocabulario médico que sabe qué enfermedad es subtipo de cuál. Cada una con su formato y sus nombres. Pembrolizumab aparece como texto libre en los ensayos, como un código en ChEMBL y como marca comercial en openFDA. Cualquier pregunta que cruce fuentes tiene que resolver eso primero.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="preguntas-oncologia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Las preguntas</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">Preguntas de negocio sobre ensayos clínicos de cáncer</h2>
+<ol style="font-size:32px;line-height:1.35;width:1664px;padding-left:44px">
+<li style="margin-bottom:14px">¿Qué fármacos anti-HER2 están en ensayos de fase 3 de cáncer de mama, y quién los patrocina?</li>
+<li style="margin-bottom:14px">¿Cuántos ensayos hay por fase para fármacos que actúan sobre EGFR?</li>
+<li style="margin-bottom:14px">¿Qué empresas tienen más ensayos detenidos en cáncer de pulmón, y por qué?</li>
+<li style="margin-bottom:14px">¿Cuáles son los eventos adversos más reportados de los fármacos que se prueban en leucemia?</li>
+<li style="margin-bottom:14px">¿Qué targets tienen fármacos en ensayos activos pero ningún fármaco aprobado?</li>
+<li style="margin-bottom:14px">¿Cuántos ensayos de fase 3 de cáncer de mama prueban alguna terapia dirigida?</li>
+<li style="margin-bottom:14px">¿Por qué se detuvieron los ensayos de fase 3 de cáncer de pulmón con inhibidores de quinasa?</li>
+</ol>
+<p style="font-size:28px;color:#4A5568;width:1664px">En la app, cada una se responde en vivo y dice de qué fuente sale cada dato. Con un asistente de IA configurado, también se pueden hacer preguntas propias.</p>
+<aside>Algunas de las once preguntas de competencia del dominio. Cruzan ensayos, fármacos, eventos adversos y la jerarquía de enfermedades, y una de ellas responde sobre textos: el motivo escrito de cada ensayo detenido.</aside>
 </section>
 </div>
 <div class="slide">
@@ -158,15 +88,15 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
-<section id="pruebas" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué confiar, en oncología</p>
-<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Las mismas pruebas, en oncología</h2>
+<section id="onco" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Respuestas consistentes</p>
+<h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">Ensayos clínicos de cáncer: «¿Qué fármacos contra HER2 se prueban en cáncer de mama?»</h2>
 <div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">La misma pregunta, la misma respuesta</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">10 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Preguntando de 4 formas distintas. Sin Rastro, 1 de 10: «488, 488, 409, 488».</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">Los cambios se arreglan en un lugar</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">1 línea</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Si una base cambia. Sin Rastro, hay que reescribir cada consulta, y algunas dan cero sin avisar.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">Cada respuesta se puede auditar</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">Evidencia</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Qué texto de cada ensayo se reconoció como cada fármaco, con el enlace al ensayo.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">9 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">preguntas cambiaron de respuesta al formularse de cuatro maneras distintas. El mismo fármaco figura como «Pembrolizumab 200 mg», como un código o como «KEYTRUDA».</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">0 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">La respuesta se mantiene, porque cada fármaco se vinculó una sola vez, con su evidencia.</p></div>
 </div>
-<aside>Tres pruebas, nada más. Uno: consistencia. Hicimos la misma pregunta de cuatro formas; con Rastro la respuesta fue siempre la misma, sin Rastro cambió según cómo se preguntara. Dos: mantenimiento. Si una base cambia, Rastro se arregla en una línea; sin Rastro hay que encontrar y arreglar cada consulta. Tres: auditoría. Cada respuesta muestra su evidencia. Todo el detalle técnico está en el anexo.</aside>
+<p style="font-size:34px;line-height:1.35;width:1664px"><b>El enfoque es aplicable a cualquier dominio; la demo lo muestra en dos.</b></p>
+<aside>El mismo Rastro, con datos de otro mundo: ensayos clínicos de cáncer, fármacos, efectos adversos y enfermedades, de cuatro fuentes públicas. El problema es el mismo: el mismo fármaco escrito de varias formas. Haciendo cada pregunta de cuatro formas, sin Rastro la respuesta cambió en 9 de 10 preguntas; con Rastro, en ninguna. Si hay tiempo, mostrarlo en la app cambiando el dominio a Oncología.</aside>
 </section>
 </div>
 <div class="slide">
@@ -193,16 +123,27 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
-<section id="energia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:36px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El mismo Rastro, otro dominio</p>
-<h2 style="font-size:56px;font-weight:700;line-height:1.12;width:1664px">Petróleo y gas en Argentina: los mismos tres momentos</h2>
-<div style="display:flex;gap:28px">
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:26px;color:#2F6FB5;font-weight:700">1 · Integración</p><p style="font-size:28px;font-weight:700;line-height:1.3">¿Cuánto petróleo de 2025 le corresponde a YPF?</p><p style="font-size:26px;color:#4A5568">Sin Rastro: <b>21,4 M m³</b></p><p style="font-size:40px;font-weight:700;color:#2F6FB5">12,6 M m³</p><p style="font-size:24px;line-height:1.4;color:#4A5568">Su parte en cada concesión, según los socios del mapa. Petronas, que no opera pozos, suma 2,1 M m³.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:26px;color:#2F6FB5;font-weight:700">2 · Trazabilidad</p><p style="font-size:28px;font-weight:700;line-height:1.3">¿Cuántos pozos opera hoy YPF?</p><p style="font-size:26px;color:#4A5568">Sin Rastro: <b>12.006 o 15.809</b></p><p style="font-size:40px;font-weight:700;color:#2F6FB5">15.809</p><p style="font-size:24px;line-height:1.4;color:#4A5568">Una regla escrita: rige la declaración jurada del último mes. En 3.796 pozos, el padrón nombra a otra empresa, y queda a la vista.</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:26px;color:#2F6FB5;font-weight:700">3 · Cruce con mapas</p><p style="font-size:28px;font-weight:700;line-height:1.3">¿Dónde vio el satélite posibles venteos de gas?</p><p style="font-size:26px;color:#4A5568">Sin Rastro: <b>solo la provincia</b></p><p style="font-size:40px;font-weight:700;color:#2F6FB5">La Calera: 482</p><p style="font-size:24px;line-height:1.4;color:#4A5568">6.636 puntos ubicados en su concesión, con su operadora (Pluspetrol) y sin puntos de venteo declarados.</p></div>
+<section id="pruebas" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué confiar, en oncología</p>
+<h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Las mismas pruebas, en oncología</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">La misma pregunta, la misma respuesta</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">10 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Preguntando de 4 formas distintas. Sin Rastro, 1 de 10: «488, 488, 409, 488».</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">Los cambios se arreglan en un lugar</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">1 línea</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Si una base cambia. Sin Rastro, hay que reescribir cada consulta, y algunas dan cero sin avisar.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:34px;font-weight:700">Cada respuesta se puede auditar</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">Evidencia</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Qué texto de cada ensayo se reconoció como cada fármaco, con el enlace al ensayo.</p></div>
 </div>
-<p style="font-size:28px;line-height:1.4;width:1664px;color:#4A5568">Dos fuentes públicas de la Secretaría de Energía: la producción declarada pozo por pozo y los mapas de concesiones y venteos. Un posible venteo es un indicio para revisar, no una confirmación.</p>
-<aside>Para operadoras y consultoras del sector, el mismo Rastro con datos de la Secretaría de Energía. Primero, la producción que corresponde a cada socio: YPF opera 21,4 millones de metros cúbicos, pero su parte es 12,6; Petronas no opera ningún pozo y le corresponden 2,1. Segundo, quién opera cada pozo: el padrón dice una cosa y las declaraciones juradas otra; Rastro aplica una regla escrita y muestra la otra versión. Tercero, los posibles venteos que ve un satélite: la capa solo dice la provincia; Rastro ubica cada punto en su concesión y llega a la operadora. Es un indicio para revisar, no una acusación.</aside>
+<aside>Tres pruebas, nada más. Uno: consistencia. Hicimos la misma pregunta de cuatro formas; con Rastro la respuesta fue siempre la misma, sin Rastro cambió según cómo se preguntara. Dos: mantenimiento. Si una base cambia, Rastro se arregla en una línea; sin Rastro hay que encontrar y arreglar cada consulta. Tres: auditoría. Cada respuesta muestra su evidencia. Todo el detalle técnico está en el anexo.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="limites-oncologia" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:112px 128px;display:flex;flex-direction:column;gap:44px">
+<p style="font-size:28px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Consideraciones</p>
+<div style="display:flex;flex-direction:column;gap:22px;font-size:36px;line-height:1.4;width:1664px">
+<p>El valor está en integrar los datos una vez y mantenerlos en un lugar, no en la tecnología por sí misma.</p>
+<p>Es una demo con datos públicos de ensayos clínicos, fármacos y eventos adversos, de octubre de 2026.</p>
+<p>Las pruebas fueron elaboradas por un asistente de IA y están pendientes de validación humana.</p>
+</div>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;width:1664px;margin-top:20px">Próximo paso: un piloto con datos propios, integrados con las fuentes públicas</h2>
+<aside>Decir los límites antes de que los pregunten, en palabras simples. Para técnicos: con las mismas tablas de enlaces, un SQL bien hecho acierta igual; eso está en el anexo. Cerrar con la propuesta de piloto.</aside>
 </section>
 </div>
 <div class="slide">
@@ -331,7 +272,7 @@ addEventListener('resize', fit); fit();
 <div class="slide">
 <section id="arquitectura" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Cómo está armado</p>
-<h2 style="font-size:56px;font-weight:700;line-height:1.1">De cuatro fuentes a una capa semántica</h2>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">De las fuentes de cada dominio a una capa semántica</h2>
 <div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 680" width="100%" font-family="'Times New Roman', Times, serif">
 <defs>
 <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
@@ -351,8 +292,8 @@ addEventListener('resize', fit); fit();
 <rect x="20" y="268" width="240" height="150" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="140.0" y="306" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Petróleo y gas</text>
 <text x="140.0" y="334" text-anchor="middle" font-size="20" fill="#4A5568">(Argentina)</text>
-<text x="140.0" y="362" text-anchor="middle" font-size="20" fill="#4A5568">Capítulo IV</text>
-<text x="140.0" y="390" text-anchor="middle" font-size="20" fill="#4A5568">mapas (WFS)</text>
+<text x="140.0" y="362" text-anchor="middle" font-size="20" fill="#4A5568">Capítulo IV · mapas</text>
+<text x="140.0" y="390" text-anchor="middle" font-size="20" fill="#4A5568">ENARGAS · IGN · GLEIF</text>
 <rect x="20" y="436" width="240" height="154" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="140.0" y="474" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Oncología</text>
 <text x="140.0" y="502" text-anchor="middle" font-size="20" fill="#4A5568">AACT · ChEMBL</text>
@@ -421,159 +362,6 @@ addEventListener('resize', fit); fit();
 </svg>
 </div>
 <aside>De izquierda a derecha. Las fuentes públicas de cada dominio se cargan tal como vienen, en Postgres; MeSH, también en GraphDB. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL; hay uno por dominio. Los datos no se mueven. El entity linking también convierte texto en datos: el motivo escrito de cada ensayo detenido pasa a ser un motivo clasificado, con su evidencia. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la usan otras herramientas que hablen SPARQL, y GraphDB, que puede unirla con MeSH y Wikidata en una sola consulta.</aside>
-</section>
-</div>
-<div class="slide">
-<section id="ontologiaprov" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El diccionario de proveedores</p>
-<h2 style="font-size:56px;font-weight:700;line-height:1.1">Contratos, empresas y grupos</h2>
-<div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 740" width="100%" font-family="'Times New Roman', Times, serif">
-<defs>
-<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
-<marker id="sub" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/></marker>
-<marker id="white" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
-</defs>
-<rect x="560" y="10" width="300" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="710.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Con matriz extranjera</text>
-<rect x="900" y="10" width="300" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1050.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Coincide con una lista</text>
-<rect x="720" y="130" width="320" height="80" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
-<text x="880.0" y="168" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Proveedor para revisar</text>
-<text x="880.0" y="195" text-anchor="middle" font-size="19" fill="#4A5568">deducida, sin mapeo</text>
-<line x1="710" y1="80" x2="830" y2="128" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
-<line x1="1050" y1="80" x2="930" y2="128" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
-<line x1="880" y1="212" x2="880" y2="298" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
-<text x="1640" y="40" text-anchor="end" font-size="20" fill="#4A5568">▷ es un tipo de (subclase)</text>
-<rect x="40" y="320" width="240" height="120" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="160.0" y="358" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Agencia</text>
-<text x="160.0" y="388" text-anchor="middle" font-size="22" fill="#14213D">nombre</text>
-<rect x="380" y="300" width="300" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="530.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Contrato</text>
-<text x="530.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">monto · fechas</text>
-<text x="530.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">descripción</text>
-<rect x="760" y="300" width="240" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="880.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Proveedor</text>
-<text x="880.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">nombre · UEI</text>
-<text x="880.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">estado</text>
-<rect x="1120" y="300" width="280" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="1260.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Grupo</text>
-<text x="1260.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">nombre · cotiza</text>
-<text x="1260.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">sede (Wikidata)</text>
-<rect x="380" y="560" width="300" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="530.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Sector</text>
-<text x="530.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">código NAICS</text>
-<rect x="1120" y="560" width="280" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="1260.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Entidad legal</text>
-<text x="1260.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">LEI · país</text>
-<rect x="760" y="560" width="240" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="880.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Lista de control</text>
-<text x="880.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">entrada · alias</text>
-<line x1="378" y1="380" x2="284" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="331.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">agencia</text>
-<line x1="682" y1="380" x2="756" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="719.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">proveedor</text>
-<line x1="1002" y1="380" x2="1116" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1059.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">grupo</text>
-<line x1="530" y1="462" x2="530" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="580" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">sector</text>
-<path d="M 682 600 C 745 600 745 660 682 660" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="530" y="725" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">está dentro de <tspan fill="#4A5568" font-style="normal" font-size="19">(sus subsectores)</tspan></text>
-<line x1="880" y1="462" x2="880" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="950" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">coincide con</text>
-<line x1="1260" y1="462" x2="1260" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1340" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">entidad legal</text>
-<path d="M 1402 600 C 1465 600 1465 660 1402 660" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1260" y="725" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">matriz final</text>
-<rect x="1450" y="300" width="210" height="160" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
-<text x="1555.0" y="338" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Enlaces</text>
-<text x="1555.0" y="365" text-anchor="middle" font-size="19" fill="#4A5568">evidencia de</text>
-<text x="1555.0" y="392" text-anchor="middle" font-size="19" fill="#4A5568">cada unión</text>
-<text x="1555.0" y="419" text-anchor="middle" font-size="19" fill="#4A5568">(PROV-O)</text>
-<rect x="40" y="560" width="260" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="170.0" y="598" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Fuente</text>
-<text x="170.0" y="626" text-anchor="middle" font-size="20" fill="#4A5568">cada dato apunta</text>
-<text x="170.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">a su fuente</text>
-</svg>
-</div>
-<aside>El diccionario del dominio de proveedores. Un contrato tiene una agencia, un sector y un proveedor; el proveedor pertenece a un grupo, y el grupo y el proveedor tienen su entidad legal en el registro global (LEI), con su país y su matriz final. Los sectores incluyen sus subsectores. Arriba, una regla de negocio: «proveedor para revisar» no tiene mapeo; Ontop la deduce de dos clases: matriz extranjera o coincidencia con una lista de control. Cada unión guarda su evidencia, con PROV-O.</aside>
-</section>
-</div>
-<div class="slide">
-<section id="ontologiaenergia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El diccionario de petróleo y gas</p>
-<h2 style="font-size:56px;font-weight:700;line-height:1.1">Pozos, concesiones y socios</h2>
-<div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 740" width="100%" font-family="'Times New Roman', Times, serif">
-<defs>
-<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
-<marker id="sub" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/></marker>
-<marker id="white" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
-</defs>
-<rect x="40" y="10" width="200" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="140.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Shale</text>
-<rect x="280" y="10" width="200" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="380.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Tight</text>
-<rect x="110" y="130" width="300" height="80" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
-<text x="260.0" y="168" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">No convencional</text>
-<text x="260.0" y="195" text-anchor="middle" font-size="19" fill="#4A5568">deducida, sin mapeo</text>
-<line x1="140" y1="80" x2="220" y2="128" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
-<line x1="380" y1="80" x2="300" y2="128" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
-<line x1="400" y1="212" x2="500" y2="298" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
-<rect x="1180" y="10" width="260" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1310.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Visto por satélite</text>
-<rect x="1460" y="10" width="200" height="70" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1560.0" y="53.0" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Declarado</text>
-<line x1="1310" y1="80" x2="1360" y2="298" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
-<line x1="1560" y1="80" x2="1440" y2="298" stroke="#4A5568" stroke-width="2.5" marker-end="url(#sub)"/>
-<text x="1660" y="728" text-anchor="end" font-size="20" fill="#4A5568">▷ es un tipo de (subclase)</text>
-<rect x="40" y="300" width="240" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="160.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Pozo</text>
-<text x="160.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">identificador</text>
-<rect x="380" y="300" width="320" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="540.0" y="338" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Producción de un pozo</text>
-<text x="540.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">petróleo · gas (2025)</text>
-<text x="540.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">formación · cuenca</text>
-<rect x="800" y="300" width="280" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="940.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Concesión</text>
-<text x="940.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">nombre · código</text>
-<text x="940.0" y="398" text-anchor="middle" font-size="22" fill="#14213D">quién informó el mapa</text>
-<rect x="1260" y="300" width="280" height="160" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="1400.0" y="338" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Venteo</text>
-<text x="1400.0" y="368" text-anchor="middle" font-size="22" fill="#14213D">fecha · satélite</text>
-<rect x="380" y="560" width="320" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="540.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Empresa</text>
-<text x="540.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">sus nombres en</text>
-<text x="540.0" y="658" text-anchor="middle" font-size="22" fill="#14213D">cada fuente</text>
-<rect x="800" y="560" width="280" height="130" rx="14" fill="#F7F6F2" stroke="#14213D" stroke-width="2"/>
-<text x="940.0" y="598" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Participación</text>
-<text x="940.0" y="628" text-anchor="middle" font-size="22" fill="#14213D">porcentaje</text>
-<line x1="378" y1="380" x2="284" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="331.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">pozo</text>
-<line x1="702" y1="380" x2="796" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="749.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">concesión</text>
-<line x1="1258" y1="380" x2="1084" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1171.0" y="370.0" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">en la concesión</text>
-<line x1="540" y1="462" x2="540" y2="556" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="610" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">la declara</text>
-<line x1="160" y1="462" x2="376" y2="600" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="330" y="548" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">operadora hoy</text>
-<line x1="820" y1="462" x2="704" y2="570" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="690" y="482" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">operadora en el mapa</text>
-<line x1="940" y1="556" x2="940" y2="466" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="1030" y="515" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">en la concesión</text>
-<line x1="798" y1="650" x2="704" y2="650" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<text x="750" y="640" text-anchor="middle" font-size="22" fill="#2F6FB5" font-style="italic">socia</text>
-<rect x="1260" y="560" width="280" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
-<text x="1400.0" y="598" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Enlaces</text>
-<text x="1400.0" y="625" text-anchor="middle" font-size="19" fill="#4A5568">evidencia de cada</text>
-<text x="1400.0" y="652" text-anchor="middle" font-size="19" fill="#4A5568">socio, operadora y nombre</text>
-<text x="1400.0" y="679" text-anchor="middle" font-size="19" fill="#4A5568">(PROV-O)</text>
-<rect x="40" y="560" width="240" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="160.0" y="598" text-anchor="middle" font-size="24" font-weight="700" fill="#14213D">Fuente</text>
-<text x="160.0" y="626" text-anchor="middle" font-size="20" fill="#4A5568">cada dato apunta</text>
-<text x="160.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">a su fuente</text>
-</svg>
-</div>
-<aside>El diccionario del dominio de petróleo y gas. La producción de cada pozo en 2025 la declara una empresa y pertenece a una concesión; cada concesión tiene socios, con su porcentaje, y una operadora en el mapa. Cada pozo tiene su operadora de hoy, según una regla escrita. Los venteos, vistos por satélite o declarados, caen en una concesión. Arriba, una regla de negocio: «no convencional» no tiene mapeo; Ontop la deduce de shale y tight. Cada unión guarda su evidencia, con PROV-O.</aside>
 </section>
 </div>
 <div class="slide">

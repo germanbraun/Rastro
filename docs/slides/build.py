@@ -1,16 +1,17 @@
-"""Arma index.html con las diapositivas de slides/, en el orden de deck.json."""
+"""Arma un HTML por mazo (proveedores.html, energia.html, oncologia.html) con las diapositivas de
+slides/, en el orden de cada mazos/<nombre>.json. Los tres comparten las diapositivas genéricas."""
 import json
 from pathlib import Path
 
 here = Path(__file__).parent
-order = json.loads((here / "deck.json").read_text())["order"]
-slides = "\n".join(
-    f'<div class="slide">\n{(here / "slides" / f"{i}.html").read_text().strip()}\n</div>' for i in order
-)
-
-(here / "index.html").write_text(f"""<!doctype html>
+for deck in sorted((here / "mazos").glob("*.json")):
+    meta = json.loads(deck.read_text())
+    slides = "\n".join(
+        f'<div class="slide">\n{(here / "slides" / f"{i}.html").read_text().strip()}\n</div>' for i in meta["order"]
+    )
+    (here / f"{deck.stem}.html").write_text(f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rastro Layer</title>
+<title>{meta["title"]}</title>
 <!-- Generado por build.py. No editar a mano: editar slides/ y volver a correr build.py. -->
 <style>
 *{{margin:0;box-sizing:border-box}}
@@ -26,3 +27,4 @@ addEventListener('resize', fit); fit();
 {slides}
 </body></html>
 """)
+print("Mazos listos:", ", ".join(f"{d.stem}.html" for d in sorted((here / "mazos").glob("*.json"))))
