@@ -377,3 +377,12 @@ Un solo mazo mezclaba tres dominios. Ahora hay tres (`docs/slides/mazos/`), con 
 - **«Explicame la consulta»**: en la vista técnica, un botón explica la consulta y el SQL en palabras de negocio. Las preguntas de ejemplo traen su explicación guardada (la app no tiene un LLM configurado); las propias se explican en vivo si hay uno.
 - **Logo** (`app/logo.svg`): un rastro de puntos unidos, que también es un pequeño grafo. En la app y en las portadas de los tres mazos.
 - **Favicons junto a las empresas**: `app/sitios.yaml` (lo arma `layer/sitios.py`: Wikidata para los grupos de proveedores y una lista revisada por IA para el resto). La app pide cada ícono una vez al servicio de favicons de Google, en el servidor, porque la tabla no dibuja imágenes de otro sitio; sin internet, la columna queda vacía.
+
+## 2026-10-19 — Petróleo y gas: una sola propiedad para «en la concesión»
+
+El diccionario tenía `:concession` (la producción) e `:inConcession` (participaciones, venteos, enlaces y estudios). En la evaluación, Rastro falló la participación de YPF (e01) en las 4 formas: el LLM unió la participación con la concesión por `:concession` y dio 0.
+
+- **Arreglo:** queda solo `:inConcession`, con un comentario que dice que es la única propiedad que une algo con su concesión, y una línea igual en `layer/energia/sparql-notes.md`. Cambiaron el mapeo, `cq1.rq` y la referencia de e01; todas las consultas del dominio y las de evidencia de la app dan lo mismo que antes, y la referencia de e01 sigue en 12.581.213 m³.
+- **Es un arreglo hecho después de medir.** Se volvieron a medir solo las 4 respuestas de Rastro de e01, con subagentes nuevos que solo vieron el prompt; las viejas se descartaron. Las 4 dieron 12.581.213.
+- **Antes y después (Rastro):** correctas 6 de 7 → 7 de 7; misma respuesta en 4 formas, 5 de 5 (antes las 4 daban 0, igual de mal) → 5 de 5; correctas en la prueba de consistencia, 16 de 20 → 20 de 20. Sin Rastro y SQL + enlaces no se tocaron (5 de 7 y 7 de 7).
+- **Cómo leerlo:** el 7 de 7 es después de corregir el diccionario con la pregunta a la vista; las otras seis no se volvieron a medir. Lo que muestra es que un error del diccionario se arregla en un lugar y vale para todas las formas de preguntar, no que Rastro acierte todo a la primera.

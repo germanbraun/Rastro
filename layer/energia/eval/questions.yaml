@@ -23,7 +23,7 @@ questions:
     kind: número
     reference: |
       SELECT (SUM(?oil * ?pct / 100) AS ?answer) WHERE {
-        ?p a :WellProduction ; :concession ?c ; :oil ?oil .
+        ?p a :WellProduction ; :inConcession ?c ; :oil ?oil .
         ?s a :Stake ; :inConcession ?c ; :partner/:name "YPF S.A." ; :percent ?pct .
       }
 

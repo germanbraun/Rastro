@@ -3,7 +3,7 @@ PREFIX : <https://w3id.org/rastro/energia#>
 
 SELECT ?company (SUM(?oil * ?percent / 100) AS ?share) (SAMPLE(?operatedOil) AS ?operated)
 WHERE {
-  ?p a :WellProduction ; :concession ?c ; :oil ?oil .
+  ?p a :WellProduction ; :inConcession ?c ; :oil ?oil .
   ?s a :Stake ; :inConcession ?c ; :partner ?e ; :percent ?percent .
   ?e :name ?company .
   OPTIONAL { SELECT ?e (SUM(?o) AS ?operatedOil) WHERE { ?q :declaredBy ?e ; :oil ?o } GROUP BY ?e }

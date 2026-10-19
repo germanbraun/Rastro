@@ -111,7 +111,6 @@ convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight).
 
 :wellId a owl:DatatypeProperty ; rdfs:label "identificador del pozo"@es .
 :well a owl:ObjectProperty ; rdfs:domain :WellProduction ; rdfs:range :Well ; rdfs:label "pozo"@es .
-:concession a owl:ObjectProperty ; rdfs:range :Concession ; rdfs:label "concesión"@es .
 :declaredBy a owl:ObjectProperty ; rdfs:domain :WellProduction ; rdfs:range :Company ;
     rdfs:label "la declara"@es .
 :formation a owl:DatatypeProperty ; rdfs:domain :WellProduction ; rdfs:label "formación"@es ;
@@ -124,7 +123,8 @@ convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight).
 :operator a owl:ObjectProperty ; rdfs:domain :Well ; rdfs:range :Company ;
     rdfs:label "operadora hoy"@es .
 
-:inConcession a owl:ObjectProperty ; rdfs:range :Concession ; rdfs:label "en la concesión"@es .
+:inConcession a owl:ObjectProperty ; rdfs:range :Concession ; rdfs:label "en la concesión"@es ;
+    rdfs:comment "La concesión donde está: la producción de un pozo (:WellProduction), la participación de una empresa (:Stake), un venteo, un enlace o un estudio ambiental. Es la única propiedad que une algo con su concesión."@es .
 :partner a owl:ObjectProperty ; rdfs:domain :Stake ; rdfs:range :Company ; rdfs:label "socia"@es .
 :percent a owl:DatatypeProperty ; rdfs:domain :Stake ; rdfs:label "porcentaje"@es .
 

@@ -4,13 +4,13 @@ Fecha: 2026-10-19. Respuestas escritas por subagentes de Claude Code (Claude Opu
 
 | | Sin Rastro (SQL) | SQL + enlaces de Rastro | Con Rastro |
 |---|---|---|---|
-| Correctas (de 7) | 5 | 7 | 6 |
+| Correctas (de 7) | 5 | 7 | 7 |
 | Misma respuesta en las 4 formas (de 5 preguntas) | 3 | 5 | 5 |
-| Correctas en la prueba de consistencia (de 20) | 11 | 20 | 16 |
+| Correctas en la prueba de consistencia (de 20) | 11 | 20 | 20 |
 
 | # | Pregunta | Referencia | Sin Rastro (SQL) | SQL + enlaces de Rastro | Con Rastro |
 |---|---|---|---|---|---|
-| e01 | ¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión? | 12.581.213 | ✅ 12.581.213 | ✅ 12.581.213 | ❌ 0 |
+| e01 | ¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión? | 12.581.213 | ✅ 12.581.213 | ✅ 12.581.213 | ✅ 12.581.213 |
 | e02 | ¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025? | 15.809 | ✅ 15.809 | ✅ 15.809 | ✅ 15.809 |
 | e03 | ¿Cuáles son las 5 concesiones con más posibles venteos detectados por satélite desde el 1 de enero de 2024, contando los puntos que caen dentro del contorno de cada concesión? | LOMA CAMPANA, LOMA LA LATA - SIERRA BARROSA, BAJO DEL CHOIQUE - LA INVERNADA y 2 más | ✅ LOMA CAMPANA, LOMA LA LATA - SIERRA BARROSA, BAJO DEL CHOIQUE - LA INVERNADA y 2 más | ✅ LOMA CAMPANA, LOMA LA LATA - SIERRA BARROSA, BAJO DEL CHOIQUE - LA INVERNADA y 2 más | ✅ LOMA CAMPANA, LOMA LA LATA - SIERRA BARROSA, BAJO DEL CHOIQUE - LA INVERNADA y 2 más |
 | e04 | ¿Cuáles son las 5 empresas que declararon más petróleo no convencional (shale o tight) en 2025, contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.? | YPF S.A., VISTA ENERGY ARGENTINA SAU, PLUSPETROL y 2 más | ✅ YPF S.A., VISTA ENERGY ARGENTINA SAU, PLUSPETROL S.A. y 2 más | ✅ YPF S.A., VISTA ENERGY ARGENTINA SAU, PLUSPETROL y 2 más | ✅ YPF S.A., VISTA ENERGY ARGENTINA SAU, PLUSPETROL y 2 más |
@@ -24,7 +24,7 @@ Respuestas por forma (la de la evaluación y sus 3 otras formas; en las listas, 
 
 | # | Sin Rastro (SQL) | SQL + enlaces de Rastro | Con Rastro |
 |---|---|---|---|
-| e01 | ✅ 4/4 correctas · 12.581.213 / 12.581.213 / 12.581.213 / 12.581.213 | ✅ 4/4 correctas · 12.581.213 / 12.581.213 / 12.581.213 / 12.581.213 | ✅ 0/4 correctas · 0 / 0 / 0 / 0 |
+| e01 | ✅ 4/4 correctas · 12.581.213 / 12.581.213 / 12.581.213 / 12.581.213 | ✅ 4/4 correctas · 12.581.213 / 12.581.213 / 12.581.213 / 12.581.213 | ✅ 4/4 correctas · 12.581.213 / 12.581.213 / 12.581.213 / 12.581.213 |
 | e02 | ❌ 3/4 correctas · 15.809 / 15.809 / 6.263 / 15.809 | ✅ 4/4 correctas · 15.809 / 15.809 / 15.809 / 15.809 | ✅ 4/4 correctas · 15.809 / 15.809 / 15.809 / 15.809 |
 | e03 | ✅ 4/4 correctas · 5 / 5 / 5 / 5 | ✅ 4/4 correctas · 5 / 5 / 5 / 5 | ✅ 4/4 correctas · 5 / 5 / 5 / 5 |
 | e05 | ✅ 0/4 correctas · — / — / — / — | ✅ 4/4 correctas · 33 / 33 / 33 / 33 | ✅ 4/4 correctas · 33 / 33 / 33 / 33 |

@@ -2,9 +2,9 @@
  "question": "¿Qué volumen de petróleo de 2025, en m³, es de YPF si se reparte la producción de cada concesión entre sus socios según su porcentaje?",
  "attempts": [
   {
-   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (SUM(?o * ?p / 100) AS ?volumen) WHERE {\n  { SELECT ?c (SUM(?oil) AS ?o) WHERE { ?wp a :WellProduction ; :concession ?c ; :oil ?oil } GROUP BY ?c }\n  ?s a :Stake ; :concession ?c ; :partner ?co ; :percent ?p .\n  { SELECT DISTINCT ?co WHERE { ?co a :Company ; :name ?n FILTER(STRSTARTS(UCASE(STR(?n)), \"YPF\")) } }\n}",
+   "query": "PREFIX : <https://w3id.org/rastro/energia#>\nSELECT (SUM(?o * ?p / 100) AS ?total) WHERE {\n  { SELECT ?c (SUM(?oil) AS ?o) WHERE {\n      ?wp a :WellProduction ; :inConcession ?c ; :oil ?oil .\n    } GROUP BY ?c }\n  { SELECT ?c (SUM(?pct) AS ?p) WHERE {\n      ?s a :Stake ; :inConcession ?c ; :partner ?e ; :percent ?pct .\n      FILTER EXISTS { ?e :name ?n . FILTER(UCASE(STR(?n)) = \"YPF\" || STRSTARTS(UCASE(STR(?n)), \"YPF S.A\")) }\n    } GROUP BY ?c }\n}",
    "error": null
   }
  ],
- "answer": 0.0
+ "answer": 12581212.573201405
 }

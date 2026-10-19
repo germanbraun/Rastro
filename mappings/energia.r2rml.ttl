@@ -20,7 +20,7 @@
     rr:logicalTable [ rr:tableName "energia.produccion_pozo" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/production/{id}" ; rr:class :WellProduction ] ;
     rr:predicateObjectMap [ rr:predicate :well ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/well/{idpozo}" ] ] ;
-    rr:predicateObjectMap [ rr:predicate :concession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
     rr:predicateObjectMap [ rr:predicate :declaredBy ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
     rr:predicateObjectMap [ rr:predicate :formation ; rr:objectMap [ rr:column "formacion" ] ] ;
     rr:predicateObjectMap [ rr:predicate :basin ; rr:objectMap [ rr:column "cuenca" ] ] ;

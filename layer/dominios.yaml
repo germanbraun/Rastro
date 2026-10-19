@@ -63,7 +63,7 @@ energia:
   namespace: https://w3id.org/rastro/energia#
   term_sources:
     capitulo4: [WellProduction, ShaleProduction, TightProduction, UnconventionalProduction, Well, oil, gas,
-                formation, basin, province, wellId, well, concession, declaredBy, aboutWell]
+                formation, basin, province, wellId, well, declaredBy, aboutWell]
     sig_energia: [Concession, concessionId, reportedBy, operatorOnMap, DetectedVenting, DeclaredVenting, Venting,
                   date, satellite]
     enargas: [pipeline, pipelineOperator]

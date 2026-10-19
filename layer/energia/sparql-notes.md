@@ -6,6 +6,7 @@ Endpoint SPARQL de Rastro (Ontop) sobre cinco fuentes públicas: la producción 
 - `:operator` de un `:Well` es quién lo opera hoy (la empresa que declara su último mes).
 - `:formation` está en minúsculas: "vaca muerta". `:UnconventionalProduction` incluye shale y tight.
 - `:DetectedVenting` son posibles venteos vistos por satélite desde 2024 (un indicio, no una confirmación); `:DeclaredVenting`, los puntos de quema declarados. Los dos tienen `:inConcession`.
+- `:inConcession` es la única propiedad que une algo con su concesión: la producción (`:WellProduction`), la participación (`:Stake`), los venteos, los enlaces y los estudios ambientales.
 - Las empresas tienen un solo nombre por grupo cuando una corrección revisada lo dice: "CHEVRON", "PLUSPETROL", "COMPAÑIA GENERAL DE COMBUSTIBLES".
 - `:PipelineLink` (`:aboutConcession`, `:pipeline`, `:distanceKm`): el gasoducto de transporte de ENARGAS más cercano a cada concesión; 0 km si la cruza.
 - `:SurroundingsLink` (`:aboutVenting`, `:nearestTown`, `:distanceKm`, `:protectedArea`): la localidad más cercana a cada posible venteo y su área protegida, según el IGN.
