@@ -391,3 +391,7 @@ El diccionario tenía `:concession` (la producción) e `:inConcession` (particip
 
 - **Consola SPARQL** en la vista técnica de los tres dominios: un editor que arranca desde cualquier consulta de ejemplo, ejecuta sobre el Ontop del dominio y muestra el resultado y el SQL que generó Ontop. Dice también la dirección del endpoint (`http://localhost:8080`, `8081`, `8082`/sparql) para usarlo desde otras herramientas.
 - **La app abre en petróleo y gas** (el primero de `app/dominios.yaml`).
+
+## 2026-10-19 — «Así se ve un dato del grafo»
+
+Para que se entienda qué es una instancia: en la vista técnica (pestaña «Consola SPARQL») se elige una entidad real de ejemplo (una concesión, una empresa, una participación con su evidencia, la operadora de un pozo, un venteo y dónde cae; un grupo, un proveedor y su enlace; un fármaco, un ensayo y su enlace) y se ven todas sus propiedades, cada una con su nombre en el diccionario de negocio, y la misma entidad en Turtle. Cada mazo suma una diapositiva de anexo con un enlace real y su evidencia, generada desde los datos.

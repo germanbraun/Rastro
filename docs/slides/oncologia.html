@@ -447,6 +447,29 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
+<section id="instancia-oncologia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:96px 128px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Así se ve un dato del grafo</p>
+<h2 style="font-size:52px;font-weight:700;line-height:1.1;width:1664px">Por qué un ensayo prueba trastuzumab</h2>
+<p style="font-size:26px;color:#4A5568">&lt;rastro:link/NCT00003440/CHEMBL1201585&gt;</p>
+<div style="background:#FFFFFF;border-radius:20px;padding:28px 32px;width:1664px">
+<table style="font-size:28px;width:1600px;color:#14213D;padding:12px">
+<tr><th style="width:24%">Término</th><th style="width:22%">En el diccionario</th><th style="width:54%">Valor</th></tr>
+<tr><td>:interventionText</td><td>texto de la intervención</td><td>trastuzumab</td></tr>
+<tr><td>:linkDrug</td><td>fármaco del enlace</td><td>rastro:drug/CHEMBL1201585</td></tr>
+<tr><td>:linkRule</td><td>regla</td><td>nombre</td></tr>
+<tr><td>:linkTrial</td><td>ensayo del enlace</td><td>rastro:trial/NCT00003440</td></tr>
+<tr><td>:matchedText</td><td>texto que coincidió</td><td>trastuzumab</td></tr>
+<tr><td>a</td><td>es un/a</td><td>:DrugLink (Enlace ensayo → fármaco)</td></tr>
+<tr><td>a</td><td>es un/a</td><td>prov:Entity (entidad (PROV))</td></tr>
+<tr><td>prov:wasDerivedFrom</td><td>deriva de</td><td>rastro:source/chembl</td></tr>
+<tr><td>prov:wasDerivedFrom</td><td>deriva de</td><td>rastro:source/aact</td></tr>
+<tr><td>prov:wasGeneratedBy</td><td>generado por</td><td>rastro:activity/entity-linking</td></tr>
+</table>
+</div>
+<aside>Así guarda Rastro por qué un ensayo prueba un fármaco: el enlace es un dato con el ensayo, el fármaco, lo que escribió el sponsor, con qué coincidió y la regla, más la fuente. Cualquier herramienta que hable SPARQL lo lee igual.</aside>
+</section>
+</div>
+<div class="slide">
 <section id="porque" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;gap:48px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué funciona</p>
 <h2 style="font-size:72px;font-weight:700;line-height:1.1;width:1600px">Lo difícil se hace una vez, y se revisa</h2>

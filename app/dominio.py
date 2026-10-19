@@ -185,9 +185,79 @@ CONSOLE = {"oncologia": ("/ontology/queries", 8080), "proveedores": ("/ontology/
            "energia": ("/ontology/energia/queries", 8082)}
 
 
+# Instancias de ejemplo para «Así se ve un dato del grafo»: una por clase importante de cada dominio
+INSTANCES = {
+    "energia": {
+        "Una concesión: Loma Campana": "https://w3id.org/rastro/energia/concession/LCAM",
+        "Una empresa: YPF": "https://w3id.org/rastro/energia/company/YPF",
+        "Una participación (enlace con evidencia): Chevron en Loma Campana": "https://w3id.org/rastro/energia/stake/LCAM/CHEVRON",
+        "La operadora de un pozo (enlace con evidencia): pozo 107709": "https://w3id.org/rastro/energia/operatorlink/107709",
+        "La producción de un pozo en 2025": "https://w3id.org/rastro/energia/production/e2d7b974a6ee583249613016f6a495a9",
+        "Un posible venteo visto por satélite": "https://w3id.org/rastro/energia/venting/sensoresremotos_venteos_detectados.61105",
+        "Dónde cae ese venteo (enlace con evidencia)": "https://w3id.org/rastro/energia/locationlink/sensoresremotos_venteos_detectados.61105",
+    },
+    "proveedores": {
+        "Un grupo: Leidos": "https://w3id.org/rastro/proveedores/group/549300IUTGTP6EJP8124",
+        "Un proveedor: la SAIC de hoy": "https://w3id.org/rastro/proveedores/supplier/MMLKPW9JLX64",
+        "Por qué ese proveedor es de su grupo (enlace con evidencia)": "https://w3id.org/rastro/proveedores/link/group/MMLKPW9JLX64",
+        "Un contrato": "https://w3id.org/rastro/proveedores/contract/CONT_AWD_HHSN261200800001E_7529_-NONE-_-NONE-",
+    },
+    "oncologia": {
+        "Un fármaco: trastuzumab": "https://w3id.org/rastro/drug/CHEMBL1201585",
+        "Un ensayo": "https://w3id.org/rastro/trial/NCT00021255",
+        "Por qué un ensayo prueba un fármaco (enlace con evidencia)": "https://w3id.org/rastro/link/NCT00003440/CHEMBL1201585",
+    },
+}
+ONTOLOGY_FILE = {"energia": "/ontology/energia/energia.ttl", "proveedores": "/ontology/proveedores/proveedores.ttl",
+                 "oncologia": "/ontology/rastro.ttl"}
+PROV_NS, RDF_TYPE = "http://www.w3.org/ns/prov#", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+
+
+@st.cache_data
+def labels(domain):
+    """Las etiquetas en español del diccionario: término → «palabras de negocio»."""
+    import rdflib
+    g = rdflib.Graph().parse(ONTOLOGY_FILE[domain])
+    return {str(s): str(o) for s, o in g.subject_objects(rdflib.RDFS.label)}
+
+
+def short_iri(iri, domain):
+    ns = answer.DOMAINS[domain]["namespace"]
+    return (iri.replace(ns, ":").replace(PROV_NS, "prov:").replace(RDF_TYPE, "a")
+            .replace("https://w3id.org/rastro/", "rastro:"))
+
+
+def show_instances(domain):
+    """Una instancia real del grafo: cada propiedad con su nombre de negocio y su valor, y en Turtle."""
+    examples = INSTANCES.get(domain)
+    if not examples:
+        return
+    st.markdown("### Así se ve un dato del grafo")
+    st.caption("Una entidad real, con todas sus propiedades tal como las ve el LLM y cualquier herramienta: "
+               "cada una con su nombre en el diccionario de negocio. Los enlaces traen su evidencia y su fuente (PROV-O).")
+    chosen = st.selectbox("Instancia", list(examples), key=f"{domain}_instancia")
+    iri = examples[chosen]
+    _, rows = run(f"SELECT ?p ?o WHERE {{ <{iri}> ?p ?o }} ORDER BY ?p", domain)
+    names = labels(domain)
+    table = [{"Propiedad": short_iri(p, domain),
+              "En el diccionario": "es un/a" if p == RDF_TYPE else names.get(p, ""),
+              "Valor": (f"{short_iri(o, domain)}" + (f" ({names[o]})" if o in names else "")) if o.startswith("http") else o}
+             for p, o in rows]
+    st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True)
+    lines = [f"<{short_iri(iri, domain)}>"]
+    for k, (p, o) in enumerate(rows):
+        value = short_iri(o, domain) if o.startswith("http") else '"' + o.replace('"', '\\"') + '"'
+        value = f"<{value}>" if value.startswith("rastro:") else value
+        lines.append(f"    {short_iri(p, domain)} {value}" + (" ." if k == len(rows) - 1 else " ;"))
+    with st.expander("La misma instancia en Turtle (el formato estándar de RDF)"):
+        st.code("\n".join(lines), language="turtle")
+    st.divider()
+
+
 def sparql_console(domain):
     """Una consola para escribir y ejecutar SPARQL sobre el Ontop del dominio, con el SQL que genera."""
     folder, port = CONSOLE[domain]
+    show_instances(domain)
     st.markdown("### Consola SPARQL")
     st.caption(f"Corre sobre el Ontop de este dominio. Otras herramientas pueden usar el mismo endpoint: "
                f"`http://localhost:{port}/sparql`.")
