@@ -165,3 +165,8 @@ Tomadas (detalle en [decisions.md](decisions.md)):
 Abiertas:
 
 - [ ] ¿El repo de GitHub queda privado?
+
+## Segundo dominio: proveedores del Estado (EE. UU.)
+
+Plan aparte en [plan-proveedores.md](plan-proveedores.md): contratos federales, empresas y grupos, y listas de control, con la misma arquitectura y un selector de dominio en la app.
+

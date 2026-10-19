@@ -205,3 +205,7 @@ La procedencia por columna se puede imitar en SQL con el nombre del esquema. Lo 
 
 Todo era demasiado complejo para quien no conoce estas tecnologías. Regla nueva: un mensaje («integrás una vez, preguntás en lenguaje de negocio, cada respuesta se puede auditar») y tres pruebas (misma respuesta, cambios en un lugar, evidencia). Sin jerga en la capa principal: «diccionario de negocio» en lugar de ontología, «traducciones» en lugar de mapeos, «evidencia» en lugar de procedencia o PROV-O. La app arranca en modo negocio y tiene «Ver detalles técnicos»; el mazo tiene 6 diapositivas y un anexo; el guion, el one-pager y las preguntas frecuentes tienen versión para todos y versión técnica. Nada técnico se borró.
 
+## 2026-10-18 — Segundo dominio: proveedores del Estado de EE. UU.
+
+Para mostrar que Rastro sirve para cualquier dominio, con un caso de negocio que entiende cualquiera (compras, riesgo, compliance), se suma un segundo dominio en la misma app: contratos federales de EE. UU. de más de US$10 millones del año fiscal 2025 (36.147), sus proveedores y grupos, y las listas de control del gobierno. Se eligió EE. UU. porque sus datos son los más abiertos (todas las fuentes, sin clave). Tiene los mismos ingredientes que oncología: nombres de empresas escritos de varias formas (entity linking), jerarquías (grupo → filiales, sector → subsectores) y evidencia. Cada dominio tiene su propio Ontop, con su ontología y su archivo de mapeos.
+
