@@ -239,9 +239,12 @@ def render(cfg_path, tech):
                 st.markdown(md(item["respuesta"]))
         if tech:
             st.markdown("##### Para técnicos")
-            with st.expander("Cómo está armado Rastro: arquitectura y diccionario de proveedores"):
+            diagram = cfg.get("diagrama", {})
+            with st.expander(f"Cómo está armado Rastro: arquitectura y {diagram.get('titulo', 'diccionario')}"):
                 for name, caption in [("arquitectura", "De las fuentes de cada dominio a una capa semántica."),
-                                      ("ontologia-proveedores", "El diccionario de proveedores: lo que lee el LLM.")]:
+                                      (diagram.get("archivo"), f"El {diagram.get('titulo')}: lo que lee el LLM.")]:
+                    if not name:
+                        continue
                     st.caption(caption)
                     image = base64.b64encode(Path(f"/app/{name}.svg").read_bytes()).decode()
                     st.markdown(f'<img src="data:image/svg+xml;base64,{image}" style="width:100%;margin-bottom:24px">',

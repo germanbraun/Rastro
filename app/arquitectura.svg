@@ -8,21 +8,22 @@
 <text x="440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">ALMACENAMIENTO</text>
 <text x="900" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">CAPA SEMÁNTICA</text>
 <text x="1440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">QUIÉN LA USA</text>
-<rect x="20" y="60" width="240" height="250" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<rect x="20" y="60" width="240" height="190" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="140.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Proveedores</text>
-<text x="140.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568">(EE. UU.)</text>
-<text x="140.0" y="158" text-anchor="middle" font-size="22" fill="#4A5568"></text>
-<text x="140.0" y="188" text-anchor="middle" font-size="22" fill="#4A5568">USAspending</text>
-<text x="140.0" y="218" text-anchor="middle" font-size="22" fill="#4A5568">NAICS · GLEIF</text>
-<text x="140.0" y="248" text-anchor="middle" font-size="22" fill="#4A5568">listas de control</text>
-<text x="140.0" y="278" text-anchor="middle" font-size="22" fill="#4A5568">Wikidata</text>
-<rect x="20" y="340" width="240" height="250" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="140.0" y="378" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Oncología</text>
-<text x="140.0" y="408" text-anchor="middle" font-size="22" fill="#4A5568"></text>
-<text x="140.0" y="438" text-anchor="middle" font-size="22" fill="#4A5568">AACT</text>
-<text x="140.0" y="468" text-anchor="middle" font-size="22" fill="#4A5568">ChEMBL</text>
-<text x="140.0" y="498" text-anchor="middle" font-size="22" fill="#4A5568">openFDA</text>
-<text x="140.0" y="528" text-anchor="middle" font-size="22" fill="#4A5568">MeSH</text>
+<text x="140.0" y="126" text-anchor="middle" font-size="20" fill="#4A5568">(EE. UU.)</text>
+<text x="140.0" y="154" text-anchor="middle" font-size="20" fill="#4A5568">USAspending</text>
+<text x="140.0" y="182" text-anchor="middle" font-size="20" fill="#4A5568">NAICS · GLEIF</text>
+<text x="140.0" y="210" text-anchor="middle" font-size="20" fill="#4A5568">listas · Wikidata</text>
+<rect x="20" y="268" width="240" height="150" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="140.0" y="306" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Petróleo y gas</text>
+<text x="140.0" y="334" text-anchor="middle" font-size="20" fill="#4A5568">(Argentina)</text>
+<text x="140.0" y="362" text-anchor="middle" font-size="20" fill="#4A5568">Capítulo IV</text>
+<text x="140.0" y="390" text-anchor="middle" font-size="20" fill="#4A5568">mapas (WFS)</text>
+<rect x="20" y="436" width="240" height="154" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="140.0" y="474" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Oncología</text>
+<text x="140.0" y="502" text-anchor="middle" font-size="20" fill="#4A5568">AACT · ChEMBL</text>
+<text x="140.0" y="530" text-anchor="middle" font-size="20" fill="#4A5568">openFDA</text>
+<text x="140.0" y="558" text-anchor="middle" font-size="20" fill="#4A5568">MeSH</text>
 <rect x="320" y="60" width="240" height="400" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="440.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Postgres</text>
 <text x="440.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568">un esquema</text>
@@ -34,14 +35,15 @@
 <rect x="320" y="490" width="240" height="100" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="440.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB</text>
 <text x="440.0" y="558" text-anchor="middle" font-size="22" fill="#4A5568">MeSH completo</text>
-<line x1="262" y1="185" x2="318" y2="185" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="262" y1="420" x2="318" y2="380" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="262" y1="540" x2="318" y2="540" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="262" y1="155" x2="318" y2="155" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="262" y1="343" x2="318" y2="343" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="262" y1="480" x2="318" y2="430" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="262" y1="555" x2="318" y2="545" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="140" y="628" text-anchor="middle" font-size="20" fill="#4A5568">un cargador por fuente</text>
 <rect x="620" y="50" width="560" height="590" rx="20" fill="#2F6FB5"/>
 <rect x="650" y="72" width="500" height="136" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
 <text x="900.0" y="110" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Entity linking y texto → dato</text>
-<text x="900.0" y="138" text-anchor="middle" font-size="20" fill="#FFFFFF">empresa → LEI → grupo · ensayo → fármaco</text>
+<text x="900.0" y="138" text-anchor="middle" font-size="20" fill="#FFFFFF">empresa → grupo · ensayo → fármaco · socios</text>
 <text x="900.0" y="166" text-anchor="middle" font-size="20" fill="#FFFFFF">motivo escrito → motivo clasificado</text>
 <text x="900.0" y="194" text-anchor="middle" font-size="20" fill="#FFFFFF">cada uno con su evidencia (PROV-O)</text>
 <rect x="650" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
@@ -60,7 +62,7 @@
 <line x1="562" y1="270" x2="618" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <line x1="900" y1="352" x2="900" y2="396" stroke="#FFFFFF" stroke-width="2.5" marker-end="url(#white)"/>
 <rect x="1250" y="50" width="380" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1440.0" y="88" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">App Rastro (dos dominios)</text>
+<text x="1440.0" y="88" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">App Rastro (tres dominios)</text>
 <text x="1440.0" y="118" text-anchor="middle" font-size="22" fill="#4A5568">el LLM lee el diccionario</text>
 <text x="1440.0" y="148" text-anchor="middle" font-size="22" fill="#4A5568">y escribe la consulta SPARQL</text>
 <rect x="1250" y="196" width="380" height="150" rx="14" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>

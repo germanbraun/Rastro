@@ -7,6 +7,7 @@ resumen: >-
   (Capítulo IV) y los mapas de concesiones, socios y venteos de gas (WFS).
 ejemplo_libre: "Por ejemplo: ¿qué empresas producen más gas en la cuenca Neuquina?"
 ontologia: /ontology/energia/energia.ttl
+diagrama: {archivo: ontologia-energia, titulo: diccionario de petróleo y gas}   # app/ontologia-energia.svg, lo dibuja docs/diagramas/build.py
 
 # La demo en tres pasos: integración, trazabilidad y cruce con mapas
 demo:

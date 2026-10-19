@@ -9,6 +9,7 @@ ejemplo_libre: "Por ejemplo: ¿qué grupos tienen más contratos con la NASA?"
 evaluacion: /layer/proveedores/resultados.json
 cambio: /layer/proveedores/cambio/resultado.json
 ontologia: /ontology/proveedores/proveedores.ttl
+diagrama: {archivo: ontologia-proveedores, titulo: diccionario de proveedores}   # app/ontologia-proveedores.svg, lo dibuja docs/diagramas/build.py
 texto: /layer/proveedores/textos/leidos.json   # la pregunta sobre textos (GraphRAG anclado)
 
 # La demo en tres pasos, todos sobre Leidos: integración, trazabilidad y análisis de textos

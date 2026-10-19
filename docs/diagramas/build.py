@@ -1,4 +1,4 @@
-"""Dibuja los dos diagramas de Rastro como SVG: arquitectura.svg y ontologia.svg.
+"""Dibuja los diagramas de Rastro como SVG: la arquitectura y el diccionario de cada dominio.
 
 Los usan las diapositivas (docs/slides) y la app. Para cambiarlos, editar acá y correr:
     python3 docs/diagramas/build.py
@@ -52,18 +52,20 @@ def architecture():
     for x, t in [(140, "FUENTES PÚBLICAS"), (440, "ALMACENAMIENTO"), (900, "CAPA SEMÁNTICA"), (1440, "QUIÉN LA USA")]:
         b.append(f'<text x="{x}" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="{BLUE}">{t}</text>')
     # Fuentes, por dominio
-    b.append(box(20, 60, 240, 250, "Proveedores", ["(EE. UU.)", "", "USAspending", "NAICS · GLEIF", "listas de control", "Wikidata"]))
-    b.append(box(20, 340, 240, 250, "Oncología", ["", "AACT", "ChEMBL", "openFDA", "MeSH"]))
+    b.append(box(20, 60, 240, 190, "Proveedores", ["(EE. UU.)", "USAspending", "NAICS · GLEIF", "listas · Wikidata"], sub=20))
+    b.append(box(20, 268, 240, 150, "Petróleo y gas", ["(Argentina)", "Capítulo IV", "mapas (WFS)"], sub=20))
+    b.append(box(20, 436, 240, 154, "Oncología", ["AACT · ChEMBL", "openFDA", "MeSH"], sub=20))
     # Almacenamiento
     b.append(box(320, 60, 240, 400, "Postgres", ["un esquema", "por fuente", "", "+ los enlaces", "de Rastro,", "con su evidencia"]))
     b.append(box(320, 490, 240, 100, "GraphDB", ["MeSH completo"]))
-    b.append(arrow(262, 185, 318, 185))
-    b.append(arrow(262, 420, 318, 380))
-    b.append(arrow(262, 540, 318, 540))
+    b.append(arrow(262, 155, 318, 155))
+    b.append(arrow(262, 343, 318, 343))
+    b.append(arrow(262, 480, 318, 430))
+    b.append(arrow(262, 555, 318, 545))
     b.append(f'<text x="140" y="628" text-anchor="middle" font-size="20" fill="{GRAY}">un cargador por fuente</text>')
     # Capa semántica
     b.append(f'<rect x="620" y="50" width="560" height="590" rx="20" fill="{BLUE}"/>')
-    b.append(box(650, 72, 500, 136, "Entity linking y texto → dato", ["empresa → LEI → grupo · ensayo → fármaco", "motivo escrito → motivo clasificado", "cada uno con su evidencia (PROV-O)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4", sub=20))
+    b.append(box(650, 72, 500, 136, "Entity linking y texto → dato", ["empresa → grupo · ensayo → fármaco · socios", "motivo escrito → motivo clasificado", "cada uno con su evidencia (PROV-O)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4", sub=20))
     b.append(box(650, 220, 240, 130, "Ontología", ["el diccionario", "de cada dominio"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
     b.append(box(910, 220, 240, 130, "Mapeos", ["columna → concepto", "(R2RML)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
     b.append(box(650, 400, 500, 130, "Ontop, uno por dominio", ["traduce cada consulta SPARQL", "a SQL sobre Postgres"], fill="#FFFFFF", color=INK, stroke="#FFFFFF"))
@@ -71,7 +73,7 @@ def architecture():
     b.append(arrow(562, 270, 618, 270))
     b.append(arrow(900, 352, 900, 396, color="#FFFFFF", head="white"))
     # Quién la usa
-    b.append(box(1250, 50, 380, 130, "App Rastro (dos dominios)", ["el LLM lee el diccionario", "y escribe la consulta SPARQL"]))
+    b.append(box(1250, 50, 380, 130, "App Rastro (tres dominios)", ["el LLM lee el diccionario", "y escribe la consulta SPARQL"]))
     b.append(box(1250, 196, 380, 150, "GraphRAG anclado", ["el grafo elige los registros;", "el LLM resume solo sus textos", "y cita cada uno"], fill="#E8F0FA", stroke=BLUE))
     b.append(box(1250, 362, 380, 76, "Otras herramientas", ["cualquier cliente SPARQL"], sub=20))
     b.append(box(1250, 454, 380, 90, "GraphDB federa", ["Rastro + MeSH + Wikidata"], sub=20))
@@ -157,6 +159,41 @@ def ontology_suppliers():
     return svg(1680, 740, "\n".join(b))
 
 
+def ontology_energy():
+    b = []
+    # Clases de producción y de venteo
+    b.append(box(40, 10, 200, 70, "Shale", [], size=24))
+    b.append(box(280, 10, 200, 70, "Tight", [], size=24))
+    b.append(box(110, 130, 300, 80, "No convencional", ["deducida, sin mapeo"], dash=True, size=24, sub=19))
+    b.append(arrow(140, 80, 220, 128, head="sub"))
+    b.append(arrow(380, 80, 300, 128, head="sub"))
+    b.append(arrow(400, 212, 500, 298, head="sub"))
+    b.append(box(1180, 10, 260, 70, "Visto por satélite", [], size=24))
+    b.append(box(1460, 10, 200, 70, "Declarado", [], size=24))
+    b.append(arrow(1310, 80, 1360, 298, head="sub"))
+    b.append(arrow(1560, 80, 1440, 298, head="sub"))
+    b.append(f'<text x="1660" y="728" text-anchor="end" font-size="20" fill="{GRAY}">▷ es un tipo de (subclase)</text>')
+    # Centro
+    b.append(box(40, 300, 240, 160, "Pozo", ["identificador"], fill=LIGHT, stroke=INK))
+    b.append(box(380, 300, 320, 160, "Producción de un pozo", ["petróleo · gas (2025)", "formación · cuenca"], fill=LIGHT, stroke=INK, size=24))
+    b.append(box(800, 300, 280, 160, "Concesión", ["nombre · código", "quién informó el mapa"], fill=LIGHT, stroke=INK))
+    b.append(box(1260, 300, 280, 160, "Venteo", ["fecha · satélite"], fill=LIGHT, stroke=INK))
+    b.append(box(380, 560, 320, 130, "Empresa", ["sus nombres en", "cada fuente"], fill=LIGHT, stroke=INK))
+    b.append(box(800, 560, 280, 130, "Participación", ["porcentaje"], fill=LIGHT, stroke=INK))
+    b.append(arrow(378, 380, 284, 380, "pozo"))
+    b.append(arrow(702, 380, 796, 380, "concesión"))
+    b.append(arrow(1258, 380, 1084, 380, "en la concesión"))
+    b.append(arrow(540, 462, 540, 556, "la declara", lx=610, ly=515))
+    b.append(arrow(160, 462, 376, 600, "operadora hoy", lx=330, ly=548))
+    b.append(arrow(820, 462, 704, 570, "operadora en el mapa", lx=690, ly=482))
+    b.append(arrow(940, 556, 940, 466, "en la concesión", lx=1030, ly=515))
+    b.append(arrow(798, 650, 704, 650, "socia", lx=750, ly=640))
+    # Evidencia y fuente
+    b.append(box(1260, 560, 280, 130, "Enlaces", ["evidencia de cada", "socio, operadora y nombre", "(PROV-O)"], size=24, sub=19, dash=True))
+    b.append(box(40, 560, 240, 130, "Fuente", ["cada dato apunta", "a su fuente"], size=24, sub=20))
+    return svg(1680, 740, "\n".join(b))
+
+
 # Las mismas imágenes van a la app y, dentro de una diapositiva cada una, al mazo
 ROOT = HERE.parent.parent
 SLIDE = """<section id="{id}" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
@@ -184,6 +221,13 @@ for name, drawing, sid, label, title, notes in [
      "global (LEI), con su país y su matriz final. Los sectores incluyen sus subsectores. Arriba, una regla "
      "de negocio: «proveedor para revisar» no tiene mapeo; Ontop la deduce de dos clases: matriz extranjera "
      "o coincidencia con una lista de control. Cada unión guarda su evidencia, con PROV-O."),
+    ("ontologia-energia", ontology_energy(), "ontologiaenergia", "El diccionario de petróleo y gas",
+     "Pozos, concesiones y socios",
+     "El diccionario del dominio de petróleo y gas. La producción de cada pozo en 2025 la declara una empresa y "
+     "pertenece a una concesión; cada concesión tiene socios, con su porcentaje, y una operadora en el mapa. Cada "
+     "pozo tiene su operadora de hoy, según una regla escrita. Los venteos, vistos por satélite o declarados, caen "
+     "en una concesión. Arriba, una regla de negocio: «no convencional» no tiene mapeo; Ontop la deduce de shale y "
+     "tight. Cada unión guarda su evidencia, con PROV-O."),
     ("ontologia", ontology(), "ontologia", "El diccionario de oncología", "Ensayos, fármacos y enfermedades",
      "Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una "
      "condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre "
