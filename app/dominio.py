@@ -263,7 +263,7 @@ def render(cfg_path, tech):
             st.markdown("##### Para técnicos")
             diagram = cfg.get("diagrama", {})
             with st.expander(f"Cómo está armado Rastro: arquitectura y {diagram.get('titulo', 'diccionario')}"):
-                for name, caption in [("arquitectura", "De las fuentes de cada dominio a una capa semántica."),
+                for name, caption in [(f"arquitectura-{cfg['domain']}", "De las fuentes del dominio a una capa semántica."),
                                       (diagram.get("archivo"), f"El {diagram.get('titulo')}: lo que lee el LLM.")]:
                     if not name:
                         continue

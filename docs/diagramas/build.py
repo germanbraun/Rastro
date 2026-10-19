@@ -47,43 +47,66 @@ def svg(w, h, body):
 '''
 
 
-def architecture():
+# Lo propio de cada dominio en el diagrama de arquitectura
+ARCH = {
+    "proveedores": {
+        "fuente": ("Proveedores", ["(EE. UU.)", "", "USAspending", "NAICS", "GLEIF", "listas de control", "Wikidata"]),
+        "enlaces": ["empresa → grupo (USAspending + GLEIF)", "empresa → LEI · → lista de control", "cada uno con su evidencia (PROV-O)"],
+        "graphrag": ["el grafo elige los contratos;", "el LLM resume sus descripciones", "y cita cada uno"],
+        "graphdb": False,
+    },
+    "energia": {
+        "fuente": ("Petróleo y gas", ["(Argentina)", "", "Capítulo IV", "mapas (WFS)", "ENARGAS · IGN", "GLEIF", "estudios ambientales"]),
+        "enlaces": ["empresa entre fuentes · socios", "operadora · punto → concesión", "con su evidencia (PROV-O)"],
+        "graphrag": ["el grafo elige los estudios;", "el LLM resume solo sus textos", "y cita cada uno"],
+        "graphdb": False,
+    },
+    "oncologia": {
+        "fuente": ("Oncología", ["", "AACT", "ChEMBL", "openFDA", "MeSH"]),
+        "enlaces": ["ensayo → fármaco · ensayo → MeSH", "motivo escrito → motivo clasificado", "cada uno con su evidencia (PROV-O)"],
+        "graphrag": ["el grafo elige los ensayos;", "el LLM resume sus motivos", "y cita cada uno"],
+        "graphdb": True,
+    },
+}
+
+
+def architecture(domain):
+    a = ARCH[domain]
     b = []
     for x, t in [(140, "FUENTES PÚBLICAS"), (440, "ALMACENAMIENTO"), (900, "CAPA SEMÁNTICA"), (1440, "QUIÉN LA USA")]:
         b.append(f'<text x="{x}" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="{BLUE}">{t}</text>')
-    # Fuentes, por dominio
-    b.append(box(20, 60, 240, 190, "Proveedores", ["(EE. UU.)", "USAspending", "NAICS · GLEIF", "listas · Wikidata"], sub=20))
-    b.append(box(20, 268, 240, 150, "Petróleo y gas", ["(Argentina)", "Capítulo IV · mapas", "ENARGAS · IGN · GLEIF"], sub=20))
-    b.append(box(20, 436, 240, 154, "Oncología", ["AACT · ChEMBL", "openFDA", "MeSH"], sub=20))
+    # Fuentes del dominio
+    b.append(box(20, 60, 240, 400 if a["graphdb"] else 530, a["fuente"][0], a["fuente"][1]))
     # Almacenamiento
     b.append(box(320, 60, 240, 400, "Postgres", ["un esquema", "por fuente", "", "+ los enlaces", "de Rastro,", "con su evidencia"]))
-    b.append(box(320, 490, 240, 100, "GraphDB", ["MeSH completo"]))
-    b.append(arrow(262, 155, 318, 155))
-    b.append(arrow(262, 343, 318, 343))
-    b.append(arrow(262, 480, 318, 430))
-    b.append(arrow(262, 555, 318, 545))
+    b.append(arrow(262, 260, 318, 260))
+    if a["graphdb"]:
+        b.append(box(20, 490, 240, 100, "MeSH", ["vocabulario médico"]))
+        b.append(box(320, 490, 240, 100, "GraphDB", ["MeSH completo"]))
+        b.append(arrow(262, 540, 318, 540))
     b.append(f'<text x="140" y="628" text-anchor="middle" font-size="20" fill="{GRAY}">un cargador por fuente</text>')
     # Capa semántica
     b.append(f'<rect x="620" y="50" width="560" height="590" rx="20" fill="{BLUE}"/>')
-    b.append(box(650, 72, 500, 136, "Entity linking y texto → dato", ["empresa → grupo · ensayo → fármaco · socios", "motivo escrito → motivo clasificado", "cada uno con su evidencia (PROV-O)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4", sub=20))
-    b.append(box(650, 220, 240, 130, "Ontología", ["el diccionario", "de cada dominio"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
+    b.append(box(650, 72, 500, 136, "Entity linking", a["enlaces"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4", sub=20))
+    b.append(box(650, 220, 240, 130, "Ontología", ["el diccionario", "de negocio"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
     b.append(box(910, 220, 240, 130, "Mapeos", ["columna → concepto", "(R2RML)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
-    b.append(box(650, 400, 500, 130, "Ontop, uno por dominio", ["traduce cada consulta SPARQL", "a SQL sobre Postgres"], fill="#FFFFFF", color=INK, stroke="#FFFFFF"))
+    b.append(box(650, 400, 500, 130, "Ontop", ["traduce cada consulta SPARQL", "a SQL sobre Postgres"], fill="#FFFFFF", color=INK, stroke="#FFFFFF"))
     b.append(f'<text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>')
     b.append(arrow(562, 270, 618, 270))
     b.append(arrow(900, 352, 900, 396, color="#FFFFFF", head="white"))
     # Quién la usa
-    b.append(box(1250, 50, 380, 130, "App Rastro (tres dominios)", ["el LLM lee el diccionario", "y escribe la consulta SPARQL"]))
-    b.append(box(1250, 196, 380, 150, "GraphRAG anclado", ["el grafo elige los registros;", "el LLM resume solo sus textos", "y cita cada uno"], fill="#E8F0FA", stroke=BLUE))
+    b.append(box(1250, 50, 380, 130, "App Rastro", ["el LLM lee el diccionario", "y escribe la consulta SPARQL"]))
+    b.append(box(1250, 196, 380, 150, "GraphRAG anclado", a["graphrag"], fill="#E8F0FA", stroke=BLUE))
     b.append(box(1250, 362, 380, 76, "Otras herramientas", ["cualquier cliente SPARQL"], sub=20))
-    b.append(box(1250, 454, 380, 90, "GraphDB federa", ["Rastro + MeSH + Wikidata"], sub=20))
-    b.append(box(1250, 572, 380, 70, "Wikidata", [], fill=LIGHT, dash=True))
     b.append(arrow(1182, 115, 1248, 115))
     b.append(arrow(1182, 270, 1248, 270))
     b.append(arrow(1182, 400, 1248, 400))
-    b.append(arrow(1182, 490, 1248, 490))
-    b.append(arrow(1440, 546, 1440, 568))
-    b.append(f'<polyline points="562,560 600,560 600,662 1215,662 1215,515 1246,515" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
+    if a["graphdb"]:
+        b.append(box(1250, 454, 380, 90, "GraphDB federa", ["Rastro + MeSH + Wikidata"], sub=20))
+        b.append(box(1250, 572, 380, 70, "Wikidata", [], fill=LIGHT, dash=True))
+        b.append(arrow(1182, 490, 1248, 490))
+        b.append(arrow(1440, 546, 1440, 568))
+        b.append(f'<polyline points="562,560 600,560 600,662 1215,662 1215,515 1246,515" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
     return svg(1664, 680, "\n".join(b))
 
 
@@ -204,16 +227,12 @@ SLIDE = """<section id="{id}" style="background:#F7F6F2;color:#14213D;font-famil
 </section>
 """
 for name, drawing, sid, label, title, notes in [
-    ("arquitectura", architecture(), "arquitectura", "Cómo está armado", "De las fuentes de cada dominio a una capa semántica",
-     "De izquierda a derecha. Las fuentes públicas de cada dominio se cargan tal como vienen, en Postgres; MeSH, también en GraphDB. "
-     "La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la "
-     "ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce "
-     "cada consulta a SQL; hay uno por dominio. Los datos no se mueven. El entity linking también convierte texto en "
-     "datos: el motivo escrito de cada ensayo detenido pasa a ser un motivo clasificado, con su evidencia. La usa la "
-     "app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en "
-     "la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada "
-     "uno. También la usan otras "
-     "herramientas que hablen SPARQL, y GraphDB, que puede unirla con MeSH y Wikidata en una sola consulta."),
+    ("arquitectura-proveedores", architecture("proveedores"), "arquitectura-proveedores", "Cómo está armado", "De cinco fuentes a una capa semántica",
+     "De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL."),
+    ("arquitectura-energia", architecture("energia"), "arquitectura-energia", "Cómo está armado", "De seis fuentes a una capa semántica",
+     "De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL."),
+    ("arquitectura-oncologia", architecture("oncologia"), "arquitectura-oncologia", "Cómo está armado", "De cuatro fuentes a una capa semántica",
+     "De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL. En oncología, MeSH vive también en GraphDB, que puede unir Rastro con MeSH y Wikidata en una sola consulta."),
     ("ontologia-proveedores", ontology_suppliers(), "ontologiaprov", "El diccionario de proveedores",
      "Contratos, empresas y grupos",
      "El diccionario del dominio de proveedores. Un contrato tiene una agencia, un sector y un proveedor; "

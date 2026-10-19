@@ -1,6 +1,6 @@
-<section id="arquitectura" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
+<section id="arquitectura-oncologia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Cómo está armado</p>
-<h2 style="font-size:56px;font-weight:700;line-height:1.1">De las fuentes de cada dominio a una capa semántica</h2>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">De cuatro fuentes a una capa semántica</h2>
 <div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 680" width="100%" font-family="'Times New Roman', Times, serif">
 <defs>
 <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
@@ -11,22 +11,13 @@
 <text x="440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">ALMACENAMIENTO</text>
 <text x="900" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">CAPA SEMÁNTICA</text>
 <text x="1440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">QUIÉN LA USA</text>
-<rect x="20" y="60" width="240" height="190" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="140.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Proveedores</text>
-<text x="140.0" y="126" text-anchor="middle" font-size="20" fill="#4A5568">(EE. UU.)</text>
-<text x="140.0" y="154" text-anchor="middle" font-size="20" fill="#4A5568">USAspending</text>
-<text x="140.0" y="182" text-anchor="middle" font-size="20" fill="#4A5568">NAICS · GLEIF</text>
-<text x="140.0" y="210" text-anchor="middle" font-size="20" fill="#4A5568">listas · Wikidata</text>
-<rect x="20" y="268" width="240" height="150" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="140.0" y="306" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Petróleo y gas</text>
-<text x="140.0" y="334" text-anchor="middle" font-size="20" fill="#4A5568">(Argentina)</text>
-<text x="140.0" y="362" text-anchor="middle" font-size="20" fill="#4A5568">Capítulo IV · mapas</text>
-<text x="140.0" y="390" text-anchor="middle" font-size="20" fill="#4A5568">ENARGAS · IGN · GLEIF</text>
-<rect x="20" y="436" width="240" height="154" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="140.0" y="474" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Oncología</text>
-<text x="140.0" y="502" text-anchor="middle" font-size="20" fill="#4A5568">AACT · ChEMBL</text>
-<text x="140.0" y="530" text-anchor="middle" font-size="20" fill="#4A5568">openFDA</text>
-<text x="140.0" y="558" text-anchor="middle" font-size="20" fill="#4A5568">MeSH</text>
+<rect x="20" y="60" width="240" height="400" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="140.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Oncología</text>
+<text x="140.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568"></text>
+<text x="140.0" y="158" text-anchor="middle" font-size="22" fill="#4A5568">AACT</text>
+<text x="140.0" y="188" text-anchor="middle" font-size="22" fill="#4A5568">ChEMBL</text>
+<text x="140.0" y="218" text-anchor="middle" font-size="22" fill="#4A5568">openFDA</text>
+<text x="140.0" y="248" text-anchor="middle" font-size="22" fill="#4A5568">MeSH</text>
 <rect x="320" y="60" width="240" height="400" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="440.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Postgres</text>
 <text x="440.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568">un esquema</text>
@@ -35,59 +26,60 @@
 <text x="440.0" y="218" text-anchor="middle" font-size="22" fill="#4A5568">+ los enlaces</text>
 <text x="440.0" y="248" text-anchor="middle" font-size="22" fill="#4A5568">de Rastro,</text>
 <text x="440.0" y="278" text-anchor="middle" font-size="22" fill="#4A5568">con su evidencia</text>
+<line x1="262" y1="260" x2="318" y2="260" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<rect x="20" y="490" width="240" height="100" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="140.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">MeSH</text>
+<text x="140.0" y="558" text-anchor="middle" font-size="22" fill="#4A5568">vocabulario médico</text>
 <rect x="320" y="490" width="240" height="100" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="440.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB</text>
 <text x="440.0" y="558" text-anchor="middle" font-size="22" fill="#4A5568">MeSH completo</text>
-<line x1="262" y1="155" x2="318" y2="155" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="262" y1="343" x2="318" y2="343" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="262" y1="480" x2="318" y2="430" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="262" y1="555" x2="318" y2="545" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="262" y1="540" x2="318" y2="540" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="140" y="628" text-anchor="middle" font-size="20" fill="#4A5568">un cargador por fuente</text>
 <rect x="620" y="50" width="560" height="590" rx="20" fill="#2F6FB5"/>
 <rect x="650" y="72" width="500" height="136" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
-<text x="900.0" y="110" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Entity linking y texto → dato</text>
-<text x="900.0" y="138" text-anchor="middle" font-size="20" fill="#FFFFFF">empresa → grupo · ensayo → fármaco · socios</text>
+<text x="900.0" y="110" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Entity linking</text>
+<text x="900.0" y="138" text-anchor="middle" font-size="20" fill="#FFFFFF">ensayo → fármaco · ensayo → MeSH</text>
 <text x="900.0" y="166" text-anchor="middle" font-size="20" fill="#FFFFFF">motivo escrito → motivo clasificado</text>
 <text x="900.0" y="194" text-anchor="middle" font-size="20" fill="#FFFFFF">cada uno con su evidencia (PROV-O)</text>
 <rect x="650" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
 <text x="770.0" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Ontología</text>
 <text x="770.0" y="288" text-anchor="middle" font-size="22" fill="#FFFFFF">el diccionario</text>
-<text x="770.0" y="318" text-anchor="middle" font-size="22" fill="#FFFFFF">de cada dominio</text>
+<text x="770.0" y="318" text-anchor="middle" font-size="22" fill="#FFFFFF">de negocio</text>
 <rect x="910" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
 <text x="1030.0" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Mapeos</text>
 <text x="1030.0" y="288" text-anchor="middle" font-size="22" fill="#FFFFFF">columna → concepto</text>
 <text x="1030.0" y="318" text-anchor="middle" font-size="22" fill="#FFFFFF">(R2RML)</text>
 <rect x="650" y="400" width="500" height="130" rx="14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2"/>
-<text x="900.0" y="438" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Ontop, uno por dominio</text>
+<text x="900.0" y="438" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Ontop</text>
 <text x="900.0" y="468" text-anchor="middle" font-size="22" fill="#4A5568">traduce cada consulta SPARQL</text>
 <text x="900.0" y="498" text-anchor="middle" font-size="22" fill="#4A5568">a SQL sobre Postgres</text>
 <text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>
 <line x1="562" y1="270" x2="618" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <line x1="900" y1="352" x2="900" y2="396" stroke="#FFFFFF" stroke-width="2.5" marker-end="url(#white)"/>
 <rect x="1250" y="50" width="380" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1440.0" y="88" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">App Rastro (tres dominios)</text>
+<text x="1440.0" y="88" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">App Rastro</text>
 <text x="1440.0" y="118" text-anchor="middle" font-size="22" fill="#4A5568">el LLM lee el diccionario</text>
 <text x="1440.0" y="148" text-anchor="middle" font-size="22" fill="#4A5568">y escribe la consulta SPARQL</text>
 <rect x="1250" y="196" width="380" height="150" rx="14" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
 <text x="1440.0" y="234" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphRAG anclado</text>
-<text x="1440.0" y="264" text-anchor="middle" font-size="22" fill="#14213D">el grafo elige los registros;</text>
-<text x="1440.0" y="294" text-anchor="middle" font-size="22" fill="#14213D">el LLM resume solo sus textos</text>
+<text x="1440.0" y="264" text-anchor="middle" font-size="22" fill="#14213D">el grafo elige los ensayos;</text>
+<text x="1440.0" y="294" text-anchor="middle" font-size="22" fill="#14213D">el LLM resume sus motivos</text>
 <text x="1440.0" y="324" text-anchor="middle" font-size="22" fill="#14213D">y cita cada uno</text>
 <rect x="1250" y="362" width="380" height="76" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="1440.0" y="400" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Otras herramientas</text>
 <text x="1440.0" y="428" text-anchor="middle" font-size="20" fill="#4A5568">cualquier cliente SPARQL</text>
+<line x1="1182" y1="115" x2="1248" y2="115" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="270" x2="1248" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="400" x2="1248" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <rect x="1250" y="454" width="380" height="90" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="1440.0" y="492" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB federa</text>
 <text x="1440.0" y="520" text-anchor="middle" font-size="20" fill="#4A5568">Rastro + MeSH + Wikidata</text>
 <rect x="1250" y="572" width="380" height="70" rx="14" fill="#F7F6F2" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
 <text x="1440.0" y="615.6666666666666" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Wikidata</text>
-<line x1="1182" y1="115" x2="1248" y2="115" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="1182" y1="270" x2="1248" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
-<line x1="1182" y1="400" x2="1248" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <line x1="1182" y1="490" x2="1248" y2="490" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <line x1="1440" y1="546" x2="1440" y2="568" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <polyline points="562,560 600,560 600,662 1215,662 1215,515 1246,515" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 </svg>
 </div>
-<aside>De izquierda a derecha. Las fuentes públicas de cada dominio se cargan tal como vienen, en Postgres; MeSH, también en GraphDB. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL; hay uno por dominio. Los datos no se mueven. El entity linking también convierte texto en datos: el motivo escrito de cada ensayo detenido pasa a ser un motivo clasificado, con su evidencia. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la usan otras herramientas que hablen SPARQL, y GraphDB, que puede unirla con MeSH y Wikidata en una sola consulta.</aside>
+<aside>De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL. En oncología, MeSH vive también en GraphDB, que puede unir Rastro con MeSH y Wikidata en una sola consulta.</aside>
 </section>

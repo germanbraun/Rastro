@@ -1,0 +1,72 @@
+<section id="arquitectura-proveedores" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Cómo está armado</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">De cinco fuentes a una capa semántica</h2>
+<div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 680" width="100%" font-family="'Times New Roman', Times, serif">
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
+<marker id="sub" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/></marker>
+<marker id="white" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#FFFFFF"/></marker>
+</defs>
+<text x="140" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">FUENTES PÚBLICAS</text>
+<text x="440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">ALMACENAMIENTO</text>
+<text x="900" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">CAPA SEMÁNTICA</text>
+<text x="1440" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">QUIÉN LA USA</text>
+<rect x="20" y="60" width="240" height="530" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="140.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Proveedores</text>
+<text x="140.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568">(EE. UU.)</text>
+<text x="140.0" y="158" text-anchor="middle" font-size="22" fill="#4A5568"></text>
+<text x="140.0" y="188" text-anchor="middle" font-size="22" fill="#4A5568">USAspending</text>
+<text x="140.0" y="218" text-anchor="middle" font-size="22" fill="#4A5568">NAICS</text>
+<text x="140.0" y="248" text-anchor="middle" font-size="22" fill="#4A5568">GLEIF</text>
+<text x="140.0" y="278" text-anchor="middle" font-size="22" fill="#4A5568">listas de control</text>
+<text x="140.0" y="308" text-anchor="middle" font-size="22" fill="#4A5568">Wikidata</text>
+<rect x="320" y="60" width="240" height="400" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="440.0" y="98" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Postgres</text>
+<text x="440.0" y="128" text-anchor="middle" font-size="22" fill="#4A5568">un esquema</text>
+<text x="440.0" y="158" text-anchor="middle" font-size="22" fill="#4A5568">por fuente</text>
+<text x="440.0" y="188" text-anchor="middle" font-size="22" fill="#4A5568"></text>
+<text x="440.0" y="218" text-anchor="middle" font-size="22" fill="#4A5568">+ los enlaces</text>
+<text x="440.0" y="248" text-anchor="middle" font-size="22" fill="#4A5568">de Rastro,</text>
+<text x="440.0" y="278" text-anchor="middle" font-size="22" fill="#4A5568">con su evidencia</text>
+<line x1="262" y1="260" x2="318" y2="260" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<text x="140" y="628" text-anchor="middle" font-size="20" fill="#4A5568">un cargador por fuente</text>
+<rect x="620" y="50" width="560" height="590" rx="20" fill="#2F6FB5"/>
+<rect x="650" y="72" width="500" height="136" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="900.0" y="110" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Entity linking</text>
+<text x="900.0" y="138" text-anchor="middle" font-size="20" fill="#FFFFFF">empresa → grupo (USAspending + GLEIF)</text>
+<text x="900.0" y="166" text-anchor="middle" font-size="20" fill="#FFFFFF">empresa → LEI · → lista de control</text>
+<text x="900.0" y="194" text-anchor="middle" font-size="20" fill="#FFFFFF">cada uno con su evidencia (PROV-O)</text>
+<rect x="650" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="770.0" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Ontología</text>
+<text x="770.0" y="288" text-anchor="middle" font-size="22" fill="#FFFFFF">el diccionario</text>
+<text x="770.0" y="318" text-anchor="middle" font-size="22" fill="#FFFFFF">de negocio</text>
+<rect x="910" y="220" width="240" height="130" rx="14" fill="#4A84C4" stroke="#4A84C4" stroke-width="2"/>
+<text x="1030.0" y="258" text-anchor="middle" font-size="26" font-weight="700" fill="#FFFFFF">Mapeos</text>
+<text x="1030.0" y="288" text-anchor="middle" font-size="22" fill="#FFFFFF">columna → concepto</text>
+<text x="1030.0" y="318" text-anchor="middle" font-size="22" fill="#FFFFFF">(R2RML)</text>
+<rect x="650" y="400" width="500" height="130" rx="14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="2"/>
+<text x="900.0" y="438" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Ontop</text>
+<text x="900.0" y="468" text-anchor="middle" font-size="22" fill="#4A5568">traduce cada consulta SPARQL</text>
+<text x="900.0" y="498" text-anchor="middle" font-size="22" fill="#4A5568">a SQL sobre Postgres</text>
+<text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>
+<line x1="562" y1="270" x2="618" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="900" y1="352" x2="900" y2="396" stroke="#FFFFFF" stroke-width="2.5" marker-end="url(#white)"/>
+<rect x="1250" y="50" width="380" height="130" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="88" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">App Rastro</text>
+<text x="1440.0" y="118" text-anchor="middle" font-size="22" fill="#4A5568">el LLM lee el diccionario</text>
+<text x="1440.0" y="148" text-anchor="middle" font-size="22" fill="#4A5568">y escribe la consulta SPARQL</text>
+<rect x="1250" y="196" width="380" height="150" rx="14" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="1440.0" y="234" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphRAG anclado</text>
+<text x="1440.0" y="264" text-anchor="middle" font-size="22" fill="#14213D">el grafo elige los contratos;</text>
+<text x="1440.0" y="294" text-anchor="middle" font-size="22" fill="#14213D">el LLM resume sus descripciones</text>
+<text x="1440.0" y="324" text-anchor="middle" font-size="22" fill="#14213D">y cita cada uno</text>
+<rect x="1250" y="362" width="380" height="76" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1440.0" y="400" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Otras herramientas</text>
+<text x="1440.0" y="428" text-anchor="middle" font-size="20" fill="#4A5568">cualquier cliente SPARQL</text>
+<line x1="1182" y1="115" x2="1248" y2="115" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="270" x2="1248" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+<line x1="1182" y1="400" x2="1248" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
+</svg>
+</div>
+<aside>De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL.</aside>
+</section>
