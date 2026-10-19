@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos proveedores distintos (por UEI) se llaman igual que una empresa u organización de la Lista Consolidada de Control, por su nombre o por un alias, si se ignoran mayúsculas, puntuación y formas societarias como Inc., LLC o Corp.?",
+ "attempts": [
+  {
+   "query": "SELECT COUNT(DISTINCT w.uei)\nFROM proveedores.watchlist_link w\nJOIN csl.entry e ON e.id = w.entry_id AND e.source = w.entry_source\nWHERE w.kind = 'supplier' AND e.type = 'Entity'",
+   "error": null
+  }
+ ],
+ "answer": 4.0
+}

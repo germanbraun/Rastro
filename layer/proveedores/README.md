@@ -1,17 +1,18 @@
 # Evaluación del dominio de proveedores
 
-El mismo método que oncología (`layer/eval`, `layer/consistencia`, `layer/cambio`), con las 9 preguntas del dominio y dos formas de responder: **sin Rastro** (el LLM escribe SQL sobre las tablas de las fuentes tal como se cargaron) y **con Rastro** (escribe SPARQL sobre el segundo Ontop).
+El mismo método que oncología (`layer/eval`, `layer/consistencia`, `layer/cambio`), con las 9 preguntas del dominio y tres formas de responder: **sin Rastro** (el LLM escribe SQL sobre las tablas de las fuentes tal como se cargaron), **SQL + enlaces** (la línea de base justa: SQL sobre las mismas tablas más las tablas de Rastro, documentadas con lo mismo que dice el diccionario) y **con Rastro** (escribe SPARQL sobre el segundo Ontop).
 
 ## Resultado (19 oct 2026, con las correcciones de los enlaces)
 
-| | Sin Rastro (SQL) | Con Rastro |
-|---|---|---|
-| Correctas (de 9) | 4 | **8** |
-| Misma respuesta en las 4 formas (de 5 preguntas) | 3 | **4** |
-| Si una columna cambia de nombre | 3 consultas rotas, a buscar y reescribir | todo falla junto, se arregla con **1 línea** |
-| Si los montos pasan a miles de dólares | 3 respuestas distintas, sin aviso | 3 distintas, **con aviso**; se arregla con **1 línea** |
+| | Sin Rastro (SQL) | SQL + enlaces | Con Rastro |
+|---|---|---|---|
+| Correctas (de 9) | 4 | **8** | **8** |
+| Misma respuesta en las 4 formas (de 5 preguntas) | 3 | 3 | **4** |
+| Si una columna cambia de nombre | 3 consultas rotas, a buscar y reescribir | — | todo falla junto, se arregla con **1 línea** |
+| Si los montos pasan a miles de dólares | 3 respuestas distintas, sin aviso | — | 3 distintas, **con aviso**; se arregla con **1 línea** |
 
 - **Lo que muestra:** sin Rastro fallan las preguntas que unen USAspending con GLEIF (p04, p07, p09), porque cada consulta inventa el enlace sin verificarlo; en una de las formas, el SQL le sumó a Leidos los contratos de SAIC. Con Rastro, el enlace está hecho una vez y con reglas.
+- **La línea de base justa, como en oncología:** con las tablas de enlaces de Rastro, el SQL acierta lo mismo que Rastro (8 de 9, y falla en la misma, p05). En consistencia, 3 de 5 contra 4 de 5, por diferencias chicas: una forma filtró los grupos por nombre y sumó un *joint venture*, y otra unió mal dos columnas y dio 0. La precisión viene de integrar una vez; la capa semántica suma que esa integración se mantiene en un lugar, la evidencia y los datos de afuera. La prueba de cambio no se repitió con esta línea de base: en oncología, las consultas con tablas de enlaces se rompían igual que las de SQL directo.
 - **Lo que no:** Rastro también falló una (p05: el diccionario no decía que algunas listas dejan vacío el tipo de entrada) y su respuesta de p01 cambió en una de las 4 formas. La primera revisión encontró que la referencia se quedaba corta en p01 y p04 (filiales de Leidos y matrices extranjeras que el enlace no encontraba); se corrigió con búsquedas más en GLEIF, dos LEI revisados y una tabla corta de correcciones, y las consultas guardadas se volvieron a ejecutar sobre los datos nuevos, sin pedirle nada nuevo al LLM. Todo está en [adjudicacion.md](adjudicacion.md).
 
 Detalle por pregunta: [resultados.md](resultados.md). La app lee `resultados.json` y `cambio/resultado.json`.

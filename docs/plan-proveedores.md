@@ -88,8 +88,10 @@ La misma que oncología:
 | P0 · Datos ✅ | Cargadores de USAspending (contratos y matrices), GLEIF, Lista Consolidada y NAICS | Conteos por fuente |
 | P1 · Preguntas y diccionario ✅ | Las 9 preguntas, la ontología y sus SPARQL | Las 9 responden contra el segundo Ontop (las 4, 5, 7 y 9, con los enlaces de P2) |
 | P2 · Enlaces ✅ | Proveedor ↔ LEI, proveedor ↔ lista, grupo ↔ Wikidata, con su evidencia; revisión de una muestra | Precisión medida |
-| P3 · Evaluación ✅ | Sin Rastro (SQL directo) contra con Rastro, consistencia y cambio, igual que en oncología | Las tres pruebas con números |
+| P3 · Evaluación ✅ | Sin Rastro (SQL directo), SQL + enlaces de Rastro y con Rastro, consistencia y cambio, igual que en oncología | Las tres pruebas con números |
 | P4 · App ✅ | El selector de dominio, las preguntas en palabras simples y la evidencia | Demo sin terminal |
 | P5 · Demo ✅ | Diapositivas y guion, con un segundo ejemplo de punta a punta | Alguien de ventas la da con el guion |
+
+**Resultado de P3** (`layer/proveedores/`): correctas, sin Rastro 4 de 9, SQL + enlaces de Rastro 8 de 9, con Rastro 8 de 9; misma respuesta en las 4 formas, 3 de 5, 3 de 5 y 4 de 5. Como en oncología, con las tablas de enlaces el SQL acierta igual: la precisión viene de integrar una vez.
 
 Esfuerzo estimado: parecido al de las fases 0 a 3 de oncología, con la ventaja de reusar todo lo aprendido.

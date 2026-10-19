@@ -36,7 +36,7 @@
 
 **Cómo leerla:** la precisión y la consistencia vienen de integrar una vez. La capa semántica agrega que esa integración se mantiene en un lugar, trae la fuente de cada dato y se conecta con datos de afuera. Solo, sin datos, el LLM acierta 5 de 20.
 
-**Segundo dominio** (contratos federales de EE. UU., sus empresas, grupos y listas de control; otro Ontop, mismo método): SQL directo 4 de 9, Rastro 8 de 9; misma respuesta en las 4 formas, 3 de 5 contra 4 de 5. El SQL falla al unir USAspending con GLEIF, porque toma el primer candidato sin verificarlo. La referencia, que sale de Rastro, se queda corta en 2 preguntas (`layer/proveedores/adjudicacion.md`).
+**Segundo dominio** (contratos federales de EE. UU., sus empresas, grupos y listas de control; otro Ontop, mismo método): SQL directo 4 de 9, SQL + enlaces de Rastro 8 de 9, Rastro 8 de 9; misma respuesta en las 4 formas, 3 de 5, 3 de 5 y 4 de 5. Como en oncología, con las tablas de enlaces el SQL acierta igual. El SQL falla al unir USAspending con GLEIF, porque toma el primer candidato sin verificarlo. La referencia, que sale de Rastro, se queda corta en 2 preguntas (`layer/proveedores/adjudicacion.md`).
 
 ## Límites, dichos de entrada
 

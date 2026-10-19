@@ -1,0 +1,16 @@
+{
+ "question": "¿Cuáles son los 5 grupos empresarios con más monto en contratos de servicios informáticos (sector NAICS 5415 y sus subsectores), sumando todas las empresas de cada grupo?",
+ "attempts": [
+  {
+   "query": "select g.name\nfrom usaspending.contract c\njoin proveedores.sector_ancestor sa on sa.code = c.naics_code and sa.ancestor_code = '5415'\njoin proveedores.supplier_group sg on sg.supplier_uei = c.recipient_uei\njoin proveedores.group_company g on g.group_id = sg.group_id\ngroup by g.group_id, g.name\norder by sum(c.amount) desc\nlimit 5",
+   "error": null
+  }
+ ],
+ "answer": [
+  "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+  "LEIDOS HOLDINGS, INC.",
+  "GENERAL DYNAMICS CORP",
+  "ACCENTURE PLC",
+  "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+ ]
+}

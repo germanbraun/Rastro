@@ -34,7 +34,8 @@ proveedores:
   ontology: ontology/proveedores/proveedores.ttl
   sparql_notes: layer/proveedores/sparql-notes.md
   sql_notes: layer/proveedores/sql-notes.md
-  readers: {B: proveedores_reader}
+  links_notes: layer/proveedores/sql-enlaces-notes.md
+  readers: {B: proveedores_reader, D: proveedores_reader_links}
   namespace: https://w3id.org/rastro/proveedores#
   term_sources:
     usaspending: [Contract, Supplier, Group, Agency, contractId, amount, startDate, endDate, description,

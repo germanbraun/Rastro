@@ -261,7 +261,11 @@ def trust(cfg, tech, evaluation, changes):
                         unsafe_allow_html=True)
             st.caption(md(card["compara"].format(**numbers)))
 
-    names = {"B": "Sin Rastro", "C": "Con Rastro"}
+    # En modo técnico se suma la línea de base justa: SQL con las tablas de enlaces de Rastro
+    names = ({"B": "Sin Rastro", "D": "SQL + enlaces", "C": "Con Rastro"} if tech
+             else {"B": "Sin Rastro", "C": "Con Rastro"})
+    names = {k: v for k, v in names.items() if all(k in r for r in consistency.values())}
+    change_names = {"B": "Sin Rastro", "C": "Con Rastro"}
     simple = {q["id"]: q["simple"] for q in cfg["preguntas"]}
     with st.container() if tech else st.expander(f"Ver las {4 * len(consistency)} respuestas"):
         st.caption(f"{len(consistency)} preguntas, cada una hecha de 4 formas con el mismo significado.")
@@ -307,8 +311,8 @@ def trust(cfg, tech, evaluation, changes):
                 return " · ".join(f"{v} {status.get(s, s)}" for s, v in sorted(t.items(), key=lambda x: x[0] != "✅"))
 
             st.markdown("**Antes de arreglar nada:**")
-            for col, k in zip(st.columns(2), names):
-                col.metric(names[k], f"{before['totals'][k].get('✅', 0)}/{n}")
+            for col, k in zip(st.columns(2), change_names):
+                col.metric(change_names[k], f"{before['totals'][k].get('✅', 0)}/{n}")
                 col.caption(summary(before["totals"][k]))
             if "🟡" in before.get("vocabulary", ""):
                 st.warning("Rastro avisa: " + md(before["vocabulary"].split(": ", 1)[-1]))
@@ -318,8 +322,8 @@ def trust(cfg, tech, evaluation, changes):
             else:
                 st.markdown("**El arreglo en Rastro:** una línea, en la traducción de esa base al diccionario de negocio.")
             st.markdown("**Después del arreglo:**")
-            for col, k in zip(st.columns(2), names):
-                col.metric(names[k], f"{after['totals'][k].get('✅', 0)}/{n}")
+            for col, k in zip(st.columns(2), change_names):
+                col.metric(change_names[k], f"{after['totals'][k].get('✅', 0)}/{n}")
                 col.caption(summary(after["totals"][k]) + ("" if k == "C" else ". Hay que encontrar y reescribir cada consulta."))
         st.info("Sin Rastro, cada consulta sabe cómo se llaman las columnas y en qué unidad están los valores: si la "
                 "base cambia, hay que encontrar y arreglar cada una. Con Rastro, eso está en un solo lugar.")
@@ -327,11 +331,16 @@ def trust(cfg, tech, evaluation, changes):
 
 def evaluation_detail(evaluation, totals):
     data = evaluation["questions"]
-    names = {"B": "Sin Rastro (SQL)", "C": "Con Rastro"}
+    names = {k: v for k, v in {"B": "Sin Rastro (SQL)", "D": "SQL + enlaces de Rastro", "C": "Con Rastro"}.items()
+             if k in totals}
     st.markdown("##### Detalle técnico: las preguntas de la evaluación")
-    cols = st.columns(2)
+    cols = st.columns(len(names))
     for col, k in zip(cols, names):
         col.metric(names[k], f"{totals.get(k, {}).get('correct', 0)}/{len(data)}")
+    if "D" in names:
+        st.info("Con las tablas de enlaces de Rastro, el SQL acierta igual: la precisión viene de la integración "
+                "hecha una vez. La capa semántica suma que esa integración se mantiene en un solo lugar, la "
+                "evidencia de cada enlace y los datos de afuera.")
     chosen = st.selectbox("Pregunta", [e["question"] for e in data.values()], key="proveedores_eval_question")
     entry = next(e for e in data.values() if e["question"] == chosen)
 
@@ -343,7 +352,7 @@ def evaluation_detail(evaluation, totals):
         return money(v)
 
     st.markdown(f"**Respuesta correcta:** {md(fmt(entry['reference']))}")
-    for col, k in zip(st.columns(2), names):
+    for col, k in zip(st.columns(len(names)), names):
         with col:
             e = entry.get(k)
             if not e:
@@ -353,7 +362,7 @@ def evaluation_detail(evaluation, totals):
             ok = [a for a in e["attempts"] if a["error"] is None]
             if ok:
                 q = ok[-1]["query"]
-                shown = sqlparse.format(q, reindent=True, keyword_case="upper", indent_width=2) if k == "B" else q
+                shown = sqlparse.format(q, reindent=True, keyword_case="upper", indent_width=2) if k in "BD" else q
                 st.caption(f"{len(shown.splitlines())} líneas · {len(e['attempts'])} intento"
                            f"{'s' if len(e['attempts']) != 1 else ''}")
-                st.code(shown, language="sql" if k == "B" else "sparql")
+                st.code(shown, language="sql" if k in "BD" else "sparql")

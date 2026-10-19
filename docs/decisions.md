@@ -292,3 +292,17 @@ La adjudicación de P3 encontró que Rastro se quedaba corto en el grupo Leidos 
 - **El ejemplo de Leidos cambia:** 30 empresas de 13 matrices de USAspending, 611 contratos, US$63.400 millones (antes 21 empresas y US$54.700 millones). Proveedores con matriz extranjera: 173 (antes 147). DELOITTE CONSULTING LIMITED (Tanzania) no está en GLEIF y no se cuenta.
 - **P3 con los datos nuevos:** las consultas guardadas se volvieron a ejecutar, sin pedirle nada nuevo al LLM. Con Rastro sigue 8 de 9; sin Rastro baja a 4 de 9, porque su total de Leidos queda un 11 % por debajo del grupo real. La consistencia no cambia (3 de 5 y 4 de 5). La consulta 4 repetía contratos cuando el grupo y el proveedor llevaban a la misma matriz final; se corrigió.
 - Se actualizaron los números en las diapositivas, los guiones, los one-pagers, la app y las preguntas de competencia.
+
+## 2026-10-19 — Proveedores: la línea de base justa da lo mismo que en oncología
+
+Como en oncología, el mismo LLM respondió las 9 preguntas con SQL sobre las fuentes más las tablas de enlaces de Rastro (esquema `proveedores`), documentadas con lo mismo que dice el diccionario (`layer/proveedores/sql-enlaces-notes.md`, usuario `proveedores_reader_links`). Subagentes que solo ven el prompt, los mismos 3 intentos, sobre los datos ya corregidos.
+
+| | Sin Rastro (SQL) | SQL + enlaces de Rastro | Con Rastro |
+|---|---|---|---|
+| Correctas (de 9) | 4 | **8** | **8** |
+| Misma respuesta en las 4 formas (de 5) | 3 | 3 | 4 |
+
+- **El mismo mensaje que en oncología:** con las tablas de enlaces, el SQL acierta lo mismo que Rastro. La precisión viene de integrar una vez. Falla en la misma pregunta (p05) y por la misma razón: filtra las entradas de tipo «Entity» y deja afuera las que no traen tipo.
+- **Consistencia:** las diferencias son chicas. En p01, una forma filtró los grupos por nombre («leidos») y sumó un *joint venture*, como hizo Rastro en tres formas; en p05, una forma unió mal dos columnas y dio 0.
+- **Lo que suma la capa semántica**, como en oncología: la integración se mantiene en un lugar (la prueba de cambio no se repitió con esta línea de base: en oncología, las consultas con tablas de enlaces se rompían igual que las de SQL directo), la evidencia de cada enlace y los datos de afuera.
+- Se muestra en la app (modo técnico, «Por qué confiar»), en `layer/proveedores/README.md`, en el plan, en la diapositiva de las pruebas del dominio, en el one-pager técnico y en el guion técnico.

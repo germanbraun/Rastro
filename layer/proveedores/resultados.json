@@ -16,6 +16,17 @@
     "answer": 56388914831.91,
     "ok": false
    },
+   "D": {
+    "question": "¿Cuánto suman, en dólares, los contratos del grupo empresario Leidos, es decir de Leidos Holdings y de todas sus empresas?",
+    "attempts": [
+     {
+      "query": "select sum(c.amount)\nfrom usaspending.contract c\njoin proveedores.supplier_group sg on sg.supplier_uei = c.recipient_uei\njoin proveedores.group_company g on g.group_id = sg.group_id\nwhere g.name ilike '%leidos holdings%'",
+      "error": null
+     }
+    ],
+    "answer": 63362671930.71,
+    "ok": true
+   },
    "C": {
     "question": "¿Cuánto suman, en dólares, los contratos del grupo empresario Leidos, es decir de Leidos Holdings y de todas sus empresas?",
     "attempts": [
@@ -50,6 +61,23 @@
      "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
      "GENERAL DYNAMICS CORP",
      "LEIDOS, INC.",
+     "ACCENTURE PLC",
+     "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+    ],
+    "ok": true
+   },
+   "D": {
+    "question": "¿Cuáles son los 5 grupos empresarios con más monto en contratos de servicios informáticos (sector NAICS 5415 y sus subsectores), sumando todas las empresas de cada grupo?",
+    "attempts": [
+     {
+      "query": "select g.name\nfrom usaspending.contract c\njoin proveedores.sector_ancestor sa on sa.code = c.naics_code and sa.ancestor_code = '5415'\njoin proveedores.supplier_group sg on sg.supplier_uei = c.recipient_uei\njoin proveedores.group_company g on g.group_id = sg.group_id\ngroup by g.group_id, g.name\norder by sum(c.amount) desc\nlimit 5",
+      "error": null
+     }
+    ],
+    "answer": [
+     "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+     "LEIDOS HOLDINGS, INC.",
+     "GENERAL DYNAMICS CORP",
      "ACCENTURE PLC",
      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
     ],
@@ -124,6 +152,35 @@
     ],
     "ok": true
    },
+   "D": {
+    "question": "¿Qué agencias tienen más de un tercio de su monto en contratos con un solo grupo empresario, sumando todas las empresas de ese grupo?",
+    "attempts": [
+     {
+      "query": "with tot as (\n  select awarding_agency, sum(amount) total\n  from usaspending.contract group by awarding_agency\n), grp as (\n  select c.awarding_agency, sg.group_id, sum(c.amount) monto\n  from usaspending.contract c\n  join proveedores.supplier_group sg on sg.supplier_uei = c.recipient_uei\n  group by c.awarding_agency, sg.group_id\n)\nselect distinct t.awarding_agency\nfrom tot t join grp g on g.awarding_agency = t.awarding_agency\nwhere g.monto > t.total / 3.0\norder by 1",
+      "error": null
+     }
+    ],
+    "answer": [
+     "Agency for International Development",
+     "Commodity Futures Trading Commission",
+     "Court Services and Offender Supervision Agency",
+     "Defense Nuclear Facilities Safety Board",
+     "Equal Employment Opportunity Commission",
+     "Executive Office of the President",
+     "Federal Trade Commission",
+     "Government Accountability Office",
+     "International Trade Commission",
+     "Millennium Challenge Corporation",
+     "National Gallery of Art",
+     "National Science Foundation",
+     "Peace Corps",
+     "Railroad Retirement Board",
+     "Small Business Administration",
+     "Smithsonian Institution",
+     "U.S. International Development Finance Corporation"
+    ],
+    "ok": true
+   },
    "C": {
     "question": "¿Qué agencias tienen más de un tercio de su monto en contratos con un solo grupo empresario, sumando todas las empresas de ese grupo?",
     "attempts": [
@@ -169,6 +226,17 @@
     "answer": 807.0,
     "ok": false
    },
+   "D": {
+    "question": "¿Cuántos proveedores (UEI distintos) tienen su matriz final, según GLEIF, fuera de EE. UU.? La matriz final es la de su grupo empresario o, si el grupo no tiene registro en GLEIF, la del propio proveedor.",
+    "attempts": [
+     {
+      "query": "select count(distinct uei) from proveedores.supplier_flag where flag = 'ForeignParent'",
+      "error": null
+     }
+    ],
+    "answer": 173.0,
+    "ok": true
+   },
    "C": {
     "question": "¿Cuántos proveedores (UEI distintos) tienen su matriz final, según GLEIF, fuera de EE. UU.? La matriz final es la de su grupo empresario o, si el grupo no tiene registro en GLEIF, la del propio proveedor.",
     "attempts": [
@@ -196,6 +264,17 @@
     "answer": 7.0,
     "ok": false
    },
+   "D": {
+    "question": "¿Cuántos proveedores (UEI distintos) tienen un nombre igual al nombre o a un alias de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias como Inc., LLC o Corp.?",
+    "attempts": [
+     {
+      "query": "select count(distinct w.uei)\nfrom proveedores.watchlist_link w\njoin csl.entry e on e.id = w.entry_id and e.source = w.entry_source\nwhere w.kind = 'supplier' and e.type = 'Entity'",
+      "error": null
+     }
+    ],
+    "answer": 4.0,
+    "ok": false
+   },
    "C": {
     "question": "¿Cuántos proveedores (UEI distintos) tienen un nombre igual al nombre o a un alias de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias como Inc., LLC o Corp.?",
     "attempts": [
@@ -217,6 +296,17 @@
     "attempts": [
      {
       "query": "SELECT COUNT(DISTINCT COALESCE(c.recipient_uei, r.uei)) FROM usaspending.contract c\nLEFT JOIN usaspending.recipient r ON r.recipient_id = c.recipient_id\nWHERE c.awarding_agency = 'Department of Defense' AND c.naics_code LIKE '23%'",
+      "error": null
+     }
+    ],
+    "answer": 1060.0,
+    "ok": true
+   },
+   "D": {
+    "question": "¿Cuántos proveedores (UEI distintos) tiene el Departamento de Defensa en contratos de construcción (sector NAICS 23 y sus subsectores)?",
+    "attempts": [
+     {
+      "query": "select count(distinct c.recipient_uei)\nfrom usaspending.contract c\njoin proveedores.sector_ancestor sa on sa.code = c.naics_code and sa.ancestor_code = '23'\nwhere c.awarding_agency = 'Department of Defense'",
       "error": null
      }
     ],
@@ -343,6 +433,71 @@
     ],
     "ok": false
    },
+   "D": {
+    "question": "¿Qué grupos empresarios cotizan en bolsa, según Wikidata, y tienen contratos por más de US$1.000 millones en total, sumando todas sus empresas?",
+    "attempts": [
+     {
+      "query": "select g.name\nfrom usaspending.contract c\njoin proveedores.supplier_group sg on sg.supplier_uei = c.recipient_uei\njoin proveedores.group_company g on g.group_id = sg.group_id\nwhere exists (select 1 from proveedores.group_wikidata w where w.group_id = g.group_id and w.listed)\ngroup by g.group_id, g.name\nhaving sum(c.amount) > 1000000000\norder by sum(c.amount) desc",
+      "error": null
+     }
+    ],
+    "answer": [
+     "LOCKHEED MARTIN CORPORATION",
+     "RTX CORPORATION",
+     "THE BOEING COMPANY",
+     "FLUOR CORPORATION",
+     "AECOM",
+     "LEIDOS HOLDINGS, INC.",
+     "HONEYWELL INTERNATIONAL INC.",
+     "NORTHROP GRUMMAN CORPORATION",
+     "BAE SYSTEMS PLC",
+     "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+     "KBR, INC.",
+     "HEALTH NET, INC.",
+     "UNITEDHEALTH GROUP INCORPORATED",
+     "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION",
+     "CACI INTERNATIONAL INC.",
+     "GENERAL DYNAMICS CORPORATION",
+     "L3HARRIS TECHNOLOGIES, INC.",
+     "TEXTRON INC.",
+     "GENERAL ELECTRIC COMPANY",
+     "MCKESSON CORPORATION",
+     "SPACE EXPLORATION TECHNOLOGIES CORP.",
+     "BWX TECHNOLOGIES, INC.",
+     "SERCO GROUP PLC",
+     "LEONARDO - SOCIETA' PER AZIONI",
+     "INTERNATIONAL BUSINESS MACHINES CORPORATION",
+     "Dell Technologies Inc.",
+     "Aerojet Rocketdyne Holdings, Inc.",
+     "AT&T INC.",
+     "THE GEO GROUP, INC.",
+     "ROLLS-ROYCE HOLDINGS PLC",
+     "EMERGENT BIOSOLUTIONS INC.",
+     "VERIZON COMMUNICATIONS INC.",
+     "CAE INC.",
+     "RAYTHEON COMPANY",
+     "TETRA TECH, INC.",
+     "ICF INTERNATIONAL, INC.",
+     "PALANTIR TECHNOLOGIES INC.",
+     "ELEVANCE HEALTH, INC.",
+     "MICROSOFT CORPORATION",
+     "TELEDYNE TECHNOLOGIES INCORPORATED",
+     "Nelnet, Inc.",
+     "MODERNA, INC.",
+     "KONGSBERG GRUPPEN ASA",
+     "CSL LIMITED",
+     "AEROVIRONMENT, INC.",
+     "CORECIVIC, INC.",
+     "THE INTERPUBLIC GROUP OF COMPANIES, INC.",
+     "BAVARIAN NORDIC A/S",
+     "REGENERON PHARMACEUTICALS, INC.",
+     "ViaSat, Inc.",
+     "KRATOS DEFENSE & SECURITY SOLUTIONS, INC.",
+     "Dominion Energy, Inc.",
+     "Elbit Systems Ltd."
+    ],
+    "ok": true
+   },
    "C": {
     "question": "¿Qué grupos empresarios cotizan en bolsa, según Wikidata, y tienen contratos por más de US$1.000 millones en total, sumando todas sus empresas?",
     "attempts": [
@@ -428,6 +583,19 @@
     ],
     "ok": true
    },
+   "D": {
+    "question": "¿A qué grupo empresario pertenece hoy el proveedor SCIENCE APPLICATIONS INTERNATIONAL CORPORATION con UEI MMLKPW9JLX64? Respondé con el nombre del grupo.",
+    "attempts": [
+     {
+      "query": "select g.name\nfrom proveedores.supplier_group sg\njoin proveedores.group_company g on g.group_id = sg.group_id\nwhere sg.supplier_uei = 'MMLKPW9JLX64'",
+      "error": null
+     }
+    ],
+    "answer": [
+     "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+    ],
+    "ok": true
+   },
    "C": {
     "question": "¿A qué grupo empresario pertenece hoy el proveedor SCIENCE APPLICATIONS INTERNATIONAL CORPORATION con UEI MMLKPW9JLX64? Respondé con el nombre del grupo.",
     "attempts": [
@@ -457,6 +625,17 @@
     "answer": 390761358533.69,
     "ok": false
    },
+   "D": {
+    "question": "¿Cuánto suman, en dólares, los contratos del Departamento de Defensa con proveedores para revisar? Un proveedor es para revisar si su matriz final según GLEIF está fuera de EE. UU. (la de su grupo o, si el grupo no tiene registro en GLEIF, la propia) o si su nombre, o el de su grupo, es igual al de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias.",
+    "attempts": [
+     {
+      "query": "with revisar as (\n  select uei from proveedores.supplier_flag where flag = 'ForeignParent'\n  union\n  select w.uei from proveedores.watchlist_link w\n  join csl.entry e on e.id = w.entry_id and e.source = w.entry_source\n  where w.kind = 'supplier' and e.type = 'Entity'\n  union\n  select sg.supplier_uei from proveedores.supplier_group sg\n  join proveedores.watchlist_link w on w.kind = 'group' and w.uei = sg.group_id\n  join csl.entry e on e.id = w.entry_id and e.source = w.entry_source\n  where e.type = 'Entity'\n)\nselect sum(c.amount)\nfrom usaspending.contract c\nwhere c.awarding_agency = 'Department of Defense'\n  and c.recipient_uei in (select uei from revisar)",
+      "error": null
+     }
+    ],
+    "answer": 115955142324.47,
+    "ok": true
+   },
    "C": {
     "question": "¿Cuánto suman, en dólares, los contratos del Departamento de Defensa con proveedores para revisar? Un proveedor es para revisar si su matriz final según GLEIF está fuera de EE. UU. (la de su grupo o, si el grupo no tiene registro en GLEIF, la propia) o si su nombre, o el de su grupo, es igual al de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias.",
     "attempts": [
@@ -475,6 +654,12 @@
    "correct": 4,
    "consistent": 3,
    "consistent_correct": 12,
+   "retries": 0
+  },
+  "D": {
+   "correct": 8,
+   "consistent": 3,
+   "consistent_correct": 16,
    "retries": 0
   },
   "C": {
@@ -504,6 +689,21 @@
      false,
      false,
      false
+    ],
+    "same": false
+   },
+   "D": {
+    "answers": [
+     63362671930.71,
+     63362671930.71,
+     63362671930.71,
+     64085535830.01
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
     ],
     "same": false
    },
@@ -557,6 +757,45 @@
       "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
       "GENERAL DYNAMICS CORP",
       "LEIDOS, INC.",
+      "ACCENTURE PLC",
+      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+     ]
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "D": {
+    "answers": [
+     [
+      "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+      "LEIDOS HOLDINGS, INC.",
+      "GENERAL DYNAMICS CORP",
+      "ACCENTURE PLC",
+      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+     ],
+     [
+      "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+      "LEIDOS HOLDINGS, INC.",
+      "GENERAL DYNAMICS CORP",
+      "ACCENTURE PLC",
+      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+     ],
+     [
+      "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+      "LEIDOS HOLDINGS, INC.",
+      "GENERAL DYNAMICS CORP",
+      "ACCENTURE PLC",
+      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+     ],
+     [
+      "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+      "LEIDOS HOLDINGS, INC.",
+      "GENERAL DYNAMICS CORP",
       "ACCENTURE PLC",
       "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
      ]
@@ -631,6 +870,21 @@
     ],
     "same": false
    },
+   "D": {
+    "answers": [
+     4.0,
+     4.0,
+     4.0,
+     0.0
+    ],
+    "ok": [
+     false,
+     false,
+     false,
+     false
+    ],
+    "same": false
+   },
    "C": {
     "answers": [
      4.0,
@@ -669,6 +923,21 @@
     ],
     "same": true
    },
+   "D": {
+    "answers": [
+     1060.0,
+     1060.0,
+     1060.0,
+     1060.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
    "C": {
     "answers": [
      1059.0,
@@ -693,6 +962,29 @@
     "Decí el nombre del grupo empresario al que pertenece hoy SCIENCE APPLICATIONS INTERNATIONAL CORPORATION, el proveedor con UEI MMLKPW9JLX64."
    ],
    "B": {
+    "answers": [
+     [
+      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+     ],
+     [
+      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+     ],
+     [
+      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+     ],
+     [
+      "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+     ]
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "D": {
     "answers": [
      [
       "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"

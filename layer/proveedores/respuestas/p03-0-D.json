@@ -1,0 +1,28 @@
+{
+ "question": "¿Qué agencias tienen más de un tercio de su monto en contratos con un solo grupo empresario, sumando todas las empresas de ese grupo?",
+ "attempts": [
+  {
+   "query": "with tot as (\n  select awarding_agency, sum(amount) total\n  from usaspending.contract group by awarding_agency\n), grp as (\n  select c.awarding_agency, sg.group_id, sum(c.amount) monto\n  from usaspending.contract c\n  join proveedores.supplier_group sg on sg.supplier_uei = c.recipient_uei\n  group by c.awarding_agency, sg.group_id\n)\nselect distinct t.awarding_agency\nfrom tot t join grp g on g.awarding_agency = t.awarding_agency\nwhere g.monto > t.total / 3.0\norder by 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "Agency for International Development",
+  "Commodity Futures Trading Commission",
+  "Court Services and Offender Supervision Agency",
+  "Defense Nuclear Facilities Safety Board",
+  "Equal Employment Opportunity Commission",
+  "Executive Office of the President",
+  "Federal Trade Commission",
+  "Government Accountability Office",
+  "International Trade Commission",
+  "Millennium Challenge Corporation",
+  "National Gallery of Art",
+  "National Science Foundation",
+  "Peace Corps",
+  "Railroad Retirement Board",
+  "Small Business Administration",
+  "Smithsonian Institution",
+  "U.S. International Development Finance Corporation"
+ ]
+}

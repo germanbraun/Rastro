@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuánto suman, en dólares, los contratos del Departamento de Defensa con proveedores para revisar? Un proveedor es para revisar si su matriz final según GLEIF está fuera de EE. UU. (la de su grupo o, si el grupo no tiene registro en GLEIF, la propia) o si su nombre, o el de su grupo, es igual al de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias.",
+ "attempts": [
+  {
+   "query": "with revisar as (\n  select uei from proveedores.supplier_flag where flag = 'ForeignParent'\n  union\n  select w.uei from proveedores.watchlist_link w\n  join csl.entry e on e.id = w.entry_id and e.source = w.entry_source\n  where w.kind = 'supplier' and e.type = 'Entity'\n  union\n  select sg.supplier_uei from proveedores.supplier_group sg\n  join proveedores.watchlist_link w on w.kind = 'group' and w.uei = sg.group_id\n  join csl.entry e on e.id = w.entry_id and e.source = w.entry_source\n  where e.type = 'Entity'\n)\nselect sum(c.amount)\nfrom usaspending.contract c\nwhere c.awarding_agency = 'Department of Defense'\n  and c.recipient_uei in (select uei from revisar)",
+   "error": null
+  }
+ ],
+ "answer": 115955142324.47
+}

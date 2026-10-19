@@ -1,0 +1,10 @@
+{
+ "question": "Sumá en dólares los contratos de todas las empresas del grupo empresario Leidos (Leidos Holdings y sus filiales).",
+ "attempts": [
+  {
+   "query": "select sum(c.amount)\nfrom usaspending.contract c\njoin proveedores.supplier_group sg on sg.supplier_uei = c.recipient_uei\njoin proveedores.group_company g on g.group_id = sg.group_id\nwhere g.name ilike 'leidos holdings%'",
+   "error": null
+  }
+ ],
+ "answer": 63362671930.71
+}

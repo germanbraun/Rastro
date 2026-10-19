@@ -244,8 +244,9 @@ faq:
     tecnico: true
     respuesta: >-
       El mismo LLM (subagentes de Claude Code, Claude Opus 5.5, que solo vieron el prompt) respondió las 9
-      preguntas de dos formas: SQL sobre las tablas de las fuentes tal como se cargaron, y SPARQL sobre el
-      segundo Ontop. Las referencias salen de Rastro y las escribió un asistente de IA, así que donde las
+      preguntas de tres formas: SQL sobre las tablas de las fuentes tal como se cargaron (4 de 9 correctas),
+      SQL sobre esas tablas más las tablas de enlaces de Rastro (8 de 9) y SPARQL sobre el segundo Ontop
+      (8 de 9). Con las tablas de enlaces, el SQL acierta igual: la precisión viene de integrar una vez. Las referencias salen de Rastro y las escribió un asistente de IA, así que donde las
       dos formas difieren se revisó con los datos (`layer/proveedores/adjudicacion.md`).
   - pregunta: ¿Dónde está cada pieza?
     tecnico: true

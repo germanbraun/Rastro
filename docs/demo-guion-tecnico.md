@@ -72,7 +72,7 @@ En la barra lateral, **Dominio** → **Proveedores del Estado de EE. UU.**, con 
 
 3. **Por qué confiar**, con el detalle técnico:
 
-> «Mismo método que oncología: subagentes que solo ven el prompt. SQL directo 4 de 9, Rastro 8 de 9; falla el SQL donde hay que unir USAspending con GLEIF, porque toma el primer candidato sin verificarlo. Rastro falló en una: el diccionario no decía que algunas listas dejan vacío el tipo de entrada. Las referencias salen de Rastro, así que revisamos las diferencias con los datos: la referencia se queda corta en dos preguntas (`layer/proveedores/adjudicacion.md`). En el cambio, si los montos pasan a miles, las dos formas dan mal sin error; Rastro avisa con un control del recorte y se arregla con una línea del mapeo.»
+> «Mismo método que oncología: subagentes que solo ven el prompt. SQL directo 4 de 9, Rastro 8 de 9, y SQL con nuestras tablas de enlaces también 8 de 9, como en oncología; falla el SQL donde hay que unir USAspending con GLEIF, porque toma el primer candidato sin verificarlo. Rastro falló en una: el diccionario no decía que algunas listas dejan vacío el tipo de entrada. Las referencias salen de Rastro, así que revisamos las diferencias con los datos: la referencia se queda corta en dos preguntas (`layer/proveedores/adjudicacion.md`). En el cambio, si los montos pasan a miles, las dos formas dan mal sin error; Rastro avisa con un control del recorte y se arregla con una línea del mapeo.»
 
 ## En vivo, para audiencias técnicas
 

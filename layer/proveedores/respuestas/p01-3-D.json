@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos dólares en contratos tiene el grupo Leidos, sumando Leidos Holdings y cada una de sus empresas?",
+ "attempts": [
+  {
+   "query": "SELECT SUM(c.amount)\nFROM usaspending.contract c\nJOIN proveedores.supplier_group sg ON sg.supplier_uei = c.recipient_uei\nJOIN proveedores.group_company g ON g.group_id = sg.group_id\nWHERE g.name ILIKE '%leidos%'",
+   "error": null
+  }
+ ],
+ "answer": 64085535830.01
+}

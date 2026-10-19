@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos proveedores (UEI distintos) tienen su matriz final, según GLEIF, fuera de EE. UU.? La matriz final es la de su grupo empresario o, si el grupo no tiene registro en GLEIF, la del propio proveedor.",
+ "attempts": [
+  {
+   "query": "select count(distinct uei) from proveedores.supplier_flag where flag = 'ForeignParent'",
+   "error": null
+  }
+ ],
+ "answer": 173.0
+}
