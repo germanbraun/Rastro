@@ -9,6 +9,10 @@ operadora y socios; los puntos de venteo declarados; y los posibles venteos dete
 satélite. El certificado del servidor viene sin la cadena completa, así que se descarga sin
 verificarlo: son datos públicos de solo lectura.
 
+Del mismo WFS salen también los gasoductos de transporte de ENARGAS. Del WFS del Instituto
+Geográfico Nacional (listado en IDERA), las localidades y las áreas protegidas. Y de GLEIF, el
+identificador global (LEI) de las empresas que más producen, buscado por nombre en Argentina.
+
 Cada descarga se guarda en data/raw/energia/ y no se vuelve a pedir.
 
 Se corre con: docker compose run --rm energia-loader
@@ -19,6 +23,7 @@ import html
 import json
 import os
 import re
+import time
 from pathlib import Path
 
 import psycopg
@@ -31,6 +36,9 @@ PRODUCCION_2025 = "d774b5d7-0756-48fe-88f2-8729b57b22da"
 PADRON_POZOS = "cb5c0f04-7835-45cd-b982-3e25ca7d7751"
 WFS = "https://sig.energia.gob.ar/mapserv?map=/etc/mapserver/mapase.map"
 PAGE = 10_000
+IGN = "https://wms.ign.gob.ar/geoserver/ows?service=wfs&version=2.0.0&request=GetFeature&outputFormat=application/json"
+GLEIF = "https://api.gleif.org/api/v1/lei-records"
+GLEIF_TOP = 40   # las empresas que más producen o más participación tienen
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 http = requests.Session()
@@ -102,6 +110,45 @@ def ring(feat):
     return json.dumps([[float(best[i + 1]), float(best[i])] for i in range(0, len(best) - 1, 2)])
 
 
+def lines(feat):
+    """Todos los tramos de una línea, como [[[lon, lat], ...], ...]."""
+    out = []
+    for pl in re.findall(r"<gml:posList[^>]*>([^<]+)</gml:posList>", feat):
+        v = pl.split()
+        out.append([[float(v[i + 1]), float(v[i])] for i in range(0, len(v) - 1, 2)])
+    return json.dumps(out)
+
+
+def ign(layer):
+    f = download(f"ign-{layer}.json", f"{IGN}&typeNames=ign:{layer}")
+    return json.loads(f.read_text())["features"]
+
+
+def exteriors(geometry):
+    polys = geometry["coordinates"] if geometry["type"] == "MultiPolygon" else [geometry["coordinates"]]
+    return json.dumps([[[round(x, 6), round(y, 6)] for x, y, *_ in poly[0]] for poly in polys])
+
+
+def gleif(names):
+    """Los candidatos de GLEIF para cada nombre, en Argentina. Se guardan y no se vuelven a pedir."""
+    rows = []
+    for name in names:
+        f = CACHE / "gleif" / (re.sub(r"[^A-Za-z0-9]+", "_", name)[:80] + ".json")
+        if not f.exists():
+            f.parent.mkdir(exist_ok=True)
+            r = http.get(GLEIF, timeout=60, params={"filter[fulltext]": name, "filter[entity.legalAddress.country]": "AR",
+                                                     "page[size]": 5})
+            r.raise_for_status()
+            f.write_text(r.text)
+            time.sleep(1.05)   # GLEIF pide no pasar de 60 consultas por minuto
+        for x in json.loads(f.read_text())["data"]:
+            e = x["attributes"]["entity"]
+            rows.append((name, x["attributes"]["lei"], e["legalName"]["name"],
+                         " | ".join(o["name"] for o in e.get("otherNames") or []), e["status"],
+                         e["legalAddress"]["country"]))
+    return rows
+
+
 def main():
     CACHE.mkdir(parents=True, exist_ok=True)
     conninfo = (f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
@@ -118,6 +165,19 @@ def main():
                    *point(f)) for f in wfs_features("planosbase_puntos_venteo_declarados")]
     detectados = [(f.split('"', 2)[1], prop(f, "fecha"), prop(f, "provincia"), prop(f, "satelite"), *point(f))
                   for f in wfs_features("sensoresremotos_venteos_detectados")]
+    gasoductos = [(f.split('"', 2)[1], prop(f, "nombregaso"), prop(f, "nombretram"), prop(f, "tipotramo"),
+                   prop(f, "subtipotra"), prop(f, "licenciata"), lines(f))
+                  for f in wfs_features("enargas_visor_gasoductos_transporte")]
+    localidades = []
+    for f in ign("localidad_bahra"):
+        p = f["properties"]
+        try:
+            lon, lat = float(p["long_gd"]), float(p["lat_gd"])
+        except (TypeError, ValueError):
+            continue
+        localidades.append((p["gid"], p["fna"], p["tipo_asent"], p["nom_pcia"], p["nom_depto"], lon, lat))
+    areas = [(f["properties"]["gid"], f["properties"]["fna"], f["properties"]["fdc"], exteriors(f["geometry"]))
+             for f in ign("area_protegida") if f.get("geometry")]
 
     with psycopg.connect(conninfo) as conn:
         conn.execute("""
@@ -125,7 +185,12 @@ def main():
               ('capitulo4', 'Producción por pozo, Capítulo IV (Secretaría de Energía)',
                'http://datos.energia.gob.ar/dataset/produccion-de-petroleo-y-gas-por-pozo', 'CC-BY 4.0', 'capitulo4'),
               ('sig_energia', 'Mapas de la Secretaría de Energía (WFS)',
-               'https://sig.energia.gob.ar/wfsenergia', 'Datos públicos (Secretaría de Energía)', 'sig_energia')
+               'https://sig.energia.gob.ar/wfsenergia', 'Datos públicos (Secretaría de Energía)', 'sig_energia'),
+              ('enargas', 'Gasoductos de transporte (ENARGAS)', 'https://www.enargas.gob.ar/',
+               'Datos públicos (ENARGAS, vía el WFS de la Secretaría de Energía)', 'enargas'),
+              ('ign', 'Instituto Geográfico Nacional (IGN)', 'https://www.ign.gob.ar/',
+               'CC-BY 4.0 (IGN)', 'ign'),
+              ('gleif', 'GLEIF (LEI)', 'https://www.gleif.org/', 'CC0 1.0', 'gleif')
             ON CONFLICT (id) DO NOTHING""")
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
 
@@ -157,6 +222,17 @@ def main():
         copy("sig_energia.concesion", concesiones, "sig_energia", "WFS")
         copy("sig_energia.venteo_declarado", declarados, "sig_energia", "WFS")
         copy("sig_energia.venteo_detectado", detectados, "sig_energia", "WFS")
+        copy("enargas.gasoducto", gasoductos, "enargas", "WFS de la Secretaría de Energía")
+        copy("ign.localidad", localidades, "ign", "WFS del IGN (BAHRA)")
+        copy("ign.area_protegida", areas, "ign", "WFS del IGN")
+
+        # Las empresas que más producen u operan, con su nombre de las declaraciones juradas
+        # Se busca sin forma societaria («YPF S.A.» → «YPF»): GLEIF busca por palabras
+        names = [re.sub(r"\b(S\.?\s?A\.?\s?U?\.?|S\.?\s?R\.?\s?L\.?|S\.?\s?L\.?|SAU|LTD\.?)(\s|$)", " ", r[0]).strip(" .,")
+                 for r in conn.execute(f"""
+            SELECT trim(empresa) FROM capitulo4.produccion GROUP BY 1
+            ORDER BY sum(prod_pet) + sum(prod_gas) DESC LIMIT {GLEIF_TOP}""")]
+        copy("gleif_energia.candidato", gleif(names), "gleif", "API de GLEIF")
 
 
 if __name__ == "__main__":

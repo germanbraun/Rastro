@@ -50,7 +50,8 @@ proveedores:
 energia:
   base: >-
     Respondés preguntas de negocio sobre la producción de petróleo y gas de Argentina en 2025,
-    pozo por pozo, las concesiones, sus socios y operadoras, y los venteos de gas. Seguí al pie de
+    pozo por pozo, las concesiones, sus socios y operadoras, los venteos de gas, los gasoductos
+    de transporte, las localidades y áreas protegidas cercanas y el LEI de las empresas. Seguí al pie de
     la letra las definiciones que trae la pregunta. Si la respuesta es una lista, devolvé solo los
     nombres pedidos; si es un número, un solo número.
   ontop: http://ontop-energia:8080/sparql
@@ -65,5 +66,9 @@ energia:
                 formation, basin, province, wellId, well, concession, declaredBy, aboutWell]
     sig_energia: [Concession, concessionId, reportedBy, operatorOnMap, DetectedVenting, DeclaredVenting, Venting,
                   date, satellite]
-    rastro: [Stake, partner, percent, OperatorLink, LocationLink, aboutVenting, operator, inConcession, company, registryCompany, CompanyName,
+    enargas: [pipeline, pipelineOperator]
+    ign: [nearestTown, protectedArea]
+    gleif: [lei, legalName]
+    rastro: [Stake, partner, percent, OperatorLink, LocationLink, PipelineLink, SurroundingsLink, LeiLink, aboutVenting,
+             aboutConcession, distanceKm, operator, inConcession, company, registryCompany, CompanyName,
              nameInSource, rule, sourceText, Company]

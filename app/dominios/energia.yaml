@@ -3,8 +3,9 @@
 
 domain: energia                # el de layer/dominios.yaml: endpoint, diccionario y notas para el LLM
 resumen: >-
-  Datos públicos de la Secretaría de Energía de Argentina: la producción de 2025 pozo por pozo
-  (Capítulo IV) y los mapas de concesiones, socios y venteos de gas (WFS).
+  Datos públicos de Argentina: la producción de 2025 pozo por pozo (Capítulo IV) y los mapas de
+  concesiones, socios y venteos de gas de la Secretaría de Energía, los gasoductos de ENARGAS, las
+  localidades y áreas protegidas del IGN, y el identificador global de empresas (GLEIF).
 ejemplo_libre: "Por ejemplo: ¿qué empresas producen más gas en la cuenca Neuquina?"
 ontologia: /ontology/energia/energia.ttl
 diagrama: {archivo: ontologia-energia, titulo: diccionario de petróleo y gas}   # app/ontologia-energia.svg, lo dibuja docs/diagramas/build.py
@@ -19,6 +20,9 @@ demo:
 fuentes:
   capitulo4: Capítulo IV
   sig_energia: Mapas (WFS)
+  enargas: ENARGAS
+  ign: IGN
+  gleif: GLEIF
   rastro: enlace Rastro
 nota_rastro: >-
   Las empresas con sus nombres en cada fuente, los socios de cada concesión, quién opera cada pozo
@@ -36,6 +40,10 @@ columnas:
   detected: Posibles venteos (satélite)
   declared: Puntos de venteo declarados
   unconventionalOil: Petróleo no convencional (m³)
+  distanceKm: Gasoducto más cercano (km)
+  pipeline: Gasoducto
+  place: Dónde
+  lei: LEI
 formatos:
   share: numero
   operated: numero
@@ -118,13 +126,68 @@ preguntas:
       :ShaleProduction rdfs:subClassOf :UnconventionalProduction .
       :TightProduction rdfs:subClassOf :UnconventionalProduction .
 
+  - id: e05
+    query: /ontology/energia/queries/cq5.rq
+    simple: ¿Qué concesiones con posibles venteos no tienen un gasoducto de transporte cerca?
+    tecnica: ¿Qué concesiones con posibles venteos detectados por satélite tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más?
+    ventaja: "Los gasoductos son de otro organismo (ENARGAS). Rastro calcula una vez la distancia de cada concesión al gasoducto más cercano y la une con los venteos: una pista de dónde el gas no tiene salida."
+    terminos:
+      Gasoducto de transporte: los caños troncales que llevan el gas a los centros de consumo. No incluye los ductos internos de cada yacimiento.
+    evidencia:
+      texto: "Por qué Rastro dice la distancia (algunos ejemplos):"
+      formato: "{evidencia}"
+      query: |
+        SELECT ?evidencia (GROUP_CONCAT(DISTINCT ?f; separator=" + ") AS ?fuentes) WHERE {
+          ?g a :PipelineLink ; :aboutConcession/:name ?c ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?f .
+          FILTER (?c IN ("CHIHUIDO DE LA SIERRA NEGRA", "EL TRAPIAL - CURAMCHED", "LOMA CAMPANA"))
+        } GROUP BY ?evidencia
+
+  - id: e06
+    query: /ontology/energia/queries/cq6.rq
+    simple: ¿Qué posibles venteos están dentro de un área protegida o cerca de una localidad?
+    tecnica: ¿Qué posibles venteos detectados por satélite caen dentro de un área protegida o a menos de 3 km de una localidad, según el IGN?
+    ventaja: "Las localidades y las áreas protegidas son del Instituto Geográfico Nacional. Rastro ubica cada posible venteo respecto de ellas una vez, con la evidencia, y llega a la concesión y a su operadora."
+    terminos:
+      Área protegida: una reserva o parque con protección legal (nacional o provincial).
+    evidencia:
+      texto: "El entorno de algunos posibles venteos:"
+      formato: "{evidencia}"
+      query: |
+        SELECT DISTINCT ?evidencia (GROUP_CONCAT(DISTINCT ?f; separator=" + ") AS ?fuentes) WHERE {
+          ?s a :SurroundingsLink ; :protectedArea ?a ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?f .
+        } GROUP BY ?evidencia ORDER BY ?evidencia LIMIT 4
+
+  - id: e07
+    query: /ontology/energia/queries/cq7.rq
+    simple: ¿Qué empresas tienen identificador global (LEI)?
+    tecnica: ¿Qué empresas que producen en Argentina tienen LEI en GLEIF, y cuánto petróleo operan?
+    ventaja: "El LEI une cada empresa con el registro global de GLEIF, el mismo que usan bancos y reguladores. Rastro lo acepta solo si coincide el nombre legal, y deja a la vista lo que descartó."
+    terminos:
+      LEI: el identificador global de empresas (GLEIF), el mismo en todo el mundo.
+    evidencia:
+      texto: "Cómo se eligió cada LEI (algunos ejemplos):"
+      formato: "{evidencia}"
+      query: |
+        SELECT ?evidencia ?fuente WHERE {
+          ?l a :LeiLink ; :company/:name ?e ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
+          FILTER (?e IN ("YPF S.A.", "SHELL ARGENTINA S.A.", "PAN AMERICAN ENERGY SL"))
+        }
+
 faq:
   - pregunta: ¿De dónde salen los datos?
     respuesta: >-
-      De dos fuentes públicas de la Secretaría de Energía: las declaraciones juradas mensuales de
+      De cinco fuentes públicas. De la Secretaría de Energía: las declaraciones juradas mensuales de
       producción de cada pozo en 2025 y el padrón de pozos (Capítulo IV, datos.energia.gob.ar), y el
-      servicio de mapas (WFS) con las concesiones, sus socios y los venteos de gas. Se usa 2025 porque
-      el archivo de 2026 todavía no trae a todas las operadoras.
+      servicio de mapas (WFS) con las concesiones, sus socios y los venteos de gas. Del mismo servicio,
+      los gasoductos de transporte de ENARGAS. Del Instituto Geográfico Nacional (listado en IDERA), las
+      localidades y las áreas protegidas. Y de GLEIF, el identificador global de las empresas. Se usa 2025
+      porque el archivo de 2026 todavía no trae a todas las operadoras.
+  - pregunta: ¿Por qué los grupos (Chevron, Pluspetrol, CGC) son correcciones revisadas y no salen de un registro?
+    respuesta: >-
+      Porque ningún registro público los tiene: GLEIF no registra la matriz de ninguna de estas empresas
+      argentinas, y las sociedades de Chevron no tienen LEI; Wikidata tampoco registra esas relaciones.
+      Por eso son correcciones revisadas, con su motivo a la vista, y el LEI se usa como identificador de
+      cada empresa.
   - pregunta: ¿Un posible venteo detectado por satélite es un incumplimiento?
     respuesta: >-
       No. Es una anomalía térmica que vio un satélite: un indicio para revisar. Además, la capa de puntos
@@ -142,6 +205,7 @@ faq:
   - pregunta: ¿Dónde está cada pieza?
     tecnico: true
     respuesta: >-
-      Datos en Postgres, un esquema por fuente (`capitulo4`, `sig_energia`); empresas, socios, operadoras y
-      venteos ubicados en el esquema `energia` (`linking/energia/`); un tercer Ontop en el puerto 8082 con su
+      Datos en Postgres, un esquema por fuente (`capitulo4`, `sig_energia`, `enargas`, `ign`, `gleif_energia`);
+      empresas, socios, operadoras, venteos ubicados, gasoductos cercanos y entorno en el esquema `energia`
+      (`linking/energia/`); un tercer Ontop en el puerto 8082 con su
       ontología (`ontology/energia/`) y sus mapeos (`mappings/energia.r2rml.ttl`). Cada enlace se expone con PROV-O.

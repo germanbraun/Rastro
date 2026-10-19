@@ -8,9 +8,10 @@
     rdfs:label "Diccionario de negocio: petróleo y gas en Argentina"@es ;
     rdfs:comment """Lo mínimo para responder las preguntas de ontology/energia/competency-questions.md:
 la producción de 2025 pozo por pozo, las concesiones con sus socios, quién opera cada pozo y los
-venteos de gas. Cada enlace entre fuentes lleva su evidencia, con PROV-O. «Producción no
+venteos de gas, con los gasoductos de transporte (ENARGAS), las localidades y áreas protegidas (IGN)
+y el identificador global de las empresas (GLEIF). Cada enlace entre fuentes lleva su evidencia, con PROV-O. «Producción no
 convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight)."""@es ;
-    owl:versionInfo "0.2" .
+    owl:versionInfo "0.3" .
 
 # Clases ---------------------------------------------------------
 
@@ -65,6 +66,21 @@ convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight).
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Ubicación de un venteo"@es ;
     rdfs:comment "En qué concesión cae un venteo y por qué: el punto está dentro del contorno de la concesión en el mapa."@es .
+
+:PipelineLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Gasoducto más cercano"@es ;
+    rdfs:comment "El gasoducto de transporte de ENARGAS más cercano al contorno de una concesión, y a cuántos km. 0 km si lo cruza."@es .
+
+:SurroundingsLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Entorno de un venteo"@es ;
+    rdfs:comment "La localidad más cercana a un posible venteo y si cae dentro de un área protegida, según el IGN."@es .
+
+:LeiLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Identificador global de una empresa"@es ;
+    rdfs:comment "El LEI de una empresa en GLEIF: se acepta si su nombre legal, normalizado, es igual. Guarda lo descartado."@es .
 
 :Venting a owl:Class ;
     rdfs:label "Venteo"@es ;
@@ -121,5 +137,13 @@ convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight).
 :sourceText a owl:DatatypeProperty ; rdfs:label "evidencia"@es .
 
 :aboutVenting a owl:ObjectProperty ; rdfs:domain :LocationLink ; rdfs:range :Venting ; rdfs:label "sobre el venteo"@es .
+:aboutConcession a owl:ObjectProperty ; rdfs:range :Concession ; rdfs:label "sobre la concesión"@es .
+:pipeline a owl:DatatypeProperty ; rdfs:domain :PipelineLink ; rdfs:label "gasoducto"@es .
+:pipelineOperator a owl:DatatypeProperty ; rdfs:domain :PipelineLink ; rdfs:label "licenciataria del gasoducto"@es .
+:distanceKm a owl:DatatypeProperty ; rdfs:label "distancia (km)"@es .
+:nearestTown a owl:DatatypeProperty ; rdfs:domain :SurroundingsLink ; rdfs:label "localidad más cercana"@es .
+:protectedArea a owl:DatatypeProperty ; rdfs:domain :SurroundingsLink ; rdfs:label "área protegida"@es .
+:lei a owl:DatatypeProperty ; rdfs:label "LEI"@es .
+:legalName a owl:DatatypeProperty ; rdfs:domain :LeiLink ; rdfs:label "nombre legal en GLEIF"@es .
 :date a owl:DatatypeProperty ; rdfs:domain :Venting ; rdfs:label "fecha"@es .
 :satellite a owl:DatatypeProperty ; rdfs:domain :DetectedVenting ; rdfs:label "satélite"@es .

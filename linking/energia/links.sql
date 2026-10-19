@@ -8,7 +8,7 @@ CREATE SCHEMA energia;
 CREATE FUNCTION energia.normalizar(t text) RETURNS text LANGUAGE sql IMMUTABLE AS $$
   SELECT trim(regexp_replace(regexp_replace(
            translate(upper(coalesce(t, '')), 'ÁÉÍÓÚÜÑ.,()', 'AEIOUUN    '),
-           '\m(S ?A ?U|S ?A ?A ?I|S ?R ?L|S ?A|S ?L|SAU|SUCURSAL ARGENTINA|INC|LLC|LTD)\M', '', 'g'),
+           '\m(SOCIEDAD ANONIMA|ARGENTINE BRANCH|S ?A ?U|S ?A ?A ?I|S ?R ?L|S ?A|S ?L|SAU|SUCURSAL ARGENTINA|INC|LLC|LTD)\M', '', 'g'),
          '\s+', ' ', 'g'))
 $$;
 
@@ -89,3 +89,32 @@ SELECT v.gml_id AS id, v.tipo, v.fecha, v.satelite, v.nombre, v.id_concesion,
        || ') cae dentro del contorno de la concesión ' || c.areapermisoconcesion || ' en el mapa.' AS evidencia
 FROM energia.venteo_ubicado v
 JOIN sig_energia.concesion c USING (id_concesion);
+
+-- LEI de GLEIF: se acepta el candidato cuyo nombre legal, normalizado, es igual al de la empresa.
+-- La evidencia guarda los candidatos descartados (por ejemplo, consorcios que nombran a varias empresas)
+CREATE TABLE energia.empresa_lei AS
+SELECT e.empresa_id, c.lei, c.nombre_legal,
+       'mismo nombre legal normalizado' AS regla,
+       'GLEIF, buscando «' || c.nombre_buscado || '» en Argentina: ' || c.nombre_legal || ' (' || c.lei || ').'
+       || coalesce(' Descartado: ' || (SELECT string_agg(d.nombre_legal, '; ') FROM gleif_energia.candidato d
+                                       WHERE d.nombre_buscado = c.nombre_buscado AND d.lei <> c.lei), '') AS evidencia
+FROM gleif_energia.candidato c
+JOIN energia.empresa e ON e.empresa_id = energia.normalizar(c.nombre_legal)
+WHERE c.estado = 'ACTIVE';
+
+-- Gasoducto de transporte más cercano a cada concesión y venteos con su entorno (IGN): las
+-- calcula link.py (concesion_gasoducto_calc y venteo_entorno_calc); acá se les pone la evidencia
+CREATE TABLE energia.concesion_gasoducto AS
+SELECT g.id_concesion, g.gasoducto, g.licenciataria, round(g.distancia_km::numeric, 1) AS distancia_km,
+       CASE WHEN g.distancia_km = 0 THEN 'El gasoducto de transporte «' || g.gasoducto || '» (' || g.licenciataria
+                 || ') cruza el contorno de la concesión ' || c.areapermisoconcesion || '.'
+            ELSE 'El gasoducto de transporte más cercano es «' || g.gasoducto || '» (' || g.licenciataria || '), a '
+                 || round(g.distancia_km::numeric, 1) || ' km del contorno de la concesión ' || c.areapermisoconcesion || '.'
+       END AS evidencia
+FROM energia.concesion_gasoducto_calc g JOIN sig_energia.concesion c USING (id_concesion);
+
+CREATE TABLE energia.venteo_entorno AS
+SELECT v.id, v.localidad, v.provincia, round(v.distancia_km::numeric, 1) AS distancia_km, v.area_protegida,
+       'La localidad más cercana es ' || v.localidad || ' (' || v.provincia || '), a ' || round(v.distancia_km::numeric, 1)
+       || ' km.' || coalesce(' El punto está dentro del área protegida «' || v.area_protegida || '».', '') AS evidencia
+FROM energia.venteo_entorno_calc v;

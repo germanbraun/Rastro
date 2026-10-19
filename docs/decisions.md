@@ -354,3 +354,13 @@ Para operadoras y consultoras del sector. Dos fuentes públicas de la Secretarí
 ## 2026-10-19 — PROV-O visible en la evidencia
 
 Ocho tipos de enlace son entidades PROV-O (`prov:Entity`, con `prov:wasDerivedFrom` y `prov:wasGeneratedBy`): `:DrugLink` y `:StopReasonLink` en oncología; `:GroupLink`, `:LeiLink` y `:WatchlistLink` en proveedores; `:Stake`, `:OperatorLink` y `:CompanyName` en petróleo y gas. Se suma `:LocationLink` (en qué concesión cae cada venteo), que antes era solo un texto del venteo. Las consultas de evidencia ahora piden la fuente con `prov:wasDerivedFrom`, y la app dice «entidad PROV-O» solo cuando la consulta la usa.
+
+## 2026-10-19 — Petróleo y gas: tres fuentes más (ENARGAS, IGN, GLEIF)
+
+Para que el dominio no dependa de un solo organismo:
+
+- **ENARGAS:** los 303 tramos de gasoductos de transporte, servidos por el mismo WFS. Para cada concesión, la distancia de su contorno al gasoducto más cercano (`:PipelineLink`). 38 concesiones con posibles venteos tienen el más cercano a 10 km o más. No incluye los ductos internos de cada yacimiento: es una pista, no una conclusión.
+- **IGN (listado en IDERA):** 3.528 localidades (BAHRA) y 506 áreas protegidas. Para cada posible venteo, la localidad más cercana y si cae en un área protegida (`:SurroundingsLink`): 60 caen en áreas protegidas y 61 a menos de 3 km de una localidad.
+- **GLEIF:** el LEI de las 40 empresas que más producen, buscado por nombre en Argentina y aceptado solo si coincide el nombre legal normalizado (`:LeiLink`, guarda lo descartado): 12 empresas. En su propio esquema (`gleif_energia`), porque el cargador de proveedores borra el esquema `gleif`.
+- **Los grupos no salen de un registro:** GLEIF no registra la matriz de ninguna de estas empresas argentinas, las sociedades de Chevron no tienen LEI y Wikidata no tiene esas relaciones. Chevron, Pluspetrol y CGC siguen siendo correcciones revisadas.
+- Distancias con una aproximación plana en km, en Python (`linking/energia/link.py`), sin PostGIS.

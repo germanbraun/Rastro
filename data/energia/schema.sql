@@ -40,3 +40,31 @@ CREATE TABLE sig_energia.venteo_detectado (   -- posibles venteos: anomalías t�
     gml_id text, fecha date, provincia text, satelite text,
     lon double precision, lat double precision
 );
+
+-- Gasoductos de transporte (ENARGAS), servidos por el mismo WFS de la Secretaría de Energía
+DROP SCHEMA IF EXISTS enargas CASCADE;
+CREATE SCHEMA enargas;
+CREATE TABLE enargas.gasoducto (
+    gml_id text, nombregaso text, nombretram text, tipotramo text, subtipotra text, licenciata text,
+    lineas text                          -- los tramos, como JSON [[[lon, lat], ...], ...]
+);
+
+-- Instituto Geográfico Nacional (IGN), por su WFS listado en IDERA
+DROP SCHEMA IF EXISTS ign CASCADE;
+CREATE SCHEMA ign;
+CREATE TABLE ign.localidad (             -- localidades de la Base de Asentamientos Humanos (BAHRA)
+    gid text, fna text, tipo_asent text, nom_pcia text, nom_depto text,
+    lon double precision, lat double precision
+);
+CREATE TABLE ign.area_protegida (
+    gid text, fna text, fdc text,
+    anillos text                         -- los contornos exteriores, como JSON [[[lon, lat], ...], ...]
+);
+
+-- GLEIF: el LEI de las empresas argentinas que más producen. Esquema propio, para no
+-- pisar el de proveedores (data/gleif/schema.sql lo borra y lo vuelve a crear)
+DROP SCHEMA IF EXISTS gleif_energia CASCADE;
+CREATE SCHEMA gleif_energia;
+CREATE TABLE gleif_energia.candidato (   -- lo que devolvió GLEIF para cada nombre buscado
+    nombre_buscado text, lei text, nombre_legal text, otros_nombres text, estado text, pais text
+);
