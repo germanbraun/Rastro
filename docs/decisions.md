@@ -315,3 +315,9 @@ Queda en el grafo como `:stopReason` del ensayo, y su evidencia como `:StopReaso
 
 Medición (`linking/review-stop-reasons-2026-10-19.md`, revisada por un asistente de IA): en una muestra independiente de 50, 45 de 49 motivos asignados correctos (92 %) y 42 de 50 ensayos con al menos un motivo correcto (84 %). Alrededor del 19 % queda como «otro», con su texto a la vista. Con los 26 ensayos del resumen de la IA, las reglas coinciden en los 26 (después de ajustarlas con ellos: es optimista).
 
+
+## 2026-10-19 — Proveedores: una pregunta sobre textos (Leidos)
+
+El mismo GraphRAG anclado que en oncología, en el dominio de proveedores: «¿En qué trabaja el grupo Leidos para el gobierno?». El grafo elige con una consulta exacta los 40 contratos más grandes del grupo (`layer/proveedores/textos/leidos.rq`), con todas sus empresas; un asistente de IA agrupó sus descripciones en 12 temas citando cada contrato (`leidos.json`). Los contratos y montos se leen en vivo; el resumen está guardado.
+
+Por qué con el grafo y no buscando en los textos: de esos 40 contratos, solo 1 nombra a Leidos en su descripción, y 7 son de empresas del grupo con otro nombre (QTC, Dynetics, Mission Support Alliance). Una búsqueda por texto no los encuentra, no puede elegir «los más grandes» y podría traer contratos de la SAIC de hoy. No se convirtió en dato del grafo (temas clasificados): por ahora alcanza con el resumen citado.

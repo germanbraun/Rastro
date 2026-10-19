@@ -1,0 +1,33 @@
+{
+ "pregunta": "¿En qué trabaja el grupo Leidos para el gobierno de EE. UU.? (sus 40 contratos más grandes)",
+ "simple": "¿Qué hace Leidos para el gobierno?",
+ "consulta": "/layer/proveedores/textos/leidos.rq",
+ "como": "Rastro eligió con una consulta exacta los 40 contratos más grandes del grupo Leidos, con todas sus empresas (incluidas Dynetics y QTC, y sin los de la SAIC de hoy). Un asistente de IA (Claude) leyó solo la descripción de esos contratos y los agrupó en temas; cada tema cita sus contratos.",
+ "fecha": "2026-10-19",
+ "temas": [
+  {"tema": "Investigación contra el cáncer", "detalle": "Opera el laboratorio nacional del Instituto Nacional del Cáncer (Frederick).",
+   "contratos": ["HHSN261200800001E", "75N91020F00003", "75N91025F00016", "75N91019F00129", "75N91024F00011"]},
+  {"tema": "Defensa: redes, sistemas y logística", "detalle": "Operación y mantenimiento de la red de comunicaciones de Defensa, sistemas tácticos y apoyo logístico.",
+   "contratos": ["HC102820F0032", "HC102820F0500", "W56KGY20F0067", "HC102821F0082", "47QFCA22F0051", "W58RGZ17C0058"]},
+  {"tema": "Historia clínica electrónica militar", "detalle": "MHS GENESIS, el sistema de historia clínica del sistema de salud militar.",
+   "contratos": ["HT003823F0011", "HT003822F0031", "HT003821F0008", "HT003825F0007", "HT003820F0005"]},
+  {"tema": "Control del tráfico aéreo", "detalle": "Sistemas de la FAA para gestionar vuelos en ruta, oceánicos y en terminales.",
+   "contratos": ["693KA721C00014", "DTFA0101CA0065CALL0001", "693KA720C00002", "DTFAWA16C00021", "DTFAWA10C00052"]},
+  {"tema": "Exámenes médicos para veteranos", "detalle": "Exámenes de discapacidad para el Departamento de Asuntos de Veteranos (QTC, empresa del grupo).",
+   "contratos": ["36C10X25N0182", "36C10X25N0242", "36C10X21N0054", "36C10X20N0065"]},
+  {"tema": "Ciencia y energía", "detalle": "Apoyo a instalaciones del Departamento de Energía y al programa antártico de EE. UU.",
+   "contratos": ["DEAC0609RL14728", "NSFDACS1219442", "89243318CFE000003"]},
+  {"tema": "Seguridad en aeropuertos y fronteras", "detalle": "Equipos de control de pasajeros de la TSA y software de verificación de viajeros.",
+   "contratos": ["70T04019C9DAP3006", "70T04025C7672N001", "70B04C24F00000739"]},
+  {"tema": "Tecnología para agencias civiles", "detalle": "Sistemas y servicios informáticos de la Seguridad Social, Justicia y Seguridad Nacional.",
+   "contratos": ["28321322FDS030130", "15A00020FAQA00189", "47QFCA23F0039"]},
+  {"tema": "Información geoespacial", "detalle": "Mapas e información geográfica en 3D de alta resolución.",
+   "contratos": ["GSQ0116BK0198", "W5J9CQ21F0015"]},
+  {"tema": "Armamento", "detalle": "Dynetics, empresa del grupo, en un programa de armas hipersónicas del Ejército.",
+   "contratos": ["W31P4Q25C0003", "W31P4Q25F0222"]},
+  {"tema": "Asesoramiento a familias militares", "detalle": "Consejería confidencial para militares y sus familias.",
+   "contratos": ["47QFCA21C0002"]},
+  {"tema": "Descripción poco clara", "detalle": "El texto del contrato no dice qué se compra.",
+   "contratos": ["GSQ0017AJ0079"]}
+ ]
+}

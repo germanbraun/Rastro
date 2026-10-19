@@ -46,7 +46,7 @@ En la barra lateral, cambiar **Dominio** a **Oncología**. Elegir *fármacos con
 - **«¿Y esto no se puede hacer con SQL?»** Sí, en parte. Lo que da Rastro es hacerlo una vez, mantenerlo en un lugar y poder auditar cada respuesta. El detalle está en el anexo técnico y en la versión técnica del guion.
 - **«¿Quién revisó las respuestas correctas?»** Las armó un asistente de IA; falta que una persona las confirme (`docs/verificacion-humana.md`).
 - **«¿Necesito saber programar?»** No. Las preguntas de ejemplo funcionan solas; para preguntas propias se configura una vez un asistente de IA.
-- **«¿Esto es GraphRAG?»** En parte, del lado que permite confiar: el grafo elige con una consulta exacta qué registros leer, y la IA resume solo esos textos, citando cada uno. Mostralo en Oncología → «Una pregunta sobre textos» (diapositiva 9). Y si el texto se puede clasificar, se vuelve un dato que se cuenta exacto.
+- **«¿Esto es GraphRAG?»** En parte, del lado que permite confiar: el grafo elige con una consulta exacta qué registros leer, y la IA resume solo esos textos, citando cada uno. Mostralo en «Una pregunta sobre textos»: en proveedores, en qué trabaja el grupo Leidos (de sus 40 contratos más grandes, solo 1 nombra a Leidos en la descripción: buscar en el texto no alcanza); en oncología, por qué se detuvieron ensayos (diapositiva 9). Y si el texto se puede clasificar, se vuelve un dato que se cuenta exacto.
 - **«No sé nada de oncología.»** No hace falta: la app explica cada pregunta en palabras simples, y [fuentes.md](fuentes.md) tiene un glosario.
 
 ## Video de respaldo

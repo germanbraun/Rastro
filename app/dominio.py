@@ -184,9 +184,12 @@ def render(cfg_path, tech):
     ask_tab, trust_tab, faq_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"])
 
     with ask_tab:
-        mode = st.radio("¿Qué querés preguntar?", ["Una pregunta de ejemplo", "Mi propia pregunta"],
+        modes = ["Una pregunta de ejemplo"] + (["Una pregunta sobre textos"] if cfg.get("texto") else [])
+        mode = st.radio("¿Qué querés preguntar?", modes + ["Mi propia pregunta"],
                         horizontal=True, label_visibility="collapsed", key=f"{domain}_mode")
-        if mode == "Una pregunta de ejemplo":
+        if mode == "Una pregunta sobre textos":
+            show_text_question(cfg, tech)
+        elif mode == "Una pregunta de ejemplo":
             options = {(q["tecnica"] if tech else q["simple"]): q for q in questions}
             chosen = st.selectbox("Pregunta", list(options), key=f"{domain}_question_{tech}")
             item = options[chosen]
@@ -237,6 +240,42 @@ def render(cfg_path, tech):
                     st.markdown(md(item["respuesta"]))
         else:
             st.caption("Hay más preguntas para técnicos: activá «Ver detalles técnicos» en la barra lateral.")
+
+
+def show_text_question(cfg, tech):
+    """Una pregunta sobre textos: el grafo elige los contratos con una consulta exacta y un asistente de
+    IA resume solo sus descripciones en temas, citando cada contrato. El resumen está guardado; los
+    contratos y sus montos se leen en vivo."""
+    domain = cfg["domain"]
+    item = read_json(cfg["texto"])
+    st.info(f"**{item['pregunta'] if tech else item['simple']}**")
+    if not st.button("Responder", type="primary", key=f"{domain}_text_answer"):
+        return
+    query = Path(item["consulta"]).read_text()
+    _, rows = run(query, domain)
+    contracts = {c: (float(m), a, e, d) for c, m, a, e, d in rows}
+    total = sum(m for m, *_ in contracts.values())
+    st.markdown(f"Rastro eligió los **{len(contracts)} contratos más grandes** del grupo "
+                f"(US\\$ {money(total / 1e6)} millones). En qué trabaja:")
+    for theme in item["temas"]:
+        found = [c for c in theme["contratos"] if c in contracts]
+        amount = sum(contracts[c][0] for c in found)
+        st.markdown(f"- **{md(theme['tema'])}** · {len(found)} {'contrato' if len(found) == 1 else 'contratos'}, US\\$ {money(amount / 1e6)} millones. "
+                    f"{md(theme['detalle'])}  \n<small>{', '.join(found)}</small>", unsafe_allow_html=True)
+    with st.expander("¿Cómo lo supe?"):
+        st.markdown(md(item["como"]))
+        if tech:
+            st.markdown("**1. La consulta que elige los contratos** (exacta: usa el grupo que arma Rastro):")
+            st.code(query, language="sparql")
+            st.markdown("**2. Las descripciones que leyó el asistente**, tal como están en el grafo (`:description`):")
+        else:
+            st.markdown("**Las descripciones que leyó**, tal como están en la base de contratos:")
+        st.dataframe(pd.DataFrame([{"Contrato": c, "Millones de US$": round(m / 1e6, 1), "Agencia": a.title(),
+                                    "Empresa": e.title(), "Descripción": d.capitalize()}
+                                   for c, (m, a, e, d) in contracts.items()]),
+                     hide_index=True, use_container_width=True)
+        st.caption(f"Resumen guardado el {item['fecha']}. Los contratos y montos se leen en vivo; si cambian "
+                   "los datos, el resumen hay que volver a generarlo.")
 
 
 def llm_status():
