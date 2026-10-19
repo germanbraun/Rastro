@@ -1,0 +1,10 @@
+# Lo que haría una búsqueda por texto (RAG sin grafo): los 40 contratos más grandes
+# que dicen «Leidos» en la descripción o en el nombre de la empresa.
+PREFIX : <https://w3id.org/rastro/proveedores#>
+SELECT ?contrato ?monto ?empresa ?descripcion WHERE {
+  ?c a :Contract ; :contractId ?contrato ; :amount ?monto ; :description ?descripcion ; :supplier ?s .
+  ?s :name ?empresa .
+  FILTER(CONTAINS(LCASE(?descripcion), "leidos") || CONTAINS(LCASE(?empresa), "leidos"))
+}
+ORDER BY DESC(?monto)
+LIMIT 40

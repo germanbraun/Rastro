@@ -7,6 +7,7 @@ dominio (preguntas, columnas, evidencia, tarjetas, escenarios de cambio) está e
 
 import base64
 import json
+import re
 from pathlib import Path
 
 import pandas as pd
@@ -249,7 +250,9 @@ def show_text_question(cfg, tech):
     domain = cfg["domain"]
     item = read_json(cfg["texto"])
     st.info(f"**{item['pregunta'] if tech else item['simple']}**")
-    if not st.button("Responder", type="primary", key=f"{domain}_text_answer"):
+    if st.button("Responder", type="primary", key=f"{domain}_text_answer"):
+        st.session_state[f"{domain}_text_shown"] = True
+    if not st.session_state.get(f"{domain}_text_shown"):
         return
     query = Path(item["consulta"]).read_text()
     _, rows = run(query, domain)
@@ -262,6 +265,8 @@ def show_text_question(cfg, tech):
         amount = sum(contracts[c][0] for c in found)
         st.markdown(f"- **{md(theme['tema'])}** · {len(found)} {'contrato' if len(found) == 1 else 'contratos'}, US\\$ {money(amount / 1e6)} millones. "
                     f"{md(theme['detalle'])}  \n<small>{', '.join(found)}</small>", unsafe_allow_html=True)
+    if item.get("busqueda_texto"):
+        compare_text_search(item, contracts, domain, tech)
     with st.expander("¿Cómo lo supe?"):
         st.markdown(md(item["como"]))
         if tech:
@@ -276,6 +281,39 @@ def show_text_question(cfg, tech):
                      hide_index=True, use_container_width=True)
         st.caption(f"Resumen guardado el {item['fecha']}. Los contratos y montos se leen en vivo; si cambian "
                    "los datos, el resumen hay que volver a generarlo.")
+
+
+def company(name):
+    """«DYNETICS, INC.» → «Dynetics»: el nombre sin la forma legal, para leer en una frase."""
+    name = re.sub(r",?\s+(INC|LLC|CORP|CORPORATION|CO|LTD)\.?$", "", name.strip(), flags=re.I)
+    return " ".join(w if len(w) <= 3 and w.isupper() else w.capitalize() for w in name.split())
+
+
+def compare_text_search(item, contracts, domain, tech):
+    """Lo mismo, buscando «Leidos» en los textos en vez de usar el grafo (lo que haría un RAG común)."""
+    if not st.toggle("¿Y si buscamos «Leidos» en los textos?", key=f"{domain}_text_search"):
+        return
+    query = Path(item["busqueda_texto"]).read_text()
+    _, rows = run(query, domain)
+    found = {c for c, *_ in rows}
+    missing = {c: v for c, v in contracts.items() if c not in found}
+    left, right = st.columns(2)
+    left.metric("Buscando «Leidos» en los textos", f"{len(contracts) - len(missing)} de {len(contracts)}",
+                help="Contratos del grupo que encuentra, de los 40 más grandes.")
+    right.metric("Rastro", f"{len(contracts)} de {len(contracts)}")
+    if not missing:
+        return
+    lost = [t["tema"] for t in item["temas"] if t["contratos"] and all(c in missing for c in t["contratos"])]
+    companies = sorted({company(e) for _, _, e, _ in missing.values()})
+    st.markdown(f"La búsqueda por texto pierde **{len(missing)} contratos** "
+                f"(US\\$ {money(sum(m for m, *_ in missing.values()) / 1e6)} millones), de empresas del grupo "
+                f"que no se llaman Leidos: {', '.join(companies)}."
+                + (f" Desaparecen temas enteros: {', '.join(lost).lower()}." if lost else ""))
+    st.caption("La búsqueda mira la descripción del contrato y el nombre de la empresa, como lo haría alguien "
+               "con SQL o un buscador. Rastro sabe que esas empresas son del grupo porque lo armó una vez, con "
+               "la evidencia de cada enlace.")
+    if tech:
+        st.code(query, language="sparql")
 
 
 def llm_status():

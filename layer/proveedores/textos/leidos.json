@@ -2,6 +2,7 @@
  "pregunta": "¿En qué trabaja el grupo Leidos para el gobierno de EE. UU.? (sus 40 contratos más grandes)",
  "simple": "¿Qué hace Leidos para el gobierno?",
  "consulta": "/layer/proveedores/textos/leidos.rq",
+ "busqueda_texto": "/layer/proveedores/textos/leidos-texto.rq",
  "como": "Rastro eligió con una consulta exacta los 40 contratos más grandes del grupo Leidos, con todas sus empresas (incluidas Dynetics y QTC, y sin los de la SAIC de hoy). Un asistente de IA (Claude) leyó solo la descripción de esos contratos y los agrupó en temas; cada tema cita sus contratos.",
  "fecha": "2026-10-19",
  "temas": [
