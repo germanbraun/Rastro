@@ -513,7 +513,9 @@ def same_answers(values):
 with trust_tab:
     data = saved()["questions"]
     st.markdown("### Por qué podés confiar en las respuestas")
-    st.caption("Tres pruebas, medidas sobre los datos reales.")
+    st.caption("Tres pruebas, medidas sobre los datos reales. En todas, el mismo asistente de IA responde "
+               "de dos formas: **sin Rastro**, escribiendo SQL sobre las bases tal como vienen; **con "
+               "Rastro**, preguntando con el diccionario de negocio.")
     st.markdown("#### 1. La misma pregunta, la misma respuesta")
     left, right = st.columns(2)
     left.metric("Sin Rastro", "1 de 10")
