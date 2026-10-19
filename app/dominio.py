@@ -53,7 +53,8 @@ def run(query, domain):
 
 
 def prefixed(query, domain):
-    return f"PREFIX : <{answer.DOMAINS[domain]['namespace']}>\n" + PROV + query
+    """Agrega los prefijos que la consulta usa: el del dominio siempre, el de PROV-O solo si hace falta."""
+    return f"PREFIX : <{answer.DOMAINS[domain]['namespace']}>\n" + (PROV if "prov:" in query else "") + query
 
 
 def md(text):
