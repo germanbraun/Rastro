@@ -276,3 +276,8 @@ El mismo método que oncología, en `layer/proveedores/`: las 9 preguntas respon
 - **Guiones:** una parte opcional de 2 minutos en `docs/demo-guion.md` (cambiar el dominio, la pregunta de Leidos y «¿Cómo lo supe?» de SAIC) y su versión técnica en `docs/demo-guion-tecnico.md`.
 - **One-pager:** una línea con el resultado en el segundo dominio (8 de 9 contra 5 de 9), y una fila en la versión técnica.
 - Se eligieron 3 diapositivas y no 4: con el ejemplo y las pruebas alcanza para mostrar que Rastro sirve en otro dominio; el detalle queda en la app y en el anexo.
+
+## 2026-10-19 — Preguntas sobre textos: GraphRAG anclado en la capa semántica
+
+La pregunta «¿esto es GraphRAG?» va a aparecer. La respuesta: Rastro es la parte estructurada y auditable; para texto, el grafo elige con una consulta exacta qué registros importan y un LLM resume solo esos textos, con cita de cada registro. No se arma un grafo desde texto con un LLM: iría contra el argumento principal (exacto, revisado, auditable). Primer ejemplo: los 26 ensayos de fase 3 de cáncer de pulmón con inhibidores de quinasa que se detuvieron y tienen motivo escrito, agrupados en 7 motivos (`layer/textos/detenidos-pulmon.json`). El resumen lo hizo un asistente de IA leyendo los 26 textos y está guardado; los textos se leen en vivo del grafo (`:whyStopped`).
+

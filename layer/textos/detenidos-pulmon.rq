@@ -1,0 +1,14 @@
+# Los ensayos que lee el resumen: fase 3 (incluye 2/3), detenidos, de cáncer de pulmón y sus
+# subtipos, que prueban algún inhibidor de quinasa (clase ATC L01E), con el motivo escrito.
+PREFIX : <https://w3id.org/rastro/ontology#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?nct ?estado ?farmacos ?motivo WHERE {
+  { SELECT ?t (GROUP_CONCAT(DISTINCT ?nombre; separator=", ") AS ?farmacos) WHERE {
+      ?t :testsDrug ?d ; :phase ?p ; :status ?s ; :condition ?c ; :whyStopped ?why .
+      ?d a :KinaseInhibitor ; :name ?nombre .
+      FILTER (CONTAINS(?p, "PHASE3") && ?s IN ("TERMINATED", "WITHDRAWN"))
+      ?x rdfs:label "Lung Neoplasms"@en . ?c :within ?x .
+    } GROUP BY ?t }
+  ?t :nctId ?nct ; :status ?estado ; :whyStopped ?motivo .
+}
+ORDER BY ?nct

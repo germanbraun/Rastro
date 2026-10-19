@@ -170,3 +170,8 @@ Abiertas:
 
 Plan aparte en [plan-proveedores.md](plan-proveedores.md): contratos federales, empresas y grupos, y listas de control, con la misma arquitectura y un selector de dominio en la app.
 
+## Preguntas sobre textos (GraphRAG anclado en la capa)
+
+- [x] Una pregunta de oncología sobre los motivos de los ensayos detenidos: el grafo elige los ensayos con una consulta exacta y un asistente de IA resume solo sus motivos, citando cada ensayo (`layer/textos/`, opción «Una pregunta sobre textos» en la app).
+- [ ] El equivalente en proveedores, con la descripción de cada contrato (hay que descargarla).
+

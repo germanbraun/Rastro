@@ -329,6 +329,41 @@ def evidence_examples(names, limit=5):
     return picked[:limit]
 
 
+TEXT_QUESTION = Path("/layer/textos/detenidos-pulmon.json")
+
+
+def show_text_question():
+    """Una pregunta sobre textos: el grafo elige los ensayos con una consulta exacta y un asistente de
+    IA resume solo sus motivos, citando cada ensayo. El resumen está guardado; los textos se leen en vivo."""
+    item = json.loads(TEXT_QUESTION.read_text())
+    st.info(f"**{item['pregunta'] if TECH else item['simple']}**")
+    if not st.button("Responder", type="primary", key="text_answer"):
+        return
+    query = Path(item["consulta"]).read_text()
+    _, rows = answer.run_sparql_table(query)
+    texts = {nct: (status, drugs, why) for nct, status, drugs, why in rows}
+    st.markdown(f"Rastro encontró **{len(texts)} ensayos** con su motivo escrito. Por qué se detuvieron:")
+    for group in item["motivos"]:
+        links = ", ".join(f"[{nct}](https://clinicaltrials.gov/study/{nct})" for nct in group["ensayos"])
+        st.markdown(f"- **{group['motivo']}** · {len(group['ensayos'])} ensayos. {group['detalle']}  \n"
+                    f"<small>{links}</small>", unsafe_allow_html=True)
+    with st.expander("¿Cómo lo supe?"):
+        st.markdown(item["como"])
+        if TECH:
+            st.markdown("**1. La consulta que elige los ensayos** (exacta: usa la clase deducida y la "
+                        "jerarquía de MeSH):")
+            st.code(query, language="sparql")
+            st.markdown("**2. Los motivos que leyó el asistente**, tal como están en el grafo (`:whyStopped`):")
+        else:
+            st.markdown("**Los motivos que leyó**, tal como los escribió cada sponsor:")
+        st.dataframe(pd.DataFrame([{"Ensayo": f"https://clinicaltrials.gov/study/{nct}", "Fármacos": d.lower(),
+                                    "Motivo escrito": w} for nct, (_, d, w) in sorted(texts.items())]),
+                     hide_index=True, use_container_width=True,
+                     column_config={"Ensayo": st.column_config.LinkColumn(display_text=r"study/(.*)")})
+        st.caption(f"Resumen guardado el {item['fecha']}. Si cambian los datos, los motivos de arriba se "
+                   "leen en vivo; el resumen hay que volver a generarlo.")
+
+
 def show_answer(query, columns, rows, note=None):
     used, col_sources = answer.column_sources(query)
     drugs = answer_drugs(rows) if rows and ":testsDrug" in query else []
@@ -462,9 +497,12 @@ ask_tab, trust_tab, faq_tab = st.tabs(["Preguntar", "Por qué confiar", "Pregunt
 FAQ_HINT = "¿Dudas? Mirá la pestaña **Preguntas frecuentes**."
 
 with ask_tab:
-    mode = st.radio("¿Qué querés preguntar?", ["Una pregunta de ejemplo", "Mi propia pregunta"],
+    mode = st.radio("¿Qué querés preguntar?",
+                    ["Una pregunta de ejemplo", "Una pregunta sobre textos", "Mi propia pregunta"],
                     horizontal=True, label_visibility="collapsed")
-    if mode == "Una pregunta de ejemplo":
+    if mode == "Una pregunta sobre textos":
+        show_text_question()
+    elif mode == "Una pregunta de ejemplo":
         # 🧾 marca las preguntas cuya respuesta trae la evidencia de cada enlace (PROV-O)
         def ask_label(q):
             linked = ":testsDrug" in (last_ok_query(saved()["questions"][q["id"]], "C") or "")

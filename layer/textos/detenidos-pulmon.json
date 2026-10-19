@@ -1,0 +1,23 @@
+{
+ "pregunta": "¿Por qué se detuvieron los ensayos de fase 3 de cáncer de pulmón que prueban inhibidores de quinasa?",
+ "simple": "¿Por qué se cortaron antes de tiempo los estudios grandes de cáncer de pulmón con pastillas que bloquean enzimas del tumor?",
+ "consulta": "/layer/textos/detenidos-pulmon.rq",
+ "como": "Rastro eligió los ensayos con una consulta exacta (fase 3, detenidos, cáncer de pulmón y sus subtipos, inhibidores de quinasa). Un asistente de IA (Claude) leyó solo los motivos escritos de esos ensayos y los agrupó; cada grupo cita sus ensayos.",
+ "fecha": "2026-10-19",
+ "motivos": [
+  {"motivo": "No consiguieron pacientes", "detalle": "Reclutamiento lento o insuficiente; en uno, la empresa lo cerró por eso.",
+   "ensayos": ["NCT00090675", "NCT00091156", "NCT00234468", "NCT00738881", "NCT01487174", "NCT01996098", "NCT02178397", "NCT02326285", "NCT02775006"]},
+  {"motivo": "Decisión de la empresa", "detalle": "Razones de negocio o estratégicas, o se abandonó el desarrollo del fármaco. Varios aclaran que no fue por seguridad.",
+   "ensayos": ["NCT02186301", "NCT02322281", "NCT03529084", "NCT04222972", "NCT04427072", "NCT04816214", "NCT06093503"]},
+  {"motivo": "El tratamiento no funcionó", "detalle": "Un análisis intermedio mostró que no iba a alcanzar su objetivo; en uno, además, más muertes en un subtipo.",
+   "ensayos": ["NCT00300885", "NCT00558636", "NCT01244191", "NCT02134015"]},
+  {"motivo": "Problemas de seguridad", "detalle": "Toxicidad del fármaco o un balance riesgo-beneficio desfavorable; en uno, la FDA suspendió el estudio.",
+   "ensayos": ["NCT01761747", "NCT04921358"]},
+  {"motivo": "Lo recomendó un comité independiente", "detalle": "El comité que vigila los datos del estudio recomendó cerrarlo.",
+   "ensayos": ["NCT01208064", "NCT02588261"]},
+  {"motivo": "Cambio de enfoque", "detalle": "Se reconsideró usar el fármaco como tratamiento después de la cirugía.",
+   "ensayos": ["NCT02795884"]},
+  {"motivo": "Sin motivo en el resumen", "detalle": "El registro remite a la descripción detallada del estudio.",
+   "ensayos": ["NCT00673049"]}
+ ]
+}

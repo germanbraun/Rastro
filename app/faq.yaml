@@ -43,6 +43,10 @@
   answer: |-
     En cada respuesta con fármacos, «¿Cómo lo supe?» muestra cómo reconoció Rastro cada fármaco en los ensayos: lo que escribió quien registró el ensayo, y qué fármaco es. Por ejemplo, «Adjuvant Systemic Therapy» es trastuzumab emtansina porque el sponsor lo declaró así. Se puede abrir cada ensayo y comprobarlo.
 
+- question: ¿Rastro también responde sobre textos?
+  answer: |-
+    Sí, con cuidado. En «Una pregunta sobre textos», Rastro primero elige con una consulta exacta los ensayos que importan (por ejemplo, los de fase 3 de cáncer de pulmón con inhibidores de quinasa que se detuvieron: 26). Después, un asistente de IA lee solo los motivos que escribió cada sponsor y los agrupa: falta de pacientes, decisión de la empresa, el tratamiento no funcionó… Cada grupo cita sus ensayos, y en «¿Cómo lo supe?» están todos los textos que leyó.
+
 - question: ¿Los eventos adversos son frecuencias reales?
   answer: >-
     No. Son conteos de reportes espontáneos de FAERS (openFDA): no tienen denominador,
@@ -210,3 +214,11 @@
     - Un número es correcto si está a menos del 5 % del valor real; una lista, si coincide en al menos un 80 %.
     - Los valores reales salen de Rastro, así que cada diferencia con el SQL directo se revisó con ensayos reales. Esa revisión encontró y corrigió errores de Rastro. Detalle en layer/eval/adjudication.md.
     - Las preguntas, las referencias y esa revisión las hizo un asistente de IA (Claude Code), no el LLM evaluado. Falta que una persona las confirme: docs/verificacion-humana.md.
+
+- question: ¿Esto es GraphRAG?
+  tecnico: true
+  answer: |-
+    En parte, y del lado que más importa para confiar. GraphRAG, en su versión popular, usa un LLM para armar un grafo a partir de documentos y después recupera pedazos de ese grafo para responder: sirve para texto libre, pero los errores de extracción son difíciles de rastrear. Rastro resuelve la otra mitad: datos estructurados, con un grafo que sale de mapeos y enlaces revisados, y un LLM que escribe una consulta exacta. Por eso los números son exactos y auditables.
+
+    Para preguntas sobre texto, Rastro combina las dos cosas: el grafo elige con una consulta exacta qué registros importan (con la jerarquía de MeSH y las clases que deduce Ontop), y el LLM resume solo esos textos, citando cada registro. Es GraphRAG anclado en la capa semántica. Ejemplo: «Una pregunta sobre textos», con los motivos de los ensayos detenidos (layer/textos/).
+
