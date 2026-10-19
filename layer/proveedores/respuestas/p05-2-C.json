@@ -1,0 +1,10 @@
+{
+ "question": "Contá los proveedores (UEI distintos) cuyo nombre coincide con el nombre o un alias de una empresa u organización de la Lista Consolidada de Control, sin tener en cuenta mayúsculas, puntuación ni formas societarias (Inc., LLC, Corp.).",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?s a :Supplier ; :uei ?uei ; :watchlistMatch ?e .\n  ?e :entryType \"Entity\" .\n}",
+   "error": null
+  }
+ ],
+ "answer": 4.0
+}

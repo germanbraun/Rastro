@@ -250,3 +250,14 @@ Todo en SQL legible (`linking/proveedores/links.sql`), cada enlace con el texto 
 - **«Proveedor para revisar»** se deduce en Ontop de dos clases mapeadas: matriz final fuera de EE. UU. (147 proveedores) y coincidencia con una lista (8).
 - **Precisión de proveedor → LEI:** muestra al azar de 50, revisada por un asistente de IA (`linking/proveedores/review-2026-10-19.md`): 46 seguros, 3 probables (la misma empresa con otra forma societaria) y 1 dudoso (nombre genérico, otro estado). Entre 92 % y 98 %. Falta que la confirme una persona.
 - **Detalle de Ontop:** `matched` es palabra reservada para su lector de SQL y rompe los mapeos con consulta; en las tablas de enlaces la columna se llama `matched_text`.
+
+## 2026-10-19 — Proveedores, P3: con y sin Rastro, con números
+
+El mismo método que oncología, en `layer/proveedores/`: las 9 preguntas respondidas por subagentes de Claude Code (Claude Opus 5.5) que solo ven el prompt, sin Rastro (SQL sobre las fuentes tal como se cargaron) y con Rastro (SPARQL sobre el segundo Ontop).
+
+- **Correctas:** sin Rastro 5 de 9, con Rastro 8 de 9. Sin Rastro fallan las que unen USAspending con GLEIF (p04, p07, p09): cada consulta toma el primer candidato de GLEIF sin verificarlo. Con Rastro falló p05: el diccionario no decía que algunas listas dejan vacío el tipo de entrada (se corrigió el comentario, sin volver a correr la prueba).
+- **Consistencia** (5 preguntas × 4 formas): misma respuesta en 3 de 5 sin Rastro y 4 de 5 con Rastro. En una forma, el SQL siguió las matrices históricas y le sumó a Leidos US$41.000 millones de SAIC.
+- **Cambio:** si USAspending renombra la columna de la agencia, sin Rastro se rompen 3 consultas y con Rastro falla todo junto, en voz alta, y se arregla con una línea del mapeo. Si los montos pasan a miles de dólares, las dos dan 3 respuestas distintas sin error; Rastro avisa con un control del recorte (todos los contratos superan US$10 millones) y se arregla con una línea. Resultado en `layer/proveedores/cambio/resultado.json` (el de oncología sigue en `layer/cambio/`).
+- **Adjudicación** (`layer/proveedores/adjudicacion.md`): la referencia sale de Rastro y se queda corta en p01 (Dynetics, QTC y Gibbs & Cox son de Leidos y no están en el grupo) y en p04 (Leonardo, Bombardier y Deloitte Consulting Limited tienen matriz extranjera y Rastro no las enlazó). El número publicable es la diferencia de método, no un «Rastro siempre acierta».
+- **`answer.py` por dominio:** lo propio de cada dominio (endpoint, diccionario, notas, usuario de solo lectura, fuente de cada término) pasó a `layer/dominios.yaml`. Cada función recibe el dominio y, si no se dice, usa oncología: los prompts de oncología quedaron idénticos (comprobado).
+- Al correr 8 subagentes a la vez, dar permisos en cada llamada chocaba («tuple concurrently updated») antes de ejecutar la consulta; no se perdió ningún intento y ahora se ignora ese choque.

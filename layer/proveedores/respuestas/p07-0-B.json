@@ -1,0 +1,47 @@
+{
+ "question": "¿Qué grupos empresarios cotizan en bolsa, según Wikidata, y tienen contratos por más de US$1.000 millones en total, sumando todas sus empresas?",
+ "attempts": [
+  {
+   "query": "WITH g AS (\n SELECT COALESCE(NULLIF(r.parent_name,''), r.name) AS grupo, SUM(c.amount) AS total\n FROM usaspending.contract c JOIN usaspending.recipient r ON r.recipient_id = c.recipient_id\n GROUP BY 1 HAVING SUM(c.amount) > 1000000000),\ngl AS (\n SELECT g.grupo, (SELECT c.lei FROM gleif.candidate c WHERE c.name = g.grupo AND c.lei IS NOT NULL ORDER BY c.rank LIMIT 1) AS lei\n FROM g)\nSELECT DISTINCT gl.grupo FROM gl\nLEFT JOIN gleif.lei_record l ON l.lei = gl.lei\nJOIN wikidata.company w ON w.lei IN (gl.lei, l.ultimate_parent_lei)\nWHERE w.exchanges IS NOT NULL AND cardinality(w.exchanges) > 0\nORDER BY 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "AEROJET ROCKETDYNE HOLDINGS, INC.",
+  "AEROVIRONMENT, INC.",
+  "BAE SYSTEMS PLC",
+  "BAVARIAN NORDIC A/S",
+  "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+  "BRIGHTON MARINE, INC.",
+  "CACI INTERNATIONAL INC",
+  "CORECIVIC, INC.",
+  "CSL BEHRING L.L.C.",
+  "DEFENSE SYSTEMS AND SOLUTIONS",
+  "DELL TECHNOLOGIES INC.",
+  "ELBIT SYSTEMS LTD",
+  "EMERGENT BIOSOLUTIONS INC",
+  "GENERAL DYNAMICS LAND SYSTEMS INC.",
+  "GENERAL DYNAMICS ORDNANCE AND TACTICAL SYSTEMS, INC.",
+  "HEALTH NET, INC.",
+  "ICF INTERNATIONAL, INC.",
+  "ITT CORPORATION",
+  "KONGSBERG GRUPPEN ASA",
+  "LEIDOS HOLDINGS, INC.",
+  "LEIDOS, INC.",
+  "MODERNATX, INC.",
+  "NORTHROP GRUMMAN SYSTEMS CORPORATION",
+  "PALANTIR TECHNOLOGIES INC.",
+  "REGENERON PHARMACEUTICALS INC",
+  "ROCKWELL COLLINS, INC.",
+  "ROLLS-ROYCE HOLDINGS PLC",
+  "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION",
+  "SERCO GROUP PLC",
+  "SPACE EXPLORATION TECHNOLOGIES CORP.",
+  "TEXTRON INC",
+  "THE GEO GROUP, INC.",
+  "THE INTERPUBLIC GROUP OF COMPANIES INC",
+  "UNITEDHEALTH GROUP INCORPORATED",
+  "VERIZON COMMUNICATIONS INC",
+  "VIASAT INC"
+ ]
+}

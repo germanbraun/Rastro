@@ -1,0 +1,24 @@
+# Prueba de consistencia: la misma pregunta, escrita de otras formas. Cada forma mantiene
+# las definiciones de la original, así que la respuesta correcta es la misma.
+# Se eligieron 5 de las 9 preguntas: las de grupos, sectores, listas y el caso SAIC.
+
+p01:
+  - ¿Cuál es el monto total, en dólares, de los contratos del grupo Leidos, contando a Leidos Holdings y a todas las empresas del grupo?
+  - Sumá en dólares los contratos de todas las empresas del grupo empresario Leidos (Leidos Holdings y sus filiales).
+  - ¿Cuántos dólares en contratos tiene el grupo Leidos, sumando Leidos Holdings y cada una de sus empresas?
+p02:
+  - En servicios informáticos (NAICS 5415 y todos sus subsectores), ¿qué 5 grupos empresarios suman más monto en contratos, contando todas las empresas de cada grupo?
+  - Top 5 de grupos empresarios por monto en contratos del sector NAICS 5415 (servicios informáticos) y sus subsectores, sumando todas las empresas de cada grupo.
+  - ¿Qué cinco grupos empresarios, sumando todas sus empresas, tienen el mayor monto en contratos de servicios informáticos (NAICS 5415, incluidos sus subsectores)?
+p05:
+  - ¿Cuántos proveedores distintos (por UEI) se llaman igual que una empresa u organización de la Lista Consolidada de Control, por su nombre o por un alias, si se ignoran mayúsculas, puntuación y formas societarias como Inc., LLC o Corp.?
+  - Contá los proveedores (UEI distintos) cuyo nombre coincide con el nombre o un alias de una empresa u organización de la Lista Consolidada de Control, sin tener en cuenta mayúsculas, puntuación ni formas societarias (Inc., LLC, Corp.).
+  - Ignorando mayúsculas, puntuación y formas societarias como Inc., LLC o Corp., ¿cuántos proveedores (UEI distintos) tienen el mismo nombre que una empresa u organización de la Lista Consolidada de Control, o que uno de sus alias?
+p06:
+  - En construcción (NAICS 23 y todos sus subsectores), ¿con cuántos proveedores distintos (por UEI) tiene contratos el Departamento de Defensa?
+  - Contá los proveedores (UEI distintos) del Departamento de Defensa en contratos del sector construcción, NAICS 23 y sus subsectores.
+  - ¿Cuántos proveedores diferentes, por UEI, le prestan al Departamento de Defensa en contratos de construcción (sector NAICS 23, incluidos sus subsectores)?
+p08:
+  - ¿De qué grupo empresario es hoy el proveedor SCIENCE APPLICATIONS INTERNATIONAL CORPORATION (UEI MMLKPW9JLX64)? Respondé con el nombre del grupo.
+  - El proveedor con UEI MMLKPW9JLX64, SCIENCE APPLICATIONS INTERNATIONAL CORPORATION, ¿a qué grupo empresario pertenece actualmente? Respondé con el nombre del grupo.
+  - Decí el nombre del grupo empresario al que pertenece hoy SCIENCE APPLICATIONS INTERNATIONAL CORPORATION, el proveedor con UEI MMLKPW9JLX64.

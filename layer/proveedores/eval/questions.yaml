@@ -1,0 +1,95 @@
+# Preguntas de evaluación del dominio de proveedores: las 9 preguntas de
+# ontology/proveedores/competency-questions.md, escritas para que la respuesta sea una
+# lista de nombres o un número.
+#
+#   kind: "lista" o "número"
+#   items: qué se nombra en una lista (empresas, agencias). Las empresas se comparan por
+#          nombre normalizado (sin mayúsculas, puntuación ni formas societarias)
+#   reference: SPARQL sobre Rastro (segundo Ontop) con la respuesta correcta, en una sola
+#              columna ?answer. La escribió un asistente de IA (Claude Code), no el LLM
+#              evaluado; falta que la confirme una persona. Como sale de Rastro, donde las
+#              dos formas difieren se revisa con datos reales (adjudicacion.md).
+#
+# Las preguntas dicen explícitamente sus definiciones (qué es un grupo, qué sector, qué
+# lista), para que las dos formas de responder puedan contestarlas.
+
+prefixes: |
+  PREFIX : <https://w3id.org/rastro/proveedores#>
+
+questions:
+
+  - id: p01
+    question: ¿Cuánto suman, en dólares, los contratos del grupo empresario Leidos, es decir de Leidos Holdings y de todas sus empresas?
+    kind: número
+    reference: |
+      SELECT (SUM(?a) AS ?answer) WHERE {
+        ?g :name "LEIDOS HOLDINGS, INC." . ?s :group ?g . ?c :supplier ?s ; :amount ?a .
+      }
+
+  - id: p02
+    question: ¿Cuáles son los 5 grupos empresarios con más monto en contratos de servicios informáticos (sector NAICS 5415 y sus subsectores), sumando todas las empresas de cada grupo?
+    kind: lista
+    items: empresas
+    reference: |
+      SELECT ?answer WHERE {
+        ?it :code "5415" . ?sec :within ?it .
+        ?c :sector ?sec ; :amount ?a ; :supplier/:group ?g . ?g :name ?answer .
+      } GROUP BY ?answer ORDER BY DESC(SUM(?a)) LIMIT 5
+
+  - id: p03
+    question: ¿Qué agencias tienen más de un tercio de su monto en contratos con un solo grupo empresario, sumando todas las empresas de ese grupo?
+    kind: lista
+    items: agencias
+    reference: |
+      SELECT DISTINCT ?answer WHERE {
+        { SELECT ?ag (SUM(?a) AS ?total) WHERE { ?c :agency ?ag ; :amount ?a } GROUP BY ?ag }
+        { SELECT ?ag ?g (SUM(?b) AS ?part) WHERE { ?d :agency ?ag ; :amount ?b ; :supplier/:group ?g } GROUP BY ?ag ?g }
+        FILTER (?part / ?total > 1.0 / 3)
+        ?ag :name ?answer .
+      }
+
+  - id: p04
+    question: ¿Cuántos proveedores (UEI distintos) tienen su matriz final, según GLEIF, fuera de EE. UU.? La matriz final es la de su grupo empresario o, si el grupo no tiene registro en GLEIF, la del propio proveedor.
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE { ?s a :ForeignParentSupplier }
+
+  - id: p05
+    question: ¿Cuántos proveedores (UEI distintos) tienen un nombre igual al nombre o a un alias de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias como Inc., LLC o Corp.?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE { ?s a :Supplier ; :watchlistMatch ?e }
+
+  - id: p06
+    question: ¿Cuántos proveedores (UEI distintos) tiene el Departamento de Defensa en contratos de construcción (sector NAICS 23 y sus subsectores)?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?s) AS ?answer) WHERE {
+        ?dod :name "Department of Defense" . ?con :code "23" .
+        ?c :agency ?dod ; :sector/:within ?con ; :supplier ?s .
+      }
+
+  - id: p07
+    question: ¿Qué grupos empresarios cotizan en bolsa, según Wikidata, y tienen contratos por más de US$1.000 millones en total, sumando todas sus empresas?
+    kind: lista
+    items: empresas
+    reference: |
+      SELECT ?answer WHERE {
+        ?g :listed true ; :name ?answer . ?c :supplier/:group ?g ; :amount ?a .
+      } GROUP BY ?answer HAVING (SUM(?a) > 1000000000)
+
+  - id: p08
+    question: ¿A qué grupo empresario pertenece hoy el proveedor SCIENCE APPLICATIONS INTERNATIONAL CORPORATION con UEI MMLKPW9JLX64? Respondé con el nombre del grupo.
+    kind: lista
+    items: empresas
+    reference: |
+      SELECT ?answer WHERE { ?s :uei "MMLKPW9JLX64" ; :group/:name ?answer }
+
+  - id: p09
+    question: ¿Cuánto suman, en dólares, los contratos del Departamento de Defensa con proveedores para revisar? Un proveedor es para revisar si su matriz final según GLEIF está fuera de EE. UU. (la de su grupo o, si el grupo no tiene registro en GLEIF, la propia) o si su nombre, o el de su grupo, es igual al de una empresa u organización de la Lista Consolidada de Control, sin contar mayúsculas, puntuación ni formas societarias.
+    kind: número
+    reference: |
+      SELECT (SUM(?a) AS ?answer) WHERE {
+        ?s a :SupplierToReview . ?dod :name "Department of Defense" .
+        ?c :supplier ?s ; :agency ?dod ; :amount ?a .
+      }

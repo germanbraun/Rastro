@@ -1,0 +1,47 @@
+# Lo propio de cada dominio para responder preguntas (answer.py): qué endpoint, qué
+# diccionario de negocio, qué notas lee el LLM y con qué usuario de solo lectura corre el SQL.
+# Las rutas son relativas a la raíz del repo.
+
+oncologia:
+  base: >-
+    Respondés preguntas de negocio sobre ensayos clínicos de oncología, fármacos,
+    sus targets y sus eventos adversos. Seguí al pie de la letra las definiciones que trae
+    la pregunta (qué fases o estados cuentan). Si la respuesta es una lista, devolvé solo
+    los nombres pedidos; si es un número, un solo número.
+  ontop: http://ontop:8080/sparql
+  ontology: ontology/rastro.ttl
+  sparql_notes: layer/sparql-notes.md
+  sql_notes: layer/sql-notes.md
+  links_notes: layer/sql-enlaces-notes.md
+  readers: {B: rastro_reader, D: rastro_reader_links}
+  namespace: https://w3id.org/rastro/ontology#
+  # De qué fuente viene cada término de la ontología («rastro» = enlace de Rastro)
+  term_sources:
+    aact: [Trial, Sponsor, nctId, title, phase, status, startDate, whyStopped, sponsor, industry, condition]
+    chembl: [Drug, Target, hasTarget, gene, approved, chemblId]
+    openfda: [YearlyReports, ReportedReaction, reports, seriousReports, reaction, year, drug]
+    mesh: [within]
+    rastro: [testsDrug, DrugLink, linkTrial, linkDrug, interventionText, matchedText, linkRule]
+
+proveedores:
+  base: >-
+    Respondés preguntas de negocio sobre los contratos federales de EE. UU. del año fiscal
+    2025 de más de US$10 millones, las empresas que los reciben, sus grupos empresarios,
+    sus sectores y las listas de control del gobierno. Seguí al pie de la letra las
+    definiciones que trae la pregunta. Si la respuesta es una lista, devolvé solo los
+    nombres pedidos; si es un número, un solo número.
+  ontop: http://ontop-proveedores:8080/sparql
+  ontology: ontology/proveedores/proveedores.ttl
+  sparql_notes: layer/proveedores/sparql-notes.md
+  sql_notes: layer/proveedores/sql-notes.md
+  readers: {B: proveedores_reader}
+  namespace: https://w3id.org/rastro/proveedores#
+  term_sources:
+    usaspending: [Contract, Supplier, Group, Agency, contractId, amount, startDate, endDate, description,
+                  subAgency, supplier, agency, uei, state]
+    naics: [Sector, sector, within]
+    gleif: [LegalEntity, lei, ultimateParent, country, Country]
+    csl: [WatchlistEntry, list, alias, entryType]
+    wikidata: [listed, wikidataId, stockExchange, headquarters]
+    rastro: [group, legalEntity, watchlistMatch, GroupLink, LeiLink, WatchlistLink, linkFrom, linkTo,
+             sourceText, matchedText, linkRule, SupplierToReview, ForeignParentSupplier, WatchlistSupplier]

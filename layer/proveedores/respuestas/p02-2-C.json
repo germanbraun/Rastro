@@ -1,0 +1,16 @@
+{
+ "question": "Top 5 de grupos empresarios por monto en contratos del sector NAICS 5415 (servicios informáticos) y sus subsectores, sumando todas las empresas de cada grupo.",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT ?gn WHERE {\n  SELECT ?gn (SUM(?amt) AS ?total) WHERE {\n    SELECT DISTINCT ?c ?amt ?gn WHERE {\n      ?c a :Contract ; :supplier ?s ; :amount ?amt ; :sector ?sec .\n      ?sec :within ?x . ?x :code \"5415\" .\n      ?s :group ?g . ?g :name ?gn .\n    }\n  } GROUP BY ?gn ORDER BY DESC(?total) LIMIT 5\n}",
+   "error": null
+  }
+ ],
+ "answer": [
+  "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+  "GENERAL DYNAMICS CORP",
+  "LEIDOS HOLDINGS, INC.",
+  "ACCENTURE PLC",
+  "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+ ]
+}

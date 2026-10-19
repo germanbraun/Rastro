@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos proveedores distintos (por UEI) se llaman igual que una empresa u organización de la Lista Consolidada de Control, por su nombre o por un alias, si se ignoran mayúsculas, puntuación y formas societarias como Inc., LLC o Corp.?",
+ "attempts": [
+  {
+   "query": "WITH lista AS (\n  SELECT e.name AS n FROM csl.entry e WHERE COALESCE(e.type, '') IN ('Entity', '')\n  UNION\n  SELECT a FROM csl.entry e, unnest(e.alt_names) a WHERE COALESCE(e.type, '') IN ('Entity', '')\n),\nlista_norm AS (\n  SELECT DISTINCT trim(regexp_replace(regexp_replace(regexp_replace(regexp_replace(lower(n), '[.,'']', '', 'g'), '[^a-z0-9]+', ' ', 'g'), '\\m(inc|incorporated|llc|corp|corporation|co|company|ltd|limited|plc|lp|llp|pllc)\\M', ' ', 'g'), '\\s+', ' ', 'g')) AS k\n  FROM lista WHERE n IS NOT NULL\n),\nprov AS (\n  SELECT r.uei, trim(regexp_replace(regexp_replace(regexp_replace(regexp_replace(lower(r.name), '[.,'']', '', 'g'), '[^a-z0-9]+', ' ', 'g'), '\\m(inc|incorporated|llc|corp|corporation|co|company|ltd|limited|plc|lp|llp|pllc)\\M', ' ', 'g'), '\\s+', ' ', 'g')) AS k\n  FROM usaspending.recipient r WHERE r.uei IS NOT NULL AND r.name IS NOT NULL\n)\nSELECT count(DISTINCT p.uei)\nFROM prov p JOIN lista_norm l ON l.k = p.k\nWHERE p.k <> ''",
+   "error": null
+  }
+ ],
+ "answer": 11.0
+}

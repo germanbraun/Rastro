@@ -1,0 +1,12 @@
+{
+ "question": "Decí el nombre del grupo empresario al que pertenece hoy SCIENCE APPLICATIONS INTERNATIONAL CORPORATION, el proveedor con UEI MMLKPW9JLX64.",
+ "attempts": [
+  {
+   "query": "SELECT DISTINCT COALESCE(NULLIF(r.parent_name, ''), r.name) FROM usaspending.recipient r WHERE r.uei = 'MMLKPW9JLX64'",
+   "error": null
+  }
+ ],
+ "answer": [
+  "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+ ]
+}

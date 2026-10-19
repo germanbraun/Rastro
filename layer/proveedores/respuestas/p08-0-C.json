@@ -1,0 +1,12 @@
+{
+ "question": "¿A qué grupo empresario pertenece hoy el proveedor SCIENCE APPLICATIONS INTERNATIONAL CORPORATION con UEI MMLKPW9JLX64? Respondé con el nombre del grupo.",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT DISTINCT ?gn WHERE {\n  ?s :uei ?uei . FILTER(STR(?uei) = \"MMLKPW9JLX64\")\n  ?s :group ?g . ?g :name ?gn .\n}",
+   "error": null
+  }
+ ],
+ "answer": [
+  "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION"
+ ]
+}

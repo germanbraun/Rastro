@@ -1,0 +1,10 @@
+{
+ "question": "En construcción (NAICS 23 y todos sus subsectores), ¿con cuántos proveedores distintos (por UEI) tiene contratos el Departamento de Defensa?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT COALESCE(r.uei, c.recipient_uei))\nFROM usaspending.contract c\nLEFT JOIN usaspending.recipient r ON r.recipient_id = c.recipient_id\nWHERE c.naics_code LIKE '23%'\n  AND c.awarding_agency = 'Department of Defense'",
+   "error": null
+  }
+ ],
+ "answer": 1060.0
+}

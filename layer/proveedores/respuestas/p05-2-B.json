@@ -1,0 +1,10 @@
+{
+ "question": "Contá los proveedores (UEI distintos) cuyo nombre coincide con el nombre o un alias de una empresa u organización de la Lista Consolidada de Control, sin tener en cuenta mayúsculas, puntuación ni formas societarias (Inc., LLC, Corp.).",
+ "attempts": [
+  {
+   "query": "WITH csl_nombres AS (\n  SELECT e.name AS n FROM csl.entry e WHERE e.type = 'Entity'\n  UNION\n  SELECT a FROM csl.entry e, unnest(e.alt_names) a WHERE e.type = 'Entity'\n),\ncsl_norm AS (\n  SELECT DISTINCT btrim(regexp_replace(regexp_replace(regexp_replace(regexp_replace(lower(n), '[.,'']', '', 'g'), '[^a-z0-9]+', ' ', 'g'), '\\m(inc|llc|corp|corporation|incorporated|co|company|ltd|limited|lp|llp|plc)\\M', ' ', 'g'), '\\s+', ' ', 'g')) AS k\n  FROM csl_nombres WHERE n IS NOT NULL\n),\nprov AS (\n  SELECT r.uei, btrim(regexp_replace(regexp_replace(regexp_replace(regexp_replace(lower(r.name), '[.,'']', '', 'g'), '[^a-z0-9]+', ' ', 'g'), '\\m(inc|llc|corp|corporation|incorporated|co|company|ltd|limited|lp|llp|plc)\\M', ' ', 'g'), '\\s+', ' ', 'g')) AS k\n  FROM usaspending.recipient r WHERE r.uei IS NOT NULL\n)\nSELECT COUNT(DISTINCT p.uei)\nFROM prov p JOIN csl_norm c ON c.k = p.k\nWHERE p.k <> ''",
+   "error": null
+  }
+ ],
+ "answer": 6.0
+}

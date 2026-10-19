@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuál es el monto total, en dólares, de los contratos del grupo Leidos, contando a Leidos Holdings y a todas las empresas del grupo?",
+ "attempts": [
+  {
+   "query": "SELECT sum(c.amount) AS total\nFROM usaspending.contract c\nWHERE c.recipient_id IN (\n  SELECT r.recipient_id FROM usaspending.recipient r\n  WHERE r.name ILIKE 'leidos%' OR r.parent_name ILIKE 'leidos%'\n  UNION\n  SELECT rp.recipient_id FROM usaspending.recipient_parent rp\n  WHERE rp.parent_name ILIKE 'leidos%'\n)",
+   "error": null
+  }
+ ],
+ "answer": 97788197518.76
+}

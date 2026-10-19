@@ -1,0 +1,52 @@
+{
+ "question": "¿Qué grupos empresarios cotizan en bolsa, según Wikidata, y tienen contratos por más de US$1.000 millones en total, sumando todas sus empresas?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT ?gn WHERE {\n  ?c a :Contract ; :supplier ?s ; :amount ?amt .\n  ?s :group ?g . ?g :name ?gn ; :listed true .\n}\nGROUP BY ?g ?gn\nHAVING (SUM(?amt) > 1000000000)",
+   "error": null
+  }
+ ],
+ "answer": [
+  "Aerojet Rocketdyne Holdings, Inc.",
+  "AEROVIRONMENT, INC.",
+  "BAE SYSTEMS PLC",
+  "BAVARIAN NORDIC A/S",
+  "BOOZ ALLEN HAMILTON HOLDING CORPORATION",
+  "BWX TECHNOLOGIES, INC.",
+  "CACI INTERNATIONAL INC.",
+  "CAE INC.",
+  "CORECIVIC, INC.",
+  "CSL LIMITED",
+  "Dell Technologies Inc.",
+  "Elbit Systems Ltd.",
+  "EMERGENT BIOSOLUTIONS INC.",
+  "FLUOR CORPORATION",
+  "GENERAL DYNAMICS CORPORATION",
+  "HEALTH NET, INC.",
+  "HONEYWELL INTERNATIONAL INC.",
+  "ICF INTERNATIONAL, INC.",
+  "INTERNATIONAL BUSINESS MACHINES CORPORATION",
+  "KONGSBERG GRUPPEN ASA",
+  "KRATOS DEFENSE & SECURITY SOLUTIONS, INC.",
+  "LEIDOS HOLDINGS, INC.",
+  "MCKESSON CORPORATION",
+  "MODERNA, INC.",
+  "Nelnet, Inc.",
+  "NORTHROP GRUMMAN CORPORATION",
+  "PALANTIR TECHNOLOGIES INC.",
+  "REGENERON PHARMACEUTICALS, INC.",
+  "ROLLS-ROYCE HOLDINGS PLC",
+  "SCIENCE APPLICATIONS INTERNATIONAL CORPORATION",
+  "SERCO GROUP PLC",
+  "SPACE EXPLORATION TECHNOLOGIES CORP.",
+  "TELEDYNE TECHNOLOGIES INCORPORATED",
+  "TETRA TECH, INC.",
+  "TEXTRON INC.",
+  "THE BOEING COMPANY",
+  "THE GEO GROUP, INC.",
+  "THE INTERPUBLIC GROUP OF COMPANIES, INC.",
+  "UNITEDHEALTH GROUP INCORPORATED",
+  "VERIZON COMMUNICATIONS INC.",
+  "ViaSat, Inc."
+ ]
+}

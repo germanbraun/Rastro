@@ -1,0 +1,301 @@
+{
+ "antes": {
+  "cells": {
+   "p01": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p04": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p05": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p07": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p08": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p09": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 9
+   },
+   "C": {
+    "✅": 9
+   }
+  },
+  "vocabulary": "✅ Control del recorte: todos los contratos superan US$10 millones."
+ },
+ "renombrar": {
+  "cells": {
+   "p01": {
+    "B": "✅ igual",
+    "C": "❌ error"
+   },
+   "p02": {
+    "B": "✅ igual",
+    "C": "❌ error"
+   },
+   "p03": {
+    "B": "❌ error",
+    "C": "❌ error"
+   },
+   "p04": {
+    "B": "✅ igual",
+    "C": "❌ error"
+   },
+   "p05": {
+    "B": "✅ igual",
+    "C": "❌ error"
+   },
+   "p06": {
+    "B": "❌ error",
+    "C": "❌ error"
+   },
+   "p07": {
+    "B": "✅ igual",
+    "C": "❌ error"
+   },
+   "p08": {
+    "B": "✅ igual",
+    "C": "❌ error"
+   },
+   "p09": {
+    "B": "❌ error",
+    "C": "❌ error"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 6,
+    "❌": 3
+   },
+   "C": {
+    "❌": 9
+   }
+  },
+  "vocabulary": "Control del recorte: Rastro no responde (HTTPConnectionPool(host='ontop-proveedores', port=8080): Max retries exceeded with url: /sparql (Caused by NameResolutio)"
+ },
+ "renombrar-arreglado": {
+  "cells": {
+   "p01": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p03": {
+    "B": "❌ error",
+    "C": "✅ igual"
+   },
+   "p04": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p05": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p06": {
+    "B": "❌ error",
+    "C": "✅ igual"
+   },
+   "p07": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p08": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p09": {
+    "B": "❌ error",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 6,
+    "❌": 3
+   },
+   "C": {
+    "✅": 9
+   }
+  },
+  "vocabulary": "✅ Control del recorte: todos los contratos superan US$10 millones."
+ },
+ "valores": {
+  "cells": {
+   "p01": {
+    "B": "🟡 56.388.915, era 56.388.914.832",
+    "C": "🟡 55.646.331, era 55.646.331.151"
+   },
+   "p02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p04": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p05": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p07": {
+    "B": "🟡 ninguno, era 36 nombres",
+    "C": "🟡 ninguno, era 41 nombres"
+   },
+   "p08": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p09": {
+    "B": "🟡 279.967.641, era 279.967.641.067",
+    "C": "🟡 105.527.845, era 105.527.844.901"
+   }
+  },
+  "totals": {
+   "B": {
+    "🟡": 3,
+    "✅": 6
+   },
+   "C": {
+    "🟡": 3,
+    "✅": 6
+   }
+  },
+  "vocabulary": "🟡 Control del recorte: hay contratos de US$10.000, y el recorte dice que todos superan US$10 millones: ¿cambió la unidad de los montos?"
+ },
+ "valores-arreglado": {
+  "cells": {
+   "p01": {
+    "B": "🟡 56.388.915, era 56.388.914.832",
+    "C": "✅ igual"
+   },
+   "p02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p04": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p05": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p07": {
+    "B": "🟡 ninguno, era 36 nombres",
+    "C": "✅ igual"
+   },
+   "p08": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p09": {
+    "B": "🟡 279.967.641, era 279.967.641.067",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "🟡": 3,
+    "✅": 6
+   },
+   "C": {
+    "✅": 9
+   }
+  },
+  "vocabulary": "✅ Control del recorte: todos los contratos superan US$10 millones."
+ },
+ "despues": {
+  "cells": {
+   "p01": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p02": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p03": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p04": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p05": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p06": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p07": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p08": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   },
+   "p09": {
+    "B": "✅ igual",
+    "C": "✅ igual"
+   }
+  },
+  "totals": {
+   "B": {
+    "✅": 9
+   },
+   "C": {
+    "✅": 9
+   }
+  },
+  "vocabulary": "✅ Control del recorte: todos los contratos superan US$10 millones."
+ }
+}

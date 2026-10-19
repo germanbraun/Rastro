@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántos proveedores (UEI distintos) tienen su matriz final, según GLEIF, fuera de EE. UU.? La matriz final es la de su grupo empresario o, si el grupo no tiene registro en GLEIF, la del propio proveedor.",
+ "attempts": [
+  {
+   "query": "WITH p AS (\n SELECT r.uei,\n  COALESCE(\n   (SELECT c.lei FROM gleif.candidate c WHERE c.name = r.parent_name AND c.lei IS NOT NULL ORDER BY c.rank LIMIT 1),\n   (SELECT c.lei FROM gleif.candidate c WHERE c.name = r.name AND c.lei IS NOT NULL ORDER BY c.rank LIMIT 1)) AS lei\n FROM usaspending.recipient r WHERE r.uei IS NOT NULL),\nf AS (\n SELECT p.uei, COALESCE(l.ultimate_parent_lei, l.lei) AS final_lei\n FROM p JOIN gleif.lei_record l ON l.lei = p.lei)\nSELECT COUNT(DISTINCT f.uei) FROM f JOIN gleif.lei_record u ON u.lei = f.final_lei\nWHERE u.country IS NOT NULL AND u.country <> 'US'",
+   "error": null
+  }
+ ],
+ "answer": 587.0
+}

@@ -147,7 +147,7 @@ mapeo: Ontop lo deduce de sus subclases."""@es ;
     rdfs:domain :WatchlistEntry ; rdfs:range xsd:string .
 :alias a owl:DatatypeProperty ; rdfs:label "alias"@es ; rdfs:domain :WatchlistEntry ; rdfs:range xsd:string .
 :entryType a owl:DatatypeProperty ; rdfs:label "tipo"@es ;
-    rdfs:comment "Entity, Individual, Vessel o Aircraft."@es ; rdfs:domain :WatchlistEntry ; rdfs:range xsd:string .
+    rdfs:comment "Entity, Individual, Vessel o Aircraft. Algunas listas no lo dicen (por ejemplo la Entity List de Comercio): sus entradas son empresas u organizaciones."@es ; rdfs:domain :WatchlistEntry ; rdfs:range xsd:string .
 
 :license a owl:DatatypeProperty ; rdfs:label "licencia"@es ; rdfs:domain :DataSource ; rdfs:range xsd:string .
 

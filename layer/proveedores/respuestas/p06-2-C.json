@@ -1,0 +1,10 @@
+{
+ "question": "Contá los proveedores (UEI distintos) del Departamento de Defensa en contratos del sector construcción, NAICS 23 y sus subsectores.",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (COUNT(DISTINCT ?uei) AS ?n) WHERE {\n  ?c a :Contract ; :supplier ?s ; :agency ?a ; :sector ?sec .\n  ?a :name \"Department of Defense\" .\n  ?sec :within ?x . ?x :code \"23\" .\n  ?s :uei ?uei .\n}",
+   "error": null
+  }
+ ],
+ "answer": 1059.0
+}

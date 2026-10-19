@@ -1,0 +1,28 @@
+{
+ "question": "¿Qué agencias tienen más de un tercio de su monto en contratos con un solo grupo empresario, sumando todas las empresas de ese grupo?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT DISTINCT ?an WHERE {\n  { SELECT ?ag (SUM(?a1) AS ?total) WHERE {\n      ?c1 a :Contract ; :agency ?ag ; :amount ?a1 .\n    } GROUP BY ?ag }\n  { SELECT ?ag ?g (SUM(?a2) AS ?gtotal) WHERE {\n      ?c2 a :Contract ; :agency ?ag ; :amount ?a2 ; :supplier ?s .\n      ?s :group ?g .\n    } GROUP BY ?ag ?g }\n  ?ag :name ?an .\n  FILTER(?gtotal * 3 > ?total)\n}",
+   "error": null
+  }
+ ],
+ "answer": [
+  "International Trade Commission",
+  "Millennium Challenge Corporation",
+  "National Gallery of Art",
+  "Peace Corps",
+  "Federal Trade Commission",
+  "Court Services and Offender Supervision Agency",
+  "Government Accountability Office",
+  "Commodity Futures Trading Commission",
+  "Smithsonian Institution",
+  "Executive Office of the President",
+  "U.S. International Development Finance Corporation",
+  "Equal Employment Opportunity Commission",
+  "Small Business Administration",
+  "Defense Nuclear Facilities Safety Board",
+  "Agency for International Development",
+  "Railroad Retirement Board",
+  "National Science Foundation"
+ ]
+}

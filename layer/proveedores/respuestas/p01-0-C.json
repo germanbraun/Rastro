@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuánto suman, en dólares, los contratos del grupo empresario Leidos, es decir de Leidos Holdings y de todas sus empresas?",
+ "attempts": [
+  {
+   "query": "PREFIX : <https://w3id.org/rastro/proveedores#>\nSELECT (SUM(?amt) AS ?total) WHERE {\n  ?c a :Contract ; :supplier ?s ; :amount ?amt .\n  ?s :group ?g . ?g :name ?gn .\n  FILTER(CONTAINS(UCASE(?gn), \"LEIDOS\"))\n}",
+   "error": null
+  }
+ ],
+ "answer": 55646331151.18
+}
