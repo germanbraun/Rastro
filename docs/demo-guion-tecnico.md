@@ -58,7 +58,7 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 > «Los datos cambian; tus preguntas, no. Lo que vendemos es la integración hecha una vez, mantenida en un lugar, con fuente y conectada con datos de afuera. Con nuestros enlaces, el SQL acierta igual: lo decimos de entrada. El siguiente paso: un piloto con datos del cliente.»
 
-## Opcional, 2 minutos · Un segundo dominio (diapositivas 11 a 13)
+## Opcional, 2 minutos · Un segundo dominio (las tres diapositivas del segundo dominio)
 
 En la barra lateral, **Dominio** → **Proveedores del Estado de EE. UU.**, con «Ver detalles técnicos» prendido. Es otro Ontop (puerto 8081), con su ontología (`ontology/proveedores/`) y sus mapeos (`mappings/proveedores.r2rml.ttl`) sobre el mismo Postgres; la app lee lo propio del dominio de `app/dominios/proveedores.yaml`.
 
