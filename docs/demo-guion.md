@@ -41,6 +41,24 @@ Elegir el escenario **Cambia cómo se escribe un valor**.
 
 > «Lo que hay que saber: el valor está en integrar los datos una vez y mantenerlos en un lugar. Es una demo con datos públicos de octubre de 2026. El siguiente paso es un piloto con tus datos.»
 
+## Opcional, 2 minutos · Un segundo dominio (diapositivas 7 a 9)
+
+Para mostrar que Rastro no es solo para oncología. En la barra lateral de la app, cambiar **Dominio** a **Proveedores del Estado de EE. UU.**
+
+> «El mismo Rastro, con otros datos: los contratos del gobierno de EE. UU. Los problemas son los mismos: la misma empresa escrita de varias formas, grupos con muchas empresas, y por qué Rastro dice lo que dice.»
+
+1. Elegir la primera pregunta (*¿cuánto le contrata el gobierno al grupo Leidos?*) y apretar **Responder**.
+
+> «Un solo grupo: 21 empresas, 54.700 millones de dólares. La base de contratos reparte a Leidos en seis "matrices" distintas; Rastro las une.»
+
+2. Elegir *«Science Applications International Corporation», ¿es de Leidos o de SAIC?*, apretar **Responder** y abrir **¿Cómo lo supe?**
+
+> «La trampa: en 2013 la vieja SAIC pasó a llamarse Leidos y una empresa nueva tomó el nombre SAIC. Sin Rastro, una de las consultas le sumó a Leidos 41.000 millones que son de SAIC. Rastro no, y acá dice por qué: el nombre legal de hoy le gana al nombre anterior, y muestra lo que descartó.»
+
+3. Si hay tiempo, pestaña **Por qué confiar**:
+
+> «Las mismas pruebas: con Rastro, 8 de 9 respuestas correctas; sin Rastro, 5 de 9. Y con honestidad: Rastro también se equivocó en una, y la revisión encontró empresas que todavía no une. Se ve en la evidencia y se corrige en un solo lugar.»
+
 ## Si preguntan
 
 - **«¿Y esto no se puede hacer con SQL?»** Sí, en parte. Lo que da Rastro es hacerlo una vez, mantenerlo en un lugar y poder auditar cada respuesta. El detalle está en el anexo técnico y en la versión técnica del guion.

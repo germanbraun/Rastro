@@ -58,6 +58,22 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 > «Los datos cambian; tus preguntas, no. Lo que vendemos es la integración hecha una vez, mantenida en un lugar, con fuente y conectada con datos de afuera. Con nuestros enlaces, el SQL acierta igual: lo decimos de entrada. El siguiente paso: un piloto con datos del cliente.»
 
+## Opcional, 2 minutos · Un segundo dominio (diapositivas 11 a 13)
+
+En la barra lateral, **Dominio** → **Proveedores del Estado de EE. UU.**, con «Ver detalles técnicos» prendido. Es otro Ontop (puerto 8081), con su ontología (`ontology/proveedores/`) y sus mapeos (`mappings/proveedores.r2rml.ttl`) sobre el mismo Postgres; la app lee lo propio del dominio de `app/dominios/proveedores.yaml`.
+
+1. Pregunta del grupo Leidos → **Responder** → **¿Cómo lo supe?**
+
+> «La consulta es corta: `?supplier :group ?g`. Abajo, el SQL que generó Ontop: une `group_company`, `supplier_group` y los contratos. El grupo está consolidado una vez: USAspending reparte a Leidos en seis matrices, y las unimos con el LEI de cada matriz y la matriz final que registra GLEIF. La evidencia de cada empresa es un `:GroupLink` en PROV-O.»
+
+2. Pregunta de SAIC → **¿Cómo lo supe?**
+
+> «GLEIF, al buscar "Science Applications International Corporation", devuelve primero a Leidos, Inc.: es su nombre anterior. La regla prefiere el nombre legal, y la evidencia guarda lo descartado. Sin Rastro, un SQL que siguió las matrices históricas de USAspending le sumó a Leidos 41.000 millones de SAIC.»
+
+3. **Por qué confiar**, con el detalle técnico:
+
+> «Mismo método que oncología: subagentes que solo ven el prompt. SQL directo 5 de 9, Rastro 8 de 9; falla el SQL donde hay que unir USAspending con GLEIF, porque toma el primer candidato sin verificarlo. Rastro falló en una: el diccionario no decía que algunas listas dejan vacío el tipo de entrada. Las referencias salen de Rastro, así que revisamos las diferencias con los datos: la referencia se queda corta en dos preguntas (`layer/proveedores/adjudicacion.md`). En el cambio, si los montos pasan a miles, las dos formas dan mal sin error; Rastro avisa con un control del recorte y se arregla con una línea del mapeo.»
+
 ## En vivo, para audiencias técnicas
 
 El cambio se puede hacer de verdad sobre la base, desde una terminal. Detalle en [demo-cambio.md](demo-cambio.md): `cambio.sh valores`, `probar`, `arreglar valores`, `probar`, y **siempre** `deshacer` al final.

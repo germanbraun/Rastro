@@ -90,6 +90,6 @@ La misma que oncología:
 | P2 · Enlaces ✅ | Proveedor ↔ LEI, proveedor ↔ lista, grupo ↔ Wikidata, con su evidencia; revisión de una muestra | Precisión medida |
 | P3 · Evaluación ✅ | Sin Rastro (SQL directo) contra con Rastro, consistencia y cambio, igual que en oncología | Las tres pruebas con números |
 | P4 · App ✅ | El selector de dominio, las preguntas en palabras simples y la evidencia | Demo sin terminal |
-| P5 · Demo | Diapositivas y guion, con un segundo ejemplo de punta a punta | Alguien de ventas la da con el guion |
+| P5 · Demo ✅ | Diapositivas y guion, con un segundo ejemplo de punta a punta | Alguien de ventas la da con el guion |
 
 Esfuerzo estimado: parecido al de las fases 0 a 3 de oncología, con la ventaja de reusar todo lo aprendido.

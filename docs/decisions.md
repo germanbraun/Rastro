@@ -269,3 +269,10 @@ El mismo método que oncología, en `layer/proveedores/`: las 9 preguntas respon
 - **Oncología no se migró** a la pantalla genérica: funciona y tiene detalles propios (evidencia por fármaco, escenarios de Wikidata y de definición de negocio). Queda para cuando haga falta.
 - **Arreglos que aparecieron al probar:** la barra lateral de oncología listaba también las fuentes de proveedores (su mapeo lee todo `rastro_meta.source`; se filtra en la app, sin tocar el mapeo); las fuentes de una respuesta no contaban los términos dentro de caminos como `:supplier/:group` (se corrigió en `answer.py`, también mejora oncología); dos «US$» en un mismo texto Streamlit los toma como fórmula (se escapa `$`).
 - Probado en el navegador: los dos dominios, los dos modos, «¿Cómo lo supe?», «Por qué confiar» y las preguntas frecuentes.
+
+## 2026-10-19 — Proveedores, P5: el segundo dominio en la demo
+
+- **Tres diapositivas** después de las 6 de oncología y antes del anexo (`docs/slides/slides/dominio2.html`, `leidos.html`, `pruebas2.html`; sección nueva en `deck.json`): la misma idea con otros datos, el ejemplo de Leidos (grupo de 21 empresas y US$54.700 millones; sin Rastro, una consulta sumó US$41.000 millones de SAIC; la evidencia de por qué) y las tres pruebas con los números de P3, con lo que encontró la adjudicación. Mismo estilo; ninguna se sale de 1920×1080. Las de oncología no cambiaron.
+- **Guiones:** una parte opcional de 2 minutos en `docs/demo-guion.md` (cambiar el dominio, la pregunta de Leidos y «¿Cómo lo supe?» de SAIC) y su versión técnica en `docs/demo-guion-tecnico.md`.
+- **One-pager:** una línea con el resultado en el segundo dominio (8 de 9 contra 5 de 9), y una fila en la versión técnica.
+- Se eligieron 3 diapositivas y no 4: con el ejemplo y las pruebas alcanza para mostrar que Rastro sirve en otro dominio; el detalle queda en la app y en el anexo.
