@@ -222,14 +222,13 @@ RULES = {
     "régimen": "por un régimen conocido, como FOLFOX",
     "palabras": "por su nombre dentro de un texto más largo",
 }
-EVIDENCE_PREFIXES = """PREFIX : <https://w3id.org/rastro/ontology#>
-PREFIX prov: <http://www.w3.org/ns/prov#>
-"""
-EVIDENCE_SUMMARY = EVIDENCE_PREFIXES + """SELECT ?name ?rule (COUNT(?link) AS ?n) WHERE {{
+RASTRO_PREFIX = "PREFIX : <https://w3id.org/rastro/ontology#>\n"
+PROV_PREFIX = "PREFIX prov: <http://www.w3.org/ns/prov#>\n"
+EVIDENCE_SUMMARY = RASTRO_PREFIX + """SELECT ?name ?rule (COUNT(?link) AS ?n) WHERE {{
   VALUES ?name {{ {names} }}
   ?link a :DrugLink ; :linkDrug ?drug ; :linkRule ?rule . ?drug :name ?name .
 }} GROUP BY ?name ?rule"""
-EVIDENCE_EXAMPLES = EVIDENCE_PREFIXES + """SELECT ?name ?nct ?text ?matched ?rule WHERE {{
+EVIDENCE_EXAMPLES = RASTRO_PREFIX + PROV_PREFIX + """SELECT ?name ?nct ?text ?matched ?rule WHERE {{
   VALUES ?name {{ {names} }}
   ?link a :DrugLink ; :linkDrug ?drug ; :linkTrial ?trial ;
         :interventionText ?text ; :matchedText ?matched ; :linkRule ?rule ;
@@ -239,7 +238,7 @@ EVIDENCE_EXAMPLES = EVIDENCE_PREFIXES + """SELECT ?name ?nct ?text ?matched ?rul
 }} LIMIT 400"""
 
 
-EVIDENCE_ONE = EVIDENCE_PREFIXES + """SELECT ?propiedad ?valor WHERE {{
+EVIDENCE_ONE = RASTRO_PREFIX + """SELECT ?propiedad ?valor WHERE {{
   ?enlace a :DrugLink ; :linkTrial ?ensayo ; :linkDrug ?farmaco ; ?propiedad ?valor .
   ?ensayo :nctId "{nct}" . ?farmaco :name "{name}" .
 }}"""
