@@ -46,3 +46,24 @@ proveedores:
     wikidata: [listed, wikidataId, stockExchange, headquarters]
     rastro: [group, legalEntity, watchlistMatch, GroupLink, LeiLink, WatchlistLink, linkFrom, linkTo,
              sourceText, matchedText, linkRule, SupplierToReview, ForeignParentSupplier, WatchlistSupplier]
+
+energia:
+  base: >-
+    Respondés preguntas de negocio sobre la producción de petróleo y gas de Argentina en 2025,
+    pozo por pozo, las concesiones, sus socios y operadoras, y los venteos de gas. Seguí al pie de
+    la letra las definiciones que trae la pregunta. Si la respuesta es una lista, devolvé solo los
+    nombres pedidos; si es un número, un solo número.
+  ontop: http://ontop-energia:8080/sparql
+  ontology: ontology/energia/energia.ttl
+  sparql_notes: layer/energia/sparql-notes.md
+  sql_notes: layer/energia/sparql-notes.md        # sin evaluación SQL todavía
+  links_notes: layer/energia/sparql-notes.md
+  readers: {B: rastro_reader, D: rastro_reader}
+  namespace: https://w3id.org/rastro/energia#
+  term_sources:
+    capitulo4: [WellProduction, ShaleProduction, TightProduction, UnconventionalProduction, Well, oil, gas,
+                formation, basin, province, wellId, well, concession, declaredBy, aboutWell]
+    sig_energia: [Concession, concessionId, reportedBy, operatorOnMap, DetectedVenting, DeclaredVenting, Venting,
+                  date, satellite]
+    rastro: [Stake, partner, percent, OperatorLink, operator, inConcession, company, registryCompany, CompanyName,
+             nameInSource, rule, sourceText, Company]

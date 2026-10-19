@@ -1,0 +1,10 @@
+# 4. ¿Quiénes producen más petróleo no convencional (shale y tight) en 2025?
+PREFIX : <https://w3id.org/rastro/energia#>
+
+SELECT ?company (SUM(?oil) AS ?unconventionalOil)
+WHERE {
+  ?p a :UnconventionalProduction ; :declaredBy/:name ?company ; :oil ?oil .
+}
+GROUP BY ?company
+ORDER BY DESC(?unconventionalOil)
+LIMIT 10

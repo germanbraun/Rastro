@@ -1,0 +1,13 @@
+# 1. ¿Cuánto petróleo de 2025 le corresponde a cada empresa según su participación en cada concesión?
+PREFIX : <https://w3id.org/rastro/energia#>
+
+SELECT ?company (SUM(?oil * ?percent / 100) AS ?share) (SAMPLE(?operatedOil) AS ?operated)
+WHERE {
+  ?p a :WellProduction ; :concession ?c ; :oil ?oil .
+  ?s a :Stake ; :inConcession ?c ; :partner ?e ; :percent ?percent .
+  ?e :name ?company .
+  OPTIONAL { SELECT ?e (SUM(?o) AS ?operatedOil) WHERE { ?q :declaredBy ?e ; :oil ?o } GROUP BY ?e }
+}
+GROUP BY ?company
+ORDER BY DESC(?share)
+LIMIT 10

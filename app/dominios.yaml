@@ -4,5 +4,8 @@
 - id: proveedores
   name: Proveedores del Estado de EE. UU.
   config: /app/dominios/proveedores.yaml
+- id: energia
+  name: Petróleo y gas en Argentina
+  config: /app/dominios/energia.yaml
 - id: oncologia
   name: Oncología

@@ -24,7 +24,10 @@ INSERT INTO rastro_meta.source (id, name, homepage, license, db_schema) VALUES
     ('naics',   'NAICS 2022 (Census)',        'https://www.census.gov/naics/',        'Dominio público',                       'naics'),
     ('csl',     'Lista Consolidada de Control (trade.gov)', 'https://www.trade.gov/consolidated-screening-list', 'Dominio público', 'csl'),
     ('gleif',   'GLEIF (LEI)',                'https://www.gleif.org/',               'CC0 1.0',                               'gleif'),
-    ('wikidata', 'Wikidata',                  'https://www.wikidata.org/',            'CC0 1.0',                               'wikidata');
+    ('wikidata', 'Wikidata',                  'https://www.wikidata.org/',            'CC0 1.0',                               'wikidata'),
+    -- Tercer dominio: petróleo y gas en Argentina (también los inserta data/energia/load.py)
+    ('capitulo4', 'Producción por pozo, Capítulo IV (Secretaría de Energía)', 'http://datos.energia.gob.ar/dataset/produccion-de-petroleo-y-gas-por-pozo', 'CC-BY 4.0', 'capitulo4'),
+    ('sig_energia', 'Mapas de la Secretaría de Energía (WFS)', 'https://sig.energia.gob.ar/wfsenergia', 'Datos públicos (Secretaría de Energía)', 'sig_energia');
 
 CREATE TABLE rastro_meta.load_run (
     id          bigserial PRIMARY KEY,

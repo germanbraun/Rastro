@@ -1,0 +1,143 @@
+# Lo propio del dominio de petróleo y gas en la app (lo dibuja app/dominio.py).
+# Rutas dentro del contenedor de la app.
+
+domain: energia                # el de layer/dominios.yaml: endpoint, diccionario y notas para el LLM
+resumen: >-
+  Datos públicos de la Secretaría de Energía de Argentina: la producción de 2025 pozo por pozo
+  (Capítulo IV) y los mapas de concesiones, socios y venteos de gas (WFS).
+ejemplo_libre: "Por ejemplo: ¿qué empresas producen más gas en la cuenca Neuquina?"
+ontologia: /ontology/energia/energia.ttl
+
+# La demo en tres pasos: integración, trazabilidad y cruce con mapas
+demo:
+  - {paso: Integración, titulo: "La producción que corresponde a cada socio", pregunta: e01}
+  - {paso: Trazabilidad, titulo: "Quién opera cada pozo, con una regla escrita", pregunta: e02}
+  - {paso: Cruce con mapas, titulo: "Posibles venteos, ubicados en su concesión", pregunta: e03}
+
+# Fuentes: nombre corto para los encabezados del modo técnico
+fuentes:
+  capitulo4: Capítulo IV
+  sig_energia: Mapas (WFS)
+  rastro: enlace Rastro
+nota_rastro: >-
+  Las empresas con sus nombres en cada fuente, los socios de cada concesión, quién opera cada pozo
+  y en qué concesión cae cada venteo, que Rastro resuelve una vez y guarda con su evidencia
+
+# Cómo se muestran las columnas de las respuestas
+columnas:
+  company: Empresa
+  share: Le corresponde (m³)
+  operated: Opera (m³)
+  rule: Regla
+  wells: Pozos
+  concession: Concesión
+  operator: Operadora
+  detected: Posibles venteos (satélite)
+  declared: Puntos de venteo declarados
+  unconventionalOil: Petróleo no convencional (m³)
+formatos:
+  share: numero
+  operated: numero
+  unconventionalOil: numero
+
+# Las preguntas de ejemplo: la consulta de ontology/energia/queries/, la pregunta en palabras
+# simples (modo negocio) y la evidencia de «¿De dónde sale la respuesta?»
+preguntas:
+  - id: e01
+    query: /ontology/energia/queries/cq1.rq
+    simple: ¿Cuánto petróleo de 2025 le corresponde a cada empresa, según su participación?
+    tecnica: ¿Cuánto petróleo de 2025 le corresponde a cada empresa, multiplicando la producción de cada concesión por su porcentaje?
+    ventaja: "Los socios están en un texto del mapa de concesiones; Rastro los separa una vez, con su porcentaje, y une los nombres de cada empresa entre fuentes. Chevron participa con dos razones sociales; una corrección revisada las agrupa."
+    terminos:
+      Participación: el porcentaje de una concesión que pertenece a cada socio. La operadora maneja los pozos, pero el petróleo se reparte entre los socios.
+      m³: metros cúbicos de petróleo. Un metro cúbico son unos 6,3 barriles.
+    antes_despues:              # layer/energia/sin-rastro.sql, consulta 1
+      sin: {valor: "YPF: 21,4 M m³", detalle: "Sumando la producción por la empresa que la declara, a YPF se le asigna todo lo que opera, y Petronas, socia en La Amarga Chica, no aparece."}
+      con: {valor: "YPF: 12,6 M m³", detalle: "Su parte en cada concesión, según los socios del mapa. Petronas: 2,1 M m³; Chevron, con sus dos razones sociales: 3,5 M m³."}
+    evidencia:
+      texto: "Los socios de cada concesión, tal como los informa el mapa (algunos ejemplos):"
+      formato: "**{concesion}**: {texto}"
+      query: |
+        SELECT ?concesion ?texto WHERE {
+          ?s a :Stake ; :inConcession/:name ?concesion ; :sourceText ?texto .
+          FILTER (?concesion IN ("LOMA CAMPANA", "LA AMARGA CHICA"))
+        } ORDER BY ?concesion ?texto
+
+  - id: e02
+    query: /ontology/energia/queries/cq2.rq
+    simple: ¿Cuántos pozos opera hoy YPF?
+    tecnica: ¿Cuántos pozos con producción en 2025 opera hoy YPF, y en cuántos no coinciden las fuentes?
+    ventaja: "El padrón de pozos y las declaraciones juradas no siempre nombran a la misma operadora. Rastro aplica una regla escrita una vez (rige quien declara la producción del último mes) y deja a la vista lo que dice el padrón en cada pozo."
+    terminos:
+      Declaración jurada: lo que cada empresa informa todos los meses a la Secretaría de Energía sobre la producción de cada pozo.
+      Padrón de pozos: el registro de todos los pozos, con su ubicación y su empresa.
+    antes_despues:              # layer/energia/sin-rastro.sql, consulta 2
+      sin: {valor: "12.006 o 15.809", detalle: "Dos respuestas: el padrón de pozos dice 12.006 y las declaraciones juradas, 15.809. En 3.796 pozos el padrón nombra a otra empresa (Pecom, Velitec, Copesa)."}
+      con: {valor: "15.809 pozos", detalle: "Una regla escrita: rige quien declara la producción del último mes. Lo que dice el padrón queda a la vista en cada pozo."}
+    evidencia:
+      texto: "Pozos donde las fuentes no coinciden (algunos ejemplos):"
+      formato: "**Pozo {pozo}**: {evidencia}"
+      query: |
+        SELECT ?pozo ?evidencia WHERE {
+          ?l a :OperatorLink ; :aboutWell/:wellId ?pozo ; :company/:name "YPF S.A." ;
+             :rule "rige la declaración jurada" ; :sourceText ?evidencia .
+        } ORDER BY ?pozo LIMIT 5
+
+  - id: e03
+    query: /ontology/energia/queries/cq3.rq
+    simple: ¿En qué concesiones vio el satélite más posibles venteos de gas desde 2024, y quién las opera?
+    tecnica: ¿En qué concesiones hay más anomalías térmicas detectadas por satélite desde 2024, con su operadora y sus puntos de venteo declarados?
+    ventaja: "La capa del satélite solo dice fecha y provincia. Rastro ubica cada punto dentro del contorno de su concesión, una vez, y así llega a la operadora y a los venteos declarados."
+    terminos:
+      Venteo: liberar o quemar gas en el yacimiento en lugar de aprovecharlo.
+      Posible venteo: una anomalía térmica que vio un satélite. Es un indicio para revisar, no una confirmación.
+    antes_despues:              # layer/energia/sin-rastro.sql, consulta 3
+      sin: {valor: "Neuquén: 6.256", detalle: "La capa del satélite solo dice fecha y provincia: no se sabe en qué concesión ni de qué empresa. Además escribe Tierra del Fuego de dos formas."}
+      con: {valor: "La Calera: 482", detalle: "6.636 posibles venteos ubicados en su concesión, con su operadora. La Calera (Pluspetrol): 482, sin ningún punto de venteo declarado en el mapa."}
+    evidencia:
+      texto: "Por qué cada detección está en La Calera (algunos ejemplos):"
+      formato: "**{fecha}**: {evidencia}"
+      query: |
+        SELECT ?fecha ?evidencia WHERE {
+          ?d a :DetectedVenting ; :inConcession/:name "LA CALERA" ; :date ?fecha ; :sourceText ?evidencia .
+        } ORDER BY DESC(?fecha) LIMIT 4
+
+  - id: e04
+    query: /ontology/energia/queries/cq4.rq
+    simple: ¿Quiénes producen más petróleo no convencional (shale y tight)?
+    tecnica: ¿Qué empresas declaran más petróleo no convencional en 2025 (la clase deducida, sin mapeo propio)?
+    ventaja: "«No convencional» se define una vez, en el diccionario de negocio: shale o tight. Ningún mapeo la asigna; vale para todas las preguntas."
+    terminos:
+      No convencional: petróleo de rocas poco permeables (shale, como Vaca Muerta, o tight), que se extrae con fractura hidráulica.
+    definicion: |
+      :UnconventionalProduction rdfs:label "Producción no convencional"@es .
+      :ShaleProduction rdfs:subClassOf :UnconventionalProduction .
+      :TightProduction rdfs:subClassOf :UnconventionalProduction .
+
+faq:
+  - pregunta: ¿De dónde salen los datos?
+    respuesta: >-
+      De dos fuentes públicas de la Secretaría de Energía: las declaraciones juradas mensuales de
+      producción de cada pozo en 2025 y el padrón de pozos (Capítulo IV, datos.energia.gob.ar), y el
+      servicio de mapas (WFS) con las concesiones, sus socios y los venteos de gas. Se usa 2025 porque
+      el archivo de 2026 todavía no trae a todas las operadoras.
+  - pregunta: ¿Un posible venteo detectado por satélite es un incumplimiento?
+    respuesta: >-
+      No. Es una anomalía térmica que vio un satélite: un indicio para revisar. Además, la capa de puntos
+      de venteo declarados puede estar desactualizada. Rastro sirve para saber en qué concesión cae cada
+      punto y quién la opera, no para concluir que hay una falta.
+  - pregunta: ¿Por qué la regla de la operadora es «rige la declaración jurada»?
+    respuesta: >-
+      Porque es lo que la empresa informa todos los meses. Es una decisión de negocio, escrita una vez y a
+      la vista: si se prefiere otra, se cambia en un solo lugar y vale para todas las preguntas. En cada
+      pozo donde las fuentes no coinciden, la evidencia muestra lo que dice el padrón.
+  - pregunta: ¿Quién revisó las correcciones de nombres?
+    respuesta: >-
+      Las armó un asistente de IA (por ejemplo, que la socia de YPF en Loma Campana es la empresa de
+      Chevron); falta que una persona las confirme. Están en linking/energia/correcciones.csv, con su motivo.
+  - pregunta: ¿Dónde está cada pieza?
+    tecnico: true
+    respuesta: >-
+      Datos en Postgres, un esquema por fuente (`capitulo4`, `sig_energia`); empresas, socios, operadoras y
+      venteos ubicados en el esquema `energia` (`linking/energia/`); un tercer Ontop en el puerto 8082 con su
+      ontología (`ontology/energia/`) y sus mapeos (`mappings/energia.r2rml.ttl`). Cada enlace se expone con PROV-O.

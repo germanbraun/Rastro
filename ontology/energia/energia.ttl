@@ -1,0 +1,119 @@
+@prefix : <https://w3id.org/rastro/energia#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+<https://w3id.org/rastro/energia> a owl:Ontology ;
+    rdfs:label "Diccionario de negocio: petróleo y gas en Argentina"@es ;
+    rdfs:comment """Lo mínimo para responder las preguntas de ontology/energia/competency-questions.md:
+la producción de 2025 pozo por pozo, las concesiones con sus socios, quién opera cada pozo y los
+venteos de gas. Cada enlace entre fuentes lleva su evidencia, con PROV-O. «Producción no
+convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight)."""@es ;
+    owl:versionInfo "0.1" .
+
+# Clases ---------------------------------------------------------
+
+:DataSource a owl:Class ;
+    rdfs:label "Fuente de datos"@es .
+
+:Company a owl:Class ;
+    rdfs:label "Empresa"@es ;
+    rdfs:comment "Una empresa, con todos los nombres con que aparece en las fuentes. Si una corrección revisada lo dice, varias razones sociales son un mismo grupo (por ejemplo, Chevron)."@es .
+
+:Concession a owl:Class ;
+    rdfs:label "Concesión"@es ;
+    rdfs:comment "Un área de explotación de hidrocarburos, con su contorno en el mapa de la Secretaría de Energía."@es .
+
+:Well a owl:Class ;
+    rdfs:label "Pozo"@es ;
+    rdfs:comment "Un pozo que declaró producción en 2025."@es .
+
+:WellProduction a owl:Class ;
+    rdfs:label "Producción de un pozo"@es ;
+    rdfs:comment "Lo que produjo un pozo en 2025 desde una formación, según las declaraciones juradas mensuales (Capítulo IV)."@es .
+
+:UnconventionalProduction a owl:Class ;
+    rdfs:subClassOf :WellProduction ;
+    rdfs:label "Producción no convencional"@es ;
+    rdfs:comment "Producción de shale o de tight. Ningún mapeo la asigna: se deduce de sus subclases."@es .
+
+:ShaleProduction a owl:Class ;
+    rdfs:subClassOf :UnconventionalProduction ;
+    rdfs:label "Producción de shale"@es .
+
+:TightProduction a owl:Class ;
+    rdfs:subClassOf :UnconventionalProduction ;
+    rdfs:label "Producción de tight"@es .
+
+:Stake a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Participación"@es ;
+    rdfs:comment "La parte de una empresa en una concesión, separada del texto de socios del mapa. Su evidencia es ese texto."@es .
+
+:OperatorLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Operadora de un pozo"@es ;
+    rdfs:comment "Quién opera hoy un pozo y por qué: la empresa que declara su producción del último mes. Si el padrón de pozos dice otra cosa, queda a la vista."@es .
+
+:CompanyName a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Nombre de una empresa en una fuente"@es ;
+    rdfs:comment "Cómo aparece una empresa en una fuente, y por qué Rastro sabe que es esa empresa."@es .
+
+:Venting a owl:Class ;
+    rdfs:label "Venteo"@es ;
+    rdfs:comment "Un punto donde se ventea o se quema gas, ubicado dentro de una concesión."@es .
+
+:DetectedVenting a owl:Class ;
+    rdfs:subClassOf :Venting ;
+    rdfs:label "Posible venteo detectado por satélite"@es ;
+    rdfs:comment "Una anomalía térmica que un satélite vio desde 2024. Es un indicio, no una confirmación."@es .
+
+:DeclaredVenting a owl:Class ;
+    rdfs:subClassOf :Venting ;
+    rdfs:label "Punto de venteo declarado"@es ;
+    rdfs:comment "Una chimenea o fosa de quema que la empresa declaró (RES. 319/93)."@es .
+
+# Propiedades ----------------------------------------------------
+
+:name a owl:DatatypeProperty ; rdfs:label "nombre"@es .
+:license a owl:DatatypeProperty ; rdfs:domain :DataSource ; rdfs:label "licencia"@es .
+:fromSource a owl:ObjectProperty ; rdfs:range :DataSource ; rdfs:label "viene de"@es .
+
+:concessionId a owl:DatatypeProperty ; rdfs:domain :Concession ; rdfs:label "código de la concesión"@es .
+:operatorOnMap a owl:ObjectProperty ; rdfs:domain :Concession ; rdfs:range :Company ;
+    rdfs:label "operadora según el mapa"@es .
+:reportedBy a owl:DatatypeProperty ; rdfs:domain :Concession ;
+    rdfs:label "informó el mapa"@es ;
+    rdfs:comment "La empresa que informó el contorno al mapa. Puede no ser la operadora de hoy."@es .
+
+:wellId a owl:DatatypeProperty ; rdfs:label "identificador del pozo"@es .
+:well a owl:ObjectProperty ; rdfs:domain :WellProduction ; rdfs:range :Well ; rdfs:label "pozo"@es .
+:concession a owl:ObjectProperty ; rdfs:range :Concession ; rdfs:label "concesión"@es .
+:declaredBy a owl:ObjectProperty ; rdfs:domain :WellProduction ; rdfs:range :Company ;
+    rdfs:label "la declara"@es .
+:formation a owl:DatatypeProperty ; rdfs:domain :WellProduction ; rdfs:label "formación"@es ;
+    rdfs:comment "La formación productiva, en minúsculas: «vaca muerta», «comodoro rivadavia»…"@es .
+:basin a owl:DatatypeProperty ; rdfs:label "cuenca"@es .
+:province a owl:DatatypeProperty ; rdfs:label "provincia"@es .
+:oil a owl:DatatypeProperty ; rdfs:domain :WellProduction ; rdfs:label "petróleo (m³)"@es .
+:gas a owl:DatatypeProperty ; rdfs:domain :WellProduction ; rdfs:label "gas (miles de m³)"@es .
+
+:operator a owl:ObjectProperty ; rdfs:domain :Well ; rdfs:range :Company ;
+    rdfs:label "operadora hoy"@es .
+
+:inConcession a owl:ObjectProperty ; rdfs:range :Concession ; rdfs:label "en la concesión"@es .
+:partner a owl:ObjectProperty ; rdfs:domain :Stake ; rdfs:range :Company ; rdfs:label "socia"@es .
+:percent a owl:DatatypeProperty ; rdfs:domain :Stake ; rdfs:label "porcentaje"@es .
+
+:aboutWell a owl:ObjectProperty ; rdfs:domain :OperatorLink ; rdfs:range :Well ; rdfs:label "sobre el pozo"@es .
+:company a owl:ObjectProperty ; rdfs:range :Company ; rdfs:label "empresa"@es .
+:registryCompany a owl:DatatypeProperty ; rdfs:domain :OperatorLink ;
+    rdfs:label "empresa según el padrón"@es .
+:nameInSource a owl:DatatypeProperty ; rdfs:domain :CompanyName ; rdfs:label "nombre en la fuente"@es .
+:rule a owl:DatatypeProperty ; rdfs:label "regla"@es .
+:sourceText a owl:DatatypeProperty ; rdfs:label "evidencia"@es .
+
+:date a owl:DatatypeProperty ; rdfs:domain :Venting ; rdfs:label "fecha"@es .
+:satellite a owl:DatatypeProperty ; rdfs:domain :DetectedVenting ; rdfs:label "satélite"@es .

@@ -338,3 +338,15 @@ Los números «sin Rastro» de los dos primeros salen de la evaluación (`layer/
 ## 2026-10-19 — Un registro más formal
 
 El texto visible (app, diapositivas principales y guion) pasó a un registro formal e impersonal: «Los datos cambian. Las preguntas, no.», «¿De dónde sale la respuesta?» en lugar de «¿Cómo lo supe?», imperativos con usted y sin expresiones coloquiales («pedazos», «trampa», «no alcanza»). Las notas del orador (`<aside>`), que no se ven en pantalla, conservan un tono más conversacional.
+
+## 2026-10-19 — Tercer dominio: petróleo y gas en Argentina
+
+Para operadoras y consultoras del sector. Dos fuentes públicas de la Secretaría de Energía: la producción declarada de 2025 pozo por pozo y el padrón de pozos (Capítulo IV, CC-BY 4.0), y el servicio de mapas (WFS) con las concesiones, sus socios y los venteos de gas. Un tercer Ontop (puerto 8082), su ontología (`ontology/energia/`) y sus mapeos (`mappings/energia.r2rml.ttl`).
+
+- **2025 y no 2026:** el archivo de 2026 trae solo 21 operadoras (falta, por ejemplo, Pan American Energy). El de 2025 tiene 69 operadoras, 83.172 pozos y unos 803.000 barriles por día, lo que coincide con la producción nacional.
+- **El WFS:** la dirección pública devuelve siempre el documento de capacidades; los datos salen de la dirección que ese documento anuncia (`/mapserv?map=...`). El certificado viene sin la cadena completa, así que se descarga sin verificarlo: son datos públicos de solo lectura.
+- **Tres momentos, como en proveedores:** producción por participación (YPF opera 21,4 M m³ y le corresponden 12,6), quién opera cada pozo (padrón 12.006, declaraciones 15.809; rige la declaración del último mes, con el padrón a la vista en 7.453 pozos en desacuerdo) y posibles venteos por satélite ubicados en su concesión (6.636 de 6.887 desde 2024).
+- **Nombres de empresas:** se unen por nombre normalizado (sin acentos, puntuación ni forma societaria) y, donde eso no alcanza, con correcciones revisadas (`linking/energia/correcciones.csv`): CGC, Chevron y Pluspetrol. Las revisó un asistente de IA; falta que una persona las confirme.
+- **Punto dentro de polígono en Python** (`linking/energia/link.py`): Postgres no tiene PostGIS acá y son 300 contornos. Se guarda la concesión de cada punto, con su evidencia.
+- **Sin evaluación medida todavía:** los números «sin Rastro» salen de SQL directo y legible (`layer/energia/sin-rastro.sql`), no de un LLM. La pestaña «Por qué confiar» no se muestra en este dominio hasta que haya una evaluación.
+- **Referencia:** una tesis de la UTDT usa los mismos datos abiertos para predecir la productividad de pozos de shale gas en Vaca Muerta; es un antecedente para un paso de predicción (Rastro Lab), no para esta demo.

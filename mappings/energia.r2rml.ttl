@@ -1,0 +1,110 @@
+# Mapeos R2RML del dominio de petróleo y gas: cómo se leen las tablas de Postgres como grafo.
+# Los lee el tercer Ontop (ontop-energia, puerto 8082). Una sección por fuente.
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix : <https://w3id.org/rastro/energia#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Fuentes (rastro_meta) -------------------------------------
+
+<#DataSource> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery """
+        SELECT id, name, license FROM rastro_meta.source WHERE id IN ('capitulo4', 'sig_energia')""" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/source/{id}" ; rr:class :DataSource ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :license ; rr:objectMap [ rr:column "license" ] ] .
+
+# --- Producción por pozo (Capítulo IV) ---------------------------
+
+<#WellProduction> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.produccion_pozo" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/production/{id}" ; rr:class :WellProduction ] ;
+    rr:predicateObjectMap [ rr:predicate :well ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/well/{idpozo}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :concession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :declaredBy ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :formation ; rr:objectMap [ rr:column "formacion" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :basin ; rr:objectMap [ rr:column "cuenca" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :province ; rr:objectMap [ rr:column "provincia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :oil ; rr:objectMap [ rr:column "petroleo_m3" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate :gas ; rr:objectMap [ rr:column "gas_mm3" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/capitulo4> ] ] .
+
+<#ShaleProduction> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id FROM energia.produccion_pozo WHERE sub_tipo_recurso = 'SHALE'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/production/{id}" ; rr:class :ShaleProduction ] .
+
+<#TightProduction> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id FROM energia.produccion_pozo WHERE sub_tipo_recurso = 'TIGHT'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/production/{id}" ; rr:class :TightProduction ] .
+
+<#Well> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.operador_pozo" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/well/{idpozo}" ; rr:class :Well ] ;
+    rr:predicateObjectMap [ rr:predicate :wellId ; rr:objectMap [ rr:column "idpozo" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :operator ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] .
+
+<#OperatorLink> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.operador_pozo" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/operatorlink/{idpozo}" ; rr:class :OperatorLink ] ;
+    rr:predicateObjectMap [ rr:predicate :aboutWell ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/well/{idpozo}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :company ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :registryCompany ; rr:objectMap [ rr:column "empresa_padron" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :rule ; rr:objectMap [ rr:column "regla" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/capitulo4> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-operator-rule> ] ] .
+
+# --- Empresas: sus nombres en cada fuente ------------------------
+
+<#Company> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.empresa" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ; rr:class :Company ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "nombre" ] ] .
+
+<#CompanyName> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT md5(fuente || '|' || nombre) AS id, fuente, nombre, empresa_id, regla, evidencia FROM energia.empresa_nombre" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/companyname/{id}" ; rr:class :CompanyName ] ;
+    rr:predicateObjectMap [ rr:predicate :nameInSource ; rr:objectMap [ rr:column "nombre" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :company ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :rule ; rr:objectMap [ rr:column "regla" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:template "https://w3id.org/rastro/source/{fuente}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-name-rules> ] ] .
+
+# --- Concesiones, socios y venteos (mapas de la Secretaría de Energía) ---
+
+<#Concession> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.concesion" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ; rr:class :Concession ] ;
+    rr:predicateObjectMap [ rr:predicate :concessionId ; rr:objectMap [ rr:column "id_concesion" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "nombre" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :operatorOnMap ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{operadora_mapa}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :reportedBy ; rr:objectMap [ rr:column "informante" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] .
+
+<#Stake> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id_concesion, empresa_id, porcentaje, texto FROM energia.participacion" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/stake/{id_concesion}/{empresa_id}" ; rr:class :Stake ] ;
+    rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :partner ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :percent ; rr:objectMap [ rr:column "porcentaje" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "texto" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-stake-parsing> ] ] .
+
+<#DetectedVenting> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, fecha, satelite, id_concesion, evidencia FROM energia.venteo WHERE tipo = 'detectado'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/venting/{id}" ; rr:class :DetectedVenting ] ;
+    rr:predicateObjectMap [ rr:predicate :date ; rr:objectMap [ rr:column "fecha" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :satellite ; rr:objectMap [ rr:column "satelite" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] .
+
+<#DeclaredVenting> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, nombre, id_concesion, evidencia FROM energia.venteo WHERE tipo = 'declarado'" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/venting/{id}" ; rr:class :DeclaredVenting ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "nombre" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] .

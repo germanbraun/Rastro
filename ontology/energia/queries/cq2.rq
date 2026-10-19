@@ -1,0 +1,9 @@
+# 2. ¿Cuántos pozos opera hoy YPF, y en cuántos no coinciden las fuentes?
+PREFIX : <https://w3id.org/rastro/energia#>
+
+SELECT ?rule (COUNT(?w) AS ?wells)
+WHERE {
+  ?l a :OperatorLink ; :aboutWell ?w ; :company/:name "YPF S.A." ; :rule ?rule .
+}
+GROUP BY ?rule
+ORDER BY DESC(?wells)

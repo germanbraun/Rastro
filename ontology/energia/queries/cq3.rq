@@ -1,0 +1,12 @@
+# 3. ¿En qué concesiones vio el satélite más posibles venteos desde 2024, quién las opera y cuántos puntos de venteo declararon?
+PREFIX : <https://w3id.org/rastro/energia#>
+
+SELECT ?concession ?operator (COUNT(DISTINCT ?d) AS ?detected) (COUNT(DISTINCT ?v) AS ?declared)
+WHERE {
+  ?d a :DetectedVenting ; :inConcession ?c .
+  ?c :name ?concession ; :operatorOnMap/:name ?operator .
+  OPTIONAL { ?v a :DeclaredVenting ; :inConcession ?c }
+}
+GROUP BY ?concession ?operator
+ORDER BY DESC(?detected)
+LIMIT 10

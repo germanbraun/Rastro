@@ -75,7 +75,7 @@ def as_table(columns, rows, cfg, tech, col_sources):
     for row in rows:
         line = []
         for c, v in zip(columns, row):
-            if v is not None and formats.get(c) == "dinero":
+            if v is not None and formats.get(c) in ("dinero", "numero"):
                 v = money(v)
             elif v is not None and formats.get(c) == "porcentaje":
                 v = f"{float(v) * 100:.0f} %"
@@ -167,8 +167,8 @@ def short(value):
 def render(cfg_path, tech):
     cfg = load_config(cfg_path)
     domain = cfg["domain"]
-    evaluation = read_json(cfg["evaluacion"])
-    changes = read_json(cfg["cambio"])
+    evaluation = read_json(cfg["evaluacion"]) if cfg.get("evaluacion") else {}
+    changes = read_json(cfg["cambio"]) if cfg.get("cambio") else {}
     questions = cfg["preguntas"]
 
     with st.sidebar:
@@ -182,7 +182,11 @@ def render(cfg_path, tech):
         else:
             st.caption(md(cfg["resumen"]))
 
-    ask_tab, trust_tab, faq_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"])
+    # «Por qué confiar» necesita una evaluación medida; un dominio sin ella no muestra la pestaña
+    if cfg.get("tarjetas"):
+        ask_tab, trust_tab, faq_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"])
+    else:
+        (ask_tab, faq_tab), trust_tab = st.tabs(["Preguntar", "Preguntas frecuentes"]), None
 
     with ask_tab:
         modes = ((["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Una pregunta de ejemplo"]
@@ -225,8 +229,9 @@ def render(cfg_path, tech):
             if not available:
                 st.info("Para preguntas libres hace falta un LLM. Mientras tanto, pueden usarse las preguntas de ejemplo.")
 
-    with trust_tab:
-        trust(cfg, tech, evaluation, changes)
+    if trust_tab:
+        with trust_tab:
+            trust(cfg, tech, evaluation, changes)
 
     with faq_tab:
         for item in [i for i in cfg.get("faq", []) if not i.get("tecnico")]:
