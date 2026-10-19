@@ -168,7 +168,7 @@ def explain(query, sql, domain, item=None):
     key = f"explain_{abs(hash(query))}"
     stored = (item or {}).get("explicacion")
     available, _ = llm_status()
-    if st.button("💬 Explicame la consulta", key=key, disabled=not stored and not available,
+    if st.button("💬 Explicame la consulta", key=f"{key}_boton", disabled=not stored and not available,
                  help=None if stored or available else "Para explicar preguntas propias hace falta un LLM."):
         st.session_state[key] = stored
         if not stored:
