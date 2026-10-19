@@ -239,6 +239,40 @@ EVIDENCE_EXAMPLES = EVIDENCE_PREFIXES + """SELECT ?name ?nct ?text ?matched ?rul
 }} LIMIT 400"""
 
 
+EVIDENCE_ONE = EVIDENCE_PREFIXES + """SELECT ?propiedad ?valor WHERE {{
+  ?enlace a :DrugLink ; :linkTrial ?ensayo ; :linkDrug ?farmaco ; ?propiedad ?valor .
+  ?ensayo :nctId "{nct}" . ?farmaco :name "{name}" .
+}}"""
+PROPERTIES = {   # IRI → (cómo se lee, de qué vocabulario es)
+    "https://w3id.org/rastro/ontology#linkTrial": ("ensayo", "Rastro"),
+    "https://w3id.org/rastro/ontology#linkDrug": ("fármaco", "Rastro"),
+    "https://w3id.org/rastro/ontology#interventionText": ("texto del sponsor", "Rastro"),
+    "https://w3id.org/rastro/ontology#matchedText": ("coincidió con", "Rastro"),
+    "https://w3id.org/rastro/ontology#linkRule": ("regla", "Rastro"),
+    "http://www.w3.org/ns/prov#wasDerivedFrom": ("deriva de", "PROV-O"),
+    "http://www.w3.org/ns/prov#wasGeneratedBy": ("generado por", "PROV-O"),
+    "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": ("es un", "RDF"),
+}
+VALUES = {
+    "https://w3id.org/rastro/source/aact": "AACT (ClinicalTrials.gov)",
+    "https://w3id.org/rastro/source/chembl": "ChEMBL",
+    "https://w3id.org/rastro/activity/entity-linking": "el entity linking de Rastro",
+    "https://w3id.org/rastro/ontology#DrugLink": "enlace ensayo → fármaco",
+    "http://www.w3.org/ns/prov#Entity": "prov:Entity (lo deduce la ontología)",
+}
+
+
+def evidence_of(nct, name):
+    """Toda la evidencia de un enlace, tal como está en el grafo."""
+    query = EVIDENCE_ONE.format(nct=nct, name=name)
+    _, rows = answer.run_sparql_table(query)
+    order = list(PROPERTIES)
+    rows = sorted(rows, key=lambda r: order.index(r[0]) if r[0] in order else len(order))
+    table = [{"Propiedad": PROPERTIES.get(p, (p, ""))[0], "Vocabulario": PROPERTIES.get(p, ("", ""))[1],
+              "Valor": VALUES.get(v, v.rsplit("/", 1)[-1] if v.startswith("http") else v)} for p, v in rows]
+    return query, table
+
+
 @st.cache_data
 def drug_names():
     with admin() as conn:
@@ -337,9 +371,17 @@ def show_answer(query, columns, rows, note=None):
             for name, nct, text, rule in evidence_examples(tuple(drugs)):
                 st.markdown(f"- «{text}» → **{name.lower()}**, {RULES.get(rule, rule)} · "
                             f"[{nct}](https://clinicaltrials.gov/study/{nct})")
-            st.caption("La evidencia está en el grafo, descrita con PROV-O (el estándar del W3C para "
-                       "procedencia): cualquier consulta puede pedirla, y cualquiera puede auditarla "
-                       "abriendo el ensayo.")
+            examples = evidence_examples(tuple(drugs))
+            if examples:
+                name, nct, text, _ = examples[0]
+                query, table = evidence_of(nct, name)
+                st.markdown(f"La evidencia está en el grafo, descrita con **PROV-O** (el estándar del W3C "
+                            f"para procedencia), así que cualquier consulta puede pedirla. Por ejemplo, esta "
+                            f"pide todo lo que Rastro sabe del enlace entre {nct} y {name.lower()}:")
+                st.code(query, language="sparql")
+                st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True)
+                st.caption("Cualquiera puede auditarlo abriendo el ensayo. «prov:Entity» no está en ningún "
+                           "mapeo: Ontop lo deduce de la ontología, donde un enlace es un tipo de entidad PROV.")
 
 
 # --- Pantalla ------------------------------------------------------
