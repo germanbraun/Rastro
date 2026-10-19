@@ -39,6 +39,27 @@ services:
       - ../ontology:/opt/rastro/ontology:ro
       - ../mappings:/opt/rastro/mappings:ro
 
+  # Segundo dominio, proveedores del Estado: su propia ontología y sus mapeos
+  ontop-proveedores:
+    build: ./ontop
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ONTOP_ONTOLOGY_FILE: /opt/rastro/ontology/proveedores/proveedores.ttl
+      ONTOP_MAPPING_FILE: /opt/rastro/mappings/proveedores.r2rml.ttl
+      ONTOP_DB_URL: jdbc:postgresql://postgres:5432/${PG_DB:-rastro}
+      ONTOP_DB_USER: ${PG_USER:-rastro}
+      ONTOP_DB_PASSWORD: ${PG_PASSWORD:-rastro}
+      ONTOP_DB_DRIVER: org.postgresql.Driver
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      ONTOP_DEV_MODE: "true"
+    ports:
+      - "${ONTOP_PROVEEDORES_PORT:-8081}:8080"
+    volumes:
+      - ../ontology:/opt/rastro/ontology:ro
+      - ../mappings:/opt/rastro/mappings:ro
+
   # Demo de Rastro Layer: http://localhost:8501
   app:
     build: ./loaders
@@ -209,6 +230,21 @@ services:
     volumes:
       - ../data:/data
     command: ["python", "-u", "/data/gleif/load.py"]
+
+  # Tablas y enlaces del dominio de proveedores (linking/proveedores/)
+  proveedores-linker:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../linking:/linking:ro
+    command: ["python", "-u", "/linking/proveedores/link.py"]
 
   # Enlaza ensayos con MeSH y ChEMBL (linking/): docker compose run --rm linker
   linker:

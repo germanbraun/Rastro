@@ -43,7 +43,7 @@ Contratos del año fiscal 2025 (oct 2024 a sep 2025) de **más de US$10 millones
 - **Entrada en una lista de control**: de la Lista Consolidada.
 - **Evidencia** de cada enlace: por qué Rastro dice que un proveedor es parte de un grupo, tiene tal LEI o coincide con tal entrada de una lista.
 
-## Preguntas de negocio (borrador)
+## Preguntas de negocio (borrador; la versión final, con la ventaja que muestra cada una, está en `ontology/proveedores/competency-questions.md`)
 
 1. ¿Cuánto facturó al gobierno el grupo Leidos en 2025, contando todas sus empresas?
 2. ¿Cuáles son los 5 grupos que más facturaron en servicios informáticos (incluidos sus subsectores)?
@@ -74,7 +74,7 @@ La misma que oncología:
 | Fase | Qué | Checkpoint |
 |---|---|---|
 | P0 · Datos ✅ | Cargadores de USAspending (contratos y matrices), GLEIF, Lista Consolidada y NAICS | Conteos por fuente |
-| P1 · Preguntas y diccionario | Las 8 preguntas, la ontología y sus SPARQL | Las 8 responden contra el segundo Ontop |
+| P1 · Preguntas y diccionario ✅ | Las 9 preguntas, la ontología y sus SPARQL | Las 9 responden contra el segundo Ontop (las 4, 5, 7 y 9, con los enlaces de P2) |
 | P2 · Enlaces | Proveedor ↔ LEI, proveedor ↔ lista, grupo ↔ Wikidata, con su evidencia; revisión de una muestra | Precisión medida |
 | P3 · Evaluación | Sin Rastro (SQL directo) contra con Rastro, consistencia y cambio, igual que en oncología | Las tres pruebas con números |
 | P4 · App | El selector de dominio, las preguntas en palabras simples y la evidencia | Demo sin terminal |

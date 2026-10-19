@@ -1,6 +1,7 @@
 """Revisa que la ontología cargue y que cada query use solo términos declarados.
 
 Se corre con: docker compose run --rm ontology-check
+Otro dominio: docker compose run --rm ontology-check python /ontology/check.py /ontology/proveedores
 """
 
 import sys
@@ -10,7 +11,8 @@ import rdflib
 from rdflib.namespace import OWL, RDF
 from rdflib.plugins.sparql import prepareQuery
 
-HERE = Path(__file__).parent
+# Carpeta del dominio: la ontología (*.ttl) y sus queries/
+HERE = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).parent
 NS = "https://w3id.org/rastro/ontology#"
 
 
@@ -34,7 +36,9 @@ def terms_in(node, found, seen):
 
 
 def main():
-    g = rdflib.Graph().parse(HERE / "rastro.ttl")
+    global NS
+    g = rdflib.Graph().parse(next(HERE.glob("*.ttl")))
+    NS = str(next(g.subjects(RDF.type, OWL.Ontology))) + "#"
     declared = {str(s) for s in g.subjects() if str(s).startswith(NS)}
     print(f"Ontología: {len(set(g.subjects(RDF.type, OWL.Class)))} clases, "
           f"{len(set(g.subjects(RDF.type, OWL.ObjectProperty)))} relaciones, "

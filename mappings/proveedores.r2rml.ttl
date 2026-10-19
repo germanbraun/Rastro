@@ -1,0 +1,88 @@
+# Mapeos R2RML del dominio de proveedores: cómo se leen las tablas de Postgres como grafo.
+# Los lee el segundo Ontop (ontop-proveedores, puerto 8081). Una sección por fuente.
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix : <https://w3id.org/rastro/proveedores#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+# --- Fuentes (rastro_meta) -------------------------------------
+
+<#DataSource> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery """
+        SELECT id, name, license FROM rastro_meta.source
+        WHERE id IN ('usaspending', 'naics', 'csl', 'gleif', 'wikidata')""" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/source/{id}" ; rr:class :DataSource ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :license ; rr:objectMap [ rr:column "license" ] ] .
+
+# --- Contratos, proveedores, grupos y agencias (USAspending) ----
+
+<#Contract> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery """
+        SELECT generated_internal_id, award_id, recipient_uei, awarding_agency, awarding_sub_agency,
+               naics_code, amount, start_date, end_date, description
+        FROM usaspending.contract""" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/contract/{generated_internal_id}" ; rr:class :Contract ] ;
+    rr:predicateObjectMap [ rr:predicate :contractId ; rr:objectMap [ rr:column "award_id" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :amount ; rr:objectMap [ rr:column "amount" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :startDate ; rr:objectMap [ rr:column "start_date" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :endDate ; rr:objectMap [ rr:column "end_date" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :description ; rr:objectMap [ rr:column "description" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :subAgency ; rr:objectMap [ rr:column "awarding_sub_agency" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :supplier ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{recipient_uei}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :agency ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/agency/{awarding_agency}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sector ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/sector/{naics_code}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/usaspending> ] ] .
+
+<#Supplier> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.supplier" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{uei}" ; rr:class :Supplier ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :uei ; rr:objectMap [ rr:column "uei" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :state ; rr:objectMap [ rr:column "state_code" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/usaspending> ] ] .
+
+<#Group> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.group_company" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/group/{group_id}" ; rr:class :Group ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :uei ; rr:objectMap [ rr:column "uei" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/usaspending> ] ] .
+
+<#SupplierGroup> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.supplier_group" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{supplier_uei}" ] ;
+    rr:predicateObjectMap [ rr:predicate :group ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/group/{group_id}" ] ] .
+
+# Por qué un proveedor es parte de un grupo, con PROV-O
+<#GroupLink> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.supplier_group" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/link/group/{supplier_uei}" ; rr:class :GroupLink ] ;
+    rr:predicateObjectMap [ rr:predicate :linkFrom ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/supplier/{supplier_uei}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkTo ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/group/{group_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "source_text" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :matchedText ; rr:objectMap [ rr:column "matched" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :linkRule ; rr:objectMap [ rr:column "rule" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/usaspending> ] ] .
+
+<#Agency> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.agency" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/agency/{name}" ; rr:class :Agency ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/usaspending> ] ] .
+
+# --- Sectores (NAICS) --------------------------------------------
+
+# NAICS 2022 más los códigos viejos que usan algunos contratos (linking/proveedores/entities.sql)
+<#Sector> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.sector" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/sector/{code}" ; rr:class :Sector ] ;
+    rr:predicateObjectMap [ rr:predicate :code ; rr:objectMap [ rr:column "code" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :name ; rr:objectMap [ rr:column "title" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/naics> ] ] .
+
+# Cada sector está dentro de sí mismo y de sus sectores más amplios (precalculado)
+<#SectorWithin> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "proveedores.sector_ancestor" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/proveedores/sector/{code}" ] ;
+    rr:predicateObjectMap [ rr:predicate :within ; rr:objectMap [ rr:template "https://w3id.org/rastro/proveedores/sector/{ancestor_code}" ] ] .

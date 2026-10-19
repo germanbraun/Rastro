@@ -1,0 +1,10 @@
+# 6. ¿Cuántos proveedores distintos tiene el Departamento de Defensa en construcción?
+PREFIX : <https://w3id.org/rastro/proveedores#>
+
+SELECT (COUNT(DISTINCT ?s) AS ?suppliers) (COUNT(?contract) AS ?contracts) (SUM(?amount) AS ?total)
+WHERE {
+  ?dod :name "Department of Defense" .
+  # 23: Construction, y todos sus subsectores
+  ?construction :code "23" .
+  ?contract :agency ?dod ; :sector/:within ?construction ; :supplier ?s ; :amount ?amount .
+}

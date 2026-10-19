@@ -1,0 +1,15 @@
+# 8. ¿A qué grupo pertenece «Science Applications International Corporation», y por qué?
+# (La vieja SAIC hoy se llama Leidos; una SAIC nueva tomó el nombre en 2013.)
+PREFIX : <https://w3id.org/rastro/proveedores#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?supplier ?group ?sourceText ?rule ?source
+WHERE {
+  ?s a :Supplier ; :name ?supplier .
+  FILTER (CONTAINS(?supplier, "SCIENCE APPLICATIONS INTERNATIONAL") || STRSTARTS(?supplier, "LEIDOS"))
+  ?link a :GroupLink ; :linkFrom ?s ; :linkTo ?g ; :sourceText ?sourceText ; :linkRule ?rule ;
+        prov:wasDerivedFrom ?src .
+  ?g :name ?group .
+  ?src :name ?source .
+}
+ORDER BY ?group ?supplier

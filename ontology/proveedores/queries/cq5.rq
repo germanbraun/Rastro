@@ -1,0 +1,13 @@
+# 5. ¿Algún proveedor, o su grupo, aparece en una lista de control del gobierno?
+PREFIX : <https://w3id.org/rastro/proveedores#>
+
+SELECT ?who ?name ?entry ?list ?matched ?rule
+WHERE {
+  { ?x a :Supplier . BIND ("proveedor" AS ?who) }
+  UNION
+  { ?x a :Group . BIND ("grupo" AS ?who) }
+  ?x :name ?name .
+  ?link a :WatchlistLink ; :linkFrom ?x ; :linkTo ?e ; :matchedText ?matched ; :linkRule ?rule .
+  ?e :name ?entry ; :list ?list .
+}
+ORDER BY ?name

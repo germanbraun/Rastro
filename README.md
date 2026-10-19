@@ -32,6 +32,7 @@ docker compose up -d
 | **Demo de Rastro Layer** | **http://localhost:8501** | Preguntar en lenguaje natural y comparar con y sin Rastro |
 | Postgres | `localhost:5434` (usuario y clave `rastro`) | Fuentes relacionales, un esquema por fuente, y `rastro_meta` con el registro de fuentes y cargas |
 | Ontop | http://localhost:8080 | Endpoint SPARQL virtual sobre Postgres; recarga `ontology/` y `mappings/` al editarlos |
+| Ontop de proveedores | http://localhost:8081 | El segundo dominio (proveedores del Estado), con su ontología y sus mapeos |
 | GraphDB Free | http://localhost:7210 | Triplestore con el repositorio `rastro`: MeSH 2026 en el grafo `<http://id.nlm.nih.gov/mesh/2026>` y el conector Lucene `mesh` |
 
 Los puertos se cambian copiando `.env.example` a `.env`. Por defecto evitan 5432 y 7200 para convivir con un Postgres y un GraphDB locales.
@@ -75,6 +76,7 @@ Los cargadores corren a demanda y necesitan credenciales en `.env` (copiado de `
 | Lista Consolidada de Control (proveedores) | `docker compose run --rm csl-loader` | Ninguno: CSV público de trade.gov |
 | GLEIF (proveedores) | `docker compose run --rm gleif-loader` | USAspending cargado antes. Candidatos a LEI de matrices y de los 1000 proveedores que más facturan; 60 consultas por minuto, reanudable |
 | Enlaces | `docker compose run --rm linker` | Las fuentes de arriba ya cargadas. Enlaza ensayos con MeSH y con ChEMBL en unos segundos |
+| Tablas y enlaces de proveedores | `docker compose run --rm proveedores-linker` | USAspending y NAICS cargados (y GLEIF, la Lista Consolidada y Wikidata para los enlaces). Arma proveedores, grupos y sectores, y los enlaces con su evidencia |
 
 Las descargas quedan en `data/raw/`, que no se versiona: openFDA guarda ahí un JSON por fármaco y no lo vuelve a pedir.
 
