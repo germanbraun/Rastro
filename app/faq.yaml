@@ -2,15 +2,64 @@
 # Los valores entre llaves ({secs_b}, {reinvented}...) los completa la app con los
 # números de la evaluación guardada.
 
-# --- Qué es -----------------------------------------------------------
+# Las que tienen «tecnico: true» se ven solo con «Ver detalles técnicos».
+
+# --- Para todos ----------------------------------------------------
 
 - question: ¿Qué es Rastro?
+  answer: |-
+    Una forma de preguntarle a varias bases de datos en lenguaje de negocio, sin saber cómo están armadas.
+
+    Rastro junta cuatro bases públicas de oncología (ensayos clínicos, fármacos, efectos adversos y enfermedades) y las describe con un **diccionario de negocio**: ensayo, fármaco, sponsor, enfermedad. Quien pregunta usa esas palabras, y Rastro se encarga de buscar en cada base. Cada respuesta dice de dónde sale y se puede auditar.
+
+- question: ¿De dónde salen los datos?
+  answer: |-
+    De cuatro bases públicas:
+    - **AACT**: el registro de ensayos clínicos, los estudios en personas para probar tratamientos.
+    - **ChEMBL**: los fármacos y sobre qué proteína del cuerpo actúan.
+    - **openFDA**: los reportes de efectos adversos que llegan a la FDA.
+    - **MeSH**: el vocabulario médico que sabe qué enfermedad es un subtipo de cuál.
+
+    Es una foto de octubre de 2026.
+
+- question: ¿Necesito saber programar?
+  answer: |-
+    No. Las 20 preguntas de ejemplo funcionan solas. Para hacer preguntas propias, Rastro usa un asistente de IA que traduce la pregunta; hay que configurarlo una vez.
+
+- question: ¿Por qué puedo confiar en las respuestas?
+  answer: |-
+    Por tres cosas que medimos:
+    - **La misma pregunta, la misma respuesta.** Hicimos 10 preguntas de 4 formas distintas: con Rastro, la respuesta fue la misma las 4 veces en las 10; sin Rastro, solo en 1.
+    - **Los cambios se arreglan en un lugar.** Si una base cambia, Rastro se arregla con una línea; sin Rastro, hay que reescribir cada consulta.
+    - **Cada respuesta se puede auditar.** Rastro muestra qué texto de cada ensayo reconoció como cada fármaco.
+
+    Detalle en la pestaña «Por qué confiar».
+
+- question: ¿Qué pasa si una base cambia?
+  answer: |-
+    Se arregla en un solo lugar. Lo probamos: cuando una base cambia el nombre de una columna, 5 consultas armadas a mano dejan de funcionar y hay que reescribirlas. Con Rastro, es una línea. Y si cambia cómo se escribe un dato, las consultas a mano dan cero sin avisar; Rastro avisa.
+
+- question: ¿Cómo sé por qué Rastro dice algo?
+  answer: |-
+    En cada respuesta con fármacos, «¿Cómo lo supe?» muestra cómo reconoció Rastro cada fármaco en los ensayos: lo que escribió quien registró el ensayo, y qué fármaco es. Por ejemplo, «Adjuvant Systemic Therapy» es trastuzumab emtansina porque el sponsor lo declaró así. Se puede abrir cada ensayo y comprobarlo.
+
+- question: ¿Los eventos adversos son frecuencias reales?
+  answer: >-
+    No. Son conteos de reportes espontáneos de FAERS (openFDA): no tienen denominador,
+    pueden tener duplicados y el fármaco puede no ser el sospechoso del evento. Sirven
+    para comparar y detectar señales, no como verdad clínica.
+
+# --- Para técnicos (se ven con «Ver detalles técnicos») ----------------
+
+- question: ¿Qué es Rastro, técnicamente?
+  tecnico: true
   answer: |-
     Una **capa semántica** sobre cuatro fuentes públicas de oncología. Las describe con conceptos de negocio (ensayo, fármaco, target, sponsor, evento adverso), un LLM pregunta sobre esos conceptos, y cada respuesta dice de qué fuente sale.
 
     Técnicamente es un **Virtual Knowledge Graph**: ontología, mapeos R2RML y SPARQL, estándares del W3C. Es pragmático: las fuentes se cargan en Postgres, y los enlaces y la jerarquía de MeSH quedan precalculados en tablas.
 
 - question: Sé SQL. ¿Qué es cada pieza, en términos de SQL?
+  tecnico: true
   answer: |-
     | Tecnología semántica | En términos de SQL |
     |---|---|
@@ -23,12 +72,14 @@
     Los datos no se mueven: siguen en Postgres, y cada pregunta se ejecuta como SQL.
 
 - question: ¿Qué pasa cuando hago una pregunta?
+  tecnico: true
   answer: |-
     1. El LLM recibe la **ontología** como contexto: los conceptos, cómo se relacionan y qué significa cada uno. Con eso escribe una consulta SPARQL. No ve tablas, así que no tiene que adivinar cómo se cruzan.
     2. Ontop la traduce a SQL y la ejecuta en vivo sobre Postgres.
     3. Ves la respuesta y la fuente de cada columna. En «¿Cómo lo supe?» están la consulta y el SQL exactos, para revisarlos: el LLM todavía puede elegir mal un concepto o un filtro.
 
 - question: ¿Qué tiene cada fuente, y dónde está?
+  tecnico: true
   answer: |-
     - 🐘 **AACT**, en Postgres: el registro público de **ensayos clínicos**. Fase, estado, sponsor y qué se prueba, como texto libre.
     - 🐘 **ChEMBL**, en Postgres: **fármacos**, si están aprobados y sobre qué **proteína** actúan (el target, con el nombre de su gen, como HER2).
@@ -38,6 +89,7 @@
     Más detalle, ejemplos y un glosario en docs/fuentes.md.
 
 - question: ¿Necesito un LLM o una API key?
+  tecnico: true
   answer: >-
     Para las 20 preguntas de ejemplo, no: usan consultas ya escritas por el LLM, que se
     ejecutan en vivo. Para preguntas propias hace falta un LLM: la Claude API (de pago
@@ -46,6 +98,7 @@
 # --- Frente a SQL -----------------------------------------------------
 
 - question: Si con SQL también se puede, ¿qué aporta la capa semántica?
+  tecnico: true
   answer: |-
     Lo medimos con tres formas de darle los datos al mismo LLM:
 
@@ -61,6 +114,7 @@
     **La precisión y la consistencia vienen de integrar una vez** (las tablas de enlaces): con ellas, el SQL acierta igual, incluso en preguntas de 3 o 4 cruces (layer/composicion/). **La capa semántica aporta el resto:** el conocimiento de cada fuente queda en los mapeos y no repartido en cada consulta, cada dato trae su fuente, y se puede consultar junto con datos de otras organizaciones, con estándares abiertos.
 
 - question: ¿Da la misma respuesta si pregunto lo mismo de otra forma?
+  tecnico: true
   answer: |-
     Con la integración hecha, sí. Escribimos 10 de las preguntas de 4 formas distintas:
     - **SQL directo:** la respuesta cambia según cómo se pregunte en 9 de las 10 (los ensayos anti-EGFR dan 488, 488, 409 o 488). En {reinvented} de las 20 preguntas originales tuvo que inventar cómo reconocer un fármaco, de {n_methods} formas distintas.
@@ -69,6 +123,7 @@
     Detalle en layer/consistencia/.
 
 - question: ¿Por qué no vistas SQL sobre las tablas de enlaces?
+  tecnico: true
   answer: |-
     Para un caso chico pueden alcanzar: unas buenas vistas dan nombres de negocio, una sola definición de cada cosa y un lugar donde absorber un cambio de la fuente.
 
@@ -79,10 +134,12 @@
     - **Estándares abiertos** (W3C): la misma capa la leen otras herramientas, no está atada a una base.
 
 - question: ¿Dónde quedó la complejidad del SQL?
+  tecnico: true
   answer: |-
     En la integración, hecha una vez. En la pregunta de HER2, el LLM escribió 1.543 caracteres de SQL sin integración, 571 de SQL sobre las tablas de enlaces y 435 de SPARQL sobre Rastro. La gran diferencia la hace integrar; SPARQL la hace un poco más corta y en palabras de negocio, y Ontop genera el SQL.
 
 - question: ¿Qué pasa si una fuente cambia?
+  tecnico: true
   answer: |-
     Lo probamos con las 20 consultas guardadas, simulando una versión nueva de AACT:
     - **Cambia el nombre de una columna:** 5 consultas de SQL fallan, con o sin las tablas de enlaces, porque igual leen las columnas de la fuente. En Rastro, **una línea del mapeo**.
@@ -91,6 +148,7 @@
     Una capa de vistas SQL también centralizaría el cambio. Detalle en docs/demo-cambio.md.
 
 - question: ¿Cómo sé por qué Rastro dice que un ensayo prueba un fármaco?
+  tecnico: true
   answer: |-
     En cada respuesta con fármacos, una columna dice cómo lo reconoce Rastro (por ejemplo, trastuzumab: 854 ensayos, 81 % por su nombre), y el paso 4 de **«¿Cómo lo supe?»** muestra ejemplos no obvios, que se pueden abrir en ClinicalTrials.gov: «Bevacizumab (drug), Herceptin (drug)» es trastuzumab como parte de una combinación; «Adjuvant Systemic Therapy» es trastuzumab emtansina por un alias que declaró el sponsor.
 
@@ -99,6 +157,7 @@
     Con SQL también se puede guardar, pero hay que programarlo en cada consulta y no lo entiende ninguna otra herramienta.
 
 - question: ¿Qué significa que «el conocimiento vive en el modelo»?
+  tecnico: true
   answer: |-
     Que una definición de negocio se escribe una vez, en la ontología, y todas las preguntas la usan. Ejemplo: «terapia dirigida» no está en ninguna tabla ni en ningún mapeo. La ontología dice, en dos líneas, que los inhibidores de quinasa y los anticuerpos monoclonales son terapias dirigidas, y Ontop lo deduce al responder: 156 fármacos.
 
@@ -107,6 +166,7 @@
     Lo probamos: con la definición documentada, el SQL con enlaces también acierta (3 de 3, layer/composicion/). La diferencia no es la precisión, es dónde vive la definición.
 
 - question: ¿Puede consultar datos que no están en Rastro?
+  tecnico: true
   answer: |-
     Sí, si comparten identificadores. Una sola consulta en GraphDB combina Rastro, MeSH y **Wikidata**, en vivo y sin cargar nada: por ejemplo, para cada fármaco anti-HER2, qué enfermedades trata según Wikidata. El cruce es el ChEMBL ID, que Rastro y Wikidata usan igual. Así aparece que afatinib (aprobado para cáncer de pulmón) y vandetanib (tiroides) se prueban en cáncer de mama.
 
@@ -115,6 +175,7 @@
 # --- Cómo integra -----------------------------------------------------
 
 - question: ¿Qué problemas de integración resuelve?
+  tecnico: true
   answer: |-
     Según el tutorial de Virtual Knowledge Graphs de Calvanese, Cogrel y Lanti (Ontobras 2022), hay cuatro tipos de heterogeneidad. Los dos que importan:
 
@@ -127,6 +188,7 @@
     Los mapeos solo unen valores iguales. Entre AACT y ChEMBL no hay ninguno: AACT dice «Pembrolizumab 200 mg» y ChEMBL `CHEMBL3137343`. Por eso hace falta el entity linking, que **crea** esa clave. Las otras dos (de modelo de datos y de sistema) las resuelven los cargadores. Más en docs/integracion.md.
 
 - question: ¿Cómo sabe Rastro qué fármaco prueba cada ensayo?
+  tecnico: true
   answer: |-
     Con **entity linking por diccionario**, calculado una vez para las 130.000 intervenciones: compara el texto del ensayo con los nombres y sinónimos de ChEMBL.
 
@@ -142,14 +204,9 @@
 # --- Confianza en los números ----------------------------------------
 
 - question: ¿Cómo se midió? ¿No favorece a Rastro?
+  tecnico: true
   answer: |-
     - El mismo LLM respondió cada pregunta sin ver la respuesta correcta, con la misma consigna y los mismos reintentos.
     - Un número es correcto si está a menos del 5 % del valor real; una lista, si coincide en al menos un 80 %.
     - Los valores reales salen de Rastro, así que cada diferencia con el SQL directo se revisó con ensayos reales. Esa revisión encontró y corrigió errores de Rastro. Detalle en layer/eval/adjudication.md.
     - Las preguntas, las referencias y esa revisión las hizo un asistente de IA (Claude Code), no el LLM evaluado. Falta que una persona las confirme: docs/verificacion-humana.md.
-
-- question: ¿Los eventos adversos son frecuencias reales?
-  answer: >-
-    No. Son conteos de reportes espontáneos de FAERS (openFDA): no tienen denominador,
-    pueden tener duplicados y el fármaco puede no ser el sospechoso del evento. Sirven
-    para comparar y detectar señales, no como verdad clínica.
