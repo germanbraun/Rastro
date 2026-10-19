@@ -419,3 +419,10 @@ Para mostrar los cambios de operadora (por ejemplo, las áreas maduras que YPF v
 - **Resultado:** 55 cambios; 25 son áreas que dejó YPF (Pecom, Petróleos Sudamericanos, Bentia, Quintana, Venoil, PCR). Pregunta nueva, e09. Cinco áreas no están en el mapa de concesiones: la consulta muestra su código y la evidencia, el nombre del Capítulo IV.
 - **Sin cambios en lo medido:** los nombres de empresa de 2023 y 2024 se suman a `energia.empresa_nombre`; la evaluación (`layer/energia/resultados.json`) da lo mismo, y las consultas guardadas, vueltas a ejecutar, dan las mismas respuestas.
 
+
+## 2026-10-19 — Pendientes al día
+
+- **Guion de oncología** (`docs/demo-guion-oncologia.md`), con la misma forma que los otros dos. Oncología no tiene «Demo en 3 pasos»: el guion usa la pregunta de ejemplo de HER2 y la pregunta sobre textos.
+- **Verificación humana de los tres dominios** (`docs/verificacion-humana.md`, partes 5 y 6): las empresas de Leidos, Austal, los socios de cuatro concesiones, los grupos, los venteos en áreas protegidas, tres LEI, tres cambios de operadora y los resúmenes de textos, con enlaces para comprobar.
+- **Un número viejo:** la diapositiva de fuentes de petróleo y gas, el guion y las preguntas de competencia decían 29 concesiones sin gasoducto cerca; desde el arreglo de distancias son 33.
+- README y `CLAUDE.md` describen los tres dominios, un mapeo por dominio y un prefijo por dominio.

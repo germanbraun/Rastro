@@ -2,7 +2,7 @@
 
 > **Los datos cambian. Las preguntas, no.**
 
-Para cualquier audiencia, sin conocimientos técnicos. Tres momentos, todos con el mismo ejemplo, el grupo Leidos: **integración, trazabilidad y análisis de textos**. Cada momento termina en un número: sin Rastro y con Rastro. El mazo de proveedores (`docs/slides/proveedores.html`, nueve diapositivas y un anexo) y la app en **Demo en 3 pasos**, con «Ver detalles técnicos» apagado. Los otros casos de uso tienen su propio mazo y su guion: [petróleo y gas](demo-guion-energia.md) y oncología (`docs/slides/oncologia.html`). Para una audiencia técnica: [demo-guion-tecnico.md](demo-guion-tecnico.md).
+Para cualquier audiencia, sin conocimientos técnicos. Tres momentos, todos con el mismo ejemplo, el grupo Leidos: **integración, trazabilidad y análisis de textos**. Cada momento termina en un número: sin Rastro y con Rastro. El mazo de proveedores (`docs/slides/proveedores.html`, nueve diapositivas y un anexo) y la app en **Demo en 3 pasos**, con «Ver detalles técnicos» apagado. Los otros casos de uso tienen su propio mazo y su guion: [petróleo y gas](demo-guion-energia.md) y [oncología](demo-guion-oncologia.md). Para una audiencia técnica: [demo-guion-tecnico.md](demo-guion-tecnico.md).
 
 ## Antes de empezar
 

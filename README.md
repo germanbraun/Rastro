@@ -1,6 +1,6 @@
 # Rastro
 
-Dos MVPs sobre tecnologías semánticas, en oncología, con datos públicos (AACT, ChEMBL, openFDA, MeSH):
+Dos MVPs sobre tecnologías semánticas, con datos públicos. Rastro Layer tiene tres dominios: petróleo y gas en Argentina, proveedores del Estado de EE. UU. y ensayos clínicos de oncología (AACT, ChEMBL, openFDA, MeSH).
 
 - **Rastro Layer** — capa semántica virtual sobre fuentes heterogéneas y preguntas en lenguaje natural con trazabilidad de cada dato.
 - **Rastro Lab** — pipeline de data science que reutiliza la capa para generar features semánticas, con linaje y explicabilidad.
@@ -14,12 +14,24 @@ El plan completo, por fases y con checkpoints, está en [docs/plan.md](docs/plan
 | `infra/` | docker-compose: Postgres, Ontop, triplestore |
 | `data/` | scripts de descarga y carga (los datos no se versionan) |
 | `ontology/` | preguntas de competencia, ontología y una query por pregunta |
-| `mappings/` | mapeos R2RML (`rastro.r2rml.ttl`), que lee Ontop |
+| `mappings/` | mapeos R2RML, uno por dominio (`rastro`, `proveedores`, `energia`), que lee el Ontop de cada dominio |
 | `linking/` | enlaces de ensayos con MeSH y ChEMBL, en SQL legible, y su revisión |
 | `layer/` | Rastro Layer: preguntas en lenguaje natural (`answer.py`) y su evaluación (`eval/`) |
 | `lab/` | Rastro Lab: features, modelos, linaje |
 | `app/` | la demo (Streamlit) |
-| `docs/` | plan, decisiones, resultados y guion de demo |
+| `docs/` | plan, decisiones, resultados, mazos (`slides/`), guiones de demo y verificación humana |
+
+Cada dominio usa su propio prefijo en SPARQL: `energia:`, `proveedores:` y `oncologia:` (por ejemplo, `energia:Well`).
+
+## La demo
+
+| Dominio | Guion | Mazo |
+|---|---|---|
+| Petróleo y gas en Argentina | [docs/demo-guion-energia.md](docs/demo-guion-energia.md) | `docs/slides/energia.html` |
+| Proveedores del Estado de EE. UU. | [docs/demo-guion.md](docs/demo-guion.md) | `docs/slides/proveedores.html` |
+| Oncología | [docs/demo-guion-oncologia.md](docs/demo-guion-oncologia.md) | `docs/slides/oncologia.html` |
+
+Para una audiencia técnica: [docs/demo-guion-tecnico.md](docs/demo-guion-tecnico.md). Lo que falta que confirme una persona: [docs/verificacion-humana.md](docs/verificacion-humana.md).
 
 ## Levantar el entorno
 
@@ -29,10 +41,11 @@ docker compose up -d
 
 | Servicio | URL local | Qué es |
 |---|---|---|
-| **Demo de Rastro Layer** | **http://localhost:8501** | Preguntar en lenguaje natural y comparar con y sin Rastro; un selector cambia de dominio (oncología o proveedores del Estado) |
+| **Demo de Rastro Layer** | **http://localhost:8501** | Preguntar en lenguaje natural y comparar con y sin Rastro; un selector cambia de dominio (abre en petróleo y gas) |
 | Postgres | `localhost:5434` (usuario y clave `rastro`) | Fuentes relacionales, un esquema por fuente, y `rastro_meta` con el registro de fuentes y cargas |
 | Ontop | http://localhost:8080 | Endpoint SPARQL virtual sobre Postgres; recarga `ontology/` y `mappings/` al editarlos |
-| Ontop de proveedores | http://localhost:8081 | El segundo dominio (proveedores del Estado), con su ontología y sus mapeos |
+| Ontop de proveedores | http://localhost:8081 | Proveedores del Estado, con su ontología y sus mapeos |
+| Ontop de petróleo y gas | http://localhost:8082 | Petróleo y gas en Argentina, con su ontología y sus mapeos |
 | GraphDB Free | http://localhost:7210 | Triplestore con el repositorio `rastro`: MeSH 2026 en el grafo `<http://id.nlm.nih.gov/mesh/2026>` y el conector Lucene `mesh` |
 
 Los puertos se cambian copiando `.env.example` a `.env`. Por defecto evitan 5432 y 7200 para convivir con un Postgres y un GraphDB locales.

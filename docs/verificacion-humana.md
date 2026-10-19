@@ -2,6 +2,8 @@
 
 Las 20 preguntas de evaluación, sus respuestas de referencia, la adjudicación (`layer/eval/adjudication.md`) y la revisión de enlaces (`linking/review-2026-10-16.md`) las hizo un asistente de IA (Claude Code). Los números salen de ejecutar queries sobre los datos y de un puntaje automático, pero **falta que una persona confirme que las referencias son correctas**. Esta lista lo hace en alrededor de una hora, sin conocimientos técnicos: solo abrir enlaces y mirar.
 
+Las partes 1 a 4 son de oncología. Proveedores (parte 5) y petróleo y gas (parte 6) tienen la misma idea, más corta: unos 20 minutos cada uno.
+
 Anotá en la última columna **sí**, **no** o **dudoso**. Al terminar, completá el resultado al final y cambiá las notas de "pendiente de revisión humana" en los documentos.
 
 ## 1. El caso de la demo: 488 contra 438 (lo más importante, 20 minutos)
@@ -86,6 +88,93 @@ Pregunta q01, fármacos anti-HER2 en fase 3 de cáncer de mama. Rastro responde:
 
 ¿Falta alguno conocido o sobra alguno? Por ejemplo, margetuximab o zanidatamab: si tienen ensayos de fase 3 de mama, Rastro los está perdiendo.
 
+
+## 5. Proveedores del Estado de EE. UU. (20 minutos)
+
+Revisión con IA en `layer/proveedores/adjudicacion.md` y correcciones en `linking/proveedores/correcciones.csv`.
+
+### 5a. Las empresas que Rastro suma al grupo Leidos
+
+El ejemplo de la demo (US$63.400 millones contra 56.400) depende de que estas empresas sean hoy de Leidos. Buscá cada una en la web de Leidos o en una noticia de la compra.
+
+| # | Empresa | Lo que dice Rastro | ¿Es de Leidos? |
+|---|---|---|---|
+| 1 | Dynetics | Leidos la compró en enero de 2020 | |
+| 2 | QTC Management | Pasó a Leidos en 2016, con el negocio de tecnología de Lockheed Martin | |
+| 3 | Gibbs & Cox | Leidos la compró en 2021 | |
+| 4 | 1901 Group | Leidos la compró en 2021 | |
+| 5 | Leidos Security Detection & Automation | Leidos compró a L3Harris su negocio de detección de seguridad en 2020 | |
+
+### 5b. La corrección de Austal USA
+
+USAspending registra como matriz de Austal USA a Computershare Limited, un registro de acciones. Rastro la corrige a Austal Limited. ¿La matriz de Austal USA es Austal Limited (Australia)? ____
+
+### 5c. El resumen de textos (GraphRAG)
+
+En la app, **Proveedores → Una pregunta sobre textos**, abrí 3 temas y, en cada uno, 2 contratos citados. ¿La descripción del contrato dice lo que resume el tema?
+
+| Tema | Contratos mirados | ¿Coincide? |
+|---|---|---|
+| | | |
+| | | |
+| | | |
+
+## 6. Petróleo y gas en Argentina (20 minutos)
+
+Revisión con IA en `layer/energia/adjudicacion.md` y correcciones en `linking/energia/correcciones.csv`.
+
+### 6a. Los socios de cuatro concesiones
+
+La pregunta de la participación (YPF: 12,6 millones de m³) depende de los socios que Rastro lee del mapa de concesiones. Comparalos con lo que publica cada operadora o la prensa del sector.
+
+| Concesión | Socios según Rastro | ¿Coincide? |
+|---|---|---|
+| Loma Campana | YPF 50 %, Chevron 50 % (como Compañía de Hidrocarburo No Convencional) | |
+| La Amarga Chica | YPF 50 %, Petronas 50 % | |
+| Bandurria Sur | YPF 44,9 %, Shell 30 %, Vista 25,1 % | |
+| Aguada Pichana Este | Total, Wintershall Dea e YPF 27,27 % cada una; Pan American 18,18 % | |
+
+### 6b. Las empresas que Rastro trata como una sola
+
+| Nombre en la fuente | Grupo en Rastro | ¿Es la misma empresa o grupo? |
+|---|---|---|
+| CGC Energía SAU | Compañía General de Combustibles | |
+| Compañía de Hidrocarburo No Convencional S.R.L. | Chevron | |
+| Chevron Argentina S.R.L. | Chevron | |
+| Pluspetrol Cuenca Neuquina S.R.L. | Pluspetrol | |
+
+### 6c. Posibles venteos en áreas protegidas
+
+Rastro cuenta 60 posibles venteos dentro de un área protegida del IGN. Abrí un punto de ejemplo de cada área en el mapa. ¿Cae dentro del área (o en su borde)?
+
+| Área protegida | Puntos | Ejemplo | ¿Cae dentro? |
+|---|---|---|---|
+| Reserva Provincial de Uso Múltiple Auca Mahuida | 35 | [-37,73132, -68,90842](https://www.google.com/maps?q=-37.73132,-68.90842) | |
+| Reserva Hidrogeológica Meseta Espinosa y El Cordón | 23 | [-46,79979, -67,91453](https://www.google.com/maps?q=-46.79979,-67.91453) | |
+| Reserva Provincial Cabo Vírgenes | 2 | [-52,38787, -68,41644](https://www.google.com/maps?q=-52.38787,-68.41644) | |
+
+### 6d. El identificador global (LEI) de tres empresas
+
+| Empresa | LEI según Rastro | ¿Es esa empresa en GLEIF? |
+|---|---|---|
+| YPF S.A. | [5493003N7447U18U5U53](https://search.gleif.org/#/record/5493003N7447U18U5U53) | |
+| Pampa Energía S.A. | [254900QNIK0CVURGML24](https://search.gleif.org/#/record/254900QNIK0CVURGML24) | |
+| Pecom Servicios Energía SAU | [549300BFZLJSODUHB179](https://search.gleif.org/#/record/549300BFZLJSODUHB179) | |
+
+### 6e. Cambios de operadora
+
+Rastro marca 55 cambios de operadora entre 2023 y 2025. ¿Coinciden estos con las cesiones conocidas (por ejemplo, las áreas maduras que YPF cedió)?
+
+| Concesión | Desde | Antes | Después | ¿Coincide? |
+|---|---|---|---|---|
+| Escalante - El Trébol | 11/2024 | YPF | Pecom | |
+| Barrancas | 04/2025 | YPF | Petróleos Sudamericanos | |
+| Bajo del Choique - La Invernada | 02/2025 | ExxonMobil | Pluspetrol | |
+
+### 6f. El resumen de los estudios ambientales (GraphRAG)
+
+En la app, **Petróleo y gas → Una pregunta sobre textos**, abrí el tema «Planillas de venteo de gas» y 3 de sus estudios. ¿Son planillas de venteo de esas concesiones? ¿Es cierto que en las concesiones de YPF el listado no muestra ninguna desde 2022? ____
+
 ## Resultado
 
 | Parte | Resultado | Quién | Fecha |
@@ -95,5 +184,14 @@ Pregunta q01, fármacos anti-HER2 en fase 3 de cáncer de mama. Rastro responde:
 | 2. Enlaces | __ de 20 correctos | | |
 | 3. Conteos | | | |
 | 4. Lista HER2 | | | |
+| 5a. Empresas de Leidos | __ de 5 | | |
+| 5b. Austal | | | |
+| 5c. Textos de Leidos | __ de 3 temas | | |
+| 6a. Socios | __ de 4 | | |
+| 6b. Grupos | __ de 4 | | |
+| 6c. Áreas protegidas | __ de 3 | | |
+| 6d. LEI | __ de 3 | | |
+| 6e. Cambios de operadora | __ de 3 | | |
+| 6f. Textos de venteos | | | |
 
 Con esto completo, los documentos pueden decir «revisado por una persona» con el número de acá.

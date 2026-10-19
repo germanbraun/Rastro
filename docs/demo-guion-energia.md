@@ -31,7 +31,7 @@ Abrir **¿De dónde sale la respuesta?** para mostrar un pozo en desacuerdo.
 
 ## 4:00 – 5:00 · Más fuentes y cierre (diapositivas 8 y 9)
 
-> «Sumar fuentes no rehace nada: con ENARGAS, 29 concesiones con posibles venteos tienen el gasoducto de transporte más cercano a 10 km o más; con el IGN, 60 caen en áreas protegidas; con GLEIF, 12 empresas tienen identificador global.»
+> «Sumar fuentes no rehace nada: con ENARGAS, 33 concesiones con posibles venteos tienen el gasoducto de transporte más cercano a 10 km o más; con el IGN, 60 caen en áreas protegidas; con GLEIF, 12 empresas tienen identificador global.»
 >
 > «En síntesis: el valor está en integrar los datos una sola vez y mantenerlos en un único lugar. El siguiente paso es un piloto con datos propios.»
 
@@ -41,3 +41,6 @@ Abrir **¿De dónde sale la respuesta?** para mostrar un pozo en desacuerdo.
 - **«¿Por qué rige la declaración jurada?»** Es una decisión de negocio, escrita una vez y a la vista. Si se prefiere otra, se cambia en un solo lugar y vale para todas las preguntas.
 - **«¿Los grupos salen de un registro?»** No: GLEIF no registra la matriz de estas empresas argentinas y Wikidata tampoco. Son correcciones revisadas, con su motivo.
 - **«¿Y GraphRAG?»** En «Una pregunta sobre textos» (diapositiva 9): el grafo elige las cinco concesiones con más posibles venteos y los 72 estudios ambientales presentados en ellas desde 2022; la IA resume solo esos textos, citando cada estudio. Pluspetrol presenta las planillas de venteo cada semestre; en las de YPF, el listado solo muestra el informe anual (una pregunta para hacer, no una conclusión).
+- **«¿Se puede ver en un mapa?»** En el paso 3 y en la pregunta «concesiones para revisar» la app dibuja los contornos de las concesiones, los posibles venteos y los gasoductos de ENARGAS. Las geometrías están en el grafo con el estándar GeoSPARQL, así que otras plataformas o herramientas de grafos de conocimiento las leen igual.
+- **«¿Qué concesiones habría que mirar primero?»** Rastro deduce una clase, «concesión para revisar», de dos reglas escritas una vez: posibles venteos con el gasoducto a 10 km o más (33) y 20 o más posibles venteos sin planillas de venteo presentadas desde 2022 (21). Son 45 concesiones, 9 con los dos motivos. Ninguna tabla dice «para revisar»: lo deduce Ontop, y cambiar una regla cambia la lista en todas las preguntas.
+- **«¿Quién operaba antes?»** Con las declaraciones de 2023 a 2025, Rastro marca 55 cambios de operadora, con el mes y la producción antes y después. Se ven las áreas maduras que YPF cedió: por ejemplo Escalante - El Trébol pasó a Pecom en noviembre de 2024 y Barrancas a Petróleos Sudamericanos en abril de 2025.
