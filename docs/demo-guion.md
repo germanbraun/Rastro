@@ -28,9 +28,9 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 2. Abrir **¿Cómo lo supe?**
 
-3. Debajo de la tabla, en **¿Por qué?**, elegir **TRASTUZUMAB**.
+3. Señalar la última columna y abrir el paso 4 de **¿Cómo lo supe?**.
 
-> «¿Por qué dice Rastro que estos ensayos prueban trastuzumab? Acá está la evidencia de cada enlace: lo que escribió el sponsor, con qué coincidió y con qué regla. Se puede abrir cada ensayo. Esta procedencia está en el grafo, con un estándar del W3C: una respuesta auditable.»
+> «¿Por qué dice Rastro que un ensayo prueba trastuzumab? Cada enlace guarda su evidencia: lo que escribió el sponsor, con qué coincidió y con qué regla. Acá, "Adjuvant Systemic Therapy" es trastuzumab emtansina porque el sponsor lo declaró como alias. Se puede abrir cada ensayo. Esta procedencia está en el grafo, con un estándar del W3C: una respuesta auditable.»
 
 > «El LLM no vio tablas: recibió la ontología y escribió esta consulta corta, en conceptos. Abajo, el SQL que generó Ontop. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto; con la integración hecha, 435.»
 

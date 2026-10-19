@@ -92,7 +92,7 @@
 
 - question: ¿Cómo sé por qué Rastro dice que un ensayo prueba un fármaco?
   answer: |-
-    Debajo de cada respuesta con fármacos está **«¿Por qué?»**: elegís un fármaco y ves cómo lo reconoció Rastro en cada ensayo, con ejemplos que se pueden abrir en ClinicalTrials.gov. Por ejemplo, trastuzumab aparece en 854 ensayos: 689 por su nombre o un sinónimo de ChEMBL, 93 como parte de una combinación, 40 como palabra dentro de un texto más largo y 32 por un alias que declaró el sponsor.
+    En cada respuesta con fármacos, una columna dice cómo lo reconoce Rastro (por ejemplo, trastuzumab: 854 ensayos, 81 % por su nombre), y el paso 4 de **«¿Cómo lo supe?»** muestra ejemplos no obvios, que se pueden abrir en ClinicalTrials.gov: «Bevacizumab (drug), Herceptin (drug)» es trastuzumab como parte de una combinación; «Adjuvant Systemic Therapy» es trastuzumab emtansina por un alias que declaró el sponsor.
 
     Esa evidencia está en el grafo, descrita con **PROV-O**, el estándar del W3C para procedencia: cada enlace ensayo → fármaco guarda el texto que escribió el sponsor, el texto que coincidió, la regla, y de qué fuentes deriva. Cualquier consulta puede pedirla. También muestra lo discutible: «[89Zr]-Df-Trastuzumab» es un trazador de imágenes, no el tratamiento, y cualquiera puede verlo y corregir la regla.
 

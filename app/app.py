@@ -216,20 +216,27 @@ def last_ok_query(entry, approach):
 # --- Mostrar una respuesta ----------------------------------------
 
 RULES = {
-    "nombre": "el nombre del fármaco o un sinónimo de ChEMBL",
-    "alias": "un alias que el sponsor declaró en ClinicalTrials.gov",
-    "combinación": "una de las partes de una combinación",
-    "régimen": "un régimen conocido, como FOLFOX",
-    "palabras": "el nombre como palabra entera dentro de un texto más largo",
+    "nombre": "por su nombre o un sinónimo de ChEMBL",
+    "alias": "por un alias que declaró el sponsor",
+    "combinación": "como parte de una combinación",
+    "régimen": "por un régimen conocido, como FOLFOX",
+    "palabras": "por su nombre dentro de un texto más largo",
 }
-EVIDENCE = """PREFIX : <https://w3id.org/rastro/ontology#>
+EVIDENCE_PREFIXES = """PREFIX : <https://w3id.org/rastro/ontology#>
 PREFIX prov: <http://www.w3.org/ns/prov#>
-SELECT ?nct ?intervencion ?coincidio ?regla WHERE {{
-  ?enlace a :DrugLink ; :linkDrug ?farmaco ; :linkTrial ?ensayo ;
-          :interventionText ?intervencion ; :matchedText ?coincidio ; :linkRule ?regla ;
-          prov:wasDerivedFrom <https://w3id.org/rastro/source/aact> .
-  ?farmaco :name "{name}" . ?ensayo :nctId ?nct .
-}}"""
+"""
+EVIDENCE_SUMMARY = EVIDENCE_PREFIXES + """SELECT ?name ?rule (COUNT(?link) AS ?n) WHERE {{
+  VALUES ?name {{ {names} }}
+  ?link a :DrugLink ; :linkDrug ?drug ; :linkRule ?rule . ?drug :name ?name .
+}} GROUP BY ?name ?rule"""
+EVIDENCE_EXAMPLES = EVIDENCE_PREFIXES + """SELECT ?name ?nct ?text ?matched ?rule WHERE {{
+  VALUES ?name {{ {names} }}
+  ?link a :DrugLink ; :linkDrug ?drug ; :linkTrial ?trial ;
+        :interventionText ?text ; :matchedText ?matched ; :linkRule ?rule ;
+        prov:wasDerivedFrom <https://w3id.org/rastro/source/aact> .
+  ?drug :name ?name . ?trial :nctId ?nct .
+  FILTER (?rule != "nombre")
+}} LIMIT 400"""
 
 
 @st.cache_data
@@ -238,31 +245,47 @@ def drug_names():
         return {r[0] for r in conn.execute("SELECT pref_name FROM linking.drug WHERE pref_name IS NOT NULL")}
 
 
-def show_evidence(rows):
-    """«¿Por qué?»: la evidencia de cada enlace ensayo → fármaco, leída del grafo (PROV-O)."""
-    names = sorted({v for row in rows for v in row if isinstance(v, str) and v in drug_names()})
-    if not names:
-        return
-    st.markdown("**¿Por qué? La evidencia de cada fármaco**")
-    name = st.selectbox("Fármaco", names, label_visibility="collapsed", key="evidence_drug")
-    query = EVIDENCE.format(name=name)
-    columns, links = answer.run_sparql_table(query)
-    by_rule = {}
-    for nct, text, matched, rule in links:
-        by_rule.setdefault(rule, []).append((nct, text, matched))
-    st.markdown(f"Rastro reconoció **{name}** en **{len(links)}** ensayos. Así:")
-    st.markdown("\n".join(f"- **{len(v)}** por {RULES.get(rule, rule)}"
-                           for rule, v in sorted(by_rule.items(), key=lambda x: -len(x[1]))))
-    examples = [{"Ensayo": f"https://clinicaltrials.gov/study/{nct}", "Lo que escribió el sponsor": text,
-                 "Coincidió con": matched, "Regla": rule}
-                for rule, v in sorted(by_rule.items(), key=lambda x: -len(x[1])) for nct, text, matched in v[:3]]
-    st.dataframe(pd.DataFrame(examples), hide_index=True, use_container_width=True,
-                 column_config={"Ensayo": st.column_config.LinkColumn(display_text=r"study/(.*)")})
-    st.caption("Ejemplos de cada regla. Cada enlace está en el grafo con su evidencia y su origen "
-               "(PROV-O, el estándar del W3C para procedencia): cualquier consulta puede pedirla, "
-               "y cualquiera puede auditarla abriendo el ensayo.")
-    with st.expander("La consulta que trae esta evidencia"):
-        st.code(query, language="sparql")
+def answer_drugs(rows):
+    """Los fármacos que nombra una respuesta, en el orden en que aparecen."""
+    names = []
+    for row in rows:
+        for v in row:
+            if isinstance(v, str) and v in drug_names() and v not in names:
+                names.append(v)
+    return names
+
+
+@st.cache_data
+def evidence_summary(names):
+    """Por fármaco: en cuántos ensayos se lo reconoció y qué parte por su nombre (PROV-O)."""
+    values = " ".join(json.dumps(n) for n in names)
+    _, rows = answer.run_sparql_table(EVIDENCE_SUMMARY.format(names=values))
+    totals, by_name = {}, {}
+    for name, rule, n in rows:
+        totals[name] = totals.get(name, 0) + int(n)
+        if rule == "nombre":
+            by_name[name] = int(n)
+    return {name: f"{total} ensayos · {round(100 * by_name.get(name, 0) / total)} % por nombre"
+            for name, total in totals.items()}
+
+
+@st.cache_data
+def evidence_examples(names, limit=5):
+    """Ejemplos de enlaces no obvios: el texto del sponsor no es el nombre del fármaco."""
+    values = " ".join(json.dumps(n) for n in names)
+    _, rows = answer.run_sparql_table(EVIDENCE_EXAMPLES.format(names=values))
+    picked, seen_rules, seen_drugs = [], set(), set()
+    for name, nct, text, matched, rule in rows:   # primero, una regla y un fármaco distintos cada vez
+        if text.strip().lower() != matched.lower() and rule not in seen_rules and name not in seen_drugs:
+            picked.append((name, nct, text, rule))
+            seen_rules.add(rule)
+            seen_drugs.add(name)
+    for name, nct, text, matched, rule in rows:   # después, completar
+        if len(picked) >= limit:
+            break
+        if text.strip().lower() != matched.lower() and (name, nct, text, rule) not in picked:
+            picked.append((name, nct, text, rule))
+    return picked[:limit]
 
 
 def show_answer(query, columns, rows, note=None):
@@ -273,11 +296,15 @@ def show_answer(query, columns, rows, note=None):
         st.info("La consulta no devolvió resultados.")
     else:
         headers = [f"{c} · {', '.join(label(s) for s in col_sources.get(c, []))}" for c in columns]
-        st.dataframe(pd.DataFrame(rows, columns=headers), hide_index=True, use_container_width=True)
-        st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}. "
-                   "Cada columna dice de qué fuente sale.")
-        if ":testsDrug" in query:
-            show_evidence(rows)
+        table = pd.DataFrame(rows, columns=headers)
+        drugs = answer_drugs(rows) if ":testsDrug" in query else []
+        if drugs:
+            summary = evidence_summary(tuple(drugs))
+            names = [next((v for v in row if v in summary), None) for row in rows]
+            table["Cómo lo reconoce Rastro, en todos sus ensayos"] = [summary.get(n, "") for n in names]
+        st.dataframe(table, hide_index=True, use_container_width=True)
+        st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}. Cada columna dice de qué fuente sale."
+                   + (" La evidencia de cada enlace está en «¿Cómo lo supe?»." if drugs else ""))
 
     with st.expander("¿Cómo lo supe?"):
         if note:
@@ -303,6 +330,16 @@ def show_answer(query, columns, rows, note=None):
         if "openfda" in used:
             st.caption("Los eventos adversos son conteos de reportes espontáneos de FAERS: "
                        "no son frecuencias clínicas y pueden incluir duplicados.")
+        drugs = answer_drugs(rows) if rows and ":testsDrug" in query else []
+        if drugs:
+            st.markdown("**4. La evidencia de los enlaces ensayo → fármaco.** Cada enlace guarda qué "
+                        "escribió el sponsor, con qué coincidió y con qué regla. Algunos ejemplos no obvios:")
+            for name, nct, text, rule in evidence_examples(tuple(drugs)):
+                st.markdown(f"- «{text}» → **{name.lower()}**, {RULES.get(rule, rule)} · "
+                            f"[{nct}](https://clinicaltrials.gov/study/{nct})")
+            st.caption("La evidencia está en el grafo, descrita con PROV-O (el estándar del W3C para "
+                       "procedencia): cualquier consulta puede pedirla, y cualquiera puede auditarla "
+                       "abriendo el ensayo.")
 
 
 # --- Pantalla ------------------------------------------------------
