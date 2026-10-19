@@ -55,6 +55,22 @@
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/capitulo4> ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-operator-rule> ] ] .
 
+<#OperatorChange> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.cambio_operadora" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/operatorchange/{id_concesion}/{mes}" ; rr:class :OperatorChange ] ;
+    rr:predicateObjectMap [ rr:predicate :inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :previousCompany ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{anterior_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :newCompany ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{nueva_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :month ; rr:objectMap [ rr:column "mes" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :oilBefore ; rr:objectMap [ rr:column "petroleo_antes_m3" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate :oilAfter ; rr:objectMap [ rr:column "petroleo_despues_m3" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate :gasBefore ; rr:objectMap [ rr:column "gas_antes_mm3" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate :gasAfter ; rr:objectMap [ rr:column "gas_despues_mm3" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate :rule ; rr:objectMap [ rr:constant "otra empresa declara la mayor parte, 3 meses seguidos" ] ] ;
+    rr:predicateObjectMap [ rr:predicate :sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/capitulo4> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-operator-change> ] ] .
+
 # --- Empresas: sus nombres en cada fuente ------------------------
 
 <#Company> a rr:TriplesMap ;

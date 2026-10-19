@@ -409,3 +409,13 @@ Cada dominio ya tenía su propio espacio de nombres, pero las consultas lo usaba
 - **Ahora se escribe `proveedores:Supplier` y `oncologia:Trial`**, en ontologías, mapeos, consultas, notas para el LLM, la app y las diapositivas. Petróleo y gas pasa a `energia:` en un segundo paso, cuando termine el trabajo en curso sobre sus archivos; mientras tanto la app declara también el prefijo vacío.
 - **Oncología cambia de espacio de nombres:** `https://w3id.org/rastro/ontology#` pasa a `https://w3id.org/rastro/oncologia#`, igual que los otros dos (`proveedores#`, `energia#`). Los IRI de las instancias (`drug/…`, `trial/…`) no cambian.
 - **Las respuestas guardadas de la evaluación se tradujeron con un script** (solo el prefijo y el espacio de nombres; nada más de la consulta). Se volvieron a ejecutar: las 62 consultas de Rastro guardadas corren, y los puntajes no cambian (oncología: Rastro 20 de 20; proveedores, igual que antes).
+
+## 2026-10-19 — Petróleo y gas: quién operó cada concesión, de 2023 a 2025
+
+Para mostrar los cambios de operadora (por ejemplo, las áreas maduras que YPF vendió).
+
+- **Datos:** las declaraciones juradas de 2023 y 2024, los archivos completos del Capítulo IV (no los «DDJJ abiertas y cerradas»): 57 y 59 operadoras, 37,4 y 41,2 M m³ de petróleo, años completos como 2025 (69 y 46,6 M m³). Van a su propia tabla (`capitulo4.produccion_historica`) para que `capitulo4.produccion` siga siendo solo 2025 y no cambie ninguna respuesta medida. Los dos recursos de 2024 del catálogo son el mismo archivo.
+- **Regla:** cada mes, la operadora de una concesión es la empresa que declara la mayor parte de su producción (petróleo en m³ más gas en miles de m³, que en energía equivalen más o menos; `energia.operador_area_mes`). Hay cambio cuando otra empresa la declara al menos 3 meses seguidos: un mes suelto no cuenta (`energia.cambio_operadora`, `:OperatorChange`, con evidencia). Antes y después: lo que producía la concesión por mes, en promedio, con cada operadora.
+- **Resultado:** 55 cambios; 25 son áreas que dejó YPF (Pecom, Petróleos Sudamericanos, Bentia, Quintana, Venoil, PCR). Pregunta nueva, e09. Cinco áreas no están en el mapa de concesiones: la consulta muestra su código y la evidencia, el nombre del Capítulo IV.
+- **Sin cambios en lo medido:** los nombres de empresa de 2023 y 2024 se suman a `energia.empresa_nombre`; la evaluación (`layer/energia/resultados.json`) da lo mismo, y las consultas guardadas, vueltas a ejecutar, dan las mismas respuestas.
+

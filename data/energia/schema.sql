@@ -13,6 +13,9 @@ CREATE TABLE capitulo4.produccion (      -- una fila por pozo y mes de 2025
     cuenca text, provincia text, tipo_de_recurso text, sub_tipo_recurso text, tipoestado text
 );
 
+-- 2023 y 2024, con las mismas columnas: solo para ver quién operó cada concesión en el tiempo
+CREATE TABLE capitulo4.produccion_historica (LIKE capitulo4.produccion);
+
 CREATE TABLE capitulo4.pozo (            -- padrón de pozos, con su ubicación
     idpozo text, sigla text, empresa text, cod_area text, area text, yacimiento text, formacion text,
     cuenca text, provincia text, tipo_recurso text, sub_tipo_recurso text, tipoestado text,

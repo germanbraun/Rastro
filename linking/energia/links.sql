@@ -16,6 +16,7 @@ $$;
 CREATE TABLE energia.empresa_nombre AS
 WITH nombres AS (
   SELECT DISTINCT 'capitulo4' AS fuente, trim(empresa) AS nombre FROM capitulo4.produccion
+  UNION SELECT DISTINCT 'capitulo4', trim(empresa) FROM capitulo4.produccion_historica
   UNION SELECT DISTINCT 'capitulo4', trim(empresa) FROM capitulo4.pozo WHERE empresa IS NOT NULL
   UNION SELECT DISTINCT 'sig_energia', trim(empresa_operadora) FROM sig_energia.concesion WHERE empresa_operadora IS NOT NULL
   UNION SELECT DISTINCT 'sig_energia', trim(m[1]) FROM sig_energia.concesion,
@@ -164,3 +165,60 @@ WHERE NOT EXISTS (SELECT 1 FROM energia.estudio e WHERE e.id_concesion = c.id_co
                   AND e.tipo_estudio ILIKE '%aventamiento%' AND e.fecha_estudio >= DATE '2022-01-01')
 GROUP BY c.id_concesion
 HAVING count(*) >= 20;   -- al menos 20 detecciones: un caso aislado no alcanza para revisar
+
+-- Quién operó cada concesión mes a mes, de 2023 a 2025: la empresa que declara la mayor parte de su
+-- producción. Se suman petróleo (m³) y gas (miles de m³), que en energía equivalen más o menos.
+CREATE TABLE energia.operador_area_mes AS
+WITH todo AS (
+  SELECT anio, mes, idareapermisoconcesion, empresa, prod_pet, prod_gas FROM capitulo4.produccion
+  UNION ALL
+  SELECT anio, mes, idareapermisoconcesion, empresa, prod_pet, prod_gas FROM capitulo4.produccion_historica
+), por_empresa AS (
+  SELECT t.idareapermisoconcesion AS id_concesion, make_date(t.anio, t.mes, 1) AS mes, en.empresa_id,
+         coalesce(sum(t.prod_pet), 0) AS petroleo_m3, coalesce(sum(t.prod_gas), 0) AS gas_mm3
+  FROM todo t
+  JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = trim(t.empresa)
+  GROUP BY 1, 2, 3
+), con_total AS (
+  SELECT *, sum(petroleo_m3) OVER w AS area_petroleo_m3, sum(gas_mm3) OVER w AS area_gas_mm3,
+         sum(petroleo_m3 + gas_mm3) OVER w AS area_total
+  FROM por_empresa WINDOW w AS (PARTITION BY id_concesion, mes)
+)
+SELECT DISTINCT ON (id_concesion, mes) id_concesion, mes, empresa_id,
+       area_petroleo_m3 AS petroleo_m3, area_gas_mm3 AS gas_mm3,   -- lo que produjo toda la concesión ese mes
+       round(100 * (petroleo_m3 + gas_mm3) / area_total) AS porcentaje
+FROM con_total
+WHERE area_total > 0   -- un mes sin producción no dice quién opera
+ORDER BY id_concesion, mes, petroleo_m3 + gas_mm3 DESC, empresa_id;
+
+-- Cambios de operadora: otra empresa pasa a declarar la mayor parte de la producción de una concesión
+-- y la sigue declarando al menos 3 meses seguidos (un mes suelto no es un cambio). Antes y después,
+-- lo que producía la concesión por mes, en promedio, con cada operadora.
+CREATE TABLE energia.cambio_operadora AS
+WITH marcado AS (
+  SELECT *, row_number() OVER (PARTITION BY id_concesion ORDER BY mes)
+            - row_number() OVER (PARTITION BY id_concesion, empresa_id ORDER BY mes) AS tramo
+  FROM energia.operador_area_mes
+), tramos AS (   -- meses seguidos con la misma operadora
+  SELECT id_concesion, empresa_id, min(mes) AS desde, max(mes) AS hasta, count(*) AS meses,
+         avg(petroleo_m3) AS petroleo_m3, avg(gas_mm3) AS gas_mm3, round(avg(porcentaje)) AS porcentaje
+  FROM marcado GROUP BY id_concesion, empresa_id, tramo
+  HAVING count(*) >= 3
+), seguidos AS (
+  SELECT t.*, lag(empresa_id) OVER x AS antes_id, lag(hasta) OVER x AS antes_hasta,
+         lag(petroleo_m3) OVER x AS antes_petroleo_m3, lag(gas_mm3) OVER x AS antes_gas_mm3,
+         lag(porcentaje) OVER x AS antes_porcentaje
+  FROM tramos t WINDOW x AS (PARTITION BY id_concesion ORDER BY desde)
+)
+SELECT s.id_concesion, s.desde AS mes, s.antes_id AS anterior_id, s.empresa_id AS nueva_id,
+       round(s.antes_petroleo_m3) AS petroleo_antes_m3, round(s.petroleo_m3) AS petroleo_despues_m3,
+       round(s.antes_gas_mm3) AS gas_antes_mm3, round(s.gas_mm3) AS gas_despues_mm3,
+       'Hasta ' || to_char(s.antes_hasta, 'MM/YYYY') || ', ' || a.nombre || ' declaraba la mayor parte de la producción de '
+       || coalesce(c.nombre, (SELECT max(trim(areapermisoconcesion)) FROM capitulo4.produccion_historica h
+                                WHERE h.idareapermisoconcesion = s.id_concesion), s.id_concesion) || ' (' || s.antes_porcentaje || ' %); desde ' || to_char(s.desde, 'MM/YYYY')
+       || ', ' || n.nombre || ' (' || s.porcentaje || ' %, ' || s.meses || ' meses seguidos).' AS evidencia
+FROM seguidos s
+JOIN energia.empresa a ON a.empresa_id = s.antes_id
+JOIN energia.empresa n ON n.empresa_id = s.empresa_id
+LEFT JOIN energia.concesion c USING (id_concesion)
+WHERE s.antes_id <> s.empresa_id;

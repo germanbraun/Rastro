@@ -10,9 +10,10 @@
     rdfs:comment """Lo mínimo para responder las preguntas de ontology/energia/competency-questions.md:
 la producción de 2025 pozo por pozo, las concesiones con sus socios, quién opera cada pozo y los
 venteos de gas, con los gasoductos de transporte (ENARGAS), las localidades y áreas protegidas (IGN)
-y el identificador global de las empresas (GLEIF). Cada enlace entre fuentes lleva su evidencia, con PROV-O. «Producción no
+y el identificador global de las empresas (GLEIF), y los cambios de operadora de cada concesión
+entre 2023 y 2025. Cada enlace entre fuentes lleva su evidencia, con PROV-O. «Producción no
 convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight)."""@es ;
-    owl:versionInfo "0.5" .
+    owl:versionInfo "0.6" .
 
 # Clases ---------------------------------------------------------
 
@@ -186,3 +187,19 @@ convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight).
 :reviewReason a owl:DatatypeProperty ; rdfs:domain :ConcessionToReview ; rdfs:label "motivo para revisar"@es .
 geo:asWKT a owl:DatatypeProperty ; rdfs:label "geometría (WKT)"@es ;
     rdfs:comment "El contorno, el punto o el trazado, en WKT: el estándar de OGC que leen GeoSPARQL y las herramientas de mapas."@es .
+
+# Cambios de operadora (2023 a 2025) -------------------------------
+
+:OperatorChange a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Cambio de operadora"@es ;
+    rdfs:comment "Una concesión pasa a otra operadora: desde ese mes, otra empresa declara la mayor parte de su producción, al menos 3 meses seguidos. Guarda lo que producía la concesión por mes, en promedio, antes y después."@es .
+
+:previousCompany a owl:ObjectProperty ; rdfs:domain :OperatorChange ; rdfs:range :Company ; rdfs:label "operadora anterior"@es .
+:newCompany a owl:ObjectProperty ; rdfs:domain :OperatorChange ; rdfs:range :Company ; rdfs:label "operadora nueva"@es .
+:month a owl:DatatypeProperty ; rdfs:domain :OperatorChange ; rdfs:label "desde el mes"@es ;
+    rdfs:comment "El primer día del primer mes con la operadora nueva."@es .
+:oilBefore a owl:DatatypeProperty ; rdfs:domain :OperatorChange ; rdfs:label "petróleo por mes antes (m³)"@es .
+:oilAfter a owl:DatatypeProperty ; rdfs:domain :OperatorChange ; rdfs:label "petróleo por mes después (m³)"@es .
+:gasBefore a owl:DatatypeProperty ; rdfs:domain :OperatorChange ; rdfs:label "gas por mes antes (miles de m³)"@es .
+:gasAfter a owl:DatatypeProperty ; rdfs:domain :OperatorChange ; rdfs:label "gas por mes después (miles de m³)"@es .

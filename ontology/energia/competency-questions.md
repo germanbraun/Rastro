@@ -1,6 +1,6 @@
 # Preguntas de competencia: petróleo y gas en Argentina
 
-Las preguntas que Rastro tiene que poder responder en el tercer dominio, pensado para operadoras y consultoras del sector. El diccionario de negocio ([`energia.ttl`](energia.ttl)) tiene solo lo necesario para estas ocho, y cada una tiene su SPARQL en [`queries/`](queries/). Todas corren contra el tercer Ontop (http://localhost:8082/sparql). Los números «sin Rastro» salen de [`layer/energia/sin-rastro.sql`](../../layer/energia/sin-rastro.sql).
+Las preguntas que Rastro tiene que poder responder en el tercer dominio, pensado para operadoras y consultoras del sector. El diccionario de negocio ([`energia.ttl`](energia.ttl)) tiene solo lo necesario para estas nueve, y cada una tiene su SPARQL en [`queries/`](queries/). Todas corren contra el tercer Ontop (http://localhost:8082/sparql). Los números «sin Rastro» salen de [`layer/energia/sin-rastro.sql`](../../layer/energia/sin-rastro.sql).
 
 | # | Pregunta | Fuentes | Qué muestra | Sin Rastro → con Rastro |
 |---|---|---|---|---|
@@ -12,3 +12,4 @@ Las preguntas que Rastro tiene que poder responder en el tercer dominio, pensado
 | 6 | ¿Qué posibles venteos están dentro de un área protegida o cerca de una localidad? | Mapas, IGN | Cada punto se ubica respecto de localidades y áreas protegidas del IGN, con su evidencia. | 60 dentro de áreas protegidas (Auca Mahuida, Meseta Espinosa); 61 a menos de 3 km de una localidad |
 | 7 | ¿Qué empresas tienen identificador global (LEI)? | Capítulo IV, GLEIF | El LEI se acepta solo si coincide el nombre legal, y lo descartado queda a la vista. | 12 empresas, entre ellas YPF, Pan American, Vista y Pluspetrol |
 | 8 | ¿Qué concesiones hay que revisar por venteos, y por qué? | Mapas, ENARGAS, estudios ambientales | «Concesión para revisar» es una clase deducida de dos reglas escritas una vez: venteos sin gasoducto cerca, o sin planillas de venteo. | 45 concesiones: 33 sin gasoducto cerca, 21 sin planillas, 9 con las dos |
+| 9 | ¿Qué áreas cambiaron de operadora entre 2023 y 2025, y cuánto producían antes y después? | Capítulo IV (2023 a 2025), mapas | Tres años de declaraciones juradas, unidos: mes a mes, quién declara la mayor parte de cada concesión, y cada cambio (`:OperatorChange`) con su evidencia. | 55 cambios; 25 son áreas que dejó YPF (Pecom, Petróleos Sudamericanos, Bentia, Quintana, Venoil) |

@@ -2,7 +2,9 @@
 
 Capítulo IV (datos.energia.gob.ar, CC-BY 4.0): la producción declarada de 2025, pozo por pozo y
 mes por mes, y el padrón de pozos con su ubicación. Se usa 2025 porque es el último año completo:
-el archivo de 2026 todavía no trae a todas las operadoras.
+el archivo de 2026 todavía no trae a todas las operadoras. Aparte, 2023 y 2024, en su propia tabla,
+solo para ver quién operó cada concesión a lo largo del tiempo (por ejemplo, las áreas maduras
+que YPF vendió).
 
 Servicio de mapas (WFS de sig.energia.gob.ar): las concesiones de explotación con su contorno,
 operadora y socios; los puntos de venteo declarados; y los posibles venteos detectados por
@@ -34,6 +36,8 @@ import urllib3
 CACHE = Path("/data/raw/energia")
 CKAN = "http://datos.energia.gob.ar/api/3/action/resource_show?id="
 PRODUCCION_2025 = "d774b5d7-0756-48fe-88f2-8729b57b22da"
+PRODUCCION_ANTERIOR = {2023: "231c39b3-e81e-4398-af8d-b115807f2c25",   # los archivos completos, no los de
+                       2024: "43a09dce-1742-44d0-bc13-f193deaab563"}   # «DDJJ abiertas y cerradas»
 PADRON_POZOS = "cb5c0f04-7835-45cd-b982-3e25ca7d7751"
 ESTUDIOS_AMBIENTALES = "7b8583fe-8994-4efa-9fbf-79c4a3f2f467"   # «Actividad ambiental de petróleo y gas»
 WFS = "https://sig.energia.gob.ar/mapserv?map=/etc/mapserver/mapase.map"
@@ -157,6 +161,7 @@ def main():
                 f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}")
 
     produccion = ckan(PRODUCCION_2025, "produccion-2025.csv")
+    anteriores = {anio: ckan(rid, f"produccion-{anio}.csv") for anio, rid in PRODUCCION_ANTERIOR.items()}
     padron = ckan(PADRON_POZOS, "pozos.csv")
     estudios = ckan(ESTUDIOS_AMBIENTALES, "estudios-ambientales.csv")
     concesiones = [(prop(f, "id_concesion"), prop(f, "areapermisoconcesion"), prop(f, "empresa_informante"),
@@ -213,6 +218,11 @@ def main():
             copy("capitulo4.produccion",
                  ([r[c] or None for c in PRODUCCION_COLS] for r in csv.DictReader(fh) if r["anio"] == "2025"),
                  "capitulo4", "producción 2025")
+        for anio, f in anteriores.items():
+            with f.open(encoding="utf-8-sig", newline="") as fh:
+                copy("capitulo4.produccion_historica",
+                     ([r[c] or None for c in PRODUCCION_COLS] for r in csv.DictReader(fh) if r["anio"] == str(anio)),
+                     "capitulo4", f"producción {anio}")
 
         def pozos(fh):
             for r in csv.DictReader(fh):

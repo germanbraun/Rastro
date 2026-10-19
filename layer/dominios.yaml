@@ -70,6 +70,7 @@ energia:
     ign: [nearestTown, protectedArea]
     gleif: [lei, legalName]
     ambiental: [EnvironmentalStudy, studyId, studyType]
-    rastro: [ConcessionToReview, VentingFarFromPipeline, VentingWithoutReports, reviewReason, Stake, partner, percent, OperatorLink, LocationLink, PipelineLink, SurroundingsLink, LeiLink, StudyLink, aboutStudy, aboutVenting,
+    rastro: [OperatorChange, previousCompany, newCompany, month, oilBefore, oilAfter, gasBefore, gasAfter,
+             ConcessionToReview, VentingFarFromPipeline, VentingWithoutReports, reviewReason, Stake, partner, percent, OperatorLink, LocationLink, PipelineLink, SurroundingsLink, LeiLink, StudyLink, aboutStudy, aboutVenting,
              aboutConcession, distanceKm, operator, inConcession, company, registryCompany, CompanyName,
              nameInSource, rule, sourceText, Company]

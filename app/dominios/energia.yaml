@@ -3,7 +3,8 @@
 
 domain: energia                # el de layer/dominios.yaml: endpoint, diccionario y notas para el LLM
 resumen: >-
-  Datos públicos de Argentina: la producción de 2025 pozo por pozo (Capítulo IV) y los mapas de
+  Datos públicos de Argentina: la producción de 2025 pozo por pozo (Capítulo IV, con 2023 y 2024
+  para ver quién operó cada concesión) y los mapas de
   concesiones, socios y venteos de gas de la Secretaría de Energía, los gasoductos de ENARGAS, las
   localidades y áreas protegidas del IGN, y el identificador global de empresas (GLEIF).
 ejemplo_libre: "Por ejemplo: ¿qué empresas producen más gas en la cuenca Neuquina?"
@@ -29,7 +30,8 @@ fuentes:
   rastro: enlace Rastro
 nota_rastro: >-
   Las empresas con sus nombres en cada fuente, los socios de cada concesión, quién opera cada pozo
-  y en qué concesión cae cada venteo, que Rastro resuelve una vez y guarda con su evidencia
+  y en qué concesión cae cada venteo, y quién operó cada concesión mes a mes, que Rastro resuelve una
+  vez y guarda con su evidencia
 
 # Cómo se muestran las columnas de las respuestas
 columnas:
@@ -48,10 +50,21 @@ columnas:
   place: Dónde
   lei: LEI
   why: Por qué revisarla
+  since: Desde
+  previous: Operadora anterior
+  new: Operadora nueva
+  oilBefore: Petróleo por mes antes (m³)
+  oilAfter: Petróleo por mes después (m³)
+  gasBefore: Gas por mes antes (miles de m³)
+  gasAfter: Gas por mes después (miles de m³)
 formatos:
   share: numero
   operated: numero
   unconventionalOil: numero
+  oilBefore: numero
+  oilAfter: numero
+  gasBefore: numero
+  gasAfter: numero
 
 # Las preguntas de ejemplo: la consulta de ontology/energia/queries/, la pregunta en palabras
 # simples (modo negocio) y la evidencia de «¿De dónde sale la respuesta?»
@@ -224,6 +237,27 @@ preguntas:
       :VentingFarFromPipeline rdfs:subClassOf :ConcessionToReview .   # venteos y gasoducto a 10 km o más
       :VentingWithoutReports  rdfs:subClassOf :ConcessionToReview .   # 20+ venteos y sin planillas desde 2022
 
+  - id: e09
+    query: /ontology/energia/queries/cq9.rq
+    explicacion: |
+      - **Qué busca:** los «cambios de operadora»: cada concesión donde otra empresa pasó a declarar la mayor parte de la producción, con el mes, la operadora anterior y la nueva.
+      - **Qué devuelve:** lo que producía la concesión por mes, en promedio, con la operadora anterior y con la nueva; de mayor a menor petróleo.
+      - **Lo que en SQL habría que hacer a mano:** unir tres años de declaraciones juradas (tres archivos), unir los nombres de empresa entre años, decidir mes a mes quién declara la mayor parte y descartar los meses sueltos. Rastro lo hace una vez y cada cambio guarda su evidencia.
+    simple: ¿Qué áreas cambiaron de operadora entre 2023 y 2025, y cuánto producían antes y después?
+    tecnica: ¿En qué concesiones pasó otra empresa a declarar la mayor parte de la producción entre 2023 y 2025 (al menos 3 meses seguidos), y cuánto petróleo y gas producían por mes con cada operadora?
+    ventaja: "Las declaraciones juradas son un archivo por año. Rastro las une, decide mes a mes quién declara la mayor parte de cada concesión y marca cada cambio con su evidencia: así se ven las áreas maduras que YPF vendió (Pecom, Petróleos Sudamericanos, Bentia, Quintana) y cuánto producían."
+    terminos:
+      Cambio de operadora: desde ese mes, otra empresa declara la mayor parte de la producción de la concesión, al menos 3 meses seguidos.
+      Áreas maduras: yacimientos convencionales con muchos años de producción, que suelen pasar a empresas más chicas.
+    evidencia:
+      texto: "Por qué Rastro dice que cambió la operadora (algunos ejemplos):"
+      formato: "{evidencia}"
+      query: |
+        SELECT ?evidencia ?fuente WHERE {
+          ?x a :OperatorChange ; :inConcession/:name ?c ; :sourceText ?evidencia ; prov:wasDerivedFrom/:name ?fuente .
+          FILTER (?c IN ("ESCALANTE - EL TREBOL", "BARRANCAS", "BAJO DEL CHOIQUE - LA INVERNADA"))
+        } ORDER BY ?c
+
 # «Por qué confiar»: los números salen de la evaluación (layer/energia/resultados.json) y de la
 # prueba de cambio (layer/energia/cambio/resultado.json)
 tarjetas:
@@ -268,7 +302,8 @@ faq:
       servicio de mapas (WFS) con las concesiones, sus socios y los venteos de gas. Del mismo servicio,
       los gasoductos de transporte de ENARGAS. Del Instituto Geográfico Nacional (listado en IDERA), las
       localidades y las áreas protegidas. Y de GLEIF, el identificador global de las empresas. Se usa 2025
-      porque el archivo de 2026 todavía no trae a todas las operadoras.
+      porque el archivo de 2026 todavía no trae a todas las operadoras. Las de 2023 y 2024 se usan solo
+      para ver quién operó cada concesión en el tiempo (los cambios de operadora).
   - pregunta: ¿Por qué los grupos (Chevron, Pluspetrol, CGC) son correcciones revisadas y no salen de un registro?
     respuesta: >-
       Porque ningún registro público los tiene: GLEIF no registra la matriz de ninguna de estas empresas

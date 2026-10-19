@@ -8,7 +8,8 @@
    con una aproximación plana, suficiente a esta escala.
 3. Carga las correcciones revisadas (correcciones.csv) y corre links.sql: empresas con sus
    nombres en cada fuente y su LEI, producción por pozo, participaciones, quién opera cada pozo,
-   cada venteo en su concesión, gasoductos y entorno, todo con su evidencia.
+   cada venteo en su concesión, gasoductos y entorno, y quién operó cada concesión mes a mes
+   (2023 a 2025) con sus cambios de operadora, todo con su evidencia.
 
 Se corre con: docker compose run --rm energia-linker
 """
@@ -147,7 +148,7 @@ def main():
             print(f"  venteos {tipo}s: {total}, dentro de una concesión: {dentro}")
         for table in ("empresa", "empresa_nombre", "empresa_lei", "produccion_pozo", "concesion", "participacion",
                       "operador_pozo", "venteo", "gasoducto", "concesion_gasoducto", "venteo_entorno", "estudio",
-                      "concesion_revisar"):
+                      "concesion_revisar", "operador_area_mes", "cambio_operadora"):
             n = conn.execute(f"SELECT count(*) FROM energia.{table}").fetchone()[0]
             print(f"  energia.{table:<16}{n:>8} filas")
         for regla, n in conn.execute("SELECT regla, count(*) FROM energia.operador_pozo GROUP BY 1 ORDER BY 2 DESC"):
