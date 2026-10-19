@@ -209,3 +209,21 @@ Todo era demasiado complejo para quien no conoce estas tecnologías. Regla nueva
 
 Para mostrar que Rastro sirve para cualquier dominio, con un caso de negocio que entiende cualquiera (compras, riesgo, compliance), se suma un segundo dominio en la misma app: contratos federales de EE. UU. de más de US$10 millones del año fiscal 2025 (36.147), sus proveedores y grupos, y las listas de control del gobierno. Se eligió EE. UU. porque sus datos son los más abiertos (todas las fuentes, sin clave). Tiene los mismos ingredientes que oncología: nombres de empresas escritos de varias formas (entity linking), jerarquías (grupo → filiales, sector → subsectores) y evidencia. Cada dominio tiene su propio Ontop, con su ontología y su archivo de mapeos.
 
+
+## 2026-10-19 — Proveedores, P0: datos cargados
+
+Cuatro cargadores nuevos, un esquema por fuente en el mismo Postgres (`data/<fuente>/`, servicios `<fuente>-loader`):
+
+| Fuente | Tablas | Filas |
+|---|---|---|
+| USAspending | `contract`, `recipient`, `recipient_parent` | 36.145 contratos, 8.380 proveedores, 14.071 matrices (actuales e históricas) |
+| NAICS 2022 | `sector`, `ancestor` | 2.125 sectores, 8.952 filas de ancestros |
+| Lista Consolidada | `entry` | 26.154 entradas de 12 listas |
+| GLEIF | `name_query`, `candidate`, `lei_record` | 3.626 nombres buscados, 8.743 candidatos, 2.610 registros LEI |
+
+- **Recorte:** contratos (tipos A, B, C y D) con actividad en el año fiscal 2025 y monto total de más de US$10 millones: 36.147 según la API, que suman US$4,6 billones. «Monto» es el total del contrato en toda su vida, no lo obligado en 2025: la búsqueda por contrato de USAspending no da lo del año. Llegaron 36.145: la paginación ordena por monto y dos contratos se pierden en empates entre páginas.
+- **Proveedores:** un perfil por proveedor distinto (8.383) con la matriz actual y la lista de matrices que tuvo. Tres perfiles devuelven siempre error 502 y quedan afuera. La API corta conexiones si se le pide rápido: el cargador usa 2 hilos, guarda cada respuesta en `data/raw/usaspending/` y se puede volver a correr. La primera carga tardó unas tres horas.
+- **Caso conocido verificado:** el proveedor SCIENCE APPLICATIONS INTERNATIONAL CORPORATION (UEI MMLKPW9JLX64) tiene como matriz actual a SAIC (RE7WMNV9L719) y, en su historia, a LEIDOS HOLDINGS (ZL41ERXMPAR3).
+- **NAICS:** el Census publica la jerarquía solo en Excel; se lee con la biblioteca estándar para no sumar dependencias. Los sectores agrupados (31-33, 44-45, 48-49) son el padre de sus códigos de 3 dígitos. 2.218 contratos usan códigos de versiones anteriores a 2022 (por ejemplo 541712); se resuelve en P1.
+- **Lista Consolidada:** el `_id` se repite entre listas (la misma entidad en SDN y SSI), así que la clave es `(id, source)`.
+- **GLEIF, limitado:** se buscan las matrices con contratos por US$50 millones o más (3.260, el 98 % del monto) y los 1.000 proveedores que más facturan; buscar las 7.355 matrices llevaría horas con el límite de 60 consultas por minuto. Se usa `filter[fulltext]`, que también mira nombres anteriores, y se guardan los 5 primeros candidatos con su matriz final, sin decidir el enlace (es P2). 1.533 nombres no tienen ningún resultado. El caso SAIC muestra la trampa: para «SCIENCE APPLICATIONS INTERNATIONAL CORPORATION», GLEIF pone primero a LEIDOS, INC. (ese era su nombre anterior) y segunda a la SAIC de hoy.

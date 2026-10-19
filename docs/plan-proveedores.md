@@ -73,7 +73,7 @@ La misma que oncología:
 
 | Fase | Qué | Checkpoint |
 |---|---|---|
-| P0 · Datos | Cargadores de USAspending (contratos y matrices), GLEIF, Lista Consolidada y NAICS | Conteos por fuente |
+| P0 · Datos ✅ | Cargadores de USAspending (contratos y matrices), GLEIF, Lista Consolidada y NAICS | Conteos por fuente |
 | P1 · Preguntas y diccionario | Las 8 preguntas, la ontología y sus SPARQL | Las 8 responden contra el segundo Ontop |
 | P2 · Enlaces | Proveedor ↔ LEI, proveedor ↔ lista, grupo ↔ Wikidata, con su evidencia; revisión de una muestra | Precisión medida |
 | P3 · Evaluación | Sin Rastro (SQL directo) contra con Rastro, consistencia y cambio, igual que en oncología | Las tres pruebas con números |

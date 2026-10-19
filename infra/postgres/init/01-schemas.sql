@@ -18,7 +18,12 @@ INSERT INTO rastro_meta.source (id, name, homepage, license, db_schema) VALUES
     ('aact',    'AACT (ClinicalTrials.gov)',  'https://aact.ctti-clinicaltrials.org/', 'Dominio público (ClinicalTrials.gov)', 'aact'),
     ('chembl',  'ChEMBL',                     'https://www.ebi.ac.uk/chembl/',        'CC BY-SA 3.0',                          'chembl'),
     ('openfda', 'openFDA Drug Adverse Events', 'https://open.fda.gov/apis/drug/event/', 'CC0 1.0',                              'openfda'),
-    ('mesh',    'MeSH (NLM)',                 'https://id.nlm.nih.gov/mesh/',         'Términos y condiciones de NLM',         NULL);
+    ('mesh',    'MeSH (NLM)',                 'https://id.nlm.nih.gov/mesh/',         'Términos y condiciones de NLM',         NULL),
+    -- Segundo dominio: proveedores del Estado (los esquemas los crea cada cargador)
+    ('usaspending', 'USAspending (contratos federales)', 'https://www.usaspending.gov/', 'Dominio público', 'usaspending'),
+    ('naics',   'NAICS 2022 (Census)',        'https://www.census.gov/naics/',        'Dominio público',                       'naics'),
+    ('csl',     'Lista Consolidada de Control (trade.gov)', 'https://www.trade.gov/consolidated-screening-list', 'Dominio público', 'csl'),
+    ('gleif',   'GLEIF (LEI)',                'https://www.gleif.org/',               'CC0 1.0',                               'gleif');
 
 CREATE TABLE rastro_meta.load_run (
     id          bigserial PRIMARY KEY,

@@ -70,6 +70,10 @@ Los cargadores corren a demanda y necesitan credenciales en `.env` (copiado de `
 | ChEMBL (oncología) | `docker compose run --rm chembl-loader` | Ninguno: usa la API pública de ChEMBL, MeSH de NLM y UniChem |
 | openFDA (eventos adversos) | `docker compose run --rm openfda-loader` | ChEMBL cargado antes. API key gratuita recomendada (`OPENFDA_API_KEY`): sin ella, 1000 requests por día y la descarga sigue en la próxima corrida |
 | MeSH 2026 (GraphDB) | `docker compose run --rm mesh-loader` | Unos 3 GB de memoria libres en Docker durante la importación. Crea también el conector Lucene `mesh` y copia descriptores y jerarquía a Postgres |
+| USAspending (proveedores) | `docker compose run --rm usaspending-loader` | Ninguno: API pública. Contratos del año fiscal 2025 de más de US$10 millones y el perfil de cada proveedor con sus matrices; la primera vez tarda alrededor de una hora y es reanudable |
+| NAICS 2022 (proveedores) | `docker compose run --rm naics-loader` | Ninguno: planilla pública del Census. Sectores de 2 a 6 dígitos con sus ancestros |
+| Lista Consolidada de Control (proveedores) | `docker compose run --rm csl-loader` | Ninguno: CSV público de trade.gov |
+| GLEIF (proveedores) | `docker compose run --rm gleif-loader` | USAspending cargado antes. Candidatos a LEI de matrices y de los 1000 proveedores que más facturan; 60 consultas por minuto, reanudable |
 | Enlaces | `docker compose run --rm linker` | Las fuentes de arriba ya cargadas. Enlaza ensayos con MeSH y con ChEMBL en unos segundos |
 
 Las descargas quedan en `data/raw/`, que no se versiona: openFDA guarda ahí un JSON por fármaco y no lo vuelve a pedir.

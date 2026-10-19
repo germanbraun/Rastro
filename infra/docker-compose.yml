@@ -153,6 +153,63 @@ services:
       - ../data:/data
     command: ["python", "-u", "/data/mesh/load.py"]
 
+  # Segundo dominio, proveedores del Estado (docs/plan-proveedores.md)
+  usaspending-loader:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../data:/data
+    command: ["python", "-u", "/data/usaspending/load.py"]
+
+  naics-loader:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../data:/data
+    command: ["python", "-u", "/data/naics/load.py"]
+
+  csl-loader:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../data:/data
+    command: ["python", "-u", "/data/csl/load.py"]
+
+  gleif-loader:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../data:/data
+    command: ["python", "-u", "/data/gleif/load.py"]
+
   # Enlaza ensayos con MeSH y ChEMBL (linking/): docker compose run --rm linker
   linker:
     build: ./loaders
