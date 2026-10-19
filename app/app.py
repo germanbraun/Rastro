@@ -477,6 +477,39 @@ with ask_tab:
         if not available:
             st.info("Para preguntas libres hace falta un LLM. Mientras tanto, probá las preguntas de ejemplo.")
 
+@st.cache_data
+def consistency():
+    """Las 10 preguntas de la prueba de consistencia: las 4 formas de preguntar y las respuestas de
+    cada enfoque (layer/consistencia/). La versión 0 es la pregunta original de la evaluación."""
+    folder = Path("/layer/consistencia")
+    paraphrases = yaml.safe_load((folder / "parafrasis.yaml").read_text())
+    data = saved()["questions"]
+    rows = []
+    for qid, others in paraphrases.items():
+        texts = [data[qid]["question"]] + others
+        answers = {}
+        for k in "BDC":
+            answers[k] = [data[qid].get(k, {}).get("answer")]
+            for n in range(1, len(others) + 1):
+                path = folder / "respuestas" / f"{qid}-{n}-{k}.json"
+                answers[k].append(json.loads(path.read_text()).get("answer") if path.exists() else None)
+        rows.append({"id": qid, "texts": texts, "answers": answers})
+    return rows
+
+
+def short_answer(value):
+    if value is None:
+        return "—"
+    if isinstance(value, list):
+        return str(len(value))
+    return f"{value:,.0f}".replace(",", ".") if value == int(value) else f"{value:.1f}"
+
+
+def same_answers(values):
+    keys = {json.dumps(sorted(v), ensure_ascii=False) if isinstance(v, list) else json.dumps(v) for v in values}
+    return len(keys) == 1
+
+
 with trust_tab:
     data = saved()["questions"]
     st.markdown("### Por qué podés confiar en las respuestas")
@@ -485,10 +518,32 @@ with trust_tab:
     left, right = st.columns(2)
     left.metric("Sin Rastro", "1 de 10")
     right.metric("Con Rastro", "10 de 10")
-    st.markdown("Hicimos 10 preguntas de 4 formas distintas, con el mismo significado. Por ejemplo, "
-                "*¿cuántos ensayos de fase 3 prueban fármacos contra EGFR?*: sin Rastro, la respuesta fue "
-                "**488, 488, 409 y 488**, según cómo se preguntara; con Rastro, **438** las cuatro veces. "
-                "Sin Rastro, cada consulta adivina de nuevo qué fármaco nombra cada ensayo.")
+    st.markdown("Hicimos 10 preguntas de 4 formas distintas, con el mismo significado. Sin Rastro, cada "
+                "consulta adivina de nuevo qué fármaco nombra cada ensayo, y la respuesta cambia según cómo "
+                "se pregunte. Estas son las 40 respuestas:")
+    approaches = {"B": "Sin Rastro", "D": "SQL + enlaces", "C": "Con Rastro"} if TECH else \
+                 {"B": "Sin Rastro", "C": "Con Rastro"}
+    table = []
+    for row in consistency():
+        line = {"Pregunta": plain().get(row["id"], {}).get("simple", row["texts"][0])}
+        for k, title in approaches.items():
+            values = row["answers"][k]
+            line[title] = ("✅ " if same_answers(values) else "❌ ") + " · ".join(short_answer(v) for v in values)
+        table.append(line)
+    st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True,
+                 column_config={"Pregunta": st.column_config.TextColumn(width="medium")})
+    st.caption("✅ la misma respuesta las 4 veces · ❌ cambió según cómo se preguntó. En las preguntas que "
+               "piden una lista, el número es cuántos nombres devolvió.")
+    rows = consistency()
+    picked = st.selectbox("Ver las 4 formas de una pregunta",
+                          [plain().get(r["id"], {}).get("simple", r["texts"][0]) for r in rows],
+                          key="consistency_question")
+    row = rows[[plain().get(r["id"], {}).get("simple", r["texts"][0]) for r in rows].index(picked)]
+    detail = [{"Cómo se preguntó": text,
+               **{title: short_answer(row["answers"][k][i]) for k, title in approaches.items()}}
+              for i, text in enumerate(row["texts"])]
+    st.dataframe(pd.DataFrame(detail), hide_index=True, use_container_width=True,
+                 column_config={"Cómo se preguntó": st.column_config.TextColumn(width="large")})
     if TECH:
         st.markdown("##### Detalle técnico: las cuatro formas, pregunta por pregunta")
         totals, per_question = scores()
