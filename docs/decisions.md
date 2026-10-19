@@ -201,3 +201,7 @@ Para mostrar que el conocimiento vive en el modelo, se sumaron clases de fármac
 
 La procedencia por columna se puede imitar en SQL con el nombre del esquema. Lo que convence es la evidencia por registro: por qué Rastro dice que un ensayo prueba un fármaco. `linking.trial_drug` guarda ahora también el texto de la intervención, y un mapeo nuevo expone cada enlace como `:DrugLink` (subclase de `prov:Entity`) con el texto, lo que coincidió, la regla, `prov:wasDerivedFrom` AACT y ChEMBL, y `prov:wasGeneratedBy` el entity linking. La app lo muestra en «¿Por qué?».
 
+## 2026-10-18 — Dos niveles: negocio por defecto, técnico si se pide
+
+Todo era demasiado complejo para quien no conoce estas tecnologías. Regla nueva: un mensaje («integrás una vez, preguntás en lenguaje de negocio, cada respuesta se puede auditar») y tres pruebas (misma respuesta, cambios en un lugar, evidencia). Sin jerga en la capa principal: «diccionario de negocio» en lugar de ontología, «traducciones» en lugar de mapeos, «evidencia» en lugar de procedencia o PROV-O. La app arranca en modo negocio y tiene «Ver detalles técnicos»; el mazo tiene 6 diapositivas y un anexo; el guion, el one-pager y las preguntas frecuentes tienen versión para todos y versión técnica. Nada técnico se borró.
+

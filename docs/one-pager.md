@@ -1,51 +1,37 @@
-# Rastro Layer · en una página
+# Rastro · en una página
 
 > **Los datos cambian. Tus preguntas, no.**
 
-**Una capa semántica sobre cuatro fuentes públicas de oncología. Los datos se integran una vez; un LLM pregunta en conceptos de negocio, y cada respuesta dice de qué fuente sale.**
+**Rastro integra tus datos una vez. Preguntás en lenguaje de negocio, y cada respuesta dice de dónde sale y se puede auditar.**
 
-## Qué gana una empresa
+## El problema
 
-- **Respuestas consistentes:** una sola definición de cada concepto.
-- **Preguntas en lenguaje de negocio:** el LLM lee un vocabulario, no cientos de columnas.
-- **Cada dato con su fuente:** respuestas auditables.
-- **Menos mantenimiento:** si una fuente cambia, se arregla en un lugar.
-- **Datos de afuera sin cargarlos:** se une con Wikidata por identificadores compartidos.
-- **Sin atarse a un proveedor:** estándares abiertos del W3C.
+Las bases de datos no se hablan entre sí. En oncología, el mismo fármaco aparece como «Pembrolizumab 200 mg» en un ensayo clínico, como un código en una base de fármacos y como «KEYTRUDA» en los reportes de la FDA. Cada consulta tiene que resolver eso por su cuenta, y cada una lo resuelve distinto.
 
-## Qué es, en términos de SQL
+## Qué hace Rastro
 
-| Pieza | Equivale a |
-|---|---|
-| Ontología | El esquema de negocio que te gustaría tener |
-| Mapeos (R2RML) | Definiciones de vistas: esta columna es este concepto |
-| Enlaces | Las claves de join que faltaban, calculadas una vez |
-| SPARQL + Ontop | SQL sobre conceptos, compilado a SQL sobre las tablas reales |
+Pone un **diccionario de negocio** entre tus bases y tus preguntas: ensayo, fármaco, sponsor, enfermedad. Traduce cada base a esas palabras una sola vez. Después, cualquiera pregunta con esas palabras, y Rastro busca en cada base.
 
-## La evidencia (el mismo LLM, Claude Opus 5.5)
+## Tres pruebas, medidas sobre datos reales
 
-| | SQL directo | SQL + enlaces de Rastro | Rastro |
-|---|---|---|---|
-| Correctas, de 20 | 18 | 20 | **20** |
-| Misma respuesta, preguntando de 4 formas | 1 de 10 | 10 de 10 | **10 de 10** |
-| Una columna de la fuente cambia de nombre | 5 consultas rotas | 5 consultas rotas | **1 línea del mapeo** |
-| Un valor cambia de formato | 5 respuestas en 0, sin aviso | igual | **avisa; 1 línea** |
-| El negocio cambia una definición | cada consulta | cada consulta | **1 línea de la ontología** |
-| De dónde sale cada dato | no | no | **por columna** |
-| Une datos de Wikidata en la misma consulta | no | no | **sí** |
+| | Sin Rastro | Con Rastro |
+|---|---|---|
+| **La misma pregunta, hecha de 4 formas** | la respuesta cambió en 9 de 10 preguntas | **la misma, en 10 de 10** |
+| **Si una base cambia** | hay que reescribir cada consulta; algunas dan cero sin avisar | **se arregla en una línea** |
+| **¿Por qué dice eso?** | no se sabe | **muestra la evidencia de cada fármaco, con el enlace al ensayo** |
 
-**Cómo leerla:** la precisión y la consistencia vienen de integrar una vez. La capa semántica agrega que esa integración se mantiene en un lugar, trae la fuente de cada dato y se conecta con datos de afuera. Solo, sin datos, el LLM acierta 5 de 20.
+Sin datos integrados, un asistente de IA solo acierta 5 de 20 preguntas: responde de memoria.
 
-## Límites, dichos de entrada
+## Lo que hay que saber
 
-- Con las tablas de enlaces de Rastro, el SQL acierta igual, incluso en preguntas de 3 o 4 cruces. Una capa de vistas SQL resolvería parte de lo demás.
-- Una foto de octubre de 2026: 106.483 ensayos, 3.739 fármacos, 81 % de las intervenciones enlazadas.
-- Las preguntas y sus referencias las hizo un asistente de IA; falta la confirmación humana.
+- El valor está en integrar los datos una vez y mantenerlos en un lugar.
+- La demo usa cuatro bases públicas de oncología, con datos de octubre de 2026.
+- Las pruebas las armó un asistente de IA; falta que una persona las confirme.
 
 ## Próximo paso
 
-Un piloto con datos del cliente sumados a las fuentes públicas.
+Un piloto con tus datos sumados a las fuentes públicas.
 
 ---
 
-Cómo se midió cada número: [results.md](results.md).
+Versión técnica, con la comparación completa: [one-pager-tecnico.md](one-pager-tecnico.md). Cómo se midió cada número: [results.md](results.md).
