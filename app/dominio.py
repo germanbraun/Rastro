@@ -112,6 +112,11 @@ def warm_up():
                         run(prefixed(why["query"].replace("{valor}", value), cfg["domain"]), cfg["domain"])
                 except Exception:   # noqa: BLE001 - un dominio apagado no frena a los otros
                     continue
+        try:   # y los dos modelos de Rastro Lab
+            import lab
+            lab.datos()
+        except Exception:   # noqa: BLE001
+            pass
 
     threading.Thread(target=work, daemon=True).start()
     return True
@@ -664,12 +669,17 @@ def render(cfg_path, tech):
     # Pocas pestañas: la demo, preguntar, por qué confiar y preguntas frecuentes; en la vista técnica, todo
     # lo de adentro (consola, diccionario, enlaces y mapeos) junto en «Bajo el capó»
     names = (["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Preguntar"] \
-        + (["Por qué confiar"] if cfg.get("tarjetas") else []) + ["Preguntas frecuentes"] + (["Bajo el capó"] if tech else [])
+        + (["Por qué confiar"] if cfg.get("tarjetas") else []) + (["Rastro Lab"] if cfg.get("lab") else []) \
+        + ["Preguntas frecuentes"] + (["Bajo el capó"] if tech else [])
     tabs = dict(zip(names, st.tabs(names)))
     ask_tab, trust_tab, faq_tab = tabs["Preguntar"], tabs.get("Por qué confiar"), tabs["Preguntas frecuentes"]
     if cfg.get("demo"):
         with tabs["Demo en 3 pasos"]:
             show_demo(cfg, tech)
+    if cfg.get("lab"):
+        with tabs["Rastro Lab"]:
+            import lab
+            lab.show_lab(tech)
     if tech:
         with tabs["Bajo el capó"]:
             under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"))

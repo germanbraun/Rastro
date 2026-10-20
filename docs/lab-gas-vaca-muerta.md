@@ -79,7 +79,9 @@ Sin Rastro, la explicación usa el 27,27 % del mapa y nadie lo nota. Con Rastro,
 
 **Lo que se dejó afuera:** la distancia al gasoducto. Es una sola por concesión y, con la concesión en el modelo, solo la repite: salía al revés (estar a 0,3 km restaba 9 millones de m³). Es justo el tipo de explicación sin sentido que un experto detecta cuando la variable tiene nombre y fuente; vuelve en la prueba de áreas nuevas, donde sí agrega.
 
-**Lo que falta del paso 1:** mostrar las dos explicaciones lado a lado en la app, con «¿Por qué?» en cada variable, y la prueba a ciegas con un consultor.
+**En la app:** la pestaña «Rastro Lab» de petróleo y gas muestra el error de los dos modelos, cuántas predicciones se apoyan en un dato corregido y, para cada pozo de 2025, las dos explicaciones lado a lado, con «¿Por qué?» (regla, evidencia y fuentes) en cada variable de Rastro.
+
+**Lo que falta del paso 1:** la prueba a ciegas con un consultor.
 
 ## Datos de fractura (paso 2)
 

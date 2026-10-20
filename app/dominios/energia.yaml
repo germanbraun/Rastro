@@ -523,6 +523,9 @@ cambios:
       - "prod_pet AS petroleo_m3, prod_gas AS gas_mm3"
       - "petroleo AS petroleo_m3, prod_gas AS gas_mm3"
 
+# Rastro Lab: el mismo modelo de gas con y sin Rastro (app/lab.py, lab/gas/modelo.py)
+lab: gas
+
 faq:
   - pregunta: ¿De dónde salen los datos?
     respuesta: >-

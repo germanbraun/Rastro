@@ -74,3 +74,13 @@ mapa: >-
 externo: >-
   Una consulta federada: GraphDB pide una parte a Rastro y otra a Wikidata, en internet, y las une
   por un identificador que las dos comparten (el LEI). No se copia nada a Rastro.
+lab_error: >-
+  Cuánto se equivoca el modelo, en promedio, en los pozos de 2025 que no vio al entrenar, en millones de
+  m³ de gas por pozo. Con y sin Rastro es el mismo: Rastro no busca más precisión, sino explicaciones que
+  se puedan comprobar.
+lab_dudosos: >-
+  Predicciones que se apoyan en un dato que no sale tal cual de la fuente: una participación corregida con
+  un documento o una unión de nombres revisada por IA que falta confirmar. Rastro las marca; sin Rastro no
+  se ven.
+lab_pozo: >-
+  Pozos de shale gas que empezaron a producir en 2025. El modelo no los vio al entrenar.

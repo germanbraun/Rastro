@@ -102,6 +102,7 @@ services:
     volumes:
       - ../app:/app:ro
       - ../layer:/layer:ro
+      - ../lab:/lab:ro
       - ../ontology:/ontology:ro
       - ../mappings:/mappings:ro
     command: ["streamlit", "run", "/app/app.py", "--server.port", "8501", "--server.address", "0.0.0.0",
