@@ -17,14 +17,29 @@ addEventListener('resize', fit); fit();
 <section id="cover-oncologia" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
 <p style="font-size:32px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Rastro · Ensayos clínicos de oncología</p>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="120" height="120" aria-label="Rastro">
-  
-  <rect width="64" height="64" rx="14" fill="#2F6FB5"/>
-  <path d="M14 46 L26 34 L38 40 L50 18" fill="none" stroke="#F7F6F2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="14" cy="46" r="5" fill="#14213D" stroke="#F7F6F2" stroke-width="2"/>
-  <circle cx="26" cy="34" r="5" fill="#14213D" stroke="#F7F6F2" stroke-width="2"/>
-  <circle cx="38" cy="40" r="5" fill="#14213D" stroke="#F7F6F2" stroke-width="2"/>
-  <circle cx="50" cy="18" r="7" fill="#F7F6F2"/>
-  <circle cx="50" cy="18" r="3" fill="#2F6FB5"/>
+  <defs>
+    <clipPath id="yema"><ellipse cx="32" cy="32" rx="22" ry="28"/></clipPath>
+    <radialGradient id="halo" cx="50%" cy="48%" r="50%">
+      <stop offset="0%" stop-color="#FFB27A" stop-opacity="0.55"/>
+      <stop offset="45%" stop-color="#8FC3F2" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#8FC3F2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="32" cy="33" rx="31" ry="31" fill="url(#halo)"/>
+  <g clip-path="url(#yema)">
+    <path d="M31.15,31.45 A2.00,2.70 0 1 1 32.85,31.45" fill="none" stroke="#FF7A2F" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M30.22,35.05 A4.55,6.14 0 1 1 33.78,35.05" fill="none" stroke="#FF8C42" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M29.46,38.75 A7.10,9.59 0 1 1 34.54,38.75" fill="none" stroke="#FFA05A" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M28.86,42.52 A9.65,13.03 0 1 1 35.14,42.52" fill="none" stroke="#FFB577" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M28.43,46.35 A12.20,16.47 0 1 1 35.57,46.35" fill="none" stroke="#78BEF5" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.1 1.1"/>
+    <path d="M28.18,50.23 A14.75,19.91 0 1 1 35.82,50.23" fill="none" stroke="#6AB2EF" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.2 1.2"/>
+    <path d="M28.11,54.16 A17.30,23.35 0 1 1 35.89,54.16" fill="none" stroke="#5DA7E9" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.3 1.3"/>
+    <path d="M28.21,58.11 A19.85,26.80 0 1 1 35.79,58.11" fill="none" stroke="#4F9BE4" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.4 1.3"/>
+    <path d="M28.50,62.07 A22.40,30.24 0 1 1 35.50,62.07" fill="none" stroke="#418FDE" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.6 1.4"/>
+    <path d="M28.10,65.87 A24.95,33.68 0 1 1 35.90,65.87" fill="none" stroke="#3484D8" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.7 1.4"/>
+    <path d="M27.70,69.67 A27.50,37.12 0 1 1 36.30,69.67" fill="none" stroke="#2678D2" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.8 1.5"/>
+  </g>
+  <circle cx="32" cy="29" r="1.3" fill="#FF7A2F"/>
 </svg>
 <h1 style="font-size:120px;font-weight:700;line-height:1.05;color:#F7F6F2">Rastro</h1>
 <p style="font-size:56px;line-height:1.2;color:#F7F6F2;width:1500px">Los datos cambian. Las preguntas, no.</p>
@@ -451,21 +466,54 @@ addEventListener('resize', fit); fit();
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Así se ve un dato del grafo</p>
 <h2 style="font-size:52px;font-weight:700;line-height:1.1;width:1664px">Por qué un ensayo prueba trastuzumab</h2>
 <p style="font-size:26px;color:#4A5568">&lt;rastro:link/NCT00003440/CHEMBL1201585&gt;</p>
-<div style="background:#FFFFFF;border-radius:20px;padding:28px 32px;width:1664px">
-<table style="font-size:28px;width:1600px;color:#14213D;padding:12px">
-<tr><th style="width:24%">Término</th><th style="width:22%">En el diccionario</th><th style="width:54%">Valor</th></tr>
-<tr><td>oncologia:interventionText</td><td>texto de la intervención</td><td>trastuzumab</td></tr>
-<tr><td>oncologia:linkDrug</td><td>fármaco del enlace</td><td>rastro:drug/CHEMBL1201585</td></tr>
-<tr><td>oncologia:linkRule</td><td>regla</td><td>nombre</td></tr>
-<tr><td>oncologia:linkTrial</td><td>ensayo del enlace</td><td>rastro:trial/NCT00003440</td></tr>
-<tr><td>oncologia:matchedText</td><td>texto que coincidió</td><td>trastuzumab</td></tr>
-<tr><td>a</td><td>es un/a</td><td>oncologia:DrugLink (Enlace ensayo → fármaco)</td></tr>
-<tr><td>a</td><td>es un/a</td><td>prov:Entity (entidad (PROV))</td></tr>
-<tr><td>prov:wasDerivedFrom</td><td>deriva de</td><td>rastro:source/chembl</td></tr>
-<tr><td>prov:wasDerivedFrom</td><td>deriva de</td><td>rastro:source/aact</td></tr>
-<tr><td>prov:wasGeneratedBy</td><td>generado por</td><td>rastro:activity/entity-linking</td></tr>
-</table>
+<div style="background:#FFFFFF;border-radius:20px;padding:12px 0;width:1664px"><!-- filas
+oncologia:interventionText	texto de la intervención	trastuzumab
+oncologia:linkDrug	fármaco del enlace	rastro:drug/CHEMBL1201585
+oncologia:linkRule	regla	nombre
+oncologia:linkTrial	ensayo del enlace	rastro:trial/NCT00003440
+oncologia:matchedText	texto que coincidió	trastuzumab
+a	es un/a	oncologia:DrugLink (Enlace ensayo → fármaco)
+a	es un/a	prov:Entity (entidad (PROV))
+prov:wasDerivedFrom	deriva de	rastro:source/chembl
+prov:wasDerivedFrom	deriva de	rastro:source/aact
+prov:wasGeneratedBy	generado por	rastro:activity/entity-linking
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 640" width="1664" height="640" font-family="'Times New Roman', Times, serif">
+<defs><marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7A8699"/></marker></defs>
+<line x1="832" y1="262" x2="832" y2="134" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="707" y="178" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="832" y="203" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">texto de la intervenc…</text>
+<line x1="980" y1="291" x2="1031" y2="155" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="880" y="203" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="1005" y="228" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">fármaco del enlace</text>
+<line x1="1000" y1="312" x2="1216" y2="254" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="983" y="263" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="1108" y="288" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">regla</text>
+<line x1="1000" y1="328" x2="1216" y2="386" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="983" y="337" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="1108" y="362" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">ensayo del enlace</text>
+<line x1="980" y1="349" x2="1031" y2="485" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="880" y="397" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="1005" y="422" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">texto que coincidió</text>
+<line x1="832" y1="378" x2="832" y2="506" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="707" y="422" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="832" y="447" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">es un/a</text>
+<line x1="684" y1="349" x2="633" y2="485" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="534" y="397" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="659" y="422" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">es un/a</text>
+<line x1="664" y1="328" x2="448" y2="386" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="431" y="337" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="556" y="362" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">deriva de</text>
+<line x1="664" y1="312" x2="448" y2="254" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="431" y="263" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="556" y="288" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">deriva de</text>
+<line x1="684" y1="291" x2="633" y2="155" stroke="#7A8699" stroke-width="2" marker-end="url(#flecha)"/>
+<rect x="534" y="203" width="250" height="34" rx="6" fill="#F7F6F2"/><text x="659" y="228" font-size="25" text-anchor="middle" fill="#4A5568" font-style="italic">generado por</text>
+<rect x="682" y="56" width="300" height="64" rx="10" fill="#FFFFFF" stroke="#B8C2CF" stroke-width="2"/><text x="832" y="96" font-size="26" text-anchor="middle" fill="#14213D">trastuzumab</text>
+<ellipse cx="1161" cy="132" rx="160" ry="48" fill="#DCEBFA" stroke="#2F6FB5" stroke-width="2"/><text x="1161" y="130" font-size="26" font-weight="700" text-anchor="middle" fill="#14213D">TRASTUZUMAB</text><text x="1161" y="157" font-size="18" text-anchor="middle" fill="#4A5568">rastro:drug/CHEMBL1201585</text>
+<rect x="1215" y="216" width="300" height="64" rx="10" fill="#FFFFFF" stroke="#B8C2CF" stroke-width="2"/><text x="1365" y="256" font-size="26" text-anchor="middle" fill="#14213D">nombre</text>
+<ellipse cx="1365" cy="392" rx="160" ry="48" fill="#DCEBFA" stroke="#2F6FB5" stroke-width="2"/><text x="1365" y="390" font-size="26" font-weight="700" text-anchor="middle" fill="#14213D">NCT00003440</text><text x="1365" y="417" font-size="18" text-anchor="middle" fill="#4A5568">rastro:trial/NCT00003440</text>
+<rect x="1011" y="476" width="300" height="64" rx="10" fill="#FFFFFF" stroke="#B8C2CF" stroke-width="2"/><text x="1161" y="516" font-size="26" text-anchor="middle" fill="#14213D">trastuzumab</text>
+<ellipse cx="832" cy="552" rx="160" ry="48" fill="#FFF3E6" stroke="#FF8C42" stroke-width="2" stroke-dasharray="7 5"/><text x="832" y="550" font-size="26" font-weight="700" text-anchor="middle" fill="#14213D">Enlace ensayo → fárma…</text><text x="832" y="577" font-size="18" text-anchor="middle" fill="#4A5568">oncologia:DrugLink</text>
+<ellipse cx="503" cy="508" rx="160" ry="48" fill="#FFF3E6" stroke="#FF8C42" stroke-width="2" stroke-dasharray="7 5"/><text x="503" y="506" font-size="26" font-weight="700" text-anchor="middle" fill="#14213D">entidad (PROV</text><text x="503" y="533" font-size="18" text-anchor="middle" fill="#4A5568">prov:Entity</text>
+<ellipse cx="299" cy="392" rx="160" ry="48" fill="#DCEBFA" stroke="#2F6FB5" stroke-width="2"/><text x="299" y="390" font-size="26" font-weight="700" text-anchor="middle" fill="#14213D">ChEMBL</text><text x="299" y="417" font-size="18" text-anchor="middle" fill="#4A5568">rastro:source/chembl</text>
+<ellipse cx="299" cy="248" rx="160" ry="48" fill="#DCEBFA" stroke="#2F6FB5" stroke-width="2"/><text x="299" y="246" font-size="26" font-weight="700" text-anchor="middle" fill="#14213D">AACT (ClinicalTrials.…</text><text x="299" y="273" font-size="18" text-anchor="middle" fill="#4A5568">rastro:source/aact</text>
+<ellipse cx="503" cy="132" rx="160" ry="48" fill="#DCEBFA" stroke="#2F6FB5" stroke-width="2"/><text x="503" y="130" font-size="26" font-weight="700" text-anchor="middle" fill="#14213D">entity-linking</text><text x="503" y="157" font-size="18" text-anchor="middle" fill="#4A5568">rastro:activity/entity-linking</text>
+<ellipse cx="832.0" cy="320.0" rx="180" ry="62" fill="#2F6FB5"/><text x="832.0" y="316.0" font-size="28" font-weight="700" text-anchor="middle" fill="#FFFFFF">Por qué un ensayo prueba trastuzumab</text><text x="832.0" y="344.0" font-size="17" text-anchor="middle" fill="#DCEBFA">rastro:link/NCT00003440/CHEMBL1201585</text>
+</svg>
 </div>
+<p style="font-size:24px;color:#4A5568">Burbuja azul: una entidad · burbuja naranja: su clase en el diccionario · rectángulo: un dato simple (texto o número) · cada flecha: una propiedad, con su nombre de negocio.</p>
 <aside>Así guarda Rastro por qué un ensayo prueba un fármaco: el enlace es un dato con el ensayo, el fármaco, lo que escribió el sponsor, con qué coincidió y la regla, más la fuente. Cualquier herramienta que hable SPARQL lo lee igual.</aside>
 </section>
 </div>

@@ -531,13 +531,15 @@ with ask_tab:
         # 🧾 marca las preguntas cuya respuesta trae la evidencia de cada enlace (PROV-O)
         def ask_label(q):
             linked = "oncologia:testsDrug" in (last_ok_query(saved()["questions"][q["id"]], "C") or "")
-            text = q["question"] if TECH else plain().get(q["id"], {}).get("simple", q["question"])
+            text = plain().get(q["id"], {}).get("simple", q["question"])   # la misma pregunta en las dos vistas
             return ("🧾 " if linked else "") + text
 
         options = {ask_label(q): q for q in questions()}
-        chosen = st.selectbox("Pregunta", list(options), key=f"ask_question_{TECH}",
+        chosen = st.selectbox("Pregunta", list(options), key="ask_question",
                               help="🧾 La respuesta muestra cómo reconoció Rastro cada fármaco: se puede auditar.")
-        show_plain(options[chosen]["id"], simple=TECH)
+        if TECH:
+            st.caption("Formulación técnica: " + options[chosen]["question"])
+        show_plain(options[chosen]["id"], simple=False)
         query = last_ok_query(saved()["questions"][options[chosen]["id"]], "C")
         # La respuesta queda guardada para que «¿Por qué?» pueda elegir un fármaco sin perderla
         if st.button("Responder", type="primary"):

@@ -17,8 +17,9 @@ import yaml
 FORMS = r"\b(THE|INC|INCORPORATED|LLC|L L C|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC|SA|SAU|SRL|SL|AG|SE|GMBH|NV|BV|HOLDINGS?|GROUP)\b"
 # Columnas que nombran una empresa (las variables de las consultas, en los tres dominios)
 COMPANY_COLUMNS = {"group", "supplier", "finalParent", "company", "operator", "sponsor", "sponsorName",
-                   "empresa", "operadora", "grupo", "proveedor"}
+                   "empresa", "operadora", "grupo", "proveedor", "previous", "new", "partner"}
 ICON = "https://www.google.com/s2/favicons?sz=64&domain="
+ICON_ALT = "https://icons.duckduckgo.com/ip3/{}.ico"
 
 
 def normalize(name):
@@ -34,20 +35,31 @@ def _sites(mtime):
 
 @st.cache_data(show_spinner=False)
 def icon(domain):
-    """El favicon como imagen incrustada (data URI), o None si no se pudo traer."""
-    try:
-        r = requests.get(ICON + domain, timeout=5)
-    except requests.RequestException:
-        return None
-    kind = r.headers.get("content-type", "").split(";")[0]
-    if not kind.startswith("image/"):   # sin favicon conocido, el servicio devuelve un globo genérico
-        return None
-    return f"data:{kind};base64," + base64.b64encode(r.content).decode()
+    """El favicon como imagen incrustada (data URI), o None si no se pudo traer. Si Google no lo
+    tiene, se prueba el servicio de íconos de DuckDuckGo."""
+    for url in (ICON + domain, ICON_ALT.format(domain)):
+        try:
+            r = requests.get(url, timeout=5)
+        except requests.RequestException:
+            continue
+        kind = r.headers.get("content-type", "").split(";")[0]
+        if r.status_code == 200 and kind.startswith("image/"):   # sin favicon, los servicios responden 404
+            return f"data:{kind};base64," + base64.b64encode(r.content).decode()
+    return None
 
 
 def site(name):
+    """El sitio de la empresa; si no está, el del grupo cuyo nombre es el comienzo del suyo
+    («BAE SYSTEMS LAND AND ARMAMENTS» → «BAE SYSTEMS»)."""
     p = Path("/app/sitios.yaml")
-    return _sites(p.stat().st_mtime).get(normalize(name)) if p.exists() else None
+    if not p.exists():
+        return None
+    sites, words = _sites(p.stat().st_mtime), normalize(name).split()
+    for k in range(len(words), 0, -1):
+        key = " ".join(words[:k])
+        if key in sites and (k == len(words) or len(key) >= 4):
+            return sites[key]
+    return None
 
 
 def with_logos(table, columns):

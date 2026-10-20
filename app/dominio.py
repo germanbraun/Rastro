@@ -230,23 +230,80 @@ def short_iri(iri, domain):
             .replace("https://w3id.org/rastro/", "rastro:"))
 
 
+def dot_text(text, n=24):
+    text = str(text).replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ")
+    return text if len(text) <= n else text[:n - 1] + "…"
+
+
+def instance_graph(iri, rows, domain):
+    """La instancia como grafo: burbujas para las entidades, rectángulos para los datos simples
+    (textos, números, fechas) y flechas con el nombre de negocio de cada propiedad."""
+    ns, names = answer.DOMAINS[domain]["namespace"], labels(domain)
+    linked = [o for p, o in rows if o.startswith("http") and p != RDF_TYPE]
+    named = {}
+    if linked:
+        values = " ".join(f"<{o}>" for o in set(linked))
+        named = dict(run(f"SELECT ?o ?n WHERE {{ VALUES ?o {{ {values} }} ?o <{ns}name> ?n }}", domain)[1])
+    own = next((o for p, o in rows if p == f"{ns}name"), None)
+    # En estrella: la entidad al centro y cada propiedad alrededor
+    lines = ['digraph {', 'layout=twopi; root=n0; ranksep=0.75; overlap=false; bgcolor="transparent";',
+             'node [fontname="Helvetica", fontsize=22, margin="0.08,0.04"]; edge [fontname="Helvetica", fontsize=18, color="#7A8699", fontcolor="#7A8699"];',
+             f'n0 [label="{dot_text(own or short_iri(iri, domain))}\\n{dot_text(short_iri(iri, domain), 34)}", shape=ellipse, '
+             'style=filled, fillcolor="#2F6FB5", fontcolor="white", penwidth=0];']
+    for k, (p, o) in enumerate(rows, start=1):
+        if p == RDF_TYPE:
+            lines.append(f'n{k} [label="{dot_text(names.get(o, short_iri(o, domain)))}\\n(clase)", shape=ellipse, '
+                         'style="filled,dashed", fillcolor="#FFF3E6", color="#FF8C42"];')
+            edge = "es un/a"
+        elif o.startswith("http"):
+            lines.append(f'n{k} [label="{dot_text(named.get(o) or short_iri(o, domain))}", shape=ellipse, '
+                         'style=filled, fillcolor="#DCEBFA", color="#2F6FB5"];')
+            edge = names.get(p) or short_iri(p, domain)
+        else:
+            lines.append(f'n{k} [label="{dot_text(o)}", shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#B8C2CF"];')
+            edge = names.get(p) or short_iri(p, domain)
+        lines.append(f'n0 -> n{k} [label="{dot_text(edge, 22)}"];')
+    return "\n".join(lines + ["}"]), [o for o in dict.fromkeys(linked) if o not in names]
+
+
 def show_instances(domain):
-    """Una instancia real del grafo: cada propiedad con su nombre de negocio y su valor, y en Turtle."""
+    """Una instancia real del grafo, dibujada como grafo: se puede seguir cada enlace a otra entidad,
+    dentro de la app. Debajo, sus propiedades en una tabla y en Turtle."""
     examples = INSTANCES.get(domain)
     if not examples:
         return
     st.markdown("### Así se ve un dato del grafo")
-    st.caption("Una entidad real, con todas sus propiedades tal como las ve el LLM y cualquier herramienta: "
-               "cada una con su nombre en el diccionario de negocio. Los enlaces traen su evidencia y su fuente (PROV-O).")
-    chosen = st.selectbox("Instancia", list(examples), key=f"{domain}_instancia")
-    iri = examples[chosen]
+    st.caption("Una entidad real del grafo. Burbuja azul: una entidad; burbuja naranja: su clase en el diccionario; "
+               "rectángulo: un dato simple (texto, número o fecha). Cada flecha es una propiedad, con su nombre de "
+               "negocio. Los enlaces traen su evidencia y su fuente (PROV-O).")
+    key = f"{domain}_instancia"
+    chosen = st.selectbox("Empezar por", list(examples), key=key)
+    if st.session_state.get(f"{key}_desde") != chosen:      # un ejemplo nuevo vuelve a empezar el recorrido
+        st.session_state[f"{key}_desde"], st.session_state[f"{key}_actual"] = chosen, examples[chosen]
+    iri = st.session_state[f"{key}_actual"]
     _, rows = run(f"SELECT ?p ?o WHERE {{ <{iri}> ?p ?o }} ORDER BY ?p", domain)
+    if not rows:
+        st.info("Esta entidad no tiene más datos en el grafo.")
+    graph, neighbours = instance_graph(iri, rows, domain)
+    st.graphviz_chart(graph, use_container_width=True)
+    nav, back = st.columns([4, 1])
+    if neighbours:
+        go = nav.selectbox("Seguir un enlace (ver esa entidad)", ["—"] + neighbours,
+                           format_func=lambda o: o if o == "—" else short_iri(o, domain), key=f"{key}_ir_{iri}")
+        if go != "—":
+            st.session_state[f"{key}_actual"] = go
+            st.rerun()
+    if iri != examples[chosen] and back.button("Volver al ejemplo", key=f"{key}_volver"):
+        st.session_state[f"{key}_actual"] = examples[chosen]
+        st.rerun()
+    st.caption(f"IRI: `{iri}`")
     names = labels(domain)
-    table = [{"Propiedad": short_iri(p, domain),
-              "En el diccionario": "es un/a" if p == RDF_TYPE else names.get(p, ""),
-              "Valor": (f"{short_iri(o, domain)}" + (f" ({names[o]})" if o in names else "")) if o.startswith("http") else o}
-             for p, o in rows]
-    st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True)
+    with st.expander("Las mismas propiedades en una tabla"):
+        table = [{"Propiedad": short_iri(p, domain),
+                  "En el diccionario": "es un/a" if p == RDF_TYPE else names.get(p, ""),
+                  "Valor": (f"{short_iri(o, domain)}" + (f" ({names[o]})" if o in names else "")) if o.startswith("http") else o}
+                 for p, o in rows]
+        st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True)
     lines = [f"<{short_iri(iri, domain)}>"]
     for k, (p, o) in enumerate(rows):
         value = short_iri(o, domain) if o.startswith("http") else '"' + o.replace('"', '\\"') + '"'
@@ -389,9 +446,12 @@ def render(cfg_path, tech):
         elif mode == "Una pregunta sobre textos":
             show_text_question(cfg, tech)
         elif mode == "Una pregunta de ejemplo":
-            options = {(q["tecnica"] if tech else q["simple"]): q for q in questions}
-            chosen = st.selectbox("Pregunta", list(options), key=f"{domain}_question_{tech}")
+            # La misma pregunta en las dos vistas; la técnica suma su formulación precisa debajo
+            options = {q["simple"]: q for q in questions}
+            chosen = st.selectbox("Pregunta", list(options), key=f"{domain}_question")
             item = options[chosen]
+            if tech:
+                st.caption("Formulación técnica: " + md(item["tecnica"]))
             if item.get("terminos"):
                 with st.expander("¿Qué significa " + ", ".join(item["terminos"]) + "?"):
                     st.markdown("\n".join(f"- **{md(t)}:** {md(m)}" for t, m in item["terminos"].items()))
@@ -470,7 +530,9 @@ def show_demo(cfg, tech):
         show_text_question(cfg, tech, demo=True)
     else:
         item = next(q for q in cfg["preguntas"] if q["id"] == step["pregunta"])
-        st.info(f"**{item['tecnica'] if tech else item['simple']}**")
+        st.info(f"**{md(item['simple'])}**")
+        if tech:
+            st.caption("Formulación técnica: " + md(item["tecnica"]))
         query = Path(item["query"]).read_text()
         columns, rows = run(query, domain)
         if item.get("antes_despues"):
@@ -491,7 +553,9 @@ def show_text_question(cfg, tech, demo=False):
     contratos y sus montos se leen en vivo."""
     domain = cfg["domain"]
     item = read_json(cfg["texto"])
-    st.info(f"**{item['pregunta'] if tech else item['simple']}**")
+    st.info(f"**{md(item['simple'])}**")
+    if tech:
+        st.caption("Formulación técnica: " + md(item["pregunta"]))
     if not demo:
         if st.button("Responder", type="primary", key=f"{domain}_text_answer"):
             st.session_state[f"{domain}_text_shown"] = True
