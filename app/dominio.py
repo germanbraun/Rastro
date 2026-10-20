@@ -6,6 +6,7 @@ dominio (preguntas, columnas, evidencia, tarjetas, escenarios de cambio) está e
 """
 
 import base64
+import hashlib
 import io
 import json
 import os
@@ -75,6 +76,30 @@ def prefixed(query, domain):
     return f"PREFIX {domain}: <{ns}>\n" + (PROV if "prov:" in query else "") + query
 
 
+def tabla(data, hide_index=True, use_container_width=True, column_config=None, key=None, **kwargs):
+    """Una tabla. Las celdas cortan el texto largo y no tienen scroll: si hay textos largos, al elegir
+    una fila se muestra completa debajo."""
+    df = data if isinstance(data, pd.DataFrame) else pd.DataFrame(data)
+    text = [c for c in df.columns if df[c].dtype == object
+            and not df[c].astype(str).str.startswith("data:image").any()]
+    long = len(df) > 0 and any(df[c].astype(str).str.len().max() > 60 for c in text)
+    args = dict(hide_index=hide_index, use_container_width=use_container_width, column_config=column_config, **kwargs)
+    if not long:
+        return st.dataframe(df, **args)
+    key = key or "tabla_" + hashlib.md5(f"{list(df.columns)}{len(df)}{df.iloc[0].tolist()}".encode()).hexdigest()[:12]
+    event = st.dataframe(df, on_select="rerun", selection_mode="single-row", key=key, **args)
+    picked = event.selection.rows if event else []
+    if picked:
+        row = df.iloc[picked[0]]
+        with st.container(border=True):
+            for c in text:
+                if pd.notna(row[c]) and str(row[c]).strip():
+                    st.markdown(f"**{str(c).strip()}:** {md(row[c])}")
+    else:
+        st.caption("Hay textos que no entran en la celda: elija una fila (la casilla de la izquierda) para leerla completa.")
+    return event
+
+
 def md(text):
     """Texto para st.markdown: «$» es fórmula en Streamlit, y los montos dicen «US$»."""
     return str(text).replace("$", "\\$")
@@ -119,7 +144,7 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
         st.info("La consulta no devolvió resultados.")
     else:
         table, config = logos.with_logos(as_table(columns, rows, cfg, tech, col_sources), columns)
-        st.dataframe(table, hide_index=True, use_container_width=True, column_config=config)
+        tabla(table, hide_index=True, use_container_width=True, column_config=config)
         if item and item.get("mapa"):
             show_map(domain)
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}."
@@ -176,7 +201,7 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
             ev_query = prefixed(evidence["query"], domain)
             st.code(ev_query, language="sparql")
             ev_cols, ev_rows = run(ev_query, domain)
-            st.dataframe(pd.DataFrame(ev_rows, columns=ev_cols), hide_index=True, use_container_width=True)
+            tabla(pd.DataFrame(ev_rows, columns=ev_cols), hide_index=True, use_container_width=True)
 
 
 def explain(query, sql, domain, item=None):
@@ -358,7 +383,7 @@ def show_pieces(domain, diagram=None):
             st.markdown(f'<img src="data:image/svg+xml;base64,{svg}" style="width:100%">', unsafe_allow_html=True)
     for title, rows in ontology_doc(domain):
         with st.expander(f"{title} ({len(rows)})", expanded=title == "Clases"):
-            st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
+            tabla(pd.DataFrame(rows), hide_index=True, use_container_width=True,
                          column_config={"Descripción": st.column_config.TextColumn(width="large")})
     if pieces.get("enlaces"):
         st.markdown("### Entity linking: algunos enlaces que usa la demo", help=ayuda("enlaces"))
@@ -367,7 +392,7 @@ def show_pieces(domain, diagram=None):
             st.markdown(f"**{title}**")
             try:
                 cols, rows = sql_table(query, domain)
-                st.dataframe(pd.DataFrame(rows, columns=cols), hide_index=True, use_container_width=True)
+                tabla(pd.DataFrame(rows, columns=cols), hide_index=True, use_container_width=True)
             except Exception as e:
                 st.warning(f"No se pudo leer: {str(e)[:200]}")
             with st.expander("La consulta"):
@@ -451,7 +476,7 @@ def show_instances(domain):
                   "En el diccionario": "es un/a" if p == RDF_TYPE else names.get(p, ""),
                   "Valor": (f"{short_iri(o, domain)}" + (f" ({names[o]})" if o in names else "")) if o.startswith("http") else o}
                  for p, o in rows]
-        st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True)
+        tabla(pd.DataFrame(table), hide_index=True, use_container_width=True)
     lines = [f"<{short_iri(iri, domain)}>"]
     for k, (p, o) in enumerate(rows):
         value = short_iri(o, domain) if o.startswith("http") else '"' + o.replace('"', '\\"') + '"'
@@ -490,7 +515,7 @@ def sparql_console(domain):
             st.error(str(e).strip()[:2000])
             return
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''} en {time.time() - started:.1f} s.")
-        st.dataframe(pd.DataFrame(rows, columns=columns), hide_index=True, use_container_width=True)
+        tabla(pd.DataFrame(rows, columns=columns), hide_index=True, use_container_width=True)
         with st.expander("El SQL que Ontop generó y ejecutó en Postgres"):
             try:
                 st.code(sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper",
@@ -760,7 +785,7 @@ def show_external(cfg, tech):
         shown["petroleo_m3"] = shown["petroleo_m3"].map(lambda v: money(v) if pd.notna(v) else "—")
     shown = shown.fillna("—").rename(columns=ext["columnas"])
     shown, config = logos.with_logos(shown, columns)
-    st.dataframe(shown, hide_index=True, use_container_width=True, column_config=config)
+    tabla(shown, hide_index=True, use_container_width=True, column_config=config)
     st.caption(f"Resultado {when}. Fuentes: Rastro (Capítulo IV y GLEIF) y Wikidata.")
     st.info(md(ext["conclusion"]))
     with st.expander("La consulta: dos grafos en una"):
@@ -808,7 +833,7 @@ def show_text_question(cfg, tech, demo=False):
             st.markdown("**2. Las descripciones que leyó el asistente**, tal como están en el grafo (`proveedores:description`):")
         else:
             st.markdown("**Las descripciones analizadas**, tal como están en la base de contratos:")
-        st.dataframe(pd.DataFrame([{"Contrato": c, "Millones de US$": round(m / 1e6, 1), "Agencia": a.title(),
+        tabla(pd.DataFrame([{"Contrato": c, "Millones de US$": round(m / 1e6, 1), "Agencia": a.title(),
                                     "Empresa": e.title(), "Descripción": d.capitalize()}
                                    for c, (m, a, e, d) in contracts.items()]),
                      hide_index=True, use_container_width=True)
@@ -833,7 +858,7 @@ def show_records(item, query, rows, tech):
             st.markdown("**2. Los textos que leyó el asistente**, tal como están en el grafo:")
         else:
             st.markdown("**Los textos analizados**, tal como están en la fuente:")
-        st.dataframe(pd.DataFrame([list(r) for r in records.values()], columns=item["columnas"]),
+        tabla(pd.DataFrame([list(r) for r in records.values()], columns=item["columnas"]),
                      hide_index=True, use_container_width=True)
         st.caption(f"Resumen guardado el {item['fecha']}. Los registros se leen en vivo; si cambian los datos, "
                    "el resumen hay que volver a generarlo.")
@@ -927,7 +952,7 @@ def trust(cfg, tech, evaluation, changes):
             for k, title in names.items():
                 line[title] = ("✅ " if row[k]["same"] else "❌ ") + " · ".join(short(a) for a in row[k]["answers"])
             table.append(line)
-        st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True,
+        tabla(pd.DataFrame(table), hide_index=True, use_container_width=True,
                      column_config={"Pregunta": st.column_config.TextColumn(width="medium")})
         st.caption("✅ la misma respuesta las 4 veces · ❌ cambió según cómo se preguntó. En las preguntas que "
                    "piden una lista, el número es cuántos nombres devolvió.")
@@ -937,7 +962,7 @@ def trust(cfg, tech, evaluation, changes):
                                   key=f"{cfg['domain']}_consistency")
             qid = next(k for k, v in labels.items() if v == picked)
             row = consistency[qid]
-            st.dataframe(pd.DataFrame([{"Cómo se preguntó": t, **{names[k]: short(row[k]["answers"][i])
+            tabla(pd.DataFrame([{"Cómo se preguntó": t, **{names[k]: short(row[k]["answers"][i])
                                                                     for k in names}}
                                        for i, t in enumerate(row["texts"])]),
                          hide_index=True, use_container_width=True,
@@ -976,7 +1001,7 @@ def trust(cfg, tech, evaluation, changes):
                 col.caption(summary(after["totals"][k]) + ("" if k == "C" else ". Hay que encontrar y reescribir cada consulta."))
             if tech:
                 st.markdown("**Pregunta por pregunta**")
-                st.dataframe(pd.DataFrame([{"Pregunta": simple.get(qid, qid),
+                tabla(pd.DataFrame([{"Pregunta": simple.get(qid, qid),
                                             **{f"{change_names[k]}, antes": before["cells"][qid][k] for k in change_names},
                                             **{f"{change_names[k]}, después": after["cells"][qid][k] for k in change_names}}
                                            for qid in before["cells"]]),

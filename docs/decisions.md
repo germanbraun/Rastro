@@ -490,3 +490,7 @@ La consulta federada con Wikidata (`layer/energia/externo/wikidata.rq`) estaba s
 ## 2026-10-20 — El grafo de cada instancia, dibujado por Rastro
 
 El dibujo automático (graphviz en el navegador) quedaba ilegible: burbujas sin relleno con texto oscuro sobre el tema oscuro, flechas larguísimas y la IRI en el centro. Ahora la app y las diapositivas usan el mismo dibujo, `app/grafo.py`: la entidad al centro con su nombre, cada propiedad alrededor con su nombre de negocio (también las de PROV-O: «se derivó de», «lo generó»), sobre un fondo claro propio que se lee con cualquier tema, y más alto cuando hay muchas propiedades.
+
+## 2026-10-20 — Tablas con texto largo: elegir una fila para leerla completa
+
+Las tablas de la app cortan el texto largo y la celda no tiene scroll. Todas las tablas pasan por `dominio.tabla`: si alguna celda tiene más de 60 caracteres, la tabla deja elegir una fila y muestra, debajo, la fila completa con cada campo en su propia línea; si no, es una tabla común.

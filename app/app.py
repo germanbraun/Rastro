@@ -32,7 +32,7 @@ sys.path.insert(0, "/layer/eval")
 
 import answer  # noqa: E402
 from run import NAMES, normalize, score  # noqa: E402
-from dominio import ayuda  # noqa: E402  (el texto de los íconos «?»)
+from dominio import ayuda, tabla  # noqa: E402  (los íconos «?» y las tablas con texto largo)
 
 EVAL = Path("/layer/eval")
 SOURCE_LABEL = {"aact": "AACT", "chembl": "ChEMBL", "openfda": "openFDA", "mesh": "MeSH",
@@ -352,7 +352,7 @@ def show_text_question():
     facts_query = Path("/ontology/queries/cq11.rq").read_text()
     _, facts = answer.run_sparql_table(facts_query)
     st.markdown("**Y como dato del grafo**, contado con una consulta exacta:")
-    st.dataframe(pd.DataFrame([{"Motivo": m, "Ensayos": int(n)} for m, n in facts]), hide_index=True,
+    tabla(pd.DataFrame([{"Motivo": m, "Ensayos": int(n)} for m, n in facts]), hide_index=True,
                  use_container_width=True)
     st.caption("Cada motivo es un hecho del grafo, clasificado con reglas a partir del texto del sponsor y "
                "con su evidencia. Un ensayo puede tener varios motivos. Las reglas aciertan 9 de cada 10 en "
@@ -370,7 +370,7 @@ def show_text_question():
             st.markdown("**2. Los motivos que leyó el asistente**, tal como están en el grafo (`oncologia:whyStopped`):")
         else:
             st.markdown("**Los motivos que leyó**, tal como los escribió cada sponsor:")
-        st.dataframe(pd.DataFrame([{"Ensayo": f"https://clinicaltrials.gov/study/{nct}", "Fármacos": d.lower(),
+        tabla(pd.DataFrame([{"Ensayo": f"https://clinicaltrials.gov/study/{nct}", "Fármacos": d.lower(),
                                     "Motivo escrito": w} for nct, (_, d, w) in sorted(texts.items())]),
                      hide_index=True, use_container_width=True,
                      column_config={"Ensayo": st.column_config.LinkColumn(display_text=r"study/(.*)")})
@@ -400,7 +400,7 @@ def show_answer(query, columns, rows, note=None):
             table[column] = [summary.get(n, "") for n in names]
         import logos  # el favicon de cada empresa (sponsor)
         table, logo_config = logos.with_logos(table, list(columns))
-        st.dataframe(table, hide_index=True, use_container_width=True, column_config=logo_config)
+        tabla(table, hide_index=True, use_container_width=True, column_config=logo_config)
         if TECH:
             st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}. Cada columna dice de qué fuente sale."
                        + (" La evidencia de cada enlace está en «¿De dónde sale la respuesta?»." if drugs else ""))
@@ -471,7 +471,7 @@ def show_answer(query, columns, rows, note=None):
                             f"pide la evidencia del enlace entre {nct} y {name.lower()}: de qué deriva "
                             f"(`prov:wasDerivedFrom`) y qué lo generó (`prov:wasGeneratedBy`):")
                 st.code(query, language="sparql")
-                st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True)
+                tabla(pd.DataFrame(table), hide_index=True, use_container_width=True)
                 st.caption("La consulta de la respuesta no necesita PROV-O: usa `oncologia:testsDrug`. La procedencia "
                            "se pide aparte, como acá. «?enlace a prov:Entity» no está en ningún mapeo: Ontop "
                            "lo deduce de la ontología, donde un enlace es un tipo de entidad PROV. Cualquiera "
@@ -631,7 +631,7 @@ with trust_tab:
                 values = row["answers"][k]
                 line[title] = ("✅ " if same_answers(values) else "❌ ") + " · ".join(short_answer(v) for v in values)
             table.append(line)
-        st.dataframe(pd.DataFrame(table), hide_index=True, use_container_width=True,
+        tabla(pd.DataFrame(table), hide_index=True, use_container_width=True,
                      column_config={"Pregunta": st.column_config.TextColumn(width="medium")})
         st.caption("✅ la misma respuesta las 4 veces · ❌ cambió según cómo se preguntó. En las preguntas que "
                    "piden una lista, el número es cuántos nombres devolvió.")
@@ -643,7 +643,7 @@ with trust_tab:
         detail = [{"Cómo se preguntó": text,
                    **{title: short_answer(row["answers"][k][i]) for k, title in approaches.items()}}
                   for i, text in enumerate(row["texts"])]
-        st.dataframe(pd.DataFrame(detail), hide_index=True, use_container_width=True,
+        tabla(pd.DataFrame(detail), hide_index=True, use_container_width=True,
                      column_config={"Cómo se preguntó": st.column_config.TextColumn(width="large")})
         if TECH:
             with trust_correct:
@@ -824,7 +824,7 @@ with trust_tab:
                              **{CHANGE_NAMES[k]: before["cells"][qid][k] for k in CHANGE_NAMES}}
                             for qid in before["cells"]
                             if any(not before["cells"][qid][k].startswith("✅") for k in CHANGE_NAMES)]
-                    st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True)
+                    tabla(pd.DataFrame(rows), hide_index=True, use_container_width=True)
             st.info("Con SQL, cada consulta sabe cómo se llaman las columnas y cómo se escriben los valores, "
                     "aunque use las tablas de enlaces. En Rastro ese conocimiento está en un solo lugar: "
                     "el mapeo. Una capa de vistas SQL también lo centralizaría; la capa semántica suma la "
@@ -866,7 +866,7 @@ with trust_tab:
             table = pd.read_csv("/layer/externo/resultado-2026-10-17.csv").rename(columns={
                 "farmaco": "Fármaco", "ensayos": "Ensayos de cáncer de mama",
                 "trata_segun_wikidata": "Trata, según Wikidata"})
-            st.dataframe(table.fillna("—"), hide_index=True, use_container_width=True)
+            tabla(table.fillna("—"), hide_index=True, use_container_width=True)
             st.caption("Afatinib (pulmón) y vandetanib (tiroides) están aprobados para otros cánceres y se "
                        "prueban en mama: un dato que ninguna de las cuatro fuentes de Rastro tiene. "
                        "Resultado guardado el 17 oct 2026; la consulta en vivo tarda unos 10 segundos.")
