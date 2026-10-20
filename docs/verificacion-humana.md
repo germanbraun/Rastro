@@ -193,7 +193,7 @@ En la app, **Petróleo y gas → Preguntar → Una pregunta sobre textos → Res
 | 5c. Textos de Leidos | __ de 3 temas | | |
 | 6a. Socios | 2 de 4 (las otras 2, corregidas con su documento) | persona | 2026-10-20 |
 | 6b. Grupos | 4 de 4 | persona | 2026-10-20 |
-| 6c. Áreas protegidas | __ de 3 | | |
+| 6c. Áreas protegidas | 3 de 3 | persona | 2026-10-20 |
 | 6d. LEI | 3 de 3 | persona | 2026-10-20 |
 | 6e. Cambios de operadora | 3 de 3 (dos con 1 a 2 meses de desfase, esperable) | persona | 2026-10-20 |
 | 6f. Textos de venteos | pendiente: el listado no trae las planillas; se deja para más adelante | | |
