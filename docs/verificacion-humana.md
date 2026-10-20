@@ -111,7 +111,7 @@ USAspending registra como matriz de Austal USA a Computershare Limited, un regis
 
 ### 5c. El resumen de textos (GraphRAG)
 
-En la app, **Proveedores → Una pregunta sobre textos**, abrí 3 temas y, en cada uno, 2 contratos citados. ¿La descripción del contrato dice lo que resume el tema?
+En la app, **Proveedores del Estado de EE. UU. → Preguntar → Una pregunta sobre textos → Responder**. En el paso 4 («El resumen, con citas»), cada tema cita sus contratos por número. Elegí 3 temas y, de cada uno, 2 contratos; buscalos en el paso 3 («Los 40 textos que leyó»): al elegir una fila se ve la descripción completa. ¿La descripción dice lo que resume el tema?
 
 | Tema | Contratos mirados | ¿Coincide? |
 |---|---|---|
