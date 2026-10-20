@@ -7,6 +7,7 @@ dominio (preguntas, columnas, evidencia, tarjetas, escenarios de cambio) está e
 
 import base64
 import json
+import os
 import re
 import time
 from pathlib import Path
@@ -230,6 +231,144 @@ def short_iri(iri, domain):
             .replace("https://w3id.org/rastro/", "rastro:"))
 
 
+# «Diccionario, enlaces y mapeos» (vista técnica): las piezas de Rastro que usa la demo en 3 pasos.
+# Los enlaces se leen en vivo de las tablas de Rastro; los mapeos, del archivo R2RML del dominio.
+PIECES = {
+    "energia": {
+        "mapeos": "/mappings/energia.r2rml.ttl",
+        "enlaces": [
+            ("Paso 1 · Los socios de cada concesión, separados del texto del mapa",
+             """SELECT c.nombre AS concesion, e.nombre AS socia, p.porcentaje, p.texto AS evidencia
+                FROM energia.participacion p JOIN energia.concesion c USING (id_concesion) JOIN energia.empresa e USING (empresa_id)
+                WHERE c.nombre IN ('LOMA CAMPANA', 'LA AMARGA CHICA', 'BANDURRIA SUR') ORDER BY 1, 3 DESC"""),
+            ("Paso 1 · La misma empresa, escrita distinto en cada fuente",
+             """SELECT n.fuente, n.nombre AS nombre_en_la_fuente, e.nombre AS empresa, n.regla
+                FROM energia.empresa_nombre n JOIN energia.empresa e USING (empresa_id)
+                WHERE e.nombre IN ('COMPAÑIA GENERAL DE COMBUSTIBLES', 'CHEVRON', 'PLUSPETROL') ORDER BY 3, 1, 2"""),
+            ("Paso 2 · Quién opera cada pozo (pozos donde el padrón dice otra cosa)",
+             """SELECT o.idpozo AS pozo, e.nombre AS operadora, o.empresa_padron AS segun_el_padron, o.regla, o.evidencia
+                FROM energia.operador_pozo o JOIN energia.empresa e USING (empresa_id)
+                WHERE o.empresa_padron IS NOT NULL AND upper(o.empresa_padron) NOT LIKE upper(left(e.nombre, 6)) || '%'
+                ORDER BY o.idpozo LIMIT 6"""),
+            ("Paso 3 · En qué concesión cae cada posible venteo (La Calera)",
+             """SELECT v.id AS venteo, v.fecha, v.satelite, c.nombre AS concesion, v.evidencia
+                FROM energia.venteo v JOIN energia.concesion c USING (id_concesion)
+                WHERE v.tipo = 'detectado' AND c.nombre = 'LA CALERA' ORDER BY v.fecha DESC LIMIT 6"""),
+        ],
+        "mapas": [("Paso 1 · Participación, nombres de empresa y producción", ["Stake", "CompanyName", "WellProductionAmounts"]),
+                  ("Paso 2 · La operadora de cada pozo", ["OperatorLink"]),
+                  ("Paso 3 · El venteo y su concesión", ["DetectedVenting", "LocationLink"])],
+    },
+    "proveedores": {
+        "mapeos": "/mappings/proveedores.r2rml.ttl",
+        "enlaces": [
+            ("Pasos 1 y 2 · Las empresas del grupo Leidos, con la evidencia de cada una",
+             """SELECT s.name AS proveedor, sg.matrix_name AS matriz_en_usaspending, g.name AS grupo, sg.rule AS regla, sg.source_text AS evidencia
+                FROM proveedores.supplier_group sg JOIN proveedores.supplier s ON s.uei = sg.supplier_uei
+                JOIN proveedores.group_company g USING (group_id)
+                WHERE g.name LIKE 'LEIDOS%' OR s.uei = 'MMLKPW9JLX64' ORDER BY g.name, s.name LIMIT 8"""),
+        ],
+        "mapas": [("Pasos 1 y 2 · Proveedor, grupo y el enlace con su evidencia", ["SupplierGroup", "GroupLink"])],
+    },
+    "oncologia": {
+        "mapeos": "/mappings/rastro.r2rml.ttl",
+        "enlaces": [
+            ("Qué escribió cada ensayo y qué fármaco reconoció Rastro (trastuzumab)",
+             """SELECT t.nct_id AS ensayo, t.intervention AS lo_que_escribio_el_ensayo, t.matched AS coincidio_con,
+                       d.pref_name AS farmaco, t.rule AS regla
+                FROM linking.trial_drug t JOIN linking.drug d ON d.chembl_id = t.parent_chembl_id
+                WHERE d.pref_name = 'TRASTUZUMAB' AND lower(t.intervention) NOT LIKE '%trastuzumab%' ORDER BY t.nct_id LIMIT 8"""),
+        ],
+        "mapas": [("El ensayo prueba un fármaco, con su evidencia", ["TrialDrug", "DrugLink"])],
+    },
+}
+
+
+def sql_table(query, domain):
+    """Una consulta de solo lectura sobre las tablas de enlaces de Rastro."""
+    import psycopg
+    user = answer.DOMAINS[domain]["readers"]["D"]
+    with psycopg.connect(answer.READER.format(user) % os.environ["PG_DB"]) as conn:
+        cur = conn.execute(query)
+        return [c.name for c in cur.description], cur.fetchall()
+
+
+def mapping_blocks(path, names):
+    """Los TriplesMap pedidos, tal como están en el archivo R2RML."""
+    text = Path(path).read_text()
+    blocks = {}
+    for m in re.finditer(r"^<#(\w+)> a rr:TriplesMap ;.*?(?=^<#|\Z)", text, re.S | re.M):
+        blocks[m.group(1)] = m.group(0).strip()
+    return [blocks[n] for n in names if n in blocks]
+
+
+def ontology_doc(domain):
+    """El diccionario como documentación (al estilo de WIDOCO): clases, relaciones y atributos, con su
+    etiqueta, su descripción y entre qué clases van."""
+    import rdflib
+    from rdflib.namespace import OWL, RDF, RDFS
+    g = rdflib.Graph().parse(ONTOLOGY_FILE[domain])
+    ns = answer.DOMAINS[domain]["namespace"]
+
+    def name(x):
+        return short_iri(str(x), domain) if x else ""
+
+    def text(x, prop):
+        return " ".join(str(o) for o in g.objects(x, prop))
+
+    sections = []
+    for title, kind in [("Clases", OWL.Class), ("Relaciones (entre entidades)", OWL.ObjectProperty),
+                        ("Atributos (datos simples)", OWL.DatatypeProperty)]:
+        rows = []
+        for s in sorted(set(g.subjects(RDF.type, kind)), key=str):
+            if not str(s).startswith(ns):
+                continue
+            row = {"Término": name(s), "En el diccionario": text(s, RDFS.label), "Descripción": text(s, RDFS.comment)}
+            if kind == OWL.Class:
+                row["Es un tipo de"] = ", ".join(name(o) for o in g.objects(s, RDFS.subClassOf) if isinstance(o, rdflib.URIRef))
+            else:
+                row["De"] = ", ".join(name(o) for o in g.objects(s, RDFS.domain))
+                row["A"] = ", ".join(name(o) for o in g.objects(s, RDFS.range))
+            rows.append(row)
+        sections.append((title, rows))
+    return sections
+
+
+def show_pieces(domain, diagram=None):
+    """La pestaña técnica «Diccionario, enlaces y mapeos»."""
+    pieces = PIECES.get(domain, {})
+    st.markdown("### El diccionario (la ontología)")
+    st.caption(f"Documentación generada del archivo de la ontología (`{ONTOLOGY_FILE[domain].replace('/ontology/', 'ontology/')}`), "
+               "como la que arman herramientas de documentación de ontologías (por ejemplo, WIDOCO).")
+    if diagram and Path(f"/app/{diagram}.svg").exists():
+        with st.expander("El diccionario dibujado", expanded=False):
+            svg = base64.b64encode(Path(f"/app/{diagram}.svg").read_bytes()).decode()
+            st.markdown(f'<img src="data:image/svg+xml;base64,{svg}" style="width:100%">', unsafe_allow_html=True)
+    for title, rows in ontology_doc(domain):
+        with st.expander(f"{title} ({len(rows)})", expanded=title == "Clases"):
+            st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
+                         column_config={"Descripción": st.column_config.TextColumn(width="large")})
+    if pieces.get("enlaces"):
+        st.markdown("### Entity linking: algunos enlaces que usa la demo")
+        st.caption("Registros reales de las tablas de enlaces de Rastro: qué decía cada fuente, qué decidió Rastro y con qué regla.")
+        for title, query in pieces["enlaces"]:
+            st.markdown(f"**{title}**")
+            try:
+                cols, rows = sql_table(query, domain)
+                st.dataframe(pd.DataFrame(rows, columns=cols), hide_index=True, use_container_width=True)
+            except Exception as e:
+                st.warning(f"No se pudo leer: {str(e)[:200]}")
+            with st.expander("La consulta"):
+                st.code(sqlparse.format(query, reindent=True, keyword_case="upper"), language="sql")
+    if pieces.get("mapas"):
+        st.markdown("### Mapeos (R2RML): los que usa la demo")
+        st.caption(f"Cómo se traduce cada tabla al diccionario, tal como está en `{pieces['mapeos'].lstrip('/')}`. "
+                   "Si una fuente cambia, se arregla acá.")
+        for title, names in pieces["mapas"]:
+            with st.expander(title):
+                st.code("\n\n".join(mapping_blocks(pieces["mapeos"], names)), language="turtle")
+
+
 def dot_text(text, n=24):
     text = str(text).replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ")
     return text if len(text) <= n else text[:n - 1] + "…"
@@ -429,12 +568,14 @@ def render(cfg_path, tech):
 
     # «Por qué confiar» necesita una evaluación medida; un dominio sin ella no muestra la pestaña
     names = ["Preguntar"] + (["Por qué confiar"] if cfg.get("tarjetas") else []) + ["Preguntas frecuentes"] \
-        + (["Consola SPARQL"] if tech else [])
+        + (["Consola SPARQL", "Diccionario, enlaces y mapeos"] if tech else [])
     tabs = dict(zip(names, st.tabs(names)))
     ask_tab, trust_tab, faq_tab = tabs["Preguntar"], tabs.get("Por qué confiar"), tabs["Preguntas frecuentes"]
     if tech:
         with tabs["Consola SPARQL"]:
             sparql_console(domain)
+        with tabs["Diccionario, enlaces y mapeos"]:
+            show_pieces(domain, cfg.get("diagrama", {}).get("archivo"))
 
     with ask_tab:
         modes = ((["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Una pregunta de ejemplo"]

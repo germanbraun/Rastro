@@ -514,11 +514,13 @@ with st.sidebar:
                    "efectos adversos (openFDA) y enfermedades (MeSH).")
 
 ask_tab, trust_tab, faq_tab, *console_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"]
-                                                   + (["Consola SPARQL"] if TECH else []))
+                                                   + (["Consola SPARQL", "Diccionario, enlaces y mapeos"] if TECH else []))
 if console_tab:
-    import dominio  # la consola es la misma en los tres dominios
+    import dominio  # la consola y las piezas técnicas son las mismas en los tres dominios
     with console_tab[0]:
         dominio.sparql_console("oncologia")
+    with console_tab[1]:
+        dominio.show_pieces("oncologia", "ontologia")
 FAQ_HINT = "Para dudas, consulte la pestaña **Preguntas frecuentes**."
 
 with ask_tab:
