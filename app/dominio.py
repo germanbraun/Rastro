@@ -381,40 +381,35 @@ def show_pieces(domain, diagram=None):
                 st.code("\n\n".join(mapping_blocks(pieces["mapeos"], names)), language="turtle")
 
 
-def dot_text(text, n=24):
-    text = str(text).replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ")
-    return text if len(text) <= n else text[:n - 1] + "…"
+PROV_NAMES = {PROV_NS + "wasDerivedFrom": "se derivó de", PROV_NS + "wasGeneratedBy": "lo generó",
+              PROV_NS + "Entity": "Dato con procedencia"}
 
 
-def instance_graph(iri, rows, domain):
-    """La instancia como grafo: burbujas para las entidades, rectángulos para los datos simples
-    (textos, números, fechas) y flechas con el nombre de negocio de cada propiedad."""
-    ns, names = answer.DOMAINS[domain]["namespace"], labels(domain)
+def instance_graph(iri, rows, domain, title=None):
+    """La instancia como grafo (app/grafo.py): burbujas para las entidades, burbujas naranjas para las
+    clases, rectángulos para los datos simples y flechas con el nombre de negocio de cada propiedad.
+    Devuelve el SVG y las entidades enlazadas, para seguirlas."""
+    import grafo
+    ns, names = answer.DOMAINS[domain]["namespace"], {**labels(domain), **PROV_NAMES}
     linked = [o for p, o in rows if o.startswith("http") and p != RDF_TYPE]
     named = {}
     if linked:
         values = " ".join(f"<{o}>" for o in set(linked))
         named = dict(run(f"SELECT ?o ?n WHERE {{ VALUES ?o {{ {values} }} ?o <{ns}name> ?n }}", domain)[1])
     own = next((o for p, o in rows if p == f"{ns}name"), None)
-    # En estrella: la entidad al centro y cada propiedad alrededor
-    lines = ['digraph {', 'layout=twopi; root=n0; ranksep=0.75; overlap=false; bgcolor="transparent";',
-             'node [fontname="Helvetica", fontsize=22, margin="0.08,0.04"]; edge [fontname="Helvetica", fontsize=18, color="#7A8699", fontcolor="#7A8699"];',
-             f'n0 [label="{dot_text(own or short_iri(iri, domain))}\\n{dot_text(short_iri(iri, domain), 34)}", shape=ellipse, '
-             'style=filled, fillcolor="#2F6FB5", fontcolor="white", penwidth=0];']
-    for k, (p, o) in enumerate(rows, start=1):
+    nodes = []
+    for p, o in rows:
+        prop = "es un/a" if p == RDF_TYPE else names.get(p) or short_iri(p, domain)
         if p == RDF_TYPE:
-            lines.append(f'n{k} [label="{dot_text(names.get(o, short_iri(o, domain)))}\\n(clase)", shape=ellipse, '
-                         'style="filled,dashed", fillcolor="#FFF3E6", color="#FF8C42"];')
-            edge = "es un/a"
+            nodes.append(("clase", names.get(o) or short_iri(o, domain), short_iri(o, domain), prop))
         elif o.startswith("http"):
-            lines.append(f'n{k} [label="{dot_text(named.get(o) or short_iri(o, domain))}", shape=ellipse, '
-                         'style=filled, fillcolor="#DCEBFA", color="#2F6FB5"];')
-            edge = names.get(p) or short_iri(p, domain)
+            nodes.append(("entidad", named.get(o) or o.rstrip("/").split("/")[-1], short_iri(o, domain), prop))
         else:
-            lines.append(f'n{k} [label="{dot_text(o)}", shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#B8C2CF"];')
-            edge = names.get(p) or short_iri(p, domain)
-        lines.append(f'n0 -> n{k} [label="{dot_text(edge, 22)}"];')
-    return "\n".join(lines + ["}"]), [o for o in dict.fromkeys(linked) if o not in names]
+            nodes.append(("dato", o, "", prop))
+    drawing = grafo.svg((own or title or iri.rstrip("/").split("/")[-1], short_iri(iri, domain)), nodes,
+                        width=1500, height=620 + 55 * max(0, len(nodes) - 8), scale=0.95,
+                        font="Helvetica, Arial, sans-serif")   # más propiedades, más alto: no se pisan
+    return drawing, [o for o in dict.fromkeys(linked) if o not in names]
 
 
 def show_instances(domain):
@@ -435,8 +430,10 @@ def show_instances(domain):
     _, rows = run(f"SELECT ?p ?o WHERE {{ <{iri}> ?p ?o }} ORDER BY ?p", domain)
     if not rows:
         st.info("Esta entidad no tiene más datos en el grafo.")
-    graph, neighbours = instance_graph(iri, rows, domain)
-    st.graphviz_chart(graph, use_container_width=True)
+    title = chosen.split(": ", 1)[-1] if iri == examples[chosen] else None
+    graph, neighbours = instance_graph(iri, rows, domain, title)
+    st.markdown(f'<img src="data:image/svg+xml;base64,{base64.b64encode(graph.encode()).decode()}" '
+                'style="width:100%;border-radius:12px">', unsafe_allow_html=True)
     nav, back = st.columns([4, 1])
     if neighbours:
         go = nav.selectbox("Seguir un enlace (ver esa entidad)", ["—"] + neighbours,

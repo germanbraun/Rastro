@@ -486,3 +486,7 @@ La app tiene muchos detalles. Cada parte importante suma un ícono «?» que, al
 ## 2026-10-20 — Petróleo y gas: «Datos de afuera (Wikidata)» en la app
 
 La consulta federada con Wikidata (`layer/energia/externo/wikidata.rq`) estaba solo en el repo, una pregunta frecuente y una diapositiva. Ahora es un modo de «Preguntar», visible sin «Ver detalles técnicos»: un dibujo de cómo se unen los dos grafos por el LEI, un botón que la corre en vivo en GraphDB (unos 15 segundos) y, si Wikidata no responde, el resultado guardado el 19 de octubre, con la fecha a la vista. La configuración está en `externo:` de `app/dominios/energia.yaml`, así que otro dominio puede sumarla igual.
+
+## 2026-10-20 — El grafo de cada instancia, dibujado por Rastro
+
+El dibujo automático (graphviz en el navegador) quedaba ilegible: burbujas sin relleno con texto oscuro sobre el tema oscuro, flechas larguísimas y la IRI en el centro. Ahora la app y las diapositivas usan el mismo dibujo, `app/grafo.py`: la entidad al centro con su nombre, cada propiedad alrededor con su nombre de negocio (también las de PROV-O: «se derivó de», «lo generó»), sobre un fondo claro propio que se lee con cualquier tema, y más alto cuando hay muchas propiedades.
