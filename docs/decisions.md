@@ -455,3 +455,12 @@ En la demo de petróleo y gas, el paso de integración decía «Fuentes: Capítu
 
 - **Una pestaña técnica nueva, en los tres dominios:** el diccionario como documentación (clases, relaciones y atributos, con su etiqueta, su descripción y entre qué clases van, leídos del archivo de la ontología, al estilo de WIDOCO, más el dibujo del diccionario); registros reales de las tablas de entity linking que usa la demo en 3 pasos; y los mapeos R2RML de esos pasos, tal como están en el archivo. No se sumó WIDOCO: es una herramienta Java aparte, y la misma lectura se hace con lo que la app ya usa.
 - **Nueve preguntas, siete medidas:** petróleo y gas tiene nueve preguntas de ejemplo, pero la evaluación midió las siete primeras; las concesiones para revisar (e08) y los cambios de operadora (e09) se sumaron después. La diapositiva de preguntas lista las nueve y lo aclara, y las tarjetas de «Por qué confiar» dicen «las preguntas medidas».
+
+## 2026-10-19 — Petróleo y gas se une con Wikidata por el LEI
+
+Oncología ya unía Rastro con Wikidata en vivo (`layer/externo/`); petróleo y gas no se conectaba a ningún grafo de afuera.
+
+- **Una consulta en GraphDB** (`layer/energia/externo/wikidata.rq`), sin cargar nada: de Rastro, las empresas con LEI y el petróleo que declararon en 2025; de Wikidata, por el mismo LEI (P1278), la sede, la bolsa en la que cotizan, el dueño o la matriz y el sitio web. Resultado guardado en `resultado-2026-10-19.csv`.
+- **Solo 3 de las 12 empresas con LEI están en Wikidata con ese LEI:** YPF, Pan American Energy y Pampa Energía. Lo nuevo: YPF y Pampa cotizan en la Bolsa de Nueva York, un dato que no está en ninguna de las seis fuentes. Ninguna tiene dueño o matriz cargados, lo que confirma que los grupos siguen siendo correcciones revisadas.
+- **Sin cruce por nombre:** por nombre exacto aparecen Pluspetrol, Tecpetrol, Compañía General de Combustibles y Vista, pero son el grupo y no la sociedad argentina, y Vista tiene dos entradas. Usarlos pediría una revisión; el LEI, no.
+- **No es una pregunta de ejemplo:** las preguntas de la app corren en Ontop, que no consulta grafos de afuera. Queda como pregunta frecuente en `app/dominios/energia.yaml` y como diapositiva del anexo (`e-externo`).
