@@ -129,19 +129,21 @@ La pregunta de la participación (YPF: 12,6 millones de m³) depende de los soci
 
 | Concesión | Socios según Rastro | ¿Coincide? |
 |---|---|---|
-| Loma Campana | YPF 50 %, Chevron 50 % (como Compañía de Hidrocarburo No Convencional) | |
-| La Amarga Chica | YPF 50 %, Petronas 50 % | |
-| Bandurria Sur | YPF 44,9 %, Shell 30 %, Vista 25,1 % | |
-| Aguada Pichana Este | Total, Wintershall Dea e YPF 27,27 % cada una; Pan American 18,18 % | |
+| Loma Campana | YPF 50 %, Chevron 50 % (como Compañía de Hidrocarburo No Convencional) | si |
+| La Amarga Chica | YPF 50 %, Petronas 50 % | Vista Energy compro el 50% a Petronas en 2025 |
+| Bandurria Sur | YPF 44,9 %, Shell 30 %, Vista 25,1 % | si |
+| Aguada Pichana Este | Total, Wintershall Dea e YPF 27,27 % cada una; Pan American 18,18 % | https://www.legislaturaneuquen.gob.ar/SVRFILES/Neuleg/ArchivoInicial/30836V_42218.pdf aparece Total 55%, Wintershall 22,65%, YPF 16,69%, Pan American 5,6 % |
+
+**Qué se hizo con 6a:** La Amarga Chica: Vista compró en abril de 2025 el 100 % de Petronas E&P Argentina, que sigue siendo la titular del 50 %; se agregó como corrección de grupo (Petronas E&P Argentina → Vista) en `linking/energia/correcciones.csv`. Aguada Pichana Este: el Acuerdo Marco de la Legislatura de Neuquén (Anexo IV, páginas 28 y 29) dice Total 55 %, Wintershall 22,5 %, YPF 16,9 % y Pan American 5,6 % (no 22,65 % ni 16,69 %); se agregó en `linking/energia/participaciones-revisadas.csv`, con el documento. La parte de YPF pasa de 12.581.213 a 12.570.093 m³ (Aguada Pichana Este es de gas y produce poco petróleo); Vista sube a 7,0 millones con la mitad de La Amarga Chica.
 
 ### 6b. Las empresas que Rastro trata como una sola
 
 | Nombre en la fuente | Grupo en Rastro | ¿Es la misma empresa o grupo? |
 |---|---|---|
-| CGC Energía SAU | Compañía General de Combustibles | |
-| Compañía de Hidrocarburo No Convencional S.R.L. | Chevron | |
-| Chevron Argentina S.R.L. | Chevron | |
-| Pluspetrol Cuenca Neuquina S.R.L. | Pluspetrol | |
+| CGC Energía SAU | Compañía General de Combustibles | si |
+| Compañía de Hidrocarburo No Convencional S.R.L. | Chevron | es una sociedad comercial argentina creada en el marco del acuerdo de YPF y Chevron |
+| Chevron Argentina S.R.L. | Chevron | si |
+| Pluspetrol Cuenca Neuquina S.R.L. | Pluspetrol | si |
 
 ### 6c. Posibles venteos en áreas protegidas
 
@@ -157,9 +159,9 @@ Rastro cuenta 60 posibles venteos dentro de un área protegida del IGN. Abrí un
 
 | Empresa | LEI según Rastro | ¿Es esa empresa en GLEIF? |
 |---|---|---|
-| YPF S.A. | [5493003N7447U18U5U53](https://search.gleif.org/#/record/5493003N7447U18U5U53) | |
-| Pampa Energía S.A. | [254900QNIK0CVURGML24](https://search.gleif.org/#/record/254900QNIK0CVURGML24) | |
-| Pecom Servicios Energía SAU | [549300BFZLJSODUHB179](https://search.gleif.org/#/record/549300BFZLJSODUHB179) | |
+| YPF S.A. | [5493003N7447U18U5U53](https://search.gleif.org/#/record/5493003N7447U18U5U53) | si |
+| Pampa Energía S.A. | [254900QNIK0CVURGML24](https://search.gleif.org/#/record/254900QNIK0CVURGML24) | si |
+| Pecom Servicios Energía SAU | [549300BFZLJSODUHB179](https://search.gleif.org/#/record/549300BFZLJSODUHB179) | si |
 
 ### 6e. Cambios de operadora
 
@@ -187,10 +189,10 @@ En la app, **Petróleo y gas → Una pregunta sobre textos**, abrí el tema «Pl
 | 5a. Empresas de Leidos | __ de 5 | | |
 | 5b. Austal | | | |
 | 5c. Textos de Leidos | __ de 3 temas | | |
-| 6a. Socios | __ de 4 | | |
-| 6b. Grupos | __ de 4 | | |
+| 6a. Socios | 2 de 4 (las otras 2, corregidas con su documento) | persona | 2026-10-20 |
+| 6b. Grupos | 4 de 4 | persona | 2026-10-20 |
 | 6c. Áreas protegidas | __ de 3 | | |
-| 6d. LEI | __ de 3 | | |
+| 6d. LEI | 3 de 3 | persona | 2026-10-20 |
 | 6e. Cambios de operadora | __ de 3 | | |
 | 6f. Textos de venteos | | | |
 

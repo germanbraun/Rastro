@@ -132,8 +132,8 @@ preguntas:
       Participación: el porcentaje de una concesión que pertenece a cada socio. La operadora maneja los pozos, pero el petróleo se reparte entre los socios.
       m³: metros cúbicos de petróleo. Un metro cúbico son unos 6,3 barriles.
     antes_despues:              # layer/energia/sin-rastro.sql, consulta 1
-      sin: {valor: "YPF: 21,4 M m³", detalle: "Sumando la producción por la empresa que la declara, a YPF se le asigna todo lo que opera, y Petronas, socia en La Amarga Chica, no aparece."}
-      con: {valor: "YPF: 12,6 M m³", detalle: "Su parte en cada concesión, según los socios del mapa. Petronas: 2,1 M m³; Chevron, con sus dos razones sociales: 3,5 M m³."}
+      sin: {valor: "YPF: 21,4 M m³", detalle: "Sumando la producción por la empresa que la declara, a YPF se le asigna todo lo que opera, y la mitad de La Amarga Chica, que figura a nombre de Petronas E&P Argentina (de Vista desde 2025), no aparece."}
+      con: {valor: "YPF: 12,6 M m³", detalle: "Su parte en cada concesión, según los socios del mapa. Vista: 7,0 M m³, con la mitad de La Amarga Chica (2,1), que compró con Petronas E&P Argentina en 2025; Chevron, con sus dos razones sociales: 3,5 M m³."}
       impacto: >-
         Sin integrar, a YPF se le asignan 8,8 millones de m³ de más (55 millones de barriles): unos US$ 3.600
         millones, con un precio supuesto de US$ 65 por barril. Es producción de sus socios.

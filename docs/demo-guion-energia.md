@@ -17,7 +17,7 @@ Para operadoras y consultoras del sector, sin conocimientos técnicos. Tres mome
 
 ## 1:00 – 2:00 · 1 · Integración (app, paso 1; diapositiva 5)
 
-> «¿Cuánto petróleo de 2025 le corresponde a cada empresa? Sumando por quien declara la producción, a YPF se le asignan 21,4 millones de metros cúbicos. Pero el petróleo se reparte entre los socios: su parte es 12,6. Petronas, que no opera ningún pozo, tiene 2,1. Los socios estaban en un texto del mapa; Rastro los separa una vez. Dicho en plata: son unos 3.600 millones de dólares de producción de los socios, con un precio supuesto de 65 dólares por barril.»
+> «¿Cuánto petróleo de 2025 le corresponde a cada empresa? Sumando por quien declara la producción, a YPF se le asignan 21,4 millones de metros cúbicos. Pero el petróleo se reparte entre los socios: su parte es 12,6. Y la mitad de La Amarga Chica, que el mapa todavía pone a nombre de Petronas, es de Vista desde 2025: 2,1 que sin Rastro no aparecen. Los socios estaban en un texto del mapa; Rastro los separa una vez. Dicho en plata: son unos 3.600 millones de dólares de producción de los socios, con un precio supuesto de 65 dólares por barril.»
 
 Debajo de la tabla, en **¿Por qué este número?**, elegir YPF: aparece su parte concesión por concesión, con el porcentaje y el texto del mapa del que sale cada uno.
 

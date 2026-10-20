@@ -61,12 +61,28 @@ LEFT JOIN energia.empresa_nombre en ON en.fuente = 'sig_energia' AND en.nombre =
 ORDER BY c.id_concesion;
 
 -- Participaciones: el texto del mapa, separado en socios y porcentajes
+-- Si una concesión tiene participaciones revisadas (participaciones-revisadas.csv, cada una con su
+-- documento), esas reemplazan a las del mapa en esa concesión.
 CREATE TABLE energia.participacion AS
-SELECT DISTINCT c.id_concesion, en.empresa_id, replace(m[2], ',', '.')::numeric AS porcentaje,
-       trim(m[1]) || ': ' || m[2] || ' %' AS texto
-FROM sig_energia.concesion c,
-     regexp_matches(c.participacion, '<br>\s*([^:<]+?)\s*:\s*([0-9.,]+)\s*%', 'g') m
-JOIN energia.empresa_nombre en ON en.fuente = 'sig_energia' AND en.nombre = trim(m[1]);
+WITH mapa AS (
+  SELECT DISTINCT c.id_concesion, en.empresa_id, replace(m[2], ',', '.')::numeric AS porcentaje,
+         trim(m[1]) || ': ' || m[2] || ' %' AS texto, 'texto de socios del mapa' AS regla
+  FROM sig_energia.concesion c,
+       regexp_matches(c.participacion, '<br>\s*([^:<]+?)\s*:\s*([0-9.,]+)\s*%', 'g') m
+  JOIN energia.empresa_nombre en ON en.fuente = 'sig_energia' AND en.nombre = trim(m[1])
+), revisada AS (
+  SELECT DISTINCT c.id_concesion,
+         (SELECT en.empresa_id FROM energia.empresa_nombre en
+           WHERE energia.normalizar(en.nombre) = energia.normalizar(r.empresa) LIMIT 1) AS empresa_id,
+         r.porcentaje,
+         'Corrección revisada: ' || r.empresa || ': ' || r.porcentaje || ' %. ' || r.motivo || ' Documento: ' || r.documento AS texto,
+         'corrección revisada con documento' AS regla
+  FROM energia.participacion_revisada r
+  JOIN sig_energia.concesion c ON energia.normalizar(c.areapermisoconcesion) = energia.normalizar(r.concesion)
+)
+SELECT * FROM mapa WHERE id_concesion NOT IN (SELECT id_concesion FROM revisada)
+UNION ALL
+SELECT * FROM revisada;
 
 -- Quién opera hoy cada pozo: la empresa que declara su producción del último mes (diciembre de 2025).
 -- La evidencia guarda lo que dice el padrón de pozos cuando no coincide.

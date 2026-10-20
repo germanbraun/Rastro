@@ -538,3 +538,12 @@ Cada paso de la demo dice qué es (integración, trazabilidad, cruce con mapas o
 ## 2026-10-20 — «¿Por qué este número?» en todas las preguntas que lo admiten
 
 Además de e01, e03 y p01: en petróleo y gas, los pozos de YPF por regla con lo que dice cada fuente (e02), el no convencional por formación (e04), el gasoducto más cercano (e05), el entorno de cada posible venteo (e06), el LEI (e07), los motivos para revisar con su evidencia (e08) y el cambio de operadora (e09); en proveedores, las empresas del grupo (p02, p03), los enlaces de un proveedor con su grupo y su LEI (p04, p08), la coincidencia con una lista de control (p05), de dónde sale que un grupo cotiza en bolsa (p07) y los proveedores para revisar de un organismo (p09); en oncología, cómo se reconoció el fármaco de una fila en los ensayos, en toda respuesta con fármacos. Queda afuera p06, que es un solo número sin filas.
+
+## 2026-10-20 — Petróleo y gas: dos participaciones corregidas por la verificación humana
+
+La verificación humana (parte 6a) encontró 2 de 4 participaciones del mapa desactualizadas:
+
+- **La Amarga Chica:** el mapa la reparte entre YPF y Petronas E&P Argentina (50 % cada una), y es correcto: Petronas E&P Argentina sigue siendo la titular. Pero Vista compró el 100 % de esa empresa en abril de 2025. Se agregó como corrección de grupo (Petronas E&P Argentina → Vista) en `linking/energia/correcciones.csv`, con la fuente de la compra. Para 2025 completo se cuenta en Vista, aunque los primeros meses y medio eran de Petronas; se dice.
+- **Aguada Pichana Este:** el mapa la reparte en partes iguales (27,27 % para Total, Wintershall e YPF; 18,18 % para Pan American). El Acuerdo Marco de la Legislatura de Neuquén (8 de septiembre de 2026, Anexo IV, páginas 28 y 29) dice Total 55 %, Wintershall 22,5 %, YPF 16,9 % y Pan American 5,6 %. Se agregó `linking/energia/participaciones-revisadas.csv`: si una concesión tiene participaciones revisadas, reemplazan a las del mapa, con el documento como evidencia y la regla «corrección revisada con documento».
+
+**El efecto:** la parte de YPF pasa de 12.581.213 a 12.570.093 m³ (Aguada Pichana Este es de gas y produce poco petróleo) y Vista sube a 7,0 millones con la mitad de La Amarga Chica. Se volvieron a ejecutar las consultas guardadas: la referencia de e01 cambia y las tres formas siguen dentro de la tolerancia, así que los puntajes no cambian. Sin Rastro, el SQL sigue leyendo el mapa: no puede saber de estas correcciones, que viven en un solo lugar en Rastro.

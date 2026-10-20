@@ -4,7 +4,7 @@
   "e01": {
    "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
    "kind": "número",
-   "reference": 12581212.573201405,
+   "reference": 12570093.352460362,
    "B": {
     "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
     "attempts": [
@@ -24,7 +24,7 @@
       "error": null
      }
     ],
-    "answer": 12581212.573201405,
+    "answer": 12570093.352460362,
     "ok": true
    },
    "C": {
@@ -35,7 +35,7 @@
       "error": null
      }
     ],
-    "answer": 12581212.573201405,
+    "answer": 12570093.352460362,
     "ok": true
    }
   },
@@ -530,10 +530,10 @@
    },
    "D": {
     "answers": [
-     12581212.573201405,
-     12581212.57,
-     12581213.0,
-     12581213.0
+     12570093.352460362,
+     12570093.35,
+     12570093.0,
+     12570093.0
     ],
     "ok": [
      true,
@@ -545,10 +545,10 @@
    },
    "C": {
     "answers": [
-     12581212.573201405,
-     12581212.573201405,
-     12581212.573201405,
-     12581212.573201405
+     12570093.352460362,
+     12570093.352460362,
+     12570093.352460362,
+     12570093.352460362
     ],
     "ok": [
      true,

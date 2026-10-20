@@ -111,12 +111,13 @@ GROUP BY p.idpozo, p.idareapermisoconcesion, en.empresa_id, p.formacion, p.tipo_
     rr:predicateObjectMap [ rr:predicate energia:fromSource ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] .
 
 <#Stake> a rr:TriplesMap ;
-    rr:logicalTable [ rr:sqlQuery "SELECT id_concesion, empresa_id, porcentaje, texto FROM energia.participacion" ] ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id_concesion, empresa_id, porcentaje, texto, regla FROM energia.participacion" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/stake/{id_concesion}/{empresa_id}" ; rr:class energia:Stake ] ;
     rr:predicateObjectMap [ rr:predicate energia:inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:partner ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:percent ; rr:objectMap [ rr:column "porcentaje" ; rr:datatype xsd:decimal ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:sourceText ; rr:objectMap [ rr:column "texto" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:rule ; rr:objectMap [ rr:column "regla" ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/sig_energia> ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-stake-parsing> ] ] .
 

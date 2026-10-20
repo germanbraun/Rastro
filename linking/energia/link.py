@@ -6,7 +6,7 @@
 2. Calcula, para cada concesión, el gasoducto de transporte de ENARGAS más cercano, y para cada
    posible venteo, la localidad más cercana y si cae en un área protegida (IGN). Distancias en km
    con una aproximación plana, suficiente a esta escala.
-3. Carga las correcciones revisadas (correcciones.csv) y corre links.sql: empresas con sus
+3. Carga las correcciones revisadas (correcciones.csv, participaciones-revisadas.csv) y corre links.sql: empresas con sus
    nombres en cada fuente y su LEI, producción por pozo, participaciones, quién opera cada pozo,
    cada venteo en su concesión, gasoductos y entorno, y quién operó cada concesión mes a mes
    (2023 a 2025) con sus cambios de operadora, todo con su evidencia.
@@ -120,6 +120,11 @@ def main():
         with conn.cursor().copy("COPY energia.correccion FROM STDIN") as cp:
             for r in csv.DictReader((HERE / "correcciones.csv").open()):
                 cp.write_row((r["nombre"], r["grupo"], r["motivo"]))
+        conn.execute("CREATE TABLE energia.participacion_revisada (concesion text, empresa text, porcentaje numeric, "
+                     "documento text, motivo text)")
+        with conn.cursor().copy("COPY energia.participacion_revisada FROM STDIN") as cp:
+            for r in csv.DictReader((HERE / "participaciones-revisadas.csv").open()):
+                cp.write_row((r["concesion"], r["empresa"], r["porcentaje"], r["documento"], r["motivo"]))
         conn.execute("CREATE TABLE energia.venteo_ubicado (gml_id text, tipo text, fecha date, satelite text, "
                      "nombre text, id_concesion text, lon double precision, lat double precision)")
         with conn.cursor().copy("COPY energia.venteo_ubicado FROM STDIN") as cp:
