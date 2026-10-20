@@ -242,7 +242,36 @@ WHERE s.antes_id <> s.empresa_id;
 
 -- Las claves de las tablas de enlaces: con ellas, Rastro sabe que hay una fila por clave y no
 -- necesita quitar repetidos en cada consulta (la participación pasa de 18 a 8 segundos)
+-- Cómo arrancó cada pozo nuevo (2023 a 2025): el primer mes con petróleo o gas, quién lo declaró ese mes
+-- y con qué tipo de pozo. Para un modelo que predice un pozo nuevo, la operadora de hoy sería usar el futuro.
+-- Se descartan los pozos que ya estaban en enero de 2023 (pozos viejos que se reactivan).
+CREATE TABLE energia.inicio_pozo AS
+WITH todo AS (
+  SELECT anio, mes, idpozo, empresa, prod_pet, prod_gas, tipopozo, idareapermisoconcesion, formacion, sub_tipo_recurso
+  FROM capitulo4.produccion
+  UNION ALL
+  SELECT anio, mes, idpozo, empresa, prod_pet, prod_gas, tipopozo, idareapermisoconcesion, formacion, sub_tipo_recurso
+  FROM capitulo4.produccion_historica
+), primero AS (
+  SELECT idpozo, min(make_date(anio, mes, 1)) AS primera_fila,
+         min(make_date(anio, mes, 1)) FILTER (WHERE prod_pet > 0 OR prod_gas > 0) AS inicio
+  FROM todo GROUP BY idpozo
+), fila AS (   -- la fila del primer mes que más produjo (un pozo puede declarar varias formaciones)
+  SELECT DISTINCT ON (t.idpozo) t.idpozo, p.inicio, trim(t.empresa) AS empresa, nullif(trim(t.tipopozo), '') AS tipo_pozo,
+         t.idareapermisoconcesion AS id_concesion, t.formacion, t.sub_tipo_recurso
+  FROM todo t JOIN primero p ON p.idpozo = t.idpozo AND make_date(t.anio, t.mes, 1) = p.inicio
+  WHERE p.inicio > DATE '2023-01-01' AND NOT (p.primera_fila = DATE '2023-01-01')
+  ORDER BY t.idpozo, coalesce(t.prod_gas, 0) + coalesce(t.prod_pet, 0) DESC
+)
+SELECT f.idpozo, f.inicio AS mes, en.empresa_id, f.empresa AS nombre_declarado, f.tipo_pozo, f.id_concesion,
+       f.formacion, f.sub_tipo_recurso,
+       'Primer mes con producción: ' || to_char(f.inicio, 'MM/YYYY') || '. Lo declara ' || rtrim(f.empresa, '.')
+       || coalesce(' como pozo ' || lower(f.tipo_pozo), '') || ', en ' || f.id_concesion || '.' AS evidencia
+FROM fila f
+JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = f.empresa;
+
 ALTER TABLE energia.participacion ADD PRIMARY KEY (id_concesion, empresa_id);
 ALTER TABLE energia.empresa ADD PRIMARY KEY (empresa_id);
 ALTER TABLE energia.empresa_nombre ADD PRIMARY KEY (fuente, nombre);
 ALTER TABLE energia.concesion ADD PRIMARY KEY (id_concesion);
+ALTER TABLE energia.inicio_pozo ADD PRIMARY KEY (idpozo);

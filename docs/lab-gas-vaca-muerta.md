@@ -51,12 +51,41 @@ Capítulo IV de la Secretaría de Energía (producción por pozo y mes, 2023–2
 - **Qué se predice:** el gas de los meses 2 a 7 (el primer mes suele ser parcial). Mediana: unos 51 millones de m³ en 6 meses, estable entre años. Con 12 meses quedarían solo 2 pozos de 2025 para probar.
 - **Entrenar con 2023–2024 y probar con 2025** (169 y 54 pozos). Sin modelo, «la mediana de la operadora» ya explica el 39 % de la variación (error medio de 14,9 millones de m³). La concesión sola explica el 63 % de la variación total: la ubicación manda.
 
+## Paso 1: lo que salió (20 de octubre de 2026)
+
+**Rastro ya da cómo arrancó cada pozo** (`energia:WellStart`): el primer mes con producción, quién lo declaró ese mes, con qué nombre y qué tipo de pozo. Son 2.263 pozos nuevos de 2023 a 2025, 244 de shale gas de Vaca Muerta. La operadora de hoy sigue en `energia:operator`.
+
+**El mismo modelo, dos veces** (`lab/gas/modelo.py`): una regresión lineal; la predicción es el gas de un pozo promedio más el aporte de cada variable, en millones de m³. 216 pozos con sus meses 2 a 7: 167 de 2023 y 2024 para entrenar, 49 de 2025 para probar.
+
+| | Error medio (millones de m³) | R² |
+|---|---|---|
+| La mediana de todos los pozos | 22,1 | — |
+| La mediana de la operadora | 17,7 | — |
+| A, tablas crudas: empresa como se declara, código de concesión, porcentaje del mapa | 16,7 | 0,44 |
+| B, Rastro: operadora (grupo), concesión, participación corregida | 16,7 | 0,44 |
+
+**La precisión es la misma, como se esperaba.** La diferencia está en lo que dice cada explicación. Pozo 166271 de Aguada Pichana Este (empezó en marzo de 2025, dio 58,4; los dos predicen 61,4):
+
+| Sin Rastro (A) | Con Rastro (B) |
+|---|---|
+| `empresa` = TOTAL AUSTRAL S.A.: +4,4 | **Operadora: Total Austral: +5,7.** ¿Por qué? La declara en el primer mes (marzo de 2025) como pozo gasífero; regla: rige la declaración jurada del primer mes; Capítulo IV |
+| `area` = APE: −1,8 | **Concesión: Aguada Pichana Este: −0,5.** El mismo código en la declaración jurada y en el mapa |
+| `porcentaje` = 27,27: +3,6 | **Participación: 55 %: +1,0 · dato corregido con documento.** ¿Por qué? El mapa reparte en partes iguales; el Acuerdo Marco de Neuquén (Anexo IV, pp. 28–29) dice 55 % |
+| — | **Por concepto:** la empresa +6,7; la ubicación −0,5 |
+
+Sin Rastro, la explicación usa el 27,27 % del mapa y nadie lo nota. Con Rastro, cada variable dice de dónde sale y la corregida está marcada.
+
+**Datos dudosos, medido:** 24 de las 49 predicciones de prueba se apoyan en un dato que no sale tal cual de la fuente: 18 de Pluspetrol (unión de nombres revisada por IA, a confirmar por una persona) y 6 de Aguada Pichana Este (participación corregida con documento). Sin Rastro no se puede saber cuáles son.
+
+**Lo que se dejó afuera:** la distancia al gasoducto. Es una sola por concesión y, con la concesión en el modelo, solo la repite: salía al revés (estar a 0,3 km restaba 9 millones de m³). Es justo el tipo de explicación sin sentido que un experto detecta cuando la variable tiene nombre y fuente; vuelve en la prueba de áreas nuevas, donde sí agrega.
+
+**Lo que falta del paso 1:** mostrar las dos explicaciones lado a lado en la app, con «¿Por qué?» en cada variable, y la prueba a ciegas con un consultor.
+
 ## Datos de fractura (paso 2)
 
 Existen, son públicos y se unen por pozo: «Datos de fractura de pozos (Adjunto IV)» en datos.energia.gob.ar. Traen el largo de la rama horizontal, la cantidad de etapas, la arena y el agua. Se actualizan todos los días y el portal los marca «preliminar, sujeto a revisión».
 
 - 237 de los 245 pozos de gas nuevos los tienen, siempre con fecha anterior al inicio. Mediana: rama de 2.800 m y 47 etapas.
-- Una tesis de la Universidad Torcuato Di Tella ([Fernández Gazzaniga, 2025](https://repositorio.utdt.edu/handle/20.500.13098/14415)) usa estas fuentes para 642 pozos de gas: la mediana por área explica el 47 % y su mejor modelo, el 75 %. Las variables más importantes son el área, la ubicación, la presión, el largo de rama y las etapas. La precisión se logra con datos públicos; Rastro no compite ahí.
 - La fractura nombra la empresa con su propio texto (por ejemplo, «Phoenix Global Resources» donde la producción dice «Petrolera El Trébol») y el área por nombre. Es otro cruce que Rastro hace con regla y evidencia.
 
 Descargados en `data/raw/fractura/` (no se versiona), el 20 de octubre de 2026.

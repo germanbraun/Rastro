@@ -579,3 +579,11 @@ Estudio sin modelo (`docs/lab-gas-vaca-muerta.md`, consulta en `lab/gas/pozos-nu
 - **Medida:** prueba a ciegas con un consultor (20 explicaciones mezcladas), trazabilidad por variable y predicciones con datos dudosos (hoy 96 de 245 pozos de gas nuevos).
 - **Datos:** 245 pozos de gas nuevos de 2023 a 2025 (223 con 6 meses); objetivo, el gas de los meses 2 a 7. La fractura es pública, diaria y se une por pozo (237 de 245).
 - **Cambio previo a la capa:** la operadora y el tipo de pozo de Rastro son los de diciembre de 2025; para un modelo eso es usar el futuro. Hacen falta los del mes de inicio.
+
+## 2026-10-20 — Rastro Lab, paso 1: el inicio de cada pozo y el mismo modelo dos veces
+
+- **El inicio de un pozo** (`energia:WellStart`, tabla `energia.inicio_pozo`): primer mes con producción, quién lo declaró ese mes y con qué nombre, tipo de pozo, formación y concesión. Para predecir un pozo nuevo, la operadora de hoy sería usar el futuro. Se descartan los pozos que ya estaban en enero de 2023. 2.263 pozos nuevos, 244 de shale gas de Vaca Muerta. `energia:aboutWell` pierde su dominio, porque ahora la usan dos clases.
+- **El modelo es una regresión lineal**, no un modelo de árboles con SHAP: con pocos pozos predice igual de bien y el aporte de cada variable sale exacto, en millones de m³. La operadora y la concesión entran como categorías. La historia de cada operadora calculada pozo por pozo (sin usar el futuro) se probó y predecía peor que la mediana: en 2023 casi ningún pozo tiene anteriores con 7 meses.
+- **Resultado:** A y B, error medio 16,7 millones de m³ y R² 0,44 en 49 pozos de 2025 (la mediana de la operadora, 17,7). Como validación, sin citarla en Lab: una tesis con las mismas fuentes y datos de fractura reporta R² 0,47 para la mediana por área y 0,75 para su mejor modelo, así que 0,44 sin fractura es razonable.
+- **La distancia al gasoducto queda afuera** del paso 1: repite la concesión y salía al revés.
+- **Trabajos relacionados en la app,** no en Lab: en las preguntas frecuentes generales (grafos de conocimiento virtuales; grafos de conocimiento para explicar aprendizaje automático) y en las de petróleo y gas (la tesis).

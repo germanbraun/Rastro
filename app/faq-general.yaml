@@ -35,6 +35,14 @@
   respuesta: |-
     Sí, con cuidado. En «Una pregunta sobre textos», Rastro primero elige con una consulta exacta los registros que importan; después, un asistente de IA lee solo esos textos y los agrupa en temas, citando cada registro. En «¿De dónde sale la respuesta?» están todos los textos que leyó. El grafo decide qué se lee; la IA solo resume.
 
+- pregunta: ¿Hay trabajos relacionados?
+  respuesta: |-
+    Sí. Rastro aplica ideas conocidas a datos públicos; estos trabajos las explican:
+    - **Grafos de conocimiento sobre bases que ya existen,** sin copiar los datos: G. Xiao, L. Ding, B. Cogrel y D. Calvanese, «Virtual Knowledge Graphs: An Overview of Systems and Use Cases», *Data Intelligence* 1(3), 2019.
+    - **Grafos de conocimiento para explicar modelos de aprendizaje automático** (la idea de Rastro Lab): I. Tiddi y S. Schlobach, «Knowledge graphs as tools for explainable machine learning: A survey», *Artificial Intelligence* 302, 2022; y F. Lécué, «On the role of knowledge graphs in explainable AI», *Semantic Web* 11(1), 2020.
+
+    Los trabajos propios de cada caso están en sus preguntas frecuentes.
+
 # --- Para técnicos (se ven con «Ver detalles técnicos») ----------------
 
 - pregunta: ¿Qué es Rastro, técnicamente?

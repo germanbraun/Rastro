@@ -561,6 +561,13 @@ faq:
       y sitio web. Así aparece que YPF y Pampa Energía cotizan en la Bolsa de Nueva York, un dato que no
       está en ninguna de las seis fuentes. Solo 3 de las 12 empresas con LEI lo tienen cargado en
       Wikidata (YPF, Pan American Energy y Pampa Energía). Detalle en layer/energia/externo/.
+  - pregunta: ¿Hay trabajos relacionados en petróleo y gas?
+    respuesta: >-
+      Sí. Una tesis de la Universidad Torcuato Di Tella une estas mismas fuentes públicas (producción, padrón,
+      datos de fractura y trayectorias de pozo) para predecir el gas de 642 pozos de shale gas de Vaca Muerta
+      en su primer año: F. Fernández Gazzaniga, 2025, repositorio.utdt.edu/handle/20.500.13098/14415.
+      Muestra que con datos públicos se puede predecir bien. Rastro Lab hace la misma predicción con otro
+      objetivo: que cada predicción se explique en conceptos de negocio, con la fuente de cada dato.
   - pregunta: ¿Dónde está cada pieza?
     tecnico: true
     respuesta: >-

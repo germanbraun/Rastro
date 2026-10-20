@@ -70,6 +70,22 @@ JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = trim(p
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/capitulo4> ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-operator-rule> ] ] .
 
+<#WellStart> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.inicio_pozo" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/wellstart/{idpozo}" ; rr:class energia:WellStart ] ;
+    rr:predicateObjectMap [ rr:predicate energia:aboutWell ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/well/{idpozo}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:startMonth ; rr:objectMap [ rr:column "mes" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:company ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:declaredName ; rr:objectMap [ rr:column "nombre_declarado" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:startWellType ; rr:objectMap [ rr:column "tipo_pozo" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:startFormation ; rr:objectMap [ rr:column "formacion" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:startResource ; rr:objectMap [ rr:column "sub_tipo_recurso" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:rule ; rr:objectMap [ rr:constant "rige la declaración jurada del primer mes" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/capitulo4> ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-operator-rule> ] ] .
+
 <#OperatorChange> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "energia.cambio_operadora" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/operatorchange/{id_concesion}/{mes}" ; rr:class energia:OperatorChange ] ;

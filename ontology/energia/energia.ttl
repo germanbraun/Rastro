@@ -59,6 +59,18 @@ energia:OperatorLink a owl:Class ;
     rdfs:label "Operadora de un pozo"@es ;
     rdfs:comment "Quién opera hoy un pozo y por qué: la empresa que declara su producción del último mes. Si el padrón de pozos dice otra cosa, queda a la vista."@es .
 
+energia:WellStart a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Inicio de un pozo"@es ;
+    rdfs:comment "Cómo arrancó un pozo nuevo (2023 a 2025): su primer mes con producción, la empresa que lo declaró ese mes y con qué tipo de pozo. Es lo que se sabía al arrancar, no lo de hoy: sirve para predecir pozos nuevos sin usar el futuro."@es .
+energia:startMonth a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "primer mes con producción"@es .
+energia:startWellType a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "tipo de pozo al arrancar"@es .
+energia:startFormation a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "formación al arrancar"@es .
+energia:startResource a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "shale o tight al arrancar"@es .
+energia:declaredName a owl:DatatypeProperty ; rdfs:domain energia:WellStart ;
+    rdfs:label "nombre declarado"@es ;
+    rdfs:comment "El nombre con el que la empresa declaró el pozo. Su energia:CompanyName dice por qué Rastro sabe qué empresa es."@es .
+
 energia:CompanyName a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Nombre de una empresa en una fuente"@es ;
@@ -132,7 +144,7 @@ energia:inConcession a owl:ObjectProperty ; rdfs:range energia:Concession ; rdfs
 energia:partner a owl:ObjectProperty ; rdfs:domain energia:Stake ; rdfs:range energia:Company ; rdfs:label "socia"@es .
 energia:percent a owl:DatatypeProperty ; rdfs:domain energia:Stake ; rdfs:label "porcentaje"@es .
 
-energia:aboutWell a owl:ObjectProperty ; rdfs:domain energia:OperatorLink ; rdfs:range energia:Well ; rdfs:label "sobre el pozo"@es .
+energia:aboutWell a owl:ObjectProperty ; rdfs:range energia:Well ; rdfs:label "sobre el pozo"@es .   # sin dominio: la usan la operadora de un pozo y su inicio
 energia:company a owl:ObjectProperty ; rdfs:range energia:Company ; rdfs:label "empresa"@es .
 energia:registryCompany a owl:DatatypeProperty ; rdfs:domain energia:OperatorLink ;
     rdfs:label "empresa según el padrón"@es .
