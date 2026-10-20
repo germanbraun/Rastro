@@ -177,7 +177,7 @@ Rastro marca 64 cambios de operadora entre 2023 y 2025 (9 de ellos en áreas sin
 
 ### 6f. El resumen de los estudios ambientales (GraphRAG)
 
-En la app, **Petróleo y gas → Preguntar → Una pregunta sobre textos → Responder**. En el paso 4 («El resumen, con citas»), el primer tema es «Planillas de venteo de gas (Res. 143/98)», con los números de los estudios que cita. Buscá 3 de esos números en el paso 3 («Los 72 textos que leyó»): al elegir una fila se ve el texto completo. ¿Son planillas de venteo de esas concesiones? ¿Es cierto que en las concesiones de YPF el listado no muestra ninguna desde 2022? ____
+En la app, **Petróleo y gas → Preguntar → Una pregunta sobre textos → Responder**. En el paso 4 («El resumen, con citas»), el primer tema es «Planillas de venteo de gas (Res. 143/98)», con los números de los estudios que cita. Buscá 3 de esos números en el paso 3 («Los 72 textos que leyó»): al elegir una fila se ve el texto completo. Ojo: son registros del listado de presentaciones ambientales de la Secretaría de Energía (conjunto «Actividad ambiental de petróleo y gas» de datos.energia.gob.ar), no las planillas: el listado dice qué se presentó, cuándo, de qué concesión y empresa, pero no trae el documento. Para ver una planilla hay que pedirla a la Secretaría o a la provincia, con su número de estudio. ¿Son registros de planillas de venteo de esas concesiones? ¿Es cierto que en las concesiones de YPF el listado no muestra ninguna desde 2022? ____
 
 ## Resultado
 
