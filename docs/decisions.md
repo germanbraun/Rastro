@@ -508,3 +508,7 @@ La consulta con Wikidata mostraba el petróleo que cada empresa declara como ope
 Para que se entienda la idea de GraphRAG anclado en el grafo, la pregunta sobre textos se muestra en pasos numerados, en los tres dominios: 1, la pregunta; 2, el grafo elige con una consulta exacta (cuántos registros, y la consulta en la vista técnica); 3, la IA lee solo esos textos (que se pueden abrir); 4, el resumen, con las citas de cada tema; 5, comprobar. En oncología, un paso 6: el motivo pasa a ser un dato del grafo, contado sin IA.
 
 De paso: los escenarios de «Por qué confiar» dividían por las 9 preguntas medidas, pero la prueba de cambio de petróleo y gas usó 7; ahora cada escenario divide por las preguntas que tiene.
+
+## 2026-10-20 — Petróleo y gas: la prueba de cambio con las nueve preguntas
+
+La prueba de cambio se había grabado cuando había siete preguntas medidas, y la app seguía mostrando «de 7». Se volvió a correr (`layer/energia/cambio/cambio.sh registrar`) con las nueve: con la columna del petróleo renombrada, sin Rastro se rompen 3 consultas (antes 2: se suma la de cambios de operadora) y Rastro falla en 3 hasta que se arregla una línea del mapeo, después 9 de 9. Con el petróleo en barriles, las dos formas dan otro número; Rastro avisa y, con una línea, vuelve a 9 de 9.

@@ -28,15 +28,23 @@
    "e07": {
     "B": "✅ igual",
     "C": "✅ igual"
+   },
+   "e08": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e09": {
+    "B": "✅ igual",
+    "C": "✅ igual"
    }
   },
   "totals": {
    "B": {
-    "✅": 6,
-    "—": 1
+    "✅": 7,
+    "—": 2
    },
    "C": {
-    "✅": 7
+    "✅": 9
    }
   },
   "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
@@ -70,17 +78,25 @@
    "e07": {
     "B": "✅ igual",
     "C": "✅ igual"
+   },
+   "e08": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e09": {
+    "B": "❌ error",
+    "C": "✅ igual"
    }
   },
   "totals": {
    "B": {
-    "❌": 2,
+    "❌": 3,
     "✅": 4,
-    "—": 1
+    "—": 2
    },
    "C": {
     "❌": 3,
-    "✅": 4
+    "✅": 6
    }
   },
   "vocabulary": "Control de unidades: Rastro no responde (it.unibz.inf.ontop.exception.OntopQueryEvaluationException: org.postgresql.util.PSQLException: ERROR: column p.prod_pet )"
@@ -114,16 +130,24 @@
    "e07": {
     "B": "✅ igual",
     "C": "✅ igual"
+   },
+   "e08": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e09": {
+    "B": "❌ error",
+    "C": "✅ igual"
    }
   },
   "totals": {
    "B": {
-    "❌": 2,
+    "❌": 3,
     "✅": 4,
-    "—": 1
+    "—": 2
    },
    "C": {
-    "✅": 7
+    "✅": 9
    }
   },
   "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
@@ -157,17 +181,25 @@
    "e07": {
     "B": "✅ igual",
     "C": "✅ igual"
+   },
+   "e08": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e09": {
+    "B": "✅ igual",
+    "C": "✅ igual"
    }
   },
   "totals": {
    "B": {
     "🟡": 1,
-    "✅": 5,
-    "—": 1
+    "✅": 6,
+    "—": 2
    },
    "C": {
     "🟡": 1,
-    "✅": 6
+    "✅": 8
    }
   },
   "vocabulary": "🟡 Control de unidades: el petróleo de 2025 suma 293,2 millones de m³, y la producción nacional ronda los 46,6: ¿cambió la unidad?"
@@ -201,16 +233,24 @@
    "e07": {
     "B": "✅ igual",
     "C": "✅ igual"
+   },
+   "e08": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e09": {
+    "B": "✅ igual",
+    "C": "✅ igual"
    }
   },
   "totals": {
    "B": {
     "🟡": 1,
-    "✅": 5,
-    "—": 1
+    "✅": 6,
+    "—": 2
    },
    "C": {
-    "✅": 7
+    "✅": 9
    }
   },
   "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
@@ -244,15 +284,23 @@
    "e07": {
     "B": "✅ igual",
     "C": "✅ igual"
+   },
+   "e08": {
+    "B": "—",
+    "C": "✅ igual"
+   },
+   "e09": {
+    "B": "✅ igual",
+    "C": "✅ igual"
    }
   },
   "totals": {
    "B": {
-    "✅": 6,
-    "—": 1
+    "✅": 7,
+    "—": 2
    },
    "C": {
-    "✅": 7
+    "✅": 9
    }
   },
   "vocabulary": "✅ Control de unidades: el petróleo de 2025 suma 46,6 millones de m³, como la producción nacional."
