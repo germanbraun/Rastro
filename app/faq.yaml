@@ -1,16 +1,11 @@
-# Preguntas frecuentes de la demo. Respuestas cortas, en palabras simples.
+# Preguntas frecuentes propias de oncología. Respuestas cortas, en palabras simples. Las que valen
+# para los tres casos están en app/faq-general.yaml y la app las muestra antes.
 # Los valores entre llaves ({secs_b}, {reinvented}...) los completa la app con los
 # números de la evaluación guardada.
 
 # Las que tienen «tecnico: true» se ven solo con «Ver detalles técnicos».
 
 # --- Para todos ----------------------------------------------------
-
-- question: ¿Qué es Rastro?
-  answer: |-
-    Una forma de preguntarle a varias bases de datos en lenguaje de negocio, sin saber cómo están armadas.
-
-    Rastro junta cuatro bases públicas de oncología (ensayos clínicos, fármacos, efectos adversos y enfermedades) y las describe con un **diccionario de negocio**: ensayo, fármaco, sponsor, enfermedad. Quien pregunta usa esas palabras, y Rastro se encarga de buscar en cada base. Cada respuesta dice de dónde sale y se puede auditar.
 
 - question: ¿De dónde salen los datos?
   answer: |-
@@ -22,28 +17,11 @@
 
     Es una foto de octubre de 2026.
 
-- question: ¿Necesito saber programar?
-  answer: |-
-    No. Las 20 preguntas de ejemplo funcionan solas. Para hacer preguntas propias, Rastro usa un asistente de IA que traduce la pregunta; hay que configurarlo una vez.
-
-- question: ¿Por qué puedo confiar en las respuestas?
-  answer: |-
-    Por tres cosas que medimos:
-    - **La misma pregunta, la misma respuesta.** Hicimos 10 preguntas de 4 formas distintas: con Rastro, la respuesta fue la misma las 4 veces en las 10; sin Rastro, solo en 1.
-    - **Los cambios se arreglan en un lugar.** Si una base cambia, Rastro se arregla con una línea; sin Rastro, hay que reescribir cada consulta.
-    - **Cada respuesta se puede auditar.** Rastro muestra qué texto de cada ensayo reconoció como cada fármaco.
-
-    Detalle en la pestaña «Por qué confiar».
-
-- question: ¿Qué pasa si una base cambia?
-  answer: |-
-    Se arregla en un solo lugar. Lo probamos: cuando una base cambia el nombre de una columna, 5 consultas armadas a mano dejan de funcionar y hay que reescribirlas. Con Rastro, es una línea. Y si cambia cómo se escribe un dato, las consultas a mano dan cero sin avisar; Rastro avisa.
-
-- question: ¿Cómo sé por qué Rastro dice algo?
+- question: Un ejemplo de evidencia en oncología
   answer: |-
     En cada respuesta con fármacos, «¿De dónde sale la respuesta?» muestra cómo reconoció Rastro cada fármaco en los ensayos: lo que escribió quien registró el ensayo, y qué fármaco es. Por ejemplo, «Adjuvant Systemic Therapy» es trastuzumab emtansina porque el sponsor lo declaró así. Se puede abrir cada ensayo y comprobarlo.
 
-- question: ¿Rastro también responde sobre textos?
+- question: ¿Qué textos lee en oncología?
   answer: |-
     Sí, con cuidado. En «Una pregunta sobre textos», Rastro primero elige con una consulta exacta los ensayos que importan (por ejemplo, los de fase 3 de cáncer de pulmón con inhibidores de quinasa que se detuvieron: 26). Después, un asistente de IA lee solo los motivos que escribió cada sponsor y los agrupa: falta de pacientes, decisión de la empresa, el tratamiento no funcionó… Cada grupo cita sus ensayos, y en «¿De dónde sale la respuesta?» están todos los textos que leyó.
 
@@ -57,33 +35,6 @@
 
 # --- Para técnicos (se ven con «Ver detalles técnicos») ----------------
 
-- question: ¿Qué es Rastro, técnicamente?
-  tecnico: true
-  answer: |-
-    Una **capa semántica** sobre cuatro fuentes públicas de oncología. Las describe con conceptos de negocio (ensayo, fármaco, target, sponsor, evento adverso), un LLM pregunta sobre esos conceptos, y cada respuesta dice de qué fuente sale.
-
-    Técnicamente es un **Virtual Knowledge Graph**: ontología, mapeos R2RML y SPARQL, estándares del W3C. Es pragmático: las fuentes se cargan en Postgres, y los enlaces y la jerarquía de MeSH quedan precalculados en tablas.
-
-- question: Sé SQL. ¿Qué es cada pieza, en términos de SQL?
-  tecnico: true
-  answer: |-
-    | Tecnología semántica | En términos de SQL |
-    |---|---|
-    | **Ontología** | El esquema de negocio documentado: las tablas que te gustaría tener |
-    | **Mapeo (R2RML)** | Una definición de vista: «esta columna de esta tabla es este concepto» |
-    | **SPARQL** | Un lenguaje de consulta sobre conceptos en lugar de tablas |
-    | **Ontop** | Un compilador: traduce la consulta a SQL normal sobre las tablas reales |
-    | **Entity linking** | La clave de join que faltaba, calculada una vez |
-
-    Los datos no se mueven: siguen en Postgres, y cada pregunta se ejecuta como SQL.
-
-- question: ¿Qué sucede al hacer una pregunta?
-  tecnico: true
-  answer: |-
-    1. El LLM recibe la **ontología** como contexto: los conceptos, cómo se relacionan y qué significa cada uno. Con eso escribe una consulta SPARQL. No ve tablas, así que no tiene que adivinar cómo se cruzan.
-    2. Ontop la traduce a SQL y la ejecuta en vivo sobre Postgres.
-    3. La respuesta se muestra con la fuente de cada columna. En «¿De dónde sale la respuesta?» están la consulta y el SQL exactos, para revisarlos: el LLM todavía puede elegir mal un concepto o un filtro.
-
 - question: ¿Qué tiene cada fuente, y dónde está?
   tecnico: true
   answer: |-
@@ -93,17 +44,9 @@
     - 🕸️ **MeSH**, en GraphDB, con una copia de su jerarquía en Postgres: el **vocabulario médico** que sabe qué enfermedad es subtipo de cuál.
 
     Más detalle, ejemplos y un glosario en docs/fuentes.md.
-
-- question: ¿Necesito un LLM o una API key?
-  tecnico: true
-  answer: >-
-    Para las 20 preguntas de ejemplo, no: usan consultas ya escritas por el LLM, que se
-    ejecutan en vivo. Para preguntas propias hace falta un LLM: la Claude API (de pago
-    por uso) u Ollama, gratis en la propia computadora. Ver layer/README.md.
-
 # --- Frente a SQL -----------------------------------------------------
 
-- question: Si con SQL también se puede, ¿qué aporta la capa semántica?
+- question: En oncología, ¿qué dio la comparación con SQL?
   tecnico: true
   answer: |-
     Lo medimos con tres formas de darle los datos al mismo LLM:
@@ -128,23 +71,12 @@
 
     Detalle en layer/consistencia/.
 
-- question: ¿Por qué no vistas SQL sobre las tablas de enlaces?
-  tecnico: true
-  answer: |-
-    Para un caso chico pueden alcanzar: unas buenas vistas dan nombres de negocio, una sola definición de cada cosa y un lugar donde absorber un cambio de la fuente.
-
-    La capa semántica suma:
-    - **Procedencia:** la fuente de cada columna de la respuesta, sin programarla.
-    - **Datos de afuera:** identificadores compartidos que permiten unir, en una consulta, datos de otras organizaciones (Wikidata).
-    - **Jerarquías y composición:** «cáncer de pulmón» incluye sus subtipos, y cualquier combinación de conceptos funciona sin una vista por pregunta.
-    - **Estándares abiertos** (W3C): la misma capa la leen otras herramientas, no está atada a una base.
-
 - question: ¿Dónde quedó la complejidad del SQL?
   tecnico: true
   answer: |-
     En la integración, hecha una vez. En la pregunta de HER2, el LLM escribió 1.543 caracteres de SQL sin integración, 571 de SQL sobre las tablas de enlaces y 435 de SPARQL sobre Rastro. La gran diferencia la hace integrar; SPARQL la hace un poco más corta y en palabras de negocio, y Ontop genera el SQL.
 
-- question: ¿Qué pasa si una fuente cambia?
+- question: En oncología, ¿qué pasó cuando cambió una fuente?
   tecnico: true
   answer: |-
     Lo probamos con las 20 consultas guardadas, simulando una versión nueva de AACT:
@@ -162,7 +94,7 @@
 
     Con SQL también se puede guardar, pero hay que programarlo en cada consulta y no lo entiende ninguna otra herramienta.
 
-- question: ¿Qué significa que «el conocimiento vive en el modelo»?
+- question: En oncología, ¿qué definición deduce Ontop?
   tecnico: true
   answer: |-
     Que una definición de negocio se escribe una vez, en la ontología, y todas las preguntas la usan. Ejemplo: «terapia dirigida» no está en ninguna tabla ni en ningún mapeo. La ontología dice, en dos líneas, que los inhibidores de quinasa y los anticuerpos monoclonales son terapias dirigidas, y Ontop lo deduce al responder: 156 fármacos.
@@ -180,7 +112,7 @@
 
 # --- Cómo integra -----------------------------------------------------
 
-- question: ¿Qué problemas de integración resuelve?
+- question: En oncología, ¿qué columnas unifican los mapeos y qué crea el entity linking?
   tecnico: true
   answer: |-
     Según el tutorial de Virtual Knowledge Graphs de Calvanese, Cogrel y Lanti (Ontobras 2022), hay cuatro tipos de heterogeneidad. Los dos que importan:
@@ -208,21 +140,3 @@
     Precisión: 98-99 % en muestras al azar, revisadas por un asistente de IA; falta la confirmación humana (docs/verificacion-humana.md). Hay formas más sofisticadas (coincidencia aproximada, modelos de lenguaje biomédico, un LLM), pero el diccionario ya alcanza, es explicable y siempre da lo mismo. Las otras sirven de complemento para lo que el diccionario no resuelve.
 
 # --- Confianza en los números ----------------------------------------
-
-- question: ¿Cómo se midió? ¿No favorece a Rastro?
-  tecnico: true
-  answer: |-
-    - El mismo LLM respondió cada pregunta sin ver la respuesta correcta, con la misma consigna y los mismos reintentos.
-    - Un número es correcto si está a menos del 5 % del valor real; una lista, si coincide en al menos un 80 %.
-    - Los valores reales salen de Rastro, así que cada diferencia con el SQL directo se revisó con ensayos reales. Esa revisión encontró y corrigió errores de Rastro. Detalle en layer/eval/adjudication.md.
-    - Las preguntas, las referencias y esa revisión las hizo un asistente de IA (Claude Code), no el LLM evaluado. Falta que una persona las confirme: docs/verificacion-humana.md.
-
-- question: ¿Esto es GraphRAG?
-  tecnico: true
-  answer: |-
-    En parte, y del lado que más importa para confiar. GraphRAG, en su versión popular, usa un LLM para armar un grafo a partir de documentos y después recupera pedazos de ese grafo para responder: sirve para texto libre, pero los errores de extracción son difíciles de rastrear. Rastro resuelve la otra mitad: datos estructurados, con un grafo que sale de mapeos y enlaces revisados, y un LLM que escribe una consulta exacta. Por eso los números son exactos y auditables.
-
-    Para preguntas sobre texto, Rastro combina las dos cosas: el grafo elige con una consulta exacta qué registros importan (con la jerarquía de MeSH y las clases que deduce Ontop), y el LLM resume solo esos textos, citando cada registro. Es GraphRAG anclado en la capa semántica. Ejemplo: «Una pregunta sobre textos», con los motivos de los ensayos detenidos (layer/textos/).
-
-    Y un paso más, con control: cuando el texto se puede clasificar, se convierte en un hecho del grafo (`oncologia:stopReason`), con su evidencia en PROV-O (`oncologia:StopReasonLink`: qué parte del texto coincidió con qué regla) y una muestra revisada (linking/review-stop-reasons-2026-10-19.md). Es «texto → grafo», pero con reglas legibles y evidencia, no con extracción opaca.
-

@@ -277,7 +277,7 @@ faq:
       todavía registra a Leidos como una matriz anterior de la SAIC de hoy, y GLEIF, al buscar el nombre,
       devuelve primero a Leidos (es su nombre anterior). Rastro usa el nombre legal actual y deja a SAIC en
       su grupo; la evidencia muestra lo que se descartó y por qué.
-  - pregunta: ¿Rastro también responde sobre textos?
+  - pregunta: ¿Qué textos lee en este caso?
     respuesta: >-
       Sí, en «Una pregunta sobre textos». Rastro elige primero, con una consulta exacta, los contratos del
       grupo Leidos (todas sus empresas, incluidas Dynetics y QTC). Después un asistente de IA lee solo la
@@ -297,7 +297,7 @@ faq:
     respuesta: >-
       El monto total de cada contrato en toda su vida, como lo publica USAspending, no solo lo que se
       pagó en 2025.
-  - pregunta: ¿Cómo se midió la comparación con y sin Rastro?
+  - pregunta: ¿Qué dio la comparación con y sin Rastro en este caso?
     tecnico: true
     respuesta: >-
       El mismo LLM (subagentes de Claude Code, Claude Opus 5.5, que solo vieron el prompt) respondió las 9

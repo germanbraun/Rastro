@@ -893,20 +893,7 @@ with faq_tab:
         "retries_c": sum(len(e["C"]["attempts"]) > 1 for e in data.values()),
         "unified_columns": unified_columns(),
     }
-    for item in [i for i in faq() if not i.get("tecnico")]:
-        with st.expander(item["question"]):
-            st.markdown(item["answer"].format(**numbers))
-    if not TECH:
-        st.caption("Hay más preguntas para perfiles técnicos: active «Ver detalles técnicos» en la barra lateral.")
-    else:
-        st.markdown("##### Para técnicos")
-        with st.expander("Cómo está armado Rastro: arquitectura y ontología", expanded=False):
-            for name, caption in [("arquitectura-oncologia", "De las fuentes del dominio a una capa semántica."),
-                                  ("ontologia", "Los conceptos de negocio que lee el LLM, en lugar de las tablas.")]:
-                st.caption(caption)
-                image = base64.b64encode(Path(f"/app/{name}.svg").read_bytes()).decode()
-                st.markdown(f'<img src="data:image/svg+xml;base64,{image}" style="width:100%;margin-bottom:24px">',
-                            unsafe_allow_html=True)
-        for item in [i for i in faq() if i.get("tecnico")]:
-            with st.expander(item["question"]):
-                st.markdown(item["answer"].format(**numbers))
+    import dominio  # las preguntas que valen para todos los casos, y después las de oncología
+    dominio.show_faq("oncologia", [(i["question"], i["answer"].format(**numbers), i.get("tecnico", False)) for i in faq()],
+                     TECH, [("arquitectura-oncologia", "De las fuentes del dominio a una capa semántica."),
+                            ("ontologia", "Los conceptos de negocio que lee el LLM, en lugar de las tablas.")], "ontología")

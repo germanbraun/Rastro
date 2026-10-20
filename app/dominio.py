@@ -626,26 +626,51 @@ def render(cfg_path, tech):
             trust(cfg, tech, evaluation, changes)
 
     with faq_tab:
-        for item in [i for i in cfg.get("faq", []) if not i.get("tecnico")]:
-            with st.expander(item["pregunta"]):
-                st.markdown(md(item["respuesta"]))
-        if tech:
-            st.markdown("##### Para técnicos")
-            diagram = cfg.get("diagrama", {})
-            with st.expander(f"Cómo está armado Rastro: arquitectura y {diagram.get('titulo', 'diccionario')}"):
-                for name, caption in [(f"arquitectura-{cfg['domain']}", "De las fuentes del dominio a una capa semántica."),
-                                      (diagram.get("archivo"), f"El {diagram.get('titulo')}: lo que lee el LLM.")]:
-                    if not name:
-                        continue
-                    st.caption(caption)
-                    image = base64.b64encode(Path(f"/app/{name}.svg").read_bytes()).decode()
-                    st.markdown(f'<img src="data:image/svg+xml;base64,{image}" style="width:100%;margin-bottom:24px">',
-                                unsafe_allow_html=True)
-            for item in [i for i in cfg.get("faq", []) if i.get("tecnico")]:
-                with st.expander(item["pregunta"]):
-                    st.markdown(md(item["respuesta"]))
-        else:
-            st.caption("Hay más preguntas para perfiles técnicos: active «Ver detalles técnicos» en la barra lateral.")
+        diagram = cfg.get("diagrama", {})
+        show_faq(domain, [(i["pregunta"], md(i["respuesta"]), i.get("tecnico", False)) for i in cfg.get("faq", [])], tech,
+                 [(f"arquitectura-{domain}", "De las fuentes del dominio a una capa semántica."),
+                  (diagram.get("archivo"), f"El {diagram.get('titulo')}: lo que lee el LLM.")],
+                 diagram.get("titulo", "diccionario"))
+
+
+@st.cache_data
+def general_faq(mtime):
+    return yaml.safe_load(Path("/app/faq-general.yaml").read_text())
+
+
+def domain_name(domain):
+    return next((d["name"] for d in yaml.safe_load(Path("/app/dominios.yaml").read_text()) if d["id"] == domain), domain)
+
+
+def show_faq(domain, specific, tech, diagrams, diagram_title="diccionario"):
+    """Las preguntas frecuentes: primero las que valen para todos los casos, después las de este caso.
+    specific es una lista de (pregunta, respuesta, técnica)."""
+    general = general_faq(Path("/app/faq-general.yaml").stat().st_mtime)
+
+    def block(items):
+        for question, answer_text in items:
+            with st.expander(question):
+                st.markdown(answer_text)
+
+    st.markdown("##### Para todos los casos")
+    block([(i["pregunta"], md(i["respuesta"])) for i in general if not i.get("tecnico")])
+    st.markdown(f"##### De este caso: {domain_name(domain)}")
+    block([(q, a) for q, a, t in specific if not t])
+    if not tech:
+        st.caption("Hay más preguntas para perfiles técnicos: active «Ver detalles técnicos» en la barra lateral.")
+        return
+    st.markdown("##### Para técnicos, en todos los casos")
+    block([(i["pregunta"], md(i["respuesta"])) for i in general if i.get("tecnico")])
+    st.markdown(f"##### Para técnicos, de este caso: {domain_name(domain)}")
+    with st.expander(f"Cómo está armado Rastro: arquitectura y {diagram_title}"):
+        for name, caption in diagrams:
+            if not name or not Path(f"/app/{name}.svg").exists():
+                continue
+            st.caption(caption)
+            image = base64.b64encode(Path(f"/app/{name}.svg").read_bytes()).decode()
+            st.markdown(f'<img src="data:image/svg+xml;base64,{image}" style="width:100%;margin-bottom:24px">',
+                        unsafe_allow_html=True)
+    block([(q, a) for q, a, t in specific if t])
 
 
 def before_after(card):

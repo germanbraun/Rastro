@@ -1,0 +1,120 @@
+# Preguntas frecuentes que valen para los tres casos de uso. La app las muestra primero, en todos los
+# dominios; después vienen las propias de cada caso (app/faq.yaml para oncología y la sección faq de
+# app/dominios/*.yaml). Las que tienen «tecnico: true» se ven solo con «Ver detalles técnicos».
+
+# --- Para todos ----------------------------------------------------
+
+- pregunta: ¿Qué es Rastro?
+  respuesta: |-
+    Una forma de preguntarle a varias bases de datos en lenguaje de negocio, sin saber cómo están armadas.
+
+    Rastro junta bases que no se hablan entre sí y las describe con un **diccionario de negocio** (por ejemplo: pozo, concesión y empresa; contrato, proveedor y grupo; ensayo, fármaco y enfermedad). Quien pregunta usa esas palabras, y Rastro se encarga de buscar en cada base. Cada respuesta dice de dónde sale y se puede auditar.
+
+- pregunta: ¿Necesito saber programar?
+  respuesta: |-
+    No. Las preguntas de ejemplo funcionan solas. Para hacer preguntas propias, Rastro usa un asistente de IA que traduce la pregunta; hay que configurarlo una vez.
+
+- pregunta: ¿Por qué puedo confiar en las respuestas?
+  respuesta: |-
+    Por tres pruebas que medimos en cada caso:
+    - **Respuestas correctas:** el mismo asistente de IA responde con Rastro y sin Rastro, y se compara con la respuesta correcta.
+    - **La misma pregunta, la misma respuesta:** cada pregunta se hace de 4 formas distintas; con Rastro la respuesta no cambia.
+    - **Los cambios se arreglan en un lugar:** si una base cambia, Rastro se arregla con una línea; sin Rastro, hay que reescribir cada consulta.
+
+    Y cada respuesta se puede auditar. Los números de este caso están en la pestaña «Por qué confiar».
+
+- pregunta: ¿Qué pasa si una base cambia?
+  respuesta: |-
+    Se arregla en un solo lugar. Lo probamos en cada caso: cuando una base cambia el nombre de una columna, las consultas armadas a mano dejan de funcionar y hay que reescribirlas una por una; con Rastro, es una línea de la traducción de esa base. Y si cambia cómo se escribe un dato (por ejemplo, la unidad), las consultas a mano dan otro número sin avisar; Rastro avisa.
+
+- pregunta: ¿Cómo sé de dónde sale cada respuesta?
+  respuesta: |-
+    Cada respuesta dice qué fuentes usó, y «¿De dónde sale la respuesta?» muestra la evidencia: qué decía cada fuente y por qué Rastro unió dos datos (por ejemplo, que dos nombres son la misma empresa, o que un texto nombra un fármaco). Esa evidencia se guarda con el estándar del W3C para procedencia (PROV-O), así que cualquier herramienta puede leerla.
+
+- pregunta: ¿Rastro también responde sobre textos?
+  respuesta: |-
+    Sí, con cuidado. En «Una pregunta sobre textos», Rastro primero elige con una consulta exacta los registros que importan; después, un asistente de IA lee solo esos textos y los agrupa en temas, citando cada registro. En «¿De dónde sale la respuesta?» están todos los textos que leyó. El grafo decide qué se lee; la IA solo resume.
+
+# --- Para técnicos (se ven con «Ver detalles técnicos») ----------------
+
+- pregunta: ¿Qué es Rastro, técnicamente?
+  tecnico: true
+  respuesta: |-
+    Una **capa semántica** sobre fuentes públicas. Las describe con conceptos de negocio, un LLM pregunta sobre esos conceptos, y cada respuesta dice de qué fuente sale.
+
+    Técnicamente es un **Virtual Knowledge Graph**: ontología, mapeos R2RML y SPARQL, estándares del W3C. Es pragmático: las fuentes se cargan en Postgres tal como vienen, y los enlaces entre fuentes quedan precalculados en tablas, con su evidencia.
+
+- pregunta: Sé SQL. ¿Qué es cada pieza, en términos de SQL?
+  tecnico: true
+  respuesta: |-
+    | Tecnología semántica | En términos de SQL |
+    |---|---|
+    | **Ontología** | El esquema de negocio documentado: las tablas que te gustaría tener |
+    | **Mapeo (R2RML)** | Una definición de vista: «esta columna de esta tabla es este concepto» |
+    | **SPARQL** | Un lenguaje de consulta sobre conceptos en lugar de tablas |
+    | **Ontop** | Un compilador: traduce la consulta a SQL normal sobre las tablas reales |
+    | **Entity linking** | La clave de join que faltaba, calculada una vez |
+
+    Los datos no se mueven: siguen en Postgres, y cada pregunta se ejecuta como SQL. Las tres piezas de este caso están en la pestaña «Diccionario, enlaces y mapeos».
+
+- pregunta: ¿Qué sucede al hacer una pregunta?
+  tecnico: true
+  respuesta: |-
+    1. El LLM recibe la **ontología** como contexto: los conceptos, cómo se relacionan y qué significa cada uno. Con eso escribe una consulta SPARQL. No ve tablas, así que no tiene que adivinar cómo se cruzan.
+    2. Ontop la traduce a SQL y la ejecuta en vivo sobre Postgres.
+    3. La respuesta se muestra con la fuente de cada columna. En «¿De dónde sale la respuesta?» están la consulta y el SQL exactos, para revisarlos: el LLM todavía puede elegir mal un concepto o un filtro.
+
+- pregunta: ¿Necesito un LLM o una API key?
+  tecnico: true
+  respuesta: >-
+    Para las preguntas de ejemplo, no: usan consultas ya escritas por el LLM, que se ejecutan en
+    vivo. Para preguntas propias hace falta un LLM: la Claude API (de pago por uso) u Ollama, gratis
+    en la propia computadora. Ver layer/README.md.
+
+- pregunta: Si con SQL también se puede, ¿qué aporta la capa semántica?
+  tecnico: true
+  respuesta: |-
+    Lo medimos en cada caso con tres formas de darle los datos al mismo LLM: SQL sobre las bases tal como vienen, SQL sobre las bases más las tablas de enlaces de Rastro, y Rastro.
+
+    **La precisión y la consistencia vienen de integrar una vez** (las tablas de enlaces): con ellas, el SQL acierta igual. **La capa semántica aporta el resto:** el conocimiento de cada fuente queda en los mapeos y no repartido en cada consulta, un cambio de la fuente se arregla en un lugar, cada dato trae su fuente, las definiciones de negocio (como «no convencional» o «terapia dirigida») las deduce Ontop, y se puede consultar junto con datos de otras organizaciones, con estándares abiertos. Los números de este caso están en «Por qué confiar».
+
+- pregunta: ¿Por qué no vistas SQL sobre las tablas de enlaces?
+  tecnico: true
+  respuesta: |-
+    Para un caso chico pueden alcanzar: unas buenas vistas dan nombres de negocio, una sola definición de cada cosa y un lugar donde absorber un cambio de la fuente.
+
+    La capa semántica suma:
+    - **Procedencia:** la fuente de cada columna de la respuesta, sin programarla.
+    - **Datos de afuera:** identificadores compartidos que permiten unir, en una consulta, datos de otras organizaciones.
+    - **Jerarquías y composición:** una clase incluye sus subtipos, y cualquier combinación de conceptos funciona sin una vista por pregunta.
+    - **Estándares abiertos** (W3C): la misma capa la leen otras plataformas o herramientas de grafos de conocimiento, no está atada a una base.
+
+- pregunta: ¿Qué significa que «el conocimiento vive en el modelo»?
+  tecnico: true
+  respuesta: |-
+    Que una definición de negocio se escribe una vez, en la ontología, y todas las preguntas la usan. Por ejemplo, «producción no convencional» o «concesión para revisar» no están en ninguna tabla: la ontología dice qué cuenta como tal, y Ontop lo deduce al responder. Si el negocio cambia la definición, es una línea, y cambia en todas las preguntas a la vez. Con SQL, esa definición vive en cada consulta, o en una vista que hay que mantener.
+
+- pregunta: ¿Qué problemas de integración resuelve?
+  tecnico: true
+  respuesta: |-
+    Según el tutorial de Virtual Knowledge Graphs de Calvanese, Cogrel y Lanti (Ontobras 2022), hay cuatro tipos de heterogeneidad. Los dos que importan:
+
+    - **De esquema:** el mismo concepto en columnas distintas de cada fuente. Lo resuelven la **ontología y los mapeos**.
+    - **De datos:** la misma entidad escrita distinto en cada fuente (una empresa con dos razones sociales, un fármaco con su marca). Lo resuelve el **entity linking**, que **crea** la clave que falta, una vez y con su evidencia.
+
+    Las otras dos (de modelo de datos y de sistema) las resuelven los cargadores. Ejemplos de este caso en «Diccionario, enlaces y mapeos».
+
+- pregunta: ¿Cómo se midió? ¿No favorece a Rastro?
+  tecnico: true
+  respuesta: |-
+    - El mismo LLM respondió cada pregunta sin ver la respuesta correcta, con la misma consigna y los mismos reintentos.
+    - Un número es correcto si está a menos del 5 % del valor real; una lista, si coincide en al menos un 80 %.
+    - Los valores reales salen de Rastro, así que cada diferencia con el SQL se revisó con los datos de las fuentes (la adjudicación de cada caso). Esa revisión encontró y corrigió errores de Rastro, y se dice cuando un arreglo se hizo después de medir.
+    - Las preguntas, las referencias y esa revisión las hizo un asistente de IA (Claude Code), no el LLM evaluado. Falta que una persona las confirme: docs/verificacion-humana.md.
+
+- pregunta: ¿Esto es GraphRAG?
+  tecnico: true
+  respuesta: |-
+    En parte, y del lado que más importa para confiar. GraphRAG, en su versión popular, usa un LLM para armar un grafo a partir de documentos y después recupera pedazos de ese grafo para responder: sirve para texto libre, pero los errores de extracción son difíciles de rastrear. Rastro resuelve la otra mitad: datos estructurados, con un grafo que sale de mapeos y enlaces revisados, y un LLM que escribe una consulta exacta. Por eso los números son exactos y auditables.
+
+    Para preguntas sobre texto, Rastro combina las dos cosas: el grafo elige con una consulta exacta qué registros importan, y el LLM resume solo esos textos, citando cada registro. Es GraphRAG anclado en la capa semántica.

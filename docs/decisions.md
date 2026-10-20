@@ -455,3 +455,7 @@ En la demo de petróleo y gas, el paso de integración decía «Fuentes: Capítu
 
 - **Una pestaña técnica nueva, en los tres dominios:** el diccionario como documentación (clases, relaciones y atributos, con su etiqueta, su descripción y entre qué clases van, leídos del archivo de la ontología, al estilo de WIDOCO, más el dibujo del diccionario); registros reales de las tablas de entity linking que usa la demo en 3 pasos; y los mapeos R2RML de esos pasos, tal como están en el archivo. No se sumó WIDOCO: es una herramienta Java aparte, y la misma lectura se hace con lo que la app ya usa.
 - **Nueve preguntas, siete medidas:** petróleo y gas tiene nueve preguntas de ejemplo, pero la evaluación midió las siete primeras; las concesiones para revisar (e08) y los cambios de operadora (e09) se sumaron después. La diapositiva de preguntas lista las nueve y lo aclara, y las tarjetas de «Por qué confiar» dicen «las preguntas medidas».
+
+## 2026-10-19 — Preguntas frecuentes: primero las de todos los casos
+
+Las preguntas generales (qué es Rastro, por qué confiar, qué pasa si una base cambia, qué es cada pieza en términos de SQL, GraphRAG…) estaban solo en oncología, escritas con sus ejemplos y sus números. Ahora están en `app/faq-general.yaml`, con respuestas que valen para los tres casos, y la app las muestra primero en todos los dominios; después vienen las propias de cada caso («De este caso: …»), en la vista simple y en la técnica. Las de oncología con números propios quedaron como preguntas de oncología («En oncología, ¿qué dio la comparación con SQL?»).
