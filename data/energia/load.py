@@ -52,7 +52,7 @@ http.headers["User-Agent"] = "RastroMVP/0.1"
 
 PRODUCCION_COLS = ["anio", "mes", "idpozo", "idempresa", "empresa", "prod_pet", "prod_gas", "formacion",
                    "idareapermisoconcesion", "areapermisoconcesion", "areayacimiento", "cuenca", "provincia",
-                   "tipo_de_recurso", "sub_tipo_recurso", "tipoestado"]
+                   "tipo_de_recurso", "sub_tipo_recurso", "tipoestado", "tipopozo"]
 POZO_COLS = ["idpozo", "sigla", "empresa", "cod_area", "area", "yacimiento", "formacion", "cuenca", "provincia",
              "tipo_recurso", "sub_tipo_recurso", "tipoestado"]
 

@@ -112,6 +112,8 @@ energia:reportedBy a owl:DatatypeProperty ; rdfs:domain energia:Concession ;
     rdfs:comment "La empresa que informó el contorno al mapa. Puede no ser la operadora de hoy."@es .
 
 energia:wellId a owl:DatatypeProperty ; rdfs:label "identificador del pozo"@es .
+energia:wellType a owl:DatatypeProperty ; rdfs:domain energia:Well ; rdfs:label "tipo de pozo"@es ;
+    rdfs:comment "Tal como lo declara la empresa en su última declaración jurada de 2025: «Petrolífero», «Gasífero», «Inyección de Agua», «Otro tipo»…"@es .
 energia:well a owl:ObjectProperty ; rdfs:domain energia:WellProduction ; rdfs:range energia:Well ; rdfs:label "pozo"@es .
 energia:declaredBy a owl:ObjectProperty ; rdfs:domain energia:WellProduction ; rdfs:range energia:Company ;
     rdfs:label "la declara"@es .

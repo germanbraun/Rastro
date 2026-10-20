@@ -1,0 +1,10 @@
+# 10. ¿Quiénes declaran más gas de shale en 2025?
+PREFIX energia: <https://w3id.org/rastro/energia#>
+
+SELECT ?company (SUM(?gas) AS ?shaleGas) (SUM(?oil) AS ?shaleOil)
+WHERE {
+  ?p a energia:ShaleProduction ; energia:declaredBy/energia:name ?company ; energia:gas ?gas ; energia:oil ?oil .
+}
+GROUP BY ?company
+ORDER BY DESC(?shaleGas)
+LIMIT 10

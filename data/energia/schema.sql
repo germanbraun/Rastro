@@ -10,8 +10,13 @@ CREATE TABLE capitulo4.produccion (      -- una fila por pozo y mes de 2025
     prod_pet numeric,                    -- petróleo, m³
     prod_gas numeric,                    -- gas, miles de m³
     formacion text, idareapermisoconcesion text, areapermisoconcesion text, areayacimiento text,
-    cuenca text, provincia text, tipo_de_recurso text, sub_tipo_recurso text, tipoestado text
+    cuenca text, provincia text, tipo_de_recurso text, sub_tipo_recurso text, tipoestado text,
+    tipopozo text                         -- Petrolífero, Gasífero, de inyección…
 );
+-- Una fila por pozo, mes, concesión y empresa: la clave deja que Rastro una el petróleo, el gas y la
+-- concesión de cada fila sin cruzar la tabla consigo misma
+ALTER TABLE capitulo4.produccion ADD CONSTRAINT produccion_clave UNIQUE (idpozo, mes, idareapermisoconcesion, idempresa);
+CREATE INDEX produccion_concesion ON capitulo4.produccion (idareapermisoconcesion);
 
 -- 2023 y 2024, con las mismas columnas: solo para ver quién operó cada concesión en el tiempo
 CREATE TABLE capitulo4.produccion_historica (LIKE capitulo4.produccion);

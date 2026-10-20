@@ -547,3 +547,20 @@ La verificación humana (parte 6a) encontró 2 de 4 participaciones del mapa des
 - **Aguada Pichana Este:** el mapa la reparte en partes iguales (27,27 % para Total, Wintershall e YPF; 18,18 % para Pan American). El Acuerdo Marco de la Legislatura de Neuquén (8 de septiembre de 2026, Anexo IV, páginas 28 y 29) dice Total 55 %, Wintershall 22,5 %, YPF 16,9 % y Pan American 5,6 %. Se agregó `linking/energia/participaciones-revisadas.csv`: si una concesión tiene participaciones revisadas, reemplazan a las del mapa, con el documento como evidencia y la regla «corrección revisada con documento».
 
 **El efecto:** la parte de YPF pasa de 12.581.213 a 12.570.093 m³ (Aguada Pichana Este es de gas y produce poco petróleo) y Vista sube a 7,0 millones con la mitad de La Amarga Chica. Se volvieron a ejecutar las consultas guardadas: la referencia de e01 cambia y las tres formas siguen dentro de la tolerancia, así que los puntajes no cambian. Sin Rastro, el SQL sigue leyendo el mapa: no puede saber de estas correcciones, que viven en un solo lugar en Rastro.
+
+## 2026-10-20 — Petróleo y gas: el gas, a la vista
+
+Rastro tenía el gas de cada pozo, pero la app casi solo mostraba petróleo (el gas aparecía en los cambios de operadora y en una instancia). En Vaca Muerta el gas pesa tanto como el petróleo, y varias concesiones son de gas (Aguada Pichana Este, Fortín de Piedra).
+
+- **Participación con petróleo y gas:** la pregunta de participación muestra las dos partes (YPF: 12,6 millones de m³ de petróleo y 12.300 millones de m³ de gas), y «¿Por qué este número?» las muestra por concesión.
+- **Una pregunta de gas (e10):** quiénes declaran más gas de shale en 2025. Se midió con el mismo protocolo (subagentes que solo ven el prompt): sin Rastro, SQL con enlaces y con Rastro aciertan las tres; es una pregunta sin cruces difíciles. La evaluación pasa a 10 preguntas: sin Rastro 7 de 10, SQL con enlaces 10 de 10, con Rastro 10 de 10.
+- **El tipo de pozo** (`energia:wellType`): Petrolífero, Gasífero, de inyección…, tal como lo declara la empresa en su última declaración de 2025. El cargador ahora guarda la columna `tipopozo` del Capítulo IV, que antes descartaba. 43.231 pozos petrolíferos y 6.606 gasíferos.
+
+## 2026-10-20 — Petróleo y gas: la producción, fila por fila y rápida
+
+Desde que el mapeo lee el petróleo de la tabla original (para que la prueba de cambio muestre el impacto), cada consulta sumaba el millón de filas de 2025 y calculaba una clave al vuelo: la participación tardaba 18 segundos y, al sumar el gas, su «¿Por qué este número?» no terminaba en 5 minutos (la app quedaba cargando).
+
+- **Cada fila de la declaración jurada es una producción** (pozo, mes, concesión y empresa), leída tal cual de `capitulo4.produccion`, sin sumar antes. La tabla tiene esa clave única; con ella, Rastro une el petróleo, el gas y la concesión de cada fila sin cruzar la tabla consigo misma.
+- **Las tablas de enlaces tienen su clave** (participación, empresa, nombres de empresa, concesión): Rastro ya no quita repetidos en cada consulta.
+- **Resultado:** la participación, de 18 a 8 segundos (4 sin la columna de lo que declara como operadora); su «¿Por qué este número?», de más de 5 minutos a 1 segundo; el gas de shale y el no convencional, 1 segundo. Las respuestas no cambian (se volvieron a ejecutar todas las consultas guardadas).
+- **La prueba de cambio sigue igual de visible:** la línea que lee el petróleo (`prod_pet AS petroleo_m3`) es la que se rompe al renombrar la columna y la que se arregla.

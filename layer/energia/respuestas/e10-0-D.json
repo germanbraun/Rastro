@@ -1,0 +1,16 @@
+{
+ "question": "¿Cuáles son las 5 empresas que declararon más gas de shale en 2025 (producción cuyo subtipo de recurso es shale, gas en miles de m³), contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.?",
+ "attempts": [
+  {
+   "query": "SELECT e.nombre FROM energia.produccion_pozo p JOIN energia.empresa e ON e.empresa_id = p.empresa_id WHERE upper(p.sub_tipo_recurso) = 'SHALE' GROUP BY e.empresa_id, e.nombre ORDER BY sum(p.gas_mm3) DESC NULLS LAST LIMIT 5",
+   "error": null
+  }
+ ],
+ "answer": [
+  "YPF S.A.",
+  "TECPETROL S.A.",
+  "PLUSPETROL",
+  "TOTAL AUSTRAL S.A.",
+  "PAMPA ENERGIA S.A."
+ ]
+}

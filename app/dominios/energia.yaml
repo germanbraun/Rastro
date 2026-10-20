@@ -69,8 +69,9 @@ nota_rastro: >-
 # Cómo se muestran las columnas de las respuestas
 columnas:
   company: Empresa
-  share: Le corresponde (m³)
-  operated: Opera (m³)
+  share: Petróleo que le corresponde (m³)
+  gasShare: Gas que le corresponde (miles de m³)
+  operated: Petróleo que declara como operadora (m³)
   rule: Regla
   wells: Pozos
   concession: Concesión
@@ -78,6 +79,8 @@ columnas:
   detected: Posibles venteos (satélite)
   declared: Puntos de venteo declarados
   unconventionalOil: Petróleo no convencional (m³)
+  shaleGas: Gas de shale (miles de m³)
+  shaleOil: Petróleo de shale (m³)
   distanceKm: Gasoducto más cercano (km)
   pipeline: Gasoducto
   place: Dónde
@@ -92,6 +95,9 @@ columnas:
   gasAfter: Gas por mes después (miles de m³)
 formatos:
   share: numero
+  gasShare: numero
+  shaleGas: numero
+  shaleOil: numero
   operated: numero
   unconventionalOil: numero
   oilBefore: numero
@@ -109,17 +115,21 @@ preguntas:
       titulo: "La parte de {valor}, concesión por concesión"
       explica: "Su parte es la suma, en cada concesión, de la producción por su porcentaje. Cada porcentaje sale del texto de socios del mapa, con su fuente."
       query: |
-        SELECT ?concesion ?porcentaje ?parte ?texto ?fuente WHERE {
-          { SELECT ?c (SUM(?oil) AS ?prod) WHERE { ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil } GROUP BY ?c }
+        SELECT ?concesion ?porcentaje ?parte ?gas ?texto ?fuente WHERE {
+          { SELECT ?c (SUM(?oil) AS ?prod) (SUM(?g) AS ?prodgas) WHERE {
+              ?s0 a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "{valor}" .
+              ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil ; energia:gas ?g } GROUP BY ?c }
           ?s a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "{valor}" ; energia:percent ?porcentaje ;
              energia:sourceText ?texto ; prov:wasDerivedFrom/energia:name ?fuente .
           ?c energia:name ?concesion .
           BIND (ROUND(?prod * ?porcentaje / 100) AS ?parte)
+          BIND (ROUND(?prodgas * ?porcentaje / 100) AS ?gas)
         } ORDER BY DESC(?parte)
+      numeros: [parte, gas]
       nodo: "{concesion}"
-      detalle: "{porcentaje} % · {parte} m³"
+      detalle: "{porcentaje} % · {parte} m³ de petróleo"
       flecha: socia en
-      columnas: {concesion: Concesión, porcentaje: "Porcentaje", parte: "Su parte (m³)", texto: "Evidencia: el texto del mapa", fuente: Fuente}
+      columnas: {concesion: Concesión, porcentaje: "Porcentaje", parte: "Su parte de petróleo (m³)", gas: "Su parte de gas (miles de m³)", texto: "Evidencia: el texto del mapa", fuente: Fuente}
     explicacion: |
       - **Qué busca:** la producción de petróleo de 2025 de cada pozo, la concesión donde está y los socios de esa concesión con su porcentaje.
       - **Qué calcula:** por cada empresa, la producción multiplicada por su porcentaje, sumada en todas sus concesiones; al lado, lo que opera (la producción que declara).
@@ -424,6 +434,31 @@ preguntas:
           FILTER (?c IN ("ESCALANTE - EL TREBOL", "BARRANCAS", "BAJO DEL CHOIQUE - LA INVERNADA"))
         } ORDER BY ?c
 
+  - id: e10
+    query: /ontology/energia/queries/cq10.rq
+    porque:
+      columna: company
+      titulo: "El gas de shale de {valor}, por concesión"
+      explica: "«Shale» sale del tipo de recurso de cada declaración jurada; la concesión, del enlace de cada pozo con el mapa."
+      query: |
+        SELECT ?concesion (ROUND(SUM(?g)) AS ?gas) WHERE {
+          ?p a energia:ShaleProduction ; energia:declaredBy/energia:name "{valor}" ; energia:inConcession/energia:name ?concesion ; energia:gas ?g .
+        } GROUP BY ?concesion ORDER BY DESC(?gas)
+      numeros: [gas]
+      nodo: "{concesion}"
+      detalle: "{gas} miles de m³"
+      flecha: declara en
+      columnas: {concesion: Concesión, gas: "Gas de shale 2025 (miles de m³)"}
+    explicacion: |
+      - **Qué busca:** la producción de cada pozo que es de shale y la empresa que la declara.
+      - **Qué devuelve:** las 10 empresas con más gas de shale en 2025, con su petróleo de shale al lado.
+      - **Lo particular:** es la misma clase deducida que el no convencional (shale es un tipo), mirada por el gas. El gas y el petróleo vienen de las mismas declaraciones juradas, pozo por pozo.
+    simple: ¿Quiénes producen más gas de shale (Vaca Muerta)?
+    tecnica: ¿Qué empresas declaran más gas de shale en 2025 (energia:ShaleProduction, con su gas en miles de m³)?
+    ventaja: "El gas y el petróleo están en el mismo diccionario y salen de las mismas declaraciones juradas: preguntar por gas es cambiar una palabra de la consulta."
+    terminos:
+      Gas de shale: gas de rocas poco permeables (como Vaca Muerta), que se extrae con fractura hidráulica. Se mide en miles de metros cúbicos.
+
 # Datos de afuera: una consulta une Rastro con Wikidata en vivo, en GraphDB, por el LEI
 externo:
   titulo: Datos de afuera (Wikidata)
@@ -473,8 +508,8 @@ cambios:
     despues: valores-arreglado
     donde: "del mapeo (mappings/energia.r2rml.ttl)"
     arreglo:
-      - "sum(p.prod_pet) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
-      - "sum(p.prod_pet / 6.2898) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
+      - "prod_pet AS petroleo_m3, prod_gas AS gas_mm3"
+      - "prod_pet / 6.2898 AS petroleo_m3, prod_gas AS gas_mm3"
   - titulo: Cambia el nombre de una columna
     que: La Secretaría de Energía publica una versión nueva del Capítulo IV y la columna del petróleo cambia de nombre.
     sql: ALTER TABLE capitulo4.produccion RENAME COLUMN prod_pet TO petroleo;
@@ -482,8 +517,8 @@ cambios:
     despues: renombrar-arreglado
     donde: "del mapeo (mappings/energia.r2rml.ttl)"
     arreglo:
-      - "sum(p.prod_pet) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
-      - "sum(p.petroleo) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
+      - "prod_pet AS petroleo_m3, prod_gas AS gas_mm3"
+      - "petroleo AS petroleo_m3, prod_gas AS gas_mm3"
 
 faq:
   - pregunta: ¿De dónde salen los datos?

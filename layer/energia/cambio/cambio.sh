@@ -17,7 +17,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
 MAPPING="$ROOT/mappings/energia.r2rml.ttl"
-ORIGINAL="       sum(p.prod_pet) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3"
+ORIGINAL="       prod_pet AS petroleo_m3, prod_gas AS gas_mm3"
 compose() { docker compose -f "$ROOT/infra/docker-compose.yml" "$@"; }
 sql() { compose exec -T postgres psql -U rastro -v ON_ERROR_STOP=1 -q -c "$1"; }
 
@@ -27,7 +27,7 @@ set_line() {
 import re, sys
 path, new = sys.argv[1:]
 text = open(path).read()
-line = re.search(r"       sum\(p\.[^\n]*\) AS petroleo_m3, sum\(p\.prod_gas\) AS gas_mm3", text).group(0)
+line = re.search(r"       [^\n]*AS petroleo_m3, prod_gas AS gas_mm3", text).group(0)
 open(path, "w").write(text.replace(line, new))
 PY
 }
@@ -70,8 +70,8 @@ case "${1:-}" in
     echo "Hecho: el petróleo ahora está en barriles." ;;
   arreglar)
     case "${2:-}" in
-      renombrar) set_line "       sum(p.petroleo) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3" ;;
-      valores)   set_line "       sum(p.prod_pet / 6.2898) AS petroleo_m3, sum(p.prod_gas) AS gas_mm3" ;;
+      renombrar) set_line "       petroleo AS petroleo_m3, prod_gas AS gas_mm3" ;;
+      valores)   set_line "       prod_pet / 6.2898 AS petroleo_m3, prod_gas AS gas_mm3" ;;
       *) echo "Uso: cambio.sh arreglar renombrar|valores"; exit 1 ;;
     esac
     echo "Mapeo cambiado (una línea):"

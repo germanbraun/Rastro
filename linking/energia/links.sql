@@ -88,10 +88,10 @@ SELECT * FROM revisada;
 -- La evidencia guarda lo que dice el padrón de pozos cuando no coincide.
 CREATE TABLE energia.operador_pozo AS
 WITH ultimo AS (
-  SELECT DISTINCT ON (idpozo) idpozo, trim(empresa) AS empresa, mes
+  SELECT DISTINCT ON (idpozo) idpozo, trim(empresa) AS empresa, mes, nullif(trim(tipopozo), '') AS tipo_pozo
   FROM capitulo4.produccion ORDER BY idpozo, mes DESC, prod_pet DESC NULLS LAST
 )
-SELECT u.idpozo, en.empresa_id,
+SELECT u.idpozo, en.empresa_id, u.tipo_pozo,   -- el tipo de pozo de su última declaración: Petrolífero, Gasífero…
        CASE WHEN pn.empresa_id IS NULL OR pn.empresa_id = en.empresa_id THEN 'coinciden las fuentes'
             ELSE 'rige la declaración jurada' END AS regla,
        'Declara la producción de ' || to_char(make_date(2025, u.mes, 1), 'MM/YYYY') || ': ' || rtrim(u.empresa, '.')
@@ -239,3 +239,10 @@ JOIN energia.empresa a ON a.empresa_id = s.antes_id
 JOIN energia.empresa n ON n.empresa_id = s.empresa_id
 LEFT JOIN energia.concesion c USING (id_concesion)
 WHERE s.antes_id <> s.empresa_id;
+
+-- Las claves de las tablas de enlaces: con ellas, Rastro sabe que hay una fila por clave y no
+-- necesita quitar repetidos en cada consulta (la participación pasa de 18 a 8 segundos)
+ALTER TABLE energia.participacion ADD PRIMARY KEY (id_concesion, empresa_id);
+ALTER TABLE energia.empresa ADD PRIMARY KEY (empresa_id);
+ALTER TABLE energia.empresa_nombre ADD PRIMARY KEY (fuente, nombre);
+ALTER TABLE energia.concesion ADD PRIMARY KEY (id_concesion);

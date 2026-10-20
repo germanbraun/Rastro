@@ -235,7 +235,7 @@ INSTANCES = {
         "Una empresa: YPF": "https://w3id.org/rastro/energia/company/YPF",
         "Una participación (enlace con evidencia): Chevron en Loma Campana": "https://w3id.org/rastro/energia/stake/LCAM/CHEVRON",
         "La operadora de un pozo (enlace con evidencia): pozo 107709": "https://w3id.org/rastro/energia/operatorlink/107709",
-        "La producción de un pozo en 2025": "https://w3id.org/rastro/energia/production/e2d7b974a6ee583249613016f6a495a9",
+        "La producción de un pozo en diciembre de 2025": "https://w3id.org/rastro/energia/production/107709/12/BEH/YPF",
         "Un posible venteo visto por satélite": "https://w3id.org/rastro/energia/venting/sensoresremotos_venteos_detectados.61105",
         "Dónde cae ese venteo (enlace con evidencia)": "https://w3id.org/rastro/energia/locationlink/sensoresremotos_venteos_detectados.61105",
     },
@@ -1059,6 +1059,10 @@ def trust(cfg, tech, evaluation, changes):
             for col, k in zip(st.columns(2), change_names):
                 col.metric(change_names[k], f"{before['totals'][k].get('✅', 0)}/{len(before['cells'])}")
                 col.caption(summary(before["totals"][k]))
+            if before["totals"]["C"].get("❌", 0) > before["totals"]["B"].get("❌", 0):
+                st.caption("Rastro falla más, y todo junto: el mapeo lee la columna que cambió y Rastro no arranca hasta "
+                           "arreglarla. Falla en voz alta y se arregla en un lugar; sin Rastro, cada consulta rota hay que "
+                           "encontrarla y reescribirla.")
             if "🟡" in before.get("vocabulary", ""):
                 st.warning("Rastro avisa: " + md(before["vocabulary"].split(": ", 1)[-1]))
             if tech:
