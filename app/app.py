@@ -532,14 +532,12 @@ with st.sidebar:
         st.caption("Datos públicos de oncología: ensayos clínicos (AACT), fármacos (ChEMBL), "
                    "efectos adversos (openFDA) y enfermedades (MeSH).")
 
-ask_tab, trust_tab, faq_tab, *console_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"]
-                                                   + (["Consola SPARQL", "Diccionario, enlaces y mapeos"] if TECH else []))
-if console_tab:
-    import dominio  # la consola y las piezas técnicas son las mismas en los tres dominios
-    with console_tab[0]:
-        dominio.sparql_console("oncologia")
-    with console_tab[1]:
-        dominio.show_pieces("oncologia", "ontologia")
+ask_tab, trust_tab, faq_tab, *hood_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"]
+                                                + (["Bajo el capó"] if TECH else []))
+if hood_tab:
+    import dominio  # «Bajo el capó» es el mismo en los tres dominios
+    with hood_tab[0]:
+        dominio.under_the_hood("oncologia", "ontologia")
 FAQ_HINT = "Para dudas, consulte la pestaña **Preguntas frecuentes**."
 
 with ask_tab:

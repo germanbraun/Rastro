@@ -11,9 +11,10 @@ llm: >-
   El asistente de IA que traduce una pregunta propia en una consulta. Las preguntas de ejemplo no lo
   necesitan: sus consultas ya están escritas y corren en vivo.
 modo: >-
-  Demo en 3 pasos: el recorrido guiado. Una pregunta de ejemplo: elegir entre las preguntas ya
-  preparadas. Una pregunta sobre textos: la IA resume solo los textos que eligió el grafo. Mi propia
-  pregunta: escribir una pregunta libre (necesita un asistente de IA configurado).
+  Una pregunta de ejemplo: elegir entre las preguntas ya preparadas. Una pregunta sobre textos: la IA
+  resume solo los textos que eligió el grafo. Datos de afuera: Rastro unido con otro grafo en vivo. Mi
+  propia pregunta: escribir una pregunta libre (necesita un asistente de IA configurado). El recorrido
+  guiado está en la pestaña «Demo en 3 pasos».
 pregunta: >-
   Preguntas de ejemplo de este dominio. Cada una se responde en vivo sobre los datos, con una consulta
   sobre el diccionario de negocio.

@@ -489,6 +489,16 @@ def show_instances(domain):
     st.divider()
 
 
+def under_the_hood(domain, diagram=None):
+    """«Bajo el capó» (vista técnica): la consola SPARQL, una instancia del grafo y el diccionario, los
+    enlaces y los mapeos, en una sola pestaña."""
+    console, pieces = st.tabs(["Consola SPARQL y una instancia", "Diccionario, enlaces y mapeos"])
+    with console:
+        sparql_console(domain)
+    with pieces:
+        show_pieces(domain, diagram)
+
+
 def sparql_console(domain):
     """Una consola para escribir y ejecutar SPARQL sobre el Ontop del dominio, con el SQL que genera."""
     folder, port = CONSOLE[domain]
@@ -603,25 +613,25 @@ def render(cfg_path, tech):
             st.caption(md(cfg["resumen"]))
 
     # «Por qué confiar» necesita una evaluación medida; un dominio sin ella no muestra la pestaña
-    names = ["Preguntar"] + (["Por qué confiar"] if cfg.get("tarjetas") else []) + ["Preguntas frecuentes"] \
-        + (["Consola SPARQL", "Diccionario, enlaces y mapeos"] if tech else [])
+    # Pocas pestañas: la demo, preguntar, por qué confiar y preguntas frecuentes; en la vista técnica, todo
+    # lo de adentro (consola, diccionario, enlaces y mapeos) junto en «Bajo el capó»
+    names = (["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Preguntar"] \
+        + (["Por qué confiar"] if cfg.get("tarjetas") else []) + ["Preguntas frecuentes"] + (["Bajo el capó"] if tech else [])
     tabs = dict(zip(names, st.tabs(names)))
     ask_tab, trust_tab, faq_tab = tabs["Preguntar"], tabs.get("Por qué confiar"), tabs["Preguntas frecuentes"]
+    if cfg.get("demo"):
+        with tabs["Demo en 3 pasos"]:
+            show_demo(cfg, tech)
     if tech:
-        with tabs["Consola SPARQL"]:
-            sparql_console(domain)
-        with tabs["Diccionario, enlaces y mapeos"]:
-            show_pieces(domain, cfg.get("diagrama", {}).get("archivo"))
+        with tabs["Bajo el capó"]:
+            under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"))
 
     with ask_tab:
-        modes = ((["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Una pregunta de ejemplo"]
-                 + (["Una pregunta sobre textos"] if cfg.get("texto") else [])
-                 + ([cfg["externo"]["titulo"]] if cfg.get("externo") else []))
+        modes = ["Una pregunta de ejemplo"] + (["Una pregunta sobre textos"] if cfg.get("texto") else []) \
+            + ([cfg["externo"]["titulo"]] if cfg.get("externo") else [])
         mode = st.radio("Tipo de pregunta", modes + ["Mi propia pregunta"], help=ayuda("modo"),
                         horizontal=True, label_visibility="visible", key=f"{domain}_mode")
-        if mode == "Demo en 3 pasos":
-            show_demo(cfg, tech)
-        elif mode == "Una pregunta sobre textos":
+        if mode == "Una pregunta sobre textos":
             show_text_question(cfg, tech)
         elif cfg.get("externo") and mode == cfg["externo"]["titulo"]:
             show_external(cfg, tech)

@@ -31,7 +31,7 @@ Cada dominio usa su propio prefijo en SPARQL: `energia:`, `proveedores:` y `onco
 | Proveedores del Estado de EE. UU. | [docs/demo-guion.md](docs/demo-guion.md) | `docs/slides/proveedores.html` |
 | Oncología | [docs/demo-guion-oncologia.md](docs/demo-guion-oncologia.md) | `docs/slides/oncologia.html` |
 
-Para una audiencia técnica: [docs/demo-guion-tecnico.md](docs/demo-guion-tecnico.md). Lo que falta que confirme una persona: [docs/verificacion-humana.md](docs/verificacion-humana.md).
+Para una audiencia técnica: [docs/demo-guion-tecnico.md](docs/demo-guion-tecnico.md). Lo que falta que confirme una persona: [docs/verificacion-humana.md](docs/verificacion-humana.md). Una evaluación con preguntas que no armamos nosotros: [docs/preguntas-a-ciegas.md](docs/preguntas-a-ciegas.md).
 
 ## Levantar el entorno
 

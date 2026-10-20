@@ -55,7 +55,7 @@
     | **Ontop** | Un compilador: traduce la consulta a SQL normal sobre las tablas reales |
     | **Entity linking** | La clave de join que faltaba, calculada una vez |
 
-    Los datos no se mueven: siguen en Postgres, y cada pregunta se ejecuta como SQL. Las tres piezas de este caso están en la pestaña «Diccionario, enlaces y mapeos».
+    Los datos no se mueven: siguen en Postgres, y cada pregunta se ejecuta como SQL. Las tres piezas de este caso están en la pestaña «Bajo el capó».
 
 - pregunta: ¿Qué sucede al hacer una pregunta?
   tecnico: true
@@ -102,7 +102,7 @@
     - **De esquema:** el mismo concepto en columnas distintas de cada fuente. Lo resuelven la **ontología y los mapeos**.
     - **De datos:** la misma entidad escrita distinto en cada fuente (una empresa con dos razones sociales, un fármaco con su marca). Lo resuelve el **entity linking**, que **crea** la clave que falta, una vez y con su evidencia.
 
-    Las otras dos (de modelo de datos y de sistema) las resuelven los cargadores. Ejemplos de este caso en «Diccionario, enlaces y mapeos».
+    Las otras dos (de modelo de datos y de sistema) las resuelven los cargadores. Ejemplos de este caso en «Bajo el capó».
 
 - pregunta: ¿Cómo se midió? ¿No favorece a Rastro?
   tecnico: true
