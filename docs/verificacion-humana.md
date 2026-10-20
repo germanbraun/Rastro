@@ -151,9 +151,9 @@ Rastro cuenta 60 posibles venteos dentro de un área protegida del IGN. Abrí un
 
 | Área protegida | Puntos | Ejemplo | ¿Cae dentro? |
 |---|---|---|---|
-| Reserva Provincial de Uso Múltiple Auca Mahuida | 35 | [-37,73132, -68,90842](https://www.google.com/maps?q=-37.73132,-68.90842) | |
-| Reserva Hidrogeológica Meseta Espinosa y El Cordón | 23 | [-46,79979, -67,91453](https://www.google.com/maps?q=-46.79979,-67.91453) | |
-| Reserva Provincial Cabo Vírgenes | 2 | [-52,38787, -68,41644](https://www.google.com/maps?q=-52.38787,-68.41644) | |
+| Reserva Provincial de Uso Múltiple Auca Mahuida | 35 | [-37,73132, -68,90842](https://www.google.com/maps?q=-37.73132,-68.90842) | si |
+| Reserva Hidrogeológica Meseta Espinosa y El Cordón | 23 | [-46,79979, -67,91453](https://www.google.com/maps?q=-46.79979,-67.91453) | si |
+| Reserva Provincial Cabo Vírgenes | 2 | [-52,38787, -68,41644](https://www.google.com/maps?q=-52.38787,-68.41644) | si |
 
 ### 6d. El identificador global (LEI) de tres empresas
 
@@ -177,7 +177,7 @@ Rastro marca 64 cambios de operadora entre 2023 y 2025 (9 de ellos en áreas sin
 
 ### 6f. El resumen de los estudios ambientales (GraphRAG)
 
-En la app, **Petróleo y gas → Una pregunta sobre textos**, abrí el tema «Planillas de venteo de gas» y 3 de sus estudios. ¿Son planillas de venteo de esas concesiones? ¿Es cierto que en las concesiones de YPF el listado no muestra ninguna desde 2022? ____
+En la app, **Petróleo y gas → Preguntar → Una pregunta sobre textos → Responder**. En el paso 4 («El resumen, con citas»), el primer tema es «Planillas de venteo de gas (Res. 143/98)», con los números de los estudios que cita. Buscá 3 de esos números en el paso 3 («Los 72 textos que leyó»): al elegir una fila se ve el texto completo. ¿Son planillas de venteo de esas concesiones? ¿Es cierto que en las concesiones de YPF el listado no muestra ninguna desde 2022? ____
 
 ## Resultado
 
