@@ -565,10 +565,12 @@ Desde que el mapeo lee el petróleo de la tabla original (para que la prueba de 
 - **Resultado:** la participación, de 18 a 8 segundos (4 sin la columna de lo que declara como operadora); su «¿Por qué este número?», de más de 5 minutos a 1 segundo; el gas de shale y el no convencional, 1 segundo. Las respuestas no cambian (se volvieron a ejecutar todas las consultas guardadas).
 - **La prueba de cambio sigue igual de visible:** la línea que lee el petróleo (`prod_pet AS petroleo_m3`) es la que se rompe al renombrar la columna y la que se arregla.
 
-## 2026-10-20 — Rastro Lab en petróleo y gas: factibilidad del gas de Vaca Muerta
+## 2026-10-20 — Rastro Lab en petróleo y gas: explicar el gas de Vaca Muerta
 
-Estudio sin modelo (`docs/lab-gas-vaca-muerta.md`, consultas en `lab/gas/pozos-nuevos.sql`). El caso mide el impacto de la capa semántica, no la precisión: el mismo modelo con variables de las tablas crudas y de Rastro, en error (áreas conocidas y nuevas), estabilidad ante cambios de la fuente, trazabilidad y costo de mantener.
+Estudio sin modelo (`docs/lab-gas-vaca-muerta.md`, consulta en `lab/gas/pozos-nuevos.sql`). El centro de Rastro Lab es la **explicabilidad**; lo segundo, la robustez ante cambios de la fuente; la precisión solo muestra que no se pierde nada.
 
-- **Pozos:** 245 gasíferos nuevos de 2023 a 2025 (223 con 6 meses), 1.161 pozos nuevos de Vaca Muerta en total. Objetivo: gas de los meses 2 a 7; con 12 meses solo quedan 2 pozos de 2025 para probar.
-- **Datos de fractura:** públicos, diarios y unidos por idpozo; 237 de los 245 gasíferos los tienen. Contexto para el modelo y caso real de fuente que cambia.
-- **Hallazgo sobre la capa:** la operadora y el tipo de pozo de Rastro son los de diciembre de 2025; para un modelo eso es usar el futuro. Rastro Lab necesita los del mes de inicio.
+- **Qué aporta Rastro y qué no:** el peso de cada variable lo calcula una técnica estándar (SHAP), igual con o sin Rastro. Rastro aporta que cada variable sea un concepto del diccionario con fuente, regla y evidencia, que se agrupe por concepto, el «¿qué pasaría si…?» en términos de negocio y la marca de datos dudosos. No vuelve transparente al modelo.
+- **Tres pasos:** explicaciones sin fractura, lado a lado «Sin Rastro / Con Rastro»; la fractura como fuente nueva (credibilidad y robustez con dos versiones); la precisión en una línea. Guardar las explicaciones en el grafo queda para después.
+- **Medida:** prueba a ciegas con un consultor (20 explicaciones mezcladas), trazabilidad por variable y predicciones con datos dudosos (hoy 96 de 245 pozos de gas nuevos).
+- **Datos:** 245 pozos de gas nuevos de 2023 a 2025 (223 con 6 meses); objetivo, el gas de los meses 2 a 7. La fractura es pública, diaria y se une por pozo (237 de 245).
+- **Cambio previo a la capa:** la operadora y el tipo de pozo de Rastro son los de diciembre de 2025; para un modelo eso es usar el futuro. Hacen falta los del mes de inicio.
