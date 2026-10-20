@@ -169,9 +169,11 @@ Rastro marca 64 cambios de operadora entre 2023 y 2025 (9 de ellos en áreas sin
 
 | Concesión | Desde | Antes | Después | ¿Coincide? |
 |---|---|---|---|---|
-| Escalante - El Trébol | 11/2024 | YPF | Pecom | |
-| Barrancas | 04/2025 | YPF | Petróleos Sudamericanos | |
-| Bajo del Choique - La Invernada | 02/2025 | ExxonMobil | Pluspetrol | |
+| Escalante - El Trébol | 11/2024 | YPF | Pecom | https://www.pecomenergia.com.ar/index.php/es/medios/104-pecom-asumi%C3%B3-la-titularidad-como-operador-de-la-concesi%C3%B3n-el-tr%C3%A9bol-escalante-en-chubut 10/2024|
+| Barrancas | 04/2025 | YPF | Petróleos Sudamericanos | si https://vacamuertaonline.com.ar/articulo/cambio-de-manos-en-rio-negro-petroleos-sudamericanos-toma-el-control-del-yacimiento-mas-productivo-de-la-provincia.php|
+| Bajo del Choique - La Invernada | 02/2025 | ExxonMobil | Pluspetrol | esto es https://www.pluspetrol.net/es/articulo/pluspetrol-adquiere-exxon-mobil-exploration-argentina-emea-1 de 12/2024 pero puede ser 2/2025|
+
+**Sobre 6e:** los tres cambios coinciden. El desfase de 1 a 2 meses (Escalante - El Trébol: traspaso el 28/10/2024, Rastro dice 11/2024; Bajo del Choique - La Invernada: compra cerrada el 16/12/2024, Rastro dice 02/2025) es esperable: Rastro marca el cambio en el primer mes en que la otra empresa declara la mayor parte de la producción, 3 meses seguidos, y las declaraciones juradas siguieron saliendo un tiempo con el nombre anterior. El enlace de Barrancas anotado es de un área de Río Negro; la Barrancas de Rastro es la de Mendoza, cedida por YPF a Petróleos Sudamericanos con efecto el 1 de abril de 2025, según el formulario 6-K de YPF ante la SEC (https://www.sec.gov/Archives/edgar/data/904851/000119312525180832/d10518d6k.htm).
 
 ### 6f. El resumen de los estudios ambientales (GraphRAG)
 
@@ -193,7 +195,7 @@ En la app, **Petróleo y gas → Una pregunta sobre textos**, abrí el tema «Pl
 | 6b. Grupos | 4 de 4 | persona | 2026-10-20 |
 | 6c. Áreas protegidas | __ de 3 | | |
 | 6d. LEI | 3 de 3 | persona | 2026-10-20 |
-| 6e. Cambios de operadora | __ de 3 | | |
+| 6e. Cambios de operadora | 3 de 3 (dos con 1 a 2 meses de desfase, esperable) | persona | 2026-10-20 |
 | 6f. Textos de venteos | | | |
 
 Con esto completo, los documentos pueden decir «revisado por una persona» con el número de acá.
