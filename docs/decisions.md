@@ -482,3 +482,7 @@ Oncología ya unía Rastro con Wikidata en vivo (`layer/externo/`); petróleo y 
 ## 2026-10-20 — Íconos «?» con ayuda rápida
 
 La app tiene muchos detalles. Cada parte importante suma un ícono «?» que, al pasar el mouse, explica en una o dos oraciones qué se está viendo: el dominio, el tipo de pregunta, cada paso de la demo, «Sin Rastro» y «Con Rastro», las fuentes de una respuesta, cada tarjeta de «Por qué confiar», los escenarios de cambio, el mapa, la consola SPARQL, la instancia, la ontología, el entity linking y los mapeos. Los textos están todos en `app/ayuda.yaml`, para corregirlos en un solo lugar.
+
+## 2026-10-20 — Petróleo y gas: «Datos de afuera (Wikidata)» en la app
+
+La consulta federada con Wikidata (`layer/energia/externo/wikidata.rq`) estaba solo en el repo, una pregunta frecuente y una diapositiva. Ahora es un modo de «Preguntar», visible sin «Ver detalles técnicos»: un dibujo de cómo se unen los dos grafos por el LEI, un botón que la corre en vivo en GraphDB (unos 15 segundos) y, si Wikidata no responde, el resultado guardado el 19 de octubre, con la fecha a la vista. La configuración está en `externo:` de `app/dominios/energia.yaml`, así que otro dominio puede sumarla igual.

@@ -70,3 +70,6 @@ mapeos: >-
 mapa: >-
   Contornos de las concesiones (en rojo, las que hay que revisar), posibles venteos vistos por satélite y
   gasoductos de transporte de ENARGAS. Las geometrías están en el grafo con el estándar GeoSPARQL.
+externo: >-
+  Una consulta federada: GraphDB pide una parte a Rastro (Ontop) y otra a Wikidata, en internet, y las une
+  por un identificador que las dos comparten (el LEI). No se copia nada a Rastro.

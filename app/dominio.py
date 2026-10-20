@@ -6,6 +6,7 @@ dominio (preguntas, columnas, evidencia, tarjetas, escenarios de cambio) está e
 """
 
 import base64
+import io
 import json
 import os
 import re
@@ -590,13 +591,16 @@ def render(cfg_path, tech):
 
     with ask_tab:
         modes = ((["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Una pregunta de ejemplo"]
-                 + (["Una pregunta sobre textos"] if cfg.get("texto") else []))
+                 + (["Una pregunta sobre textos"] if cfg.get("texto") else [])
+                 + ([cfg["externo"]["titulo"]] if cfg.get("externo") else []))
         mode = st.radio("Tipo de pregunta", modes + ["Mi propia pregunta"], help=ayuda("modo"),
                         horizontal=True, label_visibility="visible", key=f"{domain}_mode")
         if mode == "Demo en 3 pasos":
             show_demo(cfg, tech)
         elif mode == "Una pregunta sobre textos":
             show_text_question(cfg, tech)
+        elif cfg.get("externo") and mode == cfg["externo"]["titulo"]:
+            show_external(cfg, tech)
         elif mode == "Una pregunta de ejemplo":
             # La misma pregunta en las dos vistas; la técnica suma su formulación precisa debajo
             options = {q["simple"]: q for q in questions}
@@ -722,6 +726,48 @@ def show_demo(cfg, tech):
     if i < len(steps) - 1 and forward.button("Siguiente →", type="primary", key=f"{key}_next"):
         st.session_state[key] = i + 1
         st.rerun()
+
+
+GRAPHDB = "http://graphdb:7200/repositories/rastro"
+
+
+def show_external(cfg, tech):
+    """Datos de afuera: una consulta federada en GraphDB une Rastro (Ontop) con Wikidata por un
+    identificador compartido. Corre en vivo si se pide; si no, se muestra el resultado guardado."""
+    ext, domain = cfg["externo"], cfg["domain"]
+    st.markdown(f"**{ext['titulo']}**", help=ayuda("externo"))
+    st.markdown(md(ext["intro"]))
+    st.graphviz_chart("""digraph { rankdir=LR; bgcolor="transparent";
+        node [fontname="Helvetica", fontsize=14, style=filled, penwidth=0];
+        r [label="Rastro (Ontop)\\nempresa · LEI · petróleo 2025", shape=ellipse, fillcolor="#2F6FB5", fontcolor="white"];
+        w [label="Wikidata (internet)\\nsede · bolsa · dueño · sitio web", shape=ellipse, fillcolor="#FFF3E6", color="#FF8C42", penwidth=2];
+        q [label="una consulta\\n(GraphDB)", shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#B8C2CF", penwidth=1];
+        r -> q [label="  el mismo LEI  ", dir=both, color="#7A8699", fontcolor="#7A8699", fontname="Helvetica"];
+        q -> w [dir=both, color="#7A8699"]; }""", use_container_width=True)
+    key = f"{domain}_externo"
+    if st.button("Consultar en vivo", type="primary", key=f"{key}_boton",
+                 help="Une Rastro y Wikidata ahora mismo. Tarda unos 15 segundos y necesita internet."):
+        try:
+            r = requests.post(GRAPHDB, data={"query": Path(ext["consulta"]).read_text()},
+                              headers={"Accept": "text/csv"}, timeout=90)
+            r.raise_for_status()
+            st.session_state[key] = (pd.read_csv(io.StringIO(r.text)), "en vivo, ahora")
+        except Exception as e:
+            st.session_state[key] = None
+            st.warning(f"Wikidata no respondió ({str(e)[:120]}). Se muestra el resultado guardado; Wikidata a veces "
+                       "limita las consultas: probar de nuevo en un par de minutos.")
+    table, when = st.session_state.get(key) or (pd.read_csv(ext["guardado"]), f"guardado el {ext['fecha_guardado']}")
+    columns = [c for c in ext["columnas"] if c in table.columns and (tech or c not in ("lei", "wikidata"))]
+    shown = table[columns].copy()
+    if "petroleo_m3" in shown:
+        shown["petroleo_m3"] = shown["petroleo_m3"].map(lambda v: money(v) if pd.notna(v) else "—")
+    shown = shown.fillna("—").rename(columns=ext["columnas"])
+    shown, config = logos.with_logos(shown, columns)
+    st.dataframe(shown, hide_index=True, use_container_width=True, column_config=config)
+    st.caption(f"Resultado {when}. Fuentes: Rastro (Capítulo IV y GLEIF) y Wikidata.")
+    st.info(md(ext["conclusion"]))
+    with st.expander("La consulta: dos grafos en una"):
+        st.code(Path(ext["consulta"]).read_text(), language="sparql")
 
 
 def show_text_question(cfg, tech, demo=False):
