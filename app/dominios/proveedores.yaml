@@ -8,6 +8,7 @@ resumen: >-
 ejemplo_libre: "Por ejemplo: ¿qué grupos tienen más contratos con la NASA?"
 evaluacion: /layer/proveedores/resultados.json
 cambio: /layer/proveedores/cambio/resultado.json
+evidencia: /layer/proveedores/evidencia.json   # cobertura de la evidencia (layer/evidencia.py)
 ontologia: /ontology/proveedores/proveedores.ttl
 diagrama: {archivo: ontologia-proveedores, titulo: diccionario de proveedores}   # app/ontologia-proveedores.svg, lo dibuja docs/diagramas/build.py
 texto: /layer/proveedores/textos/leidos.json   # la pregunta sobre textos (GraphRAG anclado)
@@ -269,8 +270,8 @@ tarjetas:
     valor: 1 línea
     compara: "Sin Rastro: reescribir {b_broken} consultas"
   - titulo: Cada respuesta se puede auditar
-    valor: Sí
-    compara: Con la evidencia de cada grupo y cada enlace
+    valor: "{pct_evidencia}"
+    compara: "de los {n_enlaces} enlaces entre fuentes guardan su fuente, su regla y su texto; y {cols_ok} de {cols} columnas de las respuestas dicen de qué fuente salen."
 
 cambios:
   - titulo: Cambia cómo se escribe un valor

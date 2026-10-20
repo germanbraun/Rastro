@@ -516,3 +516,11 @@ La prueba de cambio se había grabado cuando había siete preguntas medidas, y l
 ## 2026-10-20 — La demo en 3 pasos explica por qué esos pasos
 
 Cada paso de la demo dice qué es (integración, trazabilidad, cruce con mapas o análisis de textos) y qué muestra, y arriba hay un «¿Por qué estos 3 pasos?»: uno por cada cosa que hace Rastro y que una consulta hecha a mano no hace sola. Los textos están en `demo_porque` y en cada paso de `demo` (`que_es`, `muestra`) de `app/dominios/*.yaml`.
+
+## 2026-10-20 — Cobertura de la evidencia, medida
+
+«Cada respuesta se puede auditar» decía «Sí». Ahora es un número, de `layer/evidencia.py`: qué porcentaje de los enlaces entre fuentes guarda su fuente, su regla y su texto (PROV-O), y cuántas columnas de las respuestas a las preguntas de competencia dicen de qué fuente salen. Petróleo y gas: 107.795 de 107.795 enlaces, 34 de 34 columnas. Proveedores: 9.108 de 9.108, 41 de 41. Oncología: 112.461 de 112.461 enlaces ensayo → fármaco, 28 de 28 columnas (una consulta no se pudo analizar y queda afuera). Los motivos de detención «Otro motivo» (2.447) no tienen texto que coincidió, porque ninguna regla coincidió: es el resultado, no un hueco.
+
+**Un error encontrado al medir:** los 303 tramos de gasoducto de ENARGAS salían también como «enlaces» (`energia:PipelineLink`), porque `energia:pipelineOperator` tenía ese dominio y el gasoducto lo usa. Se le quitó el dominio; ahora hay 293 enlaces, todos con evidencia, y las consultas dan lo mismo.
+
+**Una prueba que no se hizo:** comparar con cambios reales entre los archivos de 2023, 2024 y 2025 del Capítulo IV. No hay cambios para medir: el esquema es el mismo (2024 suma una columna `id`) y solo 3 nombres de empresa de 2023–2024 no están en 2025, ninguno de una empresa que siga activa.

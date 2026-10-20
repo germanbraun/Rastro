@@ -934,6 +934,12 @@ def trust(cfg, tech, evaluation, changes):
                "n_consistency": len(consistency), "b_broken": broken,
                "c_correct": totals.get("C", {}).get("correct", "—"), "b_correct": totals.get("B", {}).get("correct", "—"),
                "n_questions": len(evaluation.get("questions", {}))}
+    evidence = read_json(cfg["evidencia"]) if cfg.get("evidencia") and Path(cfg["evidencia"]).exists() else {}
+    if evidence:
+        numbers.update(pct_evidencia=f"{100 * evidence['enlaces_con_evidencia'] / evidence['enlaces']:.0f} %",
+                       n_enlaces=money(evidence["enlaces"]), cols=evidence["columnas"], cols_ok=evidence["columnas_con_fuente"])
+    else:
+        numbers.update(pct_evidencia="Sí", n_enlaces="todos los", cols="las", cols_ok="todas")
     st.markdown("### Por qué confiar", help=ayuda("confiar"))
     st.caption("El mismo asistente de IA, sin Rastro (escribe SQL sobre las bases tal como vienen) y con Rastro.")
     card_help = ["tarjeta_correctas", "tarjeta_consistencia", "tarjeta_cambio", "tarjeta_auditar"]

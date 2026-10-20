@@ -618,6 +618,17 @@ def same_answers(values):
     return len(keys) == 1
 
 
+def audit_card():
+    """La tarjeta «Cada respuesta se puede auditar», con la cobertura medida (layer/evidencia.py)."""
+    p = Path("/layer/eval/evidencia.json")
+    if not p.exists():
+        return "Sí", "Con la evidencia de cada fármaco"
+    e = json.loads(p.read_text())
+    return (f"{100 * e['enlaces_con_evidencia'] / e['enlaces']:.0f} %",
+            f"de los {e['enlaces']:,} enlaces ensayo → fármaco guardan su texto, su regla y su fuente; y {e['columnas_con_fuente']} "
+            f"de {e['columnas']} columnas de las respuestas dicen de qué fuente salen.".replace(",", "."))
+
+
 with trust_tab:
     data = saved()["questions"]
     st.markdown("### Por qué confiar", help=ayuda("confiar"))
@@ -626,7 +637,7 @@ with trust_tab:
     for col, (title, value, compare, tip) in zip(cards, [
             ("La misma pregunta, la misma respuesta", "10 de 10", "Sin Rastro: 1 de 10", "tarjeta_consistencia"),
             ("Si una base cambia, se arregla con", "1 línea", "Sin Rastro: reescribir 5 consultas", "tarjeta_cambio"),
-            ("Cada respuesta se puede auditar", "Sí", "Con la evidencia de cada fármaco", "tarjeta_auditar")]):
+            ("Cada respuesta se puede auditar", *audit_card(), "tarjeta_auditar")]):
         with col.container(border=True):
             st.markdown(f"**{title}**", help=ayuda(tip))
             st.markdown(f'<p style="font-size:2.4rem;line-height:1.1;margin:0">{value}</p>',
