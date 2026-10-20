@@ -167,7 +167,8 @@ GROUP BY c.id_concesion
 HAVING count(*) >= 20;   -- al menos 20 detecciones: un caso aislado no alcanza para revisar
 
 -- Quién operó cada concesión mes a mes, de 2023 a 2025: la empresa que declara la mayor parte de su
--- producción. Se suman petróleo (m³) y gas (miles de m³), que en energía equivalen más o menos.
+-- producción. Se suman petróleo (m³) y gas (miles de m³), que en energía equivalen más o menos. Un mes
+-- sin producción también cuenta si lo declara una sola empresa: un área parada sigue teniendo operadora.
 CREATE TABLE energia.operador_area_mes AS
 WITH todo AS (
   SELECT anio, mes, idareapermisoconcesion, empresa, prod_pet, prod_gas FROM capitulo4.produccion
@@ -181,14 +182,14 @@ WITH todo AS (
   GROUP BY 1, 2, 3
 ), con_total AS (
   SELECT *, sum(petroleo_m3) OVER w AS area_petroleo_m3, sum(gas_mm3) OVER w AS area_gas_mm3,
-         sum(petroleo_m3 + gas_mm3) OVER w AS area_total
+         sum(petroleo_m3 + gas_mm3) OVER w AS area_total, count(*) OVER w AS empresas
   FROM por_empresa WINDOW w AS (PARTITION BY id_concesion, mes)
 )
 SELECT DISTINCT ON (id_concesion, mes) id_concesion, mes, empresa_id,
        area_petroleo_m3 AS petroleo_m3, area_gas_mm3 AS gas_mm3,   -- lo que produjo toda la concesión ese mes
-       round(100 * (petroleo_m3 + gas_mm3) / area_total) AS porcentaje
+       CASE WHEN area_total > 0 THEN round(100 * (petroleo_m3 + gas_mm3) / area_total) ELSE 100 END AS porcentaje
 FROM con_total
-WHERE area_total > 0   -- un mes sin producción no dice quién opera
+WHERE area_total > 0 OR empresas = 1   -- sin producción y con varias empresas, el mes no dice quién opera
 ORDER BY id_concesion, mes, petroleo_m3 + gas_mm3 DESC, empresa_id;
 
 -- Cambios de operadora: otra empresa pasa a declarar la mayor parte de la producción de una concesión

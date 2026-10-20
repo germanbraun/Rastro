@@ -1,0 +1,14 @@
+{
+ "question": "¿Cuántos cambios de operadora hubo en las concesiones entre 2023 y 2025, si cada mes la operadora de una concesión es la empresa que declara la mayor parte de su producción (petróleo en m³ más gas en miles de m³), solo cuentan las rachas de al menos 3 meses seguidos con la misma operadora, y hay un cambio cada vez que la racha siguiente es de otra empresa? Contar como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L., a CGC Energía SAU y Compañía General de Combustibles S.A., y a GeoPark Argentina Ltd. (Sucursal Argentina) y GeoPark Argentina S.A.",
+ "attempts": [
+  {
+   "query": "{\"query\": \"select count(*) from energia.cambio_operadora where mes >= date '2023-01-01' and mes < date '2026-01-01'\"}",
+   "error": "syntax error at or near \"{\"\nLINE 1: {\"query\": \"select count(*) from energia.cambio_operadora whe...\n        ^"
+  },
+  {
+   "query": "select count(*) from energia.cambio_operadora where mes >= date '2023-01-01' and mes < date '2026-01-01'",
+   "error": null
+  }
+ ],
+ "answer": 64.0
+}

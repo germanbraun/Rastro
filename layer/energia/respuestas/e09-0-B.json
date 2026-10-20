@@ -1,0 +1,14 @@
+{
+ "question": "¿Cuántos cambios de operadora hubo en las concesiones entre 2023 y 2025, si cada mes la operadora de una concesión es la empresa que declara la mayor parte de su producción (petróleo en m³ más gas en miles de m³), solo cuentan las rachas de al menos 3 meses seguidos con la misma operadora, y hay un cambio cada vez que la racha siguiente es de otra empresa? Contar como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L., a CGC Energía SAU y Compañía General de Combustibles S.A., y a GeoPark Argentina Ltd. (Sucursal Argentina) y GeoPark Argentina S.A.",
+ "attempts": [
+  {
+   "query": "with p as (\n  select anio, mes, idareapermisoconcesion as c, empresa, prod_pet, prod_gas from capitulo4.produccion_historica where anio between 2023 and 2024\n  union all\n  select anio, mes, idareapermisoconcesion, empresa, prod_pet, prod_gas from capitulo4.produccion where anio = 2025\n), n as (\n  select c, anio*12+mes as m,\n    case when empresa ilike 'pluspetrol%' then 'PLUSPETROL'\n         when empresa ilike 'cgc%' or empresa ilike '%general de combustibles%' then 'CGC'\n         when empresa ilike 'geopark%' then 'GEOPARK'\n         else empresa end as e,\n    coalesce(prod_pet,0)+coalesce(prod_gas,0) as v\n  from p where idareapermisoconcesion_dummy is null\n)\nselect 1",
+   "error": "column \"idareapermisoconcesion_dummy\" does not exist\nLINE 12:   from p where idareapermisoconcesion_dummy is null\n                        ^"
+  },
+  {
+   "query": "with p as (\n  select anio, mes, idareapermisoconcesion as c, empresa, prod_pet, prod_gas from capitulo4.produccion_historica where anio between 2023 and 2024\n  union all\n  select anio, mes, idareapermisoconcesion, empresa, prod_pet, prod_gas from capitulo4.produccion where anio = 2025\n), n as (\n  select c, anio*12+mes as m,\n    case when empresa ilike 'pluspetrol%' then 'PLUSPETROL'\n         when empresa ilike 'cgc%' or empresa ilike '%general de combustibles%' then 'CGC'\n         when empresa ilike 'geopark%' then 'GEOPARK'\n         else empresa end as e,\n    coalesce(prod_pet,0)+coalesce(prod_gas,0) as v\n  from p where c is not null\n), t as (\n  select c, m, e, sum(v) as v from n group by c, m, e\n), op as (\n  select distinct on (c, m) c, m, e from t order by c, m, v desc, e\n), g as (\n  select c, m, e, m - row_number() over (partition by c, e order by m) as grp from op\n), r as (\n  select c, e, min(m) as ini, count(*) as largo from g group by c, e, grp\n), r3 as (\n  select c, e, ini, lag(e) over (partition by c order by ini) as prev from r where largo >= 3\n)\nselect count(*) from r3 where prev is not null and prev <> e",
+   "error": null
+  }
+ ],
+ "answer": 64.0
+}

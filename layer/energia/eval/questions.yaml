@@ -77,3 +77,15 @@ questions:
     items: empresas
     reference: |
       SELECT DISTINCT ?answer WHERE { ?e energia:name ?answer ; energia:lei ?lei . ?p energia:declaredBy ?e . }
+
+  - id: e08
+    question: ¿Cuántas concesiones hay que revisar por venteos, si se revisa una concesión que tiene posibles venteos detectados por satélite desde el 1 de enero de 2024 dentro de su contorno y además cumple al menos una de dos reglas, (a) el gasoducto de transporte de ENARGAS más cercano está a 10 km o más de su contorno, o (b) tiene al menos 20 de esos posibles venteos y no presentó ninguna planilla de venteo de gas (Res. 143/98) desde el 1 de enero de 2022 según el listado de estudios ambientales?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?c) AS ?answer) WHERE { ?c a energia:ConcessionToReview . }
+
+  - id: e09
+    question: ¿Cuántos cambios de operadora hubo en las concesiones entre 2023 y 2025, si cada mes la operadora de una concesión es la empresa que declara la mayor parte de su producción (petróleo en m³ más gas en miles de m³), solo cuentan las rachas de al menos 3 meses seguidos con la misma operadora, y hay un cambio cada vez que la racha siguiente es de otra empresa? Contar como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L., a CGC Energía SAU y Compañía General de Combustibles S.A., y a GeoPark Argentina Ltd. (Sucursal Argentina) y GeoPark Argentina S.A.
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?x) AS ?answer) WHERE { ?x a energia:OperatorChange . }

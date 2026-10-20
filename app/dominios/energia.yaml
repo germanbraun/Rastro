@@ -261,7 +261,7 @@ preguntas:
 # «Por qué confiar»: los números salen de la evaluación (layer/energia/resultados.json) y de la
 # prueba de cambio (layer/energia/cambio/resultado.json)
 tarjetas:
-  - titulo: Respuestas correctas (las preguntas medidas)
+  - titulo: Respuestas correctas
     valor: "{c_correct} de {n_questions}"
     compara: "Sin Rastro: {b_correct} de {n_questions}"
   - titulo: La misma pregunta, la misma respuesta
