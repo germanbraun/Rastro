@@ -7,7 +7,7 @@ Para cualquier audiencia, sin conocimientos técnicos. Tres momentos, todos con 
 ## Antes de empezar
 
 1. Levantar todo: `cd infra && docker compose up -d` (lo hace alguien técnico, una vez).
-2. Abrir http://localhost:8501. Dominio: **Proveedores del Estado de EE. UU.**; arriba, **Demo en 3 pasos**. Recorrer los tres pasos una vez: cada uno corre en vivo.
+2. Abrir http://localhost:8501. Dominio: **Proveedores del Estado de EE. UU.**; la pestaña **Demo en 3 pasos**. Recorrer los tres pasos una vez: cada uno corre en vivo. Arriba de los pasos, «¿Por qué estos 3 pasos?» resume para qué sirve cada uno.
 
 ## 0:00 – 1:00 · Qué es Rastro (diapositivas 1 a 4)
 
@@ -18,6 +18,8 @@ Para cualquier audiencia, sin conocimientos técnicos. Tres momentos, todos con 
 ## 1:00 – 2:00 · 1 · Integración (app, paso 1; diapositiva 5)
 
 > «¿Cuánto contrata el gobierno con el grupo Leidos? Una consulta SQL que busca el nombre "Leidos" obtiene 56.400 millones: omite las empresas del grupo con otra razón social, como QTC o Dynetics. Rastro define el grupo una sola vez: 30 empresas y 63.400 millones, con la justificación de cada vínculo.»
+
+Debajo de la tabla, en **¿Por qué este número?**, se ven las 30 empresas del grupo, cada una con su regla y su evidencia.
 
 ## 2:00 – 3:00 · 2 · Trazabilidad (app, paso 2; diapositiva 6)
 
@@ -45,4 +47,4 @@ Abrir **¿De dónde sale la respuesta?** para mostrar la evidencia.
 
 ## Video de respaldo
 
-Grabar la pantalla siguiendo este guion (Cmd+Shift+5 en la Mac, con micrófono), con la app en **Demo en 3 pasos**, y guardarlo fuera del repo.
+Grabar la pantalla siguiendo este guion (Cmd+Shift+5 en la Mac, con micrófono), con la app en la pestaña **Demo en 3 pasos**, y guardarlo fuera del repo.

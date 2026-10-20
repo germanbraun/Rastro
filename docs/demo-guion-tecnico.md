@@ -40,7 +40,7 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 >
 > «La capa semántica agrega lo que las tablas solas no dan: cuando la fuente cambia se arregla en un lugar, cada dato trae su fuente, y se puede consultar junto con datos de afuera.»
 
-## 4:30 – 6:30 · Cuando las fuentes cambian (pestaña Cuando las fuentes cambian, diapositivas 7 y 8)
+## 4:30 – 6:30 · Cuando las fuentes cambian (pestaña Por qué confiar → «3 · Cuando una base cambia», diapositivas 7 y 8)
 
 1. Elegir **Cambia cómo se escribe un valor**.
 
@@ -80,7 +80,7 @@ El cambio se puede hacer de verdad sobre la base, desde una terminal. Detalle en
 
 ## Si preguntan
 
-La pestaña **Preguntas frecuentes** tiene las respuestas. Las más comunes:
+La pestaña **Preguntas frecuentes** tiene las respuestas (primero las que valen para todos los casos). Con «Ver detalles técnicos», la pestaña **Bajo el capó** muestra la consola SPARQL, una instancia del grafo, el diccionario como documentación y ejemplos de enlaces y mapeos. Las más comunes:
 
 - **«¿Y por qué no vistas SQL?»** Para un caso chico pueden alcanzar. La capa semántica suma procedencia, datos de afuera, jerarquías y estándares abiertos.
 - **«¿Ontop es lento?»** No en esta demo: las 20 consultas tardan 2,6 s en total. Una consulta muy pesada puede tardar más que el SQL equivalente.

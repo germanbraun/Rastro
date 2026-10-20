@@ -7,7 +7,7 @@ Para operadoras y consultoras del sector, sin conocimientos técnicos. Tres mome
 ## Antes de empezar
 
 1. Levantar todo: `cd infra && docker compose up -d` (lo hace alguien técnico, una vez).
-2. Abrir http://localhost:8501. Dominio: **Petróleo y gas en Argentina**; arriba, **Demo en 3 pasos**. Recorrer los tres pasos una vez: cada uno corre en vivo.
+2. Abrir http://localhost:8501. Dominio: **Petróleo y gas en Argentina**; la pestaña **Demo en 3 pasos**. Recorrer los tres pasos una vez: cada uno corre en vivo. Arriba de los pasos, «¿Por qué estos 3 pasos?» resume para qué sirve cada uno.
 
 ## 0:00 – 1:00 · Qué es Rastro y el problema (diapositivas 1 a 4)
 
@@ -18,6 +18,8 @@ Para operadoras y consultoras del sector, sin conocimientos técnicos. Tres mome
 ## 1:00 – 2:00 · 1 · Integración (app, paso 1; diapositiva 5)
 
 > «¿Cuánto petróleo de 2025 le corresponde a cada empresa? Sumando por quien declara la producción, a YPF se le asignan 21,4 millones de metros cúbicos. Pero el petróleo se reparte entre los socios: su parte es 12,6. Petronas, que no opera ningún pozo, tiene 2,1. Los socios estaban en un texto del mapa; Rastro los separa una vez. Dicho en plata: son unos 3.600 millones de dólares de producción de los socios, con un precio supuesto de 65 dólares por barril.»
+
+Debajo de la tabla, en **¿Por qué este número?**, elegir YPF: aparece su parte concesión por concesión, con el porcentaje y el texto del mapa del que sale cada uno.
 
 ## 2:00 – 3:00 · 2 · Trazabilidad (app, paso 2; diapositiva 6)
 
