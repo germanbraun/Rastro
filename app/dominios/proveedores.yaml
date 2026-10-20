@@ -136,6 +136,24 @@ preguntas:
 
   - id: p08
     query: /ontology/proveedores/queries/cq8.rq
+    porque:
+      columna: supplier
+      titulo: "Los enlaces de {valor}"
+      explica: "A qué grupo pertenece y con qué LEI, cada enlace con su evidencia: qué dice cada fuente y qué se descartó."
+      query: |
+        SELECT ?que ?hacia ?texto (GROUP_CONCAT(DISTINCT ?f; separator=", ") AS ?fuente) WHERE {
+          ?s proveedores:name "{valor}" .
+          { ?l a proveedores:GroupLink ; proveedores:linkFrom ?s ; proveedores:linkTo/proveedores:name ?hacia ; proveedores:sourceText ?texto .
+            BIND ("su grupo" AS ?que) }
+          UNION
+          { ?l a proveedores:LeiLink ; proveedores:linkFrom ?s ; proveedores:sourceText ?texto . OPTIONAL { ?l proveedores:linkTo/proveedores:lei ?hacia }
+            BIND ("su LEI en GLEIF" AS ?que) }
+          ?l prov:wasDerivedFrom/proveedores:name ?f .
+        } GROUP BY ?que ?hacia ?texto LIMIT 12
+      nodo: "{que}"
+      detalle: "{hacia}"
+      flecha: enlace
+      columnas: {que: Qué, hacia: Con quién, texto: Evidencia, fuente: Fuente}
     explicacion: |
       - **Qué busca:** los proveedores llamados «Science Applications International Corporation» y el enlace que dice a qué grupo pertenece cada uno.
       - **Qué devuelve:** el grupo, la evidencia (qué dice cada fuente), la regla y la fuente de la que se derivó el enlace (PROV-O).
@@ -160,6 +178,20 @@ preguntas:
 
   - id: p02
     query: /ontology/proveedores/queries/cq2.rq
+    porque:
+      columna: group
+      titulo: "Las empresas de {valor}, y por qué son del grupo"
+      explica: "El monto es del grupo completo: cada empresa entra al grupo por un enlace con su regla y su evidencia."
+      query: |
+        SELECT ?empresa ?regla ?texto ?fuente WHERE {
+          ?g proveedores:name "{valor}" .
+          ?l a proveedores:GroupLink ; proveedores:linkTo ?g ; proveedores:linkFrom/proveedores:name ?empresa ;
+             proveedores:linkRule ?regla ; proveedores:sourceText ?texto ; prov:wasDerivedFrom/proveedores:name ?fuente .
+        } ORDER BY ?empresa LIMIT 40
+      nodo: "{empresa}"
+      detalle: "{regla}"
+      flecha: es del grupo
+      columnas: {empresa: Empresa, regla: Regla, texto: "Evidencia", fuente: Fuente}
     explicacion: |
       - **Qué busca:** los contratos del sector 5415 (servicios informáticos) y de todos sus subsectores, con el grupo de cada proveedor.
       - **Qué devuelve:** los 5 grupos con más monto.
@@ -179,6 +211,20 @@ preguntas:
 
   - id: p03
     query: /ontology/proveedores/queries/cq3.rq
+    porque:
+      columna: group
+      titulo: "Las empresas de {valor}, y por qué son del grupo"
+      explica: "La parte del organismo se calcula sobre el grupo completo: cada empresa entra por un enlace con su regla y su evidencia."
+      query: |
+        SELECT ?empresa ?regla ?texto ?fuente WHERE {
+          ?g proveedores:name "{valor}" .
+          ?l a proveedores:GroupLink ; proveedores:linkTo ?g ; proveedores:linkFrom/proveedores:name ?empresa ;
+             proveedores:linkRule ?regla ; proveedores:sourceText ?texto ; prov:wasDerivedFrom/proveedores:name ?fuente .
+        } ORDER BY ?empresa LIMIT 40
+      nodo: "{empresa}"
+      detalle: "{regla}"
+      flecha: es del grupo
+      columnas: {empresa: Empresa, regla: Regla, texto: "Evidencia", fuente: Fuente}
     explicacion: |
       - **Qué calcula:** para cada agencia, su gasto total y lo que gasta con cada grupo; la parte de cada grupo es la división de las dos.
       - **Qué filtra:** los casos donde un solo grupo tiene más de un tercio del gasto de la agencia.
@@ -189,6 +235,24 @@ preguntas:
 
   - id: p04
     query: /ontology/proveedores/queries/cq4.rq
+    porque:
+      columna: supplier
+      titulo: "Por qué {valor} tiene matriz fuera de EE. UU."
+      explica: "La matriz final sale de GLEIF, por el LEI del proveedor o de su grupo. Abajo, los enlaces con su evidencia."
+      query: |
+        SELECT ?que ?hacia ?texto (GROUP_CONCAT(DISTINCT ?f; separator=", ") AS ?fuente) WHERE {
+          ?s proveedores:name "{valor}" .
+          { ?l a proveedores:GroupLink ; proveedores:linkFrom ?s ; proveedores:linkTo/proveedores:name ?hacia ; proveedores:sourceText ?texto .
+            BIND ("su grupo" AS ?que) }
+          UNION
+          { ?l a proveedores:LeiLink ; proveedores:linkFrom ?s ; proveedores:sourceText ?texto . OPTIONAL { ?l proveedores:linkTo/proveedores:lei ?hacia }
+            BIND ("su LEI en GLEIF" AS ?que) }
+          ?l prov:wasDerivedFrom/proveedores:name ?f .
+        } GROUP BY ?que ?hacia ?texto LIMIT 12
+      nodo: "{que}"
+      detalle: "{hacia}"
+      flecha: enlace
+      columnas: {que: Qué, hacia: Con quién, texto: Evidencia, fuente: Fuente}
     explicacion: |
       - **Qué busca:** los «proveedores con matriz extranjera», una clase definida una vez en el diccionario, con su matriz final según GLEIF.
       - **Qué devuelve:** cada proveedor, su matriz final, el país y lo que contrata.
@@ -210,6 +274,20 @@ preguntas:
 
   - id: p05
     query: /ontology/proveedores/queries/cq5.rq
+    porque:
+      columna: name
+      titulo: "Por qué {valor} coincide con una lista de control"
+      explica: "Rastro compara el nombre (y los alias de la lista) sin mayúsculas, puntuación ni forma societaria. Una coincidencia es un indicio para revisar, no una sanción."
+      query: |
+        SELECT ?entrada ?lista ?coincidio ?regla WHERE {
+          ?l a proveedores:WatchlistLink ; proveedores:linkFrom/proveedores:name "{valor}" ; proveedores:linkTo ?e ;
+             proveedores:matchedText ?coincidio ; proveedores:linkRule ?regla .
+          ?e proveedores:name ?entrada ; proveedores:list ?lista .
+        }
+      nodo: "{entrada}"
+      detalle: "{lista}"
+      flecha: coincide con
+      columnas: {entrada: Entrada de la lista, lista: Lista, coincidio: Texto que coincidió, regla: Regla}
     explicacion: |
       - **Qué busca:** proveedores o grupos con un enlace a una entrada de la Lista Consolidada de Control.
       - **Qué devuelve:** quién, qué entrada, qué lista, qué coincidió y con qué regla.
@@ -246,6 +324,18 @@ preguntas:
 
   - id: p07
     query: /ontology/proveedores/queries/cq7.rq
+    porque:
+      columna: group
+      titulo: "De dónde sale que {valor} cotiza en bolsa"
+      explica: "El grupo tiene un LEI (GLEIF), y Wikidata usa el mismo LEI: de ahí salen la bolsa y la sede, sin cargar ni enlazar a mano."
+      query: |
+        SELECT ?lei ?wikidata ?bolsa WHERE {
+          ?g proveedores:name "{valor}" ; proveedores:legalEntity/proveedores:lei ?lei ; proveedores:wikidataId ?wikidata ; proveedores:stockExchange ?bolsa .
+        }
+      nodo: "{bolsa}"
+      detalle: "Wikidata {wikidata} · LEI {lei}"
+      flecha: cotiza en
+      columnas: {lei: LEI (GLEIF), wikidata: Wikidata, bolsa: Bolsa}
     explicacion: |
       - **Qué busca:** los grupos que cotizan en bolsa según Wikidata (unidos por su LEI) y sus contratos.
       - **Qué filtra:** los que suman más de US$1.000 millones, con su bolsa y su sede.
@@ -263,6 +353,23 @@ preguntas:
 
   - id: p09
     query: /ontology/proveedores/queries/cq9.rq
+    porque:
+      columna: agency
+      titulo: "Los proveedores para revisar de {valor}, y por qué"
+      explica: "«Para revisar» no está en ninguna tabla: Rastro lo deduce de dos reglas del diccionario (matriz extranjera o coincidencia con una lista de control)."
+      query: |
+        SELECT ?proveedor ?motivo (ROUND(SUM(?a) / 1000000) AS ?millones) WHERE {
+          ?c proveedores:agency/proveedores:name "{valor}" ; proveedores:supplier ?s ; proveedores:amount ?a .
+          ?s proveedores:name ?proveedor .
+          { ?s a proveedores:ForeignParentSupplier . BIND ("matriz fuera de EE. UU." AS ?motivo) }
+          UNION
+          { ?s a proveedores:WatchlistSupplier . BIND ("coincide con una lista de control" AS ?motivo) }
+        } GROUP BY ?proveedor ?motivo ORDER BY DESC(?millones) LIMIT 15
+      numeros: [millones]
+      nodo: "{proveedor}"
+      detalle: "{motivo}"
+      flecha: para revisar
+      columnas: {proveedor: Proveedor, motivo: Motivo, millones: "Millones de US$"}
     explicacion: |
       - **Qué busca:** los «proveedores para revisar», una clase sin mapeo propio: Rastro la deduce de dos reglas (matriz extranjera o coincidencia con una lista).
       - **Qué devuelve:** por agencia, cuántos de esos proveedores, cuántos contratos y el monto.

@@ -396,6 +396,22 @@ def show_text_question():
             st.code(facts_query, language="sparql")
 
 
+# «¿Por qué este número?» en oncología: cómo se reconoció el fármaco de una fila en los ensayos
+DRUG_WHY = {
+    "titulo": "Cómo reconoció Rastro {valor} en los ensayos",
+    "explica": "Cada ensayo escribe el fármaco a su manera (una marca, un código, una combinación). Rastro lo reconoció "
+               "una vez, con una regla, y guardó qué escribió el ensayo y con qué coincidió. Algunos ejemplos no obvios:",
+    "query": """SELECT ?ensayo ?texto ?coincidio ?regla WHERE {
+  ?d oncologia:name "{valor}" .
+  ?l a oncologia:DrugLink ; oncologia:linkDrug ?d ; oncologia:linkTrial/oncologia:nctId ?ensayo ;
+     oncologia:interventionText ?texto ; oncologia:matchedText ?coincidio ; oncologia:linkRule ?regla .
+  FILTER (LCASE(?texto) != LCASE("{valor}"))
+} LIMIT 12""",
+    "nodo": "{ensayo}", "detalle": "«{coincidio}»", "flecha": "lo prueba",
+    "columnas": {"ensayo": "Ensayo", "texto": "Qué escribió el ensayo", "coincidio": "Con qué coincidió", "regla": "Regla"},
+}
+
+
 def show_answer(query, columns, rows, note=None):
     used, col_sources = answer.column_sources(query)
     drugs = answer_drugs(rows) if rows and "oncologia:testsDrug" in query else []
@@ -419,6 +435,10 @@ def show_answer(query, columns, rows, note=None):
         import logos  # el favicon de cada empresa (sponsor)
         table, logo_config = logos.with_logos(table, list(columns))
         tabla(table, hide_index=True, use_container_width=True, column_config=logo_config)
+        if drugs:   # «¿Por qué este número?»: cómo reconoció Rastro ese fármaco en los ensayos
+            drug_column = next(c for i, c in enumerate(columns) if any(r[i] in drugs for r in rows))
+            import dominio
+            dominio.show_why("oncologia", DRUG_WHY | {"columna": drug_column}, list(columns), [list(r) for r in rows])
         if TECH:
             st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}. Cada columna dice de qué fuente sale."
                        + (" La evidencia de cada enlace está en «¿De dónde sale la respuesta?»." if drugs else ""))

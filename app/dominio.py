@@ -741,7 +741,8 @@ def show_why(domain, why, columns, rows):
         records = [dict(zip(cols, r)) for r in found]
 
         def fmt(record, template):
-            return template.format(**{k: (money(v) if k in ("parte",) and v not in (None, "") else (v or "—"))
+            numbers = why.get("numeros", ["parte"])
+            return template.format(**{k: (money(v) if k in numbers and v not in (None, "") else (v or "—"))
                                       for k, v in record.items()})
 
         shown = records[:8]

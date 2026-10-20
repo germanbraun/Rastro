@@ -149,6 +149,19 @@ preguntas:
 
   - id: e02
     query: /ontology/energia/queries/cq2.rq
+    porque:
+      columna: rule
+      titulo: "Pozos de YPF por la regla «{valor}»"
+      explica: "Para cada pozo, Rastro guarda qué dice cada fuente y qué regla decidió quién lo opera."
+      query: |
+        SELECT ?pozo ?texto (GROUP_CONCAT(DISTINCT ?f; separator=", ") AS ?fuente) WHERE {
+          ?l a energia:OperatorLink ; energia:aboutWell/energia:wellId ?pozo ; energia:company/energia:name "YPF S.A." ;
+             energia:rule "{valor}" ; energia:sourceText ?texto ; prov:wasDerivedFrom/energia:name ?f .
+        } GROUP BY ?pozo ?texto ORDER BY ?pozo LIMIT 12
+      nodo: "Pozo {pozo}"
+      detalle: ""
+      flecha: lo opera
+      columnas: {pozo: Pozo, texto: "Evidencia: qué dice cada fuente", fuente: Fuentes}
     explicacion: |
       - **Qué busca:** los enlaces «operadora de un pozo» que nombran a YPF, agrupados por la regla que se aplicó.
       - **Qué devuelve:** cuántos pozos opera YPF cuando las fuentes coinciden y cuántos cuando rige la declaración jurada porque el padrón dice otra cosa.
@@ -213,6 +226,19 @@ preguntas:
 
   - id: e04
     query: /ontology/energia/queries/cq4.rq
+    porque:
+      columna: company
+      titulo: "El petróleo no convencional de {valor}, por formación"
+      explica: "Ninguna tabla dice «no convencional»: Rastro lo deduce del tipo de recurso (shale o tight) de cada declaración jurada."
+      query: |
+        SELECT ?formacion (ROUND(SUM(?o)) AS ?petroleo) WHERE {
+          ?p a energia:UnconventionalProduction ; energia:declaredBy/energia:name "{valor}" ; energia:formation ?formacion ; energia:oil ?o .
+        } GROUP BY ?formacion ORDER BY DESC(?petroleo)
+      numeros: [petroleo]
+      nodo: "{formacion}"
+      detalle: "{petroleo} m³"
+      flecha: declara en
+      columnas: {formacion: Formación, petroleo: "Petróleo no convencional 2025 (m³)"}
     explicacion: |
       - **Qué busca:** la producción de cada pozo que es «no convencional» y la empresa que la declara.
       - **Qué devuelve:** las 10 empresas con más petróleo no convencional.
@@ -229,6 +255,20 @@ preguntas:
 
   - id: e05
     query: /ontology/energia/queries/cq5.rq
+    porque:
+      columna: concession
+      titulo: "El gasoducto más cercano a {valor}"
+      explica: "Rastro midió una vez la distancia del contorno de cada concesión a cada tramo de gasoducto de ENARGAS y guardó el más cercano, con su evidencia."
+      query: |
+        SELECT ?gasoducto ?distancia ?texto (GROUP_CONCAT(DISTINCT ?f; separator=", ") AS ?fuente) WHERE {
+          ?c energia:name "{valor}" .
+          ?g a energia:PipelineLink ; energia:aboutConcession ?c ; energia:pipeline ?gasoducto ; energia:distanceKm ?distancia ;
+             energia:sourceText ?texto ; prov:wasDerivedFrom/energia:name ?f .
+        } GROUP BY ?gasoducto ?distancia ?texto
+      nodo: "{gasoducto}"
+      detalle: "a {distancia} km"
+      flecha: gasoducto más cercano
+      columnas: {gasoducto: Gasoducto, distancia: "Distancia (km)", texto: Evidencia, fuente: Fuentes}
     explicacion: |
       - **Qué busca:** las concesiones con posibles venteos y, para cada una, el gasoducto de transporte de ENARGAS más cercano y a cuántos km está.
       - **Qué filtra:** solo las que tienen ese gasoducto a 10 km o más.
@@ -249,6 +289,22 @@ preguntas:
 
   - id: e06
     query: /ontology/energia/queries/cq6.rq
+    porque:
+      columna: concession
+      titulo: "Los posibles venteos de {valor} en un área protegida o cerca de una localidad"
+      explica: "Para cada punto del satélite, Rastro guardó la localidad más cercana, la distancia y si cae en un área protegida del IGN."
+      query: |
+        SELECT ?fecha ?lugar ?texto WHERE {
+          ?s a energia:SurroundingsLink ; energia:aboutVenting ?d ; energia:nearestTown ?town ; energia:distanceKm ?km ; energia:sourceText ?texto .
+          ?d energia:inConcession/energia:name "{valor}" ; energia:date ?fecha .
+          OPTIONAL { ?s energia:protectedArea ?area }
+          FILTER (BOUND(?area) || ?km < 3)
+          BIND (IF(BOUND(?area), CONCAT("área protegida: ", ?area), CONCAT("cerca de ", ?town)) AS ?lugar)
+        } ORDER BY DESC(?fecha) LIMIT 12
+      nodo: "{fecha}"
+      detalle: "{lugar}"
+      flecha: posible venteo
+      columnas: {fecha: Fecha, lugar: Dónde, texto: Evidencia}
     explicacion: |
       - **Qué busca:** los posibles venteos con su entorno según el IGN: la localidad más cercana y el área protegida, si cae en una.
       - **Qué filtra:** los que están en un área protegida o a menos de 3 km de una localidad, y los cuenta por concesión y operadora.
@@ -268,6 +324,19 @@ preguntas:
 
   - id: e07
     query: /ontology/energia/queries/cq7.rq
+    porque:
+      columna: company
+      titulo: "El LEI de {valor}"
+      explica: "Rastro buscó la empresa en GLEIF y guardó el LEI solo si el nombre legal es el de la empresa, con la evidencia."
+      query: |
+        SELECT ?lei ?texto (GROUP_CONCAT(DISTINCT ?f; separator=", ") AS ?fuente) WHERE {
+          ?e energia:name "{valor}" ; energia:lei ?lei .
+          ?l a energia:LeiLink ; energia:company ?e ; energia:sourceText ?texto ; prov:wasDerivedFrom/energia:name ?f .
+        } GROUP BY ?lei ?texto
+      nodo: "LEI {lei}"
+      detalle: ""
+      flecha: identificador global
+      columnas: {lei: LEI, texto: Evidencia, fuente: Fuentes}
     explicacion: |
       - **Qué busca:** las empresas que tienen LEI (el identificador global de GLEIF) y la producción que declaran.
       - **Qué devuelve:** cada empresa con su LEI y lo que opera, de mayor a menor.
@@ -288,6 +357,21 @@ preguntas:
 
   - id: e08
     query: /ontology/energia/queries/cq8.rq
+    porque:
+      columna: concession
+      titulo: "Por qué hay que revisar {valor}"
+      explica: "«Para revisar» no está en ninguna tabla: Rastro lo deduce de dos reglas del diccionario. Abajo, cada motivo y la evidencia en que se apoya."
+      query: |
+        SELECT ?que ?texto ?fuente WHERE {
+          { ?c energia:name "{valor}" ; energia:reviewReason ?texto . BIND ("motivo para revisar" AS ?que) BIND ("regla del diccionario" AS ?fuente) }
+          UNION
+          { ?c energia:name "{valor}" . ?g a energia:PipelineLink ; energia:aboutConcession ?c ; energia:sourceText ?texto .
+            BIND ("gasoducto más cercano" AS ?que) BIND ("ENARGAS y mapas" AS ?fuente) }
+        }
+      nodo: "{que}"
+      detalle: "{fuente}"
+      flecha: se revisa por
+      columnas: {que: Qué, texto: Evidencia, fuente: De dónde}
     explicacion: |
       - **Qué busca:** las «concesiones para revisar», con su operadora y el motivo.
       - **Lo particular:** «concesión para revisar» no es una columna ni tiene mapeo. El diccionario dice que lo son las que tienen posibles venteos y además no tienen un gasoducto cerca, o no presentaron planillas de venteo de gas. Rastro la deduce de esas dos reglas.
@@ -305,6 +389,22 @@ preguntas:
 
   - id: e09
     query: /ontology/energia/queries/cq9.rq
+    porque:
+      columna: concession
+      titulo: "El cambio de operadora en {valor}"
+      explica: "Rastro decide mes a mes quién declara la mayor parte de la producción de cada concesión y marca un cambio cuando otra empresa lo hace 3 meses seguidos. Guarda la evidencia."
+      query: |
+        SELECT ?desde ?anterior ?nueva ?texto WHERE {
+          ?x a energia:OperatorChange ; energia:inConcession ?c ; energia:month ?mes ; energia:sourceText ?texto ;
+             energia:previousCompany/energia:name ?anterior ; energia:newCompany/energia:name ?nueva .
+          OPTIONAL { ?c energia:name ?n }
+          FILTER (COALESCE(?n, STRAFTER(STR(?c), "/concession/")) = "{valor}")
+          BIND (CONCAT(SUBSTR(STR(?mes), 6, 2), "/", SUBSTR(STR(?mes), 1, 4)) AS ?desde)
+        } ORDER BY ?mes
+      nodo: "{nueva}"
+      detalle: "desde {desde}, antes {anterior}"
+      flecha: pasa a operarla
+      columnas: {desde: Desde, anterior: "Operadora anterior", nueva: "Operadora nueva", texto: Evidencia}
     explicacion: |
       - **Qué busca:** los «cambios de operadora»: cada concesión donde otra empresa pasó a declarar la mayor parte de la producción, con el mes, la operadora anterior y la nueva.
       - **Qué devuelve:** lo que producía la concesión por mes, en promedio, con la operadora anterior y con la nueva; de mayor a menor petróleo.

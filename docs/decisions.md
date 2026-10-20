@@ -534,3 +534,7 @@ Cada paso de la demo dice qué es (integración, trazabilidad, cruce con mapas o
 
 - **Pestañas:** «Demo en 3 pasos» (cuando el dominio la tiene), «Preguntar», «Por qué confiar» y «Preguntas frecuentes»; en la vista técnica, una sola más, «Bajo el capó», con la consola SPARQL, una instancia del grafo, el diccionario, los enlaces y los mapeos. Antes la demo era un modo de «Preguntar» y la vista técnica sumaba dos pestañas.
 - **Preguntas a ciegas** (`docs/preguntas-a-ciegas.md`): el protocolo para que alguien del sector, sin ver Rastro, escriba de 5 a 10 preguntas; se miden con el mismo protocolo y no se arregla el diccionario antes de publicar. Corta la circularidad de que las preguntas y las referencias las armemos nosotros. Falta la persona.
+
+## 2026-10-20 — «¿Por qué este número?» en todas las preguntas que lo admiten
+
+Además de e01, e03 y p01: en petróleo y gas, los pozos de YPF por regla con lo que dice cada fuente (e02), el no convencional por formación (e04), el gasoducto más cercano (e05), el entorno de cada posible venteo (e06), el LEI (e07), los motivos para revisar con su evidencia (e08) y el cambio de operadora (e09); en proveedores, las empresas del grupo (p02, p03), los enlaces de un proveedor con su grupo y su LEI (p04, p08), la coincidencia con una lista de control (p05), de dónde sale que un grupo cotiza en bolsa (p07) y los proveedores para revisar de un organismo (p09); en oncología, cómo se reconoció el fármaco de una fila en los ensayos, en toda respuesta con fármacos. Queda afuera p06, que es un solo número sin filas.
