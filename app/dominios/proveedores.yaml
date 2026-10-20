@@ -13,10 +13,41 @@ diagrama: {archivo: ontologia-proveedores, titulo: diccionario de proveedores}  
 texto: /layer/proveedores/textos/leidos.json   # la pregunta sobre textos (GraphRAG anclado)
 
 # La demo en tres pasos, todos sobre Leidos: integración, trazabilidad y análisis de textos
+demo_porque: >-
+  Tres pasos, uno por cada cosa que hace Rastro y que una consulta hecha a mano sobre las bases no hace
+  sola, todos con el mismo ejemplo: el grupo Leidos. Cada paso compara la respuesta sin Rastro y con
+  Rastro, y corre en vivo sobre los datos.
 demo:
-  - {paso: Integración, titulo: "Un grupo consolidado a partir de 13 matrices", pregunta: p01}
-  - {paso: Trazabilidad, titulo: "El caso SAIC: una asignación justificada", pregunta: p08}
-  - {paso: Análisis de textos, titulo: "Las actividades del grupo, a partir de sus contratos", texto: true}
+  - paso: Integración
+    titulo: "Un grupo consolidado a partir de 13 matrices"
+    pregunta: p01
+    que_es: >-
+      Unir fuentes que no comparten claves. Los contratos dicen qué empresa cobra; quién pertenece a qué grupo
+      está repartido entre las matrices de USAspending, el registro global de empresas (GLEIF) y correcciones
+      revisadas. Rastro arma el grupo una vez, con la evidencia de cada empresa.
+    muestra: >-
+      Que integrar cambia el número: buscando «Leidos» en los nombres se pierden empresas del grupo con otra
+      razón social; con el grupo armado, el monto es el del grupo completo.
+  - paso: Trazabilidad
+    titulo: "El caso SAIC: una asignación justificada"
+    pregunta: p08
+    que_es: >-
+      Poder seguir cada dato hasta su origen: de qué fuente sale, qué regla se aplicó y qué decía cada fuente.
+      Cuando las fuentes se contradicen, Rastro decide con una regla escrita y guarda la evidencia (con el
+      estándar PROV-O).
+    muestra: >-
+      Que cada asignación se puede auditar: por el cambio de nombre de 2013, USAspending registra a Leidos como
+      matriz anterior de la SAIC de hoy, y una consulta a mano le suma a Leidos contratos de SAIC. Rastro deja a
+      SAIC en su propio grupo y muestra qué se descartó y por qué.
+  - paso: Análisis de textos
+    titulo: "Las actividades del grupo, a partir de sus contratos"
+    texto: true
+    que_es: >-
+      Responder sobre texto libre con IA, pero anclada en el grafo: primero una consulta exacta elige los
+      contratos del grupo, y la IA resume solo esas descripciones, citando cada contrato (GraphRAG).
+    muestra: >-
+      Que la IA lee lo que corresponde: buscando «Leidos» en los textos se pierde casi todo; el grafo trae los
+      contratos de todas las empresas del grupo.
 
 # Fuentes: nombre corto para los encabezados del modo técnico
 fuentes:

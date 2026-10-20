@@ -721,14 +721,25 @@ def before_after(card):
 
 
 def show_demo(cfg, tech):
-    """La demo en tres pasos, todos sobre Leidos: integración, trazabilidad y análisis de textos. Cada paso corre en vivo."""
+    """La demo en tres pasos: por qué esos pasos, qué es cada uno y qué muestra. Cada paso corre en vivo."""
     domain, steps = cfg["domain"], cfg["demo"]
     key = f"{domain}_demo_step"
     i = st.session_state.get(key, 0)
+    if cfg.get("demo_porque"):
+        with st.expander("¿Por qué estos 3 pasos?"):
+            st.markdown(md(cfg["demo_porque"]))
+            for n, s in enumerate(steps):
+                if s.get("que_es"):
+                    st.markdown(f"**{n + 1} · {md(s['paso'])}:** {md(s['que_es'])}")
     st.markdown(" → ".join(f"**{n + 1} · {s['paso']}**" if n == i else f"{n + 1} · {s['paso']}"
                            for n, s in enumerate(steps)))
     step = steps[i]
     st.subheader(step["titulo"], help=ayuda("paso"))
+    if step.get("que_es"):
+        with st.container(border=True):
+            st.markdown(f"**¿Qué es {md(step['paso']).lower()}?** {md(step['que_es'])}")
+            if step.get("muestra"):
+                st.markdown(f"**Lo que muestra este paso:** {md(step['muestra'])}")
     if step.get("texto"):
         show_text_question(cfg, tech, demo=True)
     else:

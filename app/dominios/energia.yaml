@@ -15,10 +15,42 @@ texto: /layer/energia/textos/venteos.json   # la pregunta sobre textos (GraphRAG
 diagrama: {archivo: ontologia-energia, titulo: diccionario de petróleo y gas}   # app/ontologia-energia.svg, lo dibuja docs/diagramas/build.py
 
 # La demo en tres pasos: integración, trazabilidad y cruce con mapas
+demo_porque: >-
+  Tres pasos, uno por cada cosa que hace Rastro y que una consulta hecha a mano sobre las bases no hace
+  sola. Siguen las tres preguntas de cualquiera del sector: quién produce (integración), quién opera
+  (trazabilidad) y dónde se ventea gas (cruce con mapas). Cada paso compara la respuesta sin Rastro y con
+  Rastro, y corre en vivo sobre los datos.
 demo:
-  - {paso: Integración, titulo: "La producción que corresponde a cada socio", pregunta: e01}
-  - {paso: Trazabilidad, titulo: "Quién opera cada pozo, con una regla escrita", pregunta: e02}
-  - {paso: Cruce con mapas, titulo: "Posibles venteos, ubicados en su concesión", pregunta: e03}
+  - paso: Integración
+    titulo: "La producción que corresponde a cada socio"
+    pregunta: e01
+    que_es: >-
+      Unir fuentes que no comparten claves. La producción está en las declaraciones juradas, pozo por pozo; los
+      socios de cada concesión, en un texto del mapa de la Secretaría de Energía; y la misma empresa se escribe
+      distinto en cada fuente. Rastro une todo una vez, con su evidencia.
+    muestra: >-
+      Que integrar cambia el número: sumando por quien declara, YPF tiene 21,4 millones de m³; repartiendo
+      entre los socios, su parte es 12,6.
+  - paso: Trazabilidad
+    titulo: "Quién opera cada pozo, con una regla escrita"
+    pregunta: e02
+    que_es: >-
+      Poder seguir cada dato hasta su origen: de qué fuente sale, qué regla se aplicó y qué decía cada fuente.
+      Cuando dos fuentes no coinciden, Rastro decide con una regla escrita y guarda la evidencia (con el
+      estándar PROV-O), en lugar de esconder la diferencia.
+    muestra: >-
+      Que cada respuesta se puede auditar: el padrón y las declaraciones juradas dicen cosas distintas, y en
+      cada pozo se ve qué dice cada una y por qué Rastro eligió una.
+  - paso: Cruce con mapas
+    titulo: "Posibles venteos, ubicados en su concesión"
+    pregunta: e03
+    que_es: >-
+      Unir datos por su ubicación. El satélite marca puntos de calor con coordenadas, pero no dice de qué
+      concesión son; Rastro ubica cada punto dentro del contorno de su concesión (con el estándar GeoSPARQL) y
+      así llega a la operadora.
+    muestra: >-
+      Que Rastro también integra datos geográficos, difíciles de cruzar con SQL, y que el resultado se ve en un
+      mapa: posibles venteos por concesión y por operadora, como un indicio para revisar.
 
 # Fuentes: nombre corto para los encabezados del modo técnico
 fuentes:

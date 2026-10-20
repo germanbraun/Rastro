@@ -512,3 +512,7 @@ De paso: los escenarios de «Por qué confiar» dividían por las 9 preguntas me
 ## 2026-10-20 — Petróleo y gas: la prueba de cambio con las nueve preguntas
 
 La prueba de cambio se había grabado cuando había siete preguntas medidas, y la app seguía mostrando «de 7». Se volvió a correr (`layer/energia/cambio/cambio.sh registrar`) con las nueve: con la columna del petróleo renombrada, sin Rastro se rompen 3 consultas (antes 2: se suma la de cambios de operadora) y Rastro falla en 3 hasta que se arregla una línea del mapeo, después 9 de 9. Con el petróleo en barriles, las dos formas dan otro número; Rastro avisa y, con una línea, vuelve a 9 de 9.
+
+## 2026-10-20 — La demo en 3 pasos explica por qué esos pasos
+
+Cada paso de la demo dice qué es (integración, trazabilidad, cruce con mapas o análisis de textos) y qué muestra, y arriba hay un «¿Por qué estos 3 pasos?»: uno por cada cosa que hace Rastro y que una consulta hecha a mano no hace sola. Los textos están en `demo_porque` y en cada paso de `demo` (`que_es`, `muestra`) de `app/dominios/*.yaml`.
