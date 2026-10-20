@@ -61,7 +61,7 @@
   tecnico: true
   respuesta: |-
     1. El LLM recibe la **ontología** como contexto: los conceptos, cómo se relacionan y qué significa cada uno. Con eso escribe una consulta SPARQL. No ve tablas, así que no tiene que adivinar cómo se cruzan.
-    2. Ontop la traduce a SQL y la ejecuta en vivo sobre Postgres.
+    2. Rastro la traduce a SQL y la ejecuta en vivo sobre Postgres.
     3. La respuesta se muestra con la fuente de cada columna. En «¿De dónde sale la respuesta?» están la consulta y el SQL exactos, para revisarlos: el LLM todavía puede elegir mal un concepto o un filtro.
 
 - pregunta: ¿Necesito un LLM o una API key?
@@ -76,7 +76,7 @@
   respuesta: |-
     Lo medimos en cada caso con tres formas de darle los datos al mismo LLM: SQL sobre las bases tal como vienen, SQL sobre las bases más las tablas de enlaces de Rastro, y Rastro.
 
-    **La precisión y la consistencia vienen de integrar una vez** (las tablas de enlaces): con ellas, el SQL acierta igual. **La capa semántica aporta el resto:** el conocimiento de cada fuente queda en los mapeos y no repartido en cada consulta, un cambio de la fuente se arregla en un lugar, cada dato trae su fuente, las definiciones de negocio (como «no convencional» o «terapia dirigida») las deduce Ontop, y se puede consultar junto con datos de otras organizaciones, con estándares abiertos. Los números de este caso están en «Por qué confiar».
+    **La precisión y la consistencia vienen de integrar una vez** (las tablas de enlaces): con ellas, el SQL acierta igual. **La capa semántica aporta el resto:** el conocimiento de cada fuente queda en los mapeos y no repartido en cada consulta, un cambio de la fuente se arregla en un lugar, cada dato trae su fuente, las definiciones de negocio (como «no convencional» o «terapia dirigida») las deduce Rastro, y se puede consultar junto con datos de otras organizaciones, con estándares abiertos. Los números de este caso están en «Por qué confiar».
 
 - pregunta: ¿Por qué no vistas SQL sobre las tablas de enlaces?
   tecnico: true
@@ -92,7 +92,7 @@
 - pregunta: ¿Qué significa que «el conocimiento vive en el modelo»?
   tecnico: true
   respuesta: |-
-    Que una definición de negocio se escribe una vez, en la ontología, y todas las preguntas la usan. Por ejemplo, «producción no convencional» o «concesión para revisar» no están en ninguna tabla: la ontología dice qué cuenta como tal, y Ontop lo deduce al responder. Si el negocio cambia la definición, es una línea, y cambia en todas las preguntas a la vez. Con SQL, esa definición vive en cada consulta, o en una vista que hay que mantener.
+    Que una definición de negocio se escribe una vez, en la ontología, y todas las preguntas la usan. Por ejemplo, «producción no convencional» o «concesión para revisar» no están en ninguna tabla: la ontología dice qué cuenta como tal, y Rastro lo deduce al responder. Si el negocio cambia la definición, es una línea, y cambia en todas las preguntas a la vez. Con SQL, esa definición vive en cada consulta, o en una vista que hay que mantener.
 
 - pregunta: ¿Qué problemas de integración resuelve?
   tecnico: true

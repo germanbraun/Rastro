@@ -152,8 +152,8 @@ addEventListener('resize', fit); fit();
 <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:12px"><p style="font-size:30px;font-weight:700">Sin planillas de venteo</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">21</p><p style="font-size:26px;line-height:1.4;color:#4A5568">20 o más posibles venteos y ninguna planilla de venteo (Res. 143/98) presentada desde 2022.</p></div>
 <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:34px;display:flex;flex-direction:column;gap:12px"><p style="font-size:30px;font-weight:700">Las dos cosas</p><p style="font-size:64px;font-weight:700;color:#2F6FB5">9</p><p style="font-size:26px;line-height:1.4;color:#4A5568">Entre ellas Chihuido de la Sierra Negra (YPF), El Trapial (Chevron) y Aguada Federal (Vista).</p></div>
 </div>
-<p style="font-size:30px;line-height:1.4;width:1664px"><b>La regla está en el diccionario de negocio, no en cada consulta:</b> ningún mapeo dice qué concesión hay que revisar; Ontop lo deduce de las dos reglas. La usan la pregunta, el mapa de la app y cualquier herramienta. <span style="color:#4A5568">Es un indicio para revisar, no una conclusión.</span></p>
-<aside>Lo que una consulta SQL no da gratis: una regla de negocio escrita una sola vez. «Concesión para revisar» combina tres fuentes de tres organismos: los posibles venteos del satélite, la distancia a los gasoductos de ENARGAS y las planillas de venteo que presentan las empresas. No es una columna ni tiene mapeo: el diccionario dice que lo son las que cumplen alguna de las dos reglas, y Ontop la deduce. Si mañana se cambia el umbral o se suma una regla, se cambia en un lugar y vale para todas las preguntas y para el mapa. En la app se ve sobre el mapa, con las concesiones para revisar en rojo.</aside>
+<p style="font-size:30px;line-height:1.4;width:1664px"><b>La regla está en el diccionario de negocio, no en cada consulta:</b> ningún mapeo dice qué concesión hay que revisar; Rastro lo deduce de las dos reglas. La usan la pregunta, el mapa de la app y cualquier herramienta. <span style="color:#4A5568">Es un indicio para revisar, no una conclusión.</span></p>
+<aside>Lo que una consulta SQL no da gratis: una regla de negocio escrita una sola vez. «Concesión para revisar» combina tres fuentes de tres organismos: los posibles venteos del satélite, la distancia a los gasoductos de ENARGAS y las planillas de venteo que presentan las empresas. No es una columna ni tiene mapeo: el diccionario dice que lo son las que cumplen alguna de las dos reglas, y Rastro la deduce. Si mañana se cambia el umbral o se suma una regla, se cambia en un lugar y vale para todas las preguntas y para el mapa. En la app se ve sobre el mapa, con las concesiones para revisar en rojo.</aside>
 </section>
 </div>
 <div class="slide">
@@ -218,7 +218,7 @@ addEventListener('resize', fit); fit();
 <p style="font-size:30px;line-height:1.4">El LLM lee la ontología y escribe SPARQL: <span style="color:#4A5568">como SQL, pero sobre conceptos</span></p>
 </div>
 <div style="background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:32px 40px;display:flex;flex-direction:column;gap:22px">
-<p style="font-size:38px;font-weight:700">Capa semántica · Ontop la traduce a SQL</p>
+<p style="font-size:38px;font-weight:700">Capa semántica · Rastro la traduce a SQL</p>
 <div style="display:flex;gap:24px">
 <div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:22px"><p style="font-size:30px;font-weight:700">Ontología</p><p style="font-size:26px;line-height:1.35">≈ el esquema de negocio que te gustaría tener</p></div>
 <div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:22px"><p style="font-size:30px;font-weight:700">Mapeos</p><p style="font-size:26px;line-height:1.35">≈ definiciones de vistas: esta columna es este concepto</p></div>
@@ -421,7 +421,7 @@ addEventListener('resize', fit); fit();
 <text x="160.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">a su fuente</text>
 </svg>
 </div>
-<aside>El diccionario del dominio de petróleo y gas. La producción de cada pozo en 2025 la declara una empresa y pertenece a una concesión; cada concesión tiene socios, con su porcentaje, y una operadora en el mapa. Cada pozo tiene su operadora de hoy, según una regla escrita. Los venteos, vistos por satélite o declarados, caen en una concesión. Cada concesión sabe a qué distancia está el gasoducto de transporte más cercano (ENARGAS); cada venteo, su localidad más cercana y si cae en un área protegida (IGN); y las empresas que lo tienen, su LEI (GLEIF). Arriba, una regla de negocio: «no convencional» no tiene mapeo; Ontop la deduce de shale y tight. Cada unión guarda su evidencia, con PROV-O.</aside>
+<aside>El diccionario del dominio de petróleo y gas. La producción de cada pozo en 2025 la declara una empresa y pertenece a una concesión; cada concesión tiene socios, con su porcentaje, y una operadora en el mapa. Cada pozo tiene su operadora de hoy, según una regla escrita. Los venteos, vistos por satélite o declarados, caen en una concesión. Cada concesión sabe a qué distancia está el gasoducto de transporte más cercano (ENARGAS); cada venteo, su localidad más cercana y si cae en un área protegida (IGN); y las empresas que lo tienen, su LEI (GLEIF). Arriba, una regla de negocio: «no convencional» no tiene mapeo; Rastro la deduce de shale y tight. Cada unión guarda su evidencia, con PROV-O.</aside>
 </section>
 </div>
 <div class="slide">
@@ -497,7 +497,7 @@ prov:wasGeneratedBy	lo generó (la regla)	rastro:activity/energia-stake-parsing
 <p style="font-size:30px;line-height:1.4"><b>Lo resuelven los mapeos:</b> la declaración jurada, el mapa y el texto de socios pasan a ser los mismos conceptos.</p>
 </div>
 </div>
-<p style="font-size:30px;color:#4A5568">Después, Ontop une todo solo: cada pregunta usa la misma definición.</p>
+<p style="font-size:30px;color:#4A5568">Después, Rastro une todo solo: cada pregunta usa la misma definición.</p>
 <aside>Dos tipos de heterogeneidad. De datos: la misma empresa con nombres distintos en cada fuente (CGC), o dos fuentes que nombran operadoras distintas para el mismo pozo; el entity linking decide una vez, con una regla escrita y su evidencia. De esquema: la empresa está en una columna de la declaración jurada, en otra del mapa y dentro de un texto de socios; los mapeos las vuelven los mismos conceptos.</aside>
 </section>
 </div>

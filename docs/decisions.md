@@ -494,3 +494,7 @@ El dibujo automático (graphviz en el navegador) quedaba ilegible: burbujas sin 
 ## 2026-10-20 — Tablas con texto largo: elegir una fila para leerla completa
 
 Las tablas de la app cortan el texto largo y la celda no tiene scroll. Todas las tablas pasan por `dominio.tabla`: si alguna celda tiene más de 60 caracteres, la tabla deja elegir una fila y muestra, debajo, la fila completa con cada campo en su propia línea; si no, es una tabla común.
+
+## 2026-10-20 — En los textos, Rastro y no Ontop
+
+Ontop es la herramienta de mapeos; quien responde es Rastro. En la app, los mazos y los guiones se dice «Rastro deduce», «Rastro traduce» y «el SQL que generó Rastro», no «Ontop deduce» ni «Rastro (Ontop)». Las herramientas se nombran donde se explican: los diagramas de arquitectura, «Sé SQL. ¿Qué es cada pieza?» y «¿Dónde está cada pieza?».

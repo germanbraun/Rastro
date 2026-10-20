@@ -189,7 +189,7 @@ addEventListener('resize', fit); fit();
 <p style="font-size:30px;line-height:1.4">El LLM lee la ontología y escribe SPARQL: <span style="color:#4A5568">como SQL, pero sobre conceptos</span></p>
 </div>
 <div style="background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:32px 40px;display:flex;flex-direction:column;gap:22px">
-<p style="font-size:38px;font-weight:700">Capa semántica · Ontop la traduce a SQL</p>
+<p style="font-size:38px;font-weight:700">Capa semántica · Rastro la traduce a SQL</p>
 <div style="display:flex;gap:24px">
 <div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:22px"><p style="font-size:30px;font-weight:700">Ontología</p><p style="font-size:26px;line-height:1.35">≈ el esquema de negocio que te gustaría tener</p></div>
 <div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:22px"><p style="font-size:30px;font-weight:700">Mapeos</p><p style="font-size:26px;line-height:1.35">≈ definiciones de vistas: esta columna es este concepto</p></div>
@@ -240,7 +240,7 @@ addEventListener('resize', fit); fit();
 <p style="font-size:30px;line-height:1.4;margin-top:12px">Sin integración, el LLM adivina qué fármaco nombra cada ensayo, con texto. Con la integración hecha una vez, solo nombra conceptos.</p>
 </div>
 </div>
-<aside>Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto. Con las tablas de enlaces, 571. Con Rastro, 435 de SPARQL, solo conceptos, y Ontop genera el SQL. La gran diferencia la hace integrar una vez; SPARQL la hace un poco más corta y en palabras de negocio.</aside>
+<aside>Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto. Con las tablas de enlaces, 571. Con Rastro, 435 de SPARQL, solo conceptos, y Rastro genera el SQL. La gran diferencia la hace integrar una vez; SPARQL la hace un poco más corta y en palabras de negocio.</aside>
 </section>
 </div>
 <div class="slide">
@@ -270,7 +270,7 @@ addEventListener('resize', fit); fit();
 <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:16px"><p style="font-size:24px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#14213D">Cambia una definición</p><p style="font-size:28px;line-height:1.4">La terapia hormonal pasa a contar como terapia dirigida.</p><p style="font-size:28px;line-height:1.4">SQL: cambiar <b>cada consulta</b> o vista.</p><p style="font-size:28px;line-height:1.4">Rastro: <b>1 línea de la ontología</b>. 156 → 188 fármacos.</p></div>
 </div>
 <p style="font-size:28px;color:#4A5568;width:1664px">Medido sobre los datos reales. En la app: pestaña «Cuando las fuentes cambian».</p>
-<aside>Tres cambios que pasan en la vida real. Si la fuente renombra una columna, el SQL se rompe en cada consulta que la usa, con o sin las tablas de enlaces; en Rastro es una línea del mapeo. Si cambia cómo se escribe un valor, el SQL ni siquiera falla: devuelve cero. Y si el negocio cambia una definición, como qué cuenta como terapia dirigida, en Rastro es una línea de la ontología: Ontop la aplica a todas las preguntas. «Terapia dirigida» no tiene ninguna tabla ni mapeo: Ontop la deduce. Honestidad: una capa de vistas SQL también centralizaría parte de esto.</aside>
+<aside>Tres cambios que pasan en la vida real. Si la fuente renombra una columna, el SQL se rompe en cada consulta que la usa, con o sin las tablas de enlaces; en Rastro es una línea del mapeo. Si cambia cómo se escribe un valor, el SQL ni siquiera falla: devuelve cero. Y si el negocio cambia una definición, como qué cuenta como terapia dirigida, en Rastro es una línea de la ontología: Rastro la aplica a todas las preguntas. «Terapia dirigida» no tiene ninguna tabla ni mapeo: Rastro la deduce. Honestidad: una capa de vistas SQL también centralizaría parte de esto.</aside>
 </section>
 </div>
 <div class="slide">
@@ -291,7 +291,7 @@ addEventListener('resize', fit); fit();
 </div>
 </div>
 <p style="font-size:26px;color:#4A5568">Consulta en layer/externo/wikidata.rq. Tarda unos 10 segundos y necesita internet.</p>
-<aside>Esto es lo que una base SQL no hace en una sola consulta: unir, en vivo, datos de otra organización. Funciona porque Rastro usa identificadores compartidos, el ChEMBL ID, que Wikidata también tiene. La consulta corre en GraphDB y combina tres grafos: Rastro a través de Ontop, MeSH en el propio GraphDB y Wikidata en internet. Para la demo hay una copia del resultado por si no hay red.</aside>
+<aside>Esto es lo que una base SQL no hace en una sola consulta: unir, en vivo, datos de otra organización. Funciona porque Rastro usa identificadores compartidos, el ChEMBL ID, que Wikidata también tiene. La consulta corre en GraphDB y combina tres grafos: Rastro, MeSH en el propio GraphDB y Wikidata en internet. Para la demo hay una copia del resultado por si no hay red.</aside>
 </section>
 </div>
 <div class="slide">
@@ -458,7 +458,7 @@ addEventListener('resize', fit); fit();
 <text x="230.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">y su licencia (proviene de)</text>
 </svg>
 </div>
-<aside>Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre targets y tiene reportes de eventos adversos. Arriba, las clases de fármaco: terapia dirigida no tiene ningún mapeo, Ontop la deduce de sus subclases. Abajo, el enlace: cada «ensayo prueba fármaco» guarda su evidencia (el texto del sponsor, lo que coincidió y la regla) con PROV-O, el estándar del W3C para procedencia. Cada dato apunta a su fuente y su licencia.</aside>
+<aside>Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre targets y tiene reportes de eventos adversos. Arriba, las clases de fármaco: terapia dirigida no tiene ningún mapeo, Rastro la deduce de sus subclases. Abajo, el enlace: cada «ensayo prueba fármaco» guarda su evidencia (el texto del sponsor, lo que coincidió y la regla) con PROV-O, el estándar del W3C para procedencia. Cada dato apunta a su fuente y su licencia.</aside>
 </section>
 </div>
 <div class="slide">
@@ -543,7 +543,7 @@ prov:wasGeneratedBy	generado por	rastro:activity/entity-linking
 <p style="font-size:30px;line-height:1.4"><b>Lo resuelven los mapeos:</b> las tres columnas pasan a ser un solo concepto.</p>
 </div>
 </div>
-<p style="font-size:30px;color:#4A5568">Después, Ontop une todo solo: cada pregunta usa la misma definición.</p>
+<p style="font-size:30px;color:#4A5568">Después, Rastro une todo solo: cada pregunta usa la misma definición.</p>
 <aside>Dos tipos de heterogeneidad, cada uno con su solución. De datos: el ensayo dice «Pembrolizumab 200 mg» y ChEMBL dice CHEMBL3137343; ningún igual de SQL los une, así que el entity linking crea esa clave una vez y se revisa. De esquema: openFDA llama al fármaco query_id, ChEMBL chembl_id y la tabla de enlaces parent_chembl_id; los mapeos dicen que las tres son el mismo Fármaco. La lista completa está en docs/integracion.md.</aside>
 </section>
 </div>

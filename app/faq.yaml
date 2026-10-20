@@ -74,7 +74,7 @@
 - question: ¿Dónde quedó la complejidad del SQL?
   tecnico: true
   answer: |-
-    En la integración, hecha una vez. En la pregunta de HER2, el LLM escribió 1.543 caracteres de SQL sin integración, 571 de SQL sobre las tablas de enlaces y 435 de SPARQL sobre Rastro. La gran diferencia la hace integrar; SPARQL la hace un poco más corta y en palabras de negocio, y Ontop genera el SQL.
+    En la integración, hecha una vez. En la pregunta de HER2, el LLM escribió 1.543 caracteres de SQL sin integración, 571 de SQL sobre las tablas de enlaces y 435 de SPARQL sobre Rastro. La gran diferencia la hace integrar; SPARQL la hace un poco más corta y en palabras de negocio, y Rastro genera el SQL.
 
 - question: En oncología, ¿qué pasó cuando cambió una fuente?
   tecnico: true
@@ -94,10 +94,10 @@
 
     Con SQL también se puede guardar, pero hay que programarlo en cada consulta y no lo entiende ninguna otra herramienta.
 
-- question: En oncología, ¿qué definición deduce Ontop?
+- question: En oncología, ¿qué definición deduce Rastro?
   tecnico: true
   answer: |-
-    Que una definición de negocio se escribe una vez, en la ontología, y todas las preguntas la usan. Ejemplo: «terapia dirigida» no está en ninguna tabla ni en ningún mapeo. La ontología dice, en dos líneas, que los inhibidores de quinasa y los anticuerpos monoclonales son terapias dirigidas, y Ontop lo deduce al responder: 156 fármacos.
+    Que una definición de negocio se escribe una vez, en la ontología, y todas las preguntas la usan. Ejemplo: «terapia dirigida» no está en ninguna tabla ni en ningún mapeo. La ontología dice, en dos líneas, que los inhibidores de quinasa y los anticuerpos monoclonales son terapias dirigidas, y Rastro lo deduce al responder: 156 fármacos.
 
     Si el negocio decide que la terapia hormonal también cuenta, es una línea más: 188 fármacos, y los ensayos de fase 3 de cáncer de mama con terapia dirigida pasan de 336 a 547, en todas las preguntas a la vez. Con SQL, esa definición vive en cada consulta, o en una vista que hay que mantener.
 

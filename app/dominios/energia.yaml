@@ -75,7 +75,7 @@ preguntas:
       - **Qué busca:** la producción de petróleo de 2025 de cada pozo, la concesión donde está y los socios de esa concesión con su porcentaje.
       - **Qué calcula:** por cada empresa, la producción multiplicada por su porcentaje, sumada en todas sus concesiones; al lado, lo que opera (la producción que declara).
       - **Lo que en SQL habría que hacer a mano:** separar el texto de socios del mapa («YPF S.A.: 50 %») y unir los nombres de empresa entre fuentes. Acá ya son conceptos: «Participación» y «Empresa».
-      - **El SQL de abajo:** Ontop traduce cada concepto a las tablas de enlaces de Rastro y une todo en una sola consulta.
+      - **El SQL de abajo:** Rastro traduce cada concepto a las tablas de enlaces de Rastro y une todo en una sola consulta.
     simple: ¿Cuánto petróleo de 2025 le corresponde a cada empresa, según su participación?
     tecnica: ¿Cuánto petróleo de 2025 le corresponde a cada empresa, multiplicando la producción de cada concesión por su porcentaje?
     ventaja: "Los socios están en un texto del mapa de concesiones; Rastro los separa una vez, con su porcentaje, y une los nombres de cada empresa entre fuentes. Chevron participa con dos razones sociales; una corrección revisada las agrupa."
@@ -150,7 +150,7 @@ preguntas:
     explicacion: |
       - **Qué busca:** la producción de cada pozo que es «no convencional» y la empresa que la declara.
       - **Qué devuelve:** las 10 empresas con más petróleo no convencional.
-      - **Lo particular:** «no convencional» no es una columna. El diccionario dice que shale y tight son tipos de no convencional, y Ontop lo deduce. Si mañana se suma otro tipo, se cambia una línea del diccionario, no cada consulta.
+      - **Lo particular:** «no convencional» no es una columna. El diccionario dice que shale y tight son tipos de no convencional, y Rastro lo deduce. Si mañana se suma otro tipo, se cambia una línea del diccionario, no cada consulta.
     simple: ¿Quiénes producen más petróleo no convencional (shale y tight)?
     tecnica: ¿Qué empresas declaran más petróleo no convencional en 2025 (la clase deducida, sin mapeo propio)?
     ventaja: "«No convencional» se define una vez, en el diccionario de negocio: shale o tight. Ningún mapeo la asigna; vale para todas las preguntas."
@@ -224,12 +224,12 @@ preguntas:
     query: /ontology/energia/queries/cq8.rq
     explicacion: |
       - **Qué busca:** las «concesiones para revisar», con su operadora y el motivo.
-      - **Lo particular:** «concesión para revisar» no es una columna ni tiene mapeo. El diccionario dice que lo son las que tienen posibles venteos y además no tienen un gasoducto cerca, o no presentaron planillas de venteo de gas. Ontop la deduce de esas dos reglas.
+      - **Lo particular:** «concesión para revisar» no es una columna ni tiene mapeo. El diccionario dice que lo son las que tienen posibles venteos y además no tienen un gasoducto cerca, o no presentaron planillas de venteo de gas. Rastro la deduce de esas dos reglas.
       - **Lo que en SQL habría que hacer a mano:** repetir las dos reglas, con las distancias y los estudios, en cada consulta que las use. Acá se escriben una vez y valen para todas.
     mapa: true
     simple: ¿Qué concesiones hay que revisar por venteos, y por qué?
     tecnica: ¿Qué concesiones son «para revisar» (clase deducida, sin mapeo propio), con su operadora y su motivo?
-    ventaja: "La regla se escribe una vez en el diccionario de negocio: posibles venteos y, además, ningún gasoducto de transporte cerca o ninguna planilla de venteo presentada. Ontop la deduce; vale para esta pregunta, para el mapa y para cualquier otra que la use."
+    ventaja: "La regla se escribe una vez en el diccionario de negocio: posibles venteos y, además, ningún gasoducto de transporte cerca o ninguna planilla de venteo presentada. Rastro la deduce; vale para esta pregunta, para el mapa y para cualquier otra que la use."
     terminos:
       Concesión para revisar: una concesión que conviene mirar por sus posibles venteos. Es un indicio, no una conclusión.
     definicion: |
@@ -258,7 +258,7 @@ preguntas:
           FILTER (?c IN ("ESCALANTE - EL TREBOL", "BARRANCAS", "BAJO DEL CHOIQUE - LA INVERNADA"))
         } ORDER BY ?c
 
-# Datos de afuera: una consulta une Rastro (Ontop) con Wikidata en vivo, en GraphDB, por el LEI
+# Datos de afuera: una consulta une Rastro con Wikidata en vivo, en GraphDB, por el LEI
 externo:
   titulo: Datos de afuera (Wikidata)
   consulta: /layer/energia/externo/wikidata.rq

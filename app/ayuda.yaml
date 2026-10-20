@@ -30,7 +30,7 @@ fuentes_respuesta: >-
   Las fuentes de las que salen los datos de esta respuesta. «Enlaces de Rastro» son las uniones entre
   fuentes que Rastro calculó una vez, con su evidencia (por ejemplo, que dos nombres son la misma empresa).
 explicar: >-
-  Explica en palabras de negocio qué hace la consulta y el SQL que generó Ontop.
+  Explica en palabras de negocio qué hace la consulta y el SQL que generó Rastro.
 texto: >-
   El grafo elige con una consulta exacta qué registros leer; después un asistente de IA resume solo esos
   textos, citando cada registro. La IA no elige qué leer.
@@ -53,7 +53,7 @@ tarjeta_auditar: >-
 escenario: >-
   Qué pasa con todas las preguntas de la evaluación cuando una base cambia, antes y después de arreglarlo.
 consola: >-
-  SPARQL es como SQL, pero sobre los conceptos del diccionario en lugar de las tablas. Ontop traduce cada
+  SPARQL es como SQL, pero sobre los conceptos del diccionario en lugar de las tablas. Rastro traduce cada
   consulta a SQL y la ejecuta en vivo sobre Postgres; abajo se ve el SQL que generó.
 instancia: >-
   Una instancia es un dato concreto del grafo (una concesión, una empresa, un enlace) con todas sus
@@ -71,5 +71,5 @@ mapa: >-
   Contornos de las concesiones (en rojo, las que hay que revisar), posibles venteos vistos por satélite y
   gasoductos de transporte de ENARGAS. Las geometrías están en el grafo con el estándar GeoSPARQL.
 externo: >-
-  Una consulta federada: GraphDB pide una parte a Rastro (Ontop) y otra a Wikidata, en internet, y las une
+  Una consulta federada: GraphDB pide una parte a Rastro y otra a Wikidata, en internet, y las une
   por un identificador que las dos comparten (el LEI). No se copia nada a Rastro.

@@ -432,14 +432,14 @@ def show_answer(query, columns, rows, note=None):
             st.caption(note)
         st.markdown("**1. La consulta que escribió el LLM**, sobre los conceptos de Rastro (SPARQL):")
         st.code(query, language="sparql")
-        st.markdown("**2. El SQL que Rastro generó y ejecutó en Postgres** (lo traduce Ontop "
+        st.markdown("**2. El SQL que Rastro generó y ejecutó en Postgres** (lo traduce Rastro "
                     "con los mapeos; los datos no se copian a otro lado):")
         sql = None
         try:
             sql = pretty(answer.ontop_sql(query), "B")
             st.code(sql, language="sql")
         except requests.RequestException:
-            st.caption("Ontop no devolvió la traducción.")
+            st.caption("No se pudo obtener el SQL de esta consulta.")
         import dominio  # el botón «Explicame la consulta» es el mismo en todos los dominios
         dominio.explain(query, sql, "oncologia")
         st.markdown("**3. Las fuentes:**")
@@ -473,7 +473,7 @@ def show_answer(query, columns, rows, note=None):
                 st.code(query, language="sparql")
                 tabla(pd.DataFrame(table), hide_index=True, use_container_width=True)
                 st.caption("La consulta de la respuesta no necesita PROV-O: usa `oncologia:testsDrug`. La procedencia "
-                           "se pide aparte, como acá. «?enlace a prov:Entity» no está en ningún mapeo: Ontop "
+                           "se pide aparte, como acá. «?enlace a prov:Entity» no está en ningún mapeo: Rastro "
                            "lo deduce de la ontología, donde un enlace es un tipo de entidad PROV. Cualquiera "
                            "puede auditarlo abriendo el ensayo.")
 
@@ -749,13 +749,13 @@ with trust_tab:
                                         st.code(pretty(attempt["query"], k), language="sql" if k in "BD" else "sparql")
                             if k == "C":
                                 with st.expander("El SQL que Rastro generó a partir de esta consulta"):
-                                    st.caption("Ontop traduce la consulta a SQL sobre Postgres usando los "
+                                    st.caption("Rastro traduce la consulta a SQL sobre Postgres usando los "
                                                "mapeos. Comparalo con el que el LLM tuvo que escribir a mano: "
                                                "los cruces ya resueltos son tablas simples.")
                                     try:
                                         st.code(pretty(answer.ontop_sql(query), "B"), language="sql")
                                     except requests.RequestException:
-                                        st.caption("Ontop no devolvió la traducción.")
+                                        st.caption("No se pudo obtener el SQL de esta consulta.")
 
 # Escenarios de cambio: resultados medidos con layer/cambio/cambio.sh registrar
 CHANGES = {
@@ -803,7 +803,7 @@ with trust_tab:
                 col.caption(change_summary(before["totals"][k]))
             if before["totals"]["C"].get("❌", 0) > before["totals"]["B"].get("❌", 0):
                 st.caption("Rastro falla más, y todo junto: la primera consulta con error deja la conexión "
-                           "de Ontop en error y arrastra a las demás. Falla en voz alta, y se arregla en un lugar."
+                           "con la base en error y arrastra a las demás. Falla en voz alta, y se arregla en un lugar."
                            if TECH else "Con Rastro falla todo junto y en voz alta, y se arregla en un solo lugar.")
             if "Control de vocabulario" in before["vocabulary"] and "🟡" in before["vocabulary"]:
                 st.warning("Rastro avisa: " + before["vocabulary"].replace("🟡 Control de vocabulario: ", ""))
@@ -842,10 +842,10 @@ with trust_tab:
         elif scenario == "Cambia una definición de negocio":
             st.markdown("«Terapia dirigida» no está en ninguna tabla ni en ningún mapeo. Está definida en "
                         "la **ontología**, en dos líneas: los inhibidores de quinasa y los anticuerpos "
-                        "monoclonales son terapias dirigidas. Ontop lo deduce al responder.")
+                        "monoclonales son terapias dirigidas. Rastro lo deduce al responder.")
             st.code("oncologia:KinaseInhibitor    rdfs:subClassOf oncologia:TargetedTherapy .\n"
                     "oncologia:MonoclonalAntibody rdfs:subClassOf oncologia:TargetedTherapy .", language="turtle")
-            st.markdown("El SQL que genera Ontop para «fármacos que son terapia dirigida»: nadie lo escribió.")
+            st.markdown("El SQL que genera Rastro para «fármacos que son terapia dirigida»: nadie lo escribió.")
             st.code("SELECT DISTINCT v1.chembl_id, v3.pref_name\n"
                     "FROM linking.drug_class v1,\n"
                     "     (VALUES ('KinaseInhibitor'), ('MonoclonalAntibody')) AS v2 (v0m0),\n"

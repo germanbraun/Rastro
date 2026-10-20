@@ -177,13 +177,13 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
             st.caption(note)
         st.markdown("**1. La consulta**, sobre los conceptos de Rastro (SPARQL):")
         st.code(query, language="sparql")
-        st.markdown("**2. El SQL que Rastro generó y ejecutó en Postgres** (lo traduce Ontop con los mapeos):")
+        st.markdown("**2. El SQL que Rastro generó y ejecutó en Postgres** (lo traduce Rastro con los mapeos):")
         sql = None
         try:
             sql = sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper", indent_width=2)
             st.code(sql, language="sql")
         except requests.RequestException:
-            st.caption("Ontop no devolvió la traducción.")
+            st.caption("No se pudo obtener el SQL de esta consulta.")
         explain(query, sql, domain, item)
         st.markdown("**3. Las fuentes:**")
         for s in used:
@@ -192,7 +192,7 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
             elif s in info:
                 st.markdown(f"- 🐘 **{info[s]['name']}** · licencia: {info[s]['license']}")
         if item and item.get("definicion"):
-            st.markdown("**4. La regla de negocio, en la ontología.** Ningún mapeo la asigna: Ontop la deduce.")
+            st.markdown("**4. La regla de negocio, en la ontología.** Ningún mapeo la asigna: Rastro la deduce.")
             st.code(item["definicion"], language="turtle")
         if evidence:
             st.markdown("**4. La evidencia**, pedida al grafo"
@@ -492,7 +492,7 @@ def sparql_console(domain):
     folder, port = CONSOLE[domain]
     show_instances(domain)
     st.markdown("### Consola SPARQL", help=ayuda("consola"))
-    st.caption(f"Corre sobre el Ontop de este dominio. Otras herramientas pueden usar el mismo endpoint: "
+    st.caption(f"Corre sobre Rastro, en el endpoint SPARQL de este dominio. Otras herramientas pueden usar el mismo endpoint: "
                f"`http://localhost:{port}/sparql`.")
     examples = {}
     for f in sorted(Path(folder).glob("*.rq")):
@@ -516,12 +516,12 @@ def sparql_console(domain):
             return
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''} en {time.time() - started:.1f} s.")
         tabla(pd.DataFrame(rows, columns=columns), hide_index=True, use_container_width=True)
-        with st.expander("El SQL que Ontop generó y ejecutó en Postgres"):
+        with st.expander("El SQL que Rastro generó y ejecutó en Postgres"):
             try:
                 st.code(sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper",
                                         indent_width=2), language="sql")
             except requests.RequestException:
-                st.caption("Ontop no devolvió la traducción.")
+                st.caption("No se pudo obtener el SQL de esta consulta.")
 
 
 GEO = "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\n"
@@ -754,14 +754,14 @@ GRAPHDB = "http://graphdb:7200/repositories/rastro"
 
 
 def show_external(cfg, tech):
-    """Datos de afuera: una consulta federada en GraphDB une Rastro (Ontop) con Wikidata por un
+    """Datos de afuera: una consulta federada en GraphDB une Rastro con Wikidata por un
     identificador compartido. Corre en vivo si se pide; si no, se muestra el resultado guardado."""
     ext, domain = cfg["externo"], cfg["domain"]
     st.markdown(f"**{ext['titulo']}**", help=ayuda("externo"))
     st.markdown(md(ext["intro"]))
     st.graphviz_chart("""digraph { rankdir=LR; bgcolor="transparent";
         node [fontname="Helvetica", fontsize=14, style=filled, penwidth=0];
-        r [label="Rastro (Ontop)\\nempresa · LEI · petróleo 2025", shape=ellipse, fillcolor="#2F6FB5", fontcolor="white"];
+        r [label="Rastro\\nempresa · LEI · petróleo 2025", shape=ellipse, fillcolor="#2F6FB5", fontcolor="white"];
         w [label="Wikidata (internet)\\nsede · bolsa · dueño · sitio web", shape=ellipse, fillcolor="#FFF3E6", color="#FF8C42", penwidth=2];
         q [label="una consulta\\n(GraphDB)", shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#B8C2CF", penwidth=1];
         r -> q [label="  el mismo LEI  ", dir=both, color="#7A8699", fontcolor="#7A8699", fontname="Helvetica"];

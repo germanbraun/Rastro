@@ -173,7 +173,7 @@ addEventListener('resize', fit); fit();
 <p style="font-size:30px;line-height:1.4">El LLM lee la ontología y escribe SPARQL: <span style="color:#4A5568">como SQL, pero sobre conceptos</span></p>
 </div>
 <div style="background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:32px 40px;display:flex;flex-direction:column;gap:22px">
-<p style="font-size:38px;font-weight:700">Capa semántica · Ontop la traduce a SQL</p>
+<p style="font-size:38px;font-weight:700">Capa semántica · Rastro la traduce a SQL</p>
 <div style="display:flex;gap:24px">
 <div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:22px"><p style="font-size:30px;font-weight:700">Ontología</p><p style="font-size:26px;line-height:1.35">≈ el esquema de negocio que te gustaría tener</p></div>
 <div style="flex:1;background:rgba(255,255,255,0.14);border-radius:14px;padding:22px"><p style="font-size:30px;font-weight:700">Mapeos</p><p style="font-size:26px;line-height:1.35">≈ definiciones de vistas: esta columna es este concepto</p></div>
@@ -349,7 +349,7 @@ addEventListener('resize', fit); fit();
 <text x="170.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">a su fuente</text>
 </svg>
 </div>
-<aside>El diccionario del dominio de proveedores. Un contrato tiene una agencia, un sector y un proveedor; el proveedor pertenece a un grupo, y el grupo y el proveedor tienen su entidad legal en el registro global (LEI), con su país y su matriz final. Los sectores incluyen sus subsectores. Arriba, una regla de negocio: «proveedor para revisar» no tiene mapeo; Ontop la deduce de dos clases: matriz extranjera o coincidencia con una lista de control. Cada unión guarda su evidencia, con PROV-O.</aside>
+<aside>El diccionario del dominio de proveedores. Un contrato tiene una agencia, un sector y un proveedor; el proveedor pertenece a un grupo, y el grupo y el proveedor tienen su entidad legal en el registro global (LEI), con su país y su matriz final. Los sectores incluyen sus subsectores. Arriba, una regla de negocio: «proveedor para revisar» no tiene mapeo; Rastro la deduce de dos clases: matriz extranjera o coincidencia con una lista de control. Cada unión guarda su evidencia, con PROV-O.</aside>
 </section>
 </div>
 <div class="slide">
@@ -424,7 +424,7 @@ prov:wasDerivedFrom	deriva de	rastro:source/usaspending
 <p style="font-size:30px;line-height:1.4"><b>Lo resuelven los mapeos:</b> columnas de tres fuentes pasan a ser dos conceptos.</p>
 </div>
 </div>
-<p style="font-size:30px;color:#4A5568">Después, Ontop une todo solo: cada pregunta usa la misma definición.</p>
+<p style="font-size:30px;color:#4A5568">Después, Rastro une todo solo: cada pregunta usa la misma definición.</p>
 <aside>Dos tipos de heterogeneidad, cada uno con su solución. De datos: el mismo nombre puede ser dos empresas distintas (la vieja y la nueva SAIC), y una empresa puede aparecer con varios nombres; el entity linking decide una vez, con su evidencia. De esquema: USAspending, GLEIF y Wikidata guardan la empresa en columnas distintas; los mapeos las vuelven un solo concepto.</aside>
 </section>
 </div>
