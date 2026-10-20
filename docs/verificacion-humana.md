@@ -196,6 +196,6 @@ En la app, **Petróleo y gas → Preguntar → Una pregunta sobre textos → Res
 | 6c. Áreas protegidas | __ de 3 | | |
 | 6d. LEI | 3 de 3 | persona | 2026-10-20 |
 | 6e. Cambios de operadora | 3 de 3 (dos con 1 a 2 meses de desfase, esperable) | persona | 2026-10-20 |
-| 6f. Textos de venteos | | | |
+| 6f. Textos de venteos | pendiente: el listado no trae las planillas; se deja para más adelante | | |
 
 Con esto completo, los documentos pueden decir «revisado por una persona» con el número de acá.
