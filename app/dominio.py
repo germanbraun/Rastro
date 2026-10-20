@@ -781,12 +781,13 @@ def show_external(cfg, tech):
     table, when = st.session_state.get(key) or (pd.read_csv(ext["guardado"]), f"guardado el {ext['fecha_guardado']}")
     columns = [c for c in ext["columnas"] if c in table.columns and (tech or c not in ("lei", "wikidata"))]
     shown = table[columns].copy()
-    if "petroleo_m3" in shown:
-        shown["petroleo_m3"] = shown["petroleo_m3"].map(lambda v: money(v) if pd.notna(v) else "—")
+    for c in ("su_parte_m3", "declara_m3"):
+        if c in shown:
+            shown[c] = shown[c].map(lambda v: money(v) if pd.notna(v) else "—")
     shown = shown.fillna("—").rename(columns=ext["columnas"])
     shown, config = logos.with_logos(shown, columns)
     tabla(shown, hide_index=True, use_container_width=True, column_config=config)
-    st.caption(f"Resultado {when}. Fuentes: Rastro (Capítulo IV y GLEIF) y Wikidata.")
+    st.caption(f"Resultado {when}. Fuentes: Rastro (Capítulo IV, mapas de la Secretaría de Energía y GLEIF) y Wikidata.")
     st.info(md(ext["conclusion"]))
     with st.expander("La consulta: dos grafos en una"):
         st.code(Path(ext["consulta"]).read_text(), language="sparql")

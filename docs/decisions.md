@@ -498,3 +498,7 @@ Las tablas de la app cortan el texto largo y la celda no tiene scroll. Todas las
 ## 2026-10-20 — En los textos, Rastro y no Ontop
 
 Ontop es la herramienta de mapeos; quien responde es Rastro. En la app, los mazos y los guiones se dice «Rastro deduce», «Rastro traduce» y «el SQL que generó Rastro», no «Ontop deduce» ni «Rastro (Ontop)». Las herramientas se nombran donde se explican: los diagramas de arquitectura, «Sé SQL. ¿Qué es cada pieza?» y «¿Dónde está cada pieza?».
+
+## 2026-10-20 — Wikidata en petróleo y gas: la parte según socios, no lo declarado
+
+La consulta con Wikidata mostraba el petróleo que cada empresa declara como operadora (YPF: 21,4 millones de m³), justo después de que el paso 1 de la demo dijera que su parte es 12,6. Los dos números son correctos, pero miden cosas distintas. Ahora la consulta trae primero la parte según la participación en cada concesión (el número del paso 1) y, en otra columna con su nombre, lo que declara como operadora. Resultado guardado de nuevo el 20 de octubre; la diapositiva usa la parte.

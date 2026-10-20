@@ -262,11 +262,11 @@ preguntas:
 externo:
   titulo: Datos de afuera (Wikidata)
   consulta: /layer/energia/externo/wikidata.rq
-  guardado: /layer/energia/externo/resultado-2026-10-19.csv
-  fecha_guardado: 19 oct 2026
+  guardado: /layer/energia/externo/resultado-2026-10-20.csv
+  fecha_guardado: 20 oct 2026
   intro: >-
     Una sola consulta une, en vivo, **Rastro** y **Wikidata**: las empresas con identificador global (LEI)
-    y el petróleo que declararon en 2025, con lo que Wikidata sabe de cada una (sede, en qué bolsa cotiza,
+    y el petróleo de 2025 que les corresponde según sus socios (el mismo número del paso 1), con lo que Wikidata sabe de cada una (sede, en qué bolsa cotiza,
     dueño o matriz y sitio web). No se carga nada: Rastro y Wikidata usan el mismo LEI.
   conclusion: >-
     Que YPF y Pampa Energía cotizan en la Bolsa de Nueva York no está en ninguna de las seis fuentes de
@@ -274,7 +274,8 @@ externo:
     Wikidata; por nombre aparecen otras, pero ese cruce necesitaría revisión y el LEI no.
   columnas:
     empresa: Empresa
-    petroleo_m3: Petróleo 2025 (m³)
+    su_parte_m3: Su parte del petróleo 2025 (m³)
+    declara_m3: Declara como operadora (m³)
     sede_segun_wikidata: Sede (Wikidata)
     cotiza_en: Cotiza en (Wikidata)
     duenio_o_matriz: Dueño o matriz (Wikidata)
