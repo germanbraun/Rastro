@@ -1,0 +1,30 @@
+# Una consulta, dos grafos: Rastro (Ontop de petróleo y gas) y Wikidata (internet).
+# Se ejecuta en GraphDB: http://localhost:7210/repositories/rastro
+# Las empresas con LEI y el petróleo que operaron en 2025, con lo que Wikidata sabe de cada una:
+# dónde tiene la sede, en qué bolsa cotiza, quién es su dueño o matriz y su sitio web. El cruce es
+# el LEI (identificador global de empresas, de GLEIF), que Rastro y Wikidata comparten.
+PREFIX energia: <https://w3id.org/rastro/energia#>
+PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+SELECT ?empresa ?lei ?petroleo_m3 ?wikidata
+       (GROUP_CONCAT(DISTINCT ?sede; separator=", ") AS ?sede_segun_wikidata)
+       (GROUP_CONCAT(DISTINCT ?bolsa; separator=", ") AS ?cotiza_en)
+       (GROUP_CONCAT(DISTINCT ?duenio; separator=", ") AS ?duenio_o_matriz)
+       (SAMPLE(?web) AS ?sitio) WHERE {
+  # Rastro, a través de Ontop: las empresas con LEI y el petróleo que declararon en 2025
+  SERVICE <http://ontop-energia:8080/sparql> {
+    SELECT ?empresa ?lei (ROUND(SUM(?o)) AS ?petroleo_m3) WHERE {
+      ?e energia:lei ?lei ; energia:name ?empresa .
+      ?q energia:declaredBy ?e ; energia:oil ?o .
+    } GROUP BY ?empresa ?lei
+  }
+  # Wikidata, en internet: la misma empresa por su LEI, y lo que ninguna fuente de Rastro tiene
+  SERVICE <https://query.wikidata.org/sparql> {
+    ?wikidata wdt:P1278 ?lei .
+    OPTIONAL { ?wikidata wdt:P159/rdfs:label ?sede . FILTER (LANG(?sede) = "es") }
+    OPTIONAL { ?wikidata wdt:P414/rdfs:label ?bolsa . FILTER (LANG(?bolsa) = "es") }
+    OPTIONAL { ?wikidata wdt:P749|wdt:P127 ?d . ?d rdfs:label ?duenio . FILTER (LANG(?duenio) = "es") }
+    OPTIONAL { ?wikidata wdt:P856 ?web }
+  }
+} GROUP BY ?empresa ?lei ?petroleo_m3 ?wikidata
+ORDER BY DESC(?petroleo_m3)

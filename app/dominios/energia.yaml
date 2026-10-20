@@ -325,6 +325,13 @@ faq:
     respuesta: >-
       Las armó un asistente de IA (por ejemplo, que la socia de YPF en Loma Campana es la empresa de
       Chevron); falta que una persona las confirme. Están en linking/energia/correcciones.csv, con su motivo.
+  - pregunta: ¿Se puede unir con datos de otras organizaciones, como Wikidata?
+    respuesta: >-
+      Sí, por el LEI, que Rastro y Wikidata usan igual. Una sola consulta en GraphDB une, en vivo y sin
+      cargar nada, las empresas de Rastro con lo que Wikidata sabe de ellas: sede, bolsa en la que cotizan
+      y sitio web. Así aparece que YPF y Pampa Energía cotizan en la Bolsa de Nueva York, un dato que no
+      está en ninguna de las seis fuentes. Solo 3 de las 12 empresas con LEI lo tienen cargado en
+      Wikidata (YPF, Pan American Energy y Pampa Energía). Detalle en layer/energia/externo/.
   - pregunta: ¿Dónde está cada pieza?
     tecnico: true
     respuesta: >-
