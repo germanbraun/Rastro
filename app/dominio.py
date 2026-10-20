@@ -843,9 +843,9 @@ def show_text_question(cfg, tech, demo=False):
               "trae exactamente lo que pide la pregunta, siempre lo mismo.")
     st.markdown(md(graph_part.strip()))
     st.metric(f"{unit[1].capitalize()} elegidos por el grafo", n)
-    if tech:
-        with st.expander("La consulta que elige los registros"):
-            st.code(query, language="sparql")
+    with st.expander("La consulta SPARQL que elige los registros", expanded=tech):
+        st.caption("Pide conceptos del diccionario, no palabras: por eso trae exactamente estos registros, siempre los mismos.")
+        st.code(query, language="sparql")
     if demo and item.get("busqueda_texto"):
         compare_text_search(item, records, domain, tech, always=True)
 

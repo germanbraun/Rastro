@@ -359,9 +359,9 @@ def show_text_question():
               "«inhibidor de quinasa» que deduce Rastro, así que trae exactamente esos ensayos.")
     st.markdown(graph_part.strip())
     st.metric("Ensayos elegidos por el grafo", len(texts))
-    if TECH:
-        with st.expander("La consulta que elige los ensayos"):
-            st.code(query, language="sparql")
+    with st.expander("La consulta SPARQL que elige los ensayos", expanded=TECH):
+        st.caption("Pide conceptos del diccionario, no palabras: por eso trae exactamente estos ensayos, siempre los mismos.")
+        st.code(query, language="sparql")
 
     text_step(3, "La IA lee solo esos textos", "El asistente de IA no busca nada por su cuenta: recibe estos motivos y ninguno más.")
     st.markdown(("Un asistente de IA" + ai_part).strip() if ai_part else f"Un asistente de IA leyó solo los {len(texts)} motivos.")
