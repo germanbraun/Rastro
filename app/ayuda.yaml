@@ -1,0 +1,72 @@
+# Ayuda rápida: el texto que aparece al pasar el mouse por el ícono «?» de cada parte de la app.
+# Una o dos oraciones, en palabras simples. La app las lee con dominio.ayuda("clave").
+
+dominio: >-
+  Cada dominio es el mismo Rastro con otras fuentes públicas: petróleo y gas en Argentina, contratos
+  del Estado de EE. UU. u oncología. Se elige uno y toda la app cambia.
+fuentes_barra: >-
+  Las bases públicas que integra este dominio, tal como se cargaron, con su licencia. Rastro no las
+  modifica: las traduce a un diccionario de negocio.
+llm: >-
+  El asistente de IA que traduce una pregunta propia en una consulta. Las preguntas de ejemplo no lo
+  necesitan: sus consultas ya están escritas y corren en vivo.
+modo: >-
+  Demo en 3 pasos: el recorrido guiado. Una pregunta de ejemplo: elegir entre las preguntas ya
+  preparadas. Una pregunta sobre textos: la IA resume solo los textos que eligió el grafo. Mi propia
+  pregunta: escribir una pregunta libre (necesita un asistente de IA configurado).
+pregunta: >-
+  Preguntas de ejemplo de este dominio. Cada una se responde en vivo sobre los datos, con una consulta
+  sobre el diccionario de negocio.
+paso: >-
+  Cada paso muestra un problema real de integración: a la izquierda, lo que da una consulta hecha a mano
+  sobre las bases tal como vienen; a la derecha, lo que da Rastro.
+sin_rastro: >-
+  Una consulta SQL escrita sobre las bases tal como vienen, sin los enlaces de Rastro: cada consulta
+  resuelve los cruces por su cuenta.
+con_rastro: >-
+  La misma pregunta, respondida sobre el diccionario de negocio de Rastro, que ya tiene las fuentes
+  unidas y con su evidencia.
+fuentes_respuesta: >-
+  Las fuentes de las que salen los datos de esta respuesta. «Enlaces de Rastro» son las uniones entre
+  fuentes que Rastro calculó una vez, con su evidencia (por ejemplo, que dos nombres son la misma empresa).
+explicar: >-
+  Explica en palabras de negocio qué hace la consulta y el SQL que generó Ontop.
+texto: >-
+  El grafo elige con una consulta exacta qué registros leer; después un asistente de IA resume solo esos
+  textos, citando cada registro. La IA no elige qué leer.
+propia: >-
+  Escribir una pregunta en palabras de negocio. Un asistente de IA la traduce en una consulta sobre el
+  diccionario; la consulta y el SQL quedan a la vista para revisarlos.
+confiar: >-
+  Tres pruebas medidas sobre datos reales, con el mismo asistente de IA: con Rastro y sin Rastro.
+tarjeta_correctas: >-
+  De las preguntas de la evaluación, cuántas respondió bien el asistente de IA. Las referencias las
+  revisó un asistente de IA; falta la confirmación de una persona.
+tarjeta_consistencia: >-
+  Cada pregunta se hizo de 4 formas con el mismo significado. Cuenta en cuántas la respuesta fue la misma
+  las 4 veces.
+tarjeta_cambio: >-
+  Se simuló que una fuente publica una versión nueva (una columna con otro nombre, otra unidad) y se contó
+  qué hubo que arreglar.
+tarjeta_auditar: >-
+  Cada enlace entre fuentes guarda qué decía cada fuente, la regla que se aplicó y de dónde salió (PROV-O).
+escenario: >-
+  Qué pasa con todas las preguntas de la evaluación cuando una base cambia, antes y después de arreglarlo.
+consola: >-
+  SPARQL es como SQL, pero sobre los conceptos del diccionario en lugar de las tablas. Ontop traduce cada
+  consulta a SQL y la ejecuta en vivo sobre Postgres; abajo se ve el SQL que generó.
+instancia: >-
+  Una instancia es un dato concreto del grafo (una concesión, una empresa, un enlace) con todas sus
+  propiedades. Se puede seguir un enlace para ver la entidad del otro lado.
+ontologia: >-
+  La ontología es el diccionario de negocio: qué conceptos hay (clases), cómo se relacionan (relaciones) y
+  qué datos tienen (atributos). Es lo que lee el asistente de IA en lugar de las tablas.
+enlaces: >-
+  El entity linking crea la clave que falta entre fuentes: decide, con una regla escrita, que dos registros
+  hablan de lo mismo, y guarda la evidencia.
+mapeos: >-
+  Un mapeo R2RML dice qué columna de qué tabla es cada concepto del diccionario. Es como la definición de
+  una vista: si una fuente cambia, se arregla acá.
+mapa: >-
+  Contornos de las concesiones (en rojo, las que hay que revisar), posibles venteos vistos por satélite y
+  gasoductos de transporte de ENARGAS. Las geometrías están en el grafo con el estándar GeoSPARQL.

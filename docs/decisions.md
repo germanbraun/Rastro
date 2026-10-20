@@ -478,3 +478,7 @@ Oncología ya unía Rastro con Wikidata en vivo (`layer/externo/`); petróleo y 
 - **Solo 3 de las 12 empresas con LEI están en Wikidata con ese LEI:** YPF, Pan American Energy y Pampa Energía. Lo nuevo: YPF y Pampa cotizan en la Bolsa de Nueva York, un dato que no está en ninguna de las seis fuentes. Ninguna tiene dueño o matriz cargados, lo que confirma que los grupos siguen siendo correcciones revisadas.
 - **Sin cruce por nombre:** por nombre exacto aparecen Pluspetrol, Tecpetrol, Compañía General de Combustibles y Vista, pero son el grupo y no la sociedad argentina, y Vista tiene dos entradas. Usarlos pediría una revisión; el LEI, no.
 - **No es una pregunta de ejemplo:** las preguntas de la app corren en Ontop, que no consulta grafos de afuera. Queda como pregunta frecuente en `app/dominios/energia.yaml` y como diapositiva del anexo (`e-externo`).
+
+## 2026-10-20 — Íconos «?» con ayuda rápida
+
+La app tiene muchos detalles. Cada parte importante suma un ícono «?» que, al pasar el mouse, explica en una o dos oraciones qué se está viendo: el dominio, el tipo de pregunta, cada paso de la demo, «Sin Rastro» y «Con Rastro», las fuentes de una respuesta, cada tarjeta de «Por qué confiar», los escenarios de cambio, el mapa, la consola SPARQL, la instancia, la ontología, el entity linking y los mapeos. Los textos están todos en `app/ayuda.yaml`, para corregirlos en un solo lugar.

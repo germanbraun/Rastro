@@ -39,6 +39,17 @@ def _load_yaml(path, mtime):   # la fecha del archivo es parte de la clave: si c
 
 
 @st.cache_data
+def _ayuda(mtime):
+    return yaml.safe_load(Path("/app/ayuda.yaml").read_text()) or {}
+
+
+def ayuda(key):
+    """El texto del ícono «?» de cada parte de la app (app/ayuda.yaml)."""
+    p = Path("/app/ayuda.yaml")
+    return _ayuda(p.stat().st_mtime).get(key) if p.exists() else None
+
+
+@st.cache_data
 def _load_json(path, mtime):
     return json.loads(Path(path).read_text())
 
@@ -99,10 +110,10 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
     labels = cfg.get("fuentes", {})
     used, col_sources = answer.column_sources(query, domain)
     if tech:
-        st.markdown("**Fuentes que usó esta respuesta:** " + " · ".join(f"`{labels.get(s, s)}`" for s in used))
+        st.markdown("**Fuentes que usó esta respuesta:** " + " · ".join(f"`{labels.get(s, s)}`" for s in used), help=ayuda("fuentes_respuesta"))
     else:
         names = [info[s]["name"] for s in used if s in info] + (["enlaces de Rastro"] if "rastro" in used else [])
-        st.markdown("**Fuentes:** " + ", ".join(names))
+        st.markdown("**Fuentes:** " + ", ".join(names), help=ayuda("fuentes_respuesta"))
     if not rows:
         st.info("La consulta no devolvió resultados.")
     else:
@@ -337,7 +348,7 @@ def ontology_doc(domain):
 def show_pieces(domain, diagram=None):
     """La pestaña técnica «Diccionario, enlaces y mapeos»."""
     pieces = PIECES.get(domain, {})
-    st.markdown("### El diccionario (la ontología)")
+    st.markdown("### El diccionario (la ontología)", help=ayuda("ontologia"))
     st.caption(f"Documentación generada del archivo de la ontología (`{ONTOLOGY_FILE[domain].replace('/ontology/', 'ontology/')}`), "
                "como la que arman herramientas de documentación de ontologías (por ejemplo, WIDOCO).")
     if diagram and Path(f"/app/{diagram}.svg").exists():
@@ -349,7 +360,7 @@ def show_pieces(domain, diagram=None):
             st.dataframe(pd.DataFrame(rows), hide_index=True, use_container_width=True,
                          column_config={"Descripción": st.column_config.TextColumn(width="large")})
     if pieces.get("enlaces"):
-        st.markdown("### Entity linking: algunos enlaces que usa la demo")
+        st.markdown("### Entity linking: algunos enlaces que usa la demo", help=ayuda("enlaces"))
         st.caption("Registros reales de las tablas de enlaces de Rastro: qué decía cada fuente, qué decidió Rastro y con qué regla.")
         for title, query in pieces["enlaces"]:
             st.markdown(f"**{title}**")
@@ -361,7 +372,7 @@ def show_pieces(domain, diagram=None):
             with st.expander("La consulta"):
                 st.code(sqlparse.format(query, reindent=True, keyword_case="upper"), language="sql")
     if pieces.get("mapas"):
-        st.markdown("### Mapeos (R2RML): los que usa la demo")
+        st.markdown("### Mapeos (R2RML): los que usa la demo", help=ayuda("mapeos"))
         st.caption(f"Cómo se traduce cada tabla al diccionario, tal como está en `{pieces['mapeos'].lstrip('/')}`. "
                    "Si una fuente cambia, se arregla acá.")
         for title, names in pieces["mapas"]:
@@ -411,7 +422,7 @@ def show_instances(domain):
     examples = INSTANCES.get(domain)
     if not examples:
         return
-    st.markdown("### Así se ve un dato del grafo")
+    st.markdown("### Así se ve un dato del grafo", help=ayuda("instancia"))
     st.caption("Una entidad real del grafo. Burbuja azul: una entidad; burbuja naranja: su clase en el diccionario; "
                "rectángulo: un dato simple (texto, número o fecha). Cada flecha es una propiedad, con su nombre de "
                "negocio. Los enlaces traen su evidencia y su fuente (PROV-O).")
@@ -457,7 +468,7 @@ def sparql_console(domain):
     """Una consola para escribir y ejecutar SPARQL sobre el Ontop del dominio, con el SQL que genera."""
     folder, port = CONSOLE[domain]
     show_instances(domain)
-    st.markdown("### Consola SPARQL")
+    st.markdown("### Consola SPARQL", help=ayuda("consola"))
     st.caption(f"Corre sobre el Ontop de este dominio. Otras herramientas pueden usar el mismo endpoint: "
                f"`http://localhost:{port}/sparql`.")
     examples = {}
@@ -537,7 +548,7 @@ def show_map(domain):
                     use_container_width=True)
     st.caption("Puntos rojos: posibles venteos vistos por satélite desde 2024. Líneas ámbar: gasoductos de transporte "
                "(ENARGAS). Concesiones en rojo: para revisar, según la regla del diccionario; en azul, con posibles "
-               "venteos. Todo sale de Rastro, con geometrías en el estándar de OGC (GeoSPARQL).")
+               "venteos. Todo sale de Rastro, con geometrías en el estándar de OGC (GeoSPARQL).", help=ayuda("mapa"))
 
 
 def short(value):
@@ -558,9 +569,9 @@ def render(cfg_path, tech):
     with st.sidebar:
         if tech:
             available, status = llm_status()
-            st.subheader("LLM")
+            st.subheader("LLM", help=ayuda("llm"))
             st.markdown(("🟢 " if available else "⚪ ") + status)
-            st.subheader("Fuentes")
+            st.subheader("Fuentes", help=ayuda("fuentes_barra"))
             for key, info in sources(domain).items():
                 st.markdown(f"🐘 **{info['name']}**  \n<small>{info['license']}</small>", unsafe_allow_html=True)
         else:
@@ -580,8 +591,8 @@ def render(cfg_path, tech):
     with ask_tab:
         modes = ((["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Una pregunta de ejemplo"]
                  + (["Una pregunta sobre textos"] if cfg.get("texto") else []))
-        mode = st.radio("Tipo de pregunta", modes + ["Mi propia pregunta"],
-                        horizontal=True, label_visibility="collapsed", key=f"{domain}_mode")
+        mode = st.radio("Tipo de pregunta", modes + ["Mi propia pregunta"], help=ayuda("modo"),
+                        horizontal=True, label_visibility="visible", key=f"{domain}_mode")
         if mode == "Demo en 3 pasos":
             show_demo(cfg, tech)
         elif mode == "Una pregunta sobre textos":
@@ -589,7 +600,7 @@ def render(cfg_path, tech):
         elif mode == "Una pregunta de ejemplo":
             # La misma pregunta en las dos vistas; la técnica suma su formulación precisa debajo
             options = {q["simple"]: q for q in questions}
-            chosen = st.selectbox("Pregunta", list(options), key=f"{domain}_question")
+            chosen = st.selectbox("Pregunta", list(options), key=f"{domain}_question", help=ayuda("pregunta"))
             item = options[chosen]
             if tech:
                 st.caption("Formulación técnica: " + md(item["tecnica"]))
@@ -608,7 +619,7 @@ def render(cfg_path, tech):
                             note="Se ejecuta ahora, en vivo, sobre los datos.")
         else:
             available, _ = llm_status()
-            question = st.text_area("Pregunta", placeholder=cfg.get("ejemplo_libre", ""), key=f"{domain}_free")
+            question = st.text_area("Pregunta", placeholder=cfg.get("ejemplo_libre", ""), key=f"{domain}_free", help=ayuda("propia"))
             if st.button("Responder", type="primary", disabled=not available or not question.strip(),
                          key=f"{domain}_free_answer"):
                 with st.spinner("El LLM está escribiendo la query..."):
@@ -678,7 +689,7 @@ def before_after(card):
     left, right = st.columns(2)
     for col, key, title in [(left, "sin", card.get("titulo_sin", "Sin Rastro")), (right, "con", "Con Rastro")]:
         with col.container(border=True):
-            st.caption(title)
+            st.caption(title, help=ayuda("sin_rastro" if key == "sin" else "con_rastro"))
             st.markdown(f"### {'⚪' if key == 'sin' else '🟢'} {md(card[key]['valor'])}")
             st.markdown(md(card[key]["detalle"]))
 
@@ -691,7 +702,7 @@ def show_demo(cfg, tech):
     st.markdown(" → ".join(f"**{n + 1} · {s['paso']}**" if n == i else f"{n + 1} · {s['paso']}"
                            for n, s in enumerate(steps)))
     step = steps[i]
-    st.subheader(step["titulo"])
+    st.subheader(step["titulo"], help=ayuda("paso"))
     if step.get("texto"):
         show_text_question(cfg, tech, demo=True)
     else:
@@ -719,6 +730,7 @@ def show_text_question(cfg, tech, demo=False):
     contratos y sus montos se leen en vivo."""
     domain = cfg["domain"]
     item = read_json(cfg["texto"])
+    st.markdown("**Una pregunta sobre textos**", help=ayuda("texto"))
     st.info(f"**{md(item['simple'])}**")
     if tech:
         st.caption("Formulación técnica: " + md(item["pregunta"]))
@@ -838,11 +850,12 @@ def trust(cfg, tech, evaluation, changes):
                "n_consistency": len(consistency), "b_broken": broken,
                "c_correct": totals.get("C", {}).get("correct", "—"), "b_correct": totals.get("B", {}).get("correct", "—"),
                "n_questions": len(evaluation.get("questions", {}))}
-    st.markdown("### Por qué confiar")
+    st.markdown("### Por qué confiar", help=ayuda("confiar"))
     st.caption("El mismo asistente de IA, sin Rastro (escribe SQL sobre las bases tal como vienen) y con Rastro.")
-    for col, card in zip(st.columns(len(cfg["tarjetas"])), cfg["tarjetas"]):
+    card_help = ["tarjeta_correctas", "tarjeta_consistencia", "tarjeta_cambio", "tarjeta_auditar"]
+    for k, (col, card) in enumerate(zip(st.columns(len(cfg["tarjetas"])), cfg["tarjetas"])):
         with col.container(border=True):
-            st.markdown(f"**{md(card['titulo'])}**")
+            st.markdown(f"**{md(card['titulo'])}**", help=ayuda(card_help[k]) if k < len(card_help) else None)
             st.markdown(f'<p style="font-size:2.4rem;line-height:1.1;margin:0">{card["valor"].format(**numbers)}</p>',
                         unsafe_allow_html=True)
             st.caption(md(card["compara"].format(**numbers)))
@@ -890,7 +903,7 @@ def trust(cfg, tech, evaluation, changes):
     with tab_change if tech else st.expander("Ver los escenarios de cambio"):
         scenarios = {c["titulo"]: c for c in cfg.get("cambios", [])}
         st.caption(f"Qué pasa con las {n} preguntas de la evaluación, todas juntas, cuando una base cambia.")
-        picked = st.radio("Escenario", list(scenarios), horizontal=True, label_visibility="collapsed",
+        picked = st.radio("Escenario", list(scenarios), horizontal=True, label_visibility="visible", help=ayuda("escenario"),
                           key=f"{cfg['domain']}_scenario")
         change = scenarios[picked]
         before, after = changes.get(change["antes"]), changes.get(change["despues"])

@@ -32,6 +32,7 @@ sys.path.insert(0, "/layer/eval")
 
 import answer  # noqa: E402
 from run import NAMES, normalize, score  # noqa: E402
+from dominio import ayuda  # noqa: E402  (el texto de los íconos «?»)
 
 EVAL = Path("/layer/eval")
 SOURCE_LABEL = {"aact": "AACT", "chembl": "ChEMBL", "openfda": "openFDA", "mesh": "MeSH",
@@ -383,9 +384,9 @@ def show_answer(query, columns, rows, note=None):
     info = sources()
 
     if TECH:
-        st.markdown("**Fuentes que usó esta respuesta:** " + " · ".join(f"`{label(s)}`" for s in used))
+        st.markdown("**Fuentes que usó esta respuesta:** " + " · ".join(f"`{label(s)}`" for s in used), help=ayuda("fuentes_respuesta"))
     else:
-        st.markdown("**Fuentes:** " + ", ".join(info[s]["name"] for s in used if s in info))
+        st.markdown("**Fuentes:** " + ", ".join(info[s]["name"] for s in used if s in info), help=ayuda("fuentes_respuesta"))
     if not rows:
         st.info("La consulta no devolvió resultados.")
     else:
@@ -488,7 +489,7 @@ st.markdown("**Los datos cambian. Las preguntas, no.**")
 DOMAINS = yaml.safe_load(Path("/app/dominios.yaml").read_text())
 available, status = llm_status()
 with st.sidebar:
-    DOMAIN = st.radio("Dominio", DOMAINS, format_func=lambda d: d["name"], key="domain")
+    DOMAIN = st.radio("Dominio", DOMAINS, format_func=lambda d: d["name"], key="domain", help=ayuda("dominio"))
     TECH = st.toggle("Ver detalles técnicos", value=False,
                      help="Muestra las consultas, el SQL, la evidencia en PROV-O y la comparación completa.")
 if DOMAIN.get("config"):
@@ -500,11 +501,11 @@ if DOMAIN.get("config"):
 
 with st.sidebar:
     if TECH:
-        st.subheader("LLM")
+        st.subheader("LLM", help=ayuda("llm"))
         st.markdown(("🟢 " if available else "⚪ ") + status)
         if not available:
             st.caption("Las preguntas de ejemplo funcionan igual.")
-        st.subheader("Fuentes")
+        st.subheader("Fuentes", help=ayuda("fuentes_barra"))
         for key, info in sources().items():
             st.markdown(f"{STORAGE.get(key, '')} **{info['name']}**  \n<small>{info['license']}</small>",
                         unsafe_allow_html=True)
@@ -526,7 +527,7 @@ FAQ_HINT = "Para dudas, consulte la pestaña **Preguntas frecuentes**."
 with ask_tab:
     mode = st.radio("Tipo de pregunta",
                     ["Una pregunta de ejemplo", "Una pregunta sobre textos", "Mi propia pregunta"],
-                    horizontal=True, label_visibility="collapsed")
+                    horizontal=True, label_visibility="visible", help=ayuda("modo"))
     if mode == "Una pregunta sobre textos":
         show_text_question()
     elif mode == "Una pregunta de ejemplo":
@@ -553,7 +554,7 @@ with ask_tab:
                              "se ejecuta ahora, en vivo, sobre los datos.")
     else:
         question = st.text_area("Pregunta", placeholder="Por ejemplo: ¿qué fármacos contra KRAS "
-                                "se prueban en ensayos de cáncer de páncreas?")
+                                "se prueban en ensayos de cáncer de páncreas?", help=ayuda("propia"))
         if st.button("Responder", type="primary", disabled=not available or not question.strip()):
             with st.spinner("El LLM está escribiendo la query..."):
                 result = answer.ask_rastro(question)
@@ -601,15 +602,15 @@ def same_answers(values):
 
 with trust_tab:
     data = saved()["questions"]
-    st.markdown("### Por qué confiar")
+    st.markdown("### Por qué confiar", help=ayuda("confiar"))
     st.caption("El mismo asistente de IA, sin Rastro (escribe SQL sobre las bases tal como vienen) y con Rastro.")
     cards = st.columns(3)
-    for col, (title, value, compare) in zip(cards, [
-            ("La misma pregunta, la misma respuesta", "10 de 10", "Sin Rastro: 1 de 10"),
-            ("Si una base cambia, se arregla con", "1 línea", "Sin Rastro: reescribir 5 consultas"),
-            ("Cada respuesta se puede auditar", "Sí", "Con la evidencia de cada fármaco")]):
+    for col, (title, value, compare, tip) in zip(cards, [
+            ("La misma pregunta, la misma respuesta", "10 de 10", "Sin Rastro: 1 de 10", "tarjeta_consistencia"),
+            ("Si una base cambia, se arregla con", "1 línea", "Sin Rastro: reescribir 5 consultas", "tarjeta_cambio"),
+            ("Cada respuesta se puede auditar", "Sí", "Con la evidencia de cada fármaco", "tarjeta_auditar")]):
         with col.container(border=True):
-            st.markdown(f"**{title}**")
+            st.markdown(f"**{title}**", help=ayuda(tip))
             st.markdown(f'<p style="font-size:2.4rem;line-height:1.1;margin:0">{value}</p>',
                         unsafe_allow_html=True)
             st.caption(compare)
@@ -788,7 +789,7 @@ with trust_tab:
         names = CHANGE_NAMES if TECH else {"B": "Sin Rastro", "C": "Con Rastro"}
         scenario = st.radio("Escenario", list(CHANGES) + ["Cambia una definición de negocio"]
                             + (["Se suma una fuente: Wikidata"] if TECH else []),
-                            horizontal=True, label_visibility="collapsed")
+                            horizontal=True, label_visibility="visible", help=ayuda("escenario"))
         if scenario in CHANGES:
             change = CHANGES[scenario]
             recorded = json.loads(Path("/layer/cambio/resultado.json").read_text())
