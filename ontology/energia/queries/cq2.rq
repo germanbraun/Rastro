@@ -1,9 +1,11 @@
-# 2. ¿Cuántos pozos opera hoy YPF, y en cuántos no coinciden las fuentes?
+# 2. ¿Cuántos pozos opera hoy YPF, de qué tipo, y en cuántos no coinciden las fuentes?
 PREFIX energia: <https://w3id.org/rastro/energia#>
 
-SELECT ?rule (COUNT(?w) AS ?wells)
+SELECT ?type (COUNT(?w) AS ?wells) (SUM(IF(?rule = "rige la declaración jurada", 1, 0)) AS ?disagree)
 WHERE {
   ?l a energia:OperatorLink ; energia:aboutWell ?w ; energia:company/energia:name "YPF S.A." ; energia:rule ?rule .
+  OPTIONAL { ?w energia:wellType ?t }
+  BIND (COALESCE(?t, "sin dato") AS ?type)
 }
-GROUP BY ?rule
+GROUP BY ?type
 ORDER BY DESC(?wells)

@@ -65,9 +65,56 @@ def sources(domain):
     return {r[0]: {"name": r[1], "license": r[2]} for r in rows}
 
 
-@st.cache_data
-def run(query, domain):
+@st.cache_data(ttl=60, show_spinner=False)
+def data_version(domain):
+    """Cambia cuando cambian los datos (cargas y enlaces) o el diccionario y los mapeos: con ella, las
+    respuestas guardadas en disco se vuelven a calcular solo si hace falta."""
+    import psycopg
+    with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
+                         f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:
+        # las cargas registradas y las tablas de enlaces: al rearmarse, cada tabla tiene otro identificador
+        loads, inserts = conn.execute(
+            "SELECT (SELECT max(loaded_at)::text FROM rastro_meta.load_run), "
+            "(SELECT md5(string_agg(c.oid::text, ',' ORDER BY c.oid)) FROM pg_class c "
+            " JOIN pg_namespace n ON n.oid = c.relnamespace "
+            " WHERE n.nspname IN ('energia', 'proveedores', 'linking') AND c.relkind = 'r')").fetchone()
+    files = [Path(answer.ROOT / f) for f in (f"mappings/{'rastro' if domain == 'oncologia' else domain}.r2rml.ttl",
+                                             answer.DOMAINS[domain]["ontology"])]
+    return f"{loads}|{inserts}|" + "|".join(str(f.stat().st_mtime) if f.exists() else "" for f in files)
+
+
+@st.cache_data(persist="disk", show_spinner=False)
+def _run_saved(query, domain, version):
     return answer.run_sparql_table(query, domain)
+
+
+def run(query, domain):
+    """Una consulta sobre Rastro. La respuesta se guarda en disco: sobrevive a que la app se reinicie, y se
+    vuelve a calcular si cambian los datos o los mapeos (data_version)."""
+    return _run_saved(query, domain, data_version(domain))
+
+
+@st.cache_resource
+def warm_up():
+    """Precalentamiento: la primera vez que alguien abre la app, se calculan en segundo plano todas las
+    preguntas de ejemplo de los dominios, para que la demo no espere."""
+    import threading
+
+    def work():
+        for config in sorted(Path("/app/dominios").glob("*.yaml")):
+            cfg = yaml.safe_load(config.read_text())
+            for q in cfg.get("preguntas", []):
+                try:
+                    columns, rows = run(Path(q["query"]).read_text(), cfg["domain"])
+                    why = q.get("porque")
+                    if why and rows and why["columna"] in columns:   # la primera fila de «¿Por qué este número?»
+                        value = str(rows[0][columns.index(why["columna"])]).replace('"', '\\"')
+                        run(prefixed(why["query"].replace("{valor}", value), cfg["domain"]), cfg["domain"])
+                except Exception:   # noqa: BLE001 - un dominio apagado no frena a los otros
+                    continue
+
+    threading.Thread(target=work, daemon=True).start()
+    return True
 
 
 def prefixed(query, domain):
@@ -595,6 +642,7 @@ def short(value):
 
 
 def render(cfg_path, tech):
+    warm_up()
     cfg = load_config(cfg_path)
     domain = cfg["domain"]
     evaluation = read_json(cfg["evaluacion"]) if cfg.get("evaluacion") else {}

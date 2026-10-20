@@ -33,7 +33,7 @@ def _sites(mtime):
     return yaml.safe_load(Path("/app/sitios.yaml").read_text()) or {}
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner=False, persist="disk")   # en disco: los íconos no se piden de nuevo al reiniciar
 def icon(domain):
     """El favicon como imagen incrustada (data URI), o None si no se pudo traer. Si Google no lo
     tiene, se prueba el servicio de íconos de DuckDuckGo."""

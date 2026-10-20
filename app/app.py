@@ -32,7 +32,7 @@ sys.path.insert(0, "/layer/eval")
 
 import answer  # noqa: E402
 from run import NAMES, normalize, score  # noqa: E402
-from dominio import ayuda, tabla  # noqa: E402  (los íconos «?» y las tablas con texto largo)
+from dominio import ayuda, tabla, warm_up  # noqa: E402  (los íconos «?», las tablas con texto largo y el precalentamiento)
 
 EVAL = Path("/layer/eval")
 SOURCE_LABEL = {"aact": "AACT", "chembl": "ChEMBL", "openfda": "openFDA", "mesh": "MeSH",
@@ -526,6 +526,7 @@ st.markdown("**Los datos cambian. Las preguntas, no.**")
 # a partir de su configuración (app/dominios.yaml)
 DOMAINS = yaml.safe_load(Path("/app/dominios.yaml").read_text())
 available, status = llm_status()
+warm_up()   # las preguntas de ejemplo de los dominios, en segundo plano
 with st.sidebar:
     DOMAIN = st.radio("Dominio", DOMAINS, format_func=lambda d: d["name"], key="domain", help=ayuda("dominio"))
     TECH = st.toggle("Ver detalles técnicos", value=False,

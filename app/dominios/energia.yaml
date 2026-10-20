@@ -73,7 +73,9 @@ columnas:
   gasShare: Gas que le corresponde (miles de m³)
   operated: Petróleo que declara como operadora (m³)
   rule: Regla
+  type: Tipo de pozo
   wells: Pozos
+  disagree: El padrón dice otra empresa
   concession: Concesión
   operator: Operadora
   detected: Posibles venteos (satélite)
@@ -160,31 +162,32 @@ preguntas:
   - id: e02
     query: /ontology/energia/queries/cq2.rq
     porque:
-      columna: rule
-      titulo: "Pozos de YPF por la regla «{valor}»"
-      explica: "Para cada pozo, Rastro guarda qué dice cada fuente y qué regla decidió quién lo opera."
+      columna: type
+      titulo: "Pozos «{valor}» de YPF: quién los opera y por qué"
+      explica: "Para cada pozo, Rastro guarda qué dice cada fuente y qué regla decidió quién lo opera. Algunos ejemplos:"
       query: |
-        SELECT ?pozo ?texto (GROUP_CONCAT(DISTINCT ?f; separator=", ") AS ?fuente) WHERE {
-          ?l a energia:OperatorLink ; energia:aboutWell/energia:wellId ?pozo ; energia:company/energia:name "YPF S.A." ;
-             energia:rule "{valor}" ; energia:sourceText ?texto ; prov:wasDerivedFrom/energia:name ?f .
-        } GROUP BY ?pozo ?texto ORDER BY ?pozo LIMIT 12
+        SELECT ?pozo ?regla ?texto WHERE {
+          ?l a energia:OperatorLink ; energia:aboutWell ?w ; energia:company/energia:name "YPF S.A." ;
+             energia:rule ?regla ; energia:sourceText ?texto .
+          ?w energia:wellId ?pozo ; energia:wellType "{valor}" .
+        } ORDER BY DESC(?regla) ?pozo LIMIT 12
       nodo: "Pozo {pozo}"
-      detalle: ""
+      detalle: "{regla}"
       flecha: lo opera
-      columnas: {pozo: Pozo, texto: "Evidencia: qué dice cada fuente", fuente: Fuentes}
+      columnas: {pozo: Pozo, regla: Regla, texto: "Evidencia: qué dice cada fuente"}
     explicacion: |
-      - **Qué busca:** los enlaces «operadora de un pozo» que nombran a YPF, agrupados por la regla que se aplicó.
-      - **Qué devuelve:** cuántos pozos opera YPF cuando las fuentes coinciden y cuántos cuando rige la declaración jurada porque el padrón dice otra cosa.
+      - **Qué busca:** los enlaces «operadora de un pozo» que nombran a YPF, agrupados por tipo de pozo (petrolífero, gasífero, de inyección…).
+      - **Qué devuelve:** cuántos pozos de cada tipo opera YPF y en cuántos rige la declaración jurada porque el padrón dice otra empresa. Son todos los pozos que YPF declara en 2025, produzcan o no.
       - **Lo que en SQL habría que hacer a mano:** decidir en cada consulta qué fuente manda (padrón o declaraciones). Acá la regla está escrita una vez, y cada pozo guarda su evidencia.
-    simple: ¿Cuántos pozos opera hoy YPF?
-    tecnica: ¿Cuántos pozos con producción en 2025 opera hoy YPF, y en cuántos no coinciden las fuentes?
+    simple: ¿Cuántos pozos opera hoy YPF, y de qué tipo?
+    tecnica: ¿Cuántos pozos con declaración jurada en 2025 opera hoy YPF, por tipo de pozo (energia:wellType), y en cuántos no coinciden las fuentes?
     ventaja: "El padrón de pozos y las declaraciones juradas no siempre nombran a la misma operadora. Rastro aplica una regla escrita una vez (rige quien declara la producción del último mes) y deja a la vista lo que dice el padrón en cada pozo."
     terminos:
       Declaración jurada: lo que cada empresa informa todos los meses a la Secretaría de Energía sobre la producción de cada pozo.
       Padrón de pozos: el registro de todos los pozos, con su ubicación y su empresa.
     antes_despues:              # layer/energia/sin-rastro.sql, consulta 2
       sin: {valor: "12.006 o 15.809", detalle: "Dos respuestas: el padrón de pozos dice 12.006 y las declaraciones juradas, 15.809. En 3.796 pozos el padrón nombra a otra empresa (Pecom, Velitec, Copesa)."}
-      con: {valor: "15.809 pozos", detalle: "Una regla escrita: rige quien declara la producción del último mes. Lo que dice el padrón queda a la vista en cada pozo."}
+      con: {valor: "15.809 pozos", detalle: "Una regla escrita: rige quien declara la producción del último mes. Lo que dice el padrón queda a la vista en cada pozo. Son pozos de todo tipo: 5.391 petrolíferos, 1.394 gasíferos, 1.318 de inyección y 7.579 de otro tipo; 5.689 produjeron petróleo o gas en 2025."}
     evidencia:
       texto: "Pozos donde las fuentes no coinciden (algunos ejemplos):"
       formato: "**Pozo {pozo}**: {evidencia}"

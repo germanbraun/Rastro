@@ -23,7 +23,7 @@ Debajo de la tabla, en **¿Por qué este número?**, elegir YPF: aparece su part
 
 ## 2:00 – 3:00 · 2 · Trazabilidad (app, paso 2; diapositiva 6)
 
-> «¿Cuántos pozos opera YPF? El padrón dice 12.006; las declaraciones juradas, 15.809. Rastro aplica una regla escrita, rige quien declara el último mes, y en cada pozo muestra lo que dice el padrón.»
+> «¿Cuántos pozos opera YPF? El padrón dice 12.006; las declaraciones juradas, 15.809. Rastro aplica una regla escrita, rige quien declara el último mes, y en cada pozo muestra lo que dice el padrón. Son pozos de todo tipo: 5.391 petrolíferos, 1.394 gasíferos y el resto de inyección o parados; 5.689 produjeron petróleo o gas en 2025.»
 
 Abrir **¿De dónde sale la respuesta?** para mostrar un pozo en desacuerdo.
 
