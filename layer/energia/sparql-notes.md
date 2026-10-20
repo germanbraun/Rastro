@@ -13,5 +13,6 @@ Endpoint SPARQL de Rastro (Ontop) sobre cinco fuentes públicas: la producción 
 - `energia:lei` de una `energia:Company` es su identificador global en GLEIF (solo las que lo tienen).
 - Los nombres de empresas están como en cada fuente, casi siempre en mayúsculas y con su forma societaria («S.A.», «SAU», «S.R.L.»).
 - `energia:ConcessionToReview` (concesión para revisar) se deduce de `energia:VentingFarFromPipeline` y `energia:VentingWithoutReports`; `energia:reviewReason` dice el motivo.
+- `energia:OperatorChange` (cambio de operadora, 2023 a 2025): una concesión (`energia:inConcession`) pasa de `energia:previousCompany` a `energia:newCompany` desde `energia:month`; la nueva declara la mayor parte de la producción al menos 3 meses seguidos.
 - Las concesiones, los venteos y los gasoductos (`energia:Pipeline`) tienen su geometría en `geo:asWKT` (GeoSPARQL; prefijo `PREFIX geo: <http://www.opengis.net/ont/geosparql#>`).
 - El endpoint no soporta caminos de largo arbitrario (`*`, `+`).

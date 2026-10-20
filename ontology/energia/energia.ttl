@@ -193,7 +193,7 @@ geo:asWKT a owl:DatatypeProperty ; rdfs:label "geometría (WKT)"@es ;
 energia:OperatorChange a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Cambio de operadora"@es ;
-    rdfs:comment "Una concesión pasa a otra operadora: desde ese mes, otra empresa declara la mayor parte de su producción, al menos 3 meses seguidos. Guarda lo que producía la concesión por mes, en promedio, antes y después."@es .
+    rdfs:comment "Una concesión pasa a otra operadora: desde ese mes, otra empresa declara la mayor parte de su producción, al menos 3 meses seguidos. Un mes sin producción cuenta si lo declara una sola empresa. Guarda lo que producía la concesión por mes, en promedio, antes y después."@es .
 
 energia:previousCompany a owl:ObjectProperty ; rdfs:domain energia:OperatorChange ; rdfs:range energia:Company ; rdfs:label "operadora anterior"@es .
 energia:newCompany a owl:ObjectProperty ; rdfs:domain energia:OperatorChange ; rdfs:range energia:Company ; rdfs:label "operadora nueva"@es .

@@ -163,7 +163,7 @@ Rastro cuenta 60 posibles venteos dentro de un área protegida del IGN. Abrí un
 
 ### 6e. Cambios de operadora
 
-Rastro marca 55 cambios de operadora entre 2023 y 2025. ¿Coinciden estos con las cesiones conocidas (por ejemplo, las áreas maduras que YPF cedió)?
+Rastro marca 64 cambios de operadora entre 2023 y 2025 (9 de ellos en áreas sin producción, donde cambió la empresa que presenta las declaraciones). ¿Coinciden estos con las cesiones conocidas (por ejemplo, las áreas maduras que YPF cedió)?
 
 | Concesión | Desde | Antes | Después | ¿Coincide? |
 |---|---|---|---|---|
