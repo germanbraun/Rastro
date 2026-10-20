@@ -334,48 +334,66 @@ TEXT_QUESTION = Path("/layer/textos/detenidos-pulmon.json")
 
 
 def show_text_question():
-    """Una pregunta sobre textos: el grafo elige los ensayos con una consulta exacta y un asistente de
-    IA resume solo sus motivos, citando cada ensayo. El resumen está guardado; los textos se leen en vivo."""
+    """Una pregunta sobre textos, paso a paso (GraphRAG anclado en el grafo): el grafo elige los ensayos
+    con una consulta exacta, un asistente de IA resume solo sus motivos citando cada ensayo, se puede
+    comprobar, y el motivo pasa a ser un dato del grafo. El resumen está guardado; los textos se leen en vivo."""
+    from dominio import text_step
     item = json.loads(TEXT_QUESTION.read_text())
-    st.info(f"**{item['pregunta'] if TECH else item['simple']}**")
-    if not st.button("Responder", type="primary", key="text_answer"):
+    st.markdown("**1 · La pregunta → 2 · El grafo elige → 3 · La IA lee solo eso → 4 · El resumen, con citas "
+                "→ 5 · Comprobar → 6 · El texto pasa a ser dato**", help=ayuda("texto"))
+    text_step(1, "La pregunta")
+    st.info(f"**{item['simple']}**")
+    if TECH:
+        st.caption("Formulación técnica: " + item["pregunta"])
+    if st.button("Responder", type="primary", key="text_answer"):
+        st.session_state["text_shown"] = True
+    if not st.session_state.get("text_shown"):
         return
     query = Path(item["consulta"]).read_text()
     _, rows = answer.run_sparql_table(query)
     texts = {nct: (status, drugs, why) for nct, status, drugs, why in rows}
-    st.markdown(f"Rastro encontró **{len(texts)} ensayos** con su motivo escrito. Por qué se detuvieron:")
+    graph_part, _, ai_part = item["como"].partition("Un asistente de IA")
+
+    text_step(2, "El grafo elige, con una consulta exacta",
+              "No es una búsqueda por palabras: la consulta usa la jerarquía de enfermedades de MeSH y la clase "
+              "«inhibidor de quinasa» que deduce Rastro, así que trae exactamente esos ensayos.")
+    st.markdown(graph_part.strip())
+    st.metric("Ensayos elegidos por el grafo", len(texts))
+    if TECH:
+        with st.expander("La consulta que elige los ensayos"):
+            st.code(query, language="sparql")
+
+    text_step(3, "La IA lee solo esos textos", "El asistente de IA no busca nada por su cuenta: recibe estos motivos y ninguno más.")
+    st.markdown(("Un asistente de IA" + ai_part).strip() if ai_part else f"Un asistente de IA leyó solo los {len(texts)} motivos.")
+    with st.expander(f"Los {len(texts)} motivos que leyó, tal como los escribió cada sponsor"):
+        tabla(pd.DataFrame([{"Ensayo": f"https://clinicaltrials.gov/study/{nct}", "Fármacos": d.lower(),
+                             "Motivo escrito": w} for nct, (_, d, w) in sorted(texts.items())]),
+              hide_index=True, use_container_width=True,
+              column_config={"Ensayo": st.column_config.LinkColumn(display_text=r"study/(.*)")})
+
+    text_step(4, "El resumen, con citas")
     for group in item["motivos"]:
         links = ", ".join(f"[{nct}](https://clinicaltrials.gov/study/{nct})" for nct in group["ensayos"])
         st.markdown(f"- **{group['motivo']}** · {len(group['ensayos'])} ensayos. {group['detalle']}  \n"
-                    f"<small>{links}</small>", unsafe_allow_html=True)
-    # El mismo motivo, como hecho del grafo: clasificado con reglas y contado con una consulta exacta
+                    f"<small>Cita: {links}</small>", unsafe_allow_html=True)
+
+    text_step(5, "Comprobar", "Cada grupo cita sus ensayos: se abren en ClinicalTrials.gov y se lee el motivo original.")
+    st.markdown(f"Cada grupo cita sus ensayos, con el enlace a ClinicalTrials.gov; en el paso 3 está el motivo "
+                f"original de cada uno. Resumen guardado el {item['fecha']}; los motivos se leen en vivo.")
+
+    text_step(6, "El texto pasa a ser dato",
+              "Cuando el texto se puede clasificar con reglas, el motivo queda como un hecho del grafo, con su evidencia "
+              "(PROV-O), y se cuenta con una consulta exacta, sin IA.")
     facts_query = Path("/ontology/queries/cq11.rq").read_text()
     _, facts = answer.run_sparql_table(facts_query)
-    st.markdown("**Y como dato del grafo**, contado con una consulta exacta:")
     tabla(pd.DataFrame([{"Motivo": m, "Ensayos": int(n)} for m, n in facts]), hide_index=True,
-                 use_container_width=True)
+          use_container_width=True)
     st.caption("Cada motivo es un hecho del grafo, clasificado con reglas a partir del texto del sponsor y "
                "con su evidencia. Un ensayo puede tener varios motivos. Las reglas aciertan 9 de cada 10 en "
                "una muestra revisada por un asistente de IA.")
-    with st.expander("¿De dónde sale la respuesta?"):
-        st.markdown(item["como"])
-        if TECH:
-            st.markdown("**El conteo**, sobre el motivo clasificado (`oncologia:stopReason`), con su evidencia en "
-                        "`oncologia:StopReasonLink` (PROV-O):")
+    if TECH:
+        with st.expander("El conteo, sobre el motivo clasificado (oncologia:stopReason, con su evidencia en oncologia:StopReasonLink)"):
             st.code(facts_query, language="sparql")
-        if TECH:
-            st.markdown("**1. La consulta que elige los ensayos** (exacta: usa la clase deducida y la "
-                        "jerarquía de MeSH):")
-            st.code(query, language="sparql")
-            st.markdown("**2. Los motivos que leyó el asistente**, tal como están en el grafo (`oncologia:whyStopped`):")
-        else:
-            st.markdown("**Los motivos que leyó**, tal como los escribió cada sponsor:")
-        tabla(pd.DataFrame([{"Ensayo": f"https://clinicaltrials.gov/study/{nct}", "Fármacos": d.lower(),
-                                    "Motivo escrito": w} for nct, (_, d, w) in sorted(texts.items())]),
-                     hide_index=True, use_container_width=True,
-                     column_config={"Ensayo": st.column_config.LinkColumn(display_text=r"study/(.*)")})
-        st.caption(f"Resumen guardado el {item['fecha']}. Si cambian los datos, los motivos de arriba se "
-                   "leen en vivo; el resumen hay que volver a generarlo.")
 
 
 def show_answer(query, columns, rows, note=None):

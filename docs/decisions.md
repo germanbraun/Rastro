@@ -502,3 +502,9 @@ Ontop es la herramienta de mapeos; quien responde es Rastro. En la app, los mazo
 ## 2026-10-20 — Wikidata en petróleo y gas: la parte según socios, no lo declarado
 
 La consulta con Wikidata mostraba el petróleo que cada empresa declara como operadora (YPF: 21,4 millones de m³), justo después de que el paso 1 de la demo dijera que su parte es 12,6. Los dos números son correctos, pero miden cosas distintas. Ahora la consulta trae primero la parte según la participación en cada concesión (el número del paso 1) y, en otra columna con su nombre, lo que declara como operadora. Resultado guardado de nuevo el 20 de octubre; la diapositiva usa la parte.
+
+## 2026-10-20 — «Una pregunta sobre textos», paso a paso
+
+Para que se entienda la idea de GraphRAG anclado en el grafo, la pregunta sobre textos se muestra en pasos numerados, en los tres dominios: 1, la pregunta; 2, el grafo elige con una consulta exacta (cuántos registros, y la consulta en la vista técnica); 3, la IA lee solo esos textos (que se pueden abrir); 4, el resumen, con las citas de cada tema; 5, comprobar. En oncología, un paso 6: el motivo pasa a ser un dato del grafo, contado sin IA.
+
+De paso: los escenarios de «Por qué confiar» dividían por las 9 preguntas medidas, pero la prueba de cambio de petróleo y gas usó 7; ahora cada escenario divide por las preguntas que tiene.

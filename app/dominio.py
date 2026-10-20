@@ -793,13 +793,20 @@ def show_external(cfg, tech):
         st.code(Path(ext["consulta"]).read_text(), language="sparql")
 
 
+def text_step(n, title, help_text=None):
+    st.markdown(f"#### {n} · {title}", help=help_text)
+
+
 def show_text_question(cfg, tech, demo=False):
-    """Una pregunta sobre textos: el grafo elige los contratos con una consulta exacta y un asistente de
-    IA resume solo sus descripciones en temas, citando cada contrato. El resumen está guardado; los
-    contratos y sus montos se leen en vivo."""
+    """Una pregunta sobre textos, paso a paso (GraphRAG anclado en el grafo): el grafo elige los
+    registros con una consulta exacta, un asistente de IA lee solo esos textos y los resume en temas que
+    citan cada registro, y cualquiera puede comprobarlo. El resumen está guardado; los registros se leen
+    en vivo."""
     domain = cfg["domain"]
     item = read_json(cfg["texto"])
-    st.markdown("**Una pregunta sobre textos**", help=ayuda("texto"))
+    st.markdown("**1 · La pregunta → 2 · El grafo elige → 3 · La IA lee solo eso → 4 · El resumen, con citas "
+                "→ 5 · Comprobar**", help=ayuda("texto"))
+    text_step(1, "La pregunta")
     st.info(f"**{md(item['simple'])}**")
     if tech:
         st.caption("Formulación técnica: " + md(item["pregunta"]))
@@ -810,59 +817,56 @@ def show_text_question(cfg, tech, demo=False):
             return
     query = Path(item["consulta"]).read_text()
     _, rows = run(query, domain)
-    if "columnas" in item:   # registros cualesquiera (no contratos): temas que citan registros por su id
-        show_records(item, query, rows, tech)
-        return
-    contracts = {c: (float(m), a, e, d) for c, m, a, e, d in rows}
+    graph_part, _, ai_part = item["como"].partition("Un asistente de IA")
+    ai_part = ("Un asistente de IA" + ai_part) if ai_part else ""
+
+    # Los registros, con sus textos y lo que cita cada tema: contratos (con montos) o registros cualesquiera
+    if "columnas" in item:
+        records = {r[0]: r for r in rows}
+        unit = item["unidad"]
+        table = pd.DataFrame([list(r) for r in records.values()], columns=item["columnas"])
+        themes = [(th["tema"], [r for r in th["registros"] if r in records], th["detalle"], "") for th in item["temas"]]
+    else:
+        records = {c: (float(m), a, e, d) for c, m, a, e, d in rows}
+        unit = ["contrato", "contratos"]
+        table = pd.DataFrame([{"Contrato": c, "Millones de US$": round(m / 1e6, 1), "Agencia": a.title(),
+                               "Empresa": e.title(), "Descripción": d.capitalize()} for c, (m, a, e, d) in records.items()])
+        themes = []
+        for th in item["temas"]:
+            found = [c for c in th["contratos"] if c in records]
+            themes.append((th["tema"], found, th["detalle"],
+                           f", US\\$ {money(sum(records[c][0] for c in found) / 1e6)} millones"))
+    n = len(records)
+
+    text_step(2, "El grafo elige, con una consulta exacta",
+              "No es una búsqueda por palabras: la consulta usa los conceptos y los enlaces del diccionario, así que "
+              "trae exactamente lo que pide la pregunta, siempre lo mismo.")
+    st.markdown(md(graph_part.strip()))
+    st.metric(f"{unit[1].capitalize()} elegidos por el grafo", n)
+    if tech:
+        with st.expander("La consulta que elige los registros"):
+            st.code(query, language="sparql")
     if demo and item.get("busqueda_texto"):
-        compare_text_search(item, contracts, domain, tech, always=True)
-    total = sum(m for m, *_ in contracts.values())
-    st.markdown(f"Rastro seleccionó los **{len(contracts)} contratos más grandes** del grupo "
-                f"(US\\$ {money(total / 1e6)} millones). Actividades principales:")
-    for theme in item["temas"]:
-        found = [c for c in theme["contratos"] if c in contracts]
-        amount = sum(contracts[c][0] for c in found)
-        st.markdown(f"- **{md(theme['tema'])}** · {len(found)} {'contrato' if len(found) == 1 else 'contratos'}, US\\$ {money(amount / 1e6)} millones. "
-                    f"{md(theme['detalle'])}  \n<small>{', '.join(found)}</small>", unsafe_allow_html=True)
+        compare_text_search(item, records, domain, tech, always=True)
+
+    text_step(3, "La IA lee solo esos textos",
+              "El asistente de IA no busca nada por su cuenta: recibe estos textos y ninguno más.")
+    st.markdown(md(ai_part.strip()) or f"Un asistente de IA leyó solo los textos de esos {n} {unit[1]}.")
+    with st.expander(f"Los {n} textos que leyó, tal como están en la fuente"):
+        tabla(table, hide_index=True, use_container_width=True)
+
+    text_step(4, "El resumen, con citas")
+    for theme, found, detail, extra in themes:
+        st.markdown(f"- **{md(theme)}** · {len(found)} {unit[0] if len(found) == 1 else unit[1]}{extra}. "
+                    f"{md(detail)}  \n<small>Cita: {', '.join(found)}</small>", unsafe_allow_html=True)
+
+    text_step(5, "Comprobar",
+              "Cada tema cita sus registros por número: se abren en la tabla del paso 3 y se lee el texto original.")
+    st.markdown(f"Cada tema cita sus {unit[1]}: en el paso 3 está el texto original de cada uno. "
+                f"Resumen guardado el {item['fecha']}; los {unit[1]} se leen en vivo, y si cambian los datos el "
+                "resumen se vuelve a generar.")
     if item.get("busqueda_texto") and not demo:
-        compare_text_search(item, contracts, domain, tech)
-    with st.expander("¿De dónde sale la respuesta?"):
-        st.markdown(md(item["como"]))
-        if tech:
-            st.markdown("**1. La consulta que elige los contratos** (exacta: usa el grupo que arma Rastro):")
-            st.code(query, language="sparql")
-            st.markdown("**2. Las descripciones que leyó el asistente**, tal como están en el grafo (`proveedores:description`):")
-        else:
-            st.markdown("**Las descripciones analizadas**, tal como están en la base de contratos:")
-        tabla(pd.DataFrame([{"Contrato": c, "Millones de US$": round(m / 1e6, 1), "Agencia": a.title(),
-                                    "Empresa": e.title(), "Descripción": d.capitalize()}
-                                   for c, (m, a, e, d) in contracts.items()]),
-                     hide_index=True, use_container_width=True)
-        st.caption(f"Resumen guardado el {item['fecha']}. Los contratos y montos se leen en vivo; si cambian "
-                   "los datos, el resumen hay que volver a generarlo.")
-
-
-def show_records(item, query, rows, tech):
-    """La pregunta sobre textos para registros cualesquiera: la consulta devuelve una fila por registro
-    (la primera columna es su id), y el resumen guardado los agrupa en temas que los citan."""
-    records = {r[0]: r for r in rows}
-    st.markdown(md(item["intro"].format(n=len(records))))
-    for theme in item["temas"]:
-        found = [r for r in theme["registros"] if r in records]
-        st.markdown(f"- **{md(theme['tema'])}** · {len(found)} {item['unidad'][0] if len(found) == 1 else item['unidad'][1]}. "
-                    f"{md(theme['detalle'])}  \n<small>{', '.join(found)}</small>", unsafe_allow_html=True)
-    with st.expander("¿De dónde sale la respuesta?"):
-        st.markdown(md(item["como"]))
-        if tech:
-            st.markdown("**1. La consulta que elige los registros** (exacta, sobre el grafo):")
-            st.code(query, language="sparql")
-            st.markdown("**2. Los textos que leyó el asistente**, tal como están en el grafo:")
-        else:
-            st.markdown("**Los textos analizados**, tal como están en la fuente:")
-        tabla(pd.DataFrame([list(r) for r in records.values()], columns=item["columnas"]),
-                     hide_index=True, use_container_width=True)
-        st.caption(f"Resumen guardado el {item['fecha']}. Los registros se leen en vivo; si cambian los datos, "
-                   "el resumen hay que volver a generarlo.")
+        compare_text_search(item, records, domain, tech)
 
 
 def company(name):
@@ -971,7 +975,7 @@ def trust(cfg, tech, evaluation, changes):
 
     with tab_change if tech else st.expander("Ver los escenarios de cambio"):
         scenarios = {c["titulo"]: c for c in cfg.get("cambios", [])}
-        st.caption(f"Qué pasa con las {n} preguntas de la evaluación, todas juntas, cuando una base cambia.")
+        st.caption("Qué pasa con las preguntas de la prueba de cambio, todas juntas, cuando una base cambia.")
         picked = st.radio("Escenario", list(scenarios), horizontal=True, label_visibility="visible", help=ayuda("escenario"),
                           key=f"{cfg['domain']}_scenario")
         change = scenarios[picked]
@@ -987,7 +991,7 @@ def trust(cfg, tech, evaluation, changes):
 
             st.markdown("**Antes de arreglar nada:**")
             for col, k in zip(st.columns(2), change_names):
-                col.metric(change_names[k], f"{before['totals'][k].get('✅', 0)}/{n}")
+                col.metric(change_names[k], f"{before['totals'][k].get('✅', 0)}/{len(before['cells'])}")
                 col.caption(summary(before["totals"][k]))
             if "🟡" in before.get("vocabulary", ""):
                 st.warning("Rastro avisa: " + md(before["vocabulary"].split(": ", 1)[-1]))
@@ -998,7 +1002,7 @@ def trust(cfg, tech, evaluation, changes):
                 st.markdown("**El arreglo en Rastro:** una línea, en la traducción de esa base al diccionario de negocio.")
             st.markdown("**Después del arreglo:**")
             for col, k in zip(st.columns(2), change_names):
-                col.metric(change_names[k], f"{after['totals'][k].get('✅', 0)}/{n}")
+                col.metric(change_names[k], f"{after['totals'][k].get('✅', 0)}/{len(after['cells'])}")
                 col.caption(summary(after["totals"][k]) + ("" if k == "C" else ". Hay que encontrar y reescribir cada consulta."))
             if tech:
                 st.markdown("**Pregunta por pregunta**")
