@@ -120,7 +120,7 @@ def as_table(columns, rows, cfg, tech, col_sources):
                 v = money(v)
             elif v is not None and formats.get(c) == "porcentaje":
                 v = f"{float(v) * 100:.0f} %"
-            line.append(v)
+            line.append("—" if v is None or v == "" else v)
         data.append(line)
     if tech:
         labels = cfg.get("fuentes", {})
@@ -147,6 +147,8 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
         tabla(table, hide_index=True, use_container_width=True, column_config=config)
         if item and item.get("mapa"):
             show_map(domain)
+        if item and item.get("porque"):
+            show_why(domain, item["porque"], columns, rows)
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}."
                    + (" La evidencia está en «¿De dónde sale la respuesta?»." if item and item.get("evidencia") else ""))
 
@@ -710,6 +712,40 @@ def show_faq(domain, specific, tech, diagrams, diagram_title="diccionario"):
     block([(q, a) for q, a, t in specific if t])
 
 
+def show_why(domain, why, columns, rows):
+    """«¿Por qué este número?»: se elige una fila de la respuesta y se ve la evidencia que hay detrás,
+    dibujada como grafo (la fila al centro, cada enlace alrededor) y en una tabla."""
+    import grafo
+    if why["columna"] not in columns:
+        return
+    values = list(dict.fromkeys(r[columns.index(why["columna"])] for r in rows if r[columns.index(why["columna"])]))
+    with st.container(border=True):
+        st.markdown("**¿Por qué este número?**", help="Elija una fila de la respuesta: se ve de dónde sale, enlace por "
+                    "enlace, con la fuente y la regla de cada uno.")
+        value = st.selectbox("Fila", values, key=f"{domain}_porque_{why['columna']}", label_visibility="collapsed")
+        st.markdown(f"**{md(why['titulo'].format(valor=value))}.** {md(why.get('explica', ''))}")
+        cols, found = run(prefixed(why["query"].replace("{valor}", str(value).replace('"', '\\"')), domain), domain)
+        if not found:
+            st.info("No hay evidencia guardada para esta fila.")
+            return
+        records = [dict(zip(cols, r)) for r in found]
+
+        def fmt(record, template):
+            return template.format(**{k: (money(v) if k in ("parte",) and v not in (None, "") else (v or "—"))
+                                      for k, v in record.items()})
+
+        shown = records[:8]
+        nodes = [("entidad", fmt(r, why["nodo"]), fmt(r, why["detalle"]), why["flecha"]) for r in shown]
+        if len(records) > len(shown):
+            nodes.append(("dato", f"y {len(records) - len(shown)} más", "", why["flecha"]))
+        drawing = grafo.svg((str(value), "la fila de la respuesta"), nodes, width=1500,
+                            height=620 + 55 * max(0, len(nodes) - 8), scale=0.95, font="Helvetica, Arial, sans-serif")
+        st.markdown(f'<img src="data:image/svg+xml;base64,{base64.b64encode(drawing.encode()).decode()}" '
+                    'style="width:100%;border-radius:12px">', unsafe_allow_html=True)
+        table = pd.DataFrame(records).rename(columns=why.get("columnas", {}))
+        tabla(table, hide_index=True, use_container_width=True)
+
+
 def before_after(card):
     """La misma tarjeta en cada momento de la demo: sin Rastro a la izquierda, con Rastro a la derecha."""
     left, right = st.columns(2)
@@ -718,6 +754,8 @@ def before_after(card):
             st.caption(title, help=ayuda("sin_rastro" if key == "sin" else "con_rastro"))
             st.markdown(f"### {'⚪' if key == 'sin' else '🟢'} {md(card[key]['valor'])}")
             st.markdown(md(card[key]["detalle"]))
+    if card.get("impacto"):
+        st.warning("**Lo que cuesta no integrar:** " + md(card["impacto"]))
 
 
 def show_demo(cfg, tech):

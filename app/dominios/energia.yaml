@@ -104,6 +104,22 @@ formatos:
 preguntas:
   - id: e01
     query: /ontology/energia/queries/cq1.rq
+    porque:     # «¿Por qué este número?»: la evidencia detrás de una fila de la respuesta
+      columna: company
+      titulo: "La parte de {valor}, concesión por concesión"
+      explica: "Su parte es la suma, en cada concesión, de la producción por su porcentaje. Cada porcentaje sale del texto de socios del mapa, con su fuente."
+      query: |
+        SELECT ?concesion ?porcentaje ?parte ?texto ?fuente WHERE {
+          { SELECT ?c (SUM(?oil) AS ?prod) WHERE { ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil } GROUP BY ?c }
+          ?s a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "{valor}" ; energia:percent ?porcentaje ;
+             energia:sourceText ?texto ; prov:wasDerivedFrom/energia:name ?fuente .
+          ?c energia:name ?concesion .
+          BIND (ROUND(?prod * ?porcentaje / 100) AS ?parte)
+        } ORDER BY DESC(?parte)
+      nodo: "{concesion}"
+      detalle: "{porcentaje} % · {parte} m³"
+      flecha: socia en
+      columnas: {concesion: Concesión, porcentaje: "Porcentaje", parte: "Su parte (m³)", texto: "Evidencia: el texto del mapa", fuente: Fuente}
     explicacion: |
       - **Qué busca:** la producción de petróleo de 2025 de cada pozo, la concesión donde está y los socios de esa concesión con su porcentaje.
       - **Qué calcula:** por cada empresa, la producción multiplicada por su porcentaje, sumada en todas sus concesiones; al lado, lo que opera (la producción que declara).
@@ -118,6 +134,9 @@ preguntas:
     antes_despues:              # layer/energia/sin-rastro.sql, consulta 1
       sin: {valor: "YPF: 21,4 M m³", detalle: "Sumando la producción por la empresa que la declara, a YPF se le asigna todo lo que opera, y Petronas, socia en La Amarga Chica, no aparece."}
       con: {valor: "YPF: 12,6 M m³", detalle: "Su parte en cada concesión, según los socios del mapa. Petronas: 2,1 M m³; Chevron, con sus dos razones sociales: 3,5 M m³."}
+      impacto: >-
+        Sin integrar, a YPF se le asignan 8,8 millones de m³ de más (55 millones de barriles): unos US$ 3.600
+        millones, con un precio supuesto de US$ 65 por barril. Es producción de sus socios.
     evidencia:
       texto: "Los socios de cada concesión, tal como los informa el mapa (algunos ejemplos):"
       formato: "**{concesion}**: {texto}"
@@ -154,6 +173,20 @@ preguntas:
 
   - id: e03
     query: /ontology/energia/queries/cq3.rq
+    porque:
+      columna: concession
+      titulo: "Los posibles venteos de {valor}, y por qué caen ahí"
+      explica: "Cada punto del satélite tiene coordenadas; Rastro lo ubicó dentro del contorno de la concesión y guardó la evidencia."
+      query: |
+        SELECT ?fecha ?satelite ?texto ?fuente WHERE {
+          ?l a energia:LocationLink ; energia:aboutVenting ?d ; energia:inConcession/energia:name "{valor}" ;
+             energia:sourceText ?texto ; prov:wasDerivedFrom/energia:name ?fuente .
+          ?d energia:date ?fecha . OPTIONAL { ?d energia:satellite ?satelite }
+        } ORDER BY DESC(?fecha) LIMIT 12
+      nodo: "{fecha}"
+      detalle: "{satelite}"
+      flecha: posible venteo
+      columnas: {fecha: Fecha, satelite: Satélite, texto: "Evidencia: dónde cae el punto", fuente: Fuente}
     mapa: true
     explicacion: |
       - **Qué busca:** los posibles venteos vistos por satélite y la concesión en la que cae cada uno, con su operadora en el mapa y sus puntos de venteo declarados.

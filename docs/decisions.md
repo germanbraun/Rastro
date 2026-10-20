@@ -524,3 +524,8 @@ Cada paso de la demo dice qué es (integración, trazabilidad, cruce con mapas o
 **Un error encontrado al medir:** los 303 tramos de gasoducto de ENARGAS salían también como «enlaces» (`energia:PipelineLink`), porque `energia:pipelineOperator` tenía ese dominio y el gasoducto lo usa. Se le quitó el dominio; ahora hay 293 enlaces, todos con evidencia, y las consultas dan lo mismo.
 
 **Una prueba que no se hizo:** comparar con cambios reales entre los archivos de 2023, 2024 y 2025 del Capítulo IV. No hay cambios para medir: el esquema es el mismo (2024 suma una columna `id`) y solo 3 nombres de empresa de 2023–2024 no están en 2025, ninguno de una empresa que siga activa.
+
+## 2026-10-20 — «¿Por qué este número?» y lo que cuesta no integrar
+
+- **«¿Por qué este número?»**: debajo de una respuesta se elige una fila y se ve la evidencia que hay detrás, dibujada como grafo (la fila al centro, cada enlace alrededor) y en una tabla con la fuente y la regla. Configurado en las preguntas de la demo: la parte de cada empresa, concesión por concesión, con el texto de socios del mapa (e01); los posibles venteos de una concesión, con dónde cae cada punto (e03); y las empresas de un grupo, con la regla y la evidencia de cada una (p01). Se suma a otra pregunta con `porque:` en `app/dominios/*.yaml`.
+- **Lo que cuesta no integrar**, en el paso 1 de petróleo y gas: sin integrar, a YPF se le asignan 8,8 millones de m³ de más (55 millones de barriles), unos US$ 3.600 millones con un precio supuesto de US$ 65 por barril. El precio es un supuesto y se dice; la diferencia en m³ no.

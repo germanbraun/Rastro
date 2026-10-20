@@ -98,6 +98,20 @@ formatos:                      # dinero: separador de miles; porcentaje: 0,67 �
 preguntas:
   - id: p01
     query: /ontology/proveedores/queries/cq1.rq
+    porque:
+      columna: group
+      titulo: "Las empresas de {valor}, y por qué son del grupo"
+      explica: "Cada empresa entra al grupo por un enlace con su regla y su evidencia: qué dice cada fuente."
+      query: |
+        SELECT ?empresa ?regla ?texto ?fuente WHERE {
+          ?g proveedores:name "{valor}" .
+          ?l a proveedores:GroupLink ; proveedores:linkTo ?g ; proveedores:linkFrom/proveedores:name ?empresa ;
+             proveedores:linkRule ?regla ; proveedores:sourceText ?texto ; prov:wasDerivedFrom/proveedores:name ?fuente .
+        } ORDER BY ?empresa LIMIT 40
+      nodo: "{empresa}"
+      detalle: "{regla}"
+      flecha: es del grupo
+      columnas: {empresa: Empresa, regla: Regla, texto: "Evidencia", fuente: Fuente}
     explicacion: |
       - **Qué busca:** los grupos cuyo nombre incluye «Leidos», todas sus empresas y los contratos de cada una.
       - **Qué calcula:** por grupo, cuántas empresas, cuántos contratos y el monto total.
