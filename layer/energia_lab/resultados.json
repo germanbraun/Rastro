@@ -37,10 +37,14 @@
      {
       "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT (COUNT(DISTINCT ?p) AS ?n) WHERE {\n  ?run a energia:ModelRun ; energia:current true .\n  ?p a energia:Prediction ; prov:wasGeneratedBy ?run ; energia:inTest true ; prov:used ?s .\n  ?s a energia:Stake ; energia:partner ?co .\n  {\n    ?s energia:rule ?r .\n    FILTER(CONTAINS(LCASE(STR(?r)), \"revisada\"))\n  } UNION {\n    ?cn a energia:CompanyName ; energia:company ?co ; energia:rule ?r .\n    FILTER(CONTAINS(LCASE(STR(?r)), \"revisada\"))\n  }\n}",
       "error": null
+     },
+     {
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT (COUNT(DISTINCT ?p) AS ?n) WHERE {\n  ?p a energia:Prediction ;\n     energia:inTest true ;\n     prov:wasGeneratedBy ?run .\n  ?run a energia:ModelRun ;\n       energia:current true .\n  {\n    ?p prov:used ?s .\n    ?s a energia:Stake ;\n       energia:rule ?r .\n    FILTER(CONTAINS(LCASE(STR(?r)), \"revisada\"))\n  }\n  UNION\n  {\n    ?p prov:used ?ws .\n    ?ws a energia:WellStart ;\n        energia:company ?c ;\n        energia:declaredName ?dn .\n    ?cn a energia:CompanyName ;\n        energia:company ?c ;\n        energia:nameInSource ?dn ;\n        energia:rule ?r2 .\n    FILTER(CONTAINS(LCASE(STR(?r2)), \"revisada\"))\n  }\n}",
+      "error": null
      }
     ],
-    "answer": 22.0,
-    "ok": false
+    "answer": 24.0,
+    "ok": true
    }
   },
   "l02": {
@@ -234,10 +238,10 @@
    "retries": 0
   },
   "C": {
-   "correct": 4,
+   "correct": 5,
    "consistent": 0,
    "consistent_correct": 0,
-   "retries": 0
+   "retries": 1
   }
  },
  "consistency": {}

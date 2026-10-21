@@ -1,7 +1,7 @@
 """Revisa que la ontología cargue y que cada query use solo términos declarados.
 
-Se corre con: docker compose run --rm ontology-check
-Otro dominio: docker compose run --rm ontology-check python /ontology/check.py /ontology/proveedores
+Se corre con: docker compose run --rm ontology-check (los tres dominios)
+Un dominio: docker compose run --rm ontology-check python /ontology/check.py /ontology/proveedores
 """
 
 import sys
@@ -11,8 +11,9 @@ import rdflib
 from rdflib.namespace import OWL, RDF
 from rdflib.plugins.sparql import prepareQuery
 
-# Carpeta del dominio: la ontología (*.ttl) y sus queries/
-HERE = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(__file__).parent
+# Carpetas de los dominios: cada una con su ontología (*.ttl) y sus queries/
+AQUI = Path(__file__).parent
+DOMINIOS = [Path(a) for a in sys.argv[1:]] or [AQUI, AQUI / "energia", AQUI / "proveedores"]
 NS = "https://w3id.org/rastro/oncologia#"
 
 
@@ -35,17 +36,17 @@ def terms_in(node, found, seen):
             terms_in(v, found, seen)
 
 
-def main():
+def revisar(carpeta):
     global NS
-    g = rdflib.Graph().parse(next(HERE.glob("*.ttl")))
+    g = rdflib.Graph().parse(next(carpeta.glob("*.ttl")))
     NS = str(next(g.subjects(RDF.type, OWL.Ontology))) + "#"
     declared = {str(s) for s in g.subjects() if str(s).startswith(NS)}
-    print(f"Ontología: {len(set(g.subjects(RDF.type, OWL.Class)))} clases, "
+    print(f"Ontología {carpeta.name}: {len(set(g.subjects(RDF.type, OWL.Class)))} clases, "
           f"{len(set(g.subjects(RDF.type, OWL.ObjectProperty)))} relaciones, "
           f"{len(set(g.subjects(RDF.type, OWL.DatatypeProperty)))} atributos")
 
     ok = True
-    for f in sorted((HERE / "queries").glob("*.rq")):
+    for f in sorted((carpeta / "queries").glob("*.rq")):
         try:
             used = set()
             terms_in(prepareQuery(f.read_text()).algebra, used, set())
@@ -59,6 +60,11 @@ def main():
             ok = False
         else:
             print(f"{f.name}: OK")
+    return ok
+
+
+def main():
+    ok = all([revisar(c) for c in DOMINIOS])
     sys.exit(0 if ok else 1)
 
 
