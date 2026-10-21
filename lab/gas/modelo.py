@@ -263,6 +263,7 @@ def referencias(a, prueba=PRUEBA):
     def de(c):
         return a[~p].groupby(c).gas.median().reindex(a[p][c]).fillna(mediana).values
     return {"todos": float(np.abs(mediana - y).mean()), "operadora": float(np.abs(de("empresa") - y).mean()),
+            "concesion": float(np.abs(de("area") - y).mean()),
             "r2_operadora": r2(de("empresa"), y), "r2_concesion": r2(de("area"), y),
             "entreno": int((~p).sum()), "prueba": int(p.sum())}
 
@@ -620,7 +621,7 @@ if __name__ == "__main__":
           f"con fractura: {int(b.rama.notna().sum())}")
     print(f"Referencias, error medio en millones de m³: la mediana de todos {ref['todos']:.1f}; "
           f"la mediana de la operadora {ref['operadora']:.1f} (R² {ref['r2_operadora']:.2f}); "
-          f"R² de la mediana de la concesión {ref['r2_concesion']:.2f}")
+          f"la mediana de la concesión {ref['concesion']:.1f} (R² {ref['r2_concesion']:.2f})")
     for k in "AB":
         print(f"Modelo {k}: error medio {r[k]['error']:.1f} millones de m³, R² {r[k]['r2']:.2f}")
     print("Predicciones de prueba con un dato que no sale tal cual de la fuente: %d de %d" % dudosos(b))

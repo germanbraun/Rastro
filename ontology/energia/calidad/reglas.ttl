@@ -55,3 +55,21 @@ calidad:EmpresaUnLei a sh:NodeShape ;
     sh:targetClass energia:Company ;
     sh:property [ sh:path energia:lei ; sh:maxCount 1 ; sh:pattern "^[A-Z0-9]{18}[0-9]{2}$" ;
                   sh:message "Tiene más de un LEI, o uno con otro formato." ] .
+
+calidad:TrayectoriaPosible a sh:NodeShape ;
+    rdfs:label "Cada trayectoria tiene una profundidad y una rama posibles" ;
+    rdfs:comment "En Vaca Muerta la profundidad vertical va de 1.000 a 6.000 m y la rama horizontal no pasa de 6.000 m. Fuera de eso es un error de carga, y lo que lo use hereda el error." ;
+    sh:targetClass energia:WellTrajectory ;
+    sh:property [ sh:path energia:verticalDepthM ; sh:minInclusive 1000 ; sh:maxInclusive 6000 ;
+                  sh:message "La profundidad vertical no es posible." ] ;
+    sh:property [ sh:path energia:lateralLengthM ; sh:minInclusive 0 ; sh:maxInclusive 6000 ;
+                  sh:message "La rama horizontal no es posible." ] .
+
+calidad:FracturaPosible a sh:NodeShape ;
+    rdfs:label "Cada fractura tiene una presión y un agua posibles" ;
+    rdfs:comment "La presión máxima de bombeo no pasa de 20.000 psi y el agua de un pozo, de 200.000 m³ (lo común es 11.000 psi y 28.000 m³). Fuera de eso es un error de carga, y la predicción que lo use hereda el error." ;
+    sh:targetClass energia:Fracturing ;
+    sh:property [ sh:path energia:maxPressurePsi ; sh:minInclusive 0 ; sh:maxInclusive 20000 ;
+                  sh:message "La presión máxima no es posible." ] ;
+    sh:property [ sh:path energia:waterM3 ; sh:minInclusive 0 ; sh:maxInclusive 200000 ;
+                  sh:message "El agua no es posible." ] .

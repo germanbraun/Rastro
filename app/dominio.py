@@ -571,7 +571,8 @@ def show_quality(quality):
     st.markdown("### Reglas de calidad", help=ayuda("calidad"))
     st.caption(md(quality["intro"]))
     tabla(pd.DataFrame([{"Regla": r["nombre"], "Por qué importa": r["porque"], "Datos revisados": money(r["revisados"]),
-                         "Resultado": "✅ se cumple" if not r["fallas"] else f"⚠️ {money(r['fallas'])} no cumplen"}
+                         "Resultado": "✅ se cumple" if not r["fallas"] else f"⚠️ {money(r['fallas'])} no cumplen",
+                         "Predicciones que los usan": len(r.get("predicciones_afectadas", [])) or ""}
                         for r in result["reglas"]]),
           column_config={"Regla": st.column_config.TextColumn(width="medium"),
                          "Por qué importa": st.column_config.TextColumn(width="large")})
@@ -602,7 +603,10 @@ def show_quality_shacl(quality):
                     st.caption("SHACL dice: " + " ".join(r["roto_dice"]))
             if r["ejemplos"]:
                 st.markdown("**Lo que no cumple**" + (" (los primeros 10)" if r["fallas"] > 10 else ""))
-                tabla(pd.DataFrame([{"Dato": e["dato"], "Qué falla": e["mensaje"]} for e in r["ejemplos"]]))
+                tabla(pd.DataFrame([{"Dato": e["dato"], "Qué falla": e["mensaje"],
+                                     "Predicciones que lo usan (prov:used)":
+                                         ", ".join(p.rsplit("/", 1)[-1] for p in e.get("predicciones", []))}
+                                    for e in r["ejemplos"]]))
     st.caption(f"{money(result['triples'])} triples traídos de Rastro con CONSTRUCT. Las reglas están en "
                "`ontology/energia/calidad/reglas.ttl`; las comprueba `docker compose run --rm calidad`.")
 

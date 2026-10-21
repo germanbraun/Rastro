@@ -1,6 +1,6 @@
 {
  "fecha": "2026-10-21",
- "triples": 433020,
+ "triples": 456263,
  "reglas": [
   {
    "id": "EnlaceConEvidencia",
@@ -14,7 +14,8 @@
     "No tiene evidencia."
    ],
    "fallas": 0,
-   "ejemplos": []
+   "ejemplos": [],
+   "predicciones_afectadas": []
   },
   {
    "id": "Participacion",
@@ -28,7 +29,8 @@
     "El porcentaje falta o no está entre 0 y 100."
    ],
    "fallas": 0,
-   "ejemplos": []
+   "ejemplos": [],
+   "predicciones_afectadas": []
   },
   {
    "id": "ConcesionHasta100",
@@ -42,14 +44,15 @@
     "Sus participaciones suman 110 %."
    ],
    "fallas": 0,
-   "ejemplos": []
+   "ejemplos": [],
+   "predicciones_afectadas": []
   },
   {
    "id": "Prediccion",
    "nombre": "Cada predicción sale de un inicio de pozo y cae dentro de su rango",
    "porque": "Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.",
    "shacl": "calidad:Prediccion a sh:NodeShape ;\n    rdfs:label \"Cada predicción sale de un inicio de pozo y cae dentro de su rango\" ;\n    rdfs:comment \"Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.\" ;\n    sh:targetClass energia:Prediction ;\n    sh:property [ sh:path prov:used ; sh:qualifiedValueShape [ sh:class energia:WellStart ] ;\n                  sh:qualifiedMinCount 1 ; sh:qualifiedMaxCount 1 ; sh:message \"No dice de qué inicio de pozo sale.\" ] ;\n    sh:property [ sh:path energia:predictedLow ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedGas ;\n                  sh:message \"El mínimo del rango es mayor que la predicción.\" ] ;\n    sh:property [ sh:path energia:predictedGas ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedHigh ;\n                  sh:message \"La predicción es mayor que el máximo del rango.\" ] .",
-   "revisados": 5031,
+   "revisados": 5590,
    "un_dato": "<https://w3id.org/rastro/energia/prediction/20261021-0855-baf6d8fa/158961> a energia:Prediction ;\n    prov:used <https://w3id.org/rastro/energia/fracturing/158961>,\n        <https://w3id.org/rastro/energia/stake/FOR/TECPETROL>,\n        <https://w3id.org/rastro/energia/wellstart/158961> ;\n    energia:predictedGas 52.003 ;\n    energia:predictedHigh 68.337 ;\n    energia:predictedLow 19.022 .",
    "roto": "e:prediccion a energia:Prediction ; energia:predictedLow 25 ; energia:predictedGas 20 ; energia:predictedHigh 30 .",
    "roto_dice": [
@@ -57,7 +60,8 @@
     "No dice de qué inicio de pozo sale."
    ],
    "fallas": 0,
-   "ejemplos": []
+   "ejemplos": [],
+   "predicciones_afectadas": []
   },
   {
    "id": "EmpresaUnLei",
@@ -71,7 +75,113 @@
     "Tiene más de un LEI, o uno con otro formato."
    ],
    "fallas": 0,
-   "ejemplos": []
+   "ejemplos": [],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "TrayectoriaPosible",
+   "nombre": "Cada trayectoria tiene una profundidad y una rama posibles",
+   "porque": "En Vaca Muerta la profundidad vertical va de 1.000 a 6.000 m y la rama horizontal no pasa de 6.000 m. Fuera de eso es un error de carga, y lo que lo use hereda el error.",
+   "shacl": "calidad:TrayectoriaPosible a sh:NodeShape ;\n    rdfs:label \"Cada trayectoria tiene una profundidad y una rama posibles\" ;\n    rdfs:comment \"En Vaca Muerta la profundidad vertical va de 1.000 a 6.000 m y la rama horizontal no pasa de 6.000 m. Fuera de eso es un error de carga, y lo que lo use hereda el error.\" ;\n    sh:targetClass energia:WellTrajectory ;\n    sh:property [ sh:path energia:verticalDepthM ; sh:minInclusive 1000 ; sh:maxInclusive 6000 ;\n                  sh:message \"La profundidad vertical no es posible.\" ] ;\n    sh:property [ sh:path energia:lateralLengthM ; sh:minInclusive 0 ; sh:maxInclusive 6000 ;\n                  sh:message \"La rama horizontal no es posible.\" ] .",
+   "revisados": 1903,
+   "un_dato": "<https://w3id.org/rastro/energia/trajectory/0> a energia:WellTrajectory ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/trayectorias> ;\n    energia:lateralLengthM 4342.13 ;\n    energia:rule \"una por pozo: la de rama más larga entre las perforadas antes de que arrancara\" ;\n    energia:sourceText \"Trayectoria YPF.Nq.LLL-1639(h): profundidad vertical de 2943 m, rama horizontal de 4342 m, perforado hasta el 27/01/2023.\" ;\n    energia:verticalDepthM 2943.0 .",
+   "roto": "e:trayectoria a energia:WellTrajectory ; energia:verticalDepthM 276939 ; energia:lateralLengthM 2555 .",
+   "roto_dice": [
+    "La profundidad vertical no es posible."
+   ],
+   "fallas": 2,
+   "ejemplos": [
+    {
+     "dato": "https://w3id.org/rastro/energia/trajectory/157567",
+     "mensaje": "La rama horizontal no es posible.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/trajectory/163577",
+     "mensaje": "La profundidad vertical no es posible.",
+     "predicciones": []
+    }
+   ],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "FracturaPosible",
+   "nombre": "Cada fractura tiene una presión y un agua posibles",
+   "porque": "La presión máxima de bombeo no pasa de 20.000 psi y el agua de un pozo, de 200.000 m³ (lo común es 11.000 psi y 28.000 m³). Fuera de eso es un error de carga, y la predicción que lo use hereda el error.",
+   "shacl": "calidad:FracturaPosible a sh:NodeShape ;\n    rdfs:label \"Cada fractura tiene una presión y un agua posibles\" ;\n    rdfs:comment \"La presión máxima de bombeo no pasa de 20.000 psi y el agua de un pozo, de 200.000 m³ (lo común es 11.000 psi y 28.000 m³). Fuera de eso es un error de carga, y la predicción que lo use hereda el error.\" ;\n    sh:targetClass energia:Fracturing ;\n    sh:property [ sh:path energia:maxPressurePsi ; sh:minInclusive 0 ; sh:maxInclusive 20000 ;\n                  sh:message \"La presión máxima no es posible.\" ] ;\n    sh:property [ sh:path energia:waterM3 ; sh:minInclusive 0 ; sh:maxInclusive 200000 ;\n                  sh:message \"El agua no es posible.\" ] .",
+   "revisados": 4733,
+   "un_dato": "<https://w3id.org/rastro/energia/fracturing/10119> a energia:Fracturing ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/energia/fracturereport/3390>,\n        <https://w3id.org/rastro/source/fractura> ;\n    energia:maxPressurePsi 8948.0 ;\n    energia:rule \"las fracturas informadas hasta el mes en que arrancó el pozo, sumadas\" ;\n    energia:sourceText \"Fractura informada por CAPEX S.A desde 13/08/2021: rama horizontal de 0 m, 1 etapas, 12 t de arena, 51 m³ de agua, presión máxima 8948 psi. Cargada en el portal el 14/09/2021.\" ;\n    energia:waterM3 50.8 .",
+   "roto": "e:fractura a energia:Fracturing ; energia:maxPressurePsi 111515 ; energia:waterM3 109996 .",
+   "roto_dice": [
+    "La presión máxima no es posible."
+   ],
+   "fallas": 17,
+   "ejemplos": [
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/157804",
+     "mensaje": "La presión máxima no es posible.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/158182",
+     "mensaje": "El agua no es posible.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/160191",
+     "mensaje": "El agua no es posible.",
+     "predicciones": [
+      "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160191"
+     ]
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/160192",
+     "mensaje": "El agua no es posible.",
+     "predicciones": [
+      "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160192"
+     ]
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/160193",
+     "mensaje": "El agua no es posible.",
+     "predicciones": [
+      "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160193"
+     ]
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/162243",
+     "mensaje": "La presión máxima no es posible.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/163171",
+     "mensaje": "La presión máxima no es posible.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/164398",
+     "mensaje": "La presión máxima no es posible.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/164779",
+     "mensaje": "La presión máxima no es posible.",
+     "predicciones": [
+      "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/164779"
+     ]
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/fracturing/165551",
+     "mensaje": "La presión máxima no es posible.",
+     "predicciones": []
+    }
+   ],
+   "predicciones_afectadas": [
+    "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160191",
+    "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160192",
+    "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160193",
+    "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/164779"
+   ]
   }
  ]
 }

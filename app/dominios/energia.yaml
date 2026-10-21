@@ -584,8 +584,9 @@ calidad:                       # reglas de calidad (SHACL): ontology/energia/cal
   intro: >-
     Reglas sobre los datos integrados, escritas una vez con las palabras del diccionario y comprobadas después de cada
     carga, como los controles de calidad de una base de datos. Miran todas las fuentes juntas y también la evidencia.
-    No arreglan nada: muestran qué no se cumple y dónde. La primera vez encontraron 5 trayectorias de pozo sin
-    evidencia (las que no tienen rama horizontal informada); se arregló en un lugar, la regla que arma la evidencia.
+    No arreglan nada: muestran qué no se cumple, dónde y qué predicciones de Rastro Lab usan ese dato (las que heredan
+    el error). La primera vez encontraron 5 trayectorias de pozo sin evidencia; se arregló en un lugar, la regla que
+    arma la evidencia. Las de valores imposibles marcan datos de la fuente para revisar, sin cambiarlos.
   tecnico: >-
     Las reglas de calidad están en SHACL, el estándar del W3C para validar un grafo. Rastro trae con CONSTRUCT solo lo
     que miran y las valida con pySHACL. Cada regla tiene un blanco (`sh:targetClass`, `sh:targetSubjectsOf`), sus

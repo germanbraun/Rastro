@@ -24,6 +24,7 @@ PREFIJOS_TTL = ("@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix 
 SALIDA = Path("/layer/energia/calidad.json")
 ONTOP = os.environ.get("ONTOP_ENERGIA", "http://ontop-energia:8080/sparql")
 SH = Namespace("http://www.w3.org/ns/shacl#")
+PROV = Namespace("http://www.w3.org/ns/prov#")
 PREFIJOS = "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\n"
 
 # Lo que miran las reglas, y nada más: cada enlace con su regla, fuente y evidencia; las participaciones;
@@ -39,6 +40,10 @@ DATOS = [
        WHERE { ?p a energia:Prediction . OPTIONAL { ?p energia:predictedGas ?g } OPTIONAL { ?p energia:predictedLow ?l }
                OPTIONAL { ?p energia:predictedHigh ?h } OPTIONAL { ?p prov:used ?u . ?u a ?t } }""",
     """CONSTRUCT { ?e a energia:Company ; energia:lei ?l } WHERE { ?e a energia:Company ; energia:lei ?l }""",
+    """CONSTRUCT { ?t a energia:WellTrajectory ; energia:verticalDepthM ?d ; energia:lateralLengthM ?r }
+       WHERE { ?t a energia:WellTrajectory . OPTIONAL { ?t energia:verticalDepthM ?d } OPTIONAL { ?t energia:lateralLengthM ?r } }""",
+    """CONSTRUCT { ?f a energia:Fracturing ; energia:maxPressurePsi ?p ; energia:waterM3 ?a }
+       WHERE { ?f a energia:Fracturing . OPTIONAL { ?f energia:maxPressurePsi ?p } OPTIONAL { ?f energia:waterM3 ?a } }""",
 ]
 
 
@@ -49,6 +54,15 @@ def traer():
         r.raise_for_status()
         datos.parse(data=r.text, format="turtle")
     return datos
+
+
+def corrida_vigente():
+    """El identificador de la corrida vigente del modelo de Rastro Lab (las predicciones afectadas son las de ella)."""
+    r = requests.post(ONTOP, data={"query": PREFIJOS + "SELECT ?r WHERE { ?r a energia:ModelRun ; energia:current true }"},
+                      headers={"Accept": "application/sparql-results+json"}, timeout=60)
+    r.raise_for_status()
+    filas = r.json()["results"]["bindings"]
+    return filas[0]["r"]["value"].rsplit("/", 1)[-1] if filas else None
 
 
 def bloques():
@@ -93,13 +107,16 @@ def ejemplo_roto(forma, malo):
 
 def main():
     datos = traer()
+    vigente = f"/prediction/{corrida_vigente()}/"
     ejemplos = yaml.safe_load(EJEMPLOS.read_text())
     resultado = {"fecha": date.today().isoformat(), "triples": len(datos), "reglas": []}
     for prefijos, bloque in bloques():
         forma = Graph().parse(data=prefijos + "\n" + bloque, format="turtle")
         regla = next(forma.subjects(RDF.type, SH.NodeShape))
         _, informe, _ = validate(datos, shacl_graph=forma, advanced=True)
-        fallas = [{"dato": str(informe.value(r, SH.focusNode)), "mensaje": str(informe.value(r, SH.resultMessage))}
+        # cada dato que no cumple, con las predicciones que lo usaron (prov:used): las que heredan el error
+        fallas = [{"dato": str(informe.value(r, SH.focusNode)), "mensaje": str(informe.value(r, SH.resultMessage)),
+                   "predicciones": sorted(str(p) for p in datos.subjects(PROV.used, informe.value(r, SH.focusNode)) if vigente in str(p))}
                   for r in informe.subjects(RDF.type, SH.ValidationResult)]
         fallidos = {f["dato"] for f in fallas}
         nodos = sorted(n for n in blancos(datos, forma, regla) if str(n) not in fallidos)
@@ -115,6 +132,7 @@ def main():
             "roto_dice": ejemplo_roto(forma, ejemplo["malo"]),
             "fallas": len(fallas),
             "ejemplos": sorted(fallas, key=lambda f: f["dato"])[:10],
+            "predicciones_afectadas": sorted({p for f in fallas for p in f["predicciones"]}),
         })
         print(f"{resultado['reglas'][-1]['nombre']}: {resultado['reglas'][-1]['revisados']} revisados, {len(fallas)} no cumplen")
     SALIDA.write_text(json.dumps(resultado, ensure_ascii=False, indent=1) + "\n")

@@ -68,7 +68,8 @@ def show_lab(tech):
     c2.metric("Error con Rastro", f"{num(r['B']['error'])} M m³", help=ayuda("lab_error"))
     c3.metric("Con un dato corregido", f"{n_dudosos} de {n_prueba}", help=ayuda("lab_dudosos"))
     st.caption(f"Entrenado con {ref['entreno']} pozos que empezaron de {a.inicio.min():%Y} a 2024; probado con {ref['prueba']} de 2025. "
-               f"Error medio por pozo, en millones de m³; usar la mediana de cada operadora da {num(ref['operadora'])}.")
+               f"Error medio por pozo, en millones de m³. Sin modelo, usar la mediana de cada concesión da "
+               f"{num(ref['concesion'])}, y la de cada operadora, {num(ref['operadora'])}.")
 
     with st.expander("Lo que entra al modelo", expanded=False):
         st.markdown(f"Los mismos {len(entrada_b)} pozos y las mismas ideas de variables, de dos formas. "
@@ -86,7 +87,9 @@ def show_lab(tech):
 
     with st.expander("Qué aprendió el modelo", expanded=False):
         st.markdown(md(
-            f"El modelo explica el {round(100 * r['B']['r2'])} % de la diferencia entre los pozos de 2025. "
+            f"El modelo explica el {round(100 * r['B']['r2'])} % de la diferencia entre los pozos de 2025; la mediana de "
+            f"cada concesión, sola, el {round(100 * ref['r2_concesion'])} %. Casi todo lo que sabe es dónde está el pozo: "
+            "la fractura y la profundidad agregan poco, y eso también es una conclusión. "
             "Pesa dos cosas, en millones de m³ por pozo, en promedio: "
             + "; ".join(f"**{k.lower()}**, {num(v)}" for k, v in pesos.items()) + ". "
             "La operadora y los socios no se pueden separar de la concesión: Rastro muestra que dentro de una "

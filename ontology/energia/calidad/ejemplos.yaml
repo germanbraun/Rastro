@@ -15,3 +15,10 @@ Prediccion:
 EmpresaUnLei:
   bueno: 'e:ypf a energia:Company ; energia:lei "549300BS2ZHDWDKUGX28" .'
   malo: 'e:ypf a energia:Company ; energia:lei "549300BS2ZHDWDKUGX28", "ABC" .'
+TrayectoriaPosible:
+  bueno: "e:trayectoria a energia:WellTrajectory ; energia:verticalDepthM 2900 ; energia:lateralLengthM 2500 ."
+  malo: "e:trayectoria a energia:WellTrajectory ; energia:verticalDepthM 276939 ; energia:lateralLengthM 2555 ."
+FracturaPosible:
+  bueno: "e:fractura a energia:Fracturing ; energia:maxPressurePsi 11150 ; energia:waterM3 28000 ."
+  malo: "e:fractura a energia:Fracturing ; energia:maxPressurePsi 111515 ; energia:waterM3 109996 ."
+
