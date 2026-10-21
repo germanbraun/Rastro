@@ -81,6 +81,8 @@ JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = trim(p
     rr:predicateObjectMap [ rr:predicate energia:inConcession ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/concession/{id_concesion}" ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:startFormation ; rr:objectMap [ rr:column "formacion" ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:startResource ; rr:objectMap [ rr:column "sub_tipo_recurso" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:gasMonths2to7 ; rr:objectMap [ rr:column "gas_2_7" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:gasFirst12Months ; rr:objectMap [ rr:column "gas_12" ; rr:datatype xsd:decimal ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:rule ; rr:objectMap [ rr:constant "rige la declaración jurada del primer mes" ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/capitulo4> ] ] ;

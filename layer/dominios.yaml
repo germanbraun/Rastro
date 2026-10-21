@@ -82,10 +82,10 @@ energia:
              ConcessionToReview, VentingFarFromPipeline, VentingWithoutReports, reviewReason, Stake, partner, percent, OperatorLink, LocationLink, PipelineLink, SurroundingsLink, LeiLink, StudyLink, aboutStudy, aboutVenting,
              aboutConcession, distanceKm, operator, inConcession, company, registryCompany, CompanyName,
              nameInSource, rule, sourceText, Company, WellStart, startMonth, startWellType, startFormation,
-             startResource, declaredName]
+             startResource, declaredName, gasMonths2to7, gasFirst12Months]
   link_sources:
     sig_energia: [Stake, partner, percent, inConcession, LocationLink, aboutVenting, ConcessionToReview, reviewReason]
-    capitulo4: [OperatorLink, operator, aboutWell, WellStart, startMonth, startWellType, startFormation, startResource, declaredName, OperatorChange, previousCompany, newCompany, month,
+    capitulo4: [OperatorLink, operator, aboutWell, WellStart, startMonth, startWellType, startFormation, startResource, declaredName, gasMonths2to7, gasFirst12Months, OperatorChange, previousCompany, newCompany, month,
                 oilBefore, oilAfter, gasBefore, gasAfter, CompanyName]
     enargas: [PipelineLink, aboutConcession, VentingFarFromPipeline, ConcessionToReview]
     ign: [SurroundingsLink]

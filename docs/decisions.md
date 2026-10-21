@@ -588,3 +588,10 @@ Estudio sin modelo (`docs/lab-gas-vaca-muerta.md`, consulta en `lab/gas/pozos-nu
 - **La distancia al gasoducto queda afuera** del paso 1: repite la concesión y salía al revés.
 - **Trabajos relacionados en la app,** no en Lab: en las preguntas frecuentes generales (grafos de conocimiento virtuales; grafos de conocimiento para explicar aprendizaje automático) y en las de petróleo y gas (la tesis).
 - **En la app, una pestaña «Rastro Lab»** en petróleo y gas (`app/lab.py`): el mismo modelo con y sin Rastro y la explicación de un pozo lado a lado, con «¿Por qué?» en cada variable. El modelo vive en `lab/gas/modelo.py` y la app lo lee montado en `/lab`. La regresión está escrita con numpy (la misma fórmula de ridge) para no sumar una dependencia a la app. Los datos y los dos modelos se guardan en disco como las respuestas, y se preparan al abrir la app.
+
+## 2026-10-21 — Rastro Lab: explicaciones respaldadas por Rastro
+
+- **El gas que se predice está en Rastro** (`energia:gasMonths2to7`, `energia:gasFirst12Months` del inicio de cada pozo, sumando sus formaciones). B lo lee de Rastro y A lo calcula con SQL; coinciden en todos los pozos.
+- **Un solo factor en la explicación:** con estos datos, operadora y socios son fijos dentro de cada concesión, así que el modelo aprende un efecto por concesión y repartirlo en tres variables era arbitrario (la concesión llegó a «restar» con pozos por encima del promedio). La explicación con Rastro dice ese factor, por qué suma o resta (sus pozos de entrenamiento y su mediana) y los hechos de Rastro que lo respaldan (operadora, socios, cambios de operadora), cada uno con «¿De dónde sale?». La de A sigue mostrando las tres columnas, que es lo que da una herramienta estándar sobre las tablas crudas.
+- **«Qué aprendió el modelo»:** una tabla por concesión con su operadora y socios de Rastro, sus pozos, su mediana y su efecto.
+- **El R² de 0,44 es el mejor caso:** según el corte va de 0,06 a 0,44, y con 12 meses no valida. Lo dice la app y el estudio; el paso 2 suma años y fractura.

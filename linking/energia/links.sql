@@ -262,13 +262,25 @@ WITH todo AS (
   FROM todo t JOIN primero p ON p.idpozo = t.idpozo AND make_date(t.anio, t.mes, 1) = p.inicio
   WHERE p.inicio > DATE '2023-01-01' AND NOT (p.primera_fila = DATE '2023-01-01')
   ORDER BY t.idpozo, coalesce(t.prod_gas, 0) + coalesce(t.prod_pet, 0) DESC
+), gas AS (   -- el gas del pozo (todas sus formaciones) por mes desde que arrancó: 0 es el primer mes
+  SELECT f.idpozo, (12 * (t.anio - extract(year FROM f.inicio)) + t.mes - extract(month FROM f.inicio))::int AS n,
+         sum(coalesce(t.prod_gas, 0)) / 1000.0 AS gas   -- millones de m³
+  FROM fila f JOIN todo t ON t.idpozo = f.idpozo AND make_date(t.anio, t.mes, 1) >= f.inicio
+  GROUP BY 1, 2
+), acumulado AS (   -- solo si están todos los meses: los que faltan no se cuentan como cero
+  SELECT idpozo,
+         CASE WHEN count(*) FILTER (WHERE n BETWEEN 1 AND 6) = 6 THEN sum(gas) FILTER (WHERE n BETWEEN 1 AND 6) END AS gas_2_7,
+         CASE WHEN count(*) FILTER (WHERE n BETWEEN 0 AND 11) = 12 THEN sum(gas) FILTER (WHERE n BETWEEN 0 AND 11) END AS gas_12
+  FROM gas GROUP BY 1
 )
 SELECT f.idpozo, f.inicio AS mes, en.empresa_id, f.empresa AS nombre_declarado, f.tipo_pozo, f.id_concesion,
-       f.formacion, f.sub_tipo_recurso,
+       f.formacion, f.sub_tipo_recurso, round(g.gas_2_7, 3) AS gas_2_7, round(g.gas_12, 3) AS gas_12,
        'Primer mes con producción: ' || to_char(f.inicio, 'MM/YYYY') || '. Lo declara ' || rtrim(f.empresa, '.')
-       || coalesce(' como pozo ' || lower(f.tipo_pozo), '') || ', en ' || f.id_concesion || '.' AS evidencia
+       || coalesce(' como pozo ' || lower(f.tipo_pozo), '') || ', en ' || f.id_concesion || '.'
+       || coalesce(' Gas de sus meses 2 a 7: ' || replace(round(g.gas_2_7, 1)::text, '.', ',') || ' millones de m³.', '') AS evidencia
 FROM fila f
-JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = f.empresa;
+JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = f.empresa
+LEFT JOIN acumulado g ON g.idpozo = f.idpozo;
 
 ALTER TABLE energia.participacion ADD PRIMARY KEY (id_concesion, empresa_id);
 ALTER TABLE energia.empresa ADD PRIMARY KEY (empresa_id);

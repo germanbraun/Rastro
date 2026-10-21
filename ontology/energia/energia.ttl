@@ -67,6 +67,12 @@ energia:startMonth a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs
 energia:startWellType a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "tipo de pozo al arrancar"@es .
 energia:startFormation a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "formación al arrancar"@es .
 energia:startResource a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "shale o tight al arrancar"@es .
+energia:gasMonths2to7 a owl:DatatypeProperty ; rdfs:domain energia:WellStart ;
+    rdfs:label "gas de los meses 2 a 7 (millones de m³)"@es ;
+    rdfs:comment "El gas que dio el pozo del segundo al séptimo mes desde que arrancó, sumando sus formaciones. El primer mes suele ser parcial. Vacío si todavía no tiene esos meses. Es lo que predice Rastro Lab."@es .
+energia:gasFirst12Months a owl:DatatypeProperty ; rdfs:domain energia:WellStart ;
+    rdfs:label "gas de los primeros 12 meses (millones de m³)"@es ;
+    rdfs:comment "El gas de los primeros 12 meses del pozo, sumando sus formaciones. Vacío si todavía no los tiene."@es .
 energia:declaredName a owl:DatatypeProperty ; rdfs:domain energia:WellStart ;
     rdfs:label "nombre declarado"@es ;
     rdfs:comment "El nombre con el que la empresa declaró el pozo. Su energia:CompanyName dice por qué Rastro sabe qué empresa es."@es .
