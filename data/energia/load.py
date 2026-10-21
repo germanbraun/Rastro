@@ -187,18 +187,18 @@ def main():
             ON CONFLICT (id) DO UPDATE SET name = EXCLUDED.name""")
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
 
-        def copy(table, rows, source, version):
-            copiar(conn, table, rows, source, version)
+        def copy(table, rows, source, version, archivo=None):
+            copiar(conn, table, rows, source, version, archivo=archivo)
 
         with produccion.open(encoding="utf-8-sig", newline="") as fh:
             copy("capitulo4.produccion",
                  ([r[c] or None for c in PRODUCCION_COLS] for r in csv.DictReader(fh) if r["anio"] == "2025"),
-                 "capitulo4", "producción 2025")
+                 "capitulo4", "producción 2025", archivo=produccion)
         for anio, f in anteriores.items():
             with f.open(encoding="utf-8-sig", newline="") as fh:
                 copy("capitulo4.produccion_historica",
                      ([r[c] or None for c in PRODUCCION_COLS] for r in csv.DictReader(fh) if r["anio"] == str(anio)),
-                     "capitulo4", f"producción {anio}")
+                     "capitulo4", f"producción {anio}", archivo=f)
 
         def pozos(fh):
             for r in csv.DictReader(fh):
@@ -208,7 +208,7 @@ def main():
                     lon = lat = None
                 yield [(r[c] or "").strip() or None for c in POZO_COLS] + [lon, lat]
         with padron.open(encoding="utf-8-sig", newline="") as fh:
-            copy("capitulo4.pozo", pozos(fh), "capitulo4", "padrón de pozos")
+            copy("capitulo4.pozo", pozos(fh), "capitulo4", "padrón de pozos", archivo=padron)
 
         copy("sig_energia.concesion", concesiones, "sig_energia", "WFS")
         copy("sig_energia.venteo_declarado", declarados, "sig_energia", "WFS")
@@ -221,7 +221,7 @@ def main():
                  ([r["id_estudio"], r["fecha_estudio"] or None, r["tipo_estudio"] or None, (r["concesion"] or "").strip() or None,
                    r["yacimiento"] or None, r["empresa"] or None, r["objeto_estudio"] or None, r["nombre_objeto"] or None,
                    (r["observaciones"] or "").strip() or None] for r in csv.DictReader(fh)),
-                 "ambiental", "listado de estudios ambientales")
+                 "ambiental", "listado de estudios ambientales", archivo=estudios)
 
         # Las empresas que más producen u operan, con su nombre de las declaraciones juradas
         # Se busca sin forma societaria («YPF S.A.» → «YPF»): GLEIF busca por palabras

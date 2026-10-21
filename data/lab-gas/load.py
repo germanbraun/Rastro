@@ -48,17 +48,17 @@ def main():
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
         conn.execute("TRUNCATE capitulo4_anterior.produccion, fractura.fractura")
 
-        def copy(table, rows, source, version):
-            copiar(conn, table, rows, source, version, ancho=34)
+        def copy(table, rows, source, version, archivo=None):
+            copiar(conn, table, rows, source, version, ancho=34, archivo=archivo)
 
         for anio, f in produccion.items():
             with f.open(encoding="utf-8-sig", newline="") as fh:
                 copy("capitulo4_anterior.produccion",
                      ([r[c] or None for c in PRODUCCION_COLS] for r in csv.DictReader(fh) if r["anio"] == str(anio)),
-                     "capitulo4", f"producción {anio}")
+                     "capitulo4", f"producción {anio}", archivo=f)
         with fractura.open(encoding="utf-8-sig", newline="") as fh:
             copy("fractura.fractura", ([(r[c] or "").strip() or None for c in FRACTURA_COLS] for r in csv.DictReader(fh)),
-                 "fractura", f"descargado {fractura.stat().st_mtime:.0f}")
+                 "fractura", "Adjunto IV, actualización diaria", archivo=fractura)
         conn.execute("CREATE INDEX IF NOT EXISTS produccion_anterior_pozo ON capitulo4_anterior.produccion (idpozo)")
 
 

@@ -91,7 +91,8 @@ Corre en la máquina, no en Docker: necesita `python3 -m pip install -r requirem
 
 ```bash
 python3 lab/gas/modelo.py              # o un pozo, --12-meses, --como-trabajo-publicado
-python3 lab/gas/modelo.py --publicar   # guarda la corrida y sus predicciones en Rastro, para consultarlas
+python3 lab/gas/modelo.py --publicar   # guarda la corrida, su entrada y sus predicciones en Rastro, para consultarlas
+python3 lab/gas/modelo.py --comparar   # qué cambió entre las dos últimas corridas, pozo por pozo
 python3 lab/gas/a_ciegas.py            # arma la prueba a ciegas: docs/lab-explicaciones-a-ciegas.md
 ```
 

@@ -51,7 +51,7 @@ docker compose run --rm ontology-check                 # ontologías y queries d
 docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun|puntaje   # evaluación
 layer/energia/cambio/cambio.sh registrar               # prueba de cambio (siempre termina en «deshacer»)
 layer/energia/cambio/correccion.sh registrar           # una corrección, todos los resultados (~15 min)
-python3 lab/gas/modelo.py [<pozo>|--12-meses|--como-trabajo-publicado|--publicar]   # Rastro Lab desde la consola
+python3 lab/gas/modelo.py [<pozo>|--12-meses|--como-trabajo-publicado|--publicar|--comparar]   # Rastro Lab desde la consola
 python3 docs/slides/build.py                           # arma los mazos HTML
 ```
 

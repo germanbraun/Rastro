@@ -35,7 +35,10 @@ CREATE TABLE rastro_meta.load_run (
     version     text,           -- release o fecha del snapshot descargado
     loaded_at   timestamptz NOT NULL DEFAULT now(),
     table_name  text NOT NULL,
-    row_count   bigint NOT NULL
+    row_count   bigint NOT NULL,
+    archivo     text,           -- el archivo descargado, si la fuente es un archivo
+    sha256      text,           -- su huella: si la fuente publica otra versión, cambia
+    descargado  date            -- el día en que se descargó
 );
 
 -- Checkpoint de la Fase 0: conteo por fuente según la última carga de cada tabla.

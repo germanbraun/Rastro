@@ -15,7 +15,8 @@ con Postgres y Ontop de energía arriba:
     python3 lab/gas/modelo.py <idpozo>    # la explicación de otro pozo
     python3 lab/gas/modelo.py --12-meses  # validación: el gas de los primeros 12 meses, otro corte por fecha
     python3 lab/gas/modelo.py --como-trabajo-publicado   # validación con el diseño de un trabajo con las mismas fuentes
-    python3 lab/gas/modelo.py --publicar  # guarda la corrida y sus predicciones en Rastro (energia:Prediction)
+    python3 lab/gas/modelo.py --publicar  # guarda la corrida, su entrada y sus predicciones en Rastro (energia:Prediction)
+    python3 lab/gas/modelo.py --comparar [<corrida> <corrida>]   # qué cambió entre dos corridas (por defecto, las dos últimas)
 """
 import os
 from pathlib import Path
@@ -477,10 +478,13 @@ def publicar(r, b, desde_hasta, dentro, prueba=PRUEBA):
         return "NULL" if v is None or (isinstance(v, float) and np.isnan(v)) else "'" + str(v).replace("'", "''") + "'"
 
     m, ahora = r["B"], datetime.now()
-    corrida = f"{ahora:%Y%m%d-%H%M}-{version()}"
+    corrida = f"{ahora:%Y%m%d-%H%M%S}-{version()}"
     de_prueba = (b.inicio >= prueba).values
-    predicciones, aportes = [], []
+    predicciones, aportes, entradas = [], [], []
     for i, f in b.iterrows():
+        entradas.append(f"({txt(corrida)}, {txt(f.idpozo)}, {txt(f'{f.inicio:%Y-%m-%d}')}, {txt(f.grupo)}, {txt(f.area)}, "
+                        + ", ".join("NULL" if pd.isna(f[c]) else f"{float(f[c]):.3f}" for c in ["pct", *FRACTURA_B, "gas"])
+                        + f", {bool(de_prueba[i])})")
         gas = float(m["pred"][i])
         predicciones.append(f"({txt(corrida)}, {txt(f.idpozo)}, {gas:.3f}, {max(gas + desde_hasta[0], 0):.3f}, "
                             f"{gas + desde_hasta[1]:.3f}, {bool(de_prueba[i])}, {txt(f.s)}, {txt(f.fr)}, {txt(f.st)})")
@@ -492,8 +496,32 @@ INSERT INTO lab_gas.corrida VALUES ({txt(corrida)}, {txt(version())}, {txt(f"{ah
   {int((~de_prueba).sum())}, {int(de_prueba.sum())}, {m['error']:.3f}, {m['r2']:.4f}, {dentro:.4f}, true);
 INSERT INTO lab_gas.prediccion VALUES {", ".join(predicciones)};
 INSERT INTO lab_gas.aporte VALUES {", ".join(aportes)};
+INSERT INTO lab_gas.entrada VALUES {", ".join(entradas)};
 """)
     return corrida
+
+
+def comparar(antes=None, despues=None):
+    """Qué cambió entre dos corridas publicadas (por defecto, las dos últimas): pozos cuya entrada o predicción es
+    distinta, en qué variable y cuánto se movió la predicción."""
+    # solo corridas con su entrada guardada (las primeras no la tienen)
+    corridas = sql_local("SELECT id FROM lab_gas.corrida c WHERE EXISTS (SELECT 1 FROM lab_gas.entrada e "
+                         "WHERE e.corrida = c.id) ORDER BY fecha DESC LIMIT 2").id.tolist()
+    if len(corridas) < 2 and not (antes and despues):
+        return None
+    despues, antes = despues or corridas[0], antes or corridas[1]
+    columnas = ["operadora", "concesion", "participacion", "rama", "etapas", "arena", "agua", "presion", "gas"]
+    distintas = " OR ".join(f"a.{c} IS DISTINCT FROM d.{c}" for c in columnas)
+    cambios = sql_local(f"""
+SELECT d.idpozo, concat_ws(', ', {", ".join(f"CASE WHEN a.{c} IS DISTINCT FROM d.{c} THEN '{c}' END" for c in columnas)}) AS cambio,
+       round(pa.gas, 1) AS antes, round(pd.gas, 1) AS despues, round(pd.gas - pa.gas, 1) AS diferencia
+FROM lab_gas.entrada d
+JOIN lab_gas.entrada a ON a.idpozo = d.idpozo AND a.corrida = '{antes}'
+JOIN lab_gas.prediccion pd ON pd.corrida = d.corrida AND pd.idpozo = d.idpozo
+JOIN lab_gas.prediccion pa ON pa.corrida = a.corrida AND pa.idpozo = a.idpozo
+WHERE d.corrida = '{despues}' AND ({distintas} OR abs(pd.gas - pa.gas) > 0.05)
+ORDER BY abs(pd.gas - pa.gas) DESC""")
+    return {"antes": antes, "despues": despues, "cambios": cambios}
 
 
 def peso_por_concepto(r, b, prueba=PRUEBA):
@@ -543,6 +571,14 @@ if __name__ == "__main__":
         sys.exit()
 
     a, b = preparar(sql(SQL_GAS), sql(SQL_A), sparql(SPARQL_B))
+    if "--comparar" in sys.argv:
+        c = comparar(*[x for x in sys.argv[2:] if not x.startswith("--")][:2])
+        if c is None:
+            print("Hacen falta dos corridas publicadas.")
+        else:
+            print(f"De {c['antes']} a {c['despues']}: {len(c['cambios'])} pozos con otra entrada u otra predicción.")
+            print(c["cambios"].head(15).to_string(index=False))
+        sys.exit()
     if "--publicar" in sys.argv:
         r = modelos(a, b)
         desde_hasta = rango(b, **VARIABLES["B"])

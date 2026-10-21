@@ -14,7 +14,7 @@ Un cargador baja datos, los guarda en `data/raw/` y los carga en Postgres (un es
 3. **Escribí el cargador** en `data/<fuente>/`:
    - `schema.sql` con las tablas, con los nombres de la fuente original. Si el enlazador lo necesita aunque la fuente no esté cargada, que no borre nada (`CREATE ... IF NOT EXISTS`) y que el cargador vacíe las tablas antes de cargar.
    - `load.py` que registra la fuente en `rastro_meta.source` (con licencia), descarga a `data/raw/<fuente>/` con caché y reintentos, y carga con `COPY`.
-   - Una fila en `rastro_meta.load_run` por tabla, con la versión de la fuente.
+   - Una fila en `rastro_meta.load_run` por tabla, con la versión de la fuente: usá `copiar()` de `data/comun.py` y pasale el archivo descargado (`archivo=`), así queda su huella SHA-256 y el día en que se bajó.
 4. **Sumá el servicio** `<fuente>-loader` en `infra/docker-compose.yml`, con `profiles: ["load"]` y la imagen `./loaders`.
 5. **Credenciales** solo por variables de `.env`. Agregá la variable vacía a `.env.example`. Pasá contraseñas por parámetros de conexión, nunca dentro de una URL, porque los errores las imprimen.
 6. **Enlaces:** si la fuente nombra empresas, pozos o concesiones, sumala al enlazador del dominio (`linking/<dominio>/links.sql`): sus nombres a `empresa_nombre` con su `fuente`, y una tabla de enlace con regla y evidencia. Mapeala con `prov:wasDerivedFrom` a la fuente y sumá sus términos a `layer/dominios.yaml`.

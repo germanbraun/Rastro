@@ -43,6 +43,12 @@ CREATE TABLE IF NOT EXISTS lab_gas.prediccion (
     inicio_iri text, fractura_iri text, socio_iri text,   -- lo que usó la predicción, por su identidad en Rastro
     PRIMARY KEY (corrida, idpozo)
 );
+-- Lo que entró al modelo en cada corrida, pozo por pozo: con esto una corrida se puede rehacer y comparar con otra
+CREATE TABLE IF NOT EXISTS lab_gas.entrada (
+    corrida text, idpozo text, inicio date, operadora text, concesion text, participacion numeric,
+    rama numeric, etapas numeric, arena numeric, agua numeric, presion numeric, gas numeric, de_prueba boolean,
+    PRIMARY KEY (corrida, idpozo)
+);
 CREATE TABLE IF NOT EXISTS lab_gas.aporte (
     corrida text, idpozo text, factor text, aporte numeric,
     PRIMARY KEY (corrida, idpozo, factor)

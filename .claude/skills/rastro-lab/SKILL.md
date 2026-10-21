@@ -31,7 +31,8 @@ python3 lab/gas/modelo.py <idpozo>        # la explicación de otro pozo
 python3 lab/gas/modelo.py --12-meses      # validación con el gas de 12 meses
 python3 lab/gas/modelo.py --como-trabajo-publicado # validación con el diseño de un trabajo publicado con las mismas fuentes
 python3 lab/gas/a_ciegas.py               # arma docs/lab-explicaciones-a-ciegas.md (clave en lab/gas/a-ciegas-clave.json)
-python3 lab/gas/modelo.py --publicar      # guarda la corrida y sus predicciones en Rastro (esquema lab_gas, energia:Prediction)
+python3 lab/gas/modelo.py --publicar      # guarda la corrida, su entrada y sus predicciones en Rastro (esquema lab_gas)
+python3 lab/gas/modelo.py --comparar      # qué cambió entre las dos últimas corridas, pozo por pozo
 ```
 
 La app lo muestra en la pestaña **Rastro Lab** (`app/lab.py`) y en el momento 3 de la demo. Después de cambiar `lab/gas/modelo.py` o `app/lab.py`, `docker compose restart app`.
@@ -41,6 +42,7 @@ La app lo muestra en la pestaña **Rastro Lab** (`app/lab.py`) y en el momento 3
 Cada corrida publicada queda en Rastro: `energia:ModelRun` (versión = huella de `lab/gas/modelo.py`, fecha, corte, error, `energia:current`), `energia:Prediction` (valor, rango, `prov:wasGeneratedBy` la corrida, `prov:used` el inicio del pozo, su fractura y la participación de la operadora) y `energia:Contribution` (el aporte de cada factor). Los registros de origen también están, uno por uno: `energia:FractureReport` (cada fractura informada) y `energia:MonthlyGas` (cada mes de gas), y la fractura y el inicio del pozo dicen de cuáles salen (`prov:wasDerivedFrom`). Las preguntas 11, 12 y 13 de `ontology/energia/competency-questions.md` las consultan, y el asistente de IA las puede responder en «Mi propia pregunta». Las tablas (`lab_gas`) no se borran al rearmar los enlaces.
 
 - **Publicá una corrida nueva** cada vez que cambie el modelo o sus datos, y revisá que la pregunta 11 cuente lo mismo que «datos dudosos» del modelo.
+- **Cada corrida guarda su entrada** (`lab_gas.entrada`: lo que vio el modelo, pozo por pozo). Con el mismo código y los mismos datos, dos corridas dan lo mismo (`--comparar` da 0 cambios); si una fuente cambia, `--comparar` dice qué pozos, en qué variable y cuánto se movió la predicción.
 - **El rango** sale de los errores del año anterior a la prueba (sin mirar la prueba): se informa qué parte de los pozos de prueba cayó adentro (hoy 71 de 100), aunque no llegue a 80.
 
 ## Al cambiar algo
