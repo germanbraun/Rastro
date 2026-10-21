@@ -12,6 +12,7 @@ for deck in sorted((here / "mazos").glob("*.json")):
     (here / f"{deck.stem}.html").write_text(f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{meta["title"]}</title>
+{"".join(f'<link rel="stylesheet" href="{f["href"]}">' for f in meta.get("faces", {}).values() if f.get("href"))}
 <!-- Generado por build.py. No editar a mano: editar slides/ y volver a correr build.py. -->
 <style>
 *{{margin:0;box-sizing:border-box}}

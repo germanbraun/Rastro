@@ -12,3 +12,5 @@ El mazo de petróleo y gas, el de la demo, es más corto: la historia va en las 
 
 - **Ver:** abrir el `.html` del mazo en el navegador.
 - **Editar:** cada diapositiva está en `slides/`; el orden de cada mazo, en `mazos/<nombre>.json`. Las diapositivas genéricas (qué es Rastro, beneficios, arquitectura, anexo) se comparten. Las notas del orador están en el `<aside>` de cada una. Después de editar, correr `python3 docs/slides/build.py`.
+
+El mazo de petróleo y gas tiene un estilo parejo que aplica `estilo.py` (tipografías, escala de tamaños, tarjetas, pie con el número de diapositiva); después de cambiar una diapositiva, corré `python3 estilo.py` y `python3 build.py`.
