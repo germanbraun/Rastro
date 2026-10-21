@@ -1,6 +1,6 @@
 """Le da al mazo de petróleo y gas un estilo parejo, siempre igual, para no retocar diapositiva por diapositiva:
 
-- Tipografía: IBM Plex Sans para el texto y Source Serif 4 para los títulos (Google Fonts, en «faces» del mazo).
+- Tipografía: Times New Roman en todo el mazo (la del sistema: no se descarga nada).
 - Una escala de seis tamaños: 24, 28, 32, 40, 56 (títulos) y 72 (números grandes); la portada conserva los suyos.
 - Tarjetas blancas con un borde fino y el mismo radio.
 - Un pie igual en cada diapositiva de contenido: el nombre del mazo a la izquierda y el número a la derecha.
@@ -21,14 +21,9 @@ PIE_TEXTO = "Rastro · Petróleo y gas en Argentina"
 SIN_PIE = {"cover-energia", "anexo-energia"}    # portada y separador del anexo
 COMPARTIDAS = {"quees", "beneficios", "anexo"}  # se copian para este mazo
 ALTO_DIBUJO = {"arquitectura-energia": 600, "ontologiaenergia": 600, "instancia-energia": 440}   # px, para que entren sobre el pie
-TEXTO = "'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif"
-TITULOS = "'Source Serif 4', Georgia, serif"
-FACES = {
-    "ibm-plex-sans": {"family": "IBM Plex Sans",
-                      "href": "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"},
-    "source-serif-4": {"family": "Source Serif 4",
-                       "href": "https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&display=swap"},
-}
+TEXTO = "'Times New Roman', Times, serif"
+TITULOS = TEXTO
+FACES = {}                                       # Times New Roman es del sistema
 PIE = re.compile(r'\n?<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between[^"]*">'
                  r".*?</div>", re.S)
 

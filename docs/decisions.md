@@ -698,3 +698,7 @@ Tres pruebas que siguieron a otra mirada sobre el caso (que propuso medir el imp
 - **Las predicciones sin fractura o sin participación** (17 y 14 de 559 en la corrida vigente) no son una falla: el modelo usa el promedio y la explicación lo dice. Por eso la regla exige solo el inicio del pozo.
 - **Dónde se ven:** en «Por qué confiar», en palabras de negocio; con «Ver detalles técnicos», en «Bajo el capó → Reglas de calidad (SHACL)», cada regla en Turtle con lo que no cumple. Y una diapositiva en el anexo del mazo.
 - **De paso:** algunas siglas de pozo de las trayectorias llegan con la codificación rota («BAÃ±» en lugar de «Bañ»). No cambia ningún número; queda anotado para el cargador.
+
+## 2026-10-21 — El mazo vuelve a Times New Roman
+
+- Al darle al mazo un estilo más profesional se cambió la tipografía a IBM Plex Sans y Source Serif 4 sin consultarlo. Al usuario no le gustó: el mazo vuelve a Times New Roman, en todo el mazo. Es del sistema, así que el mazo no descarga ninguna tipografía. El resto del estilo (escala de tamaños, tarjetas, pie con número) se mantiene. `docs/slides/estilo.py` lo aplica.
