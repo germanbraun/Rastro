@@ -51,6 +51,9 @@ tarjeta_cambio: >-
   qué hubo que arreglar.
 tarjeta_auditar: >-
   Cada enlace entre fuentes guarda qué decía cada fuente, la regla que se aplicó y de dónde salió (PROV-O).
+fuera: >-
+  Un asistente de IA que no tiene el dato puede inventarlo. Acá se le hacen preguntas que los datos no responden,
+  con la regla de decir qué falta, y se cuenta qué hizo cada camino. Lo mide layer/fuera.py.
 calidad: >-
   Cada regla dice cómo tienen que ser los datos integrados (por ejemplo, que las participaciones de una concesión no
   sumen más de 100 %) y se comprueba sobre todos los datos de Rastro. Un ⚠️ indica cuántos datos no la cumplen.

@@ -13,10 +13,14 @@ from datetime import date
 from pathlib import Path
 
 import requests
+import yaml
 from pyshacl import validate
 from rdflib import RDF, Graph, Namespace
 
 REGLAS = Path(__file__).parent / "energia" / "calidad" / "reglas.ttl"
+EJEMPLOS = Path(__file__).parent / "energia" / "calidad" / "ejemplos.yaml"
+PREFIJOS_TTL = ("@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n"
+                "@prefix e: <https://w3id.org/rastro/energia/> .\n")
 SALIDA = Path("/layer/energia/calidad.json")
 ONTOP = os.environ.get("ONTOP_ENERGIA", "http://ontop-energia:8080/sparql")
 SH = Namespace("http://www.w3.org/ns/shacl#")
@@ -56,20 +60,40 @@ def bloques():
             yield prefijos, bloque.strip()
 
 
-def revisados(datos, forma, regla):
-    """Cuántos datos mira la regla."""
+def blancos(datos, forma, regla):
+    """Los datos que mira la regla."""
     for p, o in forma.predicate_objects(regla):
         if p == SH.targetClass:
-            return len(set(datos.subjects(RDF.type, o)))
+            return set(datos.subjects(RDF.type, o))
         if p == SH.targetSubjectsOf:
-            return len(set(datos.subjects(o, None)))
+            return set(datos.subjects(o, None))
         if p == SH.targetObjectsOf:
-            return len(set(datos.objects(None, o)))
-    return 0
+            return set(datos.objects(None, o))
+    return set()
+
+
+def en_turtle(datos, nodo, entrantes):
+    """Un dato de Rastro en Turtle: lo que dice de él y, si la regla mira lo que apunta a él (una concesión), eso."""
+    g = Graph()
+    for n in [nodo] + (sorted(datos.subjects(None, nodo))[:4] if entrantes else []):
+        for t in datos.triples((n, None, None)):
+            g.add(t)
+    g.bind("energia", "https://w3id.org/rastro/energia#")
+    g.bind("prov", "http://www.w3.org/ns/prov#")
+    g.bind("e", "https://w3id.org/rastro/energia/")
+    texto = g.serialize(format="turtle")
+    return "\n".join(line for line in texto.splitlines() if not line.startswith("@prefix")).strip()
+
+
+def ejemplo_roto(forma, malo):
+    """Qué dice SHACL del ejemplo roto."""
+    _, informe, _ = validate(Graph().parse(data=PREFIJOS_TTL + malo, format="turtle"), shacl_graph=forma, advanced=True)
+    return sorted({str(informe.value(r, SH.resultMessage)) for r in informe.subjects(RDF.type, SH.ValidationResult)})
 
 
 def main():
     datos = traer()
+    ejemplos = yaml.safe_load(EJEMPLOS.read_text())
     resultado = {"fecha": date.today().isoformat(), "triples": len(datos), "reglas": []}
     for prefijos, bloque in bloques():
         forma = Graph().parse(data=prefijos + "\n" + bloque, format="turtle")
@@ -77,12 +101,18 @@ def main():
         _, informe, _ = validate(datos, shacl_graph=forma, advanced=True)
         fallas = [{"dato": str(informe.value(r, SH.focusNode)), "mensaje": str(informe.value(r, SH.resultMessage))}
                   for r in informe.subjects(RDF.type, SH.ValidationResult)]
+        fallidos = {f["dato"] for f in fallas}
+        nodos = sorted(n for n in blancos(datos, forma, regla) if str(n) not in fallidos)
+        ejemplo = ejemplos[str(regla).split("#")[-1]]
         resultado["reglas"].append({
             "id": str(regla).split("#")[-1],
             "nombre": str(forma.value(regla, Namespace("http://www.w3.org/2000/01/rdf-schema#").label)),
             "porque": str(forma.value(regla, Namespace("http://www.w3.org/2000/01/rdf-schema#").comment)),
             "shacl": bloque,
-            "revisados": revisados(datos, forma, regla),
+            "revisados": len(blancos(datos, forma, regla)),
+            "un_dato": en_turtle(datos, nodos[0], (regla, SH.targetObjectsOf, None) in forma) if nodos else None,
+            "roto": ejemplo["malo"],
+            "roto_dice": ejemplo_roto(forma, ejemplo["malo"]),
             "fallas": len(fallas),
             "ejemplos": sorted(fallas, key=lambda f: f["dato"])[:10],
         })

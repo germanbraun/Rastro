@@ -459,6 +459,55 @@ preguntas:
 
 # Enriquecer con datos de afuera: una consulta une Rastro con Wikidata en vivo, en GraphDB, por el LEI; y lo mismo
 # guardado en Rastro (materializado: wikidata-energia-loader), que se consulta con la pregunta 15
+afirmaciones:                  # «Comprobar una afirmación»: Rastro calcula el veredicto en vivo, con cada lectura
+  titulo: Comprobar una afirmación
+  intro: >-
+    Una frase de un informe o de la prensa, comprobada contra los datos. Rastro dice si **se sostiene**, si **no se
+    sostiene** (con el valor correcto) o si **no tiene el dato**, sin inventarlo. Cuando la frase se puede leer de dos
+    formas, muestra las dos.
+  ejemplos:
+    - texto: Total Austral fue la mayor productora de gas de Argentina en 2025.
+      nota: Las dos lecturas son correctas y la frase no dice cuál usa. Los rankings publicados usan la primera.
+      lecturas:
+        - nombre: Si «producir» es el gas que opera cada empresa
+          tipo: primero
+          empresa: TOTAL AUSTRAL
+          divisor: 1000000
+          unidad: miles de millones de m³
+          consulta: |
+            SELECT ?empresa (SUM(?gas) AS ?gas2025) WHERE {
+              ?p a energia:WellProduction ; energia:declaredBy ?e ; energia:gas ?gas .
+              ?e energia:name ?empresa .
+            } GROUP BY ?empresa ORDER BY DESC(?gas2025) LIMIT 5
+        - nombre: Si «producir» es el gas que le corresponde por su participación
+          tipo: primero
+          empresa: TOTAL AUSTRAL
+          divisor: 1000000
+          unidad: miles de millones de m³
+          consulta: |
+            SELECT ?empresa (SUM(?gas * ?porcentaje / 100) AS ?gas2025) WHERE {
+              ?p a energia:WellProduction ; energia:inConcession ?c ; energia:gas ?gas .
+              ?s a energia:Stake ; energia:inConcession ?c ; energia:partner ?e ; energia:percent ?porcentaje .
+              ?e energia:name ?empresa .
+            } GROUP BY ?empresa ORDER BY DESC(?gas2025) LIMIT 5
+    - texto: Tecpetrol declaró unos 6.900 millones de m³ de gas en 2025.
+      lecturas:
+        - nombre: El gas que declaró Tecpetrol en 2025
+          tipo: numero
+          valor: 6900
+          divisor: 1000
+          unidad: millones de m³
+          consulta: |
+            SELECT (SUM(?gas) AS ?gas2025) WHERE {
+              ?p a energia:WellProduction ; energia:declaredBy ?e ; energia:gas ?gas .
+              ?e energia:name ?nombre . FILTER(CONTAINS(UCASE(?nombre), "TECPETROL"))
+            }
+    - texto: YPF tenía reservas probadas de gas por 150 mil millones de m³ a fin de 2024.
+      lecturas:
+        - nombre: Las reservas probadas de YPF
+          tipo: sin_datos
+          falta: Rastro no tiene reservas. Tiene la producción declarada, las concesiones con sus socios, los venteos y los estudios ambientales.
+
 externo:
   titulo: Enriquecer con datos de afuera (Wikidata)
   materializado: /ontology/energia/queries/cq15.rq
@@ -523,6 +572,13 @@ cambios:
 
 # Rastro Lab: el mismo modelo de gas con y sin Rastro (app/lab.py, lab/gas/modelo.py)
 lab: gas
+fuera:                         # ¿dice cuándo no tiene el dato? lo mide layer/fuera.py
+  archivo: /layer/energia/fuera/resultados.json
+  intro: >-
+    Preguntas del sector que los datos de Rastro no responden (precios, reservas, inversiones, 2026, empleo) y una de
+    control que sí. Con la misma regla para todos («si los datos no alcanzan, decí qué falta»), ninguno inventó: todos
+    dijeron qué faltaba. La diferencia está en la de control: sin datos no se puede responder; con datos, sí,
+    y con su fuente.
 calidad:                       # reglas de calidad (SHACL): ontology/energia/calidad/reglas.ttl, las comprueba `docker compose run --rm calidad`
   archivo: /layer/energia/calidad.json
   intro: >-

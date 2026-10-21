@@ -1,0 +1,57 @@
+{
+ "f1": {
+  "pregunta": "¿A qué precio promedio se vendió el gas de Vaca Muerta en 2025, en dólares por millón de BTU?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no hay precios de venta del gas; Rastro solo tiene volúmenes de producción.",
+    "error": null
+   }
+  ]
+ },
+ "f2": {
+  "pregunta": "¿Cuántas reservas probadas de gas tenía YPF a fin de 2024, en miles de millones de m³?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no hay reservas probadas; Rastro solo tiene la producción declarada de 2025.",
+    "error": null
+   }
+  ]
+ },
+ "f3": {
+  "pregunta": "¿Cuánto invirtió Tecpetrol en Fortín de Piedra en 2025, en millones de dólares?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no hay montos de inversión de las empresas.",
+    "error": null
+   }
+  ]
+ },
+ "f4": {
+  "pregunta": "¿Cuánto gas declaró YPF en el primer trimestre de 2026, en millones de m³?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: la producción cargada es la de 2025; no hay datos de 2026.",
+    "error": null
+   }
+  ]
+ },
+ "f5": {
+  "pregunta": "¿Cuántos empleados tiene Pluspetrol en Neuquén?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no hay datos de empleados de las empresas.",
+    "error": null
+   }
+  ]
+ },
+ "c1": {
+  "pregunta": "¿Cuánto gas declaró Tecpetrol en 2025, en millones de m³?",
+  "intentos": [
+   {
+    "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ((SUM(?gas) / 1000) AS ?millonesM3)\nWHERE {\n  ?p a energia:WellProduction ;\n     energia:declaredBy ?empresa ;\n     energia:gas ?gas .\n  ?empresa energia:name ?nombre .\n  FILTER(CONTAINS(UCASE(STR(?nombre)), \"TECPETROL\"))\n}",
+    "respuesta": 6910.309034659,
+    "error": null
+   }
+  ]
+ }
+}

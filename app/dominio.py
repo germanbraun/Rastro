@@ -589,7 +589,17 @@ def show_quality_shacl(quality):
     for r in result["reglas"]:
         mark = "✅" if not r["fallas"] else f"⚠️ {money(r['fallas'])}"
         with st.expander(f"{mark} · {r['nombre']} · {money(r['revisados'])} datos revisados"):
+            st.markdown("**La regla, en SHACL**")
             st.code(r["shacl"], language="turtle")
+            if r.get("un_dato"):
+                good, bad = st.columns(2)
+                with good:
+                    st.markdown("**Un dato de Rastro, en RDF** ✅ la cumple")
+                    st.code(r["un_dato"], language="turtle")
+                with bad:
+                    st.markdown("**Un dato roto, de ejemplo** ❌")
+                    st.code(r["roto"], language="turtle")
+                    st.caption("SHACL dice: " + " ".join(r["roto_dice"]))
             if r["ejemplos"]:
                 st.markdown("**Lo que no cumple**" + (" (los primeros 10)" if r["fallas"] > 10 else ""))
                 tabla(pd.DataFrame([{"Dato": e["dato"], "Qué falla": e["mensaje"]} for e in r["ejemplos"]]))
@@ -733,6 +743,7 @@ def render(cfg_path, tech):
 
     with ask_tab:
         modes = ["Una pregunta de ejemplo"] + (["Una pregunta sobre textos"] if cfg.get("texto") else []) \
+            + ([cfg["afirmaciones"]["titulo"]] if cfg.get("afirmaciones") else []) \
             + ([cfg["externo"]["titulo"]] if cfg.get("externo") else [])
         mode = st.radio("Tipo de pregunta", modes + ["Mi propia pregunta"], help=ayuda("modo"),
                         horizontal=True, label_visibility="visible", key=f"{domain}_mode")
@@ -740,6 +751,8 @@ def render(cfg_path, tech):
             show_text_question(cfg, tech)
         elif cfg.get("externo") and mode == cfg["externo"]["titulo"]:
             show_external(cfg, tech)
+        elif cfg.get("afirmaciones") and mode == cfg["afirmaciones"]["titulo"]:
+            show_claims(cfg, tech)
         elif mode == "Una pregunta de ejemplo":
             # La misma pregunta en las dos vistas; la técnica suma su formulación precisa debajo
             options = {q["simple"]: q for q in questions}
@@ -767,7 +780,9 @@ def render(cfg_path, tech):
                          key=f"{domain}_free_answer"):
                 with st.spinner("El LLM está escribiendo la query..."):
                     result = answer.ask_rastro(question, domain)
-                if result["query"] is None:
+                if result.get("sin_datos"):
+                    st.warning(f"Rastro no tiene ese dato: {result['sin_datos']}")
+                elif result["query"] is None:
                     st.error("El LLM no logró una query que funcione en tres intentos.")
                 else:
                     show_answer(cfg, tech, result["query"], result["columns"], result["rows"],
@@ -981,6 +996,45 @@ def show_correction(result, tech):
 
 
 GRAPHDB = "http://graphdb:7200/repositories/rastro"
+
+
+def claim_verdict(reading, rows):
+    """El veredicto de una lectura de la afirmación, calculado con lo que devolvió Rastro."""
+    if reading["tipo"] == "sin_datos":
+        return "🔍", "Rastro no tiene el dato", reading["falta"]
+    def fmt(v):
+        return f"{float(v) / reading['divisor']:,.1f} {reading['unidad']}".replace(",", "X").replace(".", ",").replace("X", ".")
+    if reading["tipo"] == "numero":
+        value = float(rows[0][0]) / reading["divisor"]
+        holds = abs(value - reading["valor"]) <= 0.05 * reading["valor"]
+        return ("✅", "Se sostiene", f"Rastro dice {fmt(rows[0][0])}.") if holds else \
+            ("❌", "No se sostiene", f"Rastro dice {fmt(rows[0][0])}.")
+    names = [r[0] for r in rows]
+    place = next((i for i, n in enumerate(names) if reading["empresa"] in n.upper()), None)
+    ranking = " · ".join(f"{i + 1}. {r[0]} ({fmt(r[1])})" for i, r in enumerate(rows[:3]))
+    if place == 0:
+        return "✅", "Se sostiene", ranking
+    where = f"es la {place + 1}.ª" if place is not None else f"no está entre las {len(rows)} primeras"
+    return "❌", f"No se sostiene: {where}", ranking
+
+
+def show_claims(cfg, tech):
+    """Comprobar una afirmación: cada ejemplo se compara en vivo con Rastro, lectura por lectura."""
+    claims, domain = cfg["afirmaciones"], cfg["domain"]
+    st.markdown(md(claims["intro"]))
+    chosen = st.radio("Afirmación", [c["texto"] for c in claims["ejemplos"]], key=f"{domain}_afirmacion")
+    claim = next(c for c in claims["ejemplos"] if c["texto"] == chosen)
+    st.markdown(f"> {claim['texto']}")
+    for reading in claim["lecturas"]:
+        rows = run(prefixed(reading["consulta"], domain), domain)[1] if reading.get("consulta") else []
+        mark, verdict, detail = claim_verdict(reading, rows)
+        with st.container(border=True):
+            st.markdown(f"**{reading['nombre']}**")
+            st.markdown(f"{mark} **{verdict}.** {md(detail)}")
+            if tech and reading.get("consulta"):
+                st.code(reading["consulta"].strip(), language="sparql")
+    if claim.get("nota"):
+        st.caption(md(claim["nota"]))
 
 
 def show_external(cfg, tech):
@@ -1277,6 +1331,26 @@ def trust(cfg, tech, evaluation, changes):
         st.info("Sin Rastro, cada consulta sabe cómo se llaman las columnas y en qué unidad están los valores: si la "
                 "base cambia, hay que encontrar y arreglar cada una. Con Rastro, eso está en un solo lugar.")
     show_quality(cfg.get("calidad"))
+    show_no_data(cfg.get("fuera"), tech)
+
+
+def show_no_data(fuera, tech):
+    """¿Dice cuándo no tiene el dato? Las preguntas fuera de los datos, camino por camino."""
+    path = fuera.get("archivo") if fuera else None
+    if not path or not Path(path).exists():
+        return
+    result = read_json(path)
+    st.markdown("### Cuando no tiene el dato", help=ayuda("fuera"))
+    st.caption(md(fuera["intro"]))
+    names = {k: v for k, v in result["caminos"].items() if tech or k != "D"}
+    n = len(result["preguntas"])
+    for col, (k, name) in zip(st.columns(len(names)), names.items()):
+        col.metric(name, f"{result['totales'][k]} de {n}")
+    tabla(pd.DataFrame([{"Pregunta": row["pregunta"], "Qué falta": row["falta"],
+                         **{name: f"{row[k]['marca']} {row[k]['respuesta']}" for k, name in names.items()}}
+                        for row in result["preguntas"].values()]),
+          column_config={"Pregunta": st.column_config.TextColumn(width="medium")})
+    st.caption("✅ dijo qué falta (o respondió la de control) · ❌ respondió lo que no sabe (o no respondió la de control).")
 
 
 def evaluation_detail(evaluation, totals, domain):

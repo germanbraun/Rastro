@@ -8,6 +8,11 @@
    "porque": "Todo lo que une o corrige Rastro tiene una regla. Si además no tiene su fuente y su evidencia, no se puede auditar.",
    "shacl": "calidad:EnlaceConEvidencia a sh:NodeShape ;\n    rdfs:label \"Cada enlace dice de qué fuente sale y por qué\" ;\n    rdfs:comment \"Todo lo que une o corrige Rastro tiene una regla. Si además no tiene su fuente y su evidencia, no se puede auditar.\" ;\n    sh:targetSubjectsOf energia:rule ;\n    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:message \"No dice de qué fuente sale.\" ] ;\n    sh:property [ sh:path energia:sourceText ; sh:minCount 1 ; sh:minLength 1 ; sh:message \"No tiene evidencia.\" ] .",
    "revisados": 113913,
+   "un_dato": "<https://w3id.org/rastro/energia/companyname/008725207f53f22f5b33d39107a39134> prov:wasDerivedFrom <https://w3id.org/rastro/source/fractura> ;\n    energia:rule \"mismo nombre normalizado\" ;\n    energia:sourceText \"Coincide el nombre sin acentos, puntuación ni forma societaria: «TOTAL AUSTRAL».\" .",
+   "roto": "e:enlace energia:rule \"punto dentro del contorno\" ; prov:wasDerivedFrom e:fuente .",
+   "roto_dice": [
+    "No tiene evidencia."
+   ],
    "fallas": 0,
    "ejemplos": []
   },
@@ -17,6 +22,11 @@
    "porque": "Con la participación se calcula lo que le corresponde a cada empresa y entra al modelo de Rastro Lab.",
    "shacl": "calidad:Participacion a sh:NodeShape ;\n    rdfs:label \"Cada participación es de una empresa en una concesión, entre 0 y 100 %\" ;\n    rdfs:comment \"Con la participación se calcula lo que le corresponde a cada empresa y entra al modelo de Rastro Lab.\" ;\n    sh:targetClass energia:Stake ;\n    sh:property [ sh:path energia:percent ; sh:minCount 1 ; sh:maxCount 1 ; sh:minExclusive 0 ; sh:maxInclusive 100 ;\n                  sh:message \"El porcentaje falta o no está entre 0 y 100.\" ] ;\n    sh:property [ sh:path energia:partner ; sh:minCount 1 ; sh:maxCount 1 ; sh:message \"No es de una sola empresa.\" ] ;\n    sh:property [ sh:path energia:inConcession ; sh:minCount 1 ; sh:maxCount 1 ; sh:message \"No es de una sola concesión.\" ] .",
    "revisados": 474,
+   "un_dato": "<https://w3id.org/rastro/energia/stake/AAB/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> ;\n    energia:percent 10.9 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"CONIPA S A CONSTRUCTORA INDUSTRIAL COMERCIAL FINANCIERA Y DE MANDATOS: 10.90 %\" .",
+   "roto": "e:socio a energia:Stake ; energia:percent 120 ; energia:partner e:ypf ; energia:inConcession e:concesion .",
+   "roto_dice": [
+    "El porcentaje falta o no está entre 0 y 100."
+   ],
    "fallas": 0,
    "ejemplos": []
   },
@@ -26,6 +36,11 @@
    "porque": "Si suman más, a los socios les toca más gas del que hay. Se tolera medio punto por el redondeo del mapa.",
    "shacl": "calidad:ConcesionHasta100 a sh:NodeShape ;\n    rdfs:label \"Las participaciones de una concesión suman 100 % o menos\" ;\n    rdfs:comment \"Si suman más, a los socios les toca más gas del que hay. Se tolera medio punto por el redondeo del mapa.\" ;\n    sh:targetObjectsOf energia:inConcession ;\n    sh:sparql [\n        sh:message \"Sus participaciones suman {?total} %.\" ;\n        sh:select \"\"\"\n            SELECT $this (SUM(?p) AS ?total) WHERE {\n                ?s <https://w3id.org/rastro/energia#inConcession> $this ; <https://w3id.org/rastro/energia#percent> ?p .\n            } GROUP BY $this HAVING (SUM(?p) > 100.5)\n        \"\"\" ] .",
    "revisados": 293,
+   "un_dato": "<https://w3id.org/rastro/energia/stake/AAB/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> ;\n    energia:percent 10.9 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"CONIPA S A CONSTRUCTORA INDUSTRIAL COMERCIAL FINANCIERA Y DE MANDATOS: 10.90 %\" .\n\n<https://w3id.org/rastro/energia/stake/AAB/FOMICRUZ%20S%20E> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/FOMICRUZ%20S%20E> ;\n    energia:percent 3.5 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"FOMICRUZ S.E.: 3.5 %\" .\n\n<https://w3id.org/rastro/energia/stake/AAB/INGENIERIA%20ALPA> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/INGENIERIA%20ALPA> ;\n    energia:percent 10.9 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"INGENIERIA ALPA S.A.: 10.90 %\" .\n\n<https://w3id.org/rastro/energia/stake/AAB/QUINTANA%20E%26P%20ARGENTINA> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/QUINTANA%20E%26P%20ARGENTINA> ;\n    energia:percent 72.5 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"QUINTANA E&P ARGENTINA S.R.L.: 72.50 %\" .",
+   "roto": "e:socio1 energia:inConcession e:concesion ; energia:percent 70 .\ne:socio2 energia:inConcession e:concesion ; energia:percent 40 .",
+   "roto_dice": [
+    "Sus participaciones suman 110 %."
+   ],
    "fallas": 0,
    "ejemplos": []
   },
@@ -35,6 +50,12 @@
    "porque": "Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.",
    "shacl": "calidad:Prediccion a sh:NodeShape ;\n    rdfs:label \"Cada predicción sale de un inicio de pozo y cae dentro de su rango\" ;\n    rdfs:comment \"Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.\" ;\n    sh:targetClass energia:Prediction ;\n    sh:property [ sh:path prov:used ; sh:qualifiedValueShape [ sh:class energia:WellStart ] ;\n                  sh:qualifiedMinCount 1 ; sh:qualifiedMaxCount 1 ; sh:message \"No dice de qué inicio de pozo sale.\" ] ;\n    sh:property [ sh:path energia:predictedLow ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedGas ;\n                  sh:message \"El mínimo del rango es mayor que la predicción.\" ] ;\n    sh:property [ sh:path energia:predictedGas ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedHigh ;\n                  sh:message \"La predicción es mayor que el máximo del rango.\" ] .",
    "revisados": 5031,
+   "un_dato": "<https://w3id.org/rastro/energia/prediction/20261021-0855-baf6d8fa/158961> a energia:Prediction ;\n    prov:used <https://w3id.org/rastro/energia/fracturing/158961>,\n        <https://w3id.org/rastro/energia/stake/FOR/TECPETROL>,\n        <https://w3id.org/rastro/energia/wellstart/158961> ;\n    energia:predictedGas 52.003 ;\n    energia:predictedHigh 68.337 ;\n    energia:predictedLow 19.022 .",
+   "roto": "e:prediccion a energia:Prediction ; energia:predictedLow 25 ; energia:predictedGas 20 ; energia:predictedHigh 30 .",
+   "roto_dice": [
+    "El mínimo del rango es mayor que la predicción.",
+    "No dice de qué inicio de pozo sale."
+   ],
    "fallas": 0,
    "ejemplos": []
   },
@@ -44,6 +65,11 @@
    "porque": "Por el LEI se unen GLEIF y Wikidata: dos LEI en una empresa son dos empresas unidas por error.",
    "shacl": "calidad:EmpresaUnLei a sh:NodeShape ;\n    rdfs:label \"Cada empresa tiene a lo sumo un LEI, con su formato de 20 caracteres\" ;\n    rdfs:comment \"Por el LEI se unen GLEIF y Wikidata: dos LEI en una empresa son dos empresas unidas por error.\" ;\n    sh:targetClass energia:Company ;\n    sh:property [ sh:path energia:lei ; sh:maxCount 1 ; sh:pattern \"^[A-Z0-9]{18}[0-9]{2}$\" ;\n                  sh:message \"Tiene más de un LEI, o uno con otro formato.\" ] .",
    "revisados": 12,
+   "un_dato": "<https://w3id.org/rastro/energia/company/CAPEX> a energia:Company ;\n    energia:lei \"529900C9G66T1U8FMX69\" .",
+   "roto": "e:ypf a energia:Company ; energia:lei \"549300BS2ZHDWDKUGX28\", \"ABC\" .",
+   "roto_dice": [
+    "Tiene más de un LEI, o uno con otro formato."
+   ],
    "fallas": 0,
    "ejemplos": []
   }

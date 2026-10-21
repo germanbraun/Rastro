@@ -1,0 +1,17 @@
+# Por regla de calidad (reglas.ttl), un dato que la cumple y uno roto, en Turtle (prefijos energia:, prov: y e:).
+# Los usan las pruebas (tests/test_calidad.py) y la app («Bajo el capó»), que muestra qué dice SHACL del roto.
+EnlaceConEvidencia:
+  bueno: 'e:enlace energia:rule "punto dentro del contorno" ; prov:wasDerivedFrom e:fuente ; energia:sourceText "El punto cae dentro de la concesión X." .'
+  malo: 'e:enlace energia:rule "punto dentro del contorno" ; prov:wasDerivedFrom e:fuente .'
+Participacion:
+  bueno: "e:socio a energia:Stake ; energia:percent 55 ; energia:partner e:ypf ; energia:inConcession e:concesion ."
+  malo: "e:socio a energia:Stake ; energia:percent 120 ; energia:partner e:ypf ; energia:inConcession e:concesion ."
+ConcesionHasta100:
+  bueno: "e:socio1 energia:inConcession e:concesion ; energia:percent 60 .\ne:socio2 energia:inConcession e:concesion ; energia:percent 40 ."
+  malo: "e:socio1 energia:inConcession e:concesion ; energia:percent 70 .\ne:socio2 energia:inConcession e:concesion ; energia:percent 40 ."
+Prediccion:
+  bueno: "e:prediccion a energia:Prediction ; prov:used e:inicio ; energia:predictedLow 10 ; energia:predictedGas 20 ; energia:predictedHigh 30 .\ne:inicio a energia:WellStart ."
+  malo: "e:prediccion a energia:Prediction ; energia:predictedLow 25 ; energia:predictedGas 20 ; energia:predictedHigh 30 ."
+EmpresaUnLei:
+  bueno: 'e:ypf a energia:Company ; energia:lei "549300BS2ZHDWDKUGX28" .'
+  malo: 'e:ypf a energia:Company ; energia:lei "549300BS2ZHDWDKUGX28", "ABC" .'

@@ -1,0 +1,57 @@
+{
+ "f1": {
+  "pregunta": "¿A qué precio promedio se vendió el gas de Vaca Muerta en 2025, en dólares por millón de BTU?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: la base no tiene precios de venta del gas; solo volúmenes producidos.",
+    "error": null
+   }
+  ]
+ },
+ "f2": {
+  "pregunta": "¿Cuántas reservas probadas de gas tenía YPF a fin de 2024, en miles de millones de m³?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: la base no tiene reservas probadas; solo la producción declarada mes a mes.",
+    "error": null
+   }
+  ]
+ },
+ "f3": {
+  "pregunta": "¿Cuánto invirtió Tecpetrol en Fortín de Piedra en 2025, en millones de dólares?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: la base no tiene montos de inversión; solo producción, concesiones, venteos, gasoductos y estudios ambientales.",
+    "error": null
+   }
+  ]
+ },
+ "f4": {
+  "pregunta": "¿Cuánto gas declaró YPF en el primer trimestre de 2026, en millones de m³?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: la producción cargada cubre de 2023 a 2025; no hay declaraciones del primer trimestre de 2026.",
+    "error": null
+   }
+  ]
+ },
+ "f5": {
+  "pregunta": "¿Cuántos empleados tiene Pluspetrol en Neuquén?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: la base no tiene datos de empleados de las empresas.",
+    "error": null
+   }
+  ]
+ },
+ "c1": {
+  "pregunta": "¿Cuánto gas declaró Tecpetrol en 2025, en millones de m³?",
+  "intentos": [
+   {
+    "query": "SELECT ROUND(SUM(p.gas_mm3) / 1000, 1) AS gas_millones_m3 FROM energia.produccion_pozo p JOIN energia.empresa e ON e.empresa_id = p.empresa_id WHERE e.nombre ILIKE '%TECPETROL%'",
+    "respuesta": 6910.3,
+    "error": null
+   }
+  ]
+ }
+}

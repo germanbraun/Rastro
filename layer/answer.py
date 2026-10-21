@@ -37,9 +37,14 @@ ROOT = Path(__file__).resolve().parent.parent
 HERE = Path(__file__).parent
 DOMAINS = yaml.safe_load((HERE / "dominios.yaml").read_text())
 
+# Cuando los datos no alcanzan, el LLM lo dice en lugar de inventar una query
+SIN_DATOS = "SIN DATOS:"
+NO_DATA_RULE = """Si los datos no alcanzan para responder (falta el período, la medida o el tema), no \
+inventes una query: devolvé en su lugar una sola línea que empiece con «SIN DATOS:» y diga qué falta."""
+
 QUERY_RULES = """La query tiene que devolver una sola columna: los nombres si la respuesta \
 es una lista, o una sola fila con el número si la respuesta es un número. No expliques \
-nada: devolvé solo la query."""
+nada: devolvé solo la query. """ + NO_DATA_RULE
 
 
 # --- Qué recibe el LLM en cada enfoque ----------------------------
@@ -152,11 +157,19 @@ def retry_message(error):
 
 def try_query(approach, query, kind, domain="oncologia"):
     """Ejecuta la query de B (SQL) o C (SPARQL) y devuelve la respuesta o el error."""
+    if sin_datos(query):
+        return {"answer": None, "attempt": {"query": query, "error": None}}
     try:
         column = run_sparql(query, domain) if approach == "C" else run_sql(query, approach, domain)
     except Exception as e:  # noqa: BLE001 - el error se le devuelve al modelo tal cual
         return {"answer": None, "attempt": {"query": query, "error": str(e).strip()[:2000]}}
     return {"answer": to_answer(column, kind), "attempt": {"query": query, "error": None}}
+
+
+def sin_datos(query):
+    """El LLM dijo que los datos no alcanzan (devuelve el motivo) o escribió una query (None)."""
+    text = (query or "").strip()
+    return text[len(SIN_DATOS):].strip() or "los datos no alcanzan" if text.upper().startswith(SIN_DATOS) else None
 
 
 def to_answer(column, kind):
@@ -215,7 +228,7 @@ APPROACHES = {k: (lambda q, kind, k=k: answer(k, q, kind)) for k in "ABC"}
 
 FREE_RULES = """La query puede devolver varias columnas, con nombres de variable claros en \
 español (por ejemplo ?farmaco, ?ensayos). Limitá el resultado a 50 filas. No expliques \
-nada: devolvé solo la query."""
+nada: devolvé solo la query. """ + NO_DATA_RULE
 
 # De qué fuente viene cada término de la ontología (dominios.yaml)
 def term_sources(domain="oncologia"):
@@ -231,6 +244,8 @@ def ask_rastro(question, domain="oncologia"):
     attempts = []
     for _ in range(MAX_ATTEMPTS):
         assistant, data = ask(system, messages, schema)
+        if sin_datos(data["query"]):
+            return {"query": None, "columns": [], "rows": [], "attempts": attempts, "sin_datos": sin_datos(data["query"])}
         try:
             columns, rows = run_sparql_table(data["query"], domain)
         except Exception as e:  # noqa: BLE001 - el error se le devuelve al modelo tal cual

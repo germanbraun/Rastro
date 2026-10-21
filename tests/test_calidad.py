@@ -3,6 +3,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 from pyshacl import validate
 from rdflib import Graph
 
@@ -14,30 +15,7 @@ PREFIJOS = """@prefix energia: <https://w3id.org/rastro/energia#> .
 @prefix e: <https://w3id.org/rastro/energia/> .
 """
 
-# Por regla: un dato que la cumple y uno que no
-CASOS = {
-    "EnlaceConEvidencia": (
-        'e:enlace energia:rule "punto dentro del contorno" ; prov:wasDerivedFrom e:fuente ; energia:sourceText "El punto cae en X." .',
-        'e:enlace energia:rule "punto dentro del contorno" ; prov:wasDerivedFrom e:fuente .',
-    ),
-    "Participacion": (
-        "e:p a energia:Stake ; energia:percent 55 ; energia:partner e:ypf ; energia:inConcession e:c .",
-        "e:p a energia:Stake ; energia:percent 120 ; energia:partner e:ypf ; energia:inConcession e:c .",
-    ),
-    "ConcesionHasta100": (
-        "e:a energia:inConcession e:c ; energia:percent 60 . e:b energia:inConcession e:c ; energia:percent 40 .",
-        "e:a energia:inConcession e:c ; energia:percent 70 . e:b energia:inConcession e:c ; energia:percent 40 .",
-    ),
-    "Prediccion": (
-        "e:p a energia:Prediction ; prov:used e:i ; energia:predictedLow 10 ; energia:predictedGas 20 ; energia:predictedHigh 30 ."
-        " e:i a energia:WellStart .",
-        "e:p a energia:Prediction ; energia:predictedLow 25 ; energia:predictedGas 20 ; energia:predictedHigh 30 .",
-    ),
-    "EmpresaUnLei": (
-        'e:ypf a energia:Company ; energia:lei "549300BS2ZHDWDKUGX28" .',
-        'e:ypf a energia:Company ; energia:lei "549300BS2ZHDWDKUGX28", "ABC" .',
-    ),
-}
+CASOS = {regla: (e["bueno"], e["malo"]) for regla, e in yaml.safe_load(calidad.EJEMPLOS.read_text()).items()}
 REGLAS = {bloque.split()[0].split(":")[1]: (prefijos, bloque) for prefijos, bloque in calidad.bloques()}
 
 

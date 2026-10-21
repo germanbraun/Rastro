@@ -37,6 +37,10 @@ Si solo cambió la fecha, descartá el cambio (`git checkout layer/energia/resul
 
 `energia_lab` (`layer/energia_lab/`) mide las preguntas sobre las predicciones de Rastro Lab, aparte de la evaluación de Layer, con sus propios usuarios de solo lectura y notas de SQL (`layer/dominios.yaml`). Un conjunto nuevo es una entrada en `layer/dominios.yaml` (puede heredar de otra con `<<: *ancla`) y su carpeta con `eval/questions.yaml`, `consistencia/parafrasis.yaml` y `reader.sql`.
 
+## Cuando no tiene el dato
+
+`layer/fuera.py` mide si el asistente dice qué falta en lugar de inventar: preguntas que los datos no responden y una de control que sí (`layer/<dominio>/fuera/preguntas.yaml`). Un subagente por camino (A, B, D y C) con todas las preguntas juntas: `prompt <camino>`, después `guardar <camino>` con su JSON por stdin y, al final, `puntaje`. Todos los caminos tienen la misma regla: si los datos no alcanzan, «SIN DATOS:» y qué falta (`NO_DATA_RULE` en `layer/answer.py`).
+
 ## Reglas
 
 - Un arreglo después de medir (al diccionario, a una regla) se vuelve a medir solo en lo afectado, con subagentes nuevos, y se dice así en `docs/decisions.md`.

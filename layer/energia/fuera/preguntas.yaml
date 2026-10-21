@@ -1,0 +1,28 @@
+# ¿El asistente dice cuándo no tiene el dato, o lo inventa?
+# Preguntas del sector que los datos de Rastro NO responden (sin_datos: true), y una de control que sí
+# responde (sin_datos: false), para ver que no se niega de más. Lo mide `layer/fuera.py`.
+preguntas:
+  - id: f1
+    pregunta: ¿A qué precio promedio se vendió el gas de Vaca Muerta en 2025, en dólares por millón de BTU?
+    falta: precios
+    sin_datos: true
+  - id: f2
+    pregunta: ¿Cuántas reservas probadas de gas tenía YPF a fin de 2024, en miles de millones de m³?
+    falta: reservas
+    sin_datos: true
+  - id: f3
+    pregunta: ¿Cuánto invirtió Tecpetrol en Fortín de Piedra en 2025, en millones de dólares?
+    falta: inversiones
+    sin_datos: true
+  - id: f4
+    pregunta: ¿Cuánto gas declaró YPF en el primer trimestre de 2026, en millones de m³?
+    falta: el período (los datos llegan hasta 2025)
+    sin_datos: true
+  - id: f5
+    pregunta: ¿Cuántos empleados tiene Pluspetrol en Neuquén?
+    falta: empleo
+    sin_datos: true
+  - id: c1
+    pregunta: ¿Cuánto gas declaró Tecpetrol en 2025, en millones de m³?
+    falta: nada (control)
+    sin_datos: false

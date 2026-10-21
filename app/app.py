@@ -595,7 +595,9 @@ with ask_tab:
         if st.button("Responder", type="primary", disabled=not available or not question.strip()):
             with st.spinner("El LLM está escribiendo la query..."):
                 result = answer.ask_rastro(question)
-            if result["query"] is None:
+            if result.get("sin_datos"):
+                st.warning(f"Rastro no tiene ese dato: {result['sin_datos']}")
+            elif result["query"] is None:
                 st.error("El LLM no logró una query que funcione en tres intentos.")
                 st.code(result["attempts"][-1]["error"] if result["attempts"] else "")
             else:

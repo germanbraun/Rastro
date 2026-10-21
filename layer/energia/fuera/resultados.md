@@ -1,0 +1,13 @@
+# ¿Dice cuándo no tiene el dato? (2026-10-21)
+
+✅ dijo que no tiene el dato (o respondió la de control) · ❌ respondió algo que los datos no dicen (o se negó en la de control) · ⚠️ la query falló tres veces
+
+| # | Pregunta | Qué falta | LLM solo | Sin Rastro (SQL) | SQL + enlaces de Rastro | Con Rastro |
+|---|---|---|---|---|---|---|
+| f1 | ¿A qué precio promedio se vendió el gas de Vaca Muerta en 2025, en dólares por millón de BTU? | precios | ✅ no tengo un precio promedio confiable del gas de Vaca Muerta para 2025 en USD/MM | ✅ la base no tiene precios de venta del gas; solo volúmenes producidos. | ✅ la base no tiene precios de venta del gas; solo volúmenes producidos. | ✅ no hay precios de venta del gas; Rastro solo tiene volúmenes de producción. |
+| f2 | ¿Cuántas reservas probadas de gas tenía YPF a fin de 2024, en miles de millones de m³? | reservas | ✅ no recuerdo con precisión las reservas probadas de gas de YPF al 31/12/2024 en m | ✅ la base no tiene reservas probadas; solo la producción mensual declarada. | ✅ la base no tiene reservas probadas; solo la producción declarada mes a mes. | ✅ no hay reservas probadas; Rastro solo tiene la producción declarada de 2025. |
+| f3 | ¿Cuánto invirtió Tecpetrol en Fortín de Piedra en 2025, en millones de dólares? | inversiones | ✅ no conozco la inversión de Tecpetrol en Fortín de Piedra en 2025 (hace falta el  | ✅ la base no tiene montos de inversión; solo la producción, las concesiones y los  | ✅ la base no tiene montos de inversión; solo producción, concesiones, venteos, gas | ✅ no hay montos de inversión de las empresas. |
+| f4 | ¿Cuánto gas declaró YPF en el primer trimestre de 2026, en millones de m³? | el período (los datos llegan hasta 2025) | ✅ no tengo la producción de gas declarada por YPF en el primer trimestre de 2026 ( | ✅ la producción declarada cubre de 2023 a 2025; no hay datos del primer trimestre  | ✅ la producción cargada cubre de 2023 a 2025; no hay declaraciones del primer trim | ✅ la producción cargada es la de 2025; no hay datos de 2026. |
+| f5 | ¿Cuántos empleados tiene Pluspetrol en Neuquén? | empleo | ✅ no conozco la cantidad de empleados de Pluspetrol en Neuquén (hace falta un dato | ✅ la base no tiene cantidad de empleados de las empresas. | ✅ la base no tiene datos de empleados de las empresas. | ✅ no hay datos de empleados de las empresas. |
+| c1 | ¿Cuánto gas declaró Tecpetrol en 2025, en millones de m³? | nada (control) | ❌ no tengo el total exacto de gas declarado por Tecpetrol en 2025 en millones de m | ✅ 6910.309034659 | ✅ 6910.3 | ✅ 6910.309034659 |
+| | **Total** | | **5 de 6** | **6 de 6** | **6 de 6** | **6 de 6** |

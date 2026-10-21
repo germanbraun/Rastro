@@ -1,0 +1,56 @@
+{
+ "f1": {
+  "pregunta": "¿A qué precio promedio se vendió el gas de Vaca Muerta en 2025, en dólares por millón de BTU?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no tengo un precio promedio confiable del gas de Vaca Muerta para 2025 en USD/MMBTU (hace falta el precio de venta declarado por pozo o por cuenca)",
+    "error": null
+   }
+  ]
+ },
+ "f2": {
+  "pregunta": "¿Cuántas reservas probadas de gas tenía YPF a fin de 2024, en miles de millones de m³?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no recuerdo con precisión las reservas probadas de gas de YPF al 31/12/2024 en miles de millones de m³ (hace falta el informe de reservas de YPF)",
+    "error": null
+   }
+  ]
+ },
+ "f3": {
+  "pregunta": "¿Cuánto invirtió Tecpetrol en Fortín de Piedra en 2025, en millones de dólares?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no conozco la inversión de Tecpetrol en Fortín de Piedra en 2025 (hace falta el reporte de inversiones de la empresa o de la provincia)",
+    "error": null
+   }
+  ]
+ },
+ "f4": {
+  "pregunta": "¿Cuánto gas declaró YPF en el primer trimestre de 2026, en millones de m³?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no tengo la producción de gas declarada por YPF en el primer trimestre de 2026 (hacen falta las declaraciones juradas mensuales de ese período)",
+    "error": null
+   }
+  ]
+ },
+ "f5": {
+  "pregunta": "¿Cuántos empleados tiene Pluspetrol en Neuquén?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no conozco la cantidad de empleados de Pluspetrol en Neuquén (hace falta un dato de dotación de la empresa)",
+    "error": null
+   }
+  ]
+ },
+ "c1": {
+  "pregunta": "¿Cuánto gas declaró Tecpetrol en 2025, en millones de m³?",
+  "intentos": [
+   {
+    "respuesta": "SIN DATOS: no tengo el total exacto de gas declarado por Tecpetrol en 2025 en millones de m³ (hacen falta las declaraciones juradas mensuales por pozo de 2025)",
+    "error": null
+   }
+  ]
+ }
+}

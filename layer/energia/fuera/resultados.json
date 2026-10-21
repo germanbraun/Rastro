@@ -1,0 +1,143 @@
+{
+ "fecha": "2026-10-21",
+ "caminos": {
+  "A": "LLM solo",
+  "B": "Sin Rastro (SQL)",
+  "D": "SQL + enlaces de Rastro",
+  "C": "Con Rastro"
+ },
+ "preguntas": {
+  "f1": {
+   "pregunta": "¿A qué precio promedio se vendió el gas de Vaca Muerta en 2025, en dólares por millón de BTU?",
+   "falta": "precios",
+   "sin_datos": true,
+   "A": {
+    "marca": "✅",
+    "respuesta": "no tengo un precio promedio confiable del gas de Vaca Muerta para 2025 en USD/MMBTU (hace falta el precio de venta declarado por pozo o por cuenca)"
+   },
+   "B": {
+    "marca": "✅",
+    "respuesta": "la base no tiene precios de venta del gas; solo volúmenes producidos."
+   },
+   "D": {
+    "marca": "✅",
+    "respuesta": "la base no tiene precios de venta del gas; solo volúmenes producidos."
+   },
+   "C": {
+    "marca": "✅",
+    "respuesta": "no hay precios de venta del gas; Rastro solo tiene volúmenes de producción."
+   }
+  },
+  "f2": {
+   "pregunta": "¿Cuántas reservas probadas de gas tenía YPF a fin de 2024, en miles de millones de m³?",
+   "falta": "reservas",
+   "sin_datos": true,
+   "A": {
+    "marca": "✅",
+    "respuesta": "no recuerdo con precisión las reservas probadas de gas de YPF al 31/12/2024 en miles de millones de m³ (hace falta el informe de reservas de YPF)"
+   },
+   "B": {
+    "marca": "✅",
+    "respuesta": "la base no tiene reservas probadas; solo la producción mensual declarada."
+   },
+   "D": {
+    "marca": "✅",
+    "respuesta": "la base no tiene reservas probadas; solo la producción declarada mes a mes."
+   },
+   "C": {
+    "marca": "✅",
+    "respuesta": "no hay reservas probadas; Rastro solo tiene la producción declarada de 2025."
+   }
+  },
+  "f3": {
+   "pregunta": "¿Cuánto invirtió Tecpetrol en Fortín de Piedra en 2025, en millones de dólares?",
+   "falta": "inversiones",
+   "sin_datos": true,
+   "A": {
+    "marca": "✅",
+    "respuesta": "no conozco la inversión de Tecpetrol en Fortín de Piedra en 2025 (hace falta el reporte de inversiones de la empresa o de la provincia)"
+   },
+   "B": {
+    "marca": "✅",
+    "respuesta": "la base no tiene montos de inversión; solo la producción, las concesiones y los estudios ambientales."
+   },
+   "D": {
+    "marca": "✅",
+    "respuesta": "la base no tiene montos de inversión; solo producción, concesiones, venteos, gasoductos y estudios ambientales."
+   },
+   "C": {
+    "marca": "✅",
+    "respuesta": "no hay montos de inversión de las empresas."
+   }
+  },
+  "f4": {
+   "pregunta": "¿Cuánto gas declaró YPF en el primer trimestre de 2026, en millones de m³?",
+   "falta": "el período (los datos llegan hasta 2025)",
+   "sin_datos": true,
+   "A": {
+    "marca": "✅",
+    "respuesta": "no tengo la producción de gas declarada por YPF en el primer trimestre de 2026 (hacen falta las declaraciones juradas mensuales de ese período)"
+   },
+   "B": {
+    "marca": "✅",
+    "respuesta": "la producción declarada cubre de 2023 a 2025; no hay datos del primer trimestre de 2026."
+   },
+   "D": {
+    "marca": "✅",
+    "respuesta": "la producción cargada cubre de 2023 a 2025; no hay declaraciones del primer trimestre de 2026."
+   },
+   "C": {
+    "marca": "✅",
+    "respuesta": "la producción cargada es la de 2025; no hay datos de 2026."
+   }
+  },
+  "f5": {
+   "pregunta": "¿Cuántos empleados tiene Pluspetrol en Neuquén?",
+   "falta": "empleo",
+   "sin_datos": true,
+   "A": {
+    "marca": "✅",
+    "respuesta": "no conozco la cantidad de empleados de Pluspetrol en Neuquén (hace falta un dato de dotación de la empresa)"
+   },
+   "B": {
+    "marca": "✅",
+    "respuesta": "la base no tiene cantidad de empleados de las empresas."
+   },
+   "D": {
+    "marca": "✅",
+    "respuesta": "la base no tiene datos de empleados de las empresas."
+   },
+   "C": {
+    "marca": "✅",
+    "respuesta": "no hay datos de empleados de las empresas."
+   }
+  },
+  "c1": {
+   "pregunta": "¿Cuánto gas declaró Tecpetrol en 2025, en millones de m³?",
+   "falta": "nada (control)",
+   "sin_datos": false,
+   "A": {
+    "marca": "❌",
+    "respuesta": "no tengo el total exacto de gas declarado por Tecpetrol en 2025 en millones de m³ (hacen falta las declaraciones juradas mensuales por pozo de 2025)"
+   },
+   "B": {
+    "marca": "✅",
+    "respuesta": "6910.309034659"
+   },
+   "D": {
+    "marca": "✅",
+    "respuesta": "6910.3"
+   },
+   "C": {
+    "marca": "✅",
+    "respuesta": "6910.309034659"
+   }
+  }
+ },
+ "totales": {
+  "A": 5,
+  "B": 6,
+  "D": 6,
+  "C": 6
+ }
+}
