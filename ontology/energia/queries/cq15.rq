@@ -1,0 +1,10 @@
+# 15. ¿Qué empresas de petróleo y gas cotizan en bolsa, según Wikidata, y cuándo se consultó?
+PREFIX energia: <https://w3id.org/rastro/energia#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?empresa ?bolsa ?sede ?consultado ?wikidata
+WHERE {
+  ?x a energia:Enrichment ; energia:company/energia:name ?empresa ; energia:stockExchange ?bolsa ;
+     energia:loadedOn ?consultado ; energia:wikidataEntity ?wikidata .
+  OPTIONAL { ?x energia:headquarters ?sede }
+}
+ORDER BY ?empresa

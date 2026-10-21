@@ -354,6 +354,16 @@ JOIN todo t ON t.idpozo = i.idpozo
 WHERE i.gas_2_7 IS NOT NULL
 GROUP BY 1, 2, 3;
 
+-- Enriquecimiento con Wikidata, materializado: lo que Wikidata sabe de cada empresa, unido por el LEI (la misma
+-- clave en las dos fuentes), con el día en que respondió. Lo carga wikidata-energia-loader; vacío si no se cargó.
+CREATE TABLE energia.enriquecimiento AS
+SELECT l.empresa_id, w.lei, w.wikidata, w.sede, w.bolsa, w.duenio, w.sitio, w.consultado,
+       'Wikidata: ' || replace(w.wikidata, 'http://www.wikidata.org/entity/', '') || ' tiene el LEI ' || w.lei
+       || ', el mismo que GLEIF le da a ' || e.nombre || '. Consultado el ' || to_char(w.consultado, 'DD/MM/YYYY') || '.' AS evidencia
+FROM wikidata_energia.empresa w
+JOIN energia.empresa_lei l ON l.lei = w.lei
+JOIN energia.empresa e ON e.empresa_id = l.empresa_id;
+
 ALTER TABLE energia.participacion ADD PRIMARY KEY (id_concesion, empresa_id);
 ALTER TABLE energia.empresa ADD PRIMARY KEY (empresa_id);
 ALTER TABLE energia.empresa_nombre ADD PRIMARY KEY (fuente, nombre);

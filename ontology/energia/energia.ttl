@@ -90,6 +90,16 @@ energia:fracDate a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:
 energia:loadedOn a owl:DatatypeProperty ; rdfs:label "cargado en la fuente"@es ;
     rdfs:comment "El día en que el dato se cargó en el portal de la fuente. La fractura de un pozo puede cargarse meses después de que arrancó: una predicción hecha antes no la tenía."@es .
 
+energia:Enrichment a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Enriquecimiento"@es ;
+    rdfs:comment "Lo que una fuente de afuera sabe de una empresa y ninguna de las fuentes de Rastro tiene: hoy, Wikidata (sede, bolsa en la que cotiza, dueño o matriz, sitio web). Se une por una clave compartida, el LEI, y guarda el día en que se consultó (energia:loadedOn). También se puede consultar en vivo, sin guardarlo."@es .
+energia:wikidataEntity a owl:ObjectProperty ; rdfs:domain energia:Enrichment ; rdfs:label "entidad en Wikidata"@es .
+energia:headquarters a owl:DatatypeProperty ; rdfs:domain energia:Enrichment ; rdfs:label "sede"@es .
+energia:stockExchange a owl:DatatypeProperty ; rdfs:domain energia:Enrichment ; rdfs:label "bolsa en la que cotiza"@es .
+energia:owner a owl:DatatypeProperty ; rdfs:domain energia:Enrichment ; rdfs:label "dueño o matriz"@es .
+energia:website a owl:DatatypeProperty ; rdfs:domain energia:Enrichment ; rdfs:label "sitio web"@es .
+
 energia:WellTrajectory a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Trayectoria de un pozo"@es ;

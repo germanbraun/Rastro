@@ -141,6 +141,22 @@ JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = trim(p
     rr:predicateObjectMap [ rr:predicate energia:factor ; rr:objectMap [ rr:column "factor" ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:amount ; rr:objectMap [ rr:column "aporte" ; rr:datatype xsd:decimal ] ] .
 
+# --- Enriquecimiento con Wikidata, materializado (por el LEI) ---
+
+<#Enrichment> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.enriquecimiento" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/enrichment/{empresa_id}" ; rr:class energia:Enrichment ] ;
+    rr:predicateObjectMap [ rr:predicate energia:company ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:wikidataEntity ; rr:objectMap [ rr:column "wikidata" ; rr:termType rr:IRI ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:headquarters ; rr:objectMap [ rr:column "sede" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:stockExchange ; rr:objectMap [ rr:column "bolsa" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:owner ; rr:objectMap [ rr:column "duenio" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:website ; rr:objectMap [ rr:column "sitio" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:loadedOn ; rr:objectMap [ rr:column "consultado" ; rr:datatype xsd:date ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:rule ; rr:objectMap [ rr:constant "mismo LEI en Wikidata (P1278) y en GLEIF" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/wikidata> ] ] .
+
 # --- Trayectorias de pozo de Vaca Muerta, para Rastro Lab ---
 
 <#WellTrajectory> a rr:TriplesMap ;

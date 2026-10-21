@@ -457,13 +457,16 @@ preguntas:
     terminos:
       Gas de shale: gas de rocas poco permeables (como Vaca Muerta), que se extrae con fractura hidráulica. Se mide en miles de metros cúbicos.
 
-# Datos de afuera: una consulta une Rastro con Wikidata en vivo, en GraphDB, por el LEI
+# Enriquecer con datos de afuera: una consulta une Rastro con Wikidata en vivo, en GraphDB, por el LEI; y lo mismo
+# guardado en Rastro (materializado: wikidata-energia-loader), que se consulta con la pregunta 15
 externo:
-  titulo: Datos de afuera (Wikidata)
+  titulo: Enriquecer con datos de afuera (Wikidata)
+  materializado: /ontology/energia/queries/cq15.rq
   consulta: /layer/energia/externo/wikidata.rq
   guardado: /layer/energia/externo/resultado-2026-10-20.csv
   fecha_guardado: 20 oct 2026
   intro: >-
+    **Enriquecer** es sumarle a los datos propios lo que sabe otra fuente, sin perder de dónde vino cada dato.
     Una sola consulta une, en vivo, **Rastro** y **Wikidata**: las empresas con identificador global (LEI)
     y el petróleo de 2025 que les corresponde según sus socios (el mismo número del paso 1), con lo que Wikidata sabe de cada una (sede, en qué bolsa cotiza,
     dueño o matriz y sitio web). No se carga nada: Rastro y Wikidata usan el mismo LEI.

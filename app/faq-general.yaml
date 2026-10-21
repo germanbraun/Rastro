@@ -35,6 +35,12 @@
   respuesta: |-
     Sí, con cuidado. En «Una pregunta sobre textos», Rastro primero elige con una consulta exacta los registros que importan; después, un asistente de IA lee solo esos textos y los agrupa en temas, citando cada registro. En «¿De dónde sale la respuesta?» están todos los textos que leyó. El grafo decide qué se lee; la IA solo resume.
 
+- pregunta: ¿Qué es enriquecer los datos?
+  respuesta: |-
+    Sumarle a los datos propios lo que sabe otra fuente, por una clave que las dos comparten, sin perder de dónde vino cada dato. Por ejemplo, Wikidata sabe en qué bolsa cotiza una empresa; ninguna fuente de la demo lo tiene, y las dos usan el mismo identificador global de empresas (LEI).
+
+    Se puede hacer de dos formas: **en vivo**, con una consulta que une las dos fuentes en el momento (siempre al día, sin copiar nada), o **guardado en Rastro**, como una fuente más, con el día en que se consultó (se puede repetir y lo usan las preguntas, el asistente y el modelo). Rastro hace las dos.
+
 - pregunta: ¿Sirve para otros datos?
   respuesta: |-
     Sí. El mismo Rastro funciona con contratos del Estado de EE. UU. (proveedores y sus grupos) y con oncología (ensayos clínicos y fármacos), con las mismas pruebas. Se ven activando «Ver detalles técnicos» en la barra lateral.

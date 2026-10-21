@@ -312,6 +312,21 @@ services:
       - ../data:/data
     command: ["python", "-u", "/data/lab-gas/load.py"]
 
+  # Enriquecimiento con Wikidata, materializado (data/wikidata-energia/): corre después de energia-linker
+  wikidata-energia-loader:
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../data:/data
+    command: ["python", "-u", "/data/wikidata-energia/load.py"]
+
   energia-linker:
     build: ./loaders
     profiles: ["load"]
@@ -325,6 +340,7 @@ services:
     volumes:
       - ../linking:/linking:ro
       - ../data/lab-gas/schema.sql:/data/lab-gas/schema.sql:ro
+      - ../data/wikidata-energia/schema.sql:/data/wikidata-energia/schema.sql:ro
       - ../layer/energia/reader.sql:/layer/energia/reader.sql:ro
     command: ["python", "-u", "/linking/energia/link.py"]
 

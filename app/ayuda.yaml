@@ -12,7 +12,7 @@ llm: >-
   necesitan: sus consultas ya están escritas y corren en vivo.
 modo: >-
   Una pregunta de ejemplo: elegir entre las preguntas ya preparadas. Una pregunta sobre textos: la IA
-  resume solo los textos que eligió el grafo. Datos de afuera: Rastro unido con otro grafo en vivo. Mi
+  resume solo los textos que eligió el grafo. Enriquecer con datos de afuera: Rastro unido con Wikidata, en vivo o guardado. Mi
   propia pregunta: escribir una pregunta libre (necesita un asistente de IA configurado). El recorrido
   guiado está en la pestaña «Demo».
 pregunta: >-
@@ -72,8 +72,9 @@ mapa: >-
   Contornos de las concesiones (en rojo, las que hay que revisar), posibles venteos vistos por satélite y
   gasoductos de transporte de ENARGAS. Las geometrías están en el grafo con el estándar GeoSPARQL.
 externo: >-
-  Una consulta federada: GraphDB pide una parte a Rastro y otra a Wikidata, en internet, y las une
-  por un identificador que las dos comparten (el LEI). No se copia nada a Rastro.
+  Enriquecer con una fuente de afuera, de dos formas: en vivo (una consulta une Rastro y Wikidata en el momento,
+  sin copiar nada) o guardado en Rastro (lo que respondió Wikidata queda como una fuente más, con su fecha, y lo
+  pueden usar las preguntas, el asistente y el modelo). Las dos se unen por el LEI, que comparten.
 lab_error: >-
   Cuánto se equivoca el modelo, en promedio, en los pozos de 2025 que no vio al entrenar, en millones de
   m³ de gas por pozo. Con y sin Rastro es el mismo: Rastro no busca más precisión, sino explicaciones que

@@ -941,8 +941,9 @@ GRAPHDB = "http://graphdb:7200/repositories/rastro"
 
 
 def show_external(cfg, tech):
-    """Datos de afuera: una consulta federada en GraphDB une Rastro con Wikidata por un
-    identificador compartido. Corre en vivo si se pide; si no, se muestra el resultado guardado."""
+    """Enriquecer con datos de afuera: una consulta federada en GraphDB une Rastro con Wikidata por un
+    identificador compartido. Corre en vivo si se pide; si no, se muestra el resultado guardado. Debajo, el mismo
+    enriquecimiento guardado en Rastro (show_enrichment_saved)."""
     ext, domain = cfg["externo"], cfg["domain"]
     st.markdown(f"**{ext['titulo']}**", help=ayuda("externo"))
     st.markdown(md(ext["intro"]))
@@ -978,6 +979,28 @@ def show_external(cfg, tech):
     st.info(md(ext["conclusion"]))
     with st.expander("La consulta: dos grafos en una"):
         st.code(Path(ext["consulta"]).read_text(), language="sparql")
+    if ext.get("materializado"):
+        show_enrichment_saved(ext, domain, tech)
+
+
+def show_enrichment_saved(ext, domain, tech):
+    """El mismo enriquecimiento, guardado en Rastro: lo que respondió la fuente de afuera queda como una fuente más,
+    con su fecha, y se consulta como cualquier dato."""
+    st.markdown("**Guardado en Rastro**", help=ayuda("externo"))
+    query = Path(ext["materializado"]).read_text()
+    columns, rows = run(query, domain)
+    if not rows:
+        st.info("Todavía no se guardó: `docker compose run --rm wikidata-energia-loader` y después el enlazador.")
+        return
+    tabla(pd.DataFrame(rows, columns=columns).rename(columns={
+        "empresa": "Empresa", "bolsa": "Cotiza en", "sede": "Sede", "consultado": "Consultado el", "wikidata": "Wikidata"}),
+        hide_index=True, use_container_width=True)
+    st.caption(md(
+        "Lo mismo, guardado: lo que respondió Wikidata queda en Rastro como una fuente más, con el día de la consulta "
+        "y la huella del archivo, unido por el LEI. No depende de internet, se puede repetir y lo usan las preguntas, el "
+        "asistente de IA y el modelo de Rastro Lab. En vivo está siempre al día; guardado, queda como estaba ese día."))
+    if tech:
+        st.code(query, language="sparql")
 
 
 def text_step(n, title, help_text=None):

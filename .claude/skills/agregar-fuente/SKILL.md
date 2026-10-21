@@ -21,6 +21,10 @@ Un cargador baja datos, los guarda en `data/raw/` y los carga en Postgres (un es
 7. **Corré la carga y el enlazador**, reiniciá el Ontop del dominio y verificá con la skill `verificar`: conteos, un caso conocido y que nada quede fuera del recorte.
 8. **Documentá:** una fila en la tabla «Cargar datos» del `README.md` y una entrada en `docs/decisions.md` (qué recorte, por qué, números de la carga).
 
+## Enriquecer con una fuente de afuera
+
+Si la fuente es de otra organización y se une por una clave compartida (como Wikidata por el LEI), es un **enriquecimiento**. Se puede consultar en vivo (una consulta federada, como `layer/energia/externo/wikidata.rq`) y, además, guardarlo como una fuente más: el patrón es `data/wikidata-energia/` (guarda la respuesta del día con su huella), un enlace por la clave con su regla y evidencia (`energia.enriquecimiento`) y una clase propia mapeada con `prov:wasDerivedFrom` a la fuente y `energia:loadedOn` con el día de la consulta.
+
 ## Cuidado con
 
 - **Archivos grandes** (el Capítulo IV son unos 300 MB por año): corré el cargador en segundo plano y filtrá las consultas por los pozos que hacen falta antes de unir años.

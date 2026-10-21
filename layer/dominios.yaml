@@ -80,6 +80,7 @@ energia: &energia
     fractura: [Fracturing, lateralLengthM, fracStages, proppantTonnes, waterM3, maxPressurePsi, fracDate, loadedOn,
                FractureReport, reportId]
     trayectorias: [WellTrajectory, verticalDepthM, drillingEnd]
+    wikidata: [Enrichment, wikidataEntity, headquarters, stockExchange, owner, website]
     lab: [ModelRun, modelVersion, trainedUntil, testError, testR2, inRangeShare, current, Prediction, predictedGas,
           predictedLow, predictedHigh, inTest, Contribution, ofPrediction, factor, amount]
     ambiental: [EnvironmentalStudy, studyId, studyType]
