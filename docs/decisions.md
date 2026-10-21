@@ -702,3 +702,9 @@ Tres pruebas que siguieron a otra mirada sobre el caso (que propuso medir el imp
 ## 2026-10-21 — El mazo vuelve a Times New Roman
 
 - Al darle al mazo un estilo más profesional se cambió la tipografía a IBM Plex Sans y Source Serif 4 sin consultarlo. Al usuario no le gustó: el mazo vuelve a Times New Roman, en todo el mazo. Es del sistema, así que el mazo no descarga ninguna tipografía. El resto del estilo (escala de tamaños, tarjetas, pie con número) se mantiene. `docs/slides/estilo.py` lo aplica.
+
+## 2026-10-21 — La apertura del mazo: una pregunta, dos significados
+
+- **Por qué cambió:** el usuario hizo la misma pregunta a un asistente de IA con búsqueda en internet. Respondió con el ranking publicado (datos de la cámara de empresas del sector): Total Austral 33,8, YPF 32,2 y Tecpetrol 18,9 millones de m³ por día. Por 365 son 12,3, 11,8 y 6,9 miles de millones de m³: lo mismo que el SQL sobre la declaración jurada. La columna «un asistente de IA solo», que respondía de memoria y sin herramientas, era un rival débil.
+- **El mensaje nuevo:** la pregunta tiene dos respuestas correctas. Lo que opera cada empresa (rankings publicados, SQL, IA con búsqueda): Total Austral, YPF, Tecpetrol. Lo que le corresponde por su participación (Rastro): YPF 12,3, Tecpetrol 6,4, Total Austral 5,2. Nadie dice qué midió; Rastro escribe la definición una vez, muestra las dos y la evidencia de cada número.
+- **De paso, una validación:** lo operado que sale de nuestros datos coincide con los rankings publicados.
