@@ -1,0 +1,244 @@
+{
+ "date": "2026-10-21",
+ "questions": {
+  "l01": {
+   "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) se apoyan en un dato corregido a mano, es decir, una participación de la operadora corregida con un documento o una operadora cuyo nombre se unió a su grupo por una corrección revisada?",
+   "kind": "número",
+   "reference": 24.0,
+   "B": {
+    "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) se apoyan en un dato corregido a mano, es decir, una participación de la operadora corregida con un documento o una operadora cuyo nombre se unió a su grupo por una corrección revisada?",
+    "attempts": [
+     {
+      "query": "SELECT count(*) FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente JOIN lab_gas.entrada e ON e.corrida = p.corrida AND e.idpozo = p.idpozo WHERE p.de_prueba AND (p.socio_iri ILIKE '%correc%' OR p.socio_iri ILIKE '%revis%' OR p.socio_iri ILIKE '%documento%' OR NOT EXISTS (SELECT 1 FROM sig_energia.concesion s WHERE s.id_concesion = e.concesion AND upper(unaccent_placeholder) IS NULL))",
+      "error": "column \"unaccent_placeholder\" does not exist\nLINE 1: ...on s WHERE s.id_concesion = e.concesion AND upper(unaccent_p...\n                                                             ^"
+     },
+     {
+      "query": "SELECT count(*) FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente WHERE p.de_prueba AND (p.socio_iri ILIKE '%correc%' OR p.socio_iri ILIKE '%revis%' OR p.socio_iri ILIKE '%documento%')",
+      "error": null
+     }
+    ],
+    "answer": 0.0,
+    "ok": false
+   },
+   "D": {
+    "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) se apoyan en un dato corregido a mano, es decir, una participación de la operadora corregida con un documento o una operadora cuyo nombre se unió a su grupo por una corrección revisada?",
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT p.idpozo) FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente JOIN energia.inicio_pozo ip ON ip.idpozo = p.idpozo WHERE p.de_prueba AND (EXISTS (SELECT 1 FROM energia.participacion pa WHERE pa.id_concesion = ip.id_concesion AND pa.empresa_id = ip.empresa_id AND pa.regla ILIKE 'correcci_n revisada con documento%') OR EXISTS (SELECT 1 FROM energia.empresa_nombre en WHERE en.empresa_id = ip.empresa_id AND en.regla ILIKE 'correcci_n revisada'))",
+      "error": null
+     }
+    ],
+    "answer": 24.0,
+    "ok": true
+   },
+   "C": {
+    "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) se apoyan en un dato corregido a mano, es decir, una participación de la operadora corregida con un documento o una operadora cuyo nombre se unió a su grupo por una corrección revisada?",
+    "attempts": [
+     {
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT (COUNT(DISTINCT ?p) AS ?n) WHERE {\n  ?run a energia:ModelRun ; energia:current true .\n  ?p a energia:Prediction ; prov:wasGeneratedBy ?run ; energia:inTest true ; prov:used ?s .\n  ?s a energia:Stake ; energia:partner ?co .\n  {\n    ?s energia:rule ?r .\n    FILTER(CONTAINS(LCASE(STR(?r)), \"revisada\"))\n  } UNION {\n    ?cn a energia:CompanyName ; energia:company ?co ; energia:rule ?r .\n    FILTER(CONTAINS(LCASE(STR(?r)), \"revisada\"))\n  }\n}",
+      "error": null
+     }
+    ],
+    "answer": 22.0,
+    "ok": false
+   }
+  },
+  "l02": {
+   "question": "En la corrida vigente del modelo de gas, ¿cuáles son los 3 pozos de prueba (los que empezaron a producir en 2025) con más gas esperado? Devolvé sus identificadores de pozo.",
+   "kind": "lista",
+   "reference": [
+    "166586",
+    "166587",
+    "166588"
+   ],
+   "B": {
+    "question": "En la corrida vigente del modelo de gas, ¿cuáles son los 3 pozos de prueba (los que empezaron a producir en 2025) con más gas esperado? Devolvé sus identificadores de pozo.",
+    "attempts": [
+     {
+      "query": "SELECT p.idpozo FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente WHERE p.de_prueba ORDER BY p.gas DESC LIMIT 3",
+      "error": null
+     }
+    ],
+    "answer": [
+     "166586",
+     "166587",
+     "166588"
+    ],
+    "ok": true
+   },
+   "D": {
+    "question": "En la corrida vigente del modelo de gas, ¿cuáles son los 3 pozos de prueba (los que empezaron a producir en 2025) con más gas esperado? Devolvé sus identificadores de pozo.",
+    "attempts": [
+     {
+      "query": "SELECT p.idpozo FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente WHERE p.de_prueba ORDER BY p.gas DESC LIMIT 3",
+      "error": null
+     }
+    ],
+    "answer": [
+     "166586",
+     "166587",
+     "166588"
+    ],
+    "ok": true
+   },
+   "C": {
+    "question": "En la corrida vigente del modelo de gas, ¿cuáles son los 3 pozos de prueba (los que empezaron a producir en 2025) con más gas esperado? Devolvé sus identificadores de pozo.",
+    "attempts": [
+     {
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT ?wellId WHERE {\n  ?run a energia:ModelRun ; energia:current true .\n  ?p a energia:Prediction ; prov:wasGeneratedBy ?run ; energia:inTest true ; energia:aboutWell ?w ; energia:predictedGas ?gas .\n  ?w energia:wellId ?wellId .\n}\nORDER BY DESC(?gas)\nLIMIT 3",
+      "error": null
+     }
+    ],
+    "answer": [
+     "166586",
+     "166587",
+     "166588"
+    ],
+    "ok": true
+   }
+  },
+  "l03": {
+   "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) usaron una fractura que se cargó en el portal en un mes posterior al primer mes con producción del pozo? La fractura de un pozo son las fracturas informadas hasta el mes en que arrancó; se cuenta la fecha de carga más reciente de esas fracturas.",
+   "kind": "número",
+   "reference": 36.0,
+   "B": {
+    "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) usaron una fractura que se cargó en el portal en un mes posterior al primer mes con producción del pozo? La fractura de un pozo son las fracturas informadas hasta el mes en que arrancó; se cuenta la fecha de carga más reciente de esas fracturas.",
+    "attempts": [
+     {
+      "query": "SELECT count(*) FROM (SELECT p.idpozo, e.inicio, max(f.fecha_data) AS carga FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente JOIN lab_gas.entrada e ON e.corrida = p.corrida AND e.idpozo = p.idpozo JOIN fractura.fractura f ON f.idpozo = p.idpozo AND f.fecha_inicio_fractura < (date_trunc('month', e.inicio) + interval '1 month') WHERE p.de_prueba GROUP BY p.idpozo, e.inicio) t WHERE date_trunc('month', t.carga) > date_trunc('month', t.inicio)",
+      "error": null
+     }
+    ],
+    "answer": 36.0,
+    "ok": true
+   },
+   "D": {
+    "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) usaron una fractura que se cargó en el portal en un mes posterior al primer mes con producción del pozo? La fractura de un pozo son las fracturas informadas hasta el mes en que arrancó; se cuenta la fecha de carga más reciente de esas fracturas.",
+    "attempts": [
+     {
+      "query": "SELECT count(DISTINCT p.idpozo) FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente JOIN lab_gas.entrada e ON e.corrida = p.corrida AND e.idpozo = p.idpozo JOIN energia.fractura_pozo f ON f.idpozo = p.idpozo WHERE p.de_prueba AND f.cargada IS NOT NULL AND date_trunc('month', f.cargada) > date_trunc('month', e.inicio)",
+      "error": null
+     }
+    ],
+    "answer": 36.0,
+    "ok": true
+   },
+   "C": {
+    "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) usaron una fractura que se cargó en el portal en un mes posterior al primer mes con producción del pozo? La fractura de un pozo son las fracturas informadas hasta el mes en que arrancó; se cuenta la fecha de carga más reciente de esas fracturas.",
+    "attempts": [
+     {
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT (COUNT(DISTINCT ?p) AS ?n) WHERE {\n  {\n    SELECT ?p ?sm (MAX(?ld) AS ?lastLoaded) WHERE {\n      ?run a energia:ModelRun ; energia:current true .\n      ?p a energia:Prediction ; prov:wasGeneratedBy ?run ; energia:inTest true ; prov:used ?f , ?ws .\n      ?f a energia:Fracturing ; prov:wasDerivedFrom ?rep .\n      ?rep a energia:FractureReport ; energia:loadedOn ?ld .\n      ?ws a energia:WellStart ; energia:startMonth ?sm .\n    }\n    GROUP BY ?p ?sm\n  }\n  FILTER((YEAR(?lastLoaded) * 12 + MONTH(?lastLoaded)) > (YEAR(?sm) * 12 + MONTH(?sm)))\n}",
+      "error": null
+     }
+    ],
+    "answer": 36.0,
+    "ok": true
+   }
+  },
+  "l04": {
+   "question": "Si la fuente corrige la fractura informada número 4799 (su identificador en los datos de fractura, Adjunto IV), ¿qué pozos tienen una predicción en la corrida vigente que hay que rehacer porque usó esa fractura? Devolvé sus identificadores de pozo.",
+   "kind": "lista",
+   "reference": [
+    "165404"
+   ],
+   "B": {
+    "question": "Si la fuente corrige la fractura informada número 4799 (su identificador en los datos de fractura, Adjunto IV), ¿qué pozos tienen una predicción en la corrida vigente que hay que rehacer porque usó esa fractura? Devolvé sus identificadores de pozo.",
+    "attempts": [
+     {
+      "query": "SELECT DISTINCT p.idpozo FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente JOIN lab_gas.entrada e ON e.corrida = p.corrida AND e.idpozo = p.idpozo JOIN fractura.fractura f ON f.idpozo = p.idpozo WHERE f.id_base_fractura_adjiv = '4799' AND f.fecha_inicio_fractura < (date_trunc('month', e.inicio) + interval '1 month')",
+      "error": null
+     }
+    ],
+    "answer": [
+     "165404"
+    ],
+    "ok": true
+   },
+   "D": {
+    "question": "Si la fuente corrige la fractura informada número 4799 (su identificador en los datos de fractura, Adjunto IV), ¿qué pozos tienen una predicción en la corrida vigente que hay que rehacer porque usó esa fractura? Devolvé sus identificadores de pozo.",
+    "attempts": [
+     {
+      "query": "SELECT DISTINCT p.idpozo FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente JOIN energia.fractura_registro r ON r.idpozo = p.idpozo WHERE r.id = '4799' AND r.usada",
+      "error": null
+     }
+    ],
+    "answer": [
+     "165404"
+    ],
+    "ok": true
+   },
+   "C": {
+    "question": "Si la fuente corrige la fractura informada número 4799 (su identificador en los datos de fractura, Adjunto IV), ¿qué pozos tienen una predicción en la corrida vigente que hay que rehacer porque usó esa fractura? Devolvé sus identificadores de pozo.",
+    "attempts": [
+     {
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT DISTINCT ?wellId WHERE {\n  ?rep a energia:FractureReport ; energia:reportId ?rid .\n  FILTER(STR(?rid) = \"4799\")\n  ?f a energia:Fracturing ; prov:wasDerivedFrom ?rep .\n  ?run a energia:ModelRun ; energia:current true .\n  ?p a energia:Prediction ; prov:wasGeneratedBy ?run ; prov:used ?f ; energia:aboutWell ?w .\n  ?w energia:wellId ?wellId .\n}",
+      "error": null
+     }
+    ],
+    "answer": [
+     "165404"
+    ],
+    "ok": true
+   }
+  },
+  "l05": {
+   "question": "En la corrida vigente del modelo de gas, ¿qué porcentaje de participación de su operadora en la concesión usó la predicción del pozo 166271?",
+   "kind": "número",
+   "reference": 55.0,
+   "B": {
+    "question": "En la corrida vigente del modelo de gas, ¿qué porcentaje de participación de su operadora en la concesión usó la predicción del pozo 166271?",
+    "attempts": [
+     {
+      "query": "SELECT e.participacion FROM lab_gas.entrada e JOIN lab_gas.corrida c ON c.id = e.corrida AND c.vigente WHERE e.idpozo = '166271'",
+      "error": null
+     }
+    ],
+    "answer": 55.0,
+    "ok": true
+   },
+   "D": {
+    "question": "En la corrida vigente del modelo de gas, ¿qué porcentaje de participación de su operadora en la concesión usó la predicción del pozo 166271?",
+    "attempts": [
+     {
+      "query": "SELECT e.participacion FROM lab_gas.entrada e JOIN lab_gas.corrida c ON c.id = e.corrida AND c.vigente WHERE e.idpozo = '166271'",
+      "error": null
+     }
+    ],
+    "answer": 55.0,
+    "ok": true
+   },
+   "C": {
+    "question": "En la corrida vigente del modelo de gas, ¿qué porcentaje de participación de su operadora en la concesión usó la predicción del pozo 166271?",
+    "attempts": [
+     {
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT ?percent WHERE {\n  ?run a energia:ModelRun ; energia:current true .\n  ?p a energia:Prediction ; prov:wasGeneratedBy ?run ; energia:aboutWell ?w ; prov:used ?s .\n  ?w energia:wellId ?wellId .\n  FILTER(STR(?wellId) = \"166271\")\n  ?s a energia:Stake ; energia:percent ?percent .\n}\nLIMIT 1",
+      "error": null
+     }
+    ],
+    "answer": 55.0,
+    "ok": true
+   }
+  }
+ },
+ "totals": {
+  "B": {
+   "correct": 4,
+   "consistent": 0,
+   "consistent_correct": 0,
+   "retries": 1
+  },
+  "D": {
+   "correct": 5,
+   "consistent": 0,
+   "consistent_correct": 0,
+   "retries": 0
+  },
+  "C": {
+   "correct": 4,
+   "consistent": 0,
+   "consistent_correct": 0,
+   "retries": 0
+  }
+ },
+ "consistency": {}
+}

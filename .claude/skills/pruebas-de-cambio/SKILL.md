@@ -32,6 +32,16 @@ git status --short    # al terminar, el CSV y las respuestas guardadas tienen qu
 - El resultado queda en `cambio/correccion.json`, que lee el momento 4 de la demo.
 - Lo que se afirma tiene que coincidir con lo medido: la predicción casi no se mueve (la participación es fija dentro de la concesión), así que no se dice que cambie.
 
+## Qué predicciones cambian (`layer/energia/cambio/impacto.sh`)
+
+Rastro dice de antemano qué predicciones dependen de un registro de origen (pregunta 14, el linaje al revés) y se comprueba: se corrige la fractura informada en la base, se rearma Rastro, se publica una corrida y `--comparar` dice qué cambió. Tienen que ser exactamente las que dijo Rastro. Elegí un registro de un pozo de prueba (de 2025): uno de entrenamiento cambia el modelo y mueve todas las predicciones, y Rastro lo dice («reentrenar»).
+
+```bash
+layer/energia/cambio/impacto.sh registrar    # ~15 minutos; al terminar, el registro y la corrida vigente quedan como antes
+```
+
+El resultado queda en `cambio/impacto.json`, que muestra la pestaña Rastro Lab.
+
 ## Después
 
 Si cambió un número, actualizalo en el guion y en las diapositivas «La base cambia» y «Una corrección» (skill `mazos`), y en `docs/decisions.md`.

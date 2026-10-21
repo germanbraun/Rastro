@@ -1,0 +1,10 @@
+{
+ "question": "En la corrida vigente del modelo de gas, ¿qué porcentaje de participación de su operadora en la concesión usó la predicción del pozo 166271?",
+ "attempts": [
+  {
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT ?percent WHERE {\n  ?run a energia:ModelRun ; energia:current true .\n  ?p a energia:Prediction ; prov:wasGeneratedBy ?run ; energia:aboutWell ?w ; prov:used ?s .\n  ?w energia:wellId ?wellId .\n  FILTER(STR(?wellId) = \"166271\")\n  ?s a energia:Stake ; energia:percent ?percent .\n}\nLIMIT 1",
+   "error": null
+  }
+ ],
+ "answer": 55.0
+}

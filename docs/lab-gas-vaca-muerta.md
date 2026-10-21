@@ -114,6 +114,13 @@ Cada corrida del modelo se publica en Rastro (`python3 lab/gas/modelo.py --publi
 
 La idea surgió de comparar con otra mirada sobre el mismo caso: un grafo que dice qué significa una variable no sabe qué registros usó cada predicción si no se guarda al calcularla.
 
+## Qué cambia cuando cambia un dato, una fuente nueva y el asistente (21 de octubre de 2026)
+
+- **Rastro sabe qué cambia.** Si la fuente corrige una fractura informada, la pregunta 14 dice de antemano qué predicciones dependen de ella. Probado con la fractura n.º 4703: Rastro dijo una predicción y cambió exactamente esa (de 22,7 a 30,2 millones de m³), ninguna otra (`layer/energia/cambio/impacto.sh`).
+- **Una fuente nueva en una tarde: las trayectorias de pozo.** La profundidad vertical entra con una regla escrita una vez y llega a las preguntas, al asistente, a la explicación y al linaje. Cuesta más líneas que hacerlo en la consulta del modelo, y a cambio sirve a todos. La precisión casi no cambia (R² 0,46).
+- **El asistente sobre las predicciones:** 5 preguntas; sin Rastro 4, SQL con los enlaces de Rastro 5, con Rastro 4 (`layer/energia_lab/resultados.md`). La que falla sin Rastro es la que necesita las reglas de Rastro (datos corregidos).
+- **La prueba a ciegas de las explicaciones** está lista como formulario para mandar.
+
 ## Datos de fractura (paso 2)
 
 Existen, son públicos y se unen por pozo: «Datos de fractura de pozos (Adjunto IV)» en datos.energia.gob.ar. Traen el largo de la rama horizontal, la cantidad de etapas, la arena y el agua. Se actualizan todos los días y el portal los marca «preliminar, sujeto a revisión».

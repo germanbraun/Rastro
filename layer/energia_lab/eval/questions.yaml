@@ -1,0 +1,72 @@
+# Preguntas sobre las predicciones de Rastro Lab (gas de pozos nuevos de shale de Vaca Muerta), para medir si el
+# asistente de IA las responde sin Rastro (SQL sobre las fuentes y las tablas que deja el modelo), con SQL y los
+# enlaces de Rastro, y con Rastro. Se miden aparte de la evaluación de Rastro Layer (layer/energia/).
+#
+# Todas son sobre la corrida vigente del modelo y sus pozos de prueba (los que empezaron a producir en 2025).
+# Las referencias las escribió un asistente de IA (Claude Code), no el LLM evaluado; falta que las confirme una
+# persona.
+
+prefixes: |
+  PREFIX energia: <https://w3id.org/rastro/energia#>
+  PREFIX prov: <http://www.w3.org/ns/prov#>
+
+questions:
+
+  - id: l01
+    question: En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) se apoyan en un dato corregido a mano, es decir, una participación de la operadora corregida con un documento o una operadora cuyo nombre se unió a su grupo por una corrección revisada?
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?p) AS ?answer) WHERE {
+        ?corrida a energia:ModelRun ; energia:current true .
+        ?p a energia:Prediction ; prov:wasGeneratedBy ?corrida ; energia:inTest true ; prov:used ?inicio .
+        ?inicio a energia:WellStart .
+        { ?p prov:used ?socio . ?socio a energia:Stake ; energia:rule ?regla . FILTER (CONTAINS(?regla, "revisada")) }
+        UNION
+        { ?inicio energia:declaredName ?nombre . ?n a energia:CompanyName ; energia:nameInSource ?nombre ; energia:rule ?regla .
+          FILTER (CONTAINS(?regla, "revisada")) }
+      }
+
+  - id: l02
+    question: En la corrida vigente del modelo de gas, ¿cuáles son los 3 pozos de prueba (los que empezaron a producir en 2025) con más gas esperado? Devolvé sus identificadores de pozo.
+    kind: lista
+    items: pozos
+    reference: |
+      SELECT ?answer WHERE {
+        ?corrida a energia:ModelRun ; energia:current true .
+        ?p a energia:Prediction ; prov:wasGeneratedBy ?corrida ; energia:inTest true ; energia:predictedGas ?gas ;
+           energia:aboutWell/energia:wellId ?answer .
+      } ORDER BY DESC(?gas) LIMIT 3
+
+  - id: l03
+    question: En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) usaron una fractura que se cargó en el portal en un mes posterior al primer mes con producción del pozo? La fractura de un pozo son las fracturas informadas hasta el mes en que arrancó; se cuenta la fecha de carga más reciente de esas fracturas.
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?p) AS ?answer) WHERE {
+        ?corrida a energia:ModelRun ; energia:current true .
+        ?p a energia:Prediction ; prov:wasGeneratedBy ?corrida ; energia:inTest true ; prov:used ?f ; prov:used ?inicio .
+        ?f a energia:Fracturing ; energia:loadedOn ?cargada .
+        ?inicio a energia:WellStart ; energia:startMonth ?mes .
+        FILTER (YEAR(?cargada) * 12 + MONTH(?cargada) > YEAR(?mes) * 12 + MONTH(?mes))
+      }
+
+  - id: l04
+    question: Si la fuente corrige la fractura informada número 4799 (su identificador en los datos de fractura, Adjunto IV), ¿qué pozos tienen una predicción en la corrida vigente que hay que rehacer porque usó esa fractura? Devolvé sus identificadores de pozo.
+    kind: lista
+    items: pozos
+    reference: |
+      SELECT DISTINCT ?answer WHERE {
+        ?r a energia:FractureReport ; energia:reportId "4799" .
+        ?f a energia:Fracturing ; prov:wasDerivedFrom ?r .
+        ?corrida a energia:ModelRun ; energia:current true .
+        ?p a energia:Prediction ; prov:wasGeneratedBy ?corrida ; prov:used ?f ; energia:aboutWell/energia:wellId ?answer .
+      }
+
+  - id: l05
+    question: En la corrida vigente del modelo de gas, ¿qué porcentaje de participación de su operadora en la concesión usó la predicción del pozo 166271?
+    kind: número
+    reference: |
+      SELECT ?answer WHERE {
+        ?corrida a energia:ModelRun ; energia:current true .
+        ?p a energia:Prediction ; prov:wasGeneratedBy ?corrida ; energia:aboutWell/energia:wellId "166271" ; prov:used ?s .
+        ?s a energia:Stake ; energia:percent ?answer .
+      }

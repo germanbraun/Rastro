@@ -1,0 +1,12 @@
+{
+ "question": "Si la fuente corrige la fractura informada número 4799 (su identificador en los datos de fractura, Adjunto IV), ¿qué pozos tienen una predicción en la corrida vigente que hay que rehacer porque usó esa fractura? Devolvé sus identificadores de pozo.",
+ "attempts": [
+  {
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT DISTINCT ?wellId WHERE {\n  ?rep a energia:FractureReport ; energia:reportId ?rid .\n  FILTER(STR(?rid) = \"4799\")\n  ?f a energia:Fracturing ; prov:wasDerivedFrom ?rep .\n  ?run a energia:ModelRun ; energia:current true .\n  ?p a energia:Prediction ; prov:wasGeneratedBy ?run ; prov:used ?f ; energia:aboutWell ?w .\n  ?w energia:wellId ?wellId .\n}",
+   "error": null
+  }
+ ],
+ "answer": [
+  "165404"
+ ]
+}

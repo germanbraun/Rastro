@@ -33,3 +33,4 @@ Preguntas sobre las predicciones (necesitan una corrida publicada):
 | 11 | ¿Qué predicciones de pozos de 2025 se apoyan en un dato corregido, y en cuál? | Lab |
 | 12 | ¿Qué pozos de 2025 se esperan con más gas, en qué rango, y cuánto aporta cada factor? | Lab |
 | 13 | ¿De qué registros de origen sale la predicción de un pozo: qué fracturas informadas y qué meses de gas? | Lab |
+| 14 | Si la fuente corrige una fractura informada, ¿qué predicciones dependen de ella y hay que rehacer? | Lab |

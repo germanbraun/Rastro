@@ -1,6 +1,7 @@
 """Pestaña «Rastro Lab» de petróleo y gas: el mismo modelo de gas, con y sin Rastro, y la explicación de
 cada predicción lado a lado. El modelo está en lab/gas/modelo.py; acá solo se cargan los datos y se muestra.
 """
+import json
 import os
 import sys
 from pathlib import Path
@@ -103,6 +104,17 @@ def show_lab(tech):
             f"{num(v['cambio_medio'])} millones de m³ en promedio** (hasta {num(v['cambio_max'])}) cuando la fractura llega.\n\n"
             "Sin Rastro, el número cambia y nada dice por qué. Con Rastro, cada predicción dice qué datos usó y cuándo se "
             "cargó cada uno (en «¿De dónde sale?» de la fractura), y marca los que llegaron después de que el pozo arrancó."))
+        impacto = Path("/layer/energia/cambio/impacto.json")
+        if impacto.exists():
+            i = json.loads(impacto.read_text())
+            pozos = ", ".join(e["pozo"] for e in i["esperado"])
+            cambio = i["cambiaron"][0] if i["cambiaron"] else None
+            st.markdown(md(
+                f"**Rastro sabe qué cambia.** Si la fuente corrige la fractura informada n.º {i['registro']}, Rastro dice de "
+                f"antemano qué predicciones dependen de ella (pozo {pozos}), recorriendo de qué registros sale cada una. "
+                "Se probó: se corrigió el registro, se rehízo todo y cambiaron exactamente esas"
+                + (f" (de {num(cambio['antes'])} a {num(cambio['despues'])} millones de m³)" if cambio else "")
+                + ", ninguna otra. Sin Rastro, para saberlo hay que rehacer todas y comparar."))
 
     show_well(key="lab_pozo")
 
@@ -217,7 +229,7 @@ SELECT ?version ?fecha (COUNT(?p) AS ?predicciones) WHERE {
         st.markdown(f"**{titulo}**")
         titulos = {"pozo": "Pozo", "concesion": "Concesión", "gasEsperado": "Gas esperado (M m³)", "dato": "Dato corregido",
                    "regla": "Regla", "desde": "Desde", "hasta": "Hasta", "concesionYOperadora": "Concesión con su operadora",
-                   "fractura": "Cómo se fracturó"}
+                   "fractura": "Cómo se fracturó", "profundidad": "Su profundidad"}
         tabla(pd.DataFrame(rows, columns=columns).rename(columns=titulos), key=f"lab_{archivo}")
         if tech:
             st.code(query.strip(), language="sparql")

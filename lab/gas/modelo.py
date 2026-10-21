@@ -67,13 +67,19 @@ fr AS (   -- la fractura de cada pozo, de la tabla tal como viene: las fracturas
          sum(coalesce(arena_bombeada_nacional_tn, 0) + coalesce(arena_bombeada_importada_tn, 0)) AS arena_tn,
          sum(agua_inyectada_m3) AS agua_inyectada_m3, max(presion_maxima_psi) AS presion_maxima_psi
   FROM fractura.fractura x JOIN p ON p.idpozo = x.idpozo
-  WHERE x.fecha_inicio_fractura < p.inicio + interval '1 month' GROUP BY 1)
+  WHERE x.fecha_inicio_fractura < p.inicio + interval '1 month' GROUP BY 1),
+tr AS (   -- la trayectoria de cada pozo: la de rama más larga entre las perforadas antes de que arrancara
+  SELECT DISTINCT ON (y.idpo) y.idpo AS idpozo, y.profundidad_vertical_mt
+  FROM trayectoria.trayectoria y JOIN p ON p.idpozo = y.idpo
+  WHERE y.profundidad_vertical_mt > 0 AND (y.drilfin IS NULL OR y.drilfin < p.inicio + interval '1 month')
+  ORDER BY y.idpo, y.largo_rama_horizontal_mt DESC NULLS LAST)
 SELECT DISTINCT ON (t.idpozo) t.idpozo, p.inicio, trim(t.empresa) AS empresa, t.idareapermisoconcesion AS area,
        c.participacion, fr.longitud_rama_horizontal_m, fr.cantidad_fracturas, fr.arena_tn, fr.agua_inyectada_m3,
-       fr.presion_maxima_psi
+       fr.presion_maxima_psi, tr.profundidad_vertical_mt
 FROM todo t JOIN p ON p.idpozo = t.idpozo AND make_date(t.anio, t.mes, 1) = p.inicio
 LEFT JOIN sig_energia.concesion c ON c.id_concesion = t.idareapermisoconcesion
 LEFT JOIN fr ON fr.idpozo = t.idpozo
+LEFT JOIN tr ON tr.idpozo = t.idpozo
 WHERE p.inicio > (SELECT mes FROM desde) AND p.primera > (SELECT mes FROM desde)
   AND t.formacion = 'vaca muerta' AND t.sub_tipo_recurso = 'SHALE' AND t.tipopozo = 'Gasífero'
 ORDER BY t.idpozo, t.prod_gas DESC NULLS LAST"""
@@ -82,6 +88,7 @@ ORDER BY t.idpozo, t.prod_gas DESC NULLS LAST"""
 SPARQL_B = """PREFIX energia: <https://w3id.org/rastro/energia#>
 SELECT ?well ?s ?st ?fr ?inicio ?grupo ?nombre ?reglaNombre ?evidencia ?area ?areaNombre ?pct ?reglaSocio ?textoSocio ?gas27 ?gas12
        ?rama ?etapas ?arena ?agua ?presion ?fracEvidencia ?fracNombre ?fracRegla ?fracEmpresa ?fracCargada
+       ?tr ?profundidad ?trEvidencia
 WHERE {
   ?s a energia:WellStart ; energia:aboutWell ?well ; energia:startMonth ?inicio ; energia:company ?c ;
      energia:declaredName ?nombre ; energia:sourceText ?evidencia ; energia:inConcession ?conc ;
@@ -94,6 +101,8 @@ WHERE {
                  energia:rule ?reglaSocio ; energia:sourceText ?textoSocio }
   OPTIONAL { ?s energia:gasMonths2to7 ?gas27 }
   OPTIONAL { ?s energia:gasFirst12Months ?gas12 }
+  OPTIONAL { ?tr a energia:WellTrajectory ; energia:aboutWell ?well ; energia:verticalDepthM ?profundidad ;
+                 energia:sourceText ?trEvidencia }
   OPTIONAL { ?fr a energia:Fracturing ; energia:aboutWell ?well ; energia:lateralLengthM ?rama ; energia:fracStages ?etapas ;
                  energia:proppantTonnes ?arena ; energia:waterM3 ?agua ; energia:maxPressurePsi ?presion ;
                  energia:sourceText ?fracEvidencia ; energia:declaredName ?fracNombre ; energia:company/energia:name ?fracEmpresa ;
@@ -117,9 +126,10 @@ SELECT ?area (COUNT(?x) AS ?cambios) WHERE {
 # (salía al revés: estar a 0,3 km restaba gas). Vuelve en la prueba de áreas nuevas, donde sí agrega.
 FRACTURA_A = ["longitud_rama_horizontal_m", "cantidad_fracturas", "arena_tn", "agua_inyectada_m3", "presion_maxima_psi"]
 FRACTURA_B = ["rama", "etapas", "arena", "agua", "presion"]
+PROFUNDIDAD_A, PROFUNDIDAD_B = ["profundidad_vertical_mt"], ["profundidad"]   # de las trayectorias de pozo
 VARIABLES = {
-    "A": {"categorias": ["empresa", "area"], "numeros": ["porcentaje"] + FRACTURA_A},
-    "B": {"categorias": ["grupo", "area"], "numeros": ["pct"] + FRACTURA_B},
+    "A": {"categorias": ["empresa", "area"], "numeros": ["porcentaje"] + FRACTURA_A + PROFUNDIDAD_A},
+    "B": {"categorias": ["grupo", "area"], "numeros": ["pct"] + FRACTURA_B + PROFUNDIDAD_B},
 }
 # Cómo se lee cada variable de fractura de Rastro: concepto, unidad y cuántos decimales
 FRACTURA = {"rama": ("largo de la rama horizontal", "m", 0), "etapas": ("etapas de fractura", "", 0),
@@ -171,9 +181,9 @@ def preparar(gas, a, b, objetivo="gas27"):
     b = b.copy()
     b["idpozo"] = b.well.str.rsplit("/", n=1).str[-1]
     b = b.drop_duplicates("idpozo")
-    for c in ["pct"] + FRACTURA_B:
+    for c in ["pct"] + FRACTURA_B + PROFUNDIDAD_B:
         b[c] = pd.to_numeric(b[c])
-    for c in FRACTURA_A:
+    for c in FRACTURA_A + PROFUNDIDAD_A:
         a[c] = pd.to_numeric(a[c])
     b["gas"] = pd.to_numeric(b[objetivo])
     b = b[b.gas.notna()]
@@ -337,6 +347,14 @@ def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
     area = concesion(f.areaNombre if isinstance(f.areaNombre, str) else f.area)
     operadora = nombre(f.grupo)
     lugar = float(m["aportes"].loc[i, UBICACION].sum())
+    hondo = float(m["aportes"].loc[i, PROFUNDIDAD_B].sum())
+    if pd.notna(f.profundidad):
+        tipica = m["relleno"]["profundidad"]
+        quienes = "hondos" if hondo * (f.profundidad - tipica) > 0 else "someros"   # el signo del aporte dice hacia dónde empuja
+        por_que_hondo = (f"Está a {num(f.profundidad, 0)} m de profundidad vertical (típico: {num(tipica, 0)}), de su trayectoria; "
+                         f"en el entrenamiento, los pozos más {quienes} dieron más gas.")
+    else:
+        por_que_hondo = "No hay trayectoria de este pozo: el modelo usa la profundidad de un pozo típico."
     fractura = float(m["aportes"].loc[i, FRACTURA_B].sum())
     misma = entreno[entreno.area == f.area]
     if len(misma):
@@ -391,12 +409,18 @@ def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
                        "nombre": f"Informada como «{f.fracNombre}»; Rastro la une a {informa}"
                                  + (f", que no es la operadora ({operadora})." if informa != operadora else "."),
                        "fuentes": "Datos de fractura de pozos (Adjunto IV), Secretaría de Energía"})
+    if pd.notna(f.profundidad):
+        hechos.append({"hecho": "Trayectoria", "valor": f"{num(f.profundidad, 0)} m de profundidad vertical", "marca": "",
+                       "regla": "una por pozo: la de rama más larga entre las perforadas antes de que arrancara",
+                       "evidencia": f.trEvidencia, "fuentes": "Trayectorias de pozo de Vaca Muerta, Secretaría de Energía"})
     resumen = (f"Se esperan {num(float(m['pred'][i]))} millones de m³: un pozo promedio da {num(m['base'])}; "
                f"estar en {area} con {operadora} {'suma' if lugar >= 0 else 'resta'} {num(abs(lugar))}, "
-               f"y cómo se fracturó {'suma' if fractura >= 0 else 'resta'} {num(abs(fractura))}.")
+               f"cómo se fracturó {'suma' if fractura >= 0 else 'resta'} {num(abs(fractura))} "
+               f"y su profundidad {'suma' if hondo >= 0 else 'resta'} {num(abs(hondo))}.")
     factores = [{"factor": f"{area}, con {operadora}", "aporte": lugar, "por_que": por_que_lugar,
                  "nota": juntas if len(misma) else ""},
-                {"factor": "Cómo se fracturó", "aporte": fractura, "por_que": por_que_fractura, "nota": ""}]
+                {"factor": "Cómo se fracturó", "aporte": fractura, "por_que": por_que_fractura, "nota": ""},
+                {"factor": "Su profundidad", "aporte": hondo, "por_que": por_que_hondo, "nota": ""}]
     return {"pred": float(m["pred"][i]), "factores": factores, "hechos": hechos, "resumen": resumen,
             "real": float(f.gas), "inicio": f.inicio, "area": area, "operadora": operadora}
 
@@ -445,9 +469,10 @@ ENTRADA_B = [   # (columna, título, concepto de Rastro, fuente)
     ("arena", "Arena (t)", "energia:proppantTonnes", "Datos de fractura"),
     ("agua", "Agua (m³)", "energia:waterM3", "Datos de fractura"),
     ("presion", "Presión máxima (psi)", "energia:maxPressurePsi", "Datos de fractura"),
+    ("profundidad", "Profundidad vertical (m)", "energia:WellTrajectory → energia:verticalDepthM", "Trayectorias de pozo"),
     ("gas", "Gas meses 2 a 7 (M m³)", "energia:gasMonths2to7 (lo que se predice)", "Capítulo IV"),
 ]
-ENTRADA_A = ["idpozo", "inicio", "empresa", "area", "porcentaje"] + FRACTURA_A + ["gas"]
+ENTRADA_A = ["idpozo", "inicio", "empresa", "area", "porcentaje"] + FRACTURA_A + PROFUNDIDAD_A + ["gas"]
 
 
 def entrada(a, b, prueba=PRUEBA):
@@ -484,11 +509,12 @@ def publicar(r, b, desde_hasta, dentro, prueba=PRUEBA):
     for i, f in b.iterrows():
         entradas.append(f"({txt(corrida)}, {txt(f.idpozo)}, {txt(f'{f.inicio:%Y-%m-%d}')}, {txt(f.grupo)}, {txt(f.area)}, "
                         + ", ".join("NULL" if pd.isna(f[c]) else f"{float(f[c]):.3f}" for c in ["pct", *FRACTURA_B, "gas"])
-                        + f", {bool(de_prueba[i])})")
+                        + f", {bool(de_prueba[i])}, " + ("NULL" if pd.isna(f.profundidad) else f"{float(f.profundidad):.1f}") + ")")
         gas = float(m["pred"][i])
         predicciones.append(f"({txt(corrida)}, {txt(f.idpozo)}, {gas:.3f}, {max(gas + desde_hasta[0], 0):.3f}, "
-                            f"{gas + desde_hasta[1]:.3f}, {bool(de_prueba[i])}, {txt(f.s)}, {txt(f.fr)}, {txt(f.st)})")
-        for factor, columnas in (("La concesión con su operadora y socios", UBICACION), ("Cómo se fracturó el pozo", FRACTURA_B)):
+                            f"{gas + desde_hasta[1]:.3f}, {bool(de_prueba[i])}, {txt(f.s)}, {txt(f.fr)}, {txt(f.st)}, {txt(f.tr)})")
+        for factor, columnas in (("La concesión con su operadora y socios", UBICACION), ("Cómo se fracturó el pozo", FRACTURA_B),
+                                 ("La profundidad del pozo", PROFUNDIDAD_B)):
             aportes.append(f"({txt(corrida)}, {txt(f.idpozo)}, {txt(factor)}, {float(m['aportes'].loc[i, columnas].sum()):.3f})")
     sql_ejecutar(f"""
 UPDATE lab_gas.corrida SET vigente = false;
@@ -510,7 +536,7 @@ def comparar(antes=None, despues=None):
     if len(corridas) < 2 and not (antes and despues):
         return None
     despues, antes = despues or corridas[0], antes or corridas[1]
-    columnas = ["operadora", "concesion", "participacion", "rama", "etapas", "arena", "agua", "presion", "gas"]
+    columnas = ["operadora", "concesion", "participacion", "rama", "etapas", "arena", "agua", "presion", "profundidad", "gas"]
     distintas = " OR ".join(f"a.{c} IS DISTINCT FROM d.{c}" for c in columnas)
     cambios = sql_local(f"""
 SELECT d.idpozo, concat_ws(', ', {", ".join(f"CASE WHEN a.{c} IS DISTINCT FROM d.{c} THEN '{c}' END" for c in columnas)}) AS cambio,
@@ -528,7 +554,8 @@ def peso_por_concepto(r, b, prueba=PRUEBA):
     """Qué pesa más en las predicciones de prueba: el aporte medio, sin signo, de cada concepto."""
     ap = r["B"]["aportes"][b.inicio >= prueba]
     return {"La concesión con su operadora y socios": float(ap[UBICACION].sum(axis=1).abs().mean()),
-            "Cómo se fracturó el pozo": float(ap[FRACTURA_B].sum(axis=1).abs().mean())}
+            "Cómo se fracturó el pozo": float(ap[FRACTURA_B].sum(axis=1).abs().mean()),
+            "La profundidad del pozo": float(ap[PROFUNDIDAD_B].sum(axis=1).abs().mean())}
 
 
 if __name__ == "__main__":

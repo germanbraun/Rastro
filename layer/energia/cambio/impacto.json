@@ -1,0 +1,26 @@
+{
+ "registro": "4703",
+ "correccion": "etapas +12",
+ "corrida_antes": "20261021-095738-28806b3f",
+ "esperado": [
+  {
+   "pozo": "166133",
+   "gasEsperado": 22.731,
+   "dePrueba": true,
+   "queHacer": "rehacer esta predicción"
+  }
+ ],
+ "corrida_despues": "20261021-100449-28806b3f",
+ "cambiaron": [
+  {
+   "idpozo": "166133",
+   "cambio": "etapas",
+   "antes": 22.7,
+   "despues": 30.2,
+   "diferencia": 7.4
+  }
+ ],
+ "coincide": true,
+ "corrida_restaurada": "20261021-101201-28806b3f",
+ "restaurado_igual": true
+}

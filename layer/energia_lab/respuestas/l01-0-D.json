@@ -1,0 +1,10 @@
+{
+ "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) se apoyan en un dato corregido a mano, es decir, una participación de la operadora corregida con un documento o una operadora cuyo nombre se unió a su grupo por una corrección revisada?",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT p.idpozo) FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente JOIN energia.inicio_pozo ip ON ip.idpozo = p.idpozo WHERE p.de_prueba AND (EXISTS (SELECT 1 FROM energia.participacion pa WHERE pa.id_concesion = ip.id_concesion AND pa.empresa_id = ip.empresa_id AND pa.regla ILIKE 'correcci_n revisada con documento%') OR EXISTS (SELECT 1 FROM energia.empresa_nombre en WHERE en.empresa_id = ip.empresa_id AND en.regla ILIKE 'correcci_n revisada'))",
+   "error": null
+  }
+ ],
+ "answer": 24.0
+}

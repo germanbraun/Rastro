@@ -5,7 +5,7 @@ description: Sumar o cambiar un cargador de datos de Rastro en cualquier dominio
 
 # Agregar una fuente de datos
 
-Un cargador baja datos, los guarda en `data/raw/` y los carga en Postgres (un esquema por fuente) o en GraphDB. Seguí el patrón de los que ya existen: `data/energia/` (varias fuentes de un dominio) y `data/lab-gas/` (una fuente que usa solo Rastro Lab), en Python.
+Un cargador baja datos, los guarda en `data/raw/` y los carga en Postgres (un esquema por fuente) o en GraphDB. Seguí el patrón de los que ya existen: `data/energia/` (varias fuentes de un dominio) y `data/lab-gas/` (las fuentes que usa solo Rastro Lab: años anteriores, fractura y trayectorias), en Python. Las trayectorias de pozo son el ejemplo más completo de una fuente sumada de punta a punta: cargador, enlace con su regla, mapeo, diccionario, modelo y explicación.
 
 ## Pasos
 

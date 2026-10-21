@@ -38,8 +38,9 @@ from answer import MAX_ATTEMPTS, output_schema, retry_message, run_sparql, syste
 
 DOMAIN = sys.argv[1]
 HERE = Path(__file__).parent / DOMAIN
-NORMALIZE = {"proveedores": "proveedores.normalize", "energia": "energia.normalizar"}[DOMAIN]
-TITLE = {"proveedores": "proveedores del Estado", "energia": "petróleo y gas en Argentina"}[DOMAIN]
+NORMALIZE = {"proveedores": "proveedores.normalize", "energia": "energia.normalizar", "energia_lab": "energia.normalizar"}[DOMAIN]
+TITLE = {"proveedores": "proveedores del Estado", "energia": "petróleo y gas en Argentina",
+         "energia_lab": "las predicciones de Rastro Lab"}[DOMAIN]
 ANSWERS = HERE / "respuestas"
 SPEC = yaml.safe_load((HERE / "eval" / "questions.yaml").read_text())
 QUESTIONS = {q["id"]: q for q in SPEC["questions"]}

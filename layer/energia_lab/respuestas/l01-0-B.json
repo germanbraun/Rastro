@@ -1,0 +1,14 @@
+{
+ "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) se apoyan en un dato corregido a mano, es decir, una participación de la operadora corregida con un documento o una operadora cuyo nombre se unió a su grupo por una corrección revisada?",
+ "attempts": [
+  {
+   "query": "SELECT count(*) FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente JOIN lab_gas.entrada e ON e.corrida = p.corrida AND e.idpozo = p.idpozo WHERE p.de_prueba AND (p.socio_iri ILIKE '%correc%' OR p.socio_iri ILIKE '%revis%' OR p.socio_iri ILIKE '%documento%' OR NOT EXISTS (SELECT 1 FROM sig_energia.concesion s WHERE s.id_concesion = e.concesion AND upper(unaccent_placeholder) IS NULL))",
+   "error": "column \"unaccent_placeholder\" does not exist\nLINE 1: ...on s WHERE s.id_concesion = e.concesion AND upper(unaccent_p...\n                                                             ^"
+  },
+  {
+   "query": "SELECT count(*) FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente WHERE p.de_prueba AND (p.socio_iri ILIKE '%correc%' OR p.socio_iri ILIKE '%revis%' OR p.socio_iri ILIKE '%documento%')",
+   "error": null
+  }
+ ],
+ "answer": 0.0
+}

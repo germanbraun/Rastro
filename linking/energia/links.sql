@@ -313,6 +313,21 @@ SELECT idpozo, count(*) AS fracturas,
        || '. Cargada en el portal el ' || to_char(max(fecha_data), 'DD/MM/YYYY') || '.' AS evidencia
 FROM f GROUP BY idpozo;
 
+-- La trayectoria de cada pozo (Trayectorias de Pozo Vaca Muerta): una por pozo, la de rama más larga entre las
+-- perforadas antes de que arrancara (algunos pozos tienen varias filas por desvíos), con la regla y la evidencia.
+CREATE TABLE energia.trayectoria_pozo AS
+SELECT DISTINCT ON (t.idpo) t.idpo AS idpozo, t.profundidad_vertical_mt AS profundidad_m,
+       t.largo_rama_horizontal_mt AS rama_m, t.drilfin AS perforado,
+       (SELECT count(*) FROM trayectoria.trayectoria o WHERE o.idpo = t.idpo) AS filas,
+       'Trayectoria ' || coalesce(t.sigla, t.idpo) || ': profundidad vertical de ' || round(t.profundidad_vertical_mt)
+       || ' m, rama horizontal de ' || round(t.largo_rama_horizontal_mt) || ' m'
+       || coalesce(', perforado hasta el ' || to_char(t.drilfin, 'DD/MM/YYYY'), '') || '.' AS evidencia
+FROM trayectoria.trayectoria t
+LEFT JOIN energia.inicio_pozo i ON i.idpozo = t.idpo
+WHERE t.profundidad_vertical_mt > 0
+  AND (i.mes IS NULL OR t.drilfin IS NULL OR t.drilfin < i.mes + interval '1 month')
+ORDER BY t.idpo, t.largo_rama_horizontal_mt DESC NULLS LAST;
+
 -- Los registros de origen, uno por uno, para que cada predicción de Rastro Lab llegue hasta ellos.
 -- Cada fractura informada (Adjunto IV), con su identificador; «usada» si entra en la fractura del pozo (informada
 -- hasta el mes en que arrancó).
@@ -347,3 +362,4 @@ ALTER TABLE energia.inicio_pozo ADD PRIMARY KEY (idpozo);
 ALTER TABLE energia.fractura_pozo ADD PRIMARY KEY (idpozo);
 ALTER TABLE energia.fractura_registro ADD PRIMARY KEY (id);
 ALTER TABLE energia.gas_mes ADD PRIMARY KEY (idpozo, mes);
+ALTER TABLE energia.trayectoria_pozo ADD PRIMARY KEY (idpozo);

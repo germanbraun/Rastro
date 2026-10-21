@@ -30,6 +30,16 @@ CREATE TABLE IF NOT EXISTS fractura.fractura (
     empresa_informante text
 );
 
+-- Trayectorias de pozo de Vaca Muerta (datos.energia.gob.ar): profundidad vertical, largo de la rama horizontal y
+-- fechas de perforación, por pozo. Algunos pozos tienen varias filas (desvíos).
+CREATE SCHEMA IF NOT EXISTS trayectoria;
+CREATE TABLE IF NOT EXISTS trayectoria.trayectoria (
+    sigla text, idpo text,               -- idpo es el identificador del pozo (idpozo en las otras fuentes)
+    profundidad_final_total_mt numeric, profundidad_vertical_mt numeric, profundidad_sidetrack_mt numeric,
+    largo_rama_horizontal_mt numeric, unidad_intervalo_navegacion text, detalle_unidad_intervalo_navegacion text,
+    pnl_md numeric, pnl_tvd numeric, termini date, termfin date, drilini date, drilfin date, tipopozo text
+);
+
 -- Las corridas del modelo de gas de Rastro Lab y sus predicciones, para que estén en Rastro y se puedan
 -- consultar. Las escribe `python3 lab/gas/modelo.py --publicar`; no se borran al rearmar los enlaces.
 CREATE SCHEMA IF NOT EXISTS lab_gas;
@@ -49,6 +59,8 @@ CREATE TABLE IF NOT EXISTS lab_gas.entrada (
     rama numeric, etapas numeric, arena numeric, agua numeric, presion numeric, gas numeric, de_prueba boolean,
     PRIMARY KEY (corrida, idpozo)
 );
+ALTER TABLE lab_gas.entrada ADD COLUMN IF NOT EXISTS profundidad numeric;   -- desde que se sumaron las trayectorias
+ALTER TABLE lab_gas.prediccion ADD COLUMN IF NOT EXISTS trayectoria_iri text;
 CREATE TABLE IF NOT EXISTS lab_gas.aporte (
     corrida text, idpozo text, factor text, aporte numeric,
     PRIMARY KEY (corrida, idpozo, factor)

@@ -1,0 +1,14 @@
+{
+ "question": "En la corrida vigente del modelo de gas, ¿cuáles son los 3 pozos de prueba (los que empezaron a producir en 2025) con más gas esperado? Devolvé sus identificadores de pozo.",
+ "attempts": [
+  {
+   "query": "SELECT p.idpozo FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente WHERE p.de_prueba ORDER BY p.gas DESC LIMIT 3",
+   "error": null
+  }
+ ],
+ "answer": [
+  "166586",
+  "166587",
+  "166588"
+ ]
+}

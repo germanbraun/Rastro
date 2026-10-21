@@ -45,6 +45,11 @@ Cada corrida publicada queda en Rastro: `energia:ModelRun` (versión = huella de
 - **Cada corrida guarda su entrada** (`lab_gas.entrada`: lo que vio el modelo, pozo por pozo). Con el mismo código y los mismos datos, dos corridas dan lo mismo (`--comparar` da 0 cambios); si una fuente cambia, `--comparar` dice qué pozos, en qué variable y cuánto se movió la predicción.
 - **El rango** sale de los errores del año anterior a la prueba (sin mirar la prueba): se informa qué parte de los pozos de prueba cayó adentro (hoy 71 de 100), aunque no llegue a 80.
 
+## Fuentes y preguntas sobre las predicciones
+
+- **Fuentes de Lab** (`data/lab-gas/`): Capítulo IV de 2018 a 2022, datos de fractura y trayectorias de pozo. Una fuente nueva sigue la skill `agregar-fuente`: su regla va al enlace (`linking/energia/links.sql`), se mapea con `prov:wasDerivedFrom` y entra al modelo por los dos caminos (SQL crudo en A, SPARQL en B). Medí el esfuerzo de cada lado y la precisión, y decilo aunque no mejore.
+- **El asistente sobre las predicciones** se mide con la skill `evaluar` y el conjunto `energia_lab` (`layer/energia_lab/`): `evaluar.py energia_lab prompt|try|puntaje`. Sin Rastro ve las fuentes y las tablas que deja el modelo (`lab_gas`), como cualquier proceso de aprendizaje automático.
+
 ## Al cambiar algo
 
 1. Corré `python3 lab/gas/modelo.py` y leé la explicación de dos o tres pozos: ¿dice algo falso? ¿muestra un dato que no debería?

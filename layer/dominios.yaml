@@ -55,7 +55,7 @@ proveedores:
     gleif: [group, GroupLink, legalEntity, LeiLink, ForeignParentSupplier, SupplierToReview]
     csl: [watchlistMatch, WatchlistLink, WatchlistSupplier, SupplierToReview]
 
-energia:
+energia: &energia
   base: >-
     Respondés preguntas de negocio sobre la producción de petróleo y gas de Argentina en 2025,
     pozo por pozo, las concesiones, sus socios y operadoras, los venteos de gas, los gasoductos
@@ -79,6 +79,7 @@ energia:
     gleif: [lei, legalName]
     fractura: [Fracturing, lateralLengthM, fracStages, proppantTonnes, waterM3, maxPressurePsi, fracDate, loadedOn,
                FractureReport, reportId]
+    trayectorias: [WellTrajectory, verticalDepthM, drillingEnd]
     lab: [ModelRun, modelVersion, trainedUntil, testError, testR2, inRangeShare, current, Prediction, predictedGas,
           predictedLow, predictedHigh, inTest, Contribution, ofPrediction, factor, amount]
     ambiental: [EnvironmentalStudy, studyId, studyType]
@@ -96,3 +97,15 @@ energia:
     ign: [SurroundingsLink]
     ambiental: [StudyLink, aboutStudy, VentingWithoutReports, ConcessionToReview]
     gleif: [LeiLink, registryCompany]
+
+# Las preguntas sobre las predicciones de Rastro Lab: el mismo dominio, con usuarios y notas de SQL propios
+energia_lab:
+  <<: *energia
+  base: >-
+    Respondés preguntas sobre las predicciones de un modelo que estima el gas de los meses 2 a 7 de pozos nuevos de
+    shale gas de Vaca Muerta: qué predijo, con qué datos y de qué registros de origen salen. Seguí al pie de la letra
+    las definiciones que trae la pregunta. Si la respuesta es una lista, devolvé solo lo pedido; si es un número, un
+    solo número.
+  sql_notes: layer/energia_lab/sql-notes.md
+  links_notes: layer/energia_lab/sql-enlaces-notes.md
+  readers: {B: energia_lab_reader, D: energia_lab_reader_links}

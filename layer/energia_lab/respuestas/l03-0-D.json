@@ -1,0 +1,10 @@
+{
+ "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) usaron una fractura que se cargó en el portal en un mes posterior al primer mes con producción del pozo? La fractura de un pozo son las fracturas informadas hasta el mes en que arrancó; se cuenta la fecha de carga más reciente de esas fracturas.",
+ "attempts": [
+  {
+   "query": "SELECT count(DISTINCT p.idpozo) FROM lab_gas.prediccion p JOIN lab_gas.corrida c ON c.id = p.corrida AND c.vigente JOIN lab_gas.entrada e ON e.corrida = p.corrida AND e.idpozo = p.idpozo JOIN energia.fractura_pozo f ON f.idpozo = p.idpozo WHERE p.de_prueba AND f.cargada IS NOT NULL AND date_trunc('month', f.cargada) > date_trunc('month', e.inicio)",
+   "error": null
+  }
+ ],
+ "answer": 36.0
+}

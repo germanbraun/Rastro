@@ -1,0 +1,14 @@
+# 14. Si la fuente corrige una fractura informada, ¿qué predicciones dependen de ella y hay que rehacer?
+PREFIX energia: <https://w3id.org/rastro/energia#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?pozo ?gasEsperado ?dePrueba ?queHacer
+WHERE {
+  VALUES ?registro { "4703" }   # el identificador de la fractura en el Adjunto IV
+  ?r a energia:FractureReport ; energia:reportId ?registro .
+  ?f a energia:Fracturing ; prov:wasDerivedFrom ?r .
+  ?corrida a energia:ModelRun ; energia:current true .
+  ?p a energia:Prediction ; prov:wasGeneratedBy ?corrida ; prov:used ?f ; energia:predictedGas ?gasEsperado ;
+     energia:inTest ?dePrueba ; energia:aboutWell/energia:wellId ?pozo .
+  BIND (IF(?dePrueba, "rehacer esta predicción",
+           "es un pozo de entrenamiento: reentrenar el modelo y rehacer todas") AS ?queHacer)
+}

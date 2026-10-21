@@ -81,7 +81,7 @@ energia:Fracturing a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Fractura de un pozo"@es ;
     rdfs:comment "Cómo se fracturó un pozo, según los datos de fractura (Adjunto IV): las fracturas informadas hasta el mes en que arrancó, sumadas. La empresa que informa (energia:company) se une a las demás por su nombre."@es .
-energia:lateralLengthM a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "largo de la rama horizontal (m)"@es .
+energia:lateralLengthM a owl:DatatypeProperty ; rdfs:label "largo de la rama horizontal (m)"@es .   # sin dominio: fractura y trayectoria
 energia:fracStages a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "etapas de fractura"@es .
 energia:proppantTonnes a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "arena bombeada (t)"@es .
 energia:waterM3 a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "agua inyectada (m³)"@es .
@@ -89,6 +89,13 @@ energia:maxPressurePsi a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ;
 energia:fracDate a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "inicio de la fractura"@es .
 energia:loadedOn a owl:DatatypeProperty ; rdfs:label "cargado en la fuente"@es ;
     rdfs:comment "El día en que el dato se cargó en el portal de la fuente. La fractura de un pozo puede cargarse meses después de que arrancó: una predicción hecha antes no la tenía."@es .
+
+energia:WellTrajectory a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Trayectoria de un pozo"@es ;
+    rdfs:comment "Cómo se perforó un pozo, según las trayectorias de Vaca Muerta: profundidad vertical y largo de la rama horizontal. Una por pozo: la de rama más larga entre las perforadas antes de que arrancara."@es .
+energia:verticalDepthM a owl:DatatypeProperty ; rdfs:domain energia:WellTrajectory ; rdfs:label "profundidad vertical (m)"@es .
+energia:drillingEnd a owl:DatatypeProperty ; rdfs:domain energia:WellTrajectory ; rdfs:label "fin de la perforación"@es .
 
 energia:FractureReport a owl:Class ;
     rdfs:subClassOf prov:Entity ;

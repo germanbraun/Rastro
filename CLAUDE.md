@@ -44,13 +44,14 @@ Es un MVP comercial: lo tiene que entender alguien de ventas, que tiene que pode
 ```bash
 docker compose up -d                                   # app :8501, Postgres :5434, Ontop :8080/:8081/:8082, GraphDB :7210
 docker compose run --rm energia-loader                 # cargadores: <fuente>-loader (ver README)
-docker compose run --rm lab-gas-loader                 # Capítulo IV 2018–2022 y datos de fractura, solo para Lab
+docker compose run --rm lab-gas-loader                 # Capítulo IV 2018–2022, fractura y trayectorias, solo para Lab
 docker compose run --rm energia-linker                 # enlaces de petróleo y gas (proveedores-linker, linker para oncología)
 docker compose restart ontop-energia                   # después de cambiar mapeos, ontología o enlaces
 docker compose run --rm ontology-check                 # ontologías y queries de competencia
-docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun|puntaje   # evaluación
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun|puntaje   # evaluación (energia_lab: las preguntas sobre las predicciones)
 layer/energia/cambio/cambio.sh registrar               # prueba de cambio (siempre termina en «deshacer»)
 layer/energia/cambio/correccion.sh registrar           # una corrección, todos los resultados (~15 min)
+layer/energia/cambio/impacto.sh registrar              # qué predicciones cambian si la fuente corrige un registro (~15 min)
 python3 lab/gas/modelo.py [<pozo>|--12-meses|--como-trabajo-publicado|--publicar|--comparar]   # Rastro Lab desde la consola
 python3 docs/slides/build.py                           # arma los mazos HTML
 ```

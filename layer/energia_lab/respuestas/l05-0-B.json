@@ -1,0 +1,10 @@
+{
+ "question": "En la corrida vigente del modelo de gas, ¿qué porcentaje de participación de su operadora en la concesión usó la predicción del pozo 166271?",
+ "attempts": [
+  {
+   "query": "SELECT e.participacion FROM lab_gas.entrada e JOIN lab_gas.corrida c ON c.id = e.corrida AND c.vigente WHERE e.idpozo = '166271'",
+   "error": null
+  }
+ ],
+ "answer": 55.0
+}

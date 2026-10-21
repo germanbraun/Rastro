@@ -159,7 +159,7 @@ def main():
         for table in ("empresa", "empresa_nombre", "empresa_lei", "produccion_pozo", "concesion", "participacion",
                       "operador_pozo", "venteo", "gasoducto", "concesion_gasoducto", "venteo_entorno", "estudio",
                       "concesion_revisar", "operador_area_mes", "cambio_operadora", "inicio_pozo", "fractura_pozo",
-                      "fractura_registro", "gas_mes"):
+                      "fractura_registro", "gas_mes", "trayectoria_pozo"):
             n = conn.execute(f"SELECT count(*) FROM energia.{table}").fetchone()[0]
             print(f"  energia.{table:<16}{n:>8} filas")
         for regla, n in conn.execute("SELECT regla, count(*) FROM energia.operador_pozo GROUP BY 1 ORDER BY 2 DESC"):

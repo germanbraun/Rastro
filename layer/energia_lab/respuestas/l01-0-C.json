@@ -1,0 +1,10 @@
+{
+ "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) se apoyan en un dato corregido a mano, es decir, una participación de la operadora corregida con un documento o una operadora cuyo nombre se unió a su grupo por una corrección revisada?",
+ "attempts": [
+  {
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT (COUNT(DISTINCT ?p) AS ?n) WHERE {\n  ?run a energia:ModelRun ; energia:current true .\n  ?p a energia:Prediction ; prov:wasGeneratedBy ?run ; energia:inTest true ; prov:used ?s .\n  ?s a energia:Stake ; energia:partner ?co .\n  {\n    ?s energia:rule ?r .\n    FILTER(CONTAINS(LCASE(STR(?r)), \"revisada\"))\n  } UNION {\n    ?cn a energia:CompanyName ; energia:company ?co ; energia:rule ?r .\n    FILTER(CONTAINS(LCASE(STR(?r)), \"revisada\"))\n  }\n}",
+   "error": null
+  }
+ ],
+ "answer": 22.0
+}
