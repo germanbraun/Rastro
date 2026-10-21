@@ -636,3 +636,9 @@ Una revisión del código y de la documentación (dos auditorías, una de cada u
 - **Dos preguntas nuevas** (11 y 12). La 11 cuenta 24 predicciones de 2025 con un dato corregido, lo mismo que el modelo por su lado. Se consultan con SPARQL, en la app (Rastro Lab → «Las predicciones, en Rastro») y con el asistente de IA, que conoce los términos nuevos por `layer/dominios.yaml` y las notas de SPARQL.
 - **Rango de cada predicción:** de los errores del año anterior a la prueba (entrenando con los pozos anteriores a 2024 y midiendo en 2024), sin mirar la prueba. Cubre 71 de cada 100 pozos de 2025; se dice así, aunque se buscaba 80.
 - **La app nota una corrida nueva:** la versión de los datos que usa el caché mira también la última corrida publicada.
+
+## 2026-10-21 — Rastro Lab: los registros de origen, uno por uno, y la versión de cada corrida
+
+- **Cada registro de origen tiene su identidad en Rastro:** cada fractura informada (`energia:FractureReport`, con su identificador del Adjunto IV, fecha, etapas y fecha de carga) y cada mes de gas de un pozo nuevo (`energia:MonthlyGas`, de las declaraciones juradas). La fractura de un pozo y su inicio dicen de qué registros salen (`prov:wasDerivedFrom`), así que la cadena completa se consulta: predicción → datos que usó → registros de origen (pregunta 13, en 2 segundos). Comprobado contra la fuente: el pozo 166133 usa la fractura n.º 4703 (18 etapas, cargada el 14/01/2025) y seis meses de gas que suman sus 30,2 millones de m³.
+- **En la app:** el gas real dice de qué meses de las declaraciones juradas sale, y el «¿De dónde sale?» de la fractura lista las fracturas informadas con su número y su fecha de carga, leídos de Rastro.
+- **Versión:** cada corrida ya guarda la huella del código, la fecha, el corte y el error, y las anteriores quedan (solo deja de ser la vigente). Con los registros de origen, una predicción se puede rehacer y comprobar.

@@ -132,6 +132,15 @@ def show_lab(tech):
             st.caption("Código del modelo: lab/gas/modelo.py.")
 
 
+def registros(pozo):
+    """Los registros de origen de la predicción de un pozo, leídos de Rastro (pregunta 13): las fracturas informadas
+    y los meses de gas, cada uno con su identificador o su mes."""
+    from dominio import run
+    query = (Path("/ontology/energia/queries") / "cq13.rq").read_text().replace('"166133"', f'"{pozo}"')
+    columns, rows = run(query, "energia")
+    return pd.DataFrame(rows, columns=columns)
+
+
 def show_well(key, pozo=None):
     """Un pozo de 2025: la predicción sin Rastro y con Rastro, lado a lado. Con pozo, sin selector (para la demo)."""
     a, b, ctx, r, *_, (desde_hasta, dentro) = datos()
@@ -143,7 +152,12 @@ def show_well(key, pozo=None):
     if pozo is None:
         pozo = etiquetas[st.selectbox("Pozo de 2025", list(etiquetas), index=inicial, key=key, help=ayuda("lab_pozo"))]
     ea, eb = modelo.explicacion_a(r, a, pozo), modelo.explicacion_b(r, b, ctx, pozo)
-    st.markdown(f"Dio **{num(eb['real'])} millones de m³** en sus meses 2 a 7.")
+    origen = registros(pozo)
+    meses = origen[origen.registro.str.startswith("Gas")].fecha.sort_values()
+    fracturas = origen[origen.registro.str.startswith("Fractura")]
+    st.markdown(f"Dio **{num(eb['real'])} millones de m³** en sus meses 2 a 7"
+                + (f" (declaraciones juradas de {meses.iloc[0][5:7]}/{meses.iloc[0][:4]} a {meses.iloc[-1][5:7]}/{meses.iloc[-1][:4]})"
+                   if len(meses) else "") + ".")
 
     sin, con = st.columns(2, gap="large")
     with sin:
@@ -173,6 +187,10 @@ def show_well(key, pozo=None):
                 st.markdown(f"**Regla:** {h['regla']}.  \n**Evidencia:** {h['evidencia']}"
                             + (f"  \n**Nombre:** {h['nombre']}" if h.get("nombre") else "")
                             + f"  \n**Fuentes:** {h['fuentes']}.")
+                if h["hecho"] == "Fractura" and len(fracturas):
+                    st.markdown("**Registros de origen:** " + "; ".join(
+                        f"fractura informada n.º {x.cual}, del {x.fecha[8:10]}/{x.fecha[5:7]}/{x.fecha[:4]}, cargada el "
+                        f"{x.cargado[8:10]}/{x.cargado[5:7]}/{x.cargado[:4]}" for x in fracturas.itertuples()) + ".")
 
 
 

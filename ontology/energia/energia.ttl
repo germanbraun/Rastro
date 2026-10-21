@@ -90,6 +90,19 @@ energia:fracDate a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:
 energia:loadedOn a owl:DatatypeProperty ; rdfs:label "cargado en la fuente"@es ;
     rdfs:comment "El día en que el dato se cargó en el portal de la fuente. La fractura de un pozo puede cargarse meses después de que arrancó: una predicción hecha antes no la tenía."@es .
 
+energia:FractureReport a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Fractura informada"@es ;
+    rdfs:comment "Un registro de los datos de fractura (Adjunto IV), con su identificador en la fuente. La fractura de un pozo (energia:Fracturing) dice de qué registros sale con prov:wasDerivedFrom."@es .
+energia:reportId a owl:DatatypeProperty ; rdfs:domain energia:FractureReport ; rdfs:label "identificador en la fuente"@es .
+
+energia:MonthlyGas a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Gas de un pozo en un mes"@es ;
+    rdfs:comment "El gas que declaró un pozo nuevo en uno de los meses que suman su gas de los meses 2 a 7 (millones de m³), de las declaraciones juradas. El inicio del pozo (energia:WellStart) dice de qué meses sale con prov:wasDerivedFrom."@es .
+energia:productionMonth a owl:DatatypeProperty ; rdfs:domain energia:MonthlyGas ; rdfs:label "mes"@es .
+energia:monthGas a owl:DatatypeProperty ; rdfs:domain energia:MonthlyGas ; rdfs:label "gas del mes (millones de m³)"@es .
+
 energia:ModelRun a owl:Class ;
     rdfs:subClassOf prov:Activity ;
     rdfs:label "Corrida del modelo"@es ;

@@ -77,7 +77,8 @@ energia:
     enargas: [pipeline, pipelineOperator, Pipeline]
     ign: [nearestTown, protectedArea]
     gleif: [lei, legalName]
-    fractura: [Fracturing, lateralLengthM, fracStages, proppantTonnes, waterM3, maxPressurePsi, fracDate, loadedOn]
+    fractura: [Fracturing, lateralLengthM, fracStages, proppantTonnes, waterM3, maxPressurePsi, fracDate, loadedOn,
+               FractureReport, reportId]
     lab: [ModelRun, modelVersion, trainedUntil, testError, testR2, inRangeShare, current, Prediction, predictedGas,
           predictedLow, predictedHigh, inTest, Contribution, ofPrediction, factor, amount]
     ambiental: [EnvironmentalStudy, studyId, studyType]
@@ -88,7 +89,8 @@ energia:
              startResource, declaredName, gasMonths2to7, gasFirst12Months]
   link_sources:
     sig_energia: [Stake, partner, percent, inConcession, LocationLink, aboutVenting, ConcessionToReview, reviewReason]
-    capitulo4: [OperatorLink, operator, aboutWell, WellStart, startMonth, startWellType, startFormation, startResource, declaredName, gasMonths2to7, gasFirst12Months, OperatorChange, previousCompany, newCompany, month,
+    capitulo4: [OperatorLink, operator, aboutWell, WellStart, startMonth, startWellType, startFormation, startResource, declaredName, gasMonths2to7, gasFirst12Months, MonthlyGas,
+                productionMonth, monthGas, OperatorChange, previousCompany, newCompany, month,
                 oilBefore, oilAfter, gasBefore, gasAfter, CompanyName]
     enargas: [PipelineLink, aboutConcession, VentingFarFromPipeline, ConcessionToReview]
     ign: [SurroundingsLink]

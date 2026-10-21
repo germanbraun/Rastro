@@ -109,6 +109,8 @@ Cada corrida del modelo se publica en Rastro (`python3 lab/gas/modelo.py --publi
 - «¿Qué pozos de 2025 se esperan con más gas, y qué los explica?» (pregunta 12) da los diez primeros con su rango y el aporte de cada factor.
 - **El rango** de cada predicción sale de los errores del modelo en el año anterior a la prueba, sin mirar la prueba: va de unos 33 millones de m³ menos a 16 más. En 71 de cada 100 pozos de 2025 el gas real cayó adentro (se buscaba 80).
 
+- **Hasta los registros de origen:** cada fractura informada y cada mes de gas tiene su identidad en Rastro, y la pregunta 13 recorre la cadena de una predicción hasta ellos.
+
 La idea surgió de comparar con otra mirada sobre el mismo caso: un grafo que dice qué significa una variable no sabe qué registros usó cada predicción si no se guarda al calcularla.
 
 ## Datos de fractura (paso 2)

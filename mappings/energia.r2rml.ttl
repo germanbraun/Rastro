@@ -140,6 +140,38 @@ JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = trim(p
     rr:predicateObjectMap [ rr:predicate energia:factor ; rr:objectMap [ rr:column "factor" ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:amount ; rr:objectMap [ rr:column "aporte" ; rr:datatype xsd:decimal ] ] .
 
+# --- Los registros de origen de Rastro Lab, uno por uno ---
+
+<#FractureReport> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.fractura_registro" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/fracturereport/{id}" ; rr:class energia:FractureReport ] ;
+    rr:predicateObjectMap [ rr:predicate energia:reportId ; rr:objectMap [ rr:column "id" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:aboutWell ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/well/{idpozo}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:fracDate ; rr:objectMap [ rr:column "fecha" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:fracStages ; rr:objectMap [ rr:column "etapas" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:lateralLengthM ; rr:objectMap [ rr:column "rama_m" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:loadedOn ; rr:objectMap [ rr:column "cargada" ; rr:datatype xsd:date ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:declaredName ; rr:objectMap [ rr:column "informante" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/fractura> ] ] .
+
+<#FracturingFromReports> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, idpozo FROM energia.fractura_registro WHERE usada" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/fracturing/{idpozo}" ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/fracturereport/{id}" ] ] .
+
+<#MonthlyGas> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.gas_mes" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/gasmonth/{idpozo}/{mes_texto}" ; rr:class energia:MonthlyGas ] ;
+    rr:predicateObjectMap [ rr:predicate energia:aboutWell ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/well/{idpozo}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:productionMonth ; rr:objectMap [ rr:column "mes" ; rr:datatype xsd:date ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:monthGas ; rr:objectMap [ rr:column "gas" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/capitulo4> ] ] .
+
+<#WellStartFromMonths> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.gas_mes" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/wellstart/{idpozo}" ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/gasmonth/{idpozo}/{mes_texto}" ] ] .
+
 <#OperatorChange> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "energia.cambio_operadora" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/operatorchange/{id_concesion}/{mes}" ; rr:class energia:OperatorChange ] ;

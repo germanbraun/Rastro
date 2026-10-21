@@ -313,9 +313,37 @@ SELECT idpozo, count(*) AS fracturas,
        || '. Cargada en el portal el ' || to_char(max(fecha_data), 'DD/MM/YYYY') || '.' AS evidencia
 FROM f GROUP BY idpozo;
 
+-- Los registros de origen, uno por uno, para que cada predicción de Rastro Lab llegue hasta ellos.
+-- Cada fractura informada (Adjunto IV), con su identificador; «usada» si entra en la fractura del pozo (informada
+-- hasta el mes en que arrancó).
+CREATE TABLE energia.fractura_registro AS
+SELECT x.id_base_fractura_adjiv AS id, x.idpozo, x.fecha_inicio_fractura AS fecha, x.cantidad_fracturas AS etapas,
+       x.longitud_rama_horizontal_m AS rama_m, x.fecha_data::date AS cargada, trim(x.empresa_informante) AS informante,
+       (i.mes IS NULL OR x.fecha_inicio_fractura < i.mes + interval '1 month') AS usada
+FROM fractura.fractura x
+LEFT JOIN energia.inicio_pozo i ON i.idpozo = x.idpozo;
+
+-- Cada mes de gas de un pozo nuevo que suma su gas de los meses 2 a 7, de las declaraciones juradas
+CREATE TABLE energia.gas_mes AS
+WITH todo AS (
+  SELECT anio, mes, idpozo, prod_gas FROM capitulo4.produccion
+  UNION ALL SELECT anio, mes, idpozo, prod_gas FROM capitulo4.produccion_historica
+  UNION ALL SELECT anio, mes, idpozo, prod_gas FROM capitulo4_anterior.produccion
+)
+SELECT i.idpozo, make_date(t.anio, t.mes, 1) AS mes, to_char(make_date(t.anio, t.mes, 1), 'YYYY-MM') AS mes_texto,
+       round(sum(coalesce(t.prod_gas, 0)) / 1000.0, 3) AS gas
+FROM energia.inicio_pozo i
+JOIN todo t ON t.idpozo = i.idpozo
+           AND make_date(t.anio, t.mes, 1) >= i.mes + interval '1 month'
+           AND make_date(t.anio, t.mes, 1) < i.mes + interval '7 months'
+WHERE i.gas_2_7 IS NOT NULL
+GROUP BY 1, 2, 3;
+
 ALTER TABLE energia.participacion ADD PRIMARY KEY (id_concesion, empresa_id);
 ALTER TABLE energia.empresa ADD PRIMARY KEY (empresa_id);
 ALTER TABLE energia.empresa_nombre ADD PRIMARY KEY (fuente, nombre);
 ALTER TABLE energia.concesion ADD PRIMARY KEY (id_concesion);
 ALTER TABLE energia.inicio_pozo ADD PRIMARY KEY (idpozo);
 ALTER TABLE energia.fractura_pozo ADD PRIMARY KEY (idpozo);
+ALTER TABLE energia.fractura_registro ADD PRIMARY KEY (id);
+ALTER TABLE energia.gas_mes ADD PRIMARY KEY (idpozo, mes);

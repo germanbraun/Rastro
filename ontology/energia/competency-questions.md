@@ -23,6 +23,7 @@ Rastro Lab responde otra pregunta: **¿Cuánto gas va a dar un pozo nuevo y por 
 - `energia:Fracturing`: cómo se fracturó el pozo (rama horizontal, etapas, arena, agua y presión).
 - `energia:gasMonths2to7`: el gas de los meses 2 a 7, lo que se predice.
 - `energia:loadedOn`: cuándo se cargó el dato de fractura, para marcar el que llegó después de que el pozo arrancó.
+- `energia:FractureReport` y `energia:MonthlyGas`: los registros de origen, uno por uno (cada fractura informada con su identificador, cada mes de gas).
 - `energia:Prediction`, `energia:Contribution` y `energia:ModelRun`: cada predicción de una corrida del modelo, con su rango, el aporte de cada factor y los datos de Rastro que usó (`prov:used`). Las publica `python3 lab/gas/modelo.py --publicar`.
 
 Preguntas sobre las predicciones (necesitan una corrida publicada):
@@ -31,3 +32,4 @@ Preguntas sobre las predicciones (necesitan una corrida publicada):
 |---|---|---|
 | 11 | ¿Qué predicciones de pozos de 2025 se apoyan en un dato corregido, y en cuál? | Lab |
 | 12 | ¿Qué pozos de 2025 se esperan con más gas, en qué rango, y cuánto aporta cada factor? | Lab |
+| 13 | ¿De qué registros de origen sale la predicción de un pozo: qué fracturas informadas y qué meses de gas? | Lab |

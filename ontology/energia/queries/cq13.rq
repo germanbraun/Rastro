@@ -1,0 +1,19 @@
+# 13. ¿De qué registros de origen sale la predicción de un pozo: qué fracturas informadas y qué meses de gas?
+PREFIX energia: <https://w3id.org/rastro/energia#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?registro ?cual ?fecha ?valor ?cargado
+WHERE {
+  VALUES ?pozo { "166133" }   # el pozo
+  ?corrida a energia:ModelRun ; energia:current true .
+  ?p a energia:Prediction ; prov:wasGeneratedBy ?corrida ; energia:aboutWell/energia:wellId ?pozo ; prov:used ?dato .
+  ?dato prov:wasDerivedFrom ?r .
+  {
+    ?r a energia:FractureReport ; energia:reportId ?cual ; energia:fracDate ?fecha ; energia:fracStages ?valor ; energia:loadedOn ?cargado .
+    BIND ("Fractura informada (etapas)" AS ?registro)
+  } UNION {
+    ?r a energia:MonthlyGas ; energia:productionMonth ?fecha ; energia:monthGas ?valor .
+    BIND ("Gas declarado en el mes (millones de m³)" AS ?registro)
+    BIND ("Capítulo IV" AS ?cual)
+  }
+}
+ORDER BY ?registro ?fecha
