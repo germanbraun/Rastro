@@ -1,9 +1,11 @@
-"""Rastro Lab, paso 1: el mismo modelo de gas con variables de las tablas crudas (A) y de Rastro (B).
+"""Rastro Lab: el mismo modelo de gas con variables de las tablas crudas (A) y de Rastro (B).
 
 Predice el gas de los meses 2 a 7 de un pozo nuevo de shale gas de Vaca Muerta y explica cada predicción.
 El modelo es una regresión lineal: la predicción es el gas de un pozo promedio más el aporte de cada
 variable, en millones de m³, exacto y sin técnicas aparte. La operadora y la concesión entran como
-categorías (un coeficiente por empresa y por concesión, aprendido con los pozos de entrenamiento).
+categorías (un coeficiente por empresa y por concesión, aprendido con los pozos de entrenamiento);
+la fractura (rama horizontal, etapas, arena, agua y presión), como números. Pozos desde 2018 si se cargaron
+los años anteriores del Capítulo IV (data/lab-gas/).
 Lo que cambia entre A y B es de dónde salen las variables y qué dicen: columnas en A, conceptos con
 fuente, regla y evidencia en B.
 
@@ -16,7 +18,12 @@ con Postgres y Ontop de energía arriba:
 import numpy as np
 import pandas as pd
 
-PRUEBA = pd.Timestamp("2025-01-01")   # entrena con pozos de 2023 y 2024, prueba con los de 2025
+PRUEBA = pd.Timestamp("2025-01-01")   # entrena con los pozos que empezaron antes de 2025, prueba con los de 2025
+# Solo los pozos que alguna vez declararon shale gas de Vaca Muerta: el resto no hace falta y hace lento todo
+POZOS_GAS = "formacion = 'vaca muerta' AND sub_tipo_recurso = 'SHALE' AND tipopozo = 'Gasífero'"
+# Las tres tablas del Capítulo IV: 2025, 2023 y 2024, y 2018 a 2022 (vacía si no se cargó)
+TODO = """(SELECT * FROM capitulo4.produccion UNION ALL SELECT * FROM capitulo4.produccion_historica
+         UNION ALL SELECT * FROM capitulo4_anterior.produccion)"""
 
 
 def sql_gas(desde=1, meses=6):
@@ -25,8 +32,8 @@ def sql_gas(desde=1, meses=6):
     Por defecto, los meses 2 a 7 (el primero suele ser parcial). Solo pozos con todos esos meses.
     Rastro tiene lo mismo en energia:gasMonths2to7 y energia:gasFirst12Months (para B)."""
     return f"""
-WITH todo AS (SELECT idpozo, make_date(anio, mes, 1) AS f, prod_gas, prod_pet FROM capitulo4.produccion
-              UNION ALL SELECT idpozo, make_date(anio, mes, 1), prod_gas, prod_pet FROM capitulo4.produccion_historica),
+WITH todo AS (SELECT idpozo, make_date(anio, mes, 1) AS f, prod_gas, prod_pet FROM {TODO} t
+              WHERE idpozo IN (SELECT idpozo FROM {TODO} v WHERE {POZOS_GAS})),
 m AS (SELECT idpozo, f, sum(coalesce(prod_gas, 0)) AS gas, sum(coalesce(prod_pet, 0)) AS pet FROM todo GROUP BY 1, 2),
 i AS (SELECT idpozo, min(f) FILTER (WHERE gas > 0 OR pet > 0) AS inicio FROM m GROUP BY 1)
 SELECT i.idpozo, sum(m.gas) / 1000.0 AS gas
@@ -38,21 +45,31 @@ GROUP BY 1 HAVING count(*) = {meses}"""
 SQL_GAS = sql_gas()
 
 # A: lo que armaría un analista con SQL sobre las tablas tal como vienen
-SQL_A = """
-WITH todo AS (SELECT * FROM capitulo4.produccion UNION ALL SELECT * FROM capitulo4.produccion_historica),
+SQL_A = f"""
+WITH todo AS (SELECT * FROM {TODO} t WHERE idpozo IN (SELECT idpozo FROM {TODO} v WHERE {POZOS_GAS})),
+desde AS (SELECT min(make_date(anio, mes, 1)) AS mes FROM todo),
 p AS (SELECT idpozo, min(make_date(anio, mes, 1)) AS primera,
-             min(make_date(anio, mes, 1)) FILTER (WHERE prod_gas > 0 OR prod_pet > 0) AS inicio FROM todo GROUP BY 1)
+             min(make_date(anio, mes, 1)) FILTER (WHERE prod_gas > 0 OR prod_pet > 0) AS inicio FROM todo GROUP BY 1),
+fr AS (   -- la fractura de cada pozo, de la tabla tal como viene: las fracturas hasta el mes en que arrancó
+  SELECT x.idpozo, max(longitud_rama_horizontal_m) AS longitud_rama_horizontal_m, sum(cantidad_fracturas) AS cantidad_fracturas,
+         sum(coalesce(arena_bombeada_nacional_tn, 0) + coalesce(arena_bombeada_importada_tn, 0)) AS arena_tn,
+         sum(agua_inyectada_m3) AS agua_inyectada_m3, max(presion_maxima_psi) AS presion_maxima_psi
+  FROM fractura.fractura x JOIN p ON p.idpozo = x.idpozo
+  WHERE x.fecha_inicio_fractura < p.inicio + interval '1 month' GROUP BY 1)
 SELECT DISTINCT ON (t.idpozo) t.idpozo, p.inicio, trim(t.empresa) AS empresa, t.idareapermisoconcesion AS area,
-       c.participacion
+       c.participacion, fr.longitud_rama_horizontal_m, fr.cantidad_fracturas, fr.arena_tn, fr.agua_inyectada_m3,
+       fr.presion_maxima_psi
 FROM todo t JOIN p ON p.idpozo = t.idpozo AND make_date(t.anio, t.mes, 1) = p.inicio
 LEFT JOIN sig_energia.concesion c ON c.id_concesion = t.idareapermisoconcesion
-WHERE p.inicio > date '2023-01-01' AND p.primera > date '2023-01-01'
+LEFT JOIN fr ON fr.idpozo = t.idpozo
+WHERE p.inicio > (SELECT mes FROM desde) AND p.primera > (SELECT mes FROM desde)
   AND t.formacion = 'vaca muerta' AND t.sub_tipo_recurso = 'SHALE' AND t.tipopozo = 'Gasífero'
 ORDER BY t.idpozo, t.prod_gas DESC NULLS LAST"""
 
 # B: lo mismo, leído de Rastro, con la regla y la evidencia de cada dato
 SPARQL_B = """PREFIX energia: <https://w3id.org/rastro/energia#>
 SELECT ?well ?inicio ?grupo ?nombre ?reglaNombre ?evidencia ?area ?areaNombre ?pct ?reglaSocio ?textoSocio ?gas27 ?gas12
+       ?rama ?etapas ?arena ?agua ?presion ?fracEvidencia ?fracNombre ?fracRegla ?fracEmpresa
 WHERE {
   ?s a energia:WellStart ; energia:aboutWell ?well ; energia:startMonth ?inicio ; energia:company ?c ;
      energia:declaredName ?nombre ; energia:sourceText ?evidencia ; energia:inConcession ?conc ;
@@ -65,6 +82,10 @@ WHERE {
                  energia:rule ?reglaSocio ; energia:sourceText ?textoSocio }
   OPTIONAL { ?s energia:gasMonths2to7 ?gas27 }
   OPTIONAL { ?s energia:gasFirst12Months ?gas12 }
+  OPTIONAL { ?fr a energia:Fracturing ; energia:aboutWell ?well ; energia:lateralLengthM ?rama ; energia:fracStages ?etapas ;
+                 energia:proppantTonnes ?arena ; energia:waterM3 ?agua ; energia:maxPressurePsi ?presion ;
+                 energia:sourceText ?fracEvidencia ; energia:declaredName ?fracNombre ; energia:company/energia:name ?fracEmpresa .
+             OPTIONAL { ?fcn a energia:CompanyName ; energia:nameInSource ?fracNombre ; energia:rule ?fracRegla } }
 }"""
 
 # El contexto que Rastro da de cada concesión: sus socios y sus cambios de operadora
@@ -81,10 +102,16 @@ SELECT ?area (COUNT(?x) AS ?cambios) WHERE {
 # Las mismas ideas de variables en A y B; cambia de dónde salen.
 # La distancia al gasoducto no entra: es una por concesión y, con la concesión en el modelo, solo la repite
 # (salía al revés: estar a 0,3 km restaba gas). Vuelve en la prueba de áreas nuevas, donde sí agrega.
+FRACTURA_A = ["longitud_rama_horizontal_m", "cantidad_fracturas", "arena_tn", "agua_inyectada_m3", "presion_maxima_psi"]
+FRACTURA_B = ["rama", "etapas", "arena", "agua", "presion"]
 VARIABLES = {
-    "A": {"categorias": ["empresa", "area"], "numeros": ["porcentaje"]},
-    "B": {"categorias": ["grupo", "area"], "numeros": ["pct"]},
+    "A": {"categorias": ["empresa", "area"], "numeros": ["porcentaje"] + FRACTURA_A},
+    "B": {"categorias": ["grupo", "area"], "numeros": ["pct"] + FRACTURA_B},
 }
+# Cómo se lee cada variable de fractura de Rastro: concepto, unidad y cuántos decimales
+FRACTURA = {"rama": ("largo de la rama horizontal", "m", 0), "etapas": ("etapas de fractura", "", 0),
+            "arena": ("arena bombeada", "t", 0), "agua": ("agua inyectada", "m³", 0),
+            "presion": ("presión máxima", "psi", 0)}
 
 
 def porcentaje_del_mapa(texto, empresa):
@@ -103,7 +130,10 @@ def preparar(gas, a, b, objetivo="gas27"):
     b = b.copy()
     b["idpozo"] = b.well.str.rsplit("/", n=1).str[-1]
     b = b.drop_duplicates("idpozo")
-    b["pct"] = pd.to_numeric(b.pct)
+    for c in ["pct"] + FRACTURA_B:
+        b[c] = pd.to_numeric(b[c])
+    for c in FRACTURA_A:
+        a[c] = pd.to_numeric(a[c])
     b["gas"] = pd.to_numeric(b[objetivo])
     b = b[b.gas.notna()]
     for df in (a, b, gas):
@@ -131,7 +161,7 @@ def entrenar(df, categorias, numeros, prueba=PRUEBA, alpha=1.0):
     entreno = (df.inicio < prueba).values
     x = pd.get_dummies(df[categorias].astype(str), prefix_sep="=", dtype=float)
     n = df[numeros].astype(float)
-    n = n.fillna(n[entreno].median())       # lo que falta, con la mediana del entrenamiento
+    n = n.fillna(n[entreno].mean())         # lo que falta, con el promedio del entrenamiento: no suma ni resta
     x = pd.concat([x, n], axis=1)
     media_x, media_y = x[entreno].mean(), df.gas[entreno].mean()
     xc = (x[entreno] - media_x).values
@@ -145,7 +175,7 @@ def entrenar(df, categorias, numeros, prueba=PRUEBA, alpha=1.0):
     visto = {c: df[entreno].groupby(c).gas.agg(["count", "median"]) for c in categorias}
     y, p = df.gas[~entreno], pred[~entreno]
     return {"pred": pred, "aportes": por_variable, "base": media_y, "error": float(np.abs(p - y).mean()),
-            "r2": float(1 - ((p - y) ** 2).sum() / ((y - y.mean()) ** 2).sum()), "relleno": n[entreno].median(),
+            "r2": float(1 - ((p - y) ** 2).sum() / ((y - y.mean()) ** 2).sum()), "relleno": n[entreno].mean(),
             "visto": visto, "mediana": float(df.gas[entreno].median()),
             "coef": dict(zip(x.columns, coef)), "desvio": n[entreno].std()}
 
@@ -180,6 +210,11 @@ def nombre(empresa):
     return " ".join(siglas.get(w, siglas.get(w.upper(), w)) for w in str(empresa).title().split())
 
 
+def concesion(texto):
+    """El nombre de una concesión para leer: «Las Tacanas II», no «LAS TACANAS II» ni «Las Tacanas Ii»."""
+    return " ".join(w.upper() if w.upper() in ("I", "II", "III", "IV", "V") else w for w in str(texto).title().split())
+
+
 def marca(regla):
     """Rastro marca los datos que no salen tal cual de la fuente."""
     if not isinstance(regla, str) or "revisad" not in regla:
@@ -208,66 +243,100 @@ def socios_texto(lista):
     return ", ".join(f"{nombre(s['socio'])} {num(s['pct'], 1).rstrip('0').rstrip(',')} %" for s in lista)
 
 
+UBICACION = ["grupo", "area", "pct"]   # en B, lo que no cambia dentro de una concesión
+
+
 def aprendido(r, b, ctx, prueba=PRUEBA):
-    """Lo que aprendió el modelo, por concesión, con lo que dice Rastro de cada una. Con estos datos, la
-    operadora y los socios no cambian dentro de una concesión: el modelo aprende un efecto por concesión."""
+    """Lo que aprendió el modelo, por concesión, con lo que dice Rastro de cada una: el efecto de estar en esa
+    concesión con su operadora y sus socios (sin la fractura, que es de cada pozo)."""
     m, entreno = r["B"], b.inicio < prueba
-    efecto = m["aportes"].sum(axis=1)
+    efecto = m["aportes"][UBICACION].sum(axis=1)
     filas = []
     for area, g in b[entreno].groupby("area"):
-        concesion = g.areaNombre.dropna().iloc[0].title() if g.areaNombre.notna().any() else area
-        filas.append({"Concesión": concesion, "Operadora": ", ".join(sorted(g.grupo.map(nombre).unique())),
+        nombre_area = concesion(g.areaNombre.dropna().iloc[0]) if g.areaNombre.notna().any() else area
+        filas.append({"Concesión": nombre_area, "Operadora": ", ".join(sorted(g.grupo.map(nombre).unique())),
                       "Socios (Rastro)": socios_texto(ctx["socios"].get(area, [])),
-                      "Pozos de 2023 y 2024": len(g), "Mediana de su gas": round(float(g.gas.median()), 1),
+                      "Pozos de entrenamiento": len(g), "Mediana de su gas": round(float(g.gas.median()), 1),
                       "Efecto en la predicción": round(float(efecto[g.index].mean()), 1)})
     return pd.DataFrame(filas).sort_values("Efecto en la predicción", ascending=False)
 
 
 def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
-    """Con Rastro: un solo factor, «la concesión y su operadora», con lo que aprendió el modelo de ellas, y los
-    hechos de Rastro que lo respaldan, cada uno con su regla y su evidencia. «marca» dice si un dato no sale tal
-    cual de la fuente."""
+    """Con Rastro: dos factores. La concesión con su operadora y sus socios (que no cambian dentro de una
+    concesión, así que el modelo no puede separarlos) y cómo se fracturó el pozo. Para cada uno, por qué suma o
+    resta y los hechos de Rastro que lo respaldan, con su regla y su evidencia. «marca» dice si un dato no sale
+    tal cual de la fuente."""
     i = b.index[b.idpozo == pozo][0]
     f, m = b.loc[i], r["B"]
     entreno = b[b.inicio < prueba]
-    area = (f.areaNombre if isinstance(f.areaNombre, str) else f.area).title()
+    area = concesion(f.areaNombre if isinstance(f.areaNombre, str) else f.area)
     operadora = nombre(f.grupo)
-    efecto = float(m["aportes"].loc[i].sum())
+    lugar = float(m["aportes"].loc[i, UBICACION].sum())
+    fractura = float(m["aportes"].loc[i, FRACTURA_B].sum())
     misma = entreno[entreno.area == f.area]
     if len(misma):
         ops = sorted(misma.grupo.map(nombre).unique())
-        por_que = (f"Los {len(misma)} pozos de {area} en 2023 y 2024 ({'todos de ' + ops[0] if len(ops) == 1 else ', '.join(ops)}) "
-                   f"dieron una mediana de {num(misma.gas.median())} millones de m³, "
-                   f"{'más' if misma.gas.median() > m['mediana'] else 'menos'} que la de todos los pozos ({num(m['mediana'])}).")
+        por_que_lugar = (f"Los {len(misma)} pozos de {area} que vio el modelo ({'todos de ' + ops[0] if len(ops) == 1 else ', '.join(ops)}) "
+                         f"dieron una mediana de {num(misma.gas.median())} millones de m³, "
+                         f"{'más' if misma.gas.median() > m['mediana'] else 'menos'} que la de todos los pozos ({num(m['mediana'])}).")
     else:
-        otra = entreno[entreno.grupo == f.grupo]
-        por_que = (f"El modelo no vio pozos de {area}. Usa lo que vio de {operadora} en otras concesiones: "
-                   f"{len(otra)} pozos, mediana {num(otra.gas.median())} millones de m³." if len(otra)
-                   else f"El modelo no vio pozos de {area} ni de {operadora}: usa el pozo promedio.")
+        por_que_lugar = f"El modelo no vio pozos de {area}: usa lo que vio de {operadora} en otras concesiones."
+    tiene = pd.notna(f.rama)
+    if tiene:   # las dos variables de fractura que más mueven esta predicción, contra un pozo típico
+        orden = m["aportes"].loc[i, FRACTURA_B].abs().sort_values(ascending=False).index[:2]
+        partes = [f"{FRACTURA[c][0]} {num(f[c], 0)} {FRACTURA[c][1]}".strip() + f" (típico: {num(m['relleno'][c], 0)})"
+                  for c in orden]
+        por_que_fractura = ("Lo que más pesa: " + " y ".join(partes) + ". En el entrenamiento, los pozos con "
+                            "más rama y más etapas dieron más gas.")
+    else:
+        por_que_fractura = "No hay datos de fractura de este pozo: el modelo usa los de un pozo típico."
     cambios = int(ctx["cambios"].get(f.area, 0))
-    socios = ctx["socios"].get(f.area, [])
-    juntas = (f"El modelo no puede separar la concesión de su operadora ni de sus socios, y Rastro muestra por qué: "
-              f"{area} {'no cambió de operadora' if cambios == 0 else f'cambió {cambios} vez de operadora'} entre 2023 y 2025, "
-              f"y todos sus pozos comparten los mismos socios.")
+    una = len(misma) == 0 or misma.grupo.nunique() == 1
+    juntas = ("El modelo no puede separar la concesión de su operadora ni de sus socios, y Rastro muestra por qué: "
+              + (f"{area} tuvo una sola operadora en los pozos que vio el modelo" if una else f"{area} tuvo más de una operadora")
+              + (", no cambió de operadora entre 2023 y 2025" if cambios == 0 else f", cambió {cambios} vez de operadora entre 2023 y 2025")
+              + " y todos sus pozos comparten los mismos socios.")
     hechos = [
         {"hecho": "Operadora", "valor": operadora, "marca": marca(f.reglaNombre),
          "regla": "rige quien declara el pozo en su primer mes", "evidencia": f.evidencia,
          "nombre": None if marca(f.reglaNombre) == "" else f"Declarado como «{f.nombre}»; unido a {operadora} por: {f.reglaNombre}.",
          "fuentes": "Capítulo IV de la Secretaría de Energía (declaraciones juradas)"},
-        {"hecho": "Socios", "valor": socios_texto(socios) or "sin dato", "marca": marca(f.reglaSocio),
+        {"hecho": "Socios", "valor": socios_texto(ctx["socios"].get(f.area, [])) or "sin dato", "marca": marca(f.reglaSocio),
          "regla": f.reglaSocio, "evidencia": f.textoSocio,
          "fuentes": "Mapa de concesiones de la Secretaría de Energía (texto de socios)"
                     + (", corregido con un documento" if "documento" in str(f.reglaSocio) else "")},
-        {"hecho": "Cambios de operadora, 2023 a 2025", "valor": str(cambios), "marca": "",
-         "regla": "otra empresa declara la mayor parte de la producción de la concesión al menos 3 meses seguidos",
-         "evidencia": f"Rastro no encontró cambios en {area}." if cambios == 0 else f"Rastro encontró {cambios}.",
-         "fuentes": "Capítulo IV, mes a mes"},
     ]
-    resumen = (f"Se esperan {num(float(m['pred'][i]))} millones de m³: un pozo promedio da {num(m['base'])}, "
-               f"y estar en {area} con {operadora} {'suma' if efecto >= 0 else 'resta'} {num(abs(efecto))}.")
-    return {"pred": float(m["pred"][i]), "efecto": efecto, "por_que": por_que, "juntas": juntas, "hechos": hechos,
-            "resumen": resumen, "real": float(f.gas), "evidencia_gas": f.evidencia, "inicio": f.inicio,
-            "area": area, "operadora": operadora}
+    if tiene:
+        informa = nombre(f.fracEmpresa)
+        hechos.append({"hecho": "Fractura", "valor": f"{num(f.rama, 0)} m de rama, {num(f.etapas, 0)} etapas",
+                       "marca": marca(f.fracRegla) or ("la informa otra empresa" if informa != operadora else ""),
+                       "regla": "las fracturas informadas hasta el mes en que arrancó el pozo, sumadas",
+                       "evidencia": f.fracEvidencia,
+                       "nombre": f"Informada como «{f.fracNombre}»; Rastro la une a {informa}"
+                                 + (f", que no es la operadora ({operadora})." if informa != operadora else "."),
+                       "fuentes": "Datos de fractura de pozos (Adjunto IV), Secretaría de Energía"})
+    resumen = (f"Se esperan {num(float(m['pred'][i]))} millones de m³: un pozo promedio da {num(m['base'])}; "
+               f"estar en {area} con {operadora} {'suma' if lugar >= 0 else 'resta'} {num(abs(lugar))}, "
+               f"y cómo se fracturó {'suma' if fractura >= 0 else 'resta'} {num(abs(fractura))}.")
+    factores = [{"factor": f"{area}, con {operadora}", "aporte": lugar, "por_que": por_que_lugar,
+                 "nota": juntas if len(misma) else ""},
+                {"factor": "Cómo se fracturó", "aporte": fractura, "por_que": por_que_fractura, "nota": ""}]
+    return {"pred": float(m["pred"][i]), "factores": factores, "hechos": hechos, "resumen": resumen,
+            "real": float(f.gas), "inicio": f.inicio, "area": area, "operadora": operadora}
+
+
+def pozo_ejemplo(b, prueba=PRUEBA):
+    """El pozo que se muestra primero: uno de 2025 en Aguada Pichana Este (donde se ve la participación corregida)
+    con datos de fractura."""
+    p = b[(b.inicio >= prueba) & b.rama.notna()]
+    return (p[p.area == "APE"] if (p.area == "APE").any() else p).idpozo.iloc[0]
+
+
+def peso_por_concepto(r, b, prueba=PRUEBA):
+    """Qué pesa más en las predicciones de prueba: el aporte medio, sin signo, de cada concepto."""
+    ap = r["B"]["aportes"][b.inicio >= prueba]
+    return {"La concesión con su operadora y socios": float(ap[UBICACION].sum(axis=1).abs().mean()),
+            "Cómo se fracturó el pozo": float(ap[FRACTURA_B].sum(axis=1).abs().mean())}
 
 
 if __name__ == "__main__":
@@ -288,6 +357,27 @@ if __name__ == "__main__":
         return pd.read_csv(io.StringIO(urllib.request.urlopen(req, timeout=300).read().decode()))
 
     ctx = contexto(sparql(SPARQL_SOCIOS), sparql(SPARQL_CAMBIOS))
+    if "--como-la-tesis" in sys.argv:
+        # Validación con el diseño de un trabajo con las mismas fuentes (ver las preguntas frecuentes de la app):
+        # gas de los primeros 12 meses, solo pozos con fractura, y dos formas de separar la prueba:
+        # uno de cada cinco pozos en orden cronológico (como ese trabajo) y los pozos desde 2023 (hacia el futuro).
+        from sklearn.ensemble import RandomForestRegressor
+        a, b = preparar(sql(sql_gas(desde=0, meses=12)), sql(SQL_A), sparql(SPARQL_B), objetivo="gas12")
+        con = b.rama.notna().values
+        a, b = a[con].reset_index(drop=True), b[con].reset_index(drop=True)
+        print(f"Pozos de shale gas de Vaca Muerta con 12 meses y fractura: {len(b)}, de {b.inicio.min():%m/%Y} a {b.inicio.max():%m/%Y}")
+        for nombre, prueba in (("uno de cada cinco", (np.arange(len(b)) % 5 == 4)),
+                               ("desde 2023", (b.inicio >= pd.Timestamp("2023-01-01")).values)):
+            orden = pd.Series(np.where(prueba, pd.Timestamp("2100-01-01"), pd.Timestamp("1900-01-01")))
+            aa, bb = a.assign(inicio=orden), b.assign(inicio=orden)   # entrenar() separa por fecha: se marca la prueba
+            r, ref = modelos(aa, bb, pd.Timestamp("2000-01-01")), referencias(aa, pd.Timestamp("2000-01-01"))
+            x = pd.get_dummies(bb[["grupo", "area"]], dtype=float).join(bb[["pct"] + FRACTURA_B].astype(float))
+            x = x.fillna(x[~prueba].median())
+            bosque = RandomForestRegressor(500, min_samples_leaf=4, random_state=42).fit(x[~prueba], bb.gas[~prueba])
+            print(f"  Prueba {nombre} ({prueba.sum()} pozos): mediana del área R² {ref['r2_concesion']:.2f}; "
+                  f"lineal A {r['A']['r2']:.2f}, lineal B {r['B']['r2']:.2f}; "
+                  f"bosque aleatorio con las variables de Rastro {r2(bosque.predict(x[prueba]), bb.gas[prueba]):.2f}")
+        sys.exit()
     if "--12-meses" in sys.argv:
         # Validación con el mismo objetivo que otros trabajos: el gas de los primeros 12 meses. Solo los pozos
         # que empezaron hasta enero de 2025 tienen 12 meses; se entrena hasta junio de 2024 y se prueba con el resto.
@@ -306,7 +396,8 @@ if __name__ == "__main__":
           bool(np.allclose(a.set_index("idpozo").gas.loc[b.idpozo].values, b.gas.values, atol=0.01)))
     r, ref = modelos(a, b), referencias(a)
     print(f"Pozos de shale gas nuevos de Vaca Muerta con sus meses 2 a 7: {len(a)} "
-          f"({ref['entreno']} para entrenar, de 2023 y 2024; {ref['prueba']} para probar, de 2025)")
+          f"({ref['entreno']} para entrenar, de {a.inicio.min():%m/%Y} a 2024; {ref['prueba']} para probar, de 2025); "
+          f"con fractura: {int(b.rama.notna().sum())}")
     print(f"Referencias, error medio en millones de m³: la mediana de todos {ref['todos']:.1f}; "
           f"la mediana de la operadora {ref['operadora']:.1f} (R² {ref['r2_operadora']:.2f}); "
           f"R² de la mediana de la concesión {ref['r2_concesion']:.2f}")
@@ -316,14 +407,16 @@ if __name__ == "__main__":
     print("\nLo que aprendió el modelo, por concesión:")
     print(aprendido(r, b, ctx).to_string(index=False))
 
-    pozo = sys.argv[1] if len(sys.argv) > 1 else "166271"
+    pozo = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else pozo_ejemplo(b)
     ea, eb = explicacion_a(r, a, pozo), explicacion_b(r, b, ctx, pozo)
     print(f"\nPozo {pozo}, {eb['area']}: empezó en {eb['inicio']:%m/%Y} y dio {eb['real']:.1f} millones de m³.")
     print("\nSin Rastro (A):")
     for f in ea["filas"]:
         print(f"  {f['columna']} = {f['valor']}: {f['aporte']:+.1f}")
     print(f"\nCon Rastro (B): {eb['resumen']}")
-    print(f"  Por qué: {eb['por_que']}")
-    print(f"  {eb['juntas']}")
+    for x in eb["factores"]:
+        print(f"  {x['factor']}: {x['aporte']:+.1f}. {x['por_que']} {x['nota']}")
     for h in eb["hechos"]:
         print(f"  {h['hecho']}: {h['valor']}" + (f" · {h['marca'].upper()}" if h["marca"] else "") + f" (regla: {h['regla']})")
+    print("\nPeso medio de cada concepto en las predicciones de prueba:",
+          "; ".join(f"{k} {v:.1f}" for k, v in peso_por_concepto(r, b).items()))

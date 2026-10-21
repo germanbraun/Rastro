@@ -88,6 +88,24 @@ JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = trim(p
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/capitulo4> ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:constant <https://w3id.org/rastro/activity/energia-operator-rule> ] ] .
 
+# --- Datos de fractura de pozos (Adjunto IV), para Rastro Lab ---
+
+<#Fracturing> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "energia.fractura_pozo" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/fracturing/{idpozo}" ; rr:class energia:Fracturing ] ;
+    rr:predicateObjectMap [ rr:predicate energia:aboutWell ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/well/{idpozo}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:lateralLengthM ; rr:objectMap [ rr:column "rama_m" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:fracStages ; rr:objectMap [ rr:column "etapas" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:proppantTonnes ; rr:objectMap [ rr:column "arena_tn" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:waterM3 ; rr:objectMap [ rr:column "agua_m3" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:maxPressurePsi ; rr:objectMap [ rr:column "presion_psi" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:fracDate ; rr:objectMap [ rr:column "fecha" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:company ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:declaredName ; rr:objectMap [ rr:column "nombre_informado" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:rule ; rr:objectMap [ rr:constant "las fracturas informadas hasta el mes en que arrancó el pozo, sumadas" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/fractura> ] ] .
+
 <#OperatorChange> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "energia.cambio_operadora" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/operatorchange/{id_concesion}/{mes}" ; rr:class energia:OperatorChange ] ;

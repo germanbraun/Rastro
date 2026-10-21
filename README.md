@@ -90,6 +90,7 @@ Los cargadores corren a demanda y necesitan credenciales en `.env` (copiado de `
 | GLEIF (proveedores) | `docker compose run --rm gleif-loader` | USAspending cargado antes. Candidatos a LEI de matrices y de los 1000 proveedores que más facturan; 60 consultas por minuto, reanudable |
 | Wikidata (proveedores) | `docker compose run --rm wikidata-loader` | GLEIF cargado antes. Empresas con esos LEI en Wikidata, su sede y si cotizan en bolsa |
 | Petróleo y gas (Secretaría de Energía) | `docker compose run --rm energia-loader` y después `docker compose run --rm energia-linker` | Ninguno: producción 2025 por pozo y padrón de pozos (datos.energia.gob.ar), concesiones, venteos y gasoductos de ENARGAS del WFS, localidades y áreas protegidas del IGN y el LEI de las empresas en GLEIF; unos 350 MB, reanudable |
+| Rastro Lab, gas de Vaca Muerta | `docker compose run --rm lab-gas-loader` y después `docker compose run --rm energia-linker` | Ninguno: Capítulo IV de 2018 a 2022 y datos de fractura de pozos (Adjunto IV), de datos.energia.gob.ar; unos 1,5 GB. No cambia lo que usa Rastro Layer |
 | Enlaces | `docker compose run --rm linker` | Las fuentes de arriba ya cargadas. Enlaza ensayos con MeSH y con ChEMBL en unos segundos |
 | Tablas y enlaces de proveedores | `docker compose run --rm proveedores-linker` | USAspending y NAICS cargados (y GLEIF, la Lista Consolidada y Wikidata para los enlaces). Arma proveedores, grupos y sectores, y los enlaces con su evidencia |
 

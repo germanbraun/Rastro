@@ -73,9 +73,20 @@ energia:gasMonths2to7 a owl:DatatypeProperty ; rdfs:domain energia:WellStart ;
 energia:gasFirst12Months a owl:DatatypeProperty ; rdfs:domain energia:WellStart ;
     rdfs:label "gas de los primeros 12 meses (millones de m³)"@es ;
     rdfs:comment "El gas de los primeros 12 meses del pozo, sumando sus formaciones. Vacío si todavía no los tiene."@es .
-energia:declaredName a owl:DatatypeProperty ; rdfs:domain energia:WellStart ;
+energia:declaredName a owl:DatatypeProperty ;
     rdfs:label "nombre declarado"@es ;
-    rdfs:comment "El nombre con el que la empresa declaró el pozo. Su energia:CompanyName dice por qué Rastro sabe qué empresa es."@es .
+    rdfs:comment "El nombre con el que la empresa declaró el pozo o informó su fractura. Su energia:CompanyName dice por qué Rastro sabe qué empresa es."@es .
+
+energia:Fracturing a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Fractura de un pozo"@es ;
+    rdfs:comment "Cómo se fracturó un pozo, según los datos de fractura (Adjunto IV): las fracturas informadas hasta el mes en que arrancó, sumadas. La empresa que informa (energia:company) se une a las demás por su nombre."@es .
+energia:lateralLengthM a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "largo de la rama horizontal (m)"@es .
+energia:fracStages a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "etapas de fractura"@es .
+energia:proppantTonnes a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "arena bombeada (t)"@es .
+energia:waterM3 a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "agua inyectada (m³)"@es .
+energia:maxPressurePsi a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "presión máxima (psi)"@es .
+energia:fracDate a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "inicio de la fractura"@es .
 
 energia:CompanyName a owl:Class ;
     rdfs:subClassOf prov:Entity ;
@@ -150,7 +161,7 @@ energia:inConcession a owl:ObjectProperty ; rdfs:range energia:Concession ; rdfs
 energia:partner a owl:ObjectProperty ; rdfs:domain energia:Stake ; rdfs:range energia:Company ; rdfs:label "socia"@es .
 energia:percent a owl:DatatypeProperty ; rdfs:domain energia:Stake ; rdfs:label "porcentaje"@es .
 
-energia:aboutWell a owl:ObjectProperty ; rdfs:range energia:Well ; rdfs:label "sobre el pozo"@es .   # sin dominio: la usan la operadora de un pozo y su inicio
+energia:aboutWell a owl:ObjectProperty ; rdfs:range energia:Well ; rdfs:label "sobre el pozo"@es .   # sin dominio: la usan la operadora de un pozo, su inicio y su fractura
 energia:company a owl:ObjectProperty ; rdfs:range energia:Company ; rdfs:label "empresa"@es .
 energia:registryCompany a owl:DatatypeProperty ; rdfs:domain energia:OperatorLink ;
     rdfs:label "empresa según el padrón"@es .

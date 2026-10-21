@@ -87,6 +87,14 @@ Sin Rastro, la explicación usa el 27,27 % del mapa y nadie lo nota. Con Rastro,
 
 **Lo que falta del paso 1:** la prueba a ciegas con un consultor.
 
+## Paso 2: más años y fractura (21 de octubre de 2026)
+
+- **Fuentes nuevas en Rastro:** el Capítulo IV de 2018 a 2022 (`capitulo4_anterior`, sin cambiar lo que usa Rastro Layer) y los datos de fractura (`energia:Fracturing`: rama horizontal, etapas, arena, agua y presión, solo las fracturas informadas hasta el mes en que arrancó el pozo; la empresa que informa se une a las demás por su nombre). Cargador: `docker compose run --rm lab-gas-loader`.
+- **Más pozos:** 559 pozos de shale gas con sus meses 2 a 7 (510 para entrenar, de 2018 a 2024; los mismos 49 de 2025 para probar); 542 tienen fractura.
+- **Resultado hacia el futuro (pozos de 2025):** A y B, error medio 16,8 y 16,9 millones de m³, R² 0,46 y 0,45 (antes 0,44). Con estos datos, la fractura agrega poco al predecir pozos nuevos; pesa la mitad que la concesión con su operadora (4,4 contra 9,1 millones de m³ por pozo, en promedio).
+- **La explicación con Rastro tiene dos factores:** la concesión con su operadora y socios, y cómo se fracturó el pozo, cada uno con por qué suma o resta y sus hechos con regla y evidencia.
+- **Validación con el diseño de un trabajo publicado con las mismas fuentes** (gas de 12 meses, pozos con fractura; `python3 lab/gas/modelo.py --como-la-tesis`): la mediana del área da R² 0,45 (ese trabajo, 0,47), así que los datos coinciden. Con su forma de separar la prueba (uno de cada cinco pozos en orden cronológico), nuestro modelo lineal da 0,58; su mejor modelo, 0,75, con más variables (coordenadas, profundidad, vecinos, año) y una combinación de modelos de árboles. Hacia el futuro (pozos desde 2023), todos quedan cerca de 0,25 a 0,30.
+
 ## Datos de fractura (paso 2)
 
 Existen, son públicos y se unen por pozo: «Datos de fractura de pozos (Adjunto IV)» en datos.energia.gob.ar. Traen el largo de la rama horizontal, la cantidad de etapas, la arena y el agua. Se actualizan todos los días y el portal los marca «preliminar, sujeto a revisión».

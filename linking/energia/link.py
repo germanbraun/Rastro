@@ -9,7 +9,8 @@
 3. Carga las correcciones revisadas (correcciones.csv, participaciones-revisadas.csv) y corre links.sql: empresas con sus
    nombres en cada fuente y su LEI, producción por pozo, participaciones, quién opera cada pozo,
    cada venteo en su concesión, gasoductos y entorno, y quién operó cada concesión mes a mes
-   (2023 a 2025) con sus cambios de operadora, todo con su evidencia.
+   (2023 a 2025) con sus cambios de operadora, todo con su evidencia. Para Rastro Lab, cómo arrancó cada
+   pozo nuevo (desde 2018, si se cargaron los años anteriores) y su fractura.
 
 Se corre con: docker compose run --rm energia-linker
 """
@@ -143,6 +144,8 @@ def main():
             for row in entorno:
                 cp.write_row(row)
 
+        # Las tablas de Rastro Lab (Capítulo IV de 2018 a 2022 y fractura): vacías si todavía no se cargaron
+        conn.execute(Path("/data/lab-gas/schema.sql").read_text())
         sql = (HERE / "links.sql").read_text()
         sql = sql.split("CREATE SCHEMA energia;", 1)[1]          # el esquema ya está creado, con sus tablas de entrada
         conn.execute(sql)
@@ -153,7 +156,7 @@ def main():
             print(f"  venteos {tipo}s: {total}, dentro de una concesión: {dentro}")
         for table in ("empresa", "empresa_nombre", "empresa_lei", "produccion_pozo", "concesion", "participacion",
                       "operador_pozo", "venteo", "gasoducto", "concesion_gasoducto", "venteo_entorno", "estudio",
-                      "concesion_revisar", "operador_area_mes", "cambio_operadora", "inicio_pozo"):
+                      "concesion_revisar", "operador_area_mes", "cambio_operadora", "inicio_pozo", "fractura_pozo"):
             n = conn.execute(f"SELECT count(*) FROM energia.{table}").fetchone()[0]
             print(f"  energia.{table:<16}{n:>8} filas")
         for regla, n in conn.execute("SELECT regla, count(*) FROM energia.operador_pozo GROUP BY 1 ORDER BY 2 DESC"):

@@ -27,7 +27,7 @@ Es un MVP comercial: lo tiene que entender alguien de ventas.
 
 ```bash
 docker compose up -d                              # demo :8501, Postgres :5434, Ontop :8080 (8081 proveedores, 8082 energía), GraphDB :7210
-docker compose run --rm <fuente>-loader           # aact, chembl, openfda, mesh; usaspending, naics, csl, gleif, wikidata; energia
+docker compose run --rm <fuente>-loader           # aact, chembl, openfda, mesh; usaspending, naics, csl, gleif, wikidata; energia, lab-gas
 docker compose run --rm linker                    # enlaces ensayo → MeSH y ensayo → fármaco
 docker compose run --rm ontology-check            # ontología y queries
 docker compose run --rm layer-eval                # evaluación: LLM solo, SQL directo y Rastro

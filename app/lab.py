@@ -37,7 +37,7 @@ def _datos(version):
     a, b = modelo.preparar(gas, a, sparql_df(modelo.SPARQL_B))
     ctx = modelo.contexto(sparql_df(modelo.SPARQL_SOCIOS), sparql_df(modelo.SPARQL_CAMBIOS))
     r = modelo.modelos(a, b)
-    return a, b, ctx, r, modelo.referencias(a), modelo.dudosos(b), modelo.aprendido(r, b, ctx)
+    return a, b, ctx, r, modelo.referencias(a), modelo.dudosos(b), modelo.aprendido(r, b, ctx), modelo.peso_por_concepto(r, b)
 
 
 def datos():
@@ -52,32 +52,31 @@ def show_lab(tech):
         "Es **el mismo modelo, entrenado dos veces**: una con las tablas tal como vienen y otra con Rastro. "
         "Rastro no lo hace más preciso: hace que **cada predicción se explique en conceptos de negocio, "
         "con los hechos que la respaldan, y que se pueda comprobar**.")
-    a, b, ctx, r, ref, (n_dudosos, n_prueba), tabla_aprendido = datos()
+    a, b, ctx, r, ref, (n_dudosos, n_prueba), tabla_aprendido, pesos = datos()
 
     c1, c2, c3 = st.columns(3)
     c1.metric("Error sin Rastro", f"{num(r['A']['error'])} M m³", help=ayuda("lab_error"))
     c2.metric("Error con Rastro", f"{num(r['B']['error'])} M m³", help=ayuda("lab_error"))
     c3.metric("Con un dato corregido", f"{n_dudosos} de {n_prueba}", help=ayuda("lab_dudosos"))
-    st.caption(f"Entrenado con {ref['entreno']} pozos que empezaron en 2023 y 2024; probado con {ref['prueba']} de 2025. "
+    st.caption(f"Entrenado con {ref['entreno']} pozos que empezaron de {a.inicio.min():%Y} a 2024; probado con {ref['prueba']} de 2025. "
                f"Error medio por pozo, en millones de m³; usar la mediana de cada operadora da {num(ref['operadora'])}.")
 
     with st.expander("Qué aprendió el modelo", expanded=False):
         st.markdown(md(
-            f"Con estos datos, **el modelo aprende un efecto por concesión**: explica el {round(100 * r['B']['r2'])} % "
-            "de la diferencia entre pozos de 2025. Rastro muestra por qué no puede separar más: en cada concesión, "
-            "la operadora y los socios son siempre los mismos. Lo que distingue a un pozo de su vecino (el largo de la "
-            "rama, las etapas de fractura) llega con los datos de fractura, en el paso 2.\n\n"
-            "Ese número es el mejor caso: con menos pozos para entrenar baja mucho (entrenando solo con 2023, casi "
-            "no explica nada), porque los datos empiezan en 2023. Hacen falta más años de declaraciones juradas, "
-            "que están publicadas, y los datos de fractura."))
+            f"El modelo explica el {round(100 * r['B']['r2'])} % de la diferencia entre los pozos de 2025. "
+            "Pesa dos cosas, en millones de m³ por pozo, en promedio: "
+            + "; ".join(f"**{k.lower()}**, {num(v)}" for k, v in pesos.items()) + ". "
+            "La operadora y los socios no se pueden separar de la concesión: Rastro muestra que dentro de una "
+            "concesión son siempre los mismos."))
         tabla(tabla_aprendido, key="lab_aprendido")
         st.caption("Operadora y socios, de Rastro (con sus correcciones). Efecto: cuánto suma o resta, en millones de m³, "
                    "estar en esa concesión, respecto de un pozo promedio.")
 
     prueba = b[b.inicio >= modelo.PRUEBA]
-    etiquetas = {f"{(x.areaNombre if isinstance(x.areaNombre, str) else x.area).title()} · {modelo.nombre(x.grupo)} · "
+    etiquetas = {f"{modelo.concesion(x.areaNombre if isinstance(x.areaNombre, str) else x.area)} · {modelo.nombre(x.grupo)} · "
                  f"empezó en {x.inicio:%m/%Y} · pozo {x.idpozo}": x.idpozo for x in prueba.itertuples()}
-    inicial = next((i for i, p in enumerate(etiquetas.values()) if p == "166271"), 0)
+    ejemplo = modelo.pozo_ejemplo(b)
+    inicial = next((i for i, p in enumerate(etiquetas.values()) if p == ejemplo), 0)
     pozo = etiquetas[st.selectbox("Pozo de 2025", list(etiquetas), index=inicial, key="lab_pozo", help=ayuda("lab_pozo"))]
     ea, eb = modelo.explicacion_a(r, a, pozo), modelo.explicacion_b(r, b, ctx, pozo)
     st.markdown(f"Dio **{num(eb['real'])} millones de m³** en sus meses 2 a 7.")
@@ -97,8 +96,10 @@ def show_lab(tech):
         st.markdown("##### Con Rastro")
         st.metric("Predicción", f"{num(eb['pred'])} M m³")
         st.markdown(eb["resumen"])
-        st.markdown(f"**Por qué:** {eb['por_que']}")
-        st.caption(eb["juntas"])
+        for x in eb["factores"]:
+            st.markdown(f"**{x['factor']}: {aporte(x['aporte'])}.** {x['por_que']}")
+            if x["nota"]:
+                st.caption(x["nota"])
         st.markdown("**Lo que respalda la predicción:**")
         for h in eb["hechos"]:
             st.markdown(f"**{h['hecho']}:** {h['valor']}" + (f"  \n:orange[● {h['marca']}]" if h["marca"] else ""))
@@ -110,11 +111,12 @@ def show_lab(tech):
     with st.expander("¿Cómo se calcula?"):
         st.markdown(md(
             "Es una regresión lineal: la predicción es el gas de un pozo promedio más el aporte de cada variable, "
-            "en millones de m³. Las dos versiones usan las mismas ideas de variables (operadora, concesión y "
-            "participación); cambia de dónde salen. Sin Rastro: la empresa como se declara, el código de la concesión y "
+            "en millones de m³. Las dos versiones usan las mismas ideas de variables (operadora, concesión, "
+            "participación y fractura); cambia de dónde salen. Sin Rastro: la empresa como se declara, el código de la concesión y "
             "el porcentaje del texto de socios del mapa. Con Rastro: la operadora unida entre fuentes, la concesión y la "
             "participación corregida, cada una con su regla y su evidencia. La operadora es la del primer mes del pozo, "
-            "no la de hoy: usar la de hoy sería usar el futuro. El gas que se predice también sale de Rastro "
+            "no la de hoy: usar la de hoy sería usar el futuro. La fractura (rama horizontal, etapas, arena, agua y "
+            "presión) es la informada hasta el mes en que arrancó el pozo. El gas que se predice también sale de Rastro "
             "(el gas de los meses 2 a 7 de cada pozo), y coincide con el que calcula el SQL."))
         if tech:
             st.markdown("**Sin Rastro (SQL sobre las tablas tal como vienen):**")

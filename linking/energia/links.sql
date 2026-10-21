@@ -12,12 +12,14 @@ CREATE FUNCTION energia.normalizar(t text) RETURNS text LANGUAGE sql IMMUTABLE A
          '\s+', ' ', 'g'))
 $$;
 
--- Empresas: todos los nombres de las tres tablas que nombran empresas, unidos por nombre normalizado
+-- Empresas: todos los nombres de las tablas que nombran empresas, unidos por nombre normalizado
 CREATE TABLE energia.empresa_nombre AS
 WITH nombres AS (
   SELECT DISTINCT 'capitulo4' AS fuente, trim(empresa) AS nombre FROM capitulo4.produccion
   UNION SELECT DISTINCT 'capitulo4', trim(empresa) FROM capitulo4.produccion_historica
   UNION SELECT DISTINCT 'capitulo4', trim(empresa) FROM capitulo4.pozo WHERE empresa IS NOT NULL
+  UNION SELECT DISTINCT 'capitulo4', trim(empresa) FROM capitulo4_anterior.produccion   -- 2018 a 2022, para Rastro Lab
+  UNION SELECT DISTINCT 'fractura', trim(empresa_informante) FROM fractura.fractura WHERE empresa_informante IS NOT NULL
   UNION SELECT DISTINCT 'sig_energia', trim(empresa_operadora) FROM sig_energia.concesion WHERE empresa_operadora IS NOT NULL
   UNION SELECT DISTINCT 'sig_energia', trim(m[1]) FROM sig_energia.concesion,
         regexp_matches(participacion, '<br>\s*([^:<]+?)\s*:\s*[0-9.,]+\s*%', 'g') m
@@ -242,9 +244,10 @@ WHERE s.antes_id <> s.empresa_id;
 
 -- Las claves de las tablas de enlaces: con ellas, Rastro sabe que hay una fila por clave y no
 -- necesita quitar repetidos en cada consulta (la participación pasa de 18 a 8 segundos)
--- Cómo arrancó cada pozo nuevo (2023 a 2025): el primer mes con petróleo o gas, quién lo declaró ese mes
--- y con qué tipo de pozo. Para un modelo que predice un pozo nuevo, la operadora de hoy sería usar el futuro.
--- Se descartan los pozos que ya estaban en enero de 2023 (pozos viejos que se reactivan).
+-- Cómo arrancó cada pozo nuevo: el primer mes con petróleo o gas, quién lo declaró ese mes y con qué tipo
+-- de pozo. Para un modelo que predice un pozo nuevo, la operadora de hoy sería usar el futuro. Va desde 2018
+-- si se cargaron los años anteriores del Capítulo IV (data/lab-gas/), si no desde 2023. Se descartan los
+-- pozos que ya estaban en el primer mes de los datos (pozos viejos que se reactivan).
 CREATE TABLE energia.inicio_pozo AS
 WITH todo AS (
   SELECT anio, mes, idpozo, empresa, prod_pet, prod_gas, tipopozo, idareapermisoconcesion, formacion, sub_tipo_recurso
@@ -252,6 +255,10 @@ WITH todo AS (
   UNION ALL
   SELECT anio, mes, idpozo, empresa, prod_pet, prod_gas, tipopozo, idareapermisoconcesion, formacion, sub_tipo_recurso
   FROM capitulo4.produccion_historica
+  UNION ALL
+  SELECT anio, mes, idpozo, empresa, prod_pet, prod_gas, tipopozo, idareapermisoconcesion, formacion, sub_tipo_recurso
+  FROM capitulo4_anterior.produccion
+), desde AS (SELECT min(make_date(anio, mes, 1)) AS mes FROM todo
 ), primero AS (
   SELECT idpozo, min(make_date(anio, mes, 1)) AS primera_fila,
          min(make_date(anio, mes, 1)) FILTER (WHERE prod_pet > 0 OR prod_gas > 0) AS inicio
@@ -260,7 +267,7 @@ WITH todo AS (
   SELECT DISTINCT ON (t.idpozo) t.idpozo, p.inicio, trim(t.empresa) AS empresa, nullif(trim(t.tipopozo), '') AS tipo_pozo,
          t.idareapermisoconcesion AS id_concesion, t.formacion, t.sub_tipo_recurso
   FROM todo t JOIN primero p ON p.idpozo = t.idpozo AND make_date(t.anio, t.mes, 1) = p.inicio
-  WHERE p.inicio > DATE '2023-01-01' AND NOT (p.primera_fila = DATE '2023-01-01')
+  WHERE p.inicio > (SELECT mes FROM desde) AND p.primera_fila > (SELECT mes FROM desde)
   ORDER BY t.idpozo, coalesce(t.prod_gas, 0) + coalesce(t.prod_pet, 0) DESC
 ), gas AS (   -- el gas del pozo (todas sus formaciones) por mes desde que arrancó: 0 es el primer mes
   SELECT f.idpozo, (12 * (t.anio - extract(year FROM f.inicio)) + t.mes - extract(month FROM f.inicio))::int AS n,
@@ -282,8 +289,32 @@ FROM fila f
 JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = f.empresa
 LEFT JOIN acumulado g ON g.idpozo = f.idpozo;
 
+-- La fractura de cada pozo (Adjunto IV): las fracturas informadas hasta el mes en que arrancó (las de después
+-- no se sabían al arrancar), sumadas. La empresa que informa se une a las demás por su nombre, con su regla.
+CREATE TABLE energia.fractura_pozo AS
+WITH f AS (
+  SELECT x.*, en.empresa_id, en.regla AS regla_nombre
+  FROM fractura.fractura x
+  LEFT JOIN energia.inicio_pozo i ON i.idpozo = x.idpozo
+  LEFT JOIN energia.empresa_nombre en ON en.fuente = 'fractura' AND en.nombre = trim(x.empresa_informante)
+  WHERE x.fecha_inicio_fractura < coalesce(i.mes + interval '1 month', DATE '2100-01-01')
+)
+SELECT idpozo, count(*) AS fracturas,
+       max(longitud_rama_horizontal_m) AS rama_m, sum(cantidad_fracturas) AS etapas,
+       sum(coalesce(arena_bombeada_nacional_tn, 0) + coalesce(arena_bombeada_importada_tn, 0)) AS arena_tn,
+       sum(agua_inyectada_m3) AS agua_m3, max(presion_maxima_psi) AS presion_psi,
+       min(fecha_inicio_fractura) AS fecha, max(empresa_id) AS empresa_id, max(trim(empresa_informante)) AS nombre_informado,
+       max(regla_nombre) AS regla_nombre,
+       'Fractura informada por ' || rtrim(max(trim(empresa_informante)), '.') || ' desde ' || to_char(min(fecha_inicio_fractura), 'DD/MM/YYYY')
+       || ': rama horizontal de ' || round(max(longitud_rama_horizontal_m)) || ' m, ' || sum(cantidad_fracturas) || ' etapas, '
+       || round(sum(coalesce(arena_bombeada_nacional_tn, 0) + coalesce(arena_bombeada_importada_tn, 0))) || ' t de arena, '
+       || round(sum(agua_inyectada_m3)) || ' m³ de agua, presión máxima ' || round(max(presion_maxima_psi)) || ' psi'
+       || CASE WHEN count(*) > 1 THEN ' (' || count(*) || ' fracturas informadas)' ELSE '' END || '.' AS evidencia
+FROM f GROUP BY idpozo;
+
 ALTER TABLE energia.participacion ADD PRIMARY KEY (id_concesion, empresa_id);
 ALTER TABLE energia.empresa ADD PRIMARY KEY (empresa_id);
 ALTER TABLE energia.empresa_nombre ADD PRIMARY KEY (fuente, nombre);
 ALTER TABLE energia.concesion ADD PRIMARY KEY (id_concesion);
 ALTER TABLE energia.inicio_pozo ADD PRIMARY KEY (idpozo);
+ALTER TABLE energia.fractura_pozo ADD PRIMARY KEY (idpozo);
