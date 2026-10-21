@@ -37,7 +37,8 @@ def _datos(version):
     a, b = modelo.preparar(gas, a, sparql_df(modelo.SPARQL_B))
     ctx = modelo.contexto(sparql_df(modelo.SPARQL_SOCIOS), sparql_df(modelo.SPARQL_CAMBIOS))
     r = modelo.modelos(a, b)
-    return a, b, ctx, r, modelo.referencias(a), modelo.dudosos(b), modelo.aprendido(r, b, ctx), modelo.peso_por_concepto(r, b)
+    return a, b, ctx, r, modelo.referencias(a), modelo.dudosos(b), modelo.aprendido(r, b, ctx), modelo.peso_por_concepto(r, b), \
+        modelo.al_arrancar(r, b), modelo.entrada(a, b)
 
 
 def datos():
@@ -52,7 +53,7 @@ def show_lab(tech):
         "Es **el mismo modelo, entrenado dos veces**: una con las tablas tal como vienen y otra con Rastro. "
         "Rastro no lo hace más preciso: hace que **cada predicción se explique en conceptos de negocio, "
         "con los hechos que la respaldan, y que se pueda comprobar**.")
-    a, b, ctx, r, ref, (n_dudosos, n_prueba), tabla_aprendido, pesos = datos()
+    a, b, ctx, r, ref, (n_dudosos, n_prueba), tabla_aprendido, pesos, version, (entrada_a, entrada_b, origen) = datos()
 
     c1, c2, c3 = st.columns(3)
     c1.metric("Error sin Rastro", f"{num(r['A']['error'])} M m³", help=ayuda("lab_error"))
@@ -60,6 +61,20 @@ def show_lab(tech):
     c3.metric("Con un dato corregido", f"{n_dudosos} de {n_prueba}", help=ayuda("lab_dudosos"))
     st.caption(f"Entrenado con {ref['entreno']} pozos que empezaron de {a.inicio.min():%Y} a 2024; probado con {ref['prueba']} de 2025. "
                f"Error medio por pozo, en millones de m³; usar la mediana de cada operadora da {num(ref['operadora'])}.")
+
+    with st.expander("Lo que entra al modelo", expanded=False):
+        st.markdown(f"Los mismos {len(entrada_b)} pozos y las mismas ideas de variables, de dos formas. "
+                    "Sin Rastro, las columnas de las tablas tal como vienen; con Rastro, conceptos del diccionario, "
+                    "cada uno con su fuente.")
+        sin_tab, con_tab = st.tabs(["Sin Rastro", "Con Rastro"])
+        with sin_tab:
+            tabla(entrada_a, key="lab_entrada_a")
+            st.caption("El porcentaje sale de buscar el nombre de la empresa en el texto de socios del mapa: si el nombre "
+                       "no coincide, queda vacío; si el mapa está mal, nada lo dice.")
+        with con_tab:
+            tabla(entrada_b, key="lab_entrada_b")
+            st.markdown("**De dónde sale cada columna:**")
+            tabla(origen, key="lab_origen")
 
     with st.expander("Qué aprendió el modelo", expanded=False):
         st.markdown(md(
@@ -71,6 +86,16 @@ def show_lab(tech):
         tabla(tabla_aprendido, key="lab_aprendido")
         st.caption("Operadora y socios, de Rastro (con sus correcciones). Efecto: cuánto suma o resta, en millones de m³, "
                    "estar en esa concesión, respecto de un pozo promedio.")
+
+    with st.expander("Cuando la fuente cambia", expanded=False):
+        v = version
+        st.markdown(md(
+            f"Los datos de fractura llegan tarde: de los {v['con_fractura']} pozos de 2025 que los tienen, en **{v['tarde']}** se "
+            f"cargaron después de que el pozo empezó a producir (a la mitad, {num(v['meses_mediana'], 0)} meses o más). "
+            f"Si la predicción se hace cuando el pozo arranca, esos pozos todavía no tenían fractura: **su predicción cambia "
+            f"{num(v['cambio_medio'])} millones de m³ en promedio** (hasta {num(v['cambio_max'])}) cuando la fractura llega.\n\n"
+            "Sin Rastro, el número cambia y nada dice por qué. Con Rastro, cada predicción dice qué datos usó y cuándo se "
+            "cargó cada uno (en «¿De dónde sale?» de la fractura), y marca los que llegaron después de que el pozo arrancó."))
 
     prueba = b[b.inicio >= modelo.PRUEBA]
     etiquetas = {f"{modelo.concesion(x.areaNombre if isinstance(x.areaNombre, str) else x.area)} · {modelo.nombre(x.grupo)} · "

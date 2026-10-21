@@ -77,7 +77,7 @@ energia:
     enargas: [pipeline, pipelineOperator, Pipeline]
     ign: [nearestTown, protectedArea]
     gleif: [lei, legalName]
-    fractura: [Fracturing, lateralLengthM, fracStages, proppantTonnes, waterM3, maxPressurePsi, fracDate]
+    fractura: [Fracturing, lateralLengthM, fracStages, proppantTonnes, waterM3, maxPressurePsi, fracDate, loadedOn]
     ambiental: [EnvironmentalStudy, studyId, studyType]
     rastro: [OperatorChange, previousCompany, newCompany, month, oilBefore, oilAfter, gasBefore, gasAfter,
              ConcessionToReview, VentingFarFromPipeline, VentingWithoutReports, reviewReason, Stake, partner, percent, OperatorLink, LocationLink, PipelineLink, SurroundingsLink, LeiLink, StudyLink, aboutStudy, aboutVenting,

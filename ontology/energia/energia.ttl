@@ -87,6 +87,8 @@ energia:proppantTonnes a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ;
 energia:waterM3 a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "agua inyectada (m³)"@es .
 energia:maxPressurePsi a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "presión máxima (psi)"@es .
 energia:fracDate a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "inicio de la fractura"@es .
+energia:loadedOn a owl:DatatypeProperty ; rdfs:label "cargado en la fuente"@es ;
+    rdfs:comment "El día en que el dato se cargó en el portal de la fuente. La fractura de un pozo puede cargarse meses después de que arrancó: una predicción hecha antes no la tenía."@es .
 
 energia:CompanyName a owl:Class ;
     rdfs:subClassOf prov:Entity ;

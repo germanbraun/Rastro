@@ -95,6 +95,12 @@ Sin Rastro, la explicación usa el 27,27 % del mapa y nadie lo nota. Con Rastro,
 - **La explicación con Rastro tiene dos factores:** la concesión con su operadora y socios, y cómo se fracturó el pozo, cada uno con por qué suma o resta y sus hechos con regla y evidencia.
 - **Validación con el diseño de un trabajo publicado con las mismas fuentes** (gas de 12 meses, pozos con fractura; `python3 lab/gas/modelo.py --como-la-tesis`): la mediana del área da R² 0,45 (ese trabajo, 0,47), así que los datos coinciden. Con su forma de separar la prueba (uno de cada cinco pozos en orden cronológico), nuestro modelo lineal da 0,58; su mejor modelo, 0,75, con más variables (coordenadas, profundidad, vecinos, año) y una combinación de modelos de árboles. Hacia el futuro (pozos desde 2023), todos quedan cerca de 0,25 a 0,30.
 
+## Cuando la fuente cambia: la fractura llega tarde (21 de octubre de 2026)
+
+La fuente de fractura se actualiza todos los días, pero cambia de a poco (entre 15 y 190 registros por mes; la versión del 21 de octubre era igual a la del 20). Lo que sí pesa: **en 36 de los 43 pozos de 2025 con fractura, el dato se cargó después de que el pozo empezó a producir** (a la mitad, 3 meses o más). Si la predicción se hace cuando arranca el pozo, esos pozos todavía no tenían fractura; cuando llega, **su predicción cambia 4,8 millones de m³ en promedio (hasta 11,6)**. Sin Rastro el número cambia y nada dice por qué. Con Rastro, la fractura guarda cuándo se cargó (`energia:loadedOn`) y la explicación marca la que llegó después de que el pozo arrancó.
+
+**Lo que entra al modelo,** en la app: los mismos 559 pozos dos veces, con las columnas de las tablas (sin Rastro) y con los conceptos del diccionario y su fuente (con Rastro). Ahí se ve, por ejemplo, el 27,27 % del mapa contra el 55 % corregido.
+
 ## Datos de fractura (paso 2)
 
 Existen, son públicos y se unen por pozo: «Datos de fractura de pozos (Adjunto IV)» en datos.energia.gob.ar. Traen el largo de la rama horizontal, la cantidad de etapas, la arena y el agua. Se actualizan todos los días y el portal los marca «preliminar, sujeto a revisión».

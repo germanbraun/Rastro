@@ -69,7 +69,7 @@ ORDER BY t.idpozo, t.prod_gas DESC NULLS LAST"""
 # B: lo mismo, leído de Rastro, con la regla y la evidencia de cada dato
 SPARQL_B = """PREFIX energia: <https://w3id.org/rastro/energia#>
 SELECT ?well ?inicio ?grupo ?nombre ?reglaNombre ?evidencia ?area ?areaNombre ?pct ?reglaSocio ?textoSocio ?gas27 ?gas12
-       ?rama ?etapas ?arena ?agua ?presion ?fracEvidencia ?fracNombre ?fracRegla ?fracEmpresa
+       ?rama ?etapas ?arena ?agua ?presion ?fracEvidencia ?fracNombre ?fracRegla ?fracEmpresa ?fracCargada
 WHERE {
   ?s a energia:WellStart ; energia:aboutWell ?well ; energia:startMonth ?inicio ; energia:company ?c ;
      energia:declaredName ?nombre ; energia:sourceText ?evidencia ; energia:inConcession ?conc ;
@@ -84,7 +84,8 @@ WHERE {
   OPTIONAL { ?s energia:gasFirst12Months ?gas12 }
   OPTIONAL { ?fr a energia:Fracturing ; energia:aboutWell ?well ; energia:lateralLengthM ?rama ; energia:fracStages ?etapas ;
                  energia:proppantTonnes ?arena ; energia:waterM3 ?agua ; energia:maxPressurePsi ?presion ;
-                 energia:sourceText ?fracEvidencia ; energia:declaredName ?fracNombre ; energia:company/energia:name ?fracEmpresa .
+                 energia:sourceText ?fracEvidencia ; energia:declaredName ?fracNombre ; energia:company/energia:name ?fracEmpresa ;
+                 energia:loadedOn ?fracCargada .
              OPTIONAL { ?fcn a energia:CompanyName ; energia:nameInSource ?fracNombre ; energia:rule ?fracRegla } }
 }"""
 
@@ -140,6 +141,7 @@ def preparar(gas, a, b, objetivo="gas27"):
         df["idpozo"] = df.idpozo.astype(str)
     for df in (a, b):
         df["inicio"] = pd.to_datetime(df.inicio)
+    b["fracCargada"] = pd.to_datetime(b.fracCargada)
     gas = gas.assign(gas=pd.to_numeric(gas.gas))
     pozos = set(a.idpozo) & set(b.idpozo) & set(gas.idpozo)
     a = a[a.idpozo.isin(pozos)].merge(gas, on="idpozo").sort_values(["inicio", "idpozo"]).reset_index(drop=True)
@@ -308,8 +310,11 @@ def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
     ]
     if tiene:
         informa = nombre(f.fracEmpresa)
+        tarde = meses_tarde(f)
         hechos.append({"hecho": "Fractura", "valor": f"{num(f.rama, 0)} m de rama, {num(f.etapas, 0)} etapas",
-                       "marca": marca(f.fracRegla) or ("la informa otra empresa" if informa != operadora else ""),
+                       "marca": " · ".join(x for x in (marca(f.fracRegla), "la informa otra empresa" if informa != operadora else "",
+                                                       f"cargada {tarde} {'mes' if tarde == 1 else 'meses'} después de que arrancó el pozo"
+                                                       if tarde else "") if x),
                        "regla": "las fracturas informadas hasta el mes en que arrancó el pozo, sumadas",
                        "evidencia": f.fracEvidencia,
                        "nombre": f"Informada como «{f.fracNombre}»; Rastro la une a {informa}"
@@ -326,10 +331,65 @@ def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
 
 
 def pozo_ejemplo(b, prueba=PRUEBA):
-    """El pozo que se muestra primero: uno de 2025 en Aguada Pichana Este (donde se ve la participación corregida)
-    con datos de fractura."""
+    """El pozo que se muestra primero: uno de 2025 con datos de fractura, en Aguada Pichana Este (donde se ve la
+    participación corregida) o, si no hay, uno cuya fractura llegó después de que arrancó."""
     p = b[(b.inicio >= prueba) & b.rama.notna()]
-    return (p[p.area == "APE"] if (p.area == "APE").any() else p).idpozo.iloc[0]
+    if (p.area == "APE").any():
+        return p[p.area == "APE"].idpozo.iloc[0]
+    tarde = p[p.apply(meses_tarde, axis=1) > 0]
+    return (tarde if len(tarde) else p).idpozo.iloc[0]
+
+
+def meses_tarde(f):
+    """Cuántos meses después de que arrancó el pozo se cargó su fractura en el portal (0 si estaba a tiempo)."""
+    if pd.isna(f.fracCargada):
+        return 0
+    n = (f.fracCargada.year - f.inicio.year) * 12 + f.fracCargada.month - f.inicio.month
+    return max(n, 0)
+
+
+def al_arrancar(r, b, prueba=PRUEBA):
+    """Qué cambia en las predicciones de prueba si se predice cuando arranca cada pozo, con la fuente de fractura
+    como estaba ese mes: los pozos cuya fractura se cargó después no la tenían, y el modelo usaba un pozo típico
+    (sin aporte de la fractura)."""
+    p = b.index[(b.inicio >= prueba).values]
+    con = b.loc[p][b.loc[p].rama.notna()]
+    tarde = con.apply(meses_tarde, axis=1)
+    sin = tarde[tarde > 0].index
+    cambio = r["B"]["aportes"].loc[sin, FRACTURA_B].sum(axis=1).abs()
+    return {"pozos": len(p), "con_fractura": len(con), "tarde": len(sin),
+            "meses_mediana": float(tarde[tarde > 0].median()) if len(sin) else 0.0,
+            "cambio_medio": float(cambio.mean()) if len(sin) else 0.0, "cambio_max": float(cambio.max()) if len(sin) else 0.0}
+
+
+# Lo que entra al modelo con Rastro: cada columna es un concepto del diccionario, con su fuente
+ENTRADA_B = [   # (columna, título, concepto de Rastro, fuente)
+    ("idpozo", "Pozo", "energia:WellStart → energia:aboutWell", "Capítulo IV"),
+    ("inicio", "Empezó", "energia:startMonth", "Capítulo IV"),
+    ("grupo", "Operadora", "energia:company (unida entre fuentes)", "Capítulo IV y correcciones revisadas"),
+    ("area", "Concesión", "energia:inConcession", "Capítulo IV y mapa de concesiones"),
+    ("pct", "Participación (%)", "energia:Stake → energia:percent", "Mapa de concesiones y correcciones con documento"),
+    ("rama", "Rama horizontal (m)", "energia:Fracturing → energia:lateralLengthM", "Datos de fractura"),
+    ("etapas", "Etapas", "energia:fracStages", "Datos de fractura"),
+    ("arena", "Arena (t)", "energia:proppantTonnes", "Datos de fractura"),
+    ("agua", "Agua (m³)", "energia:waterM3", "Datos de fractura"),
+    ("presion", "Presión máxima (psi)", "energia:maxPressurePsi", "Datos de fractura"),
+    ("gas", "Gas meses 2 a 7 (M m³)", "energia:gasMonths2to7 (lo que se predice)", "Capítulo IV"),
+]
+ENTRADA_A = ["idpozo", "inicio", "empresa", "area", "porcentaje"] + FRACTURA_A + ["gas"]
+
+
+def entrada(a, b, prueba=PRUEBA):
+    """Lo que entra al modelo, pozo por pozo: sin Rastro, las columnas de las tablas; con Rastro, los conceptos.
+    La última columna dice si el pozo se usó para entrenar o para probar."""
+    uso = np.where(b.inicio >= prueba, "prueba", "entrenamiento")
+    sin = a[ENTRADA_A].assign(inicio=a.inicio.dt.strftime("%m/%Y"), uso=np.where(a.inicio >= prueba, "prueba", "entrenamiento"))
+    con = b[[c for c, *_ in ENTRADA_B]].assign(inicio=b.inicio.dt.strftime("%m/%Y"), grupo=b.grupo.map(nombre), uso=uso,
+                                                area=[concesion(n) if isinstance(n, str) else c for n, c in zip(b.areaNombre, b.area)])
+    con = con.rename(columns={c: titulo for c, titulo, *_ in ENTRADA_B} | {"uso": "Uso"})
+    origen = pd.DataFrame([{"Columna": titulo, "Concepto de Rastro": concepto, "Fuente": fuente}
+                           for _, titulo, concepto, fuente in ENTRADA_B])
+    return sin, con, origen
 
 
 def peso_por_concepto(r, b, prueba=PRUEBA):
@@ -418,5 +478,9 @@ if __name__ == "__main__":
         print(f"  {x['factor']}: {x['aporte']:+.1f}. {x['por_que']} {x['nota']}")
     for h in eb["hechos"]:
         print(f"  {h['hecho']}: {h['valor']}" + (f" · {h['marca'].upper()}" if h["marca"] else "") + f" (regla: {h['regla']})")
+    v = al_arrancar(r, b)
+    print(f"\nCuando la fuente cambia: de {v['con_fractura']} pozos de prueba con fractura, en {v['tarde']} se cargó después de que "
+          f"arrancaron (mediana {v['meses_mediana']:.0f} meses). Prediciendo al arrancar, esos pozos no la tenían: su predicción "
+          f"cambia {v['cambio_medio']:.1f} millones de m³ en promedio (hasta {v['cambio_max']:.1f}).")
     print("\nPeso medio de cada concepto en las predicciones de prueba:",
           "; ".join(f"{k} {v:.1f}" for k, v in peso_por_concepto(r, b).items()))

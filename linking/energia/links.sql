@@ -305,11 +305,13 @@ SELECT idpozo, count(*) AS fracturas,
        sum(agua_inyectada_m3) AS agua_m3, max(presion_maxima_psi) AS presion_psi,
        min(fecha_inicio_fractura) AS fecha, max(empresa_id) AS empresa_id, max(trim(empresa_informante)) AS nombre_informado,
        max(regla_nombre) AS regla_nombre,
+       max(fecha_data)::date AS cargada,   -- cuándo se cargó en el portal: puede ser meses después de que arrancó el pozo
        'Fractura informada por ' || rtrim(max(trim(empresa_informante)), '.') || ' desde ' || to_char(min(fecha_inicio_fractura), 'DD/MM/YYYY')
        || ': rama horizontal de ' || round(max(longitud_rama_horizontal_m)) || ' m, ' || sum(cantidad_fracturas) || ' etapas, '
        || round(sum(coalesce(arena_bombeada_nacional_tn, 0) + coalesce(arena_bombeada_importada_tn, 0))) || ' t de arena, '
        || round(sum(agua_inyectada_m3)) || ' m³ de agua, presión máxima ' || round(max(presion_maxima_psi)) || ' psi'
-       || CASE WHEN count(*) > 1 THEN ' (' || count(*) || ' fracturas informadas)' ELSE '' END || '.' AS evidencia
+       || CASE WHEN count(*) > 1 THEN ' (' || count(*) || ' fracturas informadas)' ELSE '' END
+       || '. Cargada en el portal el ' || to_char(max(fecha_data), 'DD/MM/YYYY') || '.' AS evidencia
 FROM f GROUP BY idpozo;
 
 ALTER TABLE energia.participacion ADD PRIMARY KEY (id_concesion, empresa_id);

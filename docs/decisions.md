@@ -604,3 +604,8 @@ Estudio sin modelo (`docs/lab-gas-vaca-muerta.md`, consulta en `lab/gas/pozos-nu
 - **Resultado:** R² 0,45 hacia el futuro (antes 0,44). La fractura agrega poco al predecir pozos nuevos.
 - **Validación con el diseño de otro trabajo con las mismas fuentes:** la línea de base coincide (0,45 contra 0,47). Su R² de 0,75 sale de separar la prueba tomando uno de cada cinco pozos en orden cronológico y de más variables; hacia el futuro, ese trabajo informa 0,25 y nosotros 0,30 con un modelo de árboles. No se suma un modelo de árboles a la app: el objetivo de Rastro Lab es la explicación, y la lineal se explica sola.
 - **Las consultas del modelo filtran primero los pozos de shale gas de Vaca Muerta:** con 2018 a 2022, la de las tablas crudas pasó de más de un minuto a 9 segundos.
+
+## 2026-10-21 — Rastro Lab: cuándo llega cada dato, y lo que entra al modelo
+
+- **La prueba de cambio en Lab es la fractura que llega tarde,** no dos días de la fuente (la del 21 de octubre era igual a la del 20). Medido: en 36 de 43 pozos de 2025, la fractura se cargó después de que el pozo arrancó; cuando llega, la predicción cambia 4,8 millones de m³ en promedio. Rastro guarda cuándo se cargó cada fractura (`energia:loadedOn`, de `fecha_data` de la fuente) y la explicación lo marca. Se descartó simular un cambio de unidad: agrega piezas y la fractura tardía es un caso real.
+- **«Lo que entra al modelo»:** la tabla de entrada de los dos modelos, como la respuesta en Rastro Layer. Con Rastro, cada columna dice de qué concepto y de qué fuente sale.

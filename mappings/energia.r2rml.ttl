@@ -100,6 +100,7 @@ JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = trim(p
     rr:predicateObjectMap [ rr:predicate energia:waterM3 ; rr:objectMap [ rr:column "agua_m3" ; rr:datatype xsd:decimal ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:maxPressurePsi ; rr:objectMap [ rr:column "presion_psi" ; rr:datatype xsd:decimal ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:fracDate ; rr:objectMap [ rr:column "fecha" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:loadedOn ; rr:objectMap [ rr:column "cargada" ; rr:datatype xsd:date ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:company ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/company/{empresa_id}" ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:declaredName ; rr:objectMap [ rr:column "nombre_informado" ] ] ;
     rr:predicateObjectMap [ rr:predicate energia:rule ; rr:objectMap [ rr:constant "las fracturas informadas hasta el mes en que arrancó el pozo, sumadas" ] ] ;
