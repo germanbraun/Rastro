@@ -678,3 +678,14 @@ Tres pruebas que siguieron a otra mirada sobre el caso (que propuso medir el imp
 - **Se volvió a medir solo l01, con Rastro**, con un subagente nuevo que solo vio el prompt: 24, correcto. El resultado pasa de 4, 5 y 4 de 5 a **4, 5 y 5 de 5** (sin Rastro, SQL con enlaces, con Rastro). Las demás respuestas guardadas no cambian. El empate con SQL más enlaces se mantiene: la ventaja es la integración hecha una vez.
 - **Las notas son las mismas que usa la evaluación de Layer** de petróleo y gas. Sus respuestas guardadas no cambian; la línea nueva solo cuenta para las mediciones que vengan.
 - **De paso:** `ontology-check` revisaba solo oncología si no se le pasaba un dominio; ahora revisa los tres (oncología, petróleo y gas, proveedores). Todo OK, y las 15 preguntas de petróleo y gas responden en Rastro. Y se corrigió lo que se había escrito del enriquecimiento guardado: hoy lo usa la pregunta 15, no el modelo de Rastro Lab.
+
+## 2026-10-21 — El mazo abre con «la respuesta conocida»
+
+- **La idea:** un asistente de IA que responde de memoria da la respuesta más repetida, no la comprobada, y no puede mostrar de dónde sale; una respuesta segura y equivocada se ve igual que una correcta. El mazo de petróleo y gas abre con eso (diapositiva 2), antes de «Qué es Rastro».
+- **La pregunta:** ¿quién produjo más gas en Argentina en 2025? Tres respuestas, medidas el 21/10/2026:
+  - un asistente de IA solo (un subagente sin herramientas ni datos): YPF 13–14, Tecpetrol 7–8, Pan American 6–7 miles de millones de m³. Acierta los dos primeros; el tercero no es, los números están entre un 10 y un 20 % arriba y dice que su confianza es media o baja;
+  - SQL sobre la declaración jurada (`capitulo4.produccion`, por quien declara): Total Austral 12,3, YPF 11,7, Tecpetrol 6,9. Exacto, pero cada operadora declara todo el gas de la concesión, también el de sus socios;
+  - con Rastro (la pregunta 1, ordenada por gas: la parte de cada empresa según su participación): YPF 12,3, Tecpetrol 6,4, Total Austral 5,2. El 99,4 % del gas de 2025 tiene sus participaciones.
+- **Honesto:** la respuesta conocida acierta el primer puesto. El mensaje no es «la IA se equivoca», sino que una respuesta conocida no es una respuesta comprobada: Rastro la confirma donde acierta y muestra dónde no.
+- **De dónde sale la idea:** artículos de divulgación sobre grafos de conocimiento y razonamiento con reglas («el problema de la respuesta conocida»). Lo demás que proponen (sin esquema fijo, reemplazar SQL) no se toma: el público sabe SQL, y nuestro mensaje es que SQL con los enlaces de Rastro acierta igual.
+- **El mazo publicado:** las últimas publicaciones habían quedado fuera de `project/`, donde el mazo no las lee; se volvieron a publicar todas las diapositivas en su lugar y se borraron las copias sueltas. La skill `mazos` lo aclara.
