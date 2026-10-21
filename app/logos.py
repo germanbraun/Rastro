@@ -14,7 +14,8 @@ import requests
 import streamlit as st
 import yaml
 
-FORMS = r"\b(THE|INC|INCORPORATED|LLC|L L C|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC|SA|SAU|SRL|SL|AG|SE|GMBH|NV|BV|HOLDINGS?|GROUP)\b"
+FORMS = (r"\b(THE|INC|INCORPORATED|LLC|L L C|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC"
+         r"|SA|SAU|SRL|SL|AG|SE|GMBH|NV|BV|HOLDINGS?|GROUP)\b")
 # Columnas que nombran una empresa (las variables de las consultas, en los tres dominios)
 COMPANY_COLUMNS = {"group", "supplier", "finalParent", "company", "operator", "sponsor", "sponsorName",
                    "empresa", "operadora", "grupo", "proveedor", "previous", "new", "partner"}

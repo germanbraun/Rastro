@@ -23,3 +23,6 @@ node_modules/
 layer/eval/cache/
 
 .DS_Store
+
+# Copias de trabajo de las sesiones de Claude Code
+.claude/worktrees/

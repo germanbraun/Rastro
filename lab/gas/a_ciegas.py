@@ -6,19 +6,14 @@ tres preguntas por explicación. La clave (qué explicación es de qué modelo) 
 """
 import json
 import random
-import sys
 from pathlib import Path
 
+import modelo
+from modelo import signo, sparql_local as sparql, sql_local as sql
+
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "layer" / "energia" / "cambio"))
-import correccion  # noqa: E402  (las mismas funciones para leer Postgres y Rastro)
-import modelo  # noqa: E402
 
 N = 10
-
-
-def signo(v):
-    return ("+" if v >= 0 else "−") + modelo.num(abs(v))
 
 
 def texto_a(ea, r):
@@ -36,8 +31,8 @@ def texto_b(eb):
 
 
 def main():
-    a, b = modelo.preparar(correccion.sql(modelo.SQL_GAS), correccion.sql(modelo.SQL_A), correccion.sparql(modelo.SPARQL_B))
-    ctx = modelo.contexto(correccion.sparql(modelo.SPARQL_SOCIOS), correccion.sparql(modelo.SPARQL_CAMBIOS))
+    a, b = modelo.preparar(sql(modelo.SQL_GAS), sql(modelo.SQL_A), sparql(modelo.SPARQL_B))
+    ctx = modelo.contexto(sparql(modelo.SPARQL_SOCIOS), sparql(modelo.SPARQL_CAMBIOS))
     r = modelo.modelos(a, b)
     azar = random.Random(42)
     pozos = azar.sample(sorted(b[(b.inicio >= modelo.PRUEBA) & b.rama.notna()].idpozo), N)
@@ -59,7 +54,8 @@ del 1 (nada) al 5 (totalmente). No hace falta saber cómo funciona el modelo.
 Responda sin consultar a quien armó la prueba. Tiempo estimado: 30 minutos.
 """]
     for n, it in enumerate(items, 1):
-        partes.append(f"\n## Explicación {n}\n\n{it['texto']}\n\n| ¿La entiende? | ¿Puede comprobar los datos? | ¿La defendería? |\n|---|---|---|\n|  |  |  |\n")
+        partes.append(f"\n## Explicación {n}\n\n{it['texto']}\n\n"
+                      "| ¿La entiende? | ¿Puede comprobar los datos? | ¿La defendería? |\n|---|---|---|\n|  |  |  |\n")
     (ROOT / "docs" / "lab-explicaciones-a-ciegas.md").write_text("".join(partes))
     clave = [{"explicacion": n, "pozo": it["pozo"], "modelo": it["modelo"]} for n, it in enumerate(items, 1)]
     (ROOT / "lab" / "gas" / "a-ciegas-clave.json").write_text(json.dumps(clave, ensure_ascii=False, indent=1))

@@ -32,7 +32,7 @@ def svg(center, nodes, width=1664, height=640, scale=1.0, font="'Times New Roman
     for k, (kind, label, sub, prop) in enumerate(nodes):
         a = -math.pi / 2 + 2 * math.pi * k / n
         placed.append((cx + rx * math.cos(a), cy + ry * math.sin(a), kind, cut(label, 22), cut(sub, 30), cut(prop, 22)))
-    for x, y, kind, label, sub, prop in placed:          # flechas debajo de los nodos
+    for x, y, _kind, _label, _sub, prop in placed:       # flechas debajo de los nodos
         dx, dy = x - cx, y - cy
         d = math.hypot(dx, dy) or 1
         x1, y1 = cx + dx / d * 175 * s, cy + dy / d * 60 * s
@@ -43,7 +43,7 @@ def svg(center, nodes, width=1664, height=640, scale=1.0, font="'Times New Roman
         parts.append(f'<rect x="{mx - 120 * s:.0f}" y="{my - 18 * s:.0f}" width="{240 * s:.0f}" height="{32 * s:.0f}" '
                      f'rx="6" fill="#FFFFFF"/><text x="{mx:.0f}" y="{my + 6 * s:.0f}" font-size="{23 * s:.0f}" '
                      f'text-anchor="middle" fill="{GREY}" font-style="italic">{html.escape(prop)}</text>')
-    for x, y, kind, label, sub, prop in placed:
+    for x, y, kind, label, sub, _prop in placed:
         if kind == "dato":
             parts.append(f'<rect x="{x - 150 * s:.0f}" y="{y - 32 * s:.0f}" width="{300 * s:.0f}" height="{64 * s:.0f}" '
                          f'rx="10" fill="#F4F6F9" stroke="#B8C2CF" stroke-width="{2 * s:.1f}"/>'

@@ -2,9 +2,9 @@
 
 > **Los datos cambian. Las preguntas, no.**
 
-Para la demo comercial, la app muestra estos resultados ya medidos en la pestaña **Cuando las fuentes cambian**, sin tocar la base. Lo que sigue es para hacerlo en vivo, ante una audiencia técnica.
+Para la demo comercial, la app muestra estos resultados ya medidos en **Por qué confiar** → «3 · Cuando una base cambia» (con «Ver detalles técnicos» prendido y **Oncología** elegida en **Caso de uso**), sin tocar la base. Lo que sigue es para hacerlo en vivo, ante una audiencia técnica.
 
-Muestra el costo de mantener: qué pasa con las 20 queries guardadas cuando AACT publica una versión nueva, y dónde se arregla. Todo con `layer/cambio/cambio.sh`, desde la carpeta del repo.
+Muestra el costo de mantener: qué pasa con las 20 queries guardadas cuando AACT publica una versión nueva, y dónde se arregla. Todo con `layer/cambio/cambio.sh`, desde la carpeta del repo, con el entorno levantado (`docker compose up -d`, también desde la carpeta del repo). Este documento es el caso de oncología; para petróleo y gas, `layer/energia/cambio/cambio.sh` y `correccion.sh`.
 
 ## Comandos
 

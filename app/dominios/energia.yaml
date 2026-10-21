@@ -16,7 +16,7 @@ ontologia: /ontology/energia/energia.ttl
 texto: /layer/energia/textos/venteos.json   # la pregunta sobre textos (GraphRAG anclado)
 diagrama: {archivo: ontologia-energia, titulo: diccionario de petróleo y gas}   # app/ontologia-energia.svg, lo dibuja docs/diagramas/build.py
 
-# La demo en tres pasos: integración, trazabilidad y cruce con mapas
+# La demo en cuatro momentos
 demo_porque: >-
   Cuatro momentos, lo que hace Rastro en una frase cada uno: responde con evidencia, se arregla en un lugar
   cuando una base cambia, explica las predicciones de un modelo con esa misma evidencia, y una corrección hecha
@@ -559,13 +559,19 @@ faq:
       y sitio web. Así aparece que YPF y Pampa Energía cotizan en la Bolsa de Nueva York, un dato que no
       está en ninguna de las seis fuentes. Solo 3 de las 12 empresas con LEI lo tienen cargado en
       Wikidata (YPF, Pan American Energy y Pampa Energía). Detalle en layer/energia/externo/.
-  - pregunta: ¿Hay trabajos relacionados en petróleo y gas?
-    respuesta: >-
-      Sí. Una tesis de la Universidad Torcuato Di Tella une estas mismas fuentes públicas (producción, padrón,
-      datos de fractura y trayectorias de pozo) para predecir el gas de 642 pozos de shale gas de Vaca Muerta
-      en su primer año: F. Fernández Gazzaniga, 2025, repositorio.utdt.edu/handle/20.500.13098/14415.
-      Muestra que con datos públicos se puede predecir bien. Rastro Lab hace la misma predicción con otro
-      objetivo: que cada predicción se explique en conceptos de negocio, con la fuente de cada dato.
+  - pregunta: Referencias
+    respuesta: |-
+      Un trabajo publicado une estas mismas fuentes públicas (producción por pozo, padrón, datos de fractura y
+      trayectorias) para predecir el gas del primer año de 642 pozos de shale gas de Vaca Muerta. Rastro Lab lo usa
+      para validar que su modelo da números razonables con los mismos datos: con el diseño de ese trabajo, la
+      mediana por área da prácticamente lo mismo (R² 0,45 contra 0,47). Rastro Lab hace la misma predicción con
+      otro objetivo: que cada predicción se explique en conceptos de negocio, con la fuente de cada dato.
+
+      - Fernández Gazzaniga, A. (2025). «Predicción de productividad inicial en pozos de shale gas de Vaca Muerta
+        mediante machine learning». [Tesis de maestría. Universidad Torcuato Di Tella]. Repositorio Digital
+        Universidad Torcuato Di Tella. https://repositorio.utdt.edu/handle/20.500.13098/14415
+
+      Las referencias sobre grafos de conocimiento están en «Referencias», en las preguntas para todos los casos.
   - pregunta: ¿Dónde está cada pieza?
     tecnico: true
     respuesta: >-

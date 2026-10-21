@@ -1,0 +1,14 @@
+# Configuración de las herramientas de calidad. Rastro no es un paquete: los scripts se corren tal cual.
+[tool.ruff]
+line-length = 140
+extend-exclude = ["data/raw", ".claude"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B"]   # errores, nombres sin usar, espacios y errores probables
+ignore = ["E402"]                # los scripts agregan carpetas a sys.path antes de importar
+
+[tool.ruff.lint.per-file-ignores]
+"docs/diagramas/build.py" = ["E501"]   # trae dibujos SVG con trazos largos
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -63,7 +63,8 @@ def search(name, by="fulltext", size=CANDIDATES):
 
 
 # Formas societarias que no distinguen a una empresa (las mismas que proveedores.normalize)
-LEGAL_FORMS = r"\b(THE|INC|INCORPORATED|LLC|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC|PLLC|PC|GMBH|AG|SA|NV|BV|SPA|SRL|SAS|PTY|SE)\b"
+LEGAL_FORMS = (r"\b(THE|INC|INCORPORATED|LLC|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC|PLLC|PC"
+               r"|GMBH|AG|SA|NV|BV|SPA|SRL|SAS|PTY|SE)\b")
 
 
 def normalize(name):

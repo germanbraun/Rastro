@@ -26,15 +26,18 @@ import html
 import json
 import os
 import re
+import sys
 import time
 from pathlib import Path
 
 import psycopg
-import requests
 import urllib3
 
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+import comun  # noqa: E402
+from comun import copiar, descargar, http  # noqa: E402
+
 CACHE = Path("/data/raw/energia")
-CKAN = "http://datos.energia.gob.ar/api/3/action/resource_show?id="
 PRODUCCION_2025 = "d774b5d7-0756-48fe-88f2-8729b57b22da"
 PRODUCCION_ANTERIOR = {2023: "231c39b3-e81e-4398-af8d-b115807f2c25",   # los archivos completos, no los de
                        2024: "43a09dce-1742-44d0-bc13-f193deaab563"}   # «DDJJ abiertas y cerradas»
@@ -47,8 +50,6 @@ GLEIF = "https://api.gleif.org/api/v1/lei-records"
 GLEIF_TOP = 40   # las empresas que más producen o más participación tienen
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
-http = requests.Session()
-http.headers["User-Agent"] = "RastroMVP/0.1"
 
 PRODUCCION_COLS = ["anio", "mes", "idpozo", "idempresa", "empresa", "prod_pet", "prod_gas", "formacion",
                    "idareapermisoconcesion", "areapermisoconcesion", "areayacimiento", "cuenca", "provincia",
@@ -57,30 +58,12 @@ POZO_COLS = ["idpozo", "sigla", "empresa", "cod_area", "area", "yacimiento", "fo
              "tipo_recurso", "sub_tipo_recurso", "tipoestado"]
 
 
-def download(name, url, verify=True, tries=4):
-    f = CACHE / name
-    for attempt in range(tries):
-        if f.exists():
-            break
-        print(f"  descargando {name}")
-        try:
-            with http.get(url, timeout=900, stream=True, verify=verify) as r:
-                r.raise_for_status()
-                tmp = f.with_suffix(".tmp")
-                with tmp.open("wb") as out:
-                    for chunk in r.iter_content(1 << 20):
-                        out.write(chunk)
-                tmp.rename(f)
-        except requests.RequestException as e:   # el servidor corta descargas largas: se reintenta
-            print(f"  falló ({e.__class__.__name__}), intento {attempt + 1} de {tries}")
-    if not f.exists():
-        raise RuntimeError(f"No se pudo descargar {name}")
-    return f
+def download(name, url, verify=True):
+    return descargar(CACHE, name, url, verify=verify)
 
 
 def ckan(resource_id, name):
-    url = http.get(CKAN + resource_id, timeout=60).json()["result"]["url"]
-    return download(name, url)
+    return comun.ckan(CACHE, resource_id, name)
 
 
 def wfs_features(layer):
@@ -205,14 +188,7 @@ def main():
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
 
         def copy(table, rows, source, version):
-            n = 0
-            with conn.cursor().copy(f"COPY {table} FROM STDIN") as cp:
-                for row in rows:
-                    cp.write_row(row)
-                    n += 1
-            conn.execute("INSERT INTO rastro_meta.load_run (source_id, version, table_name, row_count) "
-                         "VALUES (%s, %s, %s, %s)", (source, version, table, n))
-            print(f"  {table:<30}{n:>9} filas")
+            copiar(conn, table, rows, source, version)
 
         with produccion.open(encoding="utf-8-sig", newline="") as fh:
             copy("capitulo4.produccion",

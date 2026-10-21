@@ -1,0 +1,13 @@
+# 12. ¿Qué pozos de 2025 se esperan con más gas, en qué rango, y cuánto aporta cada factor?
+PREFIX energia: <https://w3id.org/rastro/energia#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?pozo ?gasEsperado ?desde ?hasta ?concesionYOperadora ?fractura
+WHERE {
+  ?corrida a energia:ModelRun ; energia:current true .
+  ?p a energia:Prediction ; prov:wasGeneratedBy ?corrida ; energia:inTest true ; energia:aboutWell/energia:wellId ?pozo ;
+     energia:predictedGas ?gasEsperado ; energia:predictedLow ?desde ; energia:predictedHigh ?hasta .
+  ?a1 energia:ofPrediction ?p ; energia:factor "La concesión con su operadora y socios" ; energia:amount ?concesionYOperadora .
+  ?a2 energia:ofPrediction ?p ; energia:factor "Cómo se fracturó el pozo" ; energia:amount ?fractura .
+}
+ORDER BY DESC(?gasEsperado)
+LIMIT 10

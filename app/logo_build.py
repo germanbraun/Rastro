@@ -38,7 +38,7 @@ def ridges(cx, cy):
     return "\n    ".join(out)
 
 
-DEFS = f"""<defs>
+DEFS = """<defs>
     <clipPath id="yema"><ellipse cx="32" cy="32" rx="22" ry="28"/></clipPath>
     <radialGradient id="halo" cx="50%" cy="48%" r="50%">
       <stop offset="0%" stop-color="#FFB27A" stop-opacity="0.55"/>

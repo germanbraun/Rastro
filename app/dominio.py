@@ -74,10 +74,11 @@ def data_version(domain):
                          f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:
         # las cargas registradas y las tablas de enlaces: al rearmarse, cada tabla tiene otro identificador
         loads, inserts = conn.execute(
-            "SELECT (SELECT max(loaded_at)::text FROM rastro_meta.load_run), "
+            "SELECT (SELECT max(loaded_at)::text FROM rastro_meta.load_run) "
+            " || coalesce((SELECT '|' || max(id) FROM lab_gas.corrida), ''), "
             "(SELECT md5(string_agg(c.oid::text, ',' ORDER BY c.oid)) FROM pg_class c "
             " JOIN pg_namespace n ON n.oid = c.relnamespace "
-            " WHERE n.nspname IN ('energia', 'proveedores', 'linking') AND c.relkind = 'r')").fetchone()
+            " WHERE n.nspname IN ('energia', 'proveedores', 'linking', 'lab_gas') AND c.relkind = 'r')").fetchone()
     files = [Path(answer.ROOT / f) for f in (f"mappings/{'rastro' if domain == 'oncologia' else domain}.r2rml.ttl",
                                              answer.DOMAINS[domain]["ontology"])]
     return f"{loads}|{inserts}|" + "|".join(str(f.stat().st_mtime) if f.exists() else "" for f in files)
@@ -188,7 +189,8 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
     labels = cfg.get("fuentes", {})
     used, col_sources = answer.column_sources(query, domain)
     if tech:
-        st.markdown("**Fuentes que usó esta respuesta:** " + " · ".join(f"`{labels.get(s, s)}`" for s in used), help=ayuda("fuentes_respuesta"))
+        st.markdown("**Fuentes que usó esta respuesta:** " + " · ".join(f"`{labels.get(s, s)}`" for s in used),
+                    help=ayuda("fuentes_respuesta"))
     else:
         names = [info[s]["name"] for s in used if s in info] + (["enlaces de Rastro"] if "rastro" in used else [])
         st.markdown("**Fuentes:** " + ", ".join(names), help=ayuda("fuentes_respuesta"))
@@ -354,7 +356,8 @@ PIECES = {
         "mapeos": "/mappings/proveedores.r2rml.ttl",
         "enlaces": [
             ("Pasos 1 y 2 · Las empresas del grupo Leidos, con la evidencia de cada una",
-             """SELECT s.name AS proveedor, sg.matrix_name AS matriz_en_usaspending, g.name AS grupo, sg.rule AS regla, sg.source_text AS evidencia
+             """SELECT s.name AS proveedor, sg.matrix_name AS matriz_en_usaspending, g.name AS grupo, sg.rule AS regla,
+                       sg.source_text AS evidencia
                 FROM proveedores.supplier_group sg JOIN proveedores.supplier s ON s.uei = sg.supplier_uei
                 JOIN proveedores.group_company g USING (group_id)
                 WHERE g.name LIKE 'LEIDOS%' OR s.uei = 'MMLKPW9JLX64' ORDER BY g.name, s.name LIMIT 8"""),
@@ -561,7 +564,7 @@ def sparql_console(domain):
     examples = {}
     for f in sorted(Path(folder).glob("*.rq")):
         text = f.read_text()
-        title = next((l.lstrip("# ").strip() for l in text.splitlines() if l.startswith("#")), f.stem)
+        title = next((line.lstrip("# ").strip() for line in text.splitlines() if line.startswith("#")), f.stem)
         examples[title] = text
     key = f"{domain}_console"
     chosen = st.selectbox("Empezar desde una consulta de ejemplo", ["(en blanco)"] + list(examples),
@@ -609,7 +612,8 @@ def map_data(domain):
         OPTIONAL { ?c a energia:ConcessionToReview ; energia:reviewReason ?why }
     } GROUP BY ?name ?operator ?wkt""", domain), domain)[1]
     points = run(prefixed(GEO + "SELECT ?wkt WHERE { ?d a energia:DetectedVenting ; geo:asWKT ?wkt }", domain), domain)[1]
-    pipes = run(prefixed(GEO + "SELECT ?name ?wkt WHERE { ?p a energia:Pipeline ; energia:name ?name ; geo:asWKT ?wkt }", domain), domain)[1]
+    pipes = run(prefixed(GEO + "SELECT ?name ?wkt WHERE { ?p a energia:Pipeline ; energia:name ?name ; geo:asWKT ?wkt }", domain),
+                domain)[1]
     return concessions, points, pipes
 
 
@@ -660,7 +664,7 @@ def render(cfg_path, tech):
             st.subheader("LLM", help=ayuda("llm"))
             st.markdown(("🟢 " if available else "⚪ ") + status)
             st.subheader("Fuentes", help=ayuda("fuentes_barra"))
-            for key, info in sources(domain).items():
+            for info in sources(domain).values():
                 st.markdown(f"🐘 **{info['name']}**  \n<small>{info['license']}</small>", unsafe_allow_html=True)
         else:
             st.caption(md(cfg["resumen"]))
@@ -1084,7 +1088,6 @@ def compare_text_search(item, contracts, domain, tech, always=False):
 
 
 def llm_status():
-    import os
     if answer.PROVIDER == "ollama":
         try:
             requests.get(f"{answer.OLLAMA}/api/tags", timeout=3).raise_for_status()
@@ -1137,7 +1140,7 @@ def trust(cfg, tech, evaluation, changes):
                                                      f"3 · Cuando una base cambia (las {n} preguntas)"])
         with tab_correct:
             if evaluation.get("questions"):
-                evaluation_detail(evaluation, totals)
+                evaluation_detail(evaluation, totals, cfg["domain"])
     with tab_same if tech else st.expander(f"Ver las {4 * len(consistency)} respuestas"):
         st.caption(f"{len(consistency)} preguntas, cada una hecha de 4 formas con el mismo significado.")
         table = []
@@ -1209,7 +1212,7 @@ def trust(cfg, tech, evaluation, changes):
                 "base cambia, hay que encontrar y arreglar cada una. Con Rastro, eso está en un solo lugar.")
 
 
-def evaluation_detail(evaluation, totals):
+def evaluation_detail(evaluation, totals, domain):
     data = evaluation["questions"]
     names = {k: v for k, v in {"B": "Sin Rastro (SQL)", "D": "SQL + enlaces de Rastro", "C": "Con Rastro"}.items()
              if k in totals}
@@ -1221,7 +1224,7 @@ def evaluation_detail(evaluation, totals):
         st.info("Con las tablas de enlaces de Rastro, el SQL acierta igual: la precisión viene de la integración "
                 "hecha una vez. La capa semántica suma que esa integración se mantiene en un solo lugar, la "
                 "evidencia de cada enlace y los datos de afuera.")
-    chosen = st.selectbox("Pregunta", [e["question"] for e in data.values()], key="proveedores_eval_question")
+    chosen = st.selectbox("Pregunta", [e["question"] for e in data.values()], key=f"{domain}_eval_question")
     entry = next(e for e in data.values() if e["question"] == chosen)
 
     def fmt(v):

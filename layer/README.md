@@ -2,6 +2,12 @@
 
 Preguntas en lenguaje natural sobre las fuentes integradas. `answer.py` tiene tres formas de responder (A: el LLM solo, B: SQL sobre las tablas crudas, C: SPARQL sobre Rastro) y `eval/` las compara con 20 preguntas.
 
+Esto es oncología. Petróleo y gas y proveedores se evalúan con `evaluar.py` (ver su docstring), con tres formas: B, sin Rastro (SQL sobre las tablas crudas); D, SQL con las tablas de enlaces de Rastro; y C, con Rastro (SPARQL). Los resultados quedan en `layer/<dominio>/resultados.md`.
+
+```bash
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje
+```
+
 ## Qué LLM usar
 
 Se elige en `.env` con `RASTRO_PROVIDER`:

@@ -1,0 +1,21 @@
+# 11. ¿Qué predicciones de pozos de 2025 se apoyan en un dato corregido, y en cuál?
+PREFIX energia: <https://w3id.org/rastro/energia#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT DISTINCT ?pozo ?concesion ?gasEsperado ?dato ?regla
+WHERE {
+  ?corrida a energia:ModelRun ; energia:current true .
+  ?p a energia:Prediction ; prov:wasGeneratedBy ?corrida ; energia:inTest true ; energia:predictedGas ?gasEsperado ;
+     energia:aboutWell/energia:wellId ?pozo ; prov:used ?inicio .
+  ?inicio a energia:WellStart ; energia:inConcession/energia:name ?concesion .
+  {
+    ?p prov:used ?socio . ?socio a energia:Stake ; energia:rule ?regla .
+    FILTER (CONTAINS(?regla, "revisada"))
+    BIND ("participación de la operadora" AS ?dato)
+  } UNION {
+    ?inicio energia:declaredName ?nombre .
+    ?n a energia:CompanyName ; energia:nameInSource ?nombre ; energia:rule ?regla .
+    FILTER (CONTAINS(?regla, "revisada"))
+    BIND ("operadora (unión de nombres)" AS ?dato)
+  }
+}
+ORDER BY ?concesion ?pozo

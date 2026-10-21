@@ -20,7 +20,8 @@ import yaml
 
 HERE = Path(__file__).parent
 OUT = Path("/layer/sitios.yaml")   # se copia a app/sitios.yaml (la app no ve /layer como escritura)
-FORMS = r"\b(THE|INC|INCORPORATED|LLC|L L C|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC|SA|SAU|SRL|SL|AG|SE|GMBH|NV|BV|HOLDINGS?|GROUP)\b"
+FORMS = (r"\b(THE|INC|INCORPORATED|LLC|L L C|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC"
+         r"|SA|SAU|SRL|SL|AG|SE|GMBH|NV|BV|HOLDINGS?|GROUP)\b")
 
 
 def normalize(name):

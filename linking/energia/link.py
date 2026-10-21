@@ -149,6 +149,8 @@ def main():
         sql = (HERE / "links.sql").read_text()
         sql = sql.split("CREATE SCHEMA energia;", 1)[1]          # el esquema ya está creado, con sus tablas de entrada
         conn.execute(sql)
+        # Rearmar el esquema borra los permisos de los usuarios de la evaluación (sin Rastro y SQL + enlaces)
+        conn.execute(Path("/layer/energia/reader.sql").read_text())
 
         for tipo in ("detectado", "declarado"):
             total = sum(1 for p in ubicados if p[1] == tipo)

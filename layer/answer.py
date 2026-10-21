@@ -36,7 +36,6 @@ MAX_ATTEMPTS = 3
 ROOT = Path(__file__).resolve().parent.parent
 HERE = Path(__file__).parent
 DOMAINS = yaml.safe_load((HERE / "dominios.yaml").read_text())
-ONTOP = DOMAINS["oncologia"]["ontop"]
 
 QUERY_RULES = """La query tiene que devolver una sola columna: los nombres si la respuesta \
 es una lista, o una sola fila con el número si la respuesta es un número. No expliques \
@@ -219,14 +218,9 @@ español (por ejemplo ?farmaco, ?ensayos). Limitá el resultado a 50 filas. No e
 nada: devolvé solo la query."""
 
 # De qué fuente viene cada término de la ontología (dominios.yaml)
-NS = DOMAINS["oncologia"]["namespace"]
-
-
 def term_sources(domain="oncologia"):
     return {term: source for source, terms in DOMAINS[domain]["term_sources"].items() for term in terms}
 
-
-TERM_SOURCE = term_sources()
 
 
 def ask_rastro(question, domain="oncologia"):
@@ -278,7 +272,7 @@ def column_sources(query, domain="oncologia"):
     fuente de ese término, o la de la clase del sujeto si el término es compartido
     (:name). Una columna calculada (COUNT, SUM) toma todas las fuentes de la query.
     """
-    from rdflib import URIRef, Variable
+    from rdflib import URIRef
     from rdflib.plugins.sparql import prepareQuery
 
     algebra = prepareQuery(query).algebra

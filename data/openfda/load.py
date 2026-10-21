@@ -61,7 +61,8 @@ def query(search, **params):
 def search_for(uniis, names):
     """Búsqueda de openFDA para una familia: por UNII o por nombre del principio activo."""
     # Espacios y no "+": requests codifica "+" como %2B y openFDA lo toma literal
-    quoted = lambda values: " ".join(f'"{v}"' for v in values)
+    def quoted(values):
+        return " ".join(f'"{v}"' for v in values)
     parts = [f"patient.drug.openfda.unii:({quoted(uniis)})"]
     if names:
         parts.append(f"patient.drug.activesubstance.activesubstancename:({quoted(names)})")

@@ -78,6 +78,8 @@ energia:
     ign: [nearestTown, protectedArea]
     gleif: [lei, legalName]
     fractura: [Fracturing, lateralLengthM, fracStages, proppantTonnes, waterM3, maxPressurePsi, fracDate, loadedOn]
+    lab: [ModelRun, modelVersion, trainedUntil, testError, testR2, inRangeShare, current, Prediction, predictedGas,
+          predictedLow, predictedHigh, inTest, Contribution, ofPrediction, factor, amount]
     ambiental: [EnvironmentalStudy, studyId, studyType]
     rastro: [OperatorChange, previousCompany, newCompany, month, oilBefore, oilAfter, gasBefore, gasAfter,
              ConcessionToReview, VentingFarFromPipeline, VentingWithoutReports, reviewReason, Stake, partner, percent, OperatorLink, LocationLink, PipelineLink, SurroundingsLink, LeiLink, StudyLink, aboutStudy, aboutVenting,

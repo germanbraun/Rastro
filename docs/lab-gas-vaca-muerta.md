@@ -1,6 +1,6 @@
 # Rastro Lab, petróleo y gas: explicar el gas de un pozo nuevo de Vaca Muerta
 
-Estudio de factibilidad, sin modelo. 20 de octubre de 2026.
+Empezó como estudio de factibilidad, sin modelo (20 de octubre de 2026); al 21 de octubre de 2026 ya tiene modelo, en la app y con `python3 lab/gas/modelo.py`.
 
 ## En una línea
 
@@ -8,7 +8,7 @@ Estudio de factibilidad, sin modelo. 20 de octubre de 2026.
 
 ## Qué aporta Rastro a la explicación, y qué no
 
-El peso de cada variable en una predicción lo calcula una técnica estándar (por ejemplo, SHAP), igual con o sin Rastro. Rastro no vuelve transparente al modelo por dentro.
+El modelo es lineal (una regresión ridge), así que el aporte de cada variable a una predicción es exacto, sin técnicas de aproximación, e igual con o sin Rastro. Rastro no vuelve transparente al modelo por dentro.
 
 Lo que Rastro sí aporta:
 
@@ -85,7 +85,7 @@ Sin Rastro, la explicación usa el 27,27 % del mapa y nadie lo nota. Con Rastro,
 
 **En la app:** la pestaña «Rastro Lab» de petróleo y gas muestra el error de los dos modelos, cuántas predicciones se apoyan en un dato corregido y, para cada pozo de 2025, las dos explicaciones lado a lado, con «¿Por qué?» (regla, evidencia y fuentes) en cada variable de Rastro.
 
-**Lo que falta del paso 1:** la prueba a ciegas con un consultor.
+**Lo que falta del paso 1:** la prueba a ciegas con un consultor. Está lista para mandar: [lab-explicaciones-a-ciegas.md](lab-explicaciones-a-ciegas.md) (se arma con `python3 lab/gas/a_ciegas.py`).
 
 ## Paso 2: más años y fractura (21 de octubre de 2026)
 
@@ -93,13 +93,23 @@ Sin Rastro, la explicación usa el 27,27 % del mapa y nadie lo nota. Con Rastro,
 - **Más pozos:** 559 pozos de shale gas con sus meses 2 a 7 (510 para entrenar, de 2018 a 2024; los mismos 49 de 2025 para probar); 542 tienen fractura.
 - **Resultado hacia el futuro (pozos de 2025):** A y B, error medio 16,8 y 16,9 millones de m³, R² 0,46 y 0,45 (antes 0,44). Con estos datos, la fractura agrega poco al predecir pozos nuevos; pesa la mitad que la concesión con su operadora (4,4 contra 9,1 millones de m³ por pozo, en promedio).
 - **La explicación con Rastro tiene dos factores:** la concesión con su operadora y socios, y cómo se fracturó el pozo, cada uno con por qué suma o resta y sus hechos con regla y evidencia.
-- **Validación con el diseño de un trabajo publicado con las mismas fuentes** (gas de 12 meses, pozos con fractura; `python3 lab/gas/modelo.py --como-la-tesis`): la mediana del área da R² 0,45 (ese trabajo, 0,47), así que los datos coinciden. Con su forma de separar la prueba (uno de cada cinco pozos en orden cronológico), nuestro modelo lineal da 0,58; su mejor modelo, 0,75, con más variables (coordenadas, profundidad, vecinos, año) y una combinación de modelos de árboles. Hacia el futuro (pozos desde 2023), todos quedan cerca de 0,25 a 0,30.
+- **Validación con el diseño de un trabajo publicado con las mismas fuentes** (gas de 12 meses, pozos con fractura; `python3 lab/gas/modelo.py --como-trabajo-publicado`): la mediana del área da R² 0,45 (ese trabajo, 0,47), así que los datos coinciden. Con su forma de separar la prueba (uno de cada cinco pozos en orden cronológico), nuestro modelo lineal da 0,58; su mejor modelo, 0,75, con más variables (coordenadas, profundidad, vecinos, año) y una combinación de modelos de árboles. Hacia el futuro (pozos desde 2023), todos quedan cerca de 0,25 a 0,30.
 
 ## Cuando la fuente cambia: la fractura llega tarde (21 de octubre de 2026)
 
 La fuente de fractura se actualiza todos los días, pero cambia de a poco (entre 15 y 190 registros por mes; la versión del 21 de octubre era igual a la del 20). Lo que sí pesa: **en 36 de los 43 pozos de 2025 con fractura, el dato se cargó después de que el pozo empezó a producir** (a la mitad, 3 meses o más). Si la predicción se hace cuando arranca el pozo, esos pozos todavía no tenían fractura; cuando llega, **su predicción cambia 4,8 millones de m³ en promedio (hasta 11,6)**. Sin Rastro el número cambia y nada dice por qué. Con Rastro, la fractura guarda cuándo se cargó (`energia:loadedOn`) y la explicación marca la que llegó después de que el pozo arrancó.
 
 **Lo que entra al modelo,** en la app: los mismos 559 pozos dos veces, con las columnas de las tablas (sin Rastro) y con los conceptos del diccionario y su fuente (con Rastro). Ahí se ve, por ejemplo, el 27,27 % del mapa contra el 55 % corregido.
+
+## Las predicciones, en Rastro (21 de octubre de 2026)
+
+Cada corrida del modelo se publica en Rastro (`python3 lab/gas/modelo.py --publicar`): la corrida con su versión (una huella del código), fecha, corte y error; cada predicción con su rango y los datos de Rastro que usó (el inicio del pozo, su fractura y la participación de su operadora, con `prov:used`); y el aporte de cada factor. Así las explicaciones dejan de vivir solo en la app: se consultan como cualquier dato.
+
+- «¿Qué predicciones de 2025 se apoyan en un dato corregido?» (pregunta 11) da 24 pozos, los mismos que cuenta el modelo: 18 por la unión de nombres de Pluspetrol y 6 por la participación corregida de Aguada Pichana Este.
+- «¿Qué pozos de 2025 se esperan con más gas, y qué los explica?» (pregunta 12) da los diez primeros con su rango y el aporte de cada factor.
+- **El rango** de cada predicción sale de los errores del modelo en el año anterior a la prueba, sin mirar la prueba: va de unos 33 millones de m³ menos a 16 más. En 71 de cada 100 pozos de 2025 el gas real cayó adentro (se buscaba 80).
+
+La idea surgió de comparar con otra mirada sobre el mismo caso: un grafo que dice qué significa una variable no sabe qué registros usó cada predicción si no se guarda al calcularla.
 
 ## Datos de fractura (paso 2)
 
@@ -110,7 +120,9 @@ Existen, son públicos y se unen por pozo: «Datos de fractura de pozos (Adjunto
 
 Descargados en `data/raw/fractura/` (no se versiona), el 20 de octubre de 2026.
 
-## Plan en tres pasos
+## Plan en tres pasos (lo que se planeó)
+
+**Lo que se hizo:** los pasos 1 y 2 están hechos (arriba). La prueba de robustez del paso 2 terminó siendo «la fractura llega tarde» (arriba) y «una corrección» (la participación de Aguada Pichana Este, corregida una vez, cambia la respuesta, lo que entra al modelo y su explicación; `layer/energia/cambio/correccion.sh`). El paso 3 no se hizo.
 
 **1. Explicaciones sin fractura**, con lo que Rastro ya tiene: operadora con su grupo, socios, concesión, gasoducto y vecinos.
 - Único cambio previo a la capa: **la operadora y el tipo de pozo del mes de inicio de cada pozo.** Hoy Rastro da los de diciembre de 2025, y para un modelo eso es usar el futuro. La regla ya existe por concesión y mes (`energia.operador_area_mes`).
@@ -128,7 +140,7 @@ Descargados en `data/raw/fractura/` (no se versiona), el 20 de octubre de 2026.
 
 Con números, no con opiniones.
 
-- **Prueba a ciegas con personas.** 10 explicaciones «Sin Rastro» y 10 «Con Rastro», mezcladas, para un consultor que no armó Rastro. Por cada una: ¿la entendés?, ¿podés comprobar el dato?, ¿la defenderías ante un cliente? Es la misma idea que `docs/preguntas-a-ciegas.md` y protege contra la circularidad: la explicación sin Rastro tiene que ser la que armaría un analista razonable con SQL (`layer/energia/sin-rastro.sql`), no una hecha mal a propósito.
+- **Prueba a ciegas con personas** (lista para mandar, pendiente de respuestas: [lab-explicaciones-a-ciegas.md](lab-explicaciones-a-ciegas.md)). 10 explicaciones «Sin Rastro» y 10 «Con Rastro», mezcladas, para un consultor que no armó Rastro. Por cada una: ¿la entendés?, ¿podés comprobar el dato?, ¿la defenderías ante un cliente? Es la misma idea que `docs/preguntas-a-ciegas.md` y protege contra la circularidad: la explicación sin Rastro tiene que ser la que armaría un analista razonable con SQL (`layer/energia/sin-rastro.sql`), no una hecha mal a propósito.
 - **Trazabilidad.** Qué parte de las variables de cada explicación llega a una fuente y a una regla. Con Rastro deberían ser todas; sin Rastro, solo lo que diga el código.
 - **Datos dudosos.** Cuántas predicciones se apoyan en un dato corregido a mano o en un enlace sin confirmar. Medido hoy en los pozos de gas nuevos: 96 de 245. Son los 65 de Pluspetrol (unión de nombres revisada por IA) y los 31 de Aguada Pichana Este (socios corregidos con documento). En todos los pozos nuevos de Vaca Muerta se suman los 28 de Chevron.
 

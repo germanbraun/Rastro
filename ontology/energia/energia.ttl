@@ -90,6 +90,35 @@ energia:fracDate a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:
 energia:loadedOn a owl:DatatypeProperty ; rdfs:label "cargado en la fuente"@es ;
     rdfs:comment "El día en que el dato se cargó en el portal de la fuente. La fractura de un pozo puede cargarse meses después de que arrancó: una predicción hecha antes no la tenía."@es .
 
+energia:ModelRun a owl:Class ;
+    rdfs:subClassOf prov:Activity ;
+    rdfs:label "Corrida del modelo"@es ;
+    rdfs:comment "Una vez que se entrenó el modelo de gas de Rastro Lab: con qué versión del código, cuándo, hasta qué fecha de inicio de los pozos entrenó y cuánto se equivocó con los pozos de prueba."@es .
+energia:modelVersion a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "versión del modelo"@es .
+energia:trainedUntil a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "entrenado con pozos que empezaron antes de"@es .
+energia:testError a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "error medio en la prueba (millones de m³)"@es .
+energia:testR2 a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "R² en la prueba"@es .
+energia:inRangeShare a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "parte de los pozos de prueba dentro de su rango"@es .
+energia:current a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "es la corrida vigente"@es .
+
+energia:Prediction a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Predicción de gas"@es ;
+    rdfs:comment "El gas que el modelo espera de un pozo nuevo en sus meses 2 a 7 (millones de m³), con un rango. prov:wasGeneratedBy dice qué corrida la hizo y prov:used, qué datos de Rastro usó: el inicio del pozo, su fractura y la participación de su operadora."@es .
+energia:predictedGas a owl:DatatypeProperty ; rdfs:domain energia:Prediction ; rdfs:label "gas esperado (millones de m³)"@es .
+energia:predictedLow a owl:DatatypeProperty ; rdfs:domain energia:Prediction ; rdfs:label "gas esperado, desde (millones de m³)"@es .
+energia:predictedHigh a owl:DatatypeProperty ; rdfs:domain energia:Prediction ; rdfs:label "gas esperado, hasta (millones de m³)"@es .
+energia:inTest a owl:DatatypeProperty ; rdfs:domain energia:Prediction ; rdfs:label "es un pozo de prueba"@es ;
+    rdfs:comment "Verdadero si el modelo no vio el pozo al entrenar (pozos de 2025)."@es .
+
+energia:Contribution a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Aporte a una predicción"@es ;
+    rdfs:comment "Cuánto suma o resta un factor (la concesión con su operadora y socios, o cómo se fracturó el pozo) a una predicción, respecto de un pozo promedio. La predicción es el pozo promedio más sus aportes."@es .
+energia:ofPrediction a owl:ObjectProperty ; rdfs:domain energia:Contribution ; rdfs:range energia:Prediction ; rdfs:label "de la predicción"@es .
+energia:factor a owl:DatatypeProperty ; rdfs:domain energia:Contribution ; rdfs:label "factor"@es .
+energia:amount a owl:DatatypeProperty ; rdfs:domain energia:Contribution ; rdfs:label "aporte (millones de m³)"@es .
+
 energia:CompanyName a owl:Class ;
     rdfs:subClassOf prov:Entity ;
     rdfs:label "Nombre de una empresa en una fuente"@es ;

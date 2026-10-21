@@ -1,5 +1,7 @@
 # Las cuatro fuentes, para quien no es del dominio
 
+> Esta guía describe las fuentes del caso de oncología. La demo actual es petróleo y gas: ver [demo-guion-energia.md](demo-guion-energia.md) y el [README](../README.md).
+
 Una guía para presentar Rastro sin ser experto en oncología ni en desarrollo de fármacos. Para cada fuente: qué es, qué conceptos trae, un ejemplo real y con qué tener cuidado.
 
 ## El mapa en una frase

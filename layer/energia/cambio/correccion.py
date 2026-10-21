@@ -5,19 +5,15 @@ Lo corre correccion.sh (en esta carpeta), que saca la corrección, rearma Rastro
     python3 layer/energia/cambio/correccion.py <paso>     # paso: con | sin
 Guarda en correccion.json (en esta carpeta), que muestra la app.
 """
-import io
 import json
 import subprocess
 import sys
-import urllib.parse
-import urllib.request
 from pathlib import Path
-
-import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(ROOT / "lab" / "gas"))
 import modelo  # noqa: E402
+from modelo import sparql_local as sparql, sql_local as sql  # noqa: E402
 
 HERE = Path(__file__).parent
 RESULT = HERE / "correccion.json"
@@ -27,17 +23,6 @@ ANSWERS = ROOT / "layer" / "energia" / "respuestas"
 def compose(*args):
     return subprocess.run(["docker", "compose", "-f", str(ROOT / "infra" / "docker-compose.yml"), *args],
                           capture_output=True, text=True, check=True).stdout
-
-
-def sql(query):
-    return pd.read_csv(io.StringIO(compose("exec", "-T", "postgres", "psql", "-U", "rastro", "--csv", "-c", query)),
-                       dtype={"idpozo": str})
-
-
-def sparql(query):
-    data = urllib.parse.urlencode({"query": query}).encode()
-    req = urllib.request.Request("http://localhost:8082/sparql", data, {"Accept": "text/csv"})
-    return pd.read_csv(io.StringIO(urllib.request.urlopen(req, timeout=300).read().decode()))
 
 
 def main(paso):

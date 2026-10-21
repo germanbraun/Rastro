@@ -1,5 +1,7 @@
 # Integración en Rastro: qué heterogeneidad hay y cómo se resuelve
 
+> Este documento describe el caso de oncología. La demo actual es petróleo y gas: ver [demo-guion-energia.md](demo-guion-energia.md) y el [README](../README.md).
+
 Rastro es un **Virtual Knowledge Graph (VKG)**: una ontología con el vocabulario del dominio, mapeos R2RML que la conectan con las fuentes y un grafo virtual que Ontop traduce a SQL. La clasificación de heterogeneidad sigue el tutorial *Designing Virtual Knowledge Graphs with Ontop and Ontopic Studio* (Calvanese, Cogrel y Lanti, Ontobras 2022).
 
 ## Los cuatro tipos de heterogeneidad

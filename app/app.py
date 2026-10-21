@@ -32,6 +32,7 @@ sys.path.insert(0, "/layer/eval")
 
 import answer  # noqa: E402
 from run import NAMES, normalize, score  # noqa: E402
+import dominio  # noqa: E402  (las pantallas de los demás dominios y lo que comparten con oncología)
 from dominio import ayuda, tabla, warm_up  # noqa: E402  (los íconos «?», las tablas con texto largo y el precalentamiento)
 
 EVAL = Path("/layer/eval")
@@ -437,7 +438,6 @@ def show_answer(query, columns, rows, note=None):
         tabla(table, hide_index=True, use_container_width=True, column_config=logo_config)
         if drugs:   # «¿Por qué este número?»: cómo reconoció Rastro ese fármaco en los ensayos
             drug_column = next(c for i, c in enumerate(columns) if any(r[i] in drugs for r in rows))
-            import dominio
             dominio.show_why("oncologia", DRUG_WHY | {"columna": drug_column}, list(columns), [list(r) for r in rows])
         if TECH:
             st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}. Cada columna dice de qué fuente sale."
@@ -478,7 +478,7 @@ def show_answer(query, columns, rows, note=None):
             st.code(sql, language="sql")
         except requests.RequestException:
             st.caption("No se pudo obtener el SQL de esta consulta.")
-        import dominio  # el botón «Explicame la consulta» es el mismo en todos los dominios
+        # el botón «Explicame la consulta» es el mismo en todos los dominios
         dominio.explain(query, sql, "oncologia")
         st.markdown("**3. Las fuentes:**")
         info = sources()
@@ -535,9 +535,6 @@ with st.sidebar:
     DOMAIN = (st.radio("Caso de uso", DOMAINS, format_func=lambda d: d["name"], key="domain", help=ayuda("dominio"))
               if TECH else DOMAINS[0])
 if DOMAIN.get("config"):
-    sys.path.insert(0, "/app")
-    import dominio  # noqa: E402
-
     dominio.render(DOMAIN["config"], TECH)
     st.stop()
 
@@ -559,7 +556,7 @@ with st.sidebar:
 ask_tab, trust_tab, faq_tab, *hood_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"]
                                                 + (["Bajo el capó"] if TECH else []))
 if hood_tab:
-    import dominio  # «Bajo el capó» es el mismo en los tres dominios
+    # «Bajo el capó» es el mismo en los tres dominios
     with hood_tab[0]:
         dominio.under_the_hood("oncologia", "ontologia")
 FAQ_HINT = "Para dudas, consulte la pestaña **Preguntas frecuentes**."
@@ -647,8 +644,8 @@ def audit_card():
         return "Sí", "Con la evidencia de cada fármaco"
     e = json.loads(p.read_text())
     return (f"{100 * e['enlaces_con_evidencia'] / e['enlaces']:.0f} %",
-            f"de los {e['enlaces']:,} enlaces ensayo → fármaco guardan su texto, su regla y su fuente; y {e['columnas_con_fuente']} "
-            f"de {e['columnas']} columnas de las respuestas dicen de qué fuente salen.".replace(",", "."))
+            f"de los {e['enlaces']:,} ".replace(",", ".") + "enlaces ensayo → fármaco guardan su texto, su regla y su "
+            f"fuente; y {e['columnas_con_fuente']} de {e['columnas']} columnas de las respuestas dicen de qué fuente salen.")
 
 
 with trust_tab:
@@ -945,7 +942,7 @@ with faq_tab:
         "retries_c": sum(len(e["C"]["attempts"]) > 1 for e in data.values()),
         "unified_columns": unified_columns(),
     }
-    import dominio  # las preguntas que valen para todos los casos, y después las de oncología
+    # las preguntas que valen para todos los casos, y después las de oncología
     dominio.show_faq("oncologia", [(i["question"], i["answer"].format(**numbers), i.get("tecnico", False)) for i in faq()],
                      TECH, [("arquitectura-oncologia", "De las fuentes del dominio a una capa semántica."),
                             ("ontologia", "Los conceptos de negocio que lee el LLM, en lugar de las tablas.")], "ontología")

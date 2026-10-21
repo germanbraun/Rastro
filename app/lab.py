@@ -3,6 +3,7 @@ cada predicción lado a lado. El modelo está en lab/gas/modelo.py; acá solo se
 """
 import os
 import sys
+from pathlib import Path
 
 import pandas as pd
 import streamlit as st
@@ -16,8 +17,7 @@ import modelo  # noqa: E402
 num = modelo.num
 
 
-def aporte(v):
-    return ("+" if v >= 0 else "−") + num(abs(v))
+aporte = modelo.signo
 
 
 def sparql_df(query):
@@ -38,7 +38,13 @@ def _datos(version):
     ctx = modelo.contexto(sparql_df(modelo.SPARQL_SOCIOS), sparql_df(modelo.SPARQL_CAMBIOS))
     r = modelo.modelos(a, b)
     return a, b, ctx, r, modelo.referencias(a), modelo.dudosos(b), modelo.aprendido(r, b, ctx), modelo.peso_por_concepto(r, b), \
-        modelo.al_arrancar(r, b), modelo.entrada(a, b)
+        modelo.al_arrancar(r, b), modelo.entrada(a, b), \
+        rango_y_dentro(r, b)
+
+
+def rango_y_dentro(r, b):
+    desde_hasta = modelo.rango(b, **modelo.VARIABLES["B"])
+    return desde_hasta, modelo.dentro_del_rango(r["B"], b, desde_hasta)
 
 
 def datos():
@@ -53,7 +59,8 @@ def show_lab(tech):
         "Es **el mismo modelo, entrenado dos veces**: una con las tablas tal como vienen y otra con Rastro. "
         "Rastro no lo hace más preciso: hace que **cada predicción se explique en conceptos de negocio, "
         "con los hechos que la respaldan, y que se pueda comprobar**.")
-    a, b, ctx, r, ref, (n_dudosos, n_prueba), tabla_aprendido, pesos, version, (entrada_a, entrada_b, origen) = datos()
+    (a, b, ctx, r, ref, (n_dudosos, n_prueba), tabla_aprendido, pesos, version, (entrada_a, entrada_b, origen),
+     _rango) = datos()
 
     c1, c2, c3 = st.columns(3)
     c1.metric("Error sin Rastro", f"{num(r['A']['error'])} M m³", help=ayuda("lab_error"))
@@ -99,6 +106,9 @@ def show_lab(tech):
 
     show_well(key="lab_pozo")
 
+    with st.expander("Las predicciones, en Rastro", expanded=False):
+        show_published(tech)
+
     with st.expander("¿Cómo se calcula?"):
         st.markdown(md(
             "Es una regresión lineal: la predicción es el gas de un pozo promedio más el aporte de cada variable, "
@@ -108,18 +118,23 @@ def show_lab(tech):
             "participación corregida, cada una con su regla y su evidencia. La operadora es la del primer mes del pozo, "
             "no la de hoy: usar la de hoy sería usar el futuro. La fractura (rama horizontal, etapas, arena, agua y "
             "presión) es la informada hasta el mes en que arrancó el pozo. El gas que se predice también sale de Rastro "
-            "(el gas de los meses 2 a 7 de cada pozo), y coincide con el que calcula el SQL."))
+            "(el gas de los meses 2 a 7 de cada pozo), y coincide con el que calcula el SQL.\n\n"
+            "Ojo: la explicación dice cómo llegó el modelo a su número, no la causa física. Que un factor sume no "
+            "prueba que produzca más gas; es lo que el modelo aprendió de los pozos anteriores."))
         if tech:
-            st.markdown("**Sin Rastro (SQL sobre las tablas tal como vienen):**")
+            st.markdown("**Sin Rastro (SQL sobre las tablas tal como vienen):** la consulta que arma la entrada del modelo A. "
+                        "Cada cruce está en la consulta: el mes en que arrancó cada pozo, la empresa como se declaró, el texto "
+                        "de socios del mapa (el porcentaje se busca después por nombre) y la fractura sumada de la tabla cruda.")
             st.code(modelo.SQL_A.strip(), language="sql")
-            st.markdown("**Con Rastro (SPARQL):**")
+            st.markdown("**Con Rastro (SPARQL):** la misma entrada, pedida en conceptos del diccionario. Los cruces y las reglas "
+                        "están definidos una vez en Rastro; la consulta trae además la regla y la evidencia de cada dato.")
             st.code(modelo.SPARQL_B.strip(), language="sparql")
             st.caption("Código del modelo: lab/gas/modelo.py.")
 
 
 def show_well(key, pozo=None):
     """Un pozo de 2025: la predicción sin Rastro y con Rastro, lado a lado. Con pozo, sin selector (para la demo)."""
-    a, b, ctx, r, *_ = datos()
+    a, b, ctx, r, *_, (desde_hasta, dentro) = datos()
     prueba = b[b.inicio >= modelo.PRUEBA]
     etiquetas = {f"{modelo.concesion(x.areaNombre if isinstance(x.areaNombre, str) else x.area)} · {modelo.nombre(x.grupo)} · "
                  f"empezó en {x.inicio:%m/%Y} · pozo {x.idpozo}": x.idpozo for x in prueba.itertuples()}
@@ -144,6 +159,8 @@ def show_well(key, pozo=None):
     with con:
         st.markdown("##### Con Rastro")
         st.metric("Predicción", f"{num(eb['pred'])} M m³")
+        st.caption(f"Rango: de {num(max(eb['pred'] + desde_hasta[0], 0))} a {num(eb['pred'] + desde_hasta[1])} millones de m³. "
+                   f"En {round(100 * dentro)} de cada 100 pozos de prueba, el gas real cayó dentro de su rango.")
         st.markdown(eb["resumen"])
         for x in eb["factores"]:
             st.markdown(f"**{x['factor']}: {aporte(x['aporte'])}.** {x['por_que']}")
@@ -156,3 +173,33 @@ def show_well(key, pozo=None):
                 st.markdown(f"**Regla:** {h['regla']}.  \n**Evidencia:** {h['evidencia']}"
                             + (f"  \n**Nombre:** {h['nombre']}" if h.get("nombre") else "")
                             + f"  \n**Fuentes:** {h['fuentes']}.")
+
+
+
+def show_published(tech):
+    """La última corrida publicada en Rastro y dos preguntas sobre sus predicciones, en vivo."""
+    from dominio import run
+    columns, rows = run("""PREFIX energia: <https://w3id.org/rastro/energia#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?version ?fecha (COUNT(?p) AS ?predicciones) WHERE {
+  ?c a energia:ModelRun ; energia:current true ; energia:modelVersion ?version ; prov:startedAtTime ?fecha .
+  ?p prov:wasGeneratedBy ?c } GROUP BY ?version ?fecha""", "energia")
+    if not rows:
+        st.info("Todavía no hay una corrida publicada: `python3 lab/gas/modelo.py --publicar`.")
+        return
+    version_modelo, fecha, n = rows[0]
+    st.markdown(md(
+        f"Cada predicción queda en Rastro como un dato más: con su rango, el aporte de cada factor, la corrida que la "
+        f"hizo (versión {version_modelo}, del {str(fecha)[:10]}, {n} predicciones) y los datos de Rastro que usó. Así se le "
+        "puede preguntar a Rastro por las predicciones, con una consulta o en palabras en «Preguntar → Mi propia pregunta»."))
+    for archivo, titulo in (("cq11", "¿Qué predicciones de 2025 se apoyan en un dato corregido?"),
+                            ("cq12", "¿Qué pozos de 2025 se esperan con más gas, y qué los explica?")):
+        query = (Path("/ontology/energia/queries") / f"{archivo}.rq").read_text()
+        columns, rows = run(query, "energia")
+        st.markdown(f"**{titulo}**")
+        titulos = {"pozo": "Pozo", "concesion": "Concesión", "gasEsperado": "Gas esperado (M m³)", "dato": "Dato corregido",
+                   "regla": "Regla", "desde": "Desde", "hasta": "Hasta", "concesionYOperadora": "Concesión con su operadora",
+                   "fractura": "Cómo se fracturó"}
+        tabla(pd.DataFrame(rows, columns=columns).rename(columns=titulos), key=f"lab_{archivo}")
+        if tech:
+            st.code(query.strip(), language="sparql")

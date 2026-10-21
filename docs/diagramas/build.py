@@ -91,7 +91,7 @@ def architecture(domain):
     b.append(box(650, 220, 240, 130, "Ontología", ["el diccionario", "de negocio"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
     b.append(box(910, 220, 240, 130, "Mapeos", ["columna → concepto", "(R2RML)"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
     b.append(box(650, 400, 500, 130, "Ontop", ["traduce cada consulta SPARQL", "a SQL sobre Postgres"], fill="#FFFFFF", color=INK, stroke="#FFFFFF"))
-    b.append(f'<text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>')
+    b.append('<text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>')
     b.append(arrow(562, 270, 618, 270))
     b.append(arrow(900, 352, 900, 396, color="#FFFFFF", head="white"))
     # Quién la usa

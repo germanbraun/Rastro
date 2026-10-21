@@ -107,6 +107,39 @@ JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = trim(p
     rr:predicateObjectMap [ rr:predicate energia:sourceText ; rr:objectMap [ rr:column "evidencia" ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/fractura> ] ] .
 
+# --- Rastro Lab: las corridas del modelo de gas y sus predicciones (lab/gas/modelo.py --publicar) ---
+
+<#ModelRun> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "lab_gas.corrida" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/modelrun/{id}" ; rr:class energia:ModelRun ] ;
+    rr:predicateObjectMap [ rr:predicate energia:modelVersion ; rr:objectMap [ rr:column "version" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:startedAtTime ; rr:objectMap [ rr:column "fecha" ; rr:datatype xsd:dateTime ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:trainedUntil ; rr:objectMap [ rr:column "entrenado_hasta" ; rr:datatype xsd:date ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:testError ; rr:objectMap [ rr:column "error" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:testR2 ; rr:objectMap [ rr:column "r2" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:inRangeShare ; rr:objectMap [ rr:column "dentro_del_rango" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:current ; rr:objectMap [ rr:column "vigente" ; rr:datatype xsd:boolean ] ] .
+
+<#Prediction> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "lab_gas.prediccion" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/prediction/{corrida}/{idpozo}" ; rr:class energia:Prediction ] ;
+    rr:predicateObjectMap [ rr:predicate energia:aboutWell ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/well/{idpozo}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasGeneratedBy ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/modelrun/{corrida}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:predictedGas ; rr:objectMap [ rr:column "gas" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:predictedLow ; rr:objectMap [ rr:column "minimo" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:predictedHigh ; rr:objectMap [ rr:column "maximo" ; rr:datatype xsd:decimal ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:inTest ; rr:objectMap [ rr:column "de_prueba" ; rr:datatype xsd:boolean ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:used ; rr:objectMap [ rr:column "inicio_iri" ; rr:termType rr:IRI ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:used ; rr:objectMap [ rr:column "fractura_iri" ; rr:termType rr:IRI ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:used ; rr:objectMap [ rr:column "socio_iri" ; rr:termType rr:IRI ] ] .
+
+<#Contribution> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT md5(corrida || '|' || idpozo || '|' || factor) AS id, corrida, idpozo, factor, aporte FROM lab_gas.aporte" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/contribution/{id}" ; rr:class energia:Contribution ] ;
+    rr:predicateObjectMap [ rr:predicate energia:ofPrediction ; rr:objectMap [ rr:template "https://w3id.org/rastro/energia/prediction/{corrida}/{idpozo}" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:factor ; rr:objectMap [ rr:column "factor" ] ] ;
+    rr:predicateObjectMap [ rr:predicate energia:amount ; rr:objectMap [ rr:column "aporte" ; rr:datatype xsd:decimal ] ] .
+
 <#OperatorChange> a rr:TriplesMap ;
     rr:logicalTable [ rr:tableName "energia.cambio_operadora" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/energia/operatorchange/{id_concesion}/{mes}" ; rr:class energia:OperatorChange ] ;

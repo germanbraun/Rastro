@@ -11,13 +11,15 @@ Se corre con: docker compose run --rm lab-gas-loader
 
 import csv
 import os
+import sys
 from pathlib import Path
 
 import psycopg
-import requests
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from comun import ckan, copiar  # noqa: E402
 
 CACHE = Path("/data/raw/lab-gas")
-CKAN = "http://datos.energia.gob.ar/api/3/action/resource_show?id="
 PRODUCCION = {2018: "333fd72a-9b83-4bc1-bc94-0f5940b52331", 2019: "8bc0d61c-0408-43d4-a7bc-7178fcb5d37e",
               2020: "c4a4a6a0-e75a-4e12-ae5c-54d53a70348c", 2021: "465be754-a372-4c31-b855-81dc5fe3309f",
               2022: "876b3746-85e2-4039-adeb-b1354436159f"}
@@ -32,40 +34,10 @@ FRACTURA_COLS = ["id_base_fractura_adjiv", "idpozo", "sigla", "cuenca", "areaper
                  "agua_inyectada_m3", "co2_inyectado_m3", "presion_maxima_psi", "potencia_equipos_fractura_hp",
                  "fecha_inicio_fractura", "fecha_fin_fractura", "fecha_data", "empresa_informante"]
 
-http = requests.Session()
-http.headers["User-Agent"] = "RastroMVP/0.1"
-
-
-def download(name, url, tries=4):
-    f = CACHE / name
-    for attempt in range(tries):
-        if f.exists():
-            break
-        print(f"  descargando {name}")
-        try:
-            with http.get(url, timeout=900, stream=True) as r:
-                r.raise_for_status()
-                tmp = f.with_suffix(".tmp")
-                with tmp.open("wb") as out:
-                    for chunk in r.iter_content(1 << 20):
-                        out.write(chunk)
-                tmp.rename(f)
-        except requests.RequestException as e:   # el servidor corta descargas largas: se reintenta
-            print(f"  falló ({e.__class__.__name__}), intento {attempt + 1} de {tries}")
-    if not f.exists():
-        raise RuntimeError(f"No se pudo descargar {name}")
-    return f
-
-
-def ckan(resource_id, name):
-    url = http.get(CKAN + resource_id, timeout=60).json()["result"]["url"]
-    return download(name, url)
-
-
 def main():
     CACHE.mkdir(parents=True, exist_ok=True)
-    produccion = {anio: ckan(rid, f"produccion-{anio}.csv") for anio, rid in PRODUCCION.items()}
-    fractura = ckan(FRACTURA, "fractura.csv")
+    produccion = {anio: ckan(CACHE, rid, f"produccion-{anio}.csv") for anio, rid in PRODUCCION.items()}
+    fractura = ckan(CACHE, FRACTURA, "fractura.csv")
     with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
                          f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:
         conn.execute("""
@@ -77,14 +49,7 @@ def main():
         conn.execute("TRUNCATE capitulo4_anterior.produccion, fractura.fractura")
 
         def copy(table, rows, source, version):
-            n = 0
-            with conn.cursor().copy(f"COPY {table} FROM STDIN") as cp:
-                for row in rows:
-                    cp.write_row(row)
-                    n += 1
-            conn.execute("INSERT INTO rastro_meta.load_run (source_id, version, table_name, row_count) "
-                         "VALUES (%s, %s, %s, %s)", (source, version, table, n))
-            print(f"  {table:<34}{n:>9} filas")
+            copiar(conn, table, rows, source, version, ancho=34)
 
         for anio, f in produccion.items():
             with f.open(encoding="utf-8-sig", newline="") as fh:

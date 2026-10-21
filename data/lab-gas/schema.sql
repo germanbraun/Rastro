@@ -29,3 +29,21 @@ CREATE TABLE IF NOT EXISTS fractura.fractura (
     fecha_inicio_fractura date, fecha_fin_fractura date, fecha_data timestamp,
     empresa_informante text
 );
+
+-- Las corridas del modelo de gas de Rastro Lab y sus predicciones, para que estén en Rastro y se puedan
+-- consultar. Las escribe `python3 lab/gas/modelo.py --publicar`; no se borran al rearmar los enlaces.
+CREATE SCHEMA IF NOT EXISTS lab_gas;
+CREATE TABLE IF NOT EXISTS lab_gas.corrida (
+    id text PRIMARY KEY, version text, fecha timestamp, entrenado_hasta date,
+    pozos_entreno int, pozos_prueba int, error numeric, r2 numeric, dentro_del_rango numeric,
+    vigente boolean                      -- la última corrida publicada
+);
+CREATE TABLE IF NOT EXISTS lab_gas.prediccion (
+    corrida text, idpozo text, gas numeric, minimo numeric, maximo numeric, de_prueba boolean,
+    inicio_iri text, fractura_iri text, socio_iri text,   -- lo que usó la predicción, por su identidad en Rastro
+    PRIMARY KEY (corrida, idpozo)
+);
+CREATE TABLE IF NOT EXISTS lab_gas.aporte (
+    corrida text, idpozo text, factor text, aporte numeric,
+    PRIMARY KEY (corrida, idpozo, factor)
+);

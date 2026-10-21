@@ -13,4 +13,21 @@ Las preguntas que Rastro tiene que poder responder en el tercer dominio, pensado
 | 7 | ¿Qué empresas tienen identificador global (LEI)? | Capítulo IV, GLEIF | El LEI se acepta solo si coincide el nombre legal, y lo descartado queda a la vista. | 12 empresas, entre ellas YPF, Pan American, Vista y Pluspetrol |
 | 8 | ¿Qué concesiones hay que revisar por venteos, y por qué? | Mapas, ENARGAS, estudios ambientales | «Concesión para revisar» es una clase deducida de dos reglas escritas una vez: venteos sin gasoducto cerca, o sin planillas de venteo. | 45 concesiones: 33 sin gasoducto cerca, 21 sin planillas, 9 con las dos |
 | 9 | ¿Qué áreas cambiaron de operadora entre 2023 y 2025, y cuánto producían antes y después? | Capítulo IV (2023 a 2025), mapas | Tres años de declaraciones juradas, unidos: mes a mes, quién declara la mayor parte de cada concesión, y cada cambio (`energia:OperatorChange`) con su evidencia. | 64 cambios; 27 son áreas que dejó YPF (Bentia, Petróleos Sudamericanos, Quintana, Pecom, PCR, Venoil) |
-| 10 | ¿Quiénes declaran más gas de shale en 2025? | Capítulo IV | La misma clase deducida que el no convencional (shale), mirada por el gas: el gas y el petróleo salen de las mismas declaraciones juradas. | Se completa al medir |
+| 10 | ¿Quiénes declaran más gas de shale en 2025? | Capítulo IV | La misma clase deducida que el no convencional (shale), mirada por el gas: el gas y el petróleo salen de las mismas declaraciones juradas. | Medida: las tres formas (sin Rastro, SQL con enlaces y con Rastro) aciertan: YPF, Tecpetrol, Pluspetrol y 2 más |
+
+## Conceptos de Rastro Lab
+
+Rastro Lab responde otra pregunta: **¿Cuánto gas va a dar un pozo nuevo y por qué?** Para eso el diccionario suma cuatro conceptos, que usa el modelo de gas de Vaca Muerta (`lab/gas/`, detalle en [docs/lab-gas-vaca-muerta.md](../../docs/lab-gas-vaca-muerta.md)):
+
+- `energia:WellStart`: cómo arrancó cada pozo (primer mes con producción, quién lo declaró, con qué nombre y qué tipo de pozo).
+- `energia:Fracturing`: cómo se fracturó el pozo (rama horizontal, etapas, arena, agua y presión).
+- `energia:gasMonths2to7`: el gas de los meses 2 a 7, lo que se predice.
+- `energia:loadedOn`: cuándo se cargó el dato de fractura, para marcar el que llegó después de que el pozo arrancó.
+- `energia:Prediction`, `energia:Contribution` y `energia:ModelRun`: cada predicción de una corrida del modelo, con su rango, el aporte de cada factor y los datos de Rastro que usó (`prov:used`). Las publica `python3 lab/gas/modelo.py --publicar`.
+
+Preguntas sobre las predicciones (necesitan una corrida publicada):
+
+| # | Pregunta | Para |
+|---|---|---|
+| 11 | ¿Qué predicciones de pozos de 2025 se apoyan en un dato corregido, y en cuál? | Lab |
+| 12 | ¿Qué pozos de 2025 se esperan con más gas, en qué rango, y cuánto aporta cada factor? | Lab |

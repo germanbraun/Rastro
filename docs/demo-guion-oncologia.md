@@ -2,12 +2,12 @@
 
 > **Los datos cambian. Las preguntas, no.**
 
-Para equipos de laboratorios, CROs y consultoras de salud, sin conocimientos técnicos. Tres momentos: **integración, consistencia y textos**, y un cierre con las pruebas. Se usa el mazo de oncología (`docs/slides/oncologia.html`) y la app en el dominio **Oncología**, con «Ver detalles técnicos» apagado. Oncología no tiene modo «Demo en 3 pasos»: se usa «Una pregunta de ejemplo» y «Una pregunta sobre textos».
+Para equipos de laboratorios, CROs y consultoras de salud, sin conocimientos técnicos. Tres momentos: **integración, consistencia y textos**, y un cierre con las pruebas. Se usa el mazo de oncología (`docs/slides/oncologia.html`) y la app en el caso **Oncología**: la app abre en petróleo y gas, así que hay que prender «Ver detalles técnicos» en la barra lateral y elegir **Oncología** en **Caso de uso**. Oncología no tiene pestaña **Demo**: en **Preguntar** se usa «Una pregunta de ejemplo» y «Una pregunta sobre textos».
 
 ## Antes de empezar
 
-1. Levantar todo: `cd infra && docker compose up -d` (lo hace alguien técnico, una vez).
-2. Abrir http://localhost:8501. Dominio: **Oncología**. Abrir una vez la pregunta de HER2 y la pregunta sobre textos: corren en vivo.
+1. Levantar todo, desde la carpeta del repo: `docker compose up -d` (lo hace alguien técnico, una vez).
+2. Abrir http://localhost:8501, prender «Ver detalles técnicos» y elegir **Oncología** en **Caso de uso**. Abrir una vez la pregunta de HER2 y la pregunta sobre textos: corren en vivo.
 
 ## 0:00 – 1:00 · Qué es Rastro y el problema (diapositivas 1 a 4)
 
@@ -43,5 +43,5 @@ Abrir **¿De dónde sale la respuesta?**:
 
 - **«¿Rastro acierta más?»** En la evaluación (pestaña **Por qué confiar**), Rastro acierta 20 de 20 y el SQL directo 18 de 20. Con las mismas tablas de enlaces de Rastro, un SQL bien hecho también acierta 20: la ventaja está en integrar una vez, no en la tecnología. Las referencias las armó un asistente de IA; falta que una persona las confirme (`docs/verificacion-humana.md`).
 - **«¿Por qué 438 y no 488 ensayos de EGFR?»** El SQL directo encontró «humab» dentro de nombres como «rhuMAb HER2» y contó ensayos de trastuzumab o bevacizumab, que no actúan sobre EGFR. Está en la adjudicación (`layer/eval/adjudication.md`) y en la verificación humana, parte 1.
-- **«¿Y si el negocio cambia una definición?»** Si la terapia hormonal pasa a contar como terapia dirigida, se cambia una línea del diccionario: 156 fármacos pasan a 188 en todas las preguntas (pestaña **Cuando las fuentes cambian**).
+- **«¿Y si el negocio cambia una definición?»** Si la terapia hormonal pasa a contar como terapia dirigida, se cambia una línea del diccionario: 156 fármacos pasan a 188 en todas las preguntas (pestaña **Por qué confiar** → «3 · Cuando una base cambia»).
 - **«¿Se puede sumar información de afuera?»** Una consulta une Rastro con Wikidata en vivo, sin cargar nada: afatinib y vandetanib están aprobados para otros cánceres y se prueban en mama (diapositiva «Datos de afuera», en el anexo). Necesita internet.

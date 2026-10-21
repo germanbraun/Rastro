@@ -14,16 +14,24 @@ con Postgres y Ontop de energía arriba:
     python3 lab/gas/modelo.py             # números y la explicación de un pozo
     python3 lab/gas/modelo.py <idpozo>    # la explicación de otro pozo
     python3 lab/gas/modelo.py --12-meses  # validación: el gas de los primeros 12 meses, otro corte por fecha
+    python3 lab/gas/modelo.py --como-trabajo-publicado   # validación con el diseño de un trabajo con las mismas fuentes
+    python3 lab/gas/modelo.py --publicar  # guarda la corrida y sus predicciones en Rastro (energia:Prediction)
 """
+import os
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+
+RAIZ = Path(__file__).resolve().parents[2]
 
 PRUEBA = pd.Timestamp("2025-01-01")   # entrena con los pozos que empezaron antes de 2025, prueba con los de 2025
 # Solo los pozos que alguna vez declararon shale gas de Vaca Muerta: el resto no hace falta y hace lento todo
 POZOS_GAS = "formacion = 'vaca muerta' AND sub_tipo_recurso = 'SHALE' AND tipopozo = 'Gasífero'"
 # Las tres tablas del Capítulo IV: 2025, 2023 y 2024, y 2018 a 2022 (vacía si no se cargó)
-TODO = """(SELECT * FROM capitulo4.produccion UNION ALL SELECT * FROM capitulo4.produccion_historica
-         UNION ALL SELECT * FROM capitulo4_anterior.produccion)"""
+TODO = """(SELECT * FROM capitulo4.produccion
+          UNION ALL SELECT * FROM capitulo4.produccion_historica
+          UNION ALL SELECT * FROM capitulo4_anterior.produccion)"""
 
 
 def sql_gas(desde=1, meses=6):
@@ -32,8 +40,9 @@ def sql_gas(desde=1, meses=6):
     Por defecto, los meses 2 a 7 (el primero suele ser parcial). Solo pozos con todos esos meses.
     Rastro tiene lo mismo en energia:gasMonths2to7 y energia:gasFirst12Months (para B)."""
     return f"""
-WITH todo AS (SELECT idpozo, make_date(anio, mes, 1) AS f, prod_gas, prod_pet FROM {TODO} t
-              WHERE idpozo IN (SELECT idpozo FROM {TODO} v WHERE {POZOS_GAS})),
+WITH todo AS (
+  SELECT idpozo, make_date(anio, mes, 1) AS f, prod_gas, prod_pet FROM {TODO} t
+  WHERE idpozo IN (SELECT idpozo FROM {TODO} v WHERE {POZOS_GAS})),
 m AS (SELECT idpozo, f, sum(coalesce(prod_gas, 0)) AS gas, sum(coalesce(prod_pet, 0)) AS pet FROM todo GROUP BY 1, 2),
 i AS (SELECT idpozo, min(f) FILTER (WHERE gas > 0 OR pet > 0) AS inicio FROM m GROUP BY 1)
 SELECT i.idpozo, sum(m.gas) / 1000.0 AS gas
@@ -46,7 +55,9 @@ SQL_GAS = sql_gas()
 
 # A: lo que armaría un analista con SQL sobre las tablas tal como vienen
 SQL_A = f"""
-WITH todo AS (SELECT * FROM {TODO} t WHERE idpozo IN (SELECT idpozo FROM {TODO} v WHERE {POZOS_GAS})),
+WITH todo AS (   -- las declaraciones juradas de 2018 a 2025, solo de los pozos de shale gas de Vaca Muerta
+  SELECT * FROM {TODO} t
+  WHERE idpozo IN (SELECT idpozo FROM {TODO} v WHERE {POZOS_GAS})),
 desde AS (SELECT min(make_date(anio, mes, 1)) AS mes FROM todo),
 p AS (SELECT idpozo, min(make_date(anio, mes, 1)) AS primera,
              min(make_date(anio, mes, 1)) FILTER (WHERE prod_gas > 0 OR prod_pet > 0) AS inicio FROM todo GROUP BY 1),
@@ -68,7 +79,7 @@ ORDER BY t.idpozo, t.prod_gas DESC NULLS LAST"""
 
 # B: lo mismo, leído de Rastro, con la regla y la evidencia de cada dato
 SPARQL_B = """PREFIX energia: <https://w3id.org/rastro/energia#>
-SELECT ?well ?inicio ?grupo ?nombre ?reglaNombre ?evidencia ?area ?areaNombre ?pct ?reglaSocio ?textoSocio ?gas27 ?gas12
+SELECT ?well ?s ?st ?fr ?inicio ?grupo ?nombre ?reglaNombre ?evidencia ?area ?areaNombre ?pct ?reglaSocio ?textoSocio ?gas27 ?gas12
        ?rama ?etapas ?arena ?agua ?presion ?fracEvidencia ?fracNombre ?fracRegla ?fracEmpresa ?fracCargada
 WHERE {
   ?s a energia:WellStart ; energia:aboutWell ?well ; energia:startMonth ?inicio ; energia:company ?c ;
@@ -115,6 +126,34 @@ FRACTURA = {"rama": ("largo de la rama horizontal", "m", 0), "etapas": ("etapas 
             "presion": ("presión máxima", "psi", 0)}
 
 
+# --- Para correr en la máquina (consola, pruebas de cambio, prueba a ciegas); la app usa sus propias conexiones ---
+
+def sql_local(query):
+    """Una consulta a Postgres por docker compose, como tabla."""
+    import io
+    import subprocess
+    out = subprocess.run(["docker", "compose", "exec", "-T", "postgres", "psql", "-U", os.environ.get("PG_USER", "rastro"),
+                          "--csv", "-c", query], capture_output=True, text=True, check=True, cwd=RAIZ).stdout
+    return pd.read_csv(io.StringIO(out), dtype={"idpozo": str})
+
+
+def sparql_local(query):
+    """Una consulta al Ontop de petróleo y gas en esta máquina, como tabla."""
+    import io
+    import urllib.parse
+    import urllib.request
+    url = f"http://localhost:{os.environ.get('ONTOP_ENERGIA_PORT', '8082')}/sparql"
+    pedido = urllib.request.Request(url, urllib.parse.urlencode({"query": query}).encode(), {"Accept": "text/csv"})
+    return pd.read_csv(io.StringIO(urllib.request.urlopen(pedido, timeout=300).read().decode()))
+
+
+def sql_ejecutar(script):
+    """Ejecuta un script SQL en Postgres por docker compose (todo o nada)."""
+    import subprocess
+    subprocess.run(["docker", "compose", "exec", "-T", "postgres", "psql", "-U", os.environ.get("PG_USER", "rastro"), "-q",
+                    "-v", "ON_ERROR_STOP=1", "-1", "-f", "-"], input=script, text=True, check=True, cwd=RAIZ)
+
+
 def porcentaje_del_mapa(texto, empresa):
     """El porcentaje de la empresa en el texto de socios del mapa, buscando su nombre tal cual."""
     for parte in str(texto).split("<br>"):
@@ -156,10 +195,13 @@ def contexto(socios, cambios):
             "cambios": dict(zip(cambios.area, pd.to_numeric(cambios.cambios)))}
 
 
+def r2(p, y):
+    return float(1 - ((p - y) ** 2).sum() / ((y - y.mean()) ** 2).sum())
+
+
 def entrenar(df, categorias, numeros, prueba=PRUEBA, alpha=1.0):
     """Regresión lineal con un poco de regularización (ridge). Devuelve la predicción, el aporte de cada
-    variable (en millones de m³, respecto del pozo promedio de entrenamiento), el error y el R² en la prueba,
-    y lo que vio el modelo de cada categoría al entrenar (cuántos pozos y su mediana), que explica su aporte."""
+    variable (en millones de m³, respecto del pozo promedio de entrenamiento), el error y el R² en la prueba."""
     entreno = (df.inicio < prueba).values
     x = pd.get_dummies(df[categorias].astype(str), prefix_sep="=", dtype=float)
     n = df[numeros].astype(float)
@@ -174,20 +216,32 @@ def entrenar(df, categorias, numeros, prueba=PRUEBA, alpha=1.0):
     por_variable = pd.DataFrame({c: aportes.filter(regex=f"^{c}=").sum(axis=1) for c in categorias})
     for c in numeros:
         por_variable[c] = aportes[c]
-    visto = {c: df[entreno].groupby(c).gas.agg(["count", "median"]) for c in categorias}
     y, p = df.gas[~entreno], pred[~entreno]
     return {"pred": pred, "aportes": por_variable, "base": media_y, "error": float(np.abs(p - y).mean()),
-            "r2": float(1 - ((p - y) ** 2).sum() / ((y - y.mean()) ** 2).sum()), "relleno": n[entreno].mean(),
-            "visto": visto, "mediana": float(df.gas[entreno].median()),
-            "coef": dict(zip(x.columns, coef)), "desvio": n[entreno].std()}
+            "r2": r2(p, y), "relleno": n[entreno].mean(), "mediana": float(df.gas[entreno].median())}
+
+
+def rango(df, categorias, numeros, prueba=PRUEBA):
+    """Cuánto se suele equivocar el modelo, sin mirar la prueba: se entrena con los pozos anteriores al año previo
+    a la prueba, se predicen los de ese año y se toman los errores del 10 % y del 90 %. Sumados a cada predicción,
+    dan un rango en el que deberían caer 8 de cada 10 pozos."""
+    antes = df[df.inicio < prueba].reset_index(drop=True)
+    corte = prueba - pd.DateOffset(years=1)
+    r = entrenar(antes, categorias, numeros, prueba=corte)
+    errores = (antes.gas - r["pred"])[(antes.inicio >= corte).values]
+    return float(errores.quantile(0.1)), float(errores.quantile(0.9))
+
+
+def dentro_del_rango(r, df, desde_hasta, prueba=PRUEBA):
+    """Qué parte de los pozos de prueba cayó dentro de su rango."""
+    p = (df.inicio >= prueba).values
+    bajo, alto = r["pred"][p] + desde_hasta[0], r["pred"][p] + desde_hasta[1]
+    y = df.gas[p].values
+    return float(((y >= bajo) & (y <= alto)).mean())
 
 
 def modelos(a, b, prueba=PRUEBA):
     return {k: entrenar(df, prueba=prueba, **VARIABLES[k]) for k, df in (("A", a), ("B", b))}
-
-
-def r2(p, y):
-    return float(1 - ((p - y) ** 2).sum() / ((y - y.mean()) ** 2).sum())
 
 
 def referencias(a, prueba=PRUEBA):
@@ -217,6 +271,11 @@ def concesion(texto):
     return " ".join(w.upper() if w.upper() in ("I", "II", "III", "IV", "V") else w for w in str(texto).title().split())
 
 
+def signo(v):
+    """Un aporte con su signo: «+3,9» o «−4,9»."""
+    return ("+" if v >= 0 else "−") + num(abs(v))
+
+
 def marca(regla):
     """Rastro marca los datos que no salen tal cual de la fuente."""
     if not isinstance(regla, str) or "revisad" not in regla:
@@ -236,7 +295,10 @@ def explicacion_a(r, a, pozo):
     m, filas = r["A"], []
     for c in VARIABLES["A"]["categorias"] + VARIABLES["A"]["numeros"]:
         v = a.loc[i, c]
-        valor = f"vacío (se usa {m['relleno'][c]:g})" if isinstance(v, float) and np.isnan(v) else f"{v:g}" if isinstance(v, float) else str(v)
+        if isinstance(v, float):
+            valor = f"vacío (se usa {m['relleno'][c]:g})" if np.isnan(v) else f"{v:g}"
+        else:
+            valor = str(v)
         filas.append({"columna": c, "valor": valor, "aporte": float(m["aportes"].loc[i, c])})
     return {"pred": float(m["pred"][i]), "filas": filas}
 
@@ -278,7 +340,8 @@ def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
     misma = entreno[entreno.area == f.area]
     if len(misma):
         ops = sorted(misma.grupo.map(nombre).unique())
-        por_que_lugar = (f"Los {len(misma)} pozos de {area} que vio el modelo ({'todos de ' + ops[0] if len(ops) == 1 else ', '.join(ops)}) "
+        quienes = "todos de " + ops[0] if len(ops) == 1 else ", ".join(ops)
+        por_que_lugar = (f"Los {len(misma)} pozos de {area} que vio el modelo ({quienes}) "
                          f"dieron una mediana de {num(misma.gas.median())} millones de m³, "
                          f"{'más' if misma.gas.median() > m['mediana'] else 'menos'} que la de todos los pozos ({num(m['mediana'])}).")
     else:
@@ -292,7 +355,7 @@ def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
         por_que_fractura = "Pesan sobre todo: " + "; ".join(partes) + "."
         if set(orden) == {"rama", "etapas"} and ap["rama"] * ap["etapas"] < 0:
             por_que_fractura += (" Un pozo con más rama tiene más etapas: el modelo reparte entre las dos un mismo efecto, "
-                                 f"y juntas suman {('+' if ap['rama'] + ap['etapas'] >= 0 else '−') + num(abs(ap['rama'] + ap['etapas']))}.")
+                                 f"y juntas suman {signo(ap['rama'] + ap['etapas'])}.")
     else:
         por_que_fractura = "No hay datos de fractura de este pozo: el modelo usa los de un pozo típico."
     cambios = int(ctx["cambios"].get(f.area, 0))
@@ -399,6 +462,40 @@ def entrada(a, b, prueba=PRUEBA):
     return sin, con, origen
 
 
+def version():
+    """La versión del modelo: una huella del código de este archivo. Si el código cambia, cambia la versión."""
+    import hashlib
+    return hashlib.sha1(Path(__file__).read_bytes()).hexdigest()[:8]
+
+
+def publicar(r, b, desde_hasta, dentro, prueba=PRUEBA):
+    """Guarda en Rastro (esquema lab_gas) la corrida del modelo con Rastro, cada predicción con su rango y los datos
+    que usó, y el aporte de cada factor. Queda como la corrida vigente. Devuelve su identificador."""
+    from datetime import datetime
+
+    def txt(v):
+        return "NULL" if v is None or (isinstance(v, float) and np.isnan(v)) else "'" + str(v).replace("'", "''") + "'"
+
+    m, ahora = r["B"], datetime.now()
+    corrida = f"{ahora:%Y%m%d-%H%M}-{version()}"
+    de_prueba = (b.inicio >= prueba).values
+    predicciones, aportes = [], []
+    for i, f in b.iterrows():
+        gas = float(m["pred"][i])
+        predicciones.append(f"({txt(corrida)}, {txt(f.idpozo)}, {gas:.3f}, {max(gas + desde_hasta[0], 0):.3f}, "
+                            f"{gas + desde_hasta[1]:.3f}, {bool(de_prueba[i])}, {txt(f.s)}, {txt(f.fr)}, {txt(f.st)})")
+        for factor, columnas in (("La concesión con su operadora y socios", UBICACION), ("Cómo se fracturó el pozo", FRACTURA_B)):
+            aportes.append(f"({txt(corrida)}, {txt(f.idpozo)}, {txt(factor)}, {float(m['aportes'].loc[i, columnas].sum()):.3f})")
+    sql_ejecutar(f"""
+UPDATE lab_gas.corrida SET vigente = false;
+INSERT INTO lab_gas.corrida VALUES ({txt(corrida)}, {txt(version())}, {txt(f"{ahora:%Y-%m-%d %H:%M:%S}")}, {txt(f"{prueba:%Y-%m-%d}")},
+  {int((~de_prueba).sum())}, {int(de_prueba.sum())}, {m['error']:.3f}, {m['r2']:.4f}, {dentro:.4f}, true);
+INSERT INTO lab_gas.prediccion VALUES {", ".join(predicciones)};
+INSERT INTO lab_gas.aporte VALUES {", ".join(aportes)};
+""")
+    return corrida
+
+
 def peso_por_concepto(r, b, prueba=PRUEBA):
     """Qué pesa más en las predicciones de prueba: el aporte medio, sin signo, de cada concepto."""
     ap = r["B"]["aportes"][b.inicio >= prueba]
@@ -407,24 +504,11 @@ def peso_por_concepto(r, b, prueba=PRUEBA):
 
 
 if __name__ == "__main__":
-    import io
-    import subprocess
     import sys
-    import urllib.parse
-    import urllib.request
 
-    def sql(query):
-        out = subprocess.run(["docker", "compose", "exec", "-T", "postgres", "psql", "-U", "rastro", "--csv", "-c", query],
-                             capture_output=True, text=True, check=True).stdout
-        return pd.read_csv(io.StringIO(out), dtype={"idpozo": str})
-
-    def sparql(query):
-        data = urllib.parse.urlencode({"query": query}).encode()
-        req = urllib.request.Request("http://localhost:8082/sparql", data, {"Accept": "text/csv"})
-        return pd.read_csv(io.StringIO(urllib.request.urlopen(req, timeout=300).read().decode()))
-
+    sql, sparql = sql_local, sparql_local
     ctx = contexto(sparql(SPARQL_SOCIOS), sparql(SPARQL_CAMBIOS))
-    if "--como-la-tesis" in sys.argv:
+    if "--como-trabajo-publicado" in sys.argv:
         # Validación con el diseño de un trabajo con las mismas fuentes (ver las preguntas frecuentes de la app):
         # gas de los primeros 12 meses, solo pozos con fractura, y dos formas de separar la prueba:
         # uno de cada cinco pozos en orden cronológico (como ese trabajo) y los pozos desde 2023 (hacia el futuro).
@@ -433,7 +517,7 @@ if __name__ == "__main__":
         con = b.rama.notna().values
         a, b = a[con].reset_index(drop=True), b[con].reset_index(drop=True)
         print(f"Pozos de shale gas de Vaca Muerta con 12 meses y fractura: {len(b)}, de {b.inicio.min():%m/%Y} a {b.inicio.max():%m/%Y}")
-        for nombre, prueba in (("uno de cada cinco", (np.arange(len(b)) % 5 == 4)),
+        for corte, prueba in (("uno de cada cinco", (np.arange(len(b)) % 5 == 4)),
                                ("desde 2023", (b.inicio >= pd.Timestamp("2023-01-01")).values)):
             orden = pd.Series(np.where(prueba, pd.Timestamp("2100-01-01"), pd.Timestamp("1900-01-01")))
             aa, bb = a.assign(inicio=orden), b.assign(inicio=orden)   # entrenar() separa por fecha: se marca la prueba
@@ -441,7 +525,7 @@ if __name__ == "__main__":
             x = pd.get_dummies(bb[["grupo", "area"]], dtype=float).join(bb[["pct"] + FRACTURA_B].astype(float))
             x = x.fillna(x[~prueba].median())
             bosque = RandomForestRegressor(500, min_samples_leaf=4, random_state=42).fit(x[~prueba], bb.gas[~prueba])
-            print(f"  Prueba {nombre} ({prueba.sum()} pozos): mediana del área R² {ref['r2_concesion']:.2f}; "
+            print(f"  Prueba {corte} ({prueba.sum()} pozos): mediana del área R² {ref['r2_concesion']:.2f}; "
                   f"lineal A {r['A']['r2']:.2f}, lineal B {r['B']['r2']:.2f}; "
                   f"bosque aleatorio con las variables de Rastro {r2(bosque.predict(x[prueba]), bb.gas[prueba]):.2f}")
         sys.exit()
@@ -459,6 +543,12 @@ if __name__ == "__main__":
         sys.exit()
 
     a, b = preparar(sql(SQL_GAS), sql(SQL_A), sparql(SPARQL_B))
+    if "--publicar" in sys.argv:
+        r = modelos(a, b)
+        desde_hasta = rango(b, **VARIABLES["B"])
+        corrida = publicar(r, b, desde_hasta, dentro_del_rango(r["B"], b, desde_hasta))
+        print(f"Corrida {corrida} publicada en Rastro: {len(b)} predicciones (energia:Prediction), vigente.")
+        sys.exit()
     print("El gas de A (SQL) y el de B (Rastro) coinciden en todos los pozos:",
           bool(np.allclose(a.set_index("idpozo").gas.loc[b.idpozo].values, b.gas.values, atol=0.01)))
     r, ref = modelos(a, b), referencias(a)

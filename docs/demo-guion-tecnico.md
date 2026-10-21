@@ -2,14 +2,14 @@
 
 > **Los datos cambian. Las preguntas, no.**
 
-Para consultores que saben SQL y no conocen tecnologías semánticas. Las diapositivas están en `docs/slides/` (abrir `index.html`).
+Para consultores que saben SQL y no conocen tecnologías semánticas. Las diapositivas están en `docs/slides/`, un mazo por caso de uso (este guion sigue `oncologia.html`). La app abre en petróleo y gas: para oncología, prender «Ver detalles técnicos» y elegir **Oncología** en **Caso de uso**.
 
 ## Antes de empezar
 
 Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La app explica cada pregunta en palabras simples.
 
-1. Levantar todo: `cd infra && docker compose up -d` (lo hace alguien técnico, una vez).
-2. Abrir http://localhost:8501 en la pestaña **Preguntar** y probar una pregunta de ejemplo.
+1. Levantar todo, desde la carpeta del repo: `docker compose up -d` (lo hace alguien técnico, una vez).
+2. Abrir http://localhost:8501, prender «Ver detalles técnicos», elegir **Oncología** en **Caso de uso**, ir a la pestaña **Preguntar** y probar una pregunta de ejemplo.
 3. Si algo falla en vivo, las diapositivas tienen las mismas respuestas. No hace falta la terminal.
 
 ## 0:00 – 1:30 · Problema, capa y beneficios (diapositivas 1 a 4)
@@ -60,7 +60,7 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 ## Opcional, 2 minutos · Un segundo dominio (las tres diapositivas del segundo dominio)
 
-En la barra lateral, **Dominio** → **Proveedores del Estado de EE. UU.**, con «Ver detalles técnicos» prendido. Es otro Ontop (puerto 8081), con su ontología (`ontology/proveedores/`) y sus mapeos (`mappings/proveedores.r2rml.ttl`) sobre el mismo Postgres; la app lee lo propio del dominio de `app/dominios/proveedores.yaml`.
+En la barra lateral, con «Ver detalles técnicos» prendido, **Caso de uso** → **Proveedores del Estado de EE. UU.** Es otro Ontop (puerto 8081), con su ontología (`ontology/proveedores/`) y sus mapeos (`mappings/proveedores.r2rml.ttl`) sobre el mismo Postgres; la app lee lo propio del dominio de `app/dominios/proveedores.yaml`.
 
 1. Pregunta del grupo Leidos → **Responder** → **¿De dónde sale la respuesta?**
 

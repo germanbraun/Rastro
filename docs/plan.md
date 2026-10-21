@@ -1,9 +1,11 @@
 # Plan de desarrollo — Rastro
 
-Dos MVP comerciales sobre tecnologías semánticas, en oncología y con datos públicos:
+Dos MVP comerciales sobre tecnologías semánticas, con datos públicos:
 
 - **Rastro Layer:** preguntás en lenguaje natural y la respuesta junta datos de varias fuentes, diciendo de dónde viene cada dato.
-- **Rastro Lab:** un modelo que predice si un ensayo clínico se va a detener, con explicaciones que cualquiera entiende.
+- **Rastro Lab:** un modelo que predice, y cada predicción se explica con la misma evidencia de Rastro. Hoy: el gas de los pozos nuevos de shale gas de Vaca Muerta.
+
+El caso de la demo es petróleo y gas en Argentina. Proveedores del Estado de EE. UU. y oncología, el primer caso (fases 0 a 8), muestran que lo mismo sirve para otros datos.
 
 El nombre resume lo que tienen en común: cada dato y cada predicción deja rastro de dónde viene.
 
@@ -94,6 +96,8 @@ En Streamlit (`app/`), en http://localhost:8501 con `docker compose up`.
 **Checkpoint:** demo de 3 minutos sin tocar la terminal.
 
 > **Rastro Lab (fases 5 a 7) queda en pausa** (16 oct 2026): el MVP 1 es Rastro Layer, y la Fase 8 arma su demo.
+>
+> **Reemplazadas** (21 oct 2026): Rastro Lab se hizo con el caso de gas de Vaca Muerta, no con ensayos de oncología (ver «Rastro Lab: gas de Vaca Muerta», abajo).
 
 ### Fase 5 — Modelo base de Rastro Lab
 
@@ -165,6 +169,26 @@ Tomadas (detalle en [decisions.md](decisions.md)):
 Abiertas:
 
 - [ ] ¿El repo de GitHub queda privado?
+
+## Petróleo y gas en Argentina (el caso de la demo)
+
+Mismo Rastro, tercer Ontop (puerto 8082), con datos de la Secretaría de Energía, ENARGAS, el IGN y GLEIF. Preguntas en `ontology/energia/competency-questions.md`; guion en [demo-guion-energia.md](demo-guion-energia.md).
+
+- [x] Diez preguntas de competencia con su query, y la app abre en este caso
+- [x] Evaluación con tres formas (sin Rastro, SQL con enlaces, con Rastro): 7, 10 y 10 de 10 (`layer/energia/resultados.md`)
+- [x] Prueba de cambio: una columna cambia de nombre y se arregla con una línea (`layer/energia/cambio/cambio.sh`)
+- [x] Prueba de corrección: un dato corregido una vez llega a la respuesta, al modelo y a su explicación (`layer/energia/cambio/correccion.sh`)
+- [x] La demo en cuatro momentos: preguntar, la base cambia, predecir y una corrección
+- [ ] Que una persona confirme las referencias (`layer/energia/adjudicacion.md`)
+
+## Rastro Lab: gas de Vaca Muerta
+
+Detalle en [lab-gas-vaca-muerta.md](lab-gas-vaca-muerta.md).
+
+- [x] Paso 1: cómo arrancó cada pozo (`energia:WellStart`) y el mismo modelo con y sin Rastro, con las dos explicaciones lado a lado
+- [x] Paso 2: Capítulo IV desde 2018 y datos de fractura (`energia:Fracturing`); la misma precisión con y sin Rastro
+- [x] Cuando la fuente cambia: la fractura llega tarde (`energia:loadedOn`), y una corrección que llega a la explicación
+- [ ] Prueba a ciegas de las explicaciones con un consultor ([lab-explicaciones-a-ciegas.md](lab-explicaciones-a-ciegas.md), lista para mandar)
 
 ## Segundo dominio: proveedores del Estado (EE. UU.)
 

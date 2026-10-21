@@ -1,5 +1,7 @@
 # Rastro · en una página
 
+> Esta página describe el caso de oncología. La demo actual es petróleo y gas: ver [demo-guion-energia.md](demo-guion-energia.md) y el [README](../README.md).
+
 > **Los datos cambian. Las preguntas, no.**
 
 **Rastro integra tus datos una vez. Preguntás en lenguaje de negocio, y cada respuesta dice de dónde sale y se puede auditar.**

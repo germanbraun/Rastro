@@ -1,0 +1,9 @@
+# Para correr en la máquina lo que no corre en Docker: Rastro Lab (lab/), la prueba de la corrección
+# (layer/energia/cambio/correccion.py), las pruebas (tests/) y el lint.
+#   python3 -m pip install -r requirements-dev.txt
+numpy==1.26.4
+pandas==2.2.3
+pyyaml==6.0.2
+scikit-learn==1.5.2   # solo para la validación --como-trabajo-publicado
+pytest==8.3.3
+ruff==0.6.9

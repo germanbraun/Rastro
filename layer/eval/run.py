@@ -153,7 +153,7 @@ def main():
         f"Correcto: números a menos del {TOLERANCE:.0%} de la referencia; listas con al menos "
         f"{MIN_F1:.0%} de coincidencia (F1). Las queries generadas están en `results.json`.", "",
         "| # | Pregunta | Referencia | " + " | ".join(NAMES.values()) + " |",
-        "|---|---|---|---|---|---|",
+        "|" + "---|" * (3 + len(NAMES)),
         *lines,
     ]
     (HERE / "results.md").write_text("\n".join(report) + "\n")

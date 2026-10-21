@@ -1,5 +1,7 @@
 # Rastro Layer · en una página (versión técnica)
 
+> Esta página describe el caso de oncología. La demo actual es petróleo y gas: ver [demo-guion-energia.md](demo-guion-energia.md) y el [README](../README.md).
+
 > **Los datos cambian. Las preguntas, no.**
 
 **Una capa semántica sobre cuatro fuentes públicas de oncología. Los datos se integran una vez; un LLM pregunta en conceptos de negocio, y cada respuesta dice de qué fuente sale.**

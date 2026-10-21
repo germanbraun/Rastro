@@ -39,13 +39,15 @@
   respuesta: |-
     Sí. El mismo Rastro funciona con contratos del Estado de EE. UU. (proveedores y sus grupos) y con oncología (ensayos clínicos y fármacos), con las mismas pruebas. Se ven activando «Ver detalles técnicos» en la barra lateral.
 
-- pregunta: ¿Hay trabajos relacionados?
+- pregunta: Referencias
   respuesta: |-
-    Sí. Rastro aplica ideas conocidas a datos públicos; estos trabajos las explican:
-    - **Grafos de conocimiento sobre bases que ya existen,** sin copiar los datos: G. Xiao, L. Ding, B. Cogrel y D. Calvanese, «Virtual Knowledge Graphs: An Overview of Systems and Use Cases», *Data Intelligence* 1(3), 2019.
-    - **Grafos de conocimiento para explicar modelos de aprendizaje automático** (la idea de Rastro Lab): I. Tiddi y S. Schlobach, «Knowledge graphs as tools for explainable machine learning: A survey», *Artificial Intelligence* 302, 2022; y F. Lécué, «On the role of knowledge graphs in explainable AI», *Semantic Web* 11(1), 2020.
+    Rastro aplica ideas conocidas a datos públicos. Estos trabajos las explican:
 
-    Los trabajos propios de cada caso están en sus preguntas frecuentes.
+    - **Grafos de conocimiento sobre bases que ya existen, sin copiar los datos:** Xiao, G., Ding, L., Cogrel, B. y Calvanese, D. (2019). «Virtual Knowledge Graphs: An Overview of Systems and Use Cases». *Data Intelligence*, 1(3), 201–223.
+    - **Grafos de conocimiento para explicar modelos de aprendizaje automático** (la idea de Rastro Lab): Tiddi, I. y Schlobach, S. (2022). «Knowledge graphs as tools for explainable machine learning: A survey». *Artificial Intelligence*, 302, 103627.
+    - Lécué, F. (2020). «On the role of knowledge graphs in explainable AI». *Semantic Web*, 11(1), 41–51.
+
+    Las referencias de cada caso están en sus preguntas frecuentes.
 
 # --- Para técnicos (se ven con «Ver detalles técnicos») ----------------
 
