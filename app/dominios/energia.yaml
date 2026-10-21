@@ -523,6 +523,18 @@ cambios:
 
 # Rastro Lab: el mismo modelo de gas con y sin Rastro (app/lab.py, lab/gas/modelo.py)
 lab: gas
+calidad:                       # reglas de calidad (SHACL): ontology/energia/calidad/reglas.ttl, las comprueba `docker compose run --rm calidad`
+  archivo: /layer/energia/calidad.json
+  intro: >-
+    Reglas sobre los datos integrados, escritas una vez con las palabras del diccionario y comprobadas después de cada
+    carga, como los controles de calidad de una base de datos. Miran todas las fuentes juntas y también la evidencia.
+    No arreglan nada: muestran qué no se cumple y dónde. La primera vez encontraron 5 trayectorias de pozo sin
+    evidencia (las que no tienen rama horizontal informada); se arregló en un lugar, la regla que arma la evidencia.
+  tecnico: >-
+    Las reglas de calidad están en SHACL, el estándar del W3C para validar un grafo. Rastro trae con CONSTRUCT solo lo
+    que miran y las valida con pySHACL. Cada regla tiene un blanco (`sh:targetClass`, `sh:targetSubjectsOf`), sus
+    condiciones (`sh:minCount`, `sh:maxInclusive`, `sh:pattern`, `sh:lessThanOrEquals`) y, si hace falta, una consulta
+    SPARQL (`sh:sparql`). Las mismas reglas sirven en otras plataformas o herramientas de grafos de conocimiento.
 
 faq:
   - pregunta: ¿De dónde salen los datos?

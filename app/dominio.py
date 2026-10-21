@@ -544,14 +544,57 @@ def show_instances(domain):
     st.divider()
 
 
-def under_the_hood(domain, diagram=None):
+def under_the_hood(domain, diagram=None, quality=None):
     """«Bajo el capó» (vista técnica): la consola SPARQL, una instancia del grafo y el diccionario, los
     enlaces y los mapeos, en una sola pestaña."""
-    console, pieces = st.tabs(["Consola SPARQL y una instancia", "Diccionario, enlaces y mapeos"])
+    names = ["Consola SPARQL y una instancia", "Diccionario, enlaces y mapeos"] + (["Reglas de calidad (SHACL)"] if quality else [])
+    console, pieces, *rules = st.tabs(names)
     with console:
         sparql_console(domain)
     with pieces:
         show_pieces(domain, diagram)
+    if quality:
+        with rules[0]:
+            show_quality_shacl(quality)
+
+
+def quality_result(quality):
+    path = quality.get("archivo") if quality else None
+    return read_json(path) if path and Path(path).exists() else None
+
+
+def show_quality(quality):
+    """Las reglas de calidad, en palabras de negocio: qué se comprueba y si se cumple."""
+    result = quality_result(quality)
+    if not result:
+        return
+    st.markdown("### Reglas de calidad", help=ayuda("calidad"))
+    st.caption(md(quality["intro"]))
+    tabla(pd.DataFrame([{"Regla": r["nombre"], "Por qué importa": r["porque"], "Datos revisados": money(r["revisados"]),
+                         "Resultado": "✅ se cumple" if not r["fallas"] else f"⚠️ {money(r['fallas'])} no cumplen"}
+                        for r in result["reglas"]]),
+          column_config={"Regla": st.column_config.TextColumn(width="medium"),
+                         "Por qué importa": st.column_config.TextColumn(width="large")})
+    st.caption(f"Comprobadas el {result['fecha'][8:10]}/{result['fecha'][5:7]}/{result['fecha'][:4]}, sobre los datos de Rastro.")
+
+
+def show_quality_shacl(quality):
+    """Las mismas reglas, en SHACL, con lo que no cumple."""
+    result = quality_result(quality)
+    if not result:
+        st.caption("Todavía no se comprobaron: `docker compose run --rm calidad`.")
+        return
+    st.markdown("### Reglas de calidad en SHACL", help=ayuda("calidad_shacl"))
+    st.caption(md(quality["tecnico"]))
+    for r in result["reglas"]:
+        mark = "✅" if not r["fallas"] else f"⚠️ {money(r['fallas'])}"
+        with st.expander(f"{mark} · {r['nombre']} · {money(r['revisados'])} datos revisados"):
+            st.code(r["shacl"], language="turtle")
+            if r["ejemplos"]:
+                st.markdown("**Lo que no cumple**" + (" (los primeros 10)" if r["fallas"] > 10 else ""))
+                tabla(pd.DataFrame([{"Dato": e["dato"], "Qué falla": e["mensaje"]} for e in r["ejemplos"]]))
+    st.caption(f"{money(result['triples'])} triples traídos de Rastro con CONSTRUCT. Las reglas están en "
+               "`ontology/energia/calidad/reglas.ttl`; las comprueba `docker compose run --rm calidad`.")
 
 
 def sparql_console(domain):
@@ -686,7 +729,7 @@ def render(cfg_path, tech):
             lab.show_lab(tech)
     if tech:
         with tabs["Bajo el capó"]:
-            under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"))
+            under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"), cfg.get("calidad"))
 
     with ask_tab:
         modes = ["Una pregunta de ejemplo"] + (["Una pregunta sobre textos"] if cfg.get("texto") else []) \
@@ -1233,6 +1276,7 @@ def trust(cfg, tech, evaluation, changes):
                              column_config={"Pregunta": st.column_config.TextColumn(width="medium")})
         st.info("Sin Rastro, cada consulta sabe cómo se llaman las columnas y en qué unidad están los valores: si la "
                 "base cambia, hay que encontrar y arreglar cada una. Con Rastro, eso está en un solo lugar.")
+    show_quality(cfg.get("calidad"))
 
 
 def evaluation_detail(evaluation, totals, domain):

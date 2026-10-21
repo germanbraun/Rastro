@@ -320,7 +320,7 @@ SELECT DISTINCT ON (t.idpo) t.idpo AS idpozo, t.profundidad_vertical_mt AS profu
        t.largo_rama_horizontal_mt AS rama_m, t.drilfin AS perforado,
        (SELECT count(*) FROM trayectoria.trayectoria o WHERE o.idpo = t.idpo) AS filas,
        'Trayectoria ' || coalesce(t.sigla, t.idpo) || ': profundidad vertical de ' || round(t.profundidad_vertical_mt)
-       || ' m, rama horizontal de ' || round(t.largo_rama_horizontal_mt) || ' m'
+       || ' m, ' || coalesce('rama horizontal de ' || round(t.largo_rama_horizontal_mt) || ' m', 'sin rama horizontal informada')
        || coalesce(', perforado hasta el ' || to_char(t.drilfin, 'DD/MM/YYYY'), '') || '.' AS evidencia
 FROM trayectoria.trayectoria t
 LEFT JOIN energia.inicio_pozo i ON i.idpozo = t.idpo

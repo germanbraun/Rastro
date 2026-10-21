@@ -382,6 +382,17 @@ services:
     command: ["python", "-u", "/layer/eval/run.py"]
 
   # Herramientas: docker compose run --rm <servicio>
+  calidad:                      # reglas de calidad (SHACL) sobre los datos de petróleo y gas
+    build: ./loaders
+    profiles: ["tools"]
+    depends_on:
+      ontop-energia:
+        condition: service_healthy
+    volumes:
+      - ../ontology:/ontology:ro
+      - ../layer:/layer
+    command: ["python", "/ontology/calidad.py"]
+
   ontology-check:
     build: ./loaders
     profiles: ["tools"]

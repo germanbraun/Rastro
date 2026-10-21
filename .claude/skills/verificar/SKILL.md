@@ -20,6 +20,8 @@ git diff --stat layer/energia                          # solo debería cambiar l
 python3 lab/gas/modelo.py | head -8                    # el gas de A y B coincide; error de A y B; datos dudosos
 ```
 
+Las reglas de calidad (SHACL) de petróleo y gas: `docker compose run --rm calidad` (unos 3 minutos). Todas en «se cumple»; si una no, el detalle está en `layer/energia/calidad.json` y en la app («Bajo el capó»).
+
 Qué esperar:
 
 - Ontop de energía `healthy`. Si no levanta, `docker compose logs ontop-energia`: casi siempre un término del mapeo que no está en la ontología o una columna que cambió.

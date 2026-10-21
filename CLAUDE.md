@@ -50,6 +50,7 @@ docker compose run --rm wikidata-energia-loader        # enriquecimiento con Wik
 docker compose run --rm energia-linker                 # enlaces de petróleo y gas (proveedores-linker, linker para oncología)
 docker compose restart ontop-energia                   # después de cambiar mapeos, ontología o enlaces
 docker compose run --rm ontology-check                 # ontologías y queries de competencia
+docker compose run --rm calidad                        # reglas de calidad (SHACL) sobre los datos de petróleo y gas (~3 min)
 docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun|puntaje   # evaluación (energia_lab: las preguntas sobre las predicciones)
 layer/energia/cambio/cambio.sh registrar               # prueba de cambio (siempre termina en «deshacer»)
 layer/energia/cambio/correccion.sh registrar           # una corrección, todos los resultados (~15 min)

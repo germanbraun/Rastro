@@ -1,0 +1,51 @@
+{
+ "fecha": "2026-10-21",
+ "triples": 433020,
+ "reglas": [
+  {
+   "id": "EnlaceConEvidencia",
+   "nombre": "Cada enlace dice de qué fuente sale y por qué",
+   "porque": "Todo lo que une o corrige Rastro tiene una regla. Si además no tiene su fuente y su evidencia, no se puede auditar.",
+   "shacl": "calidad:EnlaceConEvidencia a sh:NodeShape ;\n    rdfs:label \"Cada enlace dice de qué fuente sale y por qué\" ;\n    rdfs:comment \"Todo lo que une o corrige Rastro tiene una regla. Si además no tiene su fuente y su evidencia, no se puede auditar.\" ;\n    sh:targetSubjectsOf energia:rule ;\n    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:message \"No dice de qué fuente sale.\" ] ;\n    sh:property [ sh:path energia:sourceText ; sh:minCount 1 ; sh:minLength 1 ; sh:message \"No tiene evidencia.\" ] .",
+   "revisados": 113913,
+   "fallas": 0,
+   "ejemplos": []
+  },
+  {
+   "id": "Participacion",
+   "nombre": "Cada participación es de una empresa en una concesión, entre 0 y 100 %",
+   "porque": "Con la participación se calcula lo que le corresponde a cada empresa y entra al modelo de Rastro Lab.",
+   "shacl": "calidad:Participacion a sh:NodeShape ;\n    rdfs:label \"Cada participación es de una empresa en una concesión, entre 0 y 100 %\" ;\n    rdfs:comment \"Con la participación se calcula lo que le corresponde a cada empresa y entra al modelo de Rastro Lab.\" ;\n    sh:targetClass energia:Stake ;\n    sh:property [ sh:path energia:percent ; sh:minCount 1 ; sh:maxCount 1 ; sh:minExclusive 0 ; sh:maxInclusive 100 ;\n                  sh:message \"El porcentaje falta o no está entre 0 y 100.\" ] ;\n    sh:property [ sh:path energia:partner ; sh:minCount 1 ; sh:maxCount 1 ; sh:message \"No es de una sola empresa.\" ] ;\n    sh:property [ sh:path energia:inConcession ; sh:minCount 1 ; sh:maxCount 1 ; sh:message \"No es de una sola concesión.\" ] .",
+   "revisados": 474,
+   "fallas": 0,
+   "ejemplos": []
+  },
+  {
+   "id": "ConcesionHasta100",
+   "nombre": "Las participaciones de una concesión suman 100 % o menos",
+   "porque": "Si suman más, a los socios les toca más gas del que hay. Se tolera medio punto por el redondeo del mapa.",
+   "shacl": "calidad:ConcesionHasta100 a sh:NodeShape ;\n    rdfs:label \"Las participaciones de una concesión suman 100 % o menos\" ;\n    rdfs:comment \"Si suman más, a los socios les toca más gas del que hay. Se tolera medio punto por el redondeo del mapa.\" ;\n    sh:targetObjectsOf energia:inConcession ;\n    sh:sparql [\n        sh:message \"Sus participaciones suman {?total} %.\" ;\n        sh:select \"\"\"\n            SELECT $this (SUM(?p) AS ?total) WHERE {\n                ?s <https://w3id.org/rastro/energia#inConcession> $this ; <https://w3id.org/rastro/energia#percent> ?p .\n            } GROUP BY $this HAVING (SUM(?p) > 100.5)\n        \"\"\" ] .",
+   "revisados": 293,
+   "fallas": 0,
+   "ejemplos": []
+  },
+  {
+   "id": "Prediccion",
+   "nombre": "Cada predicción sale de un inicio de pozo y cae dentro de su rango",
+   "porque": "Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.",
+   "shacl": "calidad:Prediccion a sh:NodeShape ;\n    rdfs:label \"Cada predicción sale de un inicio de pozo y cae dentro de su rango\" ;\n    rdfs:comment \"Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.\" ;\n    sh:targetClass energia:Prediction ;\n    sh:property [ sh:path prov:used ; sh:qualifiedValueShape [ sh:class energia:WellStart ] ;\n                  sh:qualifiedMinCount 1 ; sh:qualifiedMaxCount 1 ; sh:message \"No dice de qué inicio de pozo sale.\" ] ;\n    sh:property [ sh:path energia:predictedLow ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedGas ;\n                  sh:message \"El mínimo del rango es mayor que la predicción.\" ] ;\n    sh:property [ sh:path energia:predictedGas ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedHigh ;\n                  sh:message \"La predicción es mayor que el máximo del rango.\" ] .",
+   "revisados": 5031,
+   "fallas": 0,
+   "ejemplos": []
+  },
+  {
+   "id": "EmpresaUnLei",
+   "nombre": "Cada empresa tiene a lo sumo un LEI, con su formato de 20 caracteres",
+   "porque": "Por el LEI se unen GLEIF y Wikidata: dos LEI en una empresa son dos empresas unidas por error.",
+   "shacl": "calidad:EmpresaUnLei a sh:NodeShape ;\n    rdfs:label \"Cada empresa tiene a lo sumo un LEI, con su formato de 20 caracteres\" ;\n    rdfs:comment \"Por el LEI se unen GLEIF y Wikidata: dos LEI en una empresa son dos empresas unidas por error.\" ;\n    sh:targetClass energia:Company ;\n    sh:property [ sh:path energia:lei ; sh:maxCount 1 ; sh:pattern \"^[A-Z0-9]{18}[0-9]{2}$\" ;\n                  sh:message \"Tiene más de un LEI, o uno con otro formato.\" ] .",
+   "revisados": 12,
+   "fallas": 0,
+   "ejemplos": []
+  }
+ ]
+}

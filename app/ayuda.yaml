@@ -51,6 +51,11 @@ tarjeta_cambio: >-
   qué hubo que arreglar.
 tarjeta_auditar: >-
   Cada enlace entre fuentes guarda qué decía cada fuente, la regla que se aplicó y de dónde salió (PROV-O).
+calidad: >-
+  Cada regla dice cómo tienen que ser los datos integrados (por ejemplo, que las participaciones de una concesión no
+  sumen más de 100 %) y se comprueba sobre todos los datos de Rastro. Un ⚠️ indica cuántos datos no la cumplen.
+calidad_shacl: >-
+  Cada bloque es una regla en SHACL, tal cual está en el repositorio. Al abrirlo se ve qué datos no la cumplen.
 escenario: >-
   Qué pasa con todas las preguntas de la evaluación cuando una base cambia, antes y después de arreglarlo.
 consola: >-

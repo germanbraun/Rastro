@@ -8,3 +8,4 @@ requests==2.32.3      # lo usa data/comun.py (lo prueban las pruebas)
 scikit-learn==1.5.2   # solo para la validación --como-trabajo-publicado
 pytest==8.3.3
 ruff==0.6.9
+pyshacl==0.29.0

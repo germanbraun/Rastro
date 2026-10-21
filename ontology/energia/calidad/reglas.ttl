@@ -1,0 +1,57 @@
+# Reglas de calidad de petróleo y gas, en SHACL (el estándar del W3C para validar un grafo).
+# Cada regla se escribe una vez, con las palabras del diccionario, y se comprueba sobre los datos de Rastro
+# después de cada carga: docker compose run --rm calidad. No arreglan nada: muestran qué no se cumple y dónde;
+# el arreglo va donde siempre (las correcciones revisadas de linking/energia/).
+# Una regla por bloque, separados por una línea en blanco: la app muestra cada bloque tal cual.
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix energia: <https://w3id.org/rastro/energia#> .
+@prefix calidad: <https://w3id.org/rastro/energia/calidad#> .
+
+calidad:EnlaceConEvidencia a sh:NodeShape ;
+    rdfs:label "Cada enlace dice de qué fuente sale y por qué" ;
+    rdfs:comment "Todo lo que une o corrige Rastro tiene una regla. Si además no tiene su fuente y su evidencia, no se puede auditar." ;
+    sh:targetSubjectsOf energia:rule ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:message "No dice de qué fuente sale." ] ;
+    sh:property [ sh:path energia:sourceText ; sh:minCount 1 ; sh:minLength 1 ; sh:message "No tiene evidencia." ] .
+
+calidad:Participacion a sh:NodeShape ;
+    rdfs:label "Cada participación es de una empresa en una concesión, entre 0 y 100 %" ;
+    rdfs:comment "Con la participación se calcula lo que le corresponde a cada empresa y entra al modelo de Rastro Lab." ;
+    sh:targetClass energia:Stake ;
+    sh:property [ sh:path energia:percent ; sh:minCount 1 ; sh:maxCount 1 ; sh:minExclusive 0 ; sh:maxInclusive 100 ;
+                  sh:message "El porcentaje falta o no está entre 0 y 100." ] ;
+    sh:property [ sh:path energia:partner ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "No es de una sola empresa." ] ;
+    sh:property [ sh:path energia:inConcession ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "No es de una sola concesión." ] .
+
+calidad:ConcesionHasta100 a sh:NodeShape ;
+    rdfs:label "Las participaciones de una concesión suman 100 % o menos" ;
+    rdfs:comment "Si suman más, a los socios les toca más gas del que hay. Se tolera medio punto por el redondeo del mapa." ;
+    sh:targetObjectsOf energia:inConcession ;
+    sh:sparql [
+        sh:message "Sus participaciones suman {?total} %." ;
+        sh:select """
+            SELECT $this (SUM(?p) AS ?total) WHERE {
+                ?s <https://w3id.org/rastro/energia#inConcession> $this ; <https://w3id.org/rastro/energia#percent> ?p .
+            } GROUP BY $this HAVING (SUM(?p) > 100.5)
+        """ ] .
+
+calidad:Prediccion a sh:NodeShape ;
+    rdfs:label "Cada predicción sale de un inicio de pozo y cae dentro de su rango" ;
+    rdfs:comment "Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada." ;
+    sh:targetClass energia:Prediction ;
+    sh:property [ sh:path prov:used ; sh:qualifiedValueShape [ sh:class energia:WellStart ] ;
+                  sh:qualifiedMinCount 1 ; sh:qualifiedMaxCount 1 ; sh:message "No dice de qué inicio de pozo sale." ] ;
+    sh:property [ sh:path energia:predictedLow ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedGas ;
+                  sh:message "El mínimo del rango es mayor que la predicción." ] ;
+    sh:property [ sh:path energia:predictedGas ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedHigh ;
+                  sh:message "La predicción es mayor que el máximo del rango." ] .
+
+calidad:EmpresaUnLei a sh:NodeShape ;
+    rdfs:label "Cada empresa tiene a lo sumo un LEI, con su formato de 20 caracteres" ;
+    rdfs:comment "Por el LEI se unen GLEIF y Wikidata: dos LEI en una empresa son dos empresas unidas por error." ;
+    sh:targetClass energia:Company ;
+    sh:property [ sh:path energia:lei ; sh:maxCount 1 ; sh:pattern "^[A-Z0-9]{18}[0-9]{2}$" ;
+                  sh:message "Tiene más de un LEI, o uno con otro formato." ] .
