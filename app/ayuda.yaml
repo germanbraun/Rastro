@@ -2,8 +2,8 @@
 # Una o dos oraciones, en palabras simples. La app las lee con dominio.ayuda("clave").
 
 dominio: >-
-  Cada dominio es el mismo Rastro con otras fuentes públicas: petróleo y gas en Argentina, contratos
-  del Estado de EE. UU. u oncología. Se elige uno y toda la app cambia.
+  El mismo Rastro con otras fuentes públicas: petróleo y gas en Argentina (la demo), contratos del Estado de
+  EE. UU. u oncología. Se elige uno y toda la app cambia.
 fuentes_barra: >-
   Las bases públicas que integra este dominio, tal como se cargaron, con su licencia. Rastro no las
   modifica: las traduce a un diccionario de negocio.
@@ -14,7 +14,7 @@ modo: >-
   Una pregunta de ejemplo: elegir entre las preguntas ya preparadas. Una pregunta sobre textos: la IA
   resume solo los textos que eligió el grafo. Datos de afuera: Rastro unido con otro grafo en vivo. Mi
   propia pregunta: escribir una pregunta libre (necesita un asistente de IA configurado). El recorrido
-  guiado está en la pestaña «Demo en 3 pasos».
+  guiado está en la pestaña «Demo».
 pregunta: >-
   Preguntas de ejemplo de este dominio. Cada una se responde en vivo sobre los datos, con una consulta
   sobre el diccionario de negocio.

@@ -668,13 +668,13 @@ def render(cfg_path, tech):
     # «Por qué confiar» necesita una evaluación medida; un dominio sin ella no muestra la pestaña
     # Pocas pestañas: la demo, preguntar, por qué confiar y preguntas frecuentes; en la vista técnica, todo
     # lo de adentro (consola, diccionario, enlaces y mapeos) junto en «Bajo el capó»
-    names = (["Demo en 3 pasos"] if cfg.get("demo") else []) + ["Preguntar"] \
+    names = (["Demo"] if cfg.get("demo") else []) + ["Preguntar"] \
         + (["Por qué confiar"] if cfg.get("tarjetas") else []) + (["Rastro Lab"] if cfg.get("lab") else []) \
         + ["Preguntas frecuentes"] + (["Bajo el capó"] if tech else [])
     tabs = dict(zip(names, st.tabs(names)))
     ask_tab, trust_tab, faq_tab = tabs["Preguntar"], tabs.get("Por qué confiar"), tabs["Preguntas frecuentes"]
     if cfg.get("demo"):
-        with tabs["Demo en 3 pasos"]:
+        with tabs["Demo"]:
             show_demo(cfg, tech)
     if cfg.get("lab"):
         with tabs["Rastro Lab"]:
@@ -828,26 +828,31 @@ def before_after(card):
 
 
 def show_demo(cfg, tech):
-    """La demo en tres pasos: por qué esos pasos, qué es cada uno y qué muestra. Cada paso corre en vivo."""
+    """La demo: pocos momentos, cada uno con un título, una frase y algo que corre en vivo. Cada momento es una
+    pregunta de ejemplo, el cambio de una base, una predicción de Rastro Lab o una corrección."""
     domain, steps = cfg["domain"], cfg["demo"]
     key = f"{domain}_demo_step"
-    i = st.session_state.get(key, 0)
+    i = min(st.session_state.get(key, 0), len(steps) - 1)
     if cfg.get("demo_porque"):
-        with st.expander("¿Por qué estos 3 pasos?"):
+        with st.expander(f"¿Por qué estos {len(steps)} momentos?"):
             st.markdown(md(cfg["demo_porque"]))
-            for n, s in enumerate(steps):
-                if s.get("que_es"):
-                    st.markdown(f"**{n + 1} · {md(s['paso'])}:** {md(s['que_es'])}")
     st.markdown(" → ".join(f"**{n + 1} · {s['paso']}**" if n == i else f"{n + 1} · {s['paso']}"
                            for n, s in enumerate(steps)))
     step = steps[i]
     st.subheader(step["titulo"], help=ayuda("paso"))
-    if step.get("que_es"):
-        with st.container(border=True):
-            st.markdown(f"**¿Qué es {md(step['paso']).lower()}?** {md(step['que_es'])}")
-            if step.get("muestra"):
-                st.markdown(f"**Lo que muestra este paso:** {md(step['muestra'])}")
-    if step.get("texto"):
+    if step.get("que_es"):   # los demás casos de uso todavía explican qué es cada paso
+        st.markdown(f"**¿Qué es {md(step['paso']).lower()}?** {md(step['que_es'])}")
+    if step.get("muestra"):
+        st.markdown(md(step["muestra"]))
+    tipo = step.get("tipo", "pregunta")
+    if tipo == "cambio":
+        show_change_short(cfg, read_json(cfg["cambio"]), step.get("escenario"), tech)
+    elif tipo == "lab":
+        import lab
+        lab.show_well(key=f"{key}_pozo", pozo=lab.modelo.pozo_ejemplo(lab.datos()[1]))
+    elif tipo == "correccion":
+        show_correction(read_json(cfg["correccion"]), tech)
+    elif step.get("texto"):
         show_text_question(cfg, tech, demo=True)
     else:
         item = next(q for q in cfg["preguntas"] if q["id"] == step["pregunta"])
@@ -859,13 +864,73 @@ def show_demo(cfg, tech):
         if item.get("antes_despues"):
             before_after(item["antes_despues"])
         show_answer(cfg, tech, query, columns, rows, item, note="Se ejecuta ahora, en vivo, sobre los datos.")
-    back, _, forward = st.columns([1, 4, 1])
+    back, _, forward = st.columns([2, 3, 2])
     if i > 0 and back.button("← Anterior", key=f"{key}_back"):
         st.session_state[key] = i - 1
         st.rerun()
     if i < len(steps) - 1 and forward.button("Siguiente →", type="primary", key=f"{key}_next"):
         st.session_state[key] = i + 1
         st.rerun()
+
+
+def show_change_short(cfg, changes, escenario, tech):
+    """Un escenario de la prueba de cambio, corto: cuántas preguntas siguen bien antes y después del arreglo."""
+    change = next((c for c in cfg["cambios"] if c["antes"] == escenario), cfg["cambios"][0])
+    before, after = changes.get(change["antes"]), changes.get(change["despues"])
+    if not (before and after):
+        st.info("Falta registrar la prueba de cambio.")
+        return
+    n = len(before["cells"])
+    rotas = before["totals"]["B"].get("❌", 0) + before["totals"]["B"].get("🟡", 0)
+    sin_query = before["totals"]["B"].get("—", 0)
+    st.markdown(md(change["que"]))
+    antes, despues = st.columns(2)
+    with antes.container(border=True):
+        st.markdown("**Recién cambiada la base**")
+        st.markdown(f"Sin Rastro: **{rotas} consultas rotas**, que hay que encontrar")
+        st.markdown(f"Con Rastro: **las {n} preguntas fallan juntas**")
+        st.caption("Rastro no arranca hasta arreglarlo: falla en voz alta, todo junto.")
+    with despues.container(border=True):
+        st.markdown("**Para arreglarlo**")
+        st.markdown(f"Sin Rastro: **reescribir las {rotas} consultas** a mano")
+        st.markdown(f"Con Rastro: **una línea**, y responden las {after['totals']['C'].get('✅', 0)} de {n}")
+        st.caption(f"De las {n} preguntas, sin Rastro {sin_query} nunca tuvieron una consulta que funcionara.")
+    if tech:
+        st.code(f"- {change['arreglo'][0]}\n+ {change['arreglo'][1]}", language="diff")
+
+
+def show_correction(result, tech):
+    """Una corrección, todos los resultados: qué cambia en Rastro Layer y en Rastro Lab al poner la participación
+    corregida de una concesión, sin tocar nada más."""
+    con, sin = result.get("con"), result.get("sin")
+    if not (con and sin):
+        st.info("Falta registrar la prueba de la corrección (layer/energia/cambio/correccion.sh registrar).")
+        return
+
+    def m3(v):
+        return f"{v / 1e6:,.2f} M m³".replace(",", "X").replace(".", ",").replace("X", ".")
+
+    def pct(v):
+        return f"{v:g} %".replace(".", ",")
+
+    filas = [   # (dónde, sin la corrección, con la corrección)
+        ("Respuesta de Rastro", m3(sin["layer_C"]), m3(con["layer_C"])),
+        ("Respuesta con SQL sobre Rastro", m3(sin["layer_D"]), m3(con["layer_D"])),
+        ("Respuesta sin Rastro", m3(sin["layer_B"]), m3(con["layer_B"])),
+        ("Entrada del modelo, con Rastro", pct(sin["lab_B_pct"]), pct(con["lab_B_pct"])),
+        ("Entrada del modelo, sin Rastro", pct(sin["lab_A_pct"]), pct(con["lab_A_pct"])),
+        ("Explicación, con Rastro", "sin marca", "marcada" if con["lab_B_marca"] else "sin marca"),
+    ]
+    df = pd.DataFrame([{"Dónde": a, "Antes": b, "Después": c, "¿Cambió solo?": "sí" if b != c else "no"}
+                       for a, b, c in filas])
+    st.caption("La respuesta es el petróleo de 2025 que le corresponde a YPF según su participación; la entrada del "
+               "modelo, la participación de Total en Aguada Pichana Este.")
+    tabla(df, key="demo_correccion")
+    st.markdown(md(f"**Dónde se corrigió:** en un solo lugar, el archivo de participaciones revisadas (con el documento). "
+                   f"Sin Rastro, el mismo dato se lee del texto del mapa en {result['lugares_sin_rastro']} lugares "
+                   f"(cada consulta y el código del modelo), y hay que encontrarlos y corregirlos uno por uno."))
+    if tech:
+        st.caption("Se mide con layer/energia/cambio/correccion.sh: saca la corrección, rearma Rastro, mide y la vuelve a poner.")
 
 
 GRAPHDB = "http://graphdb:7200/repositories/rastro"

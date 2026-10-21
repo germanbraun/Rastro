@@ -35,6 +35,10 @@
   respuesta: |-
     Sí, con cuidado. En «Una pregunta sobre textos», Rastro primero elige con una consulta exacta los registros que importan; después, un asistente de IA lee solo esos textos y los agrupa en temas, citando cada registro. En «¿De dónde sale la respuesta?» están todos los textos que leyó. El grafo decide qué se lee; la IA solo resume.
 
+- pregunta: ¿Sirve para otros datos?
+  respuesta: |-
+    Sí. El mismo Rastro funciona con contratos del Estado de EE. UU. (proveedores y sus grupos) y con oncología (ensayos clínicos y fármacos), con las mismas pruebas. Se ven activando «Ver detalles técnicos» en la barra lateral.
+
 - pregunta: ¿Hay trabajos relacionados?
   respuesta: |-
     Sí. Rastro aplica ideas conocidas a datos públicos; estos trabajos las explican:

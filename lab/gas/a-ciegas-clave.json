@@ -1,0 +1,102 @@
+[
+ {
+  "explicacion": 1,
+  "pozo": "166179",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 2,
+  "pozo": "164867",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 3,
+  "pozo": "166165",
+  "modelo": "sin Rastro"
+ },
+ {
+  "explicacion": 4,
+  "pozo": "165631",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 5,
+  "pozo": "164867",
+  "modelo": "sin Rastro"
+ },
+ {
+  "explicacion": 6,
+  "pozo": "166165",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 7,
+  "pozo": "166479",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 8,
+  "pozo": "166179",
+  "modelo": "sin Rastro"
+ },
+ {
+  "explicacion": 9,
+  "pozo": "165538",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 10,
+  "pozo": "165692",
+  "modelo": "sin Rastro"
+ },
+ {
+  "explicacion": 11,
+  "pozo": "166479",
+  "modelo": "sin Rastro"
+ },
+ {
+  "explicacion": 12,
+  "pozo": "166168",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 13,
+  "pozo": "166168",
+  "modelo": "sin Rastro"
+ },
+ {
+  "explicacion": 14,
+  "pozo": "165631",
+  "modelo": "sin Rastro"
+ },
+ {
+  "explicacion": 15,
+  "pozo": "165634",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 16,
+  "pozo": "165634",
+  "modelo": "sin Rastro"
+ },
+ {
+  "explicacion": 17,
+  "pozo": "166588",
+  "modelo": "sin Rastro"
+ },
+ {
+  "explicacion": 18,
+  "pozo": "166588",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 19,
+  "pozo": "165692",
+  "modelo": "con Rastro"
+ },
+ {
+  "explicacion": 20,
+  "pozo": "165538",
+  "modelo": "sin Rastro"
+ }
+]

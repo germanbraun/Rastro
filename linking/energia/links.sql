@@ -283,8 +283,7 @@ WITH todo AS (
 SELECT f.idpozo, f.inicio AS mes, en.empresa_id, f.empresa AS nombre_declarado, f.tipo_pozo, f.id_concesion,
        f.formacion, f.sub_tipo_recurso, round(g.gas_2_7, 3) AS gas_2_7, round(g.gas_12, 3) AS gas_12,
        'Primer mes con producción: ' || to_char(f.inicio, 'MM/YYYY') || '. Lo declara ' || rtrim(f.empresa, '.')
-       || coalesce(' como pozo ' || lower(f.tipo_pozo), '') || ', en ' || f.id_concesion || '.'
-       || coalesce(' Gas de sus meses 2 a 7: ' || replace(round(g.gas_2_7, 1)::text, '.', ',') || ' millones de m³.', '') AS evidencia
+       || coalesce(' como pozo ' || lower(f.tipo_pozo), '') || ', en ' || f.id_concesion || '.' AS evidencia
 FROM fila f
 JOIN energia.empresa_nombre en ON en.fuente = 'capitulo4' AND en.nombre = f.empresa
 LEFT JOIN acumulado g ON g.idpozo = f.idpozo;

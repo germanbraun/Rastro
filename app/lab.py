@@ -97,12 +97,36 @@ def show_lab(tech):
             "Sin Rastro, el número cambia y nada dice por qué. Con Rastro, cada predicción dice qué datos usó y cuándo se "
             "cargó cada uno (en «¿De dónde sale?» de la fractura), y marca los que llegaron después de que el pozo arrancó."))
 
+    show_well(key="lab_pozo")
+
+    with st.expander("¿Cómo se calcula?"):
+        st.markdown(md(
+            "Es una regresión lineal: la predicción es el gas de un pozo promedio más el aporte de cada variable, "
+            "en millones de m³. Las dos versiones usan las mismas ideas de variables (operadora, concesión, "
+            "participación y fractura); cambia de dónde salen. Sin Rastro: la empresa como se declara, el código de la concesión y "
+            "el porcentaje del texto de socios del mapa. Con Rastro: la operadora unida entre fuentes, la concesión y la "
+            "participación corregida, cada una con su regla y su evidencia. La operadora es la del primer mes del pozo, "
+            "no la de hoy: usar la de hoy sería usar el futuro. La fractura (rama horizontal, etapas, arena, agua y "
+            "presión) es la informada hasta el mes en que arrancó el pozo. El gas que se predice también sale de Rastro "
+            "(el gas de los meses 2 a 7 de cada pozo), y coincide con el que calcula el SQL."))
+        if tech:
+            st.markdown("**Sin Rastro (SQL sobre las tablas tal como vienen):**")
+            st.code(modelo.SQL_A.strip(), language="sql")
+            st.markdown("**Con Rastro (SPARQL):**")
+            st.code(modelo.SPARQL_B.strip(), language="sparql")
+            st.caption("Código del modelo: lab/gas/modelo.py.")
+
+
+def show_well(key, pozo=None):
+    """Un pozo de 2025: la predicción sin Rastro y con Rastro, lado a lado. Con pozo, sin selector (para la demo)."""
+    a, b, ctx, r, *_ = datos()
     prueba = b[b.inicio >= modelo.PRUEBA]
     etiquetas = {f"{modelo.concesion(x.areaNombre if isinstance(x.areaNombre, str) else x.area)} · {modelo.nombre(x.grupo)} · "
                  f"empezó en {x.inicio:%m/%Y} · pozo {x.idpozo}": x.idpozo for x in prueba.itertuples()}
     ejemplo = modelo.pozo_ejemplo(b)
     inicial = next((i for i, p in enumerate(etiquetas.values()) if p == ejemplo), 0)
-    pozo = etiquetas[st.selectbox("Pozo de 2025", list(etiquetas), index=inicial, key="lab_pozo", help=ayuda("lab_pozo"))]
+    if pozo is None:
+        pozo = etiquetas[st.selectbox("Pozo de 2025", list(etiquetas), index=inicial, key=key, help=ayuda("lab_pozo"))]
     ea, eb = modelo.explicacion_a(r, a, pozo), modelo.explicacion_b(r, b, ctx, pozo)
     st.markdown(f"Dio **{num(eb['real'])} millones de m³** en sus meses 2 a 7.")
 
@@ -132,20 +156,3 @@ def show_lab(tech):
                 st.markdown(f"**Regla:** {h['regla']}.  \n**Evidencia:** {h['evidencia']}"
                             + (f"  \n**Nombre:** {h['nombre']}" if h.get("nombre") else "")
                             + f"  \n**Fuentes:** {h['fuentes']}.")
-
-    with st.expander("¿Cómo se calcula?"):
-        st.markdown(md(
-            "Es una regresión lineal: la predicción es el gas de un pozo promedio más el aporte de cada variable, "
-            "en millones de m³. Las dos versiones usan las mismas ideas de variables (operadora, concesión, "
-            "participación y fractura); cambia de dónde salen. Sin Rastro: la empresa como se declara, el código de la concesión y "
-            "el porcentaje del texto de socios del mapa. Con Rastro: la operadora unida entre fuentes, la concesión y la "
-            "participación corregida, cada una con su regla y su evidencia. La operadora es la del primer mes del pozo, "
-            "no la de hoy: usar la de hoy sería usar el futuro. La fractura (rama horizontal, etapas, arena, agua y "
-            "presión) es la informada hasta el mes en que arrancó el pozo. El gas que se predice también sale de Rastro "
-            "(el gas de los meses 2 a 7 de cada pozo), y coincide con el que calcula el SQL."))
-        if tech:
-            st.markdown("**Sin Rastro (SQL sobre las tablas tal como vienen):**")
-            st.code(modelo.SQL_A.strip(), language="sql")
-            st.markdown("**Con Rastro (SPARQL):**")
-            st.code(modelo.SPARQL_B.strip(), language="sparql")
-            st.caption("Código del modelo: lab/gas/modelo.py.")

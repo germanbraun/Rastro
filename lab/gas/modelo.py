@@ -284,12 +284,15 @@ def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
     else:
         por_que_lugar = f"El modelo no vio pozos de {area}: usa lo que vio de {operadora} en otras concesiones."
     tiene = pd.notna(f.rama)
-    if tiene:   # las dos variables de fractura que más mueven esta predicción, contra un pozo típico
-        orden = m["aportes"].loc[i, FRACTURA_B].abs().sort_values(ascending=False).index[:2]
-        partes = [f"{FRACTURA[c][0]} {num(f[c], 0)} {FRACTURA[c][1]}".strip() + f" (típico: {num(m['relleno'][c], 0)})"
-                  for c in orden]
-        por_que_fractura = ("Lo que más pesa: " + " y ".join(partes) + ". En el entrenamiento, los pozos con "
-                            "más rama y más etapas dieron más gas.")
+    if tiene:   # las dos variables de fractura que más mueven esta predicción, con su aporte real, contra un pozo típico
+        ap = m["aportes"].loc[i, FRACTURA_B]
+        orden = ap.abs().sort_values(ascending=False).index[:2]
+        partes = [f"{FRACTURA[c][0]} {num(f[c], 0)} {FRACTURA[c][1]}".strip() + f" (típico: {num(m['relleno'][c], 0)}), "
+                  + ("+" if ap[c] >= 0 else "−") + num(abs(ap[c])) for c in orden]
+        por_que_fractura = "Pesan sobre todo: " + "; ".join(partes) + "."
+        if set(orden) == {"rama", "etapas"} and ap["rama"] * ap["etapas"] < 0:
+            por_que_fractura += (" Un pozo con más rama tiene más etapas: el modelo reparte entre las dos un mismo efecto, "
+                                 f"y juntas suman {('+' if ap['rama'] + ap['etapas'] >= 0 else '−') + num(abs(ap['rama'] + ap['etapas']))}.")
     else:
         por_que_fractura = "No hay datos de fractura de este pozo: el modelo usa los de un pozo típico."
     cambios = int(ctx["cambios"].get(f.area, 0))
@@ -308,6 +311,10 @@ def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
          "fuentes": "Mapa de concesiones de la Secretaría de Energía (texto de socios)"
                     + (", corregido con un documento" if "documento" in str(f.reglaSocio) else "")},
     ]
+    if not isinstance(f.reglaSocio, str):   # la operadora no está entre los socios del mapa: las fuentes no coinciden
+        hechos[1].update(marca=f"{operadora} no figura entre los socios del mapa", regla="texto de socios del mapa",
+                         evidencia=f"Las declaraciones juradas dicen que opera {operadora}, pero el mapa no la lista entre "
+                                   f"los socios de {area}. El modelo usa una participación típica.")
     if tiene:
         informa = nombre(f.fracEmpresa)
         tarde = meses_tarde(f)

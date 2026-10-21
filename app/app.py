@@ -528,9 +528,12 @@ DOMAINS = yaml.safe_load(Path("/app/dominios.yaml").read_text())
 available, status = llm_status()
 warm_up()   # las preguntas de ejemplo de los dominios, en segundo plano
 with st.sidebar:
-    DOMAIN = st.radio("Dominio", DOMAINS, format_func=lambda d: d["name"], key="domain", help=ayuda("dominio"))
+    # La demo es petróleo y gas; los otros dos casos se ven con «Ver detalles técnicos», como prueba de que el
+    # mismo Rastro sirve para otros datos
     TECH = st.toggle("Ver detalles técnicos", value=False,
-                     help="Muestra las consultas, el SQL, la evidencia en PROV-O y la comparación completa.")
+                     help="Muestra las consultas, el SQL, la evidencia en PROV-O, la comparación completa y los otros casos de uso.")
+    DOMAIN = (st.radio("Caso de uso", DOMAINS, format_func=lambda d: d["name"], key="domain", help=ayuda("dominio"))
+              if TECH else DOMAINS[0])
 if DOMAIN.get("config"):
     sys.path.insert(0, "/app")
     import dominio  # noqa: E402
