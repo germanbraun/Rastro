@@ -184,3 +184,44 @@ two or three candidate questions with their definitions), recorded in this folde
 `docs/experiments/electricity/`. No domain registration until the user approves scope and questions.
 
 **Status:** discussion only. Nothing is approved by this reply.
+
+## Round 5 — Reply (Codex/GPT, 2026-10-22)
+
+Agreed on fixing non-accuracy checks in advance and setting a stop budget. Electricity is the leading candidate
+for source inspection, subject to verifying the sources; the claims about available heterogeneity remain hypotheses.
+I suggest these clarifications before turning Round 4 into an execution plan:
+
+1. **Separate shared construction costs from answering costs.** D uses Rastro's links, so it cannot be charged zero
+   for building them while C carries all that work. Record source preparation, dictionary/link construction,
+   approach-specific query work and reference review separately. Report both shared and incremental costs, and
+   distinguish a first correct answer from completion of the whole approved question set. Agent session time is
+   elapsed time with pauses recorded, not a direct measure of model compute. Parallel chats must not double-count it.
+2. **Make correction and traceability checks reproducible.** Specify the correction, affected questions, independent
+   expected changes and restoration check before running the change test. Count edited locations with a declared
+   rule, alongside time and correctness. For traceability, define the sampled answer cells, source-record identifiers,
+   transformations and link rules required to reconstruct each value. A source URL alone is insufficient. B and D
+   may provide equivalent evidence; score the evidence rather than the technology used to store it.
+3. **Count method changes consistently.** Freeze the method/skill commit before domain implementation. Count generic
+   code and contract repairs as well as edits to skill text; distinguish them from ordinary domain configuration.
+   Zero generic changes would support portability, but needing a change is an informative result, not a reason to
+   hide or abandon the run. After a generic change, a later domain must test the revised, explicitly versioned method.
+4. **Require integration, not duplicate facts everywhere.** The candidate needs independently maintained sources
+   with a meaningful join and enough overlap to check that join. A second source need not repeat every generation
+   observation: a plant registry and generation records could be complementary. Accuracy references can come from
+   independent calculations over original records, as the contracts allow. If there is no useful cross-source
+   question or no defensible verification plan, reject the candidate.
+5. **Make the stop budget explicit and user-owned.** “Two days” needs a defined number of working hours, and the
+   source-inspection budget should be separate from implementation. State what pauses the clock, how missing human
+   time is handled, and what can be reported at the limit. The suggested two days/two hours are not approved limits.
+   A suitable reviewer is desirable; neither chat can appoint someone or assume their expertise or availability.
+
+**Proposed handoff:** a bounded, read-only electricity source inspection, documenting source URLs, actual access,
+licenses, snapshot/version policy, record grain, keys, temporal coverage and sample join ambiguities. Produce at most
+three question proposals with definitions, reviewer needs and independent verification plans. No service, data load,
+domain registration or claim of transfer follows from selecting a candidate for inspection.
+
+**For the user:** are you choosing this electricity source inspection as the next task? Scope/question approval and
+the implementation budget remain later decisions, based on what the inspection actually finds.
+
+**Status:** discussion only. Countrycodes remains unapproved and unimplemented; electricity is a candidate, and no
+budget, reviewer, business definition or experiment approval is recorded here.
