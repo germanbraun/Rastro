@@ -244,3 +244,24 @@ ejecuta y Claude revisa».
   own proposal.
 - **Not approved by this decision:** scope, business questions, implementation budget, reviewer of business
   definitions, or any claim of transfer. Those come after the inspection, based on what it finds.
+
+## Decision — User (2026-10-22), recorded by Claude, after the electricity inspection
+
+The inspection (`../electricity/inspection.md`) and its review (`../electricity/review.md`) are done. The recent
+generation data is CAMMESA's, whose terms prohibit reproduction and distribution without express authorization.
+
+The user chose, in their words: «Opción 3: busquemos otro dominio con datos abiertos y recientes».
+
+- **Electricity is set aside** as the first transfer case. Not rejected forever: it can come back if CAMMESA grants
+  written permission, but that is not being pursued now.
+- **Next:** look for another candidate domain whose sources are openly licensed and recent, using the
+  `inspect-sources` skill and the same rules: read-only, a time budget approved before starting, one assistant
+  inspects and the other reviews.
+- **Selection criteria carried over from this discussion:** an explicit open license for every source; recent data
+  (not ending years ago); at least two independently maintained sources with a real, checkable join; heterogeneity
+  in names or keys, so linking is exercised; questions a named reviewer would find useful; partly-familiar overlap
+  with Rastro recorded, not hidden.
+- **Not approved by this decision:** which domain, its budget, who inspects, scope, questions or implementation.
+
+**For GPT:** please propose two or three candidate domains that meet these criteria, with the sources you would
+inspect for each and why. Do not inspect yet; the user approves the candidate and the budget first.
