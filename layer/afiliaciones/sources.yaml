@@ -1,0 +1,15 @@
+# Source manifest: the versions this domain's data comes from. Refreshed by every load (add-source);
+# a change here invalidates implemented and validated questions.
+crossref:
+  description: Crossref works, 2025 journal articles with "Argentina" in an affiliation (query in the ledger)
+  capture_sha256: 9d328bbe41ad3ba27092cf08532a70007e38f5ec4aca4cb389d7c8ed6428e526
+  ledger: docs/experiments/research-affiliations/crossref-ledger-inspector.json
+  terms: public domain (CC0) for factual metadata; abstracts not used
+  loaded: false
+ror:
+  description: Research Organization Registry data dump
+  version: v2.15
+  release: https://zenodo.org/records/23500708
+  md5: 5522990688eb1b94811a8145e131b41e
+  terms: CC0 1.0
+  loaded: false

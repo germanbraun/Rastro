@@ -81,6 +81,28 @@ services:
       - ../ontology:/opt/rastro/ontology:ro
       - ../mappings:/opt/rastro/mappings:ro
 
+  # Research affiliations (transfer experiment): only while it runs, with --profile afiliaciones
+  ontop-afiliaciones:
+    build: ./ontop
+    profiles: ["afiliaciones"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ONTOP_ONTOLOGY_FILE: /opt/rastro/ontology/afiliaciones/afiliaciones.ttl
+      ONTOP_MAPPING_FILE: /opt/rastro/mappings/afiliaciones.r2rml.ttl
+      ONTOP_DB_URL: jdbc:postgresql://postgres:5432/${PG_DB:-rastro}
+      ONTOP_DB_USER: ${PG_USER:-rastro}
+      ONTOP_DB_PASSWORD: ${PG_PASSWORD:-rastro}
+      ONTOP_DB_DRIVER: org.postgresql.Driver
+      ONTOP_CORS_ALLOWED_ORIGINS: "*"
+      ONTOP_DEV_MODE: "true"
+    ports:
+      - "${ONTOP_AFILIACIONES_PORT:-8083}:8080"
+    volumes:
+      - ../ontology:/opt/rastro/ontology:ro
+      - ../mappings:/opt/rastro/mappings:ro
+
   # Demo de Rastro Layer: http://localhost:8501
   app:
     build: ./loaders

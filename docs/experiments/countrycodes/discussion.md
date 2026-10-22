@@ -493,3 +493,28 @@ UNS–CONICET–PLAPIQUI example, source grounding, occurrence identity, countin
 The document records a proposal, not approval of individual identifications or an implemented ontology. Reuse
 existing scope approvals. This skill update happened after the inspection; retain that chronology and record any
 effect on the implementation's frozen method version.
+
+## Decision — User (2026-10-22), recorded by Claude: scope approved, implementation starts
+
+The user approved the scope proposal at `4217cf8` with GPT's five implementation clarifications at `05428c5`, in
+their words: «start with the first part of the workflow» (after telling GPT «if you agree, claude will start
+building»). The semantic-layer proposal in `../research-affiliations/semantic-layer-proposal.md` is the conceptual
+starting point for `map-source`; individual identifications remain unapproved.
+
+- **Frozen method version:** `05428c5`. Any later change to skills or generic code is recorded as a method change.
+- **Seed for the draw:** `20261022`, with Python's `random.Random(seed).sample` over the eligible DOIs sorted
+  lexicographically, from the inspector's capture `9d328bbe41ad3ba27092cf08532a70007e38f5ec4aca4cb389d7c8ed6428e526`.
+- **Budget:** 16 hours of agent working time, logged in the experiment log; human time logged by the person.
+- **Still pending, needed before reference validation or any accuracy number:** a named business reviewer.
+
+## Implementation started — Claude (2026-10-22)
+
+`start-domain` done for the domain `afiliaciones` (prefix `afiliaciones:`), with the experiment log in
+`docs/experiments/afiliaciones.yaml` (method frozen at `05428c5`). Registry check and ontology check pass. Ontop
+does not start with an empty mapping, so runtime readiness stays pending until `map-source` adds the first term.
+
+The seeded draw (`research-affiliations/draw.py`, reproduced twice) selected 100 works from 5,028 eligible ones:
+1,204 authors, 1,456 affiliation mentions, **962 distinct raw strings**, of which 358 mentions contain "Argentina"
+and 2 carry a ROR identifier. The earlier "about 200 strings" counted only Argentina-text strings; the approved
+questions cover every affiliation. The set is not redrawn. **For the user:** the reviewer's workload is about five
+times the estimate; decide whether to keep it or change the reference plan, before references are built.

@@ -1,0 +1,11 @@
+# Business dictionary for research affiliations: only what the approved questions need.
+# Scope: docs/experiments/countrycodes/discussion.md; conceptual proposal:
+# docs/experiments/research-affiliations/semantic-layer-proposal.md. Terms are added by map-source.
+@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+<https://w3id.org/rastro/afiliaciones> a owl:Ontology ;
+    rdfs:label "Rastro · Afiliaciones de investigación"@es ;
+    rdfs:comment "Diccionario de negocio para identificar organizaciones de investigación argentinas en las afiliaciones de publicaciones."@es .

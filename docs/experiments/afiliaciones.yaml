@@ -1,0 +1,55 @@
+domain: afiliaciones
+method_commit: 05428c51454e90eb6324956cfea9c659db96b31f
+sources:
+- crossref (2025 journal articles with "Argentina" in an affiliation; capture 9d328bbe…e526)
+- ror (data dump v2.15, Zenodo record 23500708)
+question_author: >-
+  Proposed by Claude and reviewed by GPT from the source inspection; scope and questions approved by the user on
+  2026-10-22 (docs/experiments/countrycodes/discussion.md). The named business reviewer is still pending.
+started_on: '2026-10-22T18:41:34Z'
+ended_on: null
+budget_agent_hours: 16
+time_basis: >-
+  Measured agent session intervals (start, stop, pauses), including tool execution. Not model compute. Human time is
+  logged by the person; missing human time stays null.
+steps:
+  initialize:
+    status: completed
+    evidence:
+    - layer/dominios.yaml (afiliaciones entry; registry check passed)
+    - ontology/afiliaciones/ (ontology header, competency-questions.md, queries/)
+    - mappings/afiliaciones.r2rml.ttl (empty)
+    - layer/afiliaciones/ (notes stubs, sources.yaml manifest)
+    - infra/docker-compose.yml (ontop-afiliaciones, profile afiliaciones, port 8083)
+    - docs/experiments/research-affiliations/draw.py, sample.json, sample-dois.txt
+    runtime: >-
+      pending: Ontop fails to start with an empty mapping (R2RML parser error, Spring context does not start).
+      Readiness is checked again after map-source adds the first mapped term.
+    not_built_yet: [readers and reader.sql (need the source schemas), evaluation, quality, app, change tests]
+    sessions:
+    - started_on: '2026-10-22T18:41:34Z'
+      ended_on: '2026-10-22T18:44:10Z'
+      pauses: []
+      work: >-
+        Record the approval and frozen method; read start-domain and the contracts; scaffold, registry entry and Ontop
+        service; initialize this log; test Ontop (pending); ontology-check over all domains (passed); seeded draw of
+        the bounded set (reproduced twice).
+    agent_hours: 0.04
+    human_hours: null
+interventions:
+- step: initialize
+  decision: Scope approved (proposal 4217cf8 with GPT's clarifications 05428c5); Claude implements, GPT reviews
+  reason: Business scope belongs to the user
+  kind: planned approval
+  minutes: null
+- step: initialize
+  decision: pending — the bounded set has 962 distinct affiliation strings, not about 200 as estimated
+  reason: >-
+    The estimate counted only strings mentioning Argentina; the approved questions cover every affiliation in the 100
+    works. The set is not redrawn; the user decides whether the reviewer's workload is acceptable or how the
+    reference plan changes.
+  kind: unexpected scope finding
+  minutes: null
+errors_caught: []
+method_changes: []
+result: null

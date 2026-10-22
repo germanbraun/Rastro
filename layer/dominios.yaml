@@ -157,3 +157,24 @@ energia_lab:
     <<: *energia_method
     evaluation: {folder: layer/energia_lab, harness: current,
                  run: docker compose run --rm -T layer-eval python /layer/evaluar.py energia_lab}
+
+afiliaciones:
+  base: >-
+    Respondés preguntas sobre las afiliaciones de un conjunto acotado de publicaciones científicas de 2025 con
+    afiliaciones argentinas: qué organizaciones de investigación nombra cada afiliación y cuántas publicaciones
+    nombran a cada organización. Seguí al pie de la letra las definiciones que trae la pregunta.
+  ontop: http://ontop-afiliaciones:8080/sparql
+  ontology: ontology/afiliaciones/afiliaciones.ttl
+  sparql_notes: layer/afiliaciones/sparql-notes.md
+  sql_notes: layer/afiliaciones/sql-notes.md
+  links_notes: layer/afiliaciones/sql-enlaces-notes.md
+  namespace: https://w3id.org/rastro/afiliaciones#
+  # A new domain experiment (research affiliations). Keys for pieces not built yet are left out.
+  method:
+    questions: ontology/afiliaciones/competency-questions.md
+    queries: ontology/afiliaciones/queries/
+    mapping: mappings/afiliaciones.r2rml.ttl
+    ontop: {service: ontop-afiliaciones, port: 8083}
+    lifecycle: layer/afiliaciones/lifecycle.json
+    source_manifest: layer/afiliaciones/sources.yaml
+

@@ -1,0 +1,4 @@
+# R2RML mapping for research affiliations, one section per source. Empty until map-source adds the first terms.
+@prefix rr: <http://www.w3.org/ns/r2rml#> .
+@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .

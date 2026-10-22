@@ -1,0 +1,18 @@
+{
+ "capture_sha256": "9d328bbe41ad3ba27092cf08532a70007e38f5ec4aca4cb389d7c8ed6428e526",
+ "seed": 20261022,
+ "algorithm": "random.Random(seed).sample over sorted lowercase DOIs",
+ "eligible_works": 5028,
+ "selected_works": 100,
+ "dois_file": "docs/experiments/research-affiliations/sample-dois.txt",
+ "dois_sha256": "e6dd13e0ff184d72b3d11903320c15f60e5d474dd444f4e97a5452f882c6b911",
+ "selected_records_file": "data/raw/research-affiliations/sample-100.json",
+ "selected_records_sha256": "707ec8cc38e325d9edada4b4e375146208e86a527e28e06a5f12e77e2c402e76",
+ "authors": 1204,
+ "affiliation_mentions": 1456,
+ "distinct_raw_strings": 962,
+ "argentina_text_mentions": 358,
+ "mentions_with_ror": 2,
+ "blank_mentions": 0,
+ "note": "about 200 strings was an estimate, not a limit; this is the actual size"
+}
