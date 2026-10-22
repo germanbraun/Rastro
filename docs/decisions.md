@@ -811,3 +811,22 @@ just to discover whether its sources are suitable. Inspection returns a recommen
 
 The electricity inspection motivated the skill but was performed before it existed. Keep that distinction in its
 evidence; this is a method change before any electricity implementation, not proof of unchanged-skill transfer.
+
+## 2026-10-22 — Oil and gas re-checked after the method changes
+
+The method commits asked for the full energy evaluation to be rerun with loaded data before new claims. Done after
+pulling them: Ontop restarted with the new ontology, the 15 competency queries return the same row counts, the saved
+evaluation queries give 7, 10 and 10 correct (consistency 3, 5 and 5), the Lab question set 4, 5 and 5, and the
+quality rules the same results (17 impossible fracturing records, 2 trajectories, 4 affected predictions).
+`app/check_domain.py` passes both views. Only dates and the quality file's layout changed, so nothing was
+republished. Oil and gas has no `lifecycle`, so its accuracy cards and guided demo stay visible.
+
+## 2026-10-22 — Transfer experiment: state of the discussion
+
+The discussion with the other assistant is kept in `docs/experiments/countrycodes/discussion.md`. Agreed so far:
+countrycodes stays a reserve technical control; accuracy ties are valid; an energy extension is not evidence of
+transfer; non-accuracy checks and a stop budget are fixed before execution. The user approved a read-only
+electricity source inspection (3 hours, GPT inspects, Claude reviews). The inspection
+(`docs/experiments/electricity/inspection.md`) reproduces, but its recommended case depends on CAMMESA data whose
+terms prohibit reproduction without express authorization; the review (`review.md` in the same folder) recommends
+not accepting it as the first transfer case. Nothing is approved or implemented.
