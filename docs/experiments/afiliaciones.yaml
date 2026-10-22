@@ -77,6 +77,19 @@ steps:
         location, as by the first); credentials as connection keyword parameters. Reloaded and verified.
     agent_hours: 0.05
     human_hours: null
+  mapping:
+    status: proposed_waiting_for_approval
+    evidence:
+    - docs/experiments/research-affiliations/mapping-proposal.md
+    sessions:
+    - started_on: '2026-10-22T19:04:13Z'
+      ended_on: '2026-10-22T19:05:07Z'
+      pauses: []
+      work: >-
+        Read map-source and the semantic-layer proposal; inspect loaded fields and sample values; write the term
+        proposal (4 classes plus ArgentineOrganization, 12 properties, IRIs) for the user's approval.
+    agent_hours: 0.03
+    human_hours: null
 interventions:
 - step: initialize
   decision: Scope approved (proposal 4217cf8 with GPT's clarifications 05428c5); Claude implements, GPT reviews
