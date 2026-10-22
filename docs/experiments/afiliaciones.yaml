@@ -37,12 +37,13 @@ steps:
     agent_hours: 0.04
     human_hours: null
   questions:
-    status: in_progress
+    status: approved_waiting_for_implementation
     evidence:
     - layer/afiliaciones/requirements/cq1.proposal.yaml
     - layer/afiliaciones/requirements/cq2.proposal.yaml
     - layer/afiliaciones/requirements/cq3.proposal.yaml
-    - layer/afiliaciones/lifecycle.json (all three proposed)
+    - layer/afiliaciones/lifecycle.json (all three approved on 2026-10-22)
+    - layer/afiliaciones/requirements/cq1.approval.yaml, cq2.approval.yaml, cq3.approval.yaml
     sessions:
     - started_on: '2026-10-22T18:49:33Z'
       ended_on: '2026-10-22T18:50:37Z'
@@ -69,6 +70,11 @@ interventions:
     works. The set is not redrawn; the user decides whether the reviewer's workload is acceptable or how the
     reference plan changes. Decided by the user on 2026-10-22.
   kind: business decision after an unexpected scope finding
+  minutes: null
+- step: questions
+  decision: The user approved the three proposals as written (cq1, cq2, cq3)
+  reason: Business definitions belong to the user; approval records bind each proposal's SHA-256
+  kind: planned approval
   minutes: null
 errors_caught: []
 method_changes: []

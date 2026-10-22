@@ -1,24 +1,36 @@
 {
   "questions": {
     "cq1": {
-      "state": "proposed",
+      "state": "approved",
       "proposal": {
         "path": "layer/afiliaciones/requirements/cq1.proposal.yaml",
         "sha256": "269926871805bb83a99560424ca0a54cc15c7c609c29c02d10d1be74f177e9b4"
+      },
+      "approval": {
+        "path": "layer/afiliaciones/requirements/cq1.approval.yaml",
+        "sha256": "5d971b65b7d510de46fc9ee932fa9a717d62b36ed380e755cd3e4b5b082124f1"
       }
     },
     "cq2": {
-      "state": "proposed",
+      "state": "approved",
       "proposal": {
         "path": "layer/afiliaciones/requirements/cq2.proposal.yaml",
         "sha256": "49d7e6199212927c77260faee0577daef5ced5863403cd9e1839f5de89cf5cb2"
+      },
+      "approval": {
+        "path": "layer/afiliaciones/requirements/cq2.approval.yaml",
+        "sha256": "bc87957894145c7b8fe1698e64a1c140b840804befa5f8b6f54430529eabbb89"
       }
     },
     "cq3": {
-      "state": "proposed",
+      "state": "approved",
       "proposal": {
         "path": "layer/afiliaciones/requirements/cq3.proposal.yaml",
         "sha256": "47b18b87e1cdf8ac1a00d140ac1c0a56154d7cf583bc9f8d7e7aede5257223fc"
+      },
+      "approval": {
+        "path": "layer/afiliaciones/requirements/cq3.approval.yaml",
+        "sha256": "f0f3bcf1622aae1497c06542554ed2190a3417ff5f71e73019073b77f0e5d91a"
       }
     }
   },
@@ -51,6 +63,36 @@
       "artifact": {
         "path": "layer/afiliaciones/requirements/cq3.proposal.yaml",
         "sha256": "47b18b87e1cdf8ac1a00d140ac1c0a56154d7cf583bc9f8d7e7aede5257223fc"
+      }
+    },
+    {
+      "question": "cq1",
+      "from": "proposed",
+      "to": "approved",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/requirements/cq1.approval.yaml",
+        "sha256": "5d971b65b7d510de46fc9ee932fa9a717d62b36ed380e755cd3e4b5b082124f1"
+      }
+    },
+    {
+      "question": "cq2",
+      "from": "proposed",
+      "to": "approved",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/requirements/cq2.approval.yaml",
+        "sha256": "bc87957894145c7b8fe1698e64a1c140b840804befa5f8b6f54430529eabbb89"
+      }
+    },
+    {
+      "question": "cq3",
+      "from": "proposed",
+      "to": "approved",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/requirements/cq3.approval.yaml",
+        "sha256": "f0f3bcf1622aae1497c06542554ed2190a3417ff5f71e73019073b77f0e5d91a"
       }
     }
   ]

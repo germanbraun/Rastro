@@ -1,0 +1,10 @@
+actor: human
+decision: approved
+reviewer: German Braun (the user, business owner of the experiment)
+reviewed_on: 2026-10-22
+proposal_sha256: 269926871805bb83a99560424ca0a54cc15c7c609c29c02d10d1be74f177e9b4
+evidence: >-
+  The user's message in the Claude Code session, recorded verbatim: «Apruebo las tres propuestas tal como están
+  (cq1, cq2, cq3).» The proposals were presented as a table with their definitions and verification plans.
+note: >-
+  Approves the business requirement only. The named business reviewer for the references is still pending.
