@@ -65,6 +65,18 @@ def control():
     return f"✅ Control de unidades: el petróleo de 2025 suma {shown} millones de m³, como la producción nacional."
 
 
+def validate_step(step, cells, control_text):
+    """Broken stages are expected; baseline and repaired stages must actually pass."""
+    if not cells:
+        raise RuntimeError("No saved queries executed")
+    paths = ("B", "C") if step in {"antes", "despues"} else ("C",)
+    if step in {"antes", "despues", "renombrar-arreglado", "valores-arreglado"}:
+        if any(not row.get(path, "").startswith("✅") for row in cells.values() for path in paths):
+            raise RuntimeError(f"{step}: saved answers were not preserved")
+        if not control_text.startswith("✅"):
+            raise RuntimeError(f"{step}: unit control failed")
+
+
 def main():
     cells, totals = {}, {k: {} for k in NAMES}
     for path in sorted(ANSWERS.glob("e*-0-B.json")):
@@ -87,6 +99,7 @@ def main():
         saved = json.loads(RESULT.read_text()) if RESULT.exists() else {}
         saved[step] = {"cells": cells, "totals": totals, "vocabulary": check_text}
         RESULT.write_text(json.dumps(saved, ensure_ascii=False, indent=1))
+        validate_step(step, cells, check_text)
 
 
 if __name__ == "__main__":

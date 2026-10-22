@@ -6,3 +6,4 @@ pyyaml==6.0.2
 streamlit==1.39.0
 sqlparse==0.5.1
 pyshacl==0.29.0
+pyarrow==19.0.1     # Compatible with the development NumPy 1.26 pin and Streamlit 1.39

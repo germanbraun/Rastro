@@ -69,7 +69,8 @@ The scripts in `lab/` and `layer/energia/cambio/correccion.py` run on the machin
 
 **Method skills** — generic for any domain; each domain's paths and commands come from its `method:` block in `layer/dominios.yaml`, and real cases from each skill's `examples.md`:
 
-- `add-question`: add a competency question with its query
+- `start-domain`: initialize a domain, its approved scope and experiment log
+- `add-question`: approve a business requirement, then implement and validate its query
 - `add-source`: add or change a data loader
 - `map-source`: a source's dictionary and mapping, with their checks
 - `link-entities`: link entities across sources, with rule, evidence and reviewed corrections

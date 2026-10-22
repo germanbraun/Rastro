@@ -16,10 +16,19 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+
+# All mutations run under a snapshot guard; never overwrite pre-existing edits.
+if [ -z "${RASTRO_CHANGE_GUARD:-}" ]; then
+  case "${1:-}" in
+    registrar) exec python3 "$ROOT/layer/change_guard.py" run cambio ;;
+    probar) ;;
+    deshacer) exec python3 "$ROOT/layer/change_guard.py" recover ;;
+    *) echo "Use registrar (guarded); recover with python3 layer/change_guard.py recover"; exit 1 ;;
+  esac
+fi
 MAPPING="$ROOT/mappings/energia.r2rml.ttl"
-ORIGINAL="       prod_pet AS petroleo_m3, prod_gas AS gas_mm3"
 compose() { docker compose -f "$ROOT/infra/docker-compose.yml" "$@"; }
-sql() { compose exec -T postgres psql -U rastro -v ON_ERROR_STOP=1 -q -c "$1"; }
+sql() { compose exec -T postgres psql -U "${PG_USER:-rastro}" -d "${PG_DB:-rastro}" -v ON_ERROR_STOP=1 -q -c "$1"; }
 
 # Cambia la línea del mapeo que suma el petróleo de cada pozo
 set_line() {
@@ -43,23 +52,26 @@ restart_ontop() {
   done
   echo "Ontop no levantó en 3 minutos (es lo esperado si la fuente cambió y el mapeo no). Últimas líneas del log:"
   compose logs --tail 5 ontop-energia
+  [ "${1:-required}" = "expected-broken" ] || return 1
 }
 
-has_column() {
-  compose exec -T postgres psql -U rastro -tAc \
-    "SELECT 1 FROM information_schema.columns WHERE table_schema='capitulo4' AND table_name='produccion' AND column_name='$1'"
-}
 
 case "${1:-}" in
   probar)
     compose run --rm -T layer-eval python /layer/energia/cambio/probar.py ${2:+--guardar "$2"} ;;
   registrar)
     "$0" probar antes
-    "$0" renombrar && restart_ontop && "$0" probar renombrar
-    "$0" arreglar renombrar && "$0" probar renombrar-arreglado
+    "$0" renombrar
+    restart_ontop expected-broken
+    "$0" probar renombrar
+    "$0" arreglar renombrar
+    "$0" probar renombrar-arreglado
     "$0" deshacer
-    "$0" valores && restart_ontop && "$0" probar valores
-    "$0" arreglar valores && "$0" probar valores-arreglado
+    "$0" valores
+    restart_ontop
+    "$0" probar valores
+    "$0" arreglar valores
+    "$0" probar valores-arreglado
     "$0" deshacer
     "$0" probar despues ;;
   renombrar)
@@ -78,10 +90,7 @@ case "${1:-}" in
     grep -n "AS petroleo_m3" "$MAPPING" || true
     restart_ontop ;;
   deshacer)
-    if [ -n "$(has_column petroleo)" ]; then sql "ALTER TABLE capitulo4.produccion RENAME COLUMN petroleo TO prod_pet"; fi
-    # Si el petróleo de 2025 suma más de 100 millones, está en barriles: vuelve a m³
-    sql "UPDATE capitulo4.produccion SET prod_pet = prod_pet / 6.2898 WHERE (SELECT sum(prod_pet) FROM capitulo4.produccion) > 100000000"
-    set_line "$ORIGINAL"
+    python3 "$ROOT/layer/change_guard.py" restore-source
     restart_ontop
     echo "Todo como estaba." ;;
   *)

@@ -24,7 +24,7 @@ Suppliers, the same with `proveedores` (for example `... evaluar.py proveedores 
 docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun
 docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje
 git diff layer/energia/resultados.md
-git checkout layer/energia/resultados.*    # only if the date was the only change
+# Preserve pre-existing edits; review generated diffs without Git checkout/reset.
 ```
 
 ## One prompt per subagent: the discarded check (oil and gas)

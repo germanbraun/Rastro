@@ -5,17 +5,22 @@ description: Add or change a competency question with its SPARQL query, in any d
 
 # Add a competency question
 
+Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
+For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
+
+
 Step 0 of the method (`docs/method.md`). Questions rule: the ontology only has what some question needs.
 
 ## Contract
 
 - **Takes:** a business question from a client or from the demo, and the domain it belongs to.
-- **Returns:** the question in the domain's questions file, its SPARQL query, and the query answering in Rastro.
+- **Returns first:** an approved business requirement (definitions, scope, answer type and verification plan).
+- **Returns after data and mappings exist:** its implemented query, then validated executable expectations.
 - **Does not:** add terms or mappings on its own (that is the skill `map-source`), or load data (skill `add-source`).
 
 ## Constraints
 
-- **Never write a question that a single table answers** to show integration: it has to cross at least two sources.
+- **Allow useful single-source questions and controls.** Label which questions demonstrate cross-source integration.
 - **No internal names in the question:** it is said in business words, as a client would say it, without table,
   column or ontology names.
 - **Definitions are written into the question,** not assumed: what counts as an operator, which category is included,
@@ -41,14 +46,14 @@ Below, `<domain>` is the registry entry, `<prefix>:` its prefix and `<port>` its
 
 ## Steps: narrow down, decide, test
 
-1. **Narrow down the question, and write the proposal.** The question in business words, as a client would say it. It has to cross at least two sources; if a single table answers it, it does not show Rastro's value. If it depends on a definition (what counts as an operator, which category is included), write it in the question. Look in the existing questions and the dictionary first: maybe it is already asked or almost. Write the result as a short table, one row per question, before touching any file:
+1. **Narrow down the question, and write the proposal.** The question in business words, as a client would say it. Identify whether it tests cross-source integration or is a useful single-source requirement/control. If it depends on a definition (what counts as an operator, which category is included), write it in the question. Look in the existing questions and the dictionary first: maybe it is already asked or almost. Write the result as a short table, one row per question, before touching any file:
 
-   | Question (plain words) | Definitions it depends on | Sources it needs (at least two) | Expected answer type | Ambiguous words | How sure | Open question |
+   | Question (plain words) | Definitions it depends on | Sources it needs | Expected answer type | Ambiguous words | How sure | Open question |
    |---|---|---|---|---|---|---|
 
    A person reviews it at a glance; definitions and ambiguous words are decided here. The table goes into the decision or the experiment log.
 2. **Add it to the table** in the domain's questions file (`method.questions`), with number, sources and what it is for (demo, Layer or Lab).
-3. **Write the query** in `method.queries` as `cq<N>.rq`:
+3. **After approved requirements have their data and mappings, write the query** in `method.queries` as `cq<N>.rq`:
    - First line: `# <N>. <the question>`.
    - The domain prefix (`<prefix>:`), never the empty prefix.
    - No `*` or `+` paths: Ontop does not support them. Whatever needs closure is precomputed in Postgres.
@@ -56,8 +61,8 @@ Below, `<domain>` is the registry entry, `<prefix>:` its prefix and `<port>` its
 4. **If a term or a value is missing,** follow the skill `map-source` (dictionary and mapping together, with their checks). In short: add it to the ontology with an `rdfs:label` in Spanish and a short comment. Prefer an attribute over a new class; a property used by two classes has no `rdfs:domain` (otherwise Ontop infers wrong classes). Add it to the domain's `term_sources` (and to `link_sources` if it is a link) in `layer/dominios.yaml`, and to the notes the assistant reads (`sparql_notes`). If it joins things across sources, the skill `link-entities`.
 5. **If it needs new data,** load it first (skill `add-source`), then add its mapping (with `rr:datatype` if the column comes from a `GROUP BY` or `DISTINCT`) and restart the domain's Ontop (`docker compose restart <method.ontop.service>`).
 6. **Validate:** `docker compose run --rm ontology-check` returns OK, and the query against Ontop gives an answer that makes sense to someone from the business:
-   `curl -s -H 'Accept: text/csv' --data-urlencode "query@<method.queries>cq<N>.rq" http://localhost:<port>/sparql`
-   Then the skill `verify`.
+   `curl --fail-with-body --show-error -H 'Accept: text/csv' --data-urlencode "query@<method.queries>cq<N>.rq" http://localhost:<port>/sparql`
+   Then add fingerprinted assertions to `layer/<domain>/query-checks.yaml` and run the executable gate in `verify`. HTTP success alone is insufficient.
 7. **If it goes to the app,** add it to `preguntas` in `app/dominios/<domain>.yaml` (simple question, technical wording and, if possible, «¿Por qué este número?» (Why this number?)). If it goes to the evaluation, follow the skill `evaluate`. If it touches values the source can get wrong, the skill `quality-rules`.
 8. **If it is for a predictive model** (Rastro Lab), use only data known at prediction time: nothing that arrived after the case started (see the skill `rastro-lab`).
 

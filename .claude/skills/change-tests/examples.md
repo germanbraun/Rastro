@@ -9,7 +9,7 @@ layer/energia/cambio/cambio.sh registrar    # the two acts (renamed column, oil 
 ```
 
 - Act 1 (`renombrar`): `prod_pet` is renamed to `petroleo`. Act 2 (`valores`): oil is in barrels.
-- Each act changes the source, restarts Ontop (`ontop-energia`), measures, fixes **one line** of the mapping and measures again. It always ends with `deshacer`; if it stops halfway, run `cambio.sh deshacer`.
+- Each act changes the source, restarts Ontop (`ontop-energia`), measures, fixes **one line** of the mapping and measures again. It always ends with `deshacer`; the guard restores inputs even on failure; if recovery is incomplete, run `python layer/change_guard.py recover` before another test.
 - `probar.py` checks that 2025 oil stays around 46.6 million m³ (about 800,000 barrels per day); if the unit changes, Rastro warns.
 - The result is saved in `cambio/resultado.json` (steps `antes`, `renombrar`, `renombrar-arreglado`, `valores`, `valores-arreglado`, `despues`), which «Por qué confiar» (Why trust it) and moment 2 of the demo read.
 - If you change the mapping line that reads oil (`prod_pet AS petroleo_m3`), update the pattern in `cambio.sh` and the `arreglo` entries in `app/dominios/energia.yaml`.

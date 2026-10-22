@@ -105,6 +105,7 @@ services:
       - ../lab:/lab:ro
       - ../ontology:/ontology:ro
       - ../mappings:/mappings:ro
+      - ../data/cache:/data/cache:ro
     command: ["streamlit", "run", "/app/app.py", "--server.port", "8501", "--server.address", "0.0.0.0",
               "--server.headless", "true", "--browser.gatherUsageStats", "false"]
 
@@ -398,6 +399,8 @@ services:
     profiles: ["tools"]
     volumes:
       - ../ontology:/ontology:ro
+      - ../mappings:/mappings:ro
+      - ../layer:/layer:ro
     command: ["python", "/ontology/check.py"]
 
 volumes:

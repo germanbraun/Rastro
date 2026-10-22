@@ -5,6 +5,10 @@ description: Measure a domain's evaluation questions with the three paths (witho
 
 # Evaluate a domain
 
+Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
+For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
+
+
 Step 6 of the method (`docs/method.md`). The evaluation compares three paths on the same questions, with the same AI assistant:
 
 - **B, without Rastro:** SQL over the sources as they were loaded.
@@ -20,7 +24,7 @@ The files: questions in `<folder>/eval/questions.yaml`, saved answers in `<folde
 - **One prompt per evaluator:** each subagent gets one wording of one question for one path, never several wordings together.
 - **The evaluator never sees** the reference or the other paths' answers.
 - **A failure caused by the dictionary is recorded,** never silently fixed before publishing.
-- **A number is published only after adjudication** of every question where the paths differ.
+- **A number is provisional until the publication gate passes:** independent reference evidence covers every question, including agreement cases, and a person approves adjudications.
 - **Saved answers are never edited by hand:** they change only by running the evaluation again (`try`, `rerun`).
 
 ## Measure a new or changed question
@@ -34,13 +38,15 @@ The files: questions in `<folder>/eval/questions.yaml`, saved answers in `<folde
    Where the reference comes from is either independent of Rastro (a source's own total, a published figure) or from
    Rastro, and then it is marked to be adjudicated. The approaches are B, D and C. How it is scored: a number with 5 %
    tolerance, or a list with F1. A person reviews it; the table goes into the decision or the experiment log.
-   Then write the question in `eval/questions.yaml`, in business words, with the definitions it uses and its reference (SPARQL over Rastro). If it has paraphrases, in `consistencia/parafrasis.yaml`. It usually starts as a competency question (skill `add-question`).
+   Record the exact model/version, prompts, retries and source versions in the evidence manifest described in `docs/method-contracts.md`. Then write the question in `eval/questions.yaml`, in business words, with the definitions it uses and its reference (SPARQL over Rastro). If it has paraphrases, in `consistencia/parafrasis.yaml`. It usually starts as a competency question (skill `add-question`).
 2. **One subagent per path, which only sees the prompt:** generate the prompt with
    `<run> prompt <q> 0 <B|D|C>`,
    give it to a new subagent with no other context, and test what it returns with
    `<run> try <q> 0 <B|D|C> < query.sql`. Up to 3 attempts, giving it back the error message. Never show it the reference or other answers. **One prompt per subagent:** if a subagent sees the four forms of a question together, it repeats the same query and consistency stops measuring anything (this happened once, and that check was discarded).
 3. **Score:** `<run> puntaje`. Tolerance: 5 % for numbers; for lists, F1 of 80 % or more.
-4. **Adjudicate** each question where the paths differ, with each source's data, in `<folder>/adjudicacion.md`: who was right and why. The reference comes from Rastro, so Rastro's advantage can be circular until adjudicated.
+4. **Independently validate every reference**, even when all paths agree. Preserve the checked answer, source/version, supporting artifact and fingerprint, reviewer and date. **Adjudicate** each question where the paths differ, with each source's data, in `<folder>/adjudicacion.md`: who was right and why. The reference comes from Rastro, so Rastro's advantage can be circular until adjudicated.
+
+5. **Publication gate:** `python layer/method.py publication <domain>`. The manifest binds approved evidence to the questions, run artifacts and result. Missing or stale evidence blocks publication, not exploratory scoring. Never invent reviewer approval.
 
 ## After changing data, mappings or rules
 
@@ -50,7 +56,7 @@ The files: questions in `<folder>/eval/questions.yaml`, saved answers in `<folde
 git diff <folder>/resultados.md
 ```
 
-If only the date changed, discard the change (`git checkout <folder>/resultados.*`). If a score changed, explain why in `docs/decisions.md`. Before re-running, check that Rastro starts and answers (skill `verify`).
+Preserve pre-existing edits; review generated diffs, including date-only changes, without Git checkout/reset. If a score changed, explain why in `docs/decisions.md`. Before re-running, check that Rastro starts and answers (skill `verify`).
 
 ## Other question sets
 

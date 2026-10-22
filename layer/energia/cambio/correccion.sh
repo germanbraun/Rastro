@@ -10,6 +10,14 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+
+# All mutations run under a snapshot guard; never overwrite pre-existing edits.
+if [ -z "${RASTRO_CHANGE_GUARD:-}" ]; then
+  case "${1:-}" in
+    registrar) exec python3 "$ROOT/layer/change_guard.py" run correccion ;;
+    *) echo "Use registrar (guarded); recover with python3 layer/change_guard.py recover"; exit 1 ;;
+  esac
+fi
 CSV="$ROOT/linking/energia/participaciones-revisadas.csv"
 compose() { docker compose -f "$ROOT/infra/docker-compose.yml" "$@"; }
 
@@ -27,9 +35,9 @@ rearmar() {
 case "${1:-}" in
   registrar)
     python3 "$ROOT/layer/energia/cambio/correccion.py" con
-    cp "$CSV" "$CSV.bak"
-    trap 'mv "$CSV.bak" "$CSV"; rearmar; git -C "$ROOT" checkout -- layer/energia/respuestas' EXIT
-    head -1 "$CSV.bak" > "$CSV"                      # sin la corrección: solo el encabezado
+    # Guard snapshots before the first measurement, including all saved answers.
+    head -1 "$CSV" > "$CSV.tmp"
+    mv "$CSV.tmp" "$CSV"
     rearmar
     python3 "$ROOT/layer/energia/cambio/correccion.py" sin ;;
   *) echo "Uso: correccion.sh registrar"; exit 1 ;;

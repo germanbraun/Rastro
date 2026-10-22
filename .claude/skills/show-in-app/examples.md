@@ -28,11 +28,11 @@ deck and the script by hand; the cards were right because they read the JSON.
 
 ## Technical view (oil and gas)
 
-- Console: `/ontology/energia/queries`, port 8082 (`CONSOLE` in `app/dominio.py`).
-- Example records (`INSTANCES`): the concession Loma Campana, the company YPF, Chevron's share in Loma Campana (a link
+- Console: `/ontology/energia/queries`, port 8082 (the domain registry).
+- Example records (`technical.instances` in the domain YAML): the concession Loma Campana, the company YPF, Chevron's share in Loma Campana (a link
   with evidence), the operator link of well 107709, a well's production in December 2025, a venting seen by satellite and
   the link that places it in its concession.
-- Pieces (`PIECES`): the partners of each concession separated from the map's text, the company names joined across
+- Pieces (`technical.pieces` in the domain YAML): the partners of each concession separated from the map's text, the company names joined across
   sources, the operator of each well, each venting in its concession, with their R2RML blocks.
 - Quality rules: «Bajo el capó → Reglas de calidad (SHACL)», each rule with a real record in Turtle and a broken
   example.
@@ -48,4 +48,4 @@ with citations, check.
 ## The map (oil and gas)
 
 `map_data` in `app/dominio.py` queries `energia:Concession`, `energia:DetectedVenting`, `energia:Pipeline` and
-`energia:ConcessionToReview` with `geo:asWKT`: it is the clearest piece of per-domain code still in the template.
+`energia:ConcessionToReview` with `geo:asWKT`: its domain-specific queries and display settings now live in `technical.map` in the domain YAML.

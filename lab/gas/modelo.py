@@ -144,7 +144,8 @@ def sql_local(query):
     import io
     import subprocess
     out = subprocess.run(["docker", "compose", "exec", "-T", "postgres", "psql", "-U", os.environ.get("PG_USER", "rastro"),
-                          "--csv", "-c", query], capture_output=True, text=True, check=True, cwd=RAIZ).stdout
+                          "-d", os.environ.get("PG_DB", "rastro"), "--csv", "-c", query],
+                         capture_output=True, text=True, check=True, cwd=RAIZ).stdout
     return pd.read_csv(io.StringIO(out), dtype={"idpozo": str})
 
 
@@ -162,7 +163,8 @@ def sql_ejecutar(script):
     """Ejecuta un script SQL en Postgres por docker compose (todo o nada)."""
     import subprocess
     subprocess.run(["docker", "compose", "exec", "-T", "postgres", "psql", "-U", os.environ.get("PG_USER", "rastro"), "-q",
-                    "-v", "ON_ERROR_STOP=1", "-1", "-f", "-"], input=script, text=True, check=True, cwd=RAIZ)
+                    "-d", os.environ.get("PG_DB", "rastro"), "-v", "ON_ERROR_STOP=1", "-1", "-f", "-"],
+                   input=script, text=True, check=True, cwd=RAIZ)
 
 
 def porcentaje_del_mapa(texto, empresa):

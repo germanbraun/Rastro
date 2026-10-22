@@ -17,6 +17,8 @@ Three principles:
    production for" something is not interchangeable. The agent proposes, with evidence and alternatives; it does not
    decide silently.
 
+The executable handoffs, evidence formats and gates are specified in [method-contracts.md](method-contracts.md).
+
 ## The steps
 
 Each step has a skill that does it, a check that decides whether it passes, a human approval only where there is a
@@ -39,7 +41,8 @@ and every prediction saved with the data it used.
 
 ## Before step 0: start a domain
 
-A new domain starts as an empty shell that already runs, so every later step can be checked from the first day.
+The `start-domain` skill owns initialization. A new domain starts as a minimal scaffold. Runtime readiness must be
+checked, not assumed from an empty mapping. Record pending capabilities until the first minimal implementation runs.
 
 1. **Name and prefix:** a short name in lowercase (`<domain>`), which is also the SPARQL prefix (`<prefix>:`) and the
    namespace `https://w3id.org/rastro/<domain>#`.
@@ -52,7 +55,7 @@ A new domain starts as an empty shell that already runs, so every later step can
    `reader.sql`) and `data/<source>/` per source.
 4. **Its own Ontop service** in `infra/docker-compose.yml`, copying an existing one, with the domain's ontology and
    mapping and a free port; and the read-only database users for the evaluation (`reader.sql`).
-5. **Check that the shell runs:** the Ontop service starts and is healthy, and `ontology-check` passes. Then step 0.
+5. **Check that the shell runs:** the Ontop service starts and is healthy, and `ontology-check` passes. If the runtime needs its first mapping, record that dependency and proceed with an approved question; do not claim readiness yet.
 
 **A person approves:** the domain's scope (which sources, which period, which region) and who answers the business
 questions.
@@ -116,7 +119,7 @@ the process, it becomes clear what is not general yet. Whatever comes out is pub
 
 ## The experiment log
 
-The experiment is measured with a log, one file per domain (`docs/experiments/<domain>.md`), filled in while the work
+The experiment is measured with a log, one file per domain (`docs/experiments/<domain>.yaml`, following `method-contracts.md`), filled in while the work
 happens, not afterwards:
 
 **Header:** domain, sources, who wrote the business questions, start and end date, the method version (the commit).

@@ -5,6 +5,10 @@ description: Show a domain's semantic layer in the Rastro app - the business vie
 
 # Show a domain in the app
 
+Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
+For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
+
+
 The step "Show" of the method (`docs/method.md`), between "Measure" and "Maintain": the semantic layer is delivered as an
 app that a business person can use and a technical person can audit. The app is a template: what belongs to a domain is
 described in its configuration file, not programmed.
@@ -77,7 +81,7 @@ described in its configuration file, not programmed.
 3. **Business view first:** write the example questions of the proposal. For each: the question in plain words (`simple`), the technical wording (`tecnica`), the query file, readable
    column names, "why this number" for its main column, what Rastro added, the glossary. Use the users' words, never
    class or table names.
-4. **What can be trusted:** point the cards and sections to the domain's measurement files (`evaluacion`, `cambio`,
+4. **What can be trusted:** require `python layer/method.py publication <domain>` before showing new accuracy claims. Missing independent evidence means provisional, not published. point the cards and sections to the domain's measurement files (`evaluacion`, `cambio`,
    `evidencia`, `calidad`, `fuera`). Card texts use placeholders filled from those files (`{c_correct}`, `{b_correct}`),
    never typed numbers.
 5. **Technical view:** register the domain's pieces for the technical view (the console's queries folder and port,
@@ -89,7 +93,7 @@ described in its configuration file, not programmed.
    - the summary is saved with its date (`.json`, with `consulta`, `simple`, `como`, `temas`); the records are read
      live, so anyone can open a cited record and read the original text;
    - if the data changes, the summary is generated again; a person checks that each citation says what the theme says.
-7. **Check** (below), in the browser, in both views.
+7. **Check** (below), in both views with the real runner: `docker compose run --rm --no-deps -T app python /app/check_domain.py <domain>`. Then inspect the visual layout in the browser.
 
 ## The check that decides
 
@@ -126,9 +130,10 @@ described in its configuration file, not programmed.
 
 - **Numbers typed in prose drift:** a number written into a sentence of the configuration stays when the measurement
   changes. Prefer placeholders; when prose needs a number, check it after every re-measurement.
-- **The technical view still has per-domain lists in the code** (console queries folder and port, example records,
-  ontology file, link tables and mapping blocks, the map's queries). A new domain adds its entries there until they
-  move into the domain's YAML; record that as a method change in the experiment log.
+- **All technical-view configuration is data:** register `method.app` and use the domain YAML's
+  `technical.instances`, `technical.pieces` and optional `technical.map`. The registry supplies the ontology,
+  query folder and port. A new domain must not add Python lists. A map uses the existing polygon/point/line
+  result schema and configurable queries, view state, tooltip and caption.
 - **A saved text summary goes stale** when the records it read change; its date is on screen, and it is regenerated,
   not edited by hand.
 - **Jargon leaks into the business view** through column names and error messages; check the business view as a

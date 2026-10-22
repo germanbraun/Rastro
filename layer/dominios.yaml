@@ -17,13 +17,15 @@ oncologia:
   namespace: https://w3id.org/rastro/oncologia#
   # Where each piece of the method lives for this domain (read by the method skills; see docs/method.md)
   method:
+    app: app/dominios/oncologia.yaml
+    app_mode: legacy
     questions: ontology/competency-questions.md
     queries: ontology/queries/
     mapping: mappings/rastro.r2rml.ttl
     ontop: {service: ontop, port: 8080}
     loaders: [aact-loader, chembl-loader, openfda-loader, mesh-loader]
     linker: {service: linker, folder: linking/, corrections: [linking/regimens.csv, linking/generic_words.csv]}
-    evaluation: {folder: layer/eval, run: docker compose run --rm layer-eval}
+    evaluation: {folder: layer/eval, harness: legacy, run: docker compose run --rm layer-eval}
     evidence: {result: layer/eval/evidencia.json, link_classes: [DrugLink],
                pattern: "?l prov:wasDerivedFrom ?f ; oncologia:interventionText ?t ; oncologia:linkRule ?r ."}
   # De qué fuente viene cada término de la ontología («rastro» = enlace de Rastro)
@@ -53,13 +55,14 @@ proveedores:
   readers: {B: proveedores_reader, D: proveedores_reader_links}
   namespace: https://w3id.org/rastro/proveedores#
   method:
+    app: app/dominios/proveedores.yaml
     questions: ontology/proveedores/competency-questions.md
     queries: ontology/proveedores/queries/
     mapping: mappings/proveedores.r2rml.ttl
     ontop: {service: ontop-proveedores, port: 8081}
     loaders: [usaspending-loader, naics-loader, csl-loader, gleif-loader, wikidata-loader]
     linker: {service: proveedores-linker, folder: linking/proveedores/, corrections: [linking/proveedores/correcciones.csv]}
-    evaluation: {folder: layer/proveedores, run: docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores}
+    evaluation: {folder: layer/proveedores, harness: current, run: docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores}
     change_tests: layer/proveedores/cambio/
     evidence: {result: layer/proveedores/evidencia.json, link_classes: [GroupLink, LeiLink, WatchlistLink],
                pattern: "?l prov:wasDerivedFrom ?f ; proveedores:sourceText ?t ."}
@@ -91,7 +94,8 @@ energia: &energia
   links_notes: layer/energia/sql-enlaces-notes.md
   readers: {B: energia_reader, D: energia_reader_links}
   namespace: https://w3id.org/rastro/energia#
-  method:
+  method: &energia_method
+    app: app/dominios/energia.yaml
     questions: ontology/energia/competency-questions.md
     queries: ontology/energia/queries/
     mapping: mappings/energia.r2rml.ttl
@@ -99,10 +103,10 @@ energia: &energia
     loaders: [energia-loader, lab-gas-loader, wikidata-energia-loader]
     linker: {service: energia-linker, folder: linking/energia/,
              corrections: [linking/energia/correcciones.csv, linking/energia/participaciones-revisadas.csv]}
-    quality: {rules: ontology/energia/calidad/reglas.ttl, examples: ontology/energia/calidad/ejemplos.yaml,
+    quality: {prefix: energia, rules: ontology/energia/calidad/reglas.ttl, examples: ontology/energia/calidad/ejemplos.yaml,
               result: layer/energia/calidad.json, run: docker compose run --rm calidad,
               data: ontology/energia/calidad/datos.yaml, predictions: ontology/energia/calidad/predicciones.rq}
-    evaluation: {folder: layer/energia, run: docker compose run --rm -T layer-eval python /layer/evaluar.py energia}
+    evaluation: {folder: layer/energia, harness: current, run: docker compose run --rm -T layer-eval python /layer/evaluar.py energia}
     change_tests: layer/energia/cambio/
     evidence: {result: layer/energia/evidencia.json,
                link_classes: [Stake, OperatorLink, CompanyName, LocationLink, PipelineLink, SurroundingsLink,
@@ -149,3 +153,7 @@ energia_lab:
   sql_notes: layer/energia_lab/sql-notes.md
   links_notes: layer/energia_lab/sql-enlaces-notes.md
   readers: {B: energia_lab_reader, D: energia_lab_reader_links}
+  method:
+    <<: *energia_method
+    evaluation: {folder: layer/energia_lab, harness: current,
+                 run: docker compose run --rm -T layer-eval python /layer/evaluar.py energia_lab}

@@ -1,0 +1,22 @@
+domain: oncologia
+
+# Configuración de la vista técnica; sin listas por dominio en Python.
+technical:
+  instances:
+    'Un fármaco: trastuzumab': https://w3id.org/rastro/drug/CHEMBL1201585
+    Un ensayo: https://w3id.org/rastro/trial/NCT00021255
+    Por qué un ensayo prueba un fármaco (enlace con evidencia): https://w3id.org/rastro/link/NCT00003440/CHEMBL1201585
+  pieces:
+    mapeos: /mappings/rastro.r2rml.ttl
+    enlaces:
+    - - Qué escribió cada ensayo y qué fármaco reconoció Rastro (trastuzumab)
+      - "SELECT t.nct_id AS ensayo, t.intervention AS lo_que_escribio_el_ensayo, t.matched\
+        \ AS coincidio_con,\n                       d.pref_name AS farmaco, t.rule\
+        \ AS regla\n                FROM linking.trial_drug t JOIN linking.drug d\
+        \ ON d.chembl_id = t.parent_chembl_id\n                WHERE d.pref_name =\
+        \ 'TRASTUZUMAB' AND lower(t.intervention) NOT LIKE '%trastuzumab%' ORDER BY\
+        \ t.nct_id LIMIT 8"
+    mapas:
+    - - El ensayo prueba un fármaco, con su evidencia
+      - - TrialDrug
+        - DrugLink

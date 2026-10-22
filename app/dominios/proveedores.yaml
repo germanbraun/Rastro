@@ -465,3 +465,25 @@ faq:
       y enlaces en el esquema `proveedores` (`linking/proveedores/`); un segundo Ontop en el puerto 8081 con
       su ontología (`ontology/proveedores/`) y sus mapeos (`mappings/proveedores.r2rml.ttl`). Cada enlace
       se expone con PROV-O.
+
+# Configuración de la vista técnica; sin listas por dominio en Python.
+technical:
+  instances:
+    'Un grupo: Leidos': https://w3id.org/rastro/proveedores/group/549300IUTGTP6EJP8124
+    'Un proveedor: la SAIC de hoy': https://w3id.org/rastro/proveedores/supplier/MMLKPW9JLX64
+    Por qué ese proveedor es de su grupo (enlace con evidencia): https://w3id.org/rastro/proveedores/link/group/MMLKPW9JLX64
+    Un contrato: https://w3id.org/rastro/proveedores/contract/CONT_AWD_HHSN261200800001E_7529_-NONE-_-NONE-
+  pieces:
+    mapeos: /mappings/proveedores.r2rml.ttl
+    enlaces:
+    - - Pasos 1 y 2 · Las empresas del grupo Leidos, con la evidencia de cada una
+      - "SELECT s.name AS proveedor, sg.matrix_name AS matriz_en_usaspending, g.name\
+        \ AS grupo, sg.rule AS regla,\n                       sg.source_text AS evidencia\n\
+        \                FROM proveedores.supplier_group sg JOIN proveedores.supplier\
+        \ s ON s.uei = sg.supplier_uei\n                JOIN proveedores.group_company\
+        \ g USING (group_id)\n                WHERE g.name LIKE 'LEIDOS%' OR s.uei\
+        \ = 'MMLKPW9JLX64' ORDER BY g.name, s.name LIMIT 8"
+    mapas:
+    - - Pasos 1 y 2 · Proveedor, grupo y el enlace con su evidencia
+      - - SupplierGroup
+        - GroupLink

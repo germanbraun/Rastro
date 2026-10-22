@@ -5,6 +5,10 @@ description: Map a source that is already loaded to Rastro's business dictionary
 
 # Map a source to the dictionary
 
+Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
+For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
+
+
 Steps 2 and 3 of the method (`docs/method.md`): the dictionary and the mappings go together, because a new concept without
 a mapping answers nothing, and a mapping without a concept does not exist for the assistant.
 
@@ -79,11 +83,11 @@ A new domain gets its own entry, following the existing ones.
   `docker compose logs <method.ontop.service>`.
 - `docker compose run --rm ontology-check` is OK: each query uses only declared terms, in every domain.
 - **Every competency question of the domain answers** and the answer makes sense to a business person:
-  `curl -s -H 'Accept: text/csv' --data-urlencode "query@<method.queries>/cq<N>.rq" http://localhost:<method.ontop.port>/sparql`
+  `python layer/method.py verify <domain> --expectations layer/<domain>/query-checks.yaml`
 - **The counts match the source:** `SELECT (COUNT(DISTINCT ?x) AS ?n) WHERE { ?x a <prefix>:<Class> }` against
   `SELECT count(*)` on the table. If Rastro counts too many, it is almost always an extra `rdfs:domain`.
 - **What was measured does not change by accident:** run the domain's evaluation (`method.evaluation.run`) with
-  `rerun` and `puntaje`; if only the date changed, discard it. If the registry has no `method.evaluation`, the domain
+  `rerun` and `puntaje` for the current harness (use the declared legacy runner otherwise); preserve and review generated diffs without resetting pre-existing edits. If the registry has no `method.evaluation`, the domain
   is not measured yet.
 
 ## A person approves

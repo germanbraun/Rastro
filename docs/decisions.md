@@ -749,3 +749,55 @@ Se leyó entera la tesis que sirve de validación (solo para validar, sin citarl
 - **Three new skills, one per method step that had none:** `map-source` (dictionary and mapping together, steps 2 and 3), `link-entities` (step 4) and `quality-rules` (step 5). Each has a contract, the steps "narrow down, decide, test", the check that decides, what a person approves, its grounding in the literature and what went wrong in Rastro.
 - **Two lessons written into the rules:** one prompt per evaluator (`evaluate`, `CLAUDE.md`), and stage only the files you changed when committing (`close-phase`, `CLAUDE.md`).
 - **Still in Spanish, for a second pass:** comments and docstrings in the code, and the other technical docs.
+
+## 2026-10-22 — Executable contracts for method skills
+
+Keep the existing skill structure and add a shared contract (`docs/method-contracts.md`) plus `start-domain`.
+Questions progress from proposed requirements to approved, implemented and validated states. New-domain experiments
+must record measured time, interventions, caught errors and method changes; closure checks their evidence without
+inventing history for existing domains.
+
+`layer/method.py` validates registry targets and fingerprinted query assertions, and gates new accuracy claims on
+independently reviewed references for every question, matching the reference actually scored. Missing evidence
+remains pending; existing published numbers were not re-adjudicated. Correct the Lab question-set target, declare
+legacy/current evaluation harnesses and remove registry paths that do not exist. Quality defects have explicit
+reviewed dispositions, distinct from failed runners.
+
+Energy change tests now preserve actual starting files and affected tables through `layer/change_guard.py`, including
+local edits, untracked answers and original model runs. Restoration uses saved values and transactional equality
+checks instead of inverse arithmetic or Git checkout. Recovery data survives failed cleanup; concurrent writers
+must be stopped. Database helpers explicitly select the same database as the snapshots. Full energy scenarios
+still require loaded sources; isolated Postgres recovery tests exercise the rollback without those sources.
+
+## 2026-10-22 — Generic domain infrastructure and enforced lifecycle
+
+Add executable lifecycle transitions in `layer/lifecycle.py`. Real human approval artifacts bind exact proposals;
+query validation executes HTTP assertions and ontology checks. Changes to definitions, approval records, source
+manifests, mappings, queries or expectations invalidate dependent receipts. Adopted domains expose only current
+validated questions in the app; accuracy cards and guided demos remain hidden while independent review is pending.
+Existing domains retain explicit legacy status rather than invented historical approvals.
+
+Move quality CONSTRUCT queries and prediction-lineage queries into domain files. The shared SHACL runner and tests
+read every configured domain's namespace, paths and endpoint. Zero-target checks remain pending, and good/bad
+examples cannot pass vacuously. Move app instance lists, mapping/link panels and map queries/settings into domain
+YAML; console and ontology paths come from the registry. App cache invalidation no longer requires Lab tables.
+Pin PyArrow 19.0.1 because the previously resolved release rejected the development NumPy 1.26.4 at render time.
+
+The new shared-property checker found three energy domains to remove: `date` wrongly typed environmental studies as
+venting, `aboutVenting` wrongly typed surroundings links as location links, and `reviewReason` redundantly implied a
+superclass already supplied by the mapped subclass hierarchy. Keep the existing definitions, ranges and hierarchy;
+remove the shared-property domains as required by the method. Inference regression tests cover the unwanted types
+and the preserved superclass. The full energy evaluation must be rerun with loaded source data before new claims.
+
+`layer/experiment.py` preserves each technical check's exit status, output, duration and method-file fingerprints.
+A legacy rerun no longer generates missing LLM answers when a provider is configured. `app/check_domain.py` checks
+live examples and both app views; it requires the real services. The synthetic tests use an unfamiliar library
+vocabulary, with no claims of real business approval. Validation here: 56 tests passed, including five isolated
+Postgres checks, HTTP lifecycle validation and both template views; registry, ontology, lint and dependency checks
+passed. These software tests are distinct from the proposed public-data experiment.
+
+Profile public country/currency-code datasets over verified HTTPS and retain exact file hashes in
+`docs/experiments/countrycodes/source-profile.json`; source snapshots remain outside version control. The concrete
+proposal is unapproved, and no independent answer review, model comparison or two-domain generalization result is
+claimed. The next empirical step is approval of scope/questions, then the documented experiment with independent
+B/D/C evaluators and live time/intervention logging, repeated on a second unfamiliar domain.

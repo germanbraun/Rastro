@@ -96,7 +96,8 @@ def main():
 
     from answer import APPROACHES, MODEL, PROVIDER, run_sparql, to_answer, try_query  # noqa: E402
 
-    can_generate = PROVIDER == "ollama" or bool(os.environ.get("ANTHROPIC_API_KEY"))
+    # A rerun only executes saved queries, even if a provider is configured.
+    can_generate = not args.rerun and (PROVIDER == "ollama" or bool(os.environ.get("ANTHROPIC_API_KEY")))
     if not can_generate:
         print("Sin ANTHROPIC_API_KEY ni Ollama: solo se puntúan las respuestas guardadas.\n")
 

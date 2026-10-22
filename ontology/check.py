@@ -8,12 +8,14 @@ import sys
 from pathlib import Path
 
 import rdflib
-from rdflib.namespace import OWL, RDF
+from rdflib.namespace import OWL, RDF, RDFS
+
+import yaml
 from rdflib.plugins.sparql import prepareQuery
 
 # Carpetas de los dominios: cada una con su ontología (*.ttl) y sus queries/
 AQUI = Path(__file__).parent
-DOMINIOS = [Path(a) for a in sys.argv[1:]] or [AQUI, AQUI / "energia", AQUI / "proveedores"]
+ROOT = AQUI.parent
 NS = "https://w3id.org/rastro/oncologia#"
 
 
@@ -36,17 +38,52 @@ def terms_in(node, found, seen):
             terms_in(v, found, seen)
 
 
-def revisar(carpeta):
+def shared_domain_errors(ontology, mapping):
+    """Find shared predicates from explicit R2RML subject classes, not inferred domain types."""
+    rr = rdflib.Namespace("http://www.w3.org/ns/r2rml#")
+    uses = {}
+    for triples_map, subject_map in mapping.subject_objects(rr.subjectMap):
+        classes = set(mapping.objects(subject_map, rr["class"]))
+        for pom in mapping.objects(triples_map, rr.predicateObjectMap):
+            predicates = set(mapping.objects(pom, rr.predicate))
+            for predicate_map in mapping.objects(pom, rr.predicateMap):
+                predicates.update(mapping.objects(predicate_map, rr.constant))
+            for predicate in predicates:
+                uses.setdefault(predicate, set()).update(classes)
+    # Also check explicit typed examples supplied in the ontology itself.
+    for subject, predicate, _ in ontology:
+        uses.setdefault(predicate, set()).update(ontology.objects(subject, RDF.type))
+    return [f"Shared property {predicate} has rdfs:domain but is used by {sorted(map(str, classes))}"
+            for predicate, classes in uses.items() if len(classes) > 1 and (predicate, RDFS.domain, None) in ontology]
+
+
+def registered_targets(root=ROOT):
+    registry = yaml.safe_load((root / "layer/dominios.yaml").read_text())
+    targets = {}
+    for cfg in registry.values():
+        method = cfg.get("method", {})
+        if cfg.get("ontology") and method.get("mapping") and method.get("queries"):
+            key = (root / cfg["ontology"], root / method["mapping"], root / method["queries"])
+            targets[key] = key
+    return list(targets.values())
+
+
+def revisar(carpeta, mapping=None, queries=None):
     global NS
-    g = rdflib.Graph().parse(next(carpeta.glob("*.ttl")))
+    ontology = carpeta if carpeta.is_file() else next(carpeta.glob("*.ttl"))
+    g = rdflib.Graph().parse(ontology)
     NS = str(next(g.subjects(RDF.type, OWL.Ontology))) + "#"
     declared = {str(s) for s in g.subjects() if str(s).startswith(NS)}
     print(f"Ontología {carpeta.name}: {len(set(g.subjects(RDF.type, OWL.Class)))} clases, "
           f"{len(set(g.subjects(RDF.type, OWL.ObjectProperty)))} relaciones, "
           f"{len(set(g.subjects(RDF.type, OWL.DatatypeProperty)))} atributos")
 
-    ok = True
-    for f in sorted((carpeta / "queries").glob("*.rq")):
+    errors = shared_domain_errors(g, rdflib.Graph().parse(mapping) if mapping else rdflib.Graph())
+    for error in errors:
+        print(error)
+    ok = not errors
+    folder = queries or (ontology.parent / "queries")
+    for f in sorted(folder.glob("*.rq")):
         try:
             used = set()
             terms_in(prepareQuery(f.read_text()).algebra, used, set())
@@ -64,7 +101,16 @@ def revisar(carpeta):
 
 
 def main():
-    ok = all([revisar(c) for c in DOMINIOS])
+    targets = registered_targets()
+    if sys.argv[1:]:
+        folders = {Path(arg).resolve() for arg in sys.argv[1:]}
+        selected = [target for target in targets if target[0].parent.resolve() in folders or target[0].resolve() in folders]
+        if not selected:
+            raise ValueError("No registered ontology matches the requested paths")
+        targets = selected
+    if not targets:
+        raise ValueError("No registered ontologies to check")
+    ok = all([revisar(ontology, mapping, queries) for ontology, mapping, queries in targets])
     sys.exit(0 if ok else 1)
 
 

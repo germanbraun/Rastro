@@ -5,6 +5,10 @@ description: Link entities across sources in Rastro (the same company, place or 
 
 # Link across sources, with evidence
 
+Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
+For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
+
+
 Step 4 of the method (`docs/method.md`). It is the step that adds the most value and the one that hides the most business
 decisions: saying that two records are the same thing, or that a company "operates" or "owns" something, is a rule, and
 the rule has to stay visible.

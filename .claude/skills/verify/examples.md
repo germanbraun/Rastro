@@ -1,38 +1,37 @@
 # Worked examples from Rastro's domains
 
-## Oil and gas (`energia`, the demo): always
+These are domain paths and historical evidence. Use the executable contracts in `SKILL.md` and
+`docs/method-contracts.md`; historical scores are not immutable expected values.
+
+## Oil and gas (`energia`)
 
 ```bash
-docker compose ps                                      # postgres, ontop-energia and app up; ontop-energia healthy
+python layer/method.py registry energia
 docker compose exec -T postgres psql -U rastro -c "select * from rastro_meta.source_counts"
-docker compose run --rm ontology-check                 # OK on every query of the three domains
-for q in ontology/energia/queries/cq*.rq; do echo "$q $(curl -s -H 'Accept: text/csv' --data-urlencode "query@$q" http://localhost:8082/sparql | wc -l) filas"; done
+docker compose run --rm ontology-check python /ontology/check.py /ontology/energia
+# Requires reviewed query expectations; missing evidence remains pending:
+python layer/method.py verify energia --expectations layer/energia/query-checks.yaml
 docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun
-docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje   # without Rastro 7/10, SQL + links 10/10, with Rastro 10/10
-git diff --stat layer/energia                          # only the date should change: if so, git checkout layer/energia/resultados.*
-python3 lab/gas/modelo.py | head -8                    # A and B gas match; A and B error; doubtful data
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje
+git diff layer/energia/resultados.md   # preserve pre-existing edits; no Git reset/checkout
+python3 lab/gas/modelo.py             # inspect the complete output and exit status
+python layer/method.py publication energia
 ```
 
-The oil and gas quality rules (SHACL): `docker compose run --rm calidad` (about 3 minutes). All of them in «se cumple» (holds); if one does not, the detail is in `layer/energia/calidad.json` and in the app («Bajo el capó», Under the hood).
+Historical evaluation: B 7/10, D 10/10, C 10/10. Re-measure and investigate changes rather than enforcing those
+numbers. The query gate covers every current competency query, including any explicitly expected empty answer.
+Historical Lab consistency output says A's and B's gas match in every well; execute the model to verify it today.
 
-What to expect:
+Quality runner: `docker compose run --rm calidad`, with results in `layer/energia/calidad.json`. Review detected
+source defects and their downstream impact separately from runner/test failures.
 
-- `ontop-energia` `healthy`. If it does not start, `docker compose logs ontop-energia`.
-- The 10 competency queries with rows, in a few seconds each.
-- The evaluation with the same scores as `layer/energia/resultados.md`.
-- Rastro Lab: «El gas de A (SQL) y el de B (Rastro) coinciden en todos los pozos: True» (A's and B's gas match in every well).
+In the app, exercise the Demo and Lab tabs. Restart imported modules when changed; health alone is insufficient.
 
-The app: open http://localhost:8501 and walk through the **Demo** tab (the four moments) and **Rastro Lab**. If you changed `app/dominio.py`, `app/lab.py` or `lab/gas/modelo.py`, restart it: `docker compose restart app`.
+## Suppliers, oncology and Lab question sets
 
-## US suppliers (`proveedores`) and oncology (`oncologia`): when you touched them
+Registry entries supply the Ontop service/port and evaluation harness. Suppliers use `proveedores` with the current
+harness; oncology uses the legacy runner and `--rerun`. Oncology's service is `ontop`, not `ontop-proveedores`.
+Start required services only as needed and restore their previous running state afterwards.
 
-They are stopped to save memory (`ontop-proveedores`, `graphdb`). Start them, verify and stop them again:
-
-```bash
-docker compose start ontop-proveedores graphdb
-curl -s -H 'Accept: text/csv' --data-urlencode 'query@ontology/proveedores/queries/cq1.rq' http://localhost:8081/sparql | head -3
-curl -s -H 'Accept: text/csv' --data-urlencode 'query@ontology/queries/cq1.rq' http://localhost:8080/sparql | head -3
-docker compose stop ontop-proveedores graphdb
-```
-
-If GraphDB restarts on its own, it is almost always Docker memory: check which other containers are running.
+`energia_lab` shares energy's ontology/service, but its evaluation folder is `layer/energia_lab` and its command must
+end in `evaluar.py energia_lab`. It must not inherit energy's question-set target.

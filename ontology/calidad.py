@@ -1,141 +1,205 @@
-"""Comprueba las reglas de calidad (SHACL) de petróleo y gas sobre los datos de Rastro.
+"""Registry-driven SHACL checks. python ontology/calidad.py [domain] [--examples-only].
 
-Trae de Rastro, con CONSTRUCT, solo lo que miran las reglas, lo valida con cada regla de
-ontology/energia/calidad/reglas.ttl y escribe el resultado en layer/energia/calidad.json (lo lee la app).
-
-    docker compose run --rm calidad
+Execution failures exit nonzero. Detected source defects remain in the result with their
+coverage and affected predictions; they are not silently corrected or treated as runner errors.
 """
-
+import argparse
 import json
 import os
-import re
+from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
 import requests
 import yaml
 from pyshacl import validate
-from rdflib import RDF, Graph, Namespace
+from rdflib import BNode, RDF, RDFS, Graph, Namespace
 
-REGLAS = Path(__file__).parent / "energia" / "calidad" / "reglas.ttl"
-EJEMPLOS = Path(__file__).parent / "energia" / "calidad" / "ejemplos.yaml"
-PREFIJOS_TTL = ("@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n"
-                "@prefix e: <https://w3id.org/rastro/energia/> .\n")
-SALIDA = Path("/layer/energia/calidad.json")
-ONTOP = os.environ.get("ONTOP_ENERGIA", "http://ontop-energia:8080/sparql")
+ROOT = Path(__file__).resolve().parents[1]
 SH = Namespace("http://www.w3.org/ns/shacl#")
-PROV = Namespace("http://www.w3.org/ns/prov#")
-PREFIJOS = "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\n"
-
-# Lo que miran las reglas, y nada más: cada enlace con su regla, fuente y evidencia; las participaciones;
-# las predicciones con lo que usaron; las empresas con LEI
-DATOS = [
-    """CONSTRUCT { ?s energia:rule ?r ; prov:wasDerivedFrom ?f ; energia:sourceText ?t }
-       WHERE { ?s energia:rule ?r . OPTIONAL { ?s prov:wasDerivedFrom ?f } OPTIONAL { ?s energia:sourceText ?t } }""",
-    """CONSTRUCT { ?s a energia:Stake ; energia:percent ?p ; energia:partner ?e ; energia:inConcession ?c }
-       WHERE { ?s a energia:Stake . OPTIONAL { ?s energia:percent ?p } OPTIONAL { ?s energia:partner ?e }
-               OPTIONAL { ?s energia:inConcession ?c } }""",
-    """CONSTRUCT { ?p a energia:Prediction ; prov:used ?u ; energia:predictedGas ?g ; energia:predictedLow ?l ;
-                  energia:predictedHigh ?h . ?u a ?t }
-       WHERE { ?p a energia:Prediction . OPTIONAL { ?p energia:predictedGas ?g } OPTIONAL { ?p energia:predictedLow ?l }
-               OPTIONAL { ?p energia:predictedHigh ?h } OPTIONAL { ?p prov:used ?u . ?u a ?t } }""",
-    """CONSTRUCT { ?e a energia:Company ; energia:lei ?l } WHERE { ?e a energia:Company ; energia:lei ?l }""",
-    """CONSTRUCT { ?t a energia:WellTrajectory ; energia:verticalDepthM ?d ; energia:lateralLengthM ?r }
-       WHERE { ?t a energia:WellTrajectory . OPTIONAL { ?t energia:verticalDepthM ?d } OPTIONAL { ?t energia:lateralLengthM ?r } }""",
-    """CONSTRUCT { ?f a energia:Fracturing ; energia:maxPressurePsi ?p ; energia:waterM3 ?a }
-       WHERE { ?f a energia:Fracturing . OPTIONAL { ?f energia:maxPressurePsi ?p } OPTIONAL { ?f energia:waterM3 ?a } }""",
-]
 
 
-def traer():
-    datos = Graph()
-    for q in DATOS:
-        r = requests.post(ONTOP, data={"query": PREFIJOS + q}, headers={"Accept": "text/turtle"}, timeout=600)
-        r.raise_for_status()
-        datos.parse(data=r.text, format="turtle")
-    return datos
+@dataclass
+class QualityConfig:
+    domain: str
+    rules: Path
+    examples: Path
+    data: Path
+    result: Path
+    endpoint: str
+    namespace: str
+    prefix: str
+    predictions: Path | None = None
+
+    @property
+    def prefixes(self):
+        return f"PREFIX {self.prefix}: <{self.namespace}>\nPREFIX prov: <http://www.w3.org/ns/prov#>\n"
+
+    @classmethod
+    def load(cls, domain="energia", root=ROOT):
+        registry = yaml.safe_load((root / "layer/dominios.yaml").read_text())
+        cfg = registry[domain]
+        quality = cfg.get("method", {}).get("quality")
+        if not quality:
+            raise ValueError(f"{domain}: quality coverage is not built")
+        paths = {}
+        for name in ("rules", "examples", "data", "result", "predictions"):
+            if name in quality:
+                path = (root / quality[name]).resolve()
+                if not path.is_relative_to(root.resolve()):
+                    raise ValueError(f"{domain}: quality path escapes root")
+                paths[name] = path
+        prefix = quality.get("prefix", domain)
+        endpoint = os.environ.get(f"ONTOP_{domain.upper()}", cfg["ontop"])
+        return cls(domain=domain, endpoint=endpoint, namespace=cfg["namespace"], prefix=prefix, **paths)
 
 
-def corrida_vigente():
-    """El identificador de la corrida vigente del modelo de Rastro Lab (las predicciones afectadas son las de ella)."""
-    r = requests.post(ONTOP, data={"query": PREFIJOS + "SELECT ?r WHERE { ?r a energia:ModelRun ; energia:current true }"},
-                      headers={"Accept": "application/sparql-results+json"}, timeout=60)
-    r.raise_for_status()
-    filas = r.json()["results"]["bindings"]
-    return filas[0]["r"]["value"].rsplit("/", 1)[-1] if filas else None
-
-
-def bloques():
-    """Las reglas, cada una con su texto tal cual (los prefijos y un bloque por regla)."""
-    texto = REGLAS.read_text()
-    prefijos = "\n".join(line for line in texto.splitlines() if line.startswith("@prefix"))
-    for bloque in re.split(r"\n\s*\n", texto):
-        if bloque.lstrip().startswith("calidad:"):
-            yield prefijos, bloque.strip()
+def bloques(config):
+    """Yield each NodeShape and its complete constraint graph, without layout conventions."""
+    graph = Graph().parse(config.rules)
+    targets = {SH.targetClass, SH.targetNode, SH.targetSubjectsOf, SH.targetObjectsOf}
+    shapes = sorted((shape for shape in set(graph.subjects(RDF.type, SH.NodeShape))
+                     if any(predicate in targets for predicate in graph.predicates(shape))), key=str)
+    if not shapes:
+        raise ValueError(f"{config.domain}: rules contain no NodeShapes")
+    for shape in shapes:
+        part = Graph()
+        for prefix, namespace in graph.namespaces():
+            part.bind(prefix, namespace)
+        pending, seen = [shape], set()
+        while pending:
+            node = pending.pop()
+            if node in seen:
+                continue
+            seen.add(node)
+            for triple in graph.triples((node, None, None)):
+                part.add(triple)
+                if isinstance(triple[2], BNode) or triple[1] in {SH.node, SH.property, SH.qualifiedValueShape}:
+                    pending.append(triple[2])
+        yield shape, part
 
 
 def blancos(datos, forma, regla):
-    """Los datos que mira la regla."""
-    for p, o in forma.predicate_objects(regla):
-        if p == SH.targetClass:
-            return set(datos.subjects(RDF.type, o))
-        if p == SH.targetSubjectsOf:
-            return set(datos.subjects(o, None))
-        if p == SH.targetObjectsOf:
-            return set(datos.objects(None, o))
-    return set()
+    """Union of every explicit SHACL target, including multiple target types."""
+    nodes = set(forma.objects(regla, SH.targetNode))
+    for target in forma.objects(regla, SH.targetClass):
+        for subclass in datos.transitive_subjects(RDFS.subClassOf, target):
+            nodes.update(datos.subjects(RDF.type, subclass))
+    for target in forma.objects(regla, SH.targetSubjectsOf):
+        nodes.update(datos.subjects(target, None))
+    for target in forma.objects(regla, SH.targetObjectsOf):
+        nodes.update(datos.objects(None, target))
+    return nodes
+
+
+def example_graph(config, text):
+    graph = Graph()
+    graph.bind("e", config.namespace.rstrip("#/") + "/")
+    for prefix, namespace in Graph().parse(config.rules).namespaces():
+        graph.bind(prefix, namespace)
+    # Examples can use the vocabulary's declared prefixes, or declare their own.
+    prefixes = "\n".join(f"@prefix {p}: <{n}> ." for p, n in graph.namespaces())
+    return graph.parse(data=prefixes + "\n" + text, format="turtle")
+
+
+def check_examples(config):
+    examples = yaml.safe_load(config.examples.read_text()) or {}
+    shapes = list(bloques(config))
+    ids = {str(shape).rsplit("#", 1)[-1].rsplit("/", 1)[-1].rsplit(":", 1)[-1] for shape, _ in shapes}
+    if set(examples) != ids:
+        raise ValueError(f"{config.domain}: examples must cover exactly every shape")
+    for shape, graph in shapes:
+        name = str(shape).rsplit("#", 1)[-1].rsplit("/", 1)[-1].rsplit(":", 1)[-1]
+        for key, expected in (("bueno", True), ("malo", False)):
+            sample = example_graph(config, examples[name][key])
+            if not blancos(sample, graph, shape):
+                raise ValueError(f"{name}: {key} example has no target nodes")
+            conforms, _, _ = validate(sample, shacl_graph=graph, advanced=True)
+            if conforms != expected:
+                raise ValueError(f"{name}: {key} example did not produce expected conformance")
+    return len(shapes)
+
+
+def traer(config):
+    queries = yaml.safe_load(config.data.read_text())
+    if not isinstance(queries, list) or not queries:
+        raise ValueError("Quality data must contain nonempty CONSTRUCT queries")
+    graph = Graph()
+    for query in queries:
+        response = requests.post(config.endpoint, data={"query": config.prefixes + query},
+                                 headers={"Accept": "text/turtle"}, timeout=600)
+        response.raise_for_status()
+        graph.parse(data=response.text, format="turtle")
+    return graph
+
+
+def prediction_links(config):
+    if config.predictions is None:
+        return {}
+    response = requests.post(config.endpoint, data={"query": config.predictions.read_text()},
+                             headers={"Accept": "application/sparql-results+json"}, timeout=60)
+    response.raise_for_status()
+    links = {}
+    for row in response.json()["results"]["bindings"]:
+        links.setdefault(row["record"]["value"], set()).add(row["prediction"]["value"])
+    return links
 
 
 def en_turtle(datos, nodo, entrantes):
-    """Un dato de Rastro en Turtle: lo que dice de él y, si la regla mira lo que apunta a él (una concesión), eso."""
-    g = Graph()
-    for n in [nodo] + (sorted(datos.subjects(None, nodo))[:4] if entrantes else []):
-        for t in datos.triples((n, None, None)):
-            g.add(t)
-    g.bind("energia", "https://w3id.org/rastro/energia#")
-    g.bind("prov", "http://www.w3.org/ns/prov#")
-    g.bind("e", "https://w3id.org/rastro/energia/")
-    texto = g.serialize(format="turtle")
-    return "\n".join(line for line in texto.splitlines() if not line.startswith("@prefix")).strip()
+    graph = Graph()
+    for prefix, namespace in datos.namespaces():
+        graph.bind(prefix, namespace)
+    for node in [nodo] + (sorted(datos.subjects(None, nodo), key=str)[:4] if entrantes else []):
+        for triple in datos.triples((node, None, None)):
+            graph.add(triple)
+    return graph.serialize(format="turtle")
 
 
-def ejemplo_roto(forma, malo):
-    """Qué dice SHACL del ejemplo roto."""
-    _, informe, _ = validate(Graph().parse(data=PREFIJOS_TTL + malo, format="turtle"), shacl_graph=forma, advanced=True)
-    return sorted({str(informe.value(r, SH.resultMessage)) for r in informe.subjects(RDF.type, SH.ValidationResult)})
+def evaluate(config, data, predictions=None):
+    examples = yaml.safe_load(config.examples.read_text())
+    predictions = predictions or {}
+    result = {"fecha": date.today().isoformat(), "domain": config.domain, "triples": len(data), "reglas": []}
+    for shape, graph in bloques(config):
+        _, report, _ = validate(data, shacl_graph=graph, advanced=True)
+        failures = [{"dato": str(report.value(node, SH.focusNode)), "mensaje": str(report.value(node, SH.resultMessage)),
+                     "predicciones": sorted(predictions.get(str(report.value(node, SH.focusNode)), []))}
+                    for node in report.subjects(RDF.type, SH.ValidationResult)]
+        bad = {failure["dato"] for failure in failures}
+        targets = blancos(data, graph, shape)
+        passing = sorted((node for node in targets if str(node) not in bad), key=str)
+        name = str(shape).rsplit("#", 1)[-1].rsplit("/", 1)[-1].rsplit(":", 1)[-1]
+        broken = examples[name]["malo"]
+        _, broken_report, _ = validate(example_graph(config, broken), shacl_graph=graph, advanced=True)
+        result["reglas"].append({
+            "id": name, "nombre": str(graph.value(shape, RDFS.label) or name),
+            "porque": str(graph.value(shape, RDFS.comment) or ""), "shacl": graph.serialize(format="turtle"),
+            "revisados": len(targets), "coverage": "checked" if targets else "no_targets",
+            "un_dato": en_turtle(data, passing[0], bool(list(graph.objects(shape, SH.targetObjectsOf)))) if passing else None,
+            "roto": broken, "roto_dice": sorted({str(message) for message in broken_report.objects(None, SH.resultMessage)}),
+            "fallas": len(failures), "ejemplos": sorted(failures, key=lambda item: item["dato"])[:10],
+            "predicciones_afectadas": sorted({p for failure in failures for p in failure["predicciones"]}),
+        })
+    result["status"] = "coverage_pending" if any(not row["revisados"] for row in result["reglas"]) else (
+        "defects_detected" if any(row["fallas"] for row in result["reglas"]) else "checked")
+    return result
 
 
 def main():
-    datos = traer()
-    vigente = f"/prediction/{corrida_vigente()}/"
-    ejemplos = yaml.safe_load(EJEMPLOS.read_text())
-    resultado = {"fecha": date.today().isoformat(), "triples": len(datos), "reglas": []}
-    for prefijos, bloque in bloques():
-        forma = Graph().parse(data=prefijos + "\n" + bloque, format="turtle")
-        regla = next(forma.subjects(RDF.type, SH.NodeShape))
-        _, informe, _ = validate(datos, shacl_graph=forma, advanced=True)
-        # cada dato que no cumple, con las predicciones que lo usaron (prov:used): las que heredan el error
-        fallas = [{"dato": str(informe.value(r, SH.focusNode)), "mensaje": str(informe.value(r, SH.resultMessage)),
-                   "predicciones": sorted(str(p) for p in datos.subjects(PROV.used, informe.value(r, SH.focusNode)) if vigente in str(p))}
-                  for r in informe.subjects(RDF.type, SH.ValidationResult)]
-        fallidos = {f["dato"] for f in fallas}
-        nodos = sorted(n for n in blancos(datos, forma, regla) if str(n) not in fallidos)
-        ejemplo = ejemplos[str(regla).split("#")[-1]]
-        resultado["reglas"].append({
-            "id": str(regla).split("#")[-1],
-            "nombre": str(forma.value(regla, Namespace("http://www.w3.org/2000/01/rdf-schema#").label)),
-            "porque": str(forma.value(regla, Namespace("http://www.w3.org/2000/01/rdf-schema#").comment)),
-            "shacl": bloque,
-            "revisados": len(blancos(datos, forma, regla)),
-            "un_dato": en_turtle(datos, nodos[0], (regla, SH.targetObjectsOf, None) in forma) if nodos else None,
-            "roto": ejemplo["malo"],
-            "roto_dice": ejemplo_roto(forma, ejemplo["malo"]),
-            "fallas": len(fallas),
-            "ejemplos": sorted(fallas, key=lambda f: f["dato"])[:10],
-            "predicciones_afectadas": sorted({p for f in fallas for p in f["predicciones"]}),
-        })
-        print(f"{resultado['reglas'][-1]['nombre']}: {resultado['reglas'][-1]['revisados']} revisados, {len(fallas)} no cumplen")
-    SALIDA.write_text(json.dumps(resultado, ensure_ascii=False, indent=1) + "\n")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("domain", nargs="?", default="energia")
+    parser.add_argument("--examples-only", action="store_true")
+    args = parser.parse_args()
+    config = QualityConfig.load(args.domain)
+    count = check_examples(config)
+    if args.examples_only:
+        print(f"{args.domain}: {count} good/bad pairs passed")
+        return
+    result = evaluate(config, traer(config), prediction_links(config))
+    config.result.parent.mkdir(parents=True, exist_ok=True)
+    config.result.write_text(json.dumps(result, ensure_ascii=False, indent=1) + "\n")
+    print(f"{args.domain}: {result['status']}")
+    if result["status"] == "coverage_pending":
+        raise SystemExit(2)
 
 
 if __name__ == "__main__":

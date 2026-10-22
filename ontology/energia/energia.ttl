@@ -230,7 +230,8 @@ energia:nameInSource a owl:DatatypeProperty ; rdfs:domain energia:CompanyName ; 
 energia:rule a owl:DatatypeProperty ; rdfs:label "regla"@es .
 energia:sourceText a owl:DatatypeProperty ; rdfs:label "evidencia"@es .
 
-energia:aboutVenting a owl:ObjectProperty ; rdfs:domain energia:LocationLink ; rdfs:range energia:Venting ; rdfs:label "sobre el venteo"@es .
+# Shared properties have no domain: preserve the explicit mapped classes without adding unrelated types.
+energia:aboutVenting a owl:ObjectProperty ; rdfs:range energia:Venting ; rdfs:label "sobre el venteo"@es .
 energia:aboutConcession a owl:ObjectProperty ; rdfs:range energia:Concession ; rdfs:label "sobre la concesión"@es .
 energia:pipeline a owl:DatatypeProperty ; rdfs:domain energia:PipelineLink ; rdfs:label "gasoducto"@es .
 energia:pipelineOperator a owl:DatatypeProperty ; rdfs:label "licenciataria del gasoducto"@es .   # sin dominio: lo usan el gasoducto y el enlace
@@ -239,7 +240,7 @@ energia:nearestTown a owl:DatatypeProperty ; rdfs:domain energia:SurroundingsLin
 energia:protectedArea a owl:DatatypeProperty ; rdfs:domain energia:SurroundingsLink ; rdfs:label "área protegida"@es .
 energia:lei a owl:DatatypeProperty ; rdfs:label "LEI"@es .
 energia:legalName a owl:DatatypeProperty ; rdfs:domain energia:LeiLink ; rdfs:label "nombre legal en GLEIF"@es .
-energia:date a owl:DatatypeProperty ; rdfs:domain energia:Venting ; rdfs:label "fecha"@es .
+energia:date a owl:DatatypeProperty ; rdfs:label "fecha"@es .
 energia:satellite a owl:DatatypeProperty ; rdfs:domain energia:DetectedVenting ; rdfs:label "satélite"@es .
 
 energia:EnvironmentalStudy a owl:Class ;
@@ -276,7 +277,7 @@ energia:VentingWithoutReports a owl:Class ;
     rdfs:label "Con venteos y sin planillas de venteo"@es ;
     rdfs:comment "Al menos 20 posibles venteos desde 2024 y ninguna planilla de venteo de gas (Res. 143/98) presentada desde 2022."@es .
 
-energia:reviewReason a owl:DatatypeProperty ; rdfs:domain energia:ConcessionToReview ; rdfs:label "motivo para revisar"@es .
+energia:reviewReason a owl:DatatypeProperty ; rdfs:label "motivo para revisar"@es .
 geo:asWKT a owl:DatatypeProperty ; rdfs:label "geometría (WKT)"@es ;
     rdfs:comment "El contorno, el punto o el trazado, en WKT: el estándar de OGC que leen GeoSPARQL y las herramientas de mapas."@es .
 

@@ -1,0 +1,6 @@
+PREFIX energia: <https://w3id.org/rastro/energia#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT DISTINCT ?prediction ?record WHERE {
+  ?prediction prov:wasGeneratedBy ?run ; prov:used ?record .
+  ?run a energia:ModelRun ; energia:current true .
+}

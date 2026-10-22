@@ -651,3 +651,74 @@ faq:
       empresas, socios, operadoras, venteos ubicados, gasoductos cercanos y entorno en el esquema `energia`
       (`linking/energia/`); un tercer Ontop en el puerto 8082 con su
       ontología (`ontology/energia/`) y sus mapeos (`mappings/energia.r2rml.ttl`). Cada enlace se expone con PROV-O.
+
+# Configuración de la vista técnica; sin listas por dominio en Python.
+technical:
+  instances:
+    'Una concesión: Loma Campana': https://w3id.org/rastro/energia/concession/LCAM
+    'Una empresa: YPF': https://w3id.org/rastro/energia/company/YPF
+    'Una participación (enlace con evidencia): Chevron en Loma Campana': https://w3id.org/rastro/energia/stake/LCAM/CHEVRON
+    'La operadora de un pozo (enlace con evidencia): pozo 107709': https://w3id.org/rastro/energia/operatorlink/107709
+    La producción de un pozo en diciembre de 2025: https://w3id.org/rastro/energia/production/107709/12/BEH/YPF
+    Un posible venteo visto por satélite: https://w3id.org/rastro/energia/venting/sensoresremotos_venteos_detectados.61105
+    Dónde cae ese venteo (enlace con evidencia): https://w3id.org/rastro/energia/locationlink/sensoresremotos_venteos_detectados.61105
+  pieces:
+    mapeos: /mappings/energia.r2rml.ttl
+    enlaces:
+    - - Paso 1 · Los socios de cada concesión, separados del texto del mapa
+      - "SELECT c.nombre AS concesion, e.nombre AS socia, p.porcentaje, p.texto AS\
+        \ evidencia\n                FROM energia.participacion p JOIN energia.concesion\
+        \ c USING (id_concesion) JOIN energia.empresa e USING (empresa_id)\n     \
+        \           WHERE c.nombre IN ('LOMA CAMPANA', 'LA AMARGA CHICA', 'BANDURRIA\
+        \ SUR') ORDER BY 1, 3 DESC"
+    - - Paso 1 · La misma empresa, escrita distinto en cada fuente
+      - "SELECT n.fuente, n.nombre AS nombre_en_la_fuente, e.nombre AS empresa, n.regla\n\
+        \                FROM energia.empresa_nombre n JOIN energia.empresa e USING\
+        \ (empresa_id)\n                WHERE e.nombre IN ('COMPAÑIA GENERAL DE COMBUSTIBLES',\
+        \ 'CHEVRON', 'PLUSPETROL') ORDER BY 3, 1, 2"
+    - - Paso 2 · Quién opera cada pozo (pozos donde el padrón dice otra cosa)
+      - "SELECT o.idpozo AS pozo, e.nombre AS operadora, o.empresa_padron AS segun_el_padron,\
+        \ o.regla, o.evidencia\n                FROM energia.operador_pozo o JOIN\
+        \ energia.empresa e USING (empresa_id)\n                WHERE o.empresa_padron\
+        \ IS NOT NULL AND upper(o.empresa_padron) NOT LIKE upper(left(e.nombre, 6))\
+        \ || '%'\n                ORDER BY o.idpozo LIMIT 6"
+    - - Paso 3 · En qué concesión cae cada posible venteo (La Calera)
+      - "SELECT v.id AS venteo, v.fecha, v.satelite, c.nombre AS concesion, v.evidencia\n\
+        \                FROM energia.venteo v JOIN energia.concesion c USING (id_concesion)\n\
+        \                WHERE v.tipo = 'detectado' AND c.nombre = 'LA CALERA' ORDER\
+        \ BY v.fecha DESC LIMIT 6"
+    mapas:
+    - - Paso 1 · Participación, nombres de empresa y producción
+      - - Stake
+        - CompanyName
+        - WellProductionAmounts
+    - - Paso 2 · La operadora de cada pozo
+      - - OperatorLink
+    - - Paso 3 · El venteo y su concesión
+      - - DetectedVenting
+        - LocationLink
+  map:
+    queries:
+      concessions: "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\nSELECT ?name\
+        \ ?operator ?wkt (COUNT(DISTINCT ?d) AS ?n) (SAMPLE(?why) AS ?reason) WHERE\
+        \ {\n        ?c a energia:Concession ; energia:name ?name ; geo:asWKT ?wkt\
+        \ .\n        OPTIONAL { ?c energia:operatorOnMap/energia:name ?operator }\n\
+        \        OPTIONAL { ?d a energia:DetectedVenting ; energia:inConcession ?c\
+        \ }\n        OPTIONAL { ?c a energia:ConcessionToReview ; energia:reviewReason\
+        \ ?why }\n    } GROUP BY ?name ?operator ?wkt"
+      points: 'PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+        SELECT ?wkt WHERE { ?d a energia:DetectedVenting ; geo:asWKT ?wkt }'
+      pipes: 'PREFIX geo: <http://www.opengis.net/ont/geosparql#>
+
+        SELECT ?name ?wkt WHERE { ?p a energia:Pipeline ; energia:name ?name ; geo:asWKT
+        ?wkt }'
+    view_state:
+      latitude: -38.4
+      longitude: -68.9
+      zoom: 6.4
+    tooltip: <b>{nombre}</b><br>{operadora}<br>{venteos} posibles venteos<br>{revisar}
+    caption: 'Puntos rojos: posibles venteos vistos por satélite desde 2024. Líneas
+      ámbar: gasoductos de transporte (ENARGAS). Concesiones en rojo: para revisar,
+      según la regla del diccionario; en azul, con posibles venteos. Todo sale de
+      Rastro, con geometrías en el estándar de OGC (GeoSPARQL).'

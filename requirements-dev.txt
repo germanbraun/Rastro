@@ -9,3 +9,6 @@ scikit-learn==1.5.2   # solo para la validación --como-trabajo-publicado
 pytest==8.3.3
 ruff==0.6.9
 pyshacl==0.29.0
+
+# Exercise the real app template with the same dependencies as the runtime.
+-r infra/loaders/requirements.txt

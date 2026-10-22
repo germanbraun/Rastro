@@ -10,8 +10,8 @@ Only for oil and gas (`energia`):
 - Rules: `ontology/energia/calidad/reglas.ttl`
 - Examples: `ontology/energia/calidad/ejemplos.yaml`
 - Result: `layer/energia/calidad.json`
-- Runner: `ontology/calidad.py` (paths, prefix `energia:` and the Ontop at `http://ontop-energia:8080/sparql`, or
-  `ONTOP_ENERGIA`, are written in the script), service `calidad`: `docker compose run --rm calidad`, about 3 minutes.
+- Runner: `ontology/calidad.py energia` (paths, prefix, CONSTRUCT queries and endpoint come from the registry;
+  `ONTOP_ENERGIA` remains a runtime endpoint override), service `calidad`: `docker compose run --rm calidad`, about 3 minutes.
 
 Suppliers (`proveedores`) and oncology (`oncologia`) have no quality rules yet.
 

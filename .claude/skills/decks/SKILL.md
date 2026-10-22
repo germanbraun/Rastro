@@ -24,7 +24,7 @@ The same thing in three places, which must say the same:
 
 ## Steps
 
-1. **Change the text in all three places at once.** Every number on a slide or in the script must be measured (in `layer/**/resultados.json`, `layer/energia/cambio/*.json` or what `lab/gas/modelo.py` prints).
+1. **Before new accuracy claims**, run `python layer/method.py publication <domain>`; missing independent evidence blocks those claims. **Change the text in all three places at once.** Every number on a slide or in the script must be measured (in `layer/**/resultados.json`, `layer/energia/cambio/*.json` or what `lab/gas/modelo.py` prints).
 2. **A slide** is a 1920×1080 `<section>` in `docs/slides/slides/<nombre>.html`, with the style of the others (background `#F7F6F2`, titles in `#14213D`, «Sin Rastro» (without Rastro) and «Con Rastro» (with Rastro) in two cards) and the speaker notes in `<aside>`. The first seven are the story; the rest goes after `anexo`.
 3. **Style and HTML:** `python3 docs/slides/estilo.py` gives the oil and gas deck an even style (Times New Roman across the whole deck, as the user asked; a scale of six sizes, cards with a thin border, the footer with each slide's number, drawings at a height that fits); you can always run it, it is idempotent. Then `python3 docs/slides/build.py` (generates `docs/slides/<mazo>.html` with its fonts; not edited by hand).
 4. **Check it in the browser:** open `docs/slides/energia.html` and look at the slides you changed. Measure that nothing goes past the footer: each slide's content ends before 920 px of height (the browser measurement is in `docs/decisions.md`, October 21). If something goes past, shorten the text: nothing gets smaller.

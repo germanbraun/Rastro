@@ -54,6 +54,11 @@ def main(paso):
     RESULT.write_text(json.dumps(guardado, ensure_ascii=False, indent=1, default=str))
     print(paso, json.dumps({k: v for k, v in guardado.items() if k != "esperado"}, ensure_ascii=False, default=str)[:600])
 
+    if paso == "despues" and not guardado["coincide"]:
+        raise RuntimeError("Changed predictions differ from the announced impact")
+    if paso == "restaurado" and not guardado["restaurado_igual"]:
+        raise RuntimeError("Restored predictions differ from the baseline")
+
 
 if __name__ == "__main__":
     main(sys.argv[1])

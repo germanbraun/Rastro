@@ -72,15 +72,11 @@ def data_version(domain):
     import psycopg
     with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
                          f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:
-        # las cargas registradas y las tablas de enlaces: al rearmarse, cada tabla tiene otro identificador
-        loads, inserts = conn.execute(
-            "SELECT (SELECT max(loaded_at)::text FROM rastro_meta.load_run) "
-            " || coalesce((SELECT '|' || max(id) FROM lab_gas.corrida), ''), "
-            "(SELECT md5(string_agg(c.oid::text, ',' ORDER BY c.oid)) FROM pg_class c "
-            " JOIN pg_namespace n ON n.oid = c.relnamespace "
-            " WHERE n.nspname IN ('energia', 'proveedores', 'linking', 'lab_gas') AND c.relkind = 'r')").fetchone()
-    files = [Path(answer.ROOT / f) for f in (f"mappings/{'rastro' if domain == 'oncologia' else domain}.r2rml.ttl",
-                                             answer.DOMAINS[domain]["ontology"])]
+        # A cluster write invalidates cached answers, including domains with no Lab tables.
+        loads = conn.execute("SELECT pg_current_wal_lsn()::text").fetchone()[0]
+    cfg = answer.DOMAINS[domain]
+    files = [answer.ROOT / path for path in (cfg["method"]["mapping"], cfg["ontology"], cfg["method"]["app"])]
+    inserts = ""
     return f"{loads}|{inserts}|" + "|".join(str(f.stat().st_mtime) if f.exists() else "" for f in files)
 
 
@@ -104,7 +100,7 @@ def warm_up():
     def work():
         for config in sorted(Path("/app/dominios").glob("*.yaml")):
             cfg = yaml.safe_load(config.read_text())
-            for q in cfg.get("preguntas", []):
+            for q in (validated_questions(cfg) if cfg.get("preguntas") else []):
                 try:
                     columns, rows = run(Path(q["query"]).read_text(), cfg["domain"])
                     why = q.get("porque")
@@ -278,43 +274,31 @@ def explain(query, sql, domain, item=None):
 
 # La consola SPARQL de la vista técnica: dónde están las consultas de ejemplo y el puerto que se
 # abre en la computadora para otras herramientas
-CONSOLE = {"oncologia": ("/ontology/queries", 8080), "proveedores": ("/ontology/proveedores/queries", 8081),
-           "energia": ("/ontology/energia/queries", 8082)}
 
 
 # Instancias de ejemplo para «Así se ve un dato del grafo»: una por clase importante de cada dominio
-INSTANCES = {
-    "energia": {
-        "Una concesión: Loma Campana": "https://w3id.org/rastro/energia/concession/LCAM",
-        "Una empresa: YPF": "https://w3id.org/rastro/energia/company/YPF",
-        "Una participación (enlace con evidencia): Chevron en Loma Campana": "https://w3id.org/rastro/energia/stake/LCAM/CHEVRON",
-        "La operadora de un pozo (enlace con evidencia): pozo 107709": "https://w3id.org/rastro/energia/operatorlink/107709",
-        "La producción de un pozo en diciembre de 2025": "https://w3id.org/rastro/energia/production/107709/12/BEH/YPF",
-        "Un posible venteo visto por satélite": "https://w3id.org/rastro/energia/venting/sensoresremotos_venteos_detectados.61105",
-        "Dónde cae ese venteo (enlace con evidencia)": "https://w3id.org/rastro/energia/locationlink/sensoresremotos_venteos_detectados.61105",
-    },
-    "proveedores": {
-        "Un grupo: Leidos": "https://w3id.org/rastro/proveedores/group/549300IUTGTP6EJP8124",
-        "Un proveedor: la SAIC de hoy": "https://w3id.org/rastro/proveedores/supplier/MMLKPW9JLX64",
-        "Por qué ese proveedor es de su grupo (enlace con evidencia)": "https://w3id.org/rastro/proveedores/link/group/MMLKPW9JLX64",
-        "Un contrato": "https://w3id.org/rastro/proveedores/contract/CONT_AWD_HHSN261200800001E_7529_-NONE-_-NONE-",
-    },
-    "oncologia": {
-        "Un fármaco: trastuzumab": "https://w3id.org/rastro/drug/CHEMBL1201585",
-        "Un ensayo": "https://w3id.org/rastro/trial/NCT00021255",
-        "Por qué un ensayo prueba un fármaco (enlace con evidencia)": "https://w3id.org/rastro/link/NCT00003440/CHEMBL1201585",
-    },
-}
-ONTOLOGY_FILE = {"energia": "/ontology/energia/energia.ttl", "proveedores": "/ontology/proveedores/proveedores.ttl",
-                 "oncologia": "/ontology/rastro.ttl"}
 PROV_NS, RDF_TYPE = "http://www.w3.org/ns/prov#", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+
+
+def domain_config(domain):
+    """The registry owns each domain's app configuration path."""
+    path = answer.DOMAINS[domain].get("method", {}).get("app")
+    return load_config(answer.ROOT / path) if path else {}
+
+
+def technical(domain):
+    return domain_config(domain).get("technical", {})
+
+
+def ontology_file(domain):
+    return str(answer.ROOT / answer.DOMAINS[domain]["ontology"])
 
 
 @st.cache_data
 def labels(domain):
     """Las etiquetas en español del diccionario: término → «palabras de negocio»."""
     import rdflib
-    g = rdflib.Graph().parse(ONTOLOGY_FILE[domain])
+    g = rdflib.Graph().parse(ontology_file(domain))
     return {str(s): str(o) for s, o in g.subject_objects(rdflib.RDFS.label)}
 
 
@@ -326,56 +310,6 @@ def short_iri(iri, domain):
 
 # «Diccionario, enlaces y mapeos» (vista técnica): las piezas de Rastro que usa la demo en 3 pasos.
 # Los enlaces se leen en vivo de las tablas de Rastro; los mapeos, del archivo R2RML del dominio.
-PIECES = {
-    "energia": {
-        "mapeos": "/mappings/energia.r2rml.ttl",
-        "enlaces": [
-            ("Paso 1 · Los socios de cada concesión, separados del texto del mapa",
-             """SELECT c.nombre AS concesion, e.nombre AS socia, p.porcentaje, p.texto AS evidencia
-                FROM energia.participacion p JOIN energia.concesion c USING (id_concesion) JOIN energia.empresa e USING (empresa_id)
-                WHERE c.nombre IN ('LOMA CAMPANA', 'LA AMARGA CHICA', 'BANDURRIA SUR') ORDER BY 1, 3 DESC"""),
-            ("Paso 1 · La misma empresa, escrita distinto en cada fuente",
-             """SELECT n.fuente, n.nombre AS nombre_en_la_fuente, e.nombre AS empresa, n.regla
-                FROM energia.empresa_nombre n JOIN energia.empresa e USING (empresa_id)
-                WHERE e.nombre IN ('COMPAÑIA GENERAL DE COMBUSTIBLES', 'CHEVRON', 'PLUSPETROL') ORDER BY 3, 1, 2"""),
-            ("Paso 2 · Quién opera cada pozo (pozos donde el padrón dice otra cosa)",
-             """SELECT o.idpozo AS pozo, e.nombre AS operadora, o.empresa_padron AS segun_el_padron, o.regla, o.evidencia
-                FROM energia.operador_pozo o JOIN energia.empresa e USING (empresa_id)
-                WHERE o.empresa_padron IS NOT NULL AND upper(o.empresa_padron) NOT LIKE upper(left(e.nombre, 6)) || '%'
-                ORDER BY o.idpozo LIMIT 6"""),
-            ("Paso 3 · En qué concesión cae cada posible venteo (La Calera)",
-             """SELECT v.id AS venteo, v.fecha, v.satelite, c.nombre AS concesion, v.evidencia
-                FROM energia.venteo v JOIN energia.concesion c USING (id_concesion)
-                WHERE v.tipo = 'detectado' AND c.nombre = 'LA CALERA' ORDER BY v.fecha DESC LIMIT 6"""),
-        ],
-        "mapas": [("Paso 1 · Participación, nombres de empresa y producción", ["Stake", "CompanyName", "WellProductionAmounts"]),
-                  ("Paso 2 · La operadora de cada pozo", ["OperatorLink"]),
-                  ("Paso 3 · El venteo y su concesión", ["DetectedVenting", "LocationLink"])],
-    },
-    "proveedores": {
-        "mapeos": "/mappings/proveedores.r2rml.ttl",
-        "enlaces": [
-            ("Pasos 1 y 2 · Las empresas del grupo Leidos, con la evidencia de cada una",
-             """SELECT s.name AS proveedor, sg.matrix_name AS matriz_en_usaspending, g.name AS grupo, sg.rule AS regla,
-                       sg.source_text AS evidencia
-                FROM proveedores.supplier_group sg JOIN proveedores.supplier s ON s.uei = sg.supplier_uei
-                JOIN proveedores.group_company g USING (group_id)
-                WHERE g.name LIKE 'LEIDOS%' OR s.uei = 'MMLKPW9JLX64' ORDER BY g.name, s.name LIMIT 8"""),
-        ],
-        "mapas": [("Pasos 1 y 2 · Proveedor, grupo y el enlace con su evidencia", ["SupplierGroup", "GroupLink"])],
-    },
-    "oncologia": {
-        "mapeos": "/mappings/rastro.r2rml.ttl",
-        "enlaces": [
-            ("Qué escribió cada ensayo y qué fármaco reconoció Rastro (trastuzumab)",
-             """SELECT t.nct_id AS ensayo, t.intervention AS lo_que_escribio_el_ensayo, t.matched AS coincidio_con,
-                       d.pref_name AS farmaco, t.rule AS regla
-                FROM linking.trial_drug t JOIN linking.drug d ON d.chembl_id = t.parent_chembl_id
-                WHERE d.pref_name = 'TRASTUZUMAB' AND lower(t.intervention) NOT LIKE '%trastuzumab%' ORDER BY t.nct_id LIMIT 8"""),
-        ],
-        "mapas": [("El ensayo prueba un fármaco, con su evidencia", ["TrialDrug", "DrugLink"])],
-    },
-}
 
 
 def sql_table(query, domain):
@@ -401,7 +335,7 @@ def ontology_doc(domain):
     etiqueta, su descripción y entre qué clases van."""
     import rdflib
     from rdflib.namespace import OWL, RDF, RDFS
-    g = rdflib.Graph().parse(ONTOLOGY_FILE[domain])
+    g = rdflib.Graph().parse(ontology_file(domain))
     ns = answer.DOMAINS[domain]["namespace"]
 
     def name(x):
@@ -430,9 +364,9 @@ def ontology_doc(domain):
 
 def show_pieces(domain, diagram=None):
     """La pestaña técnica «Diccionario, enlaces y mapeos»."""
-    pieces = PIECES.get(domain, {})
+    pieces = technical(domain).get("pieces", {})
     st.markdown("### El diccionario (la ontología)", help=ayuda("ontologia"))
-    st.caption(f"Documentación generada del archivo de la ontología (`{ONTOLOGY_FILE[domain].replace('/ontology/', 'ontology/')}`), "
+    st.caption(f"Documentación generada del archivo de la ontología (`{ontology_file(domain).replace('/ontology/', 'ontology/')}`), "
                "como la que arman herramientas de documentación de ontologías (por ejemplo, WIDOCO).")
     if diagram and Path(f"/app/{diagram}.svg").exists():
         with st.expander("El diccionario dibujado", expanded=False):
@@ -497,7 +431,7 @@ def instance_graph(iri, rows, domain, title=None):
 def show_instances(domain):
     """Una instancia real del grafo, dibujada como grafo: se puede seguir cada enlace a otra entidad,
     dentro de la app. Debajo, sus propiedades en una tabla y en Turtle."""
-    examples = INSTANCES.get(domain)
+    examples = technical(domain).get("instances")
     if not examples:
         return
     st.markdown("### Así se ve un dato del grafo", help=ayuda("instancia"))
@@ -571,7 +505,8 @@ def show_quality(quality):
     st.markdown("### Reglas de calidad", help=ayuda("calidad"))
     st.caption(md(quality["intro"]))
     tabla(pd.DataFrame([{"Regla": r["nombre"], "Por qué importa": r["porque"], "Datos revisados": money(r["revisados"]),
-                         "Resultado": "✅ se cumple" if not r["fallas"] else f"⚠️ {money(r['fallas'])} no cumplen",
+                         "Resultado": ("⏳ sin datos revisados" if not r["revisados"] else
+                                       "✅ se cumple" if not r["fallas"] else f"⚠️ {money(r['fallas'])} no cumplen"),
                          "Predicciones que los usan": len(r.get("predicciones_afectadas", [])) or ""}
                         for r in result["reglas"]]),
           column_config={"Regla": st.column_config.TextColumn(width="medium"),
@@ -588,7 +523,7 @@ def show_quality_shacl(quality):
     st.markdown("### Reglas de calidad en SHACL", help=ayuda("calidad_shacl"))
     st.caption(md(quality["tecnico"]))
     for r in result["reglas"]:
-        mark = "✅" if not r["fallas"] else f"⚠️ {money(r['fallas'])}"
+        mark = "⏳" if not r["revisados"] else "✅" if not r["fallas"] else f"⚠️ {money(r['fallas'])}"
         with st.expander(f"{mark} · {r['nombre']} · {money(r['revisados'])} datos revisados"):
             st.markdown("**La regla, en SHACL**")
             st.code(r["shacl"], language="turtle")
@@ -608,12 +543,13 @@ def show_quality_shacl(quality):
                                          ", ".join(p.rsplit("/", 1)[-1] for p in e.get("predicciones", []))}
                                     for e in r["ejemplos"]]))
     st.caption(f"{money(result['triples'])} triples traídos de Rastro con CONSTRUCT. Las reglas están en "
-               "`ontology/energia/calidad/reglas.ttl`; las comprueba `docker compose run --rm calidad`.")
+               "el archivo de reglas del dominio; se comprueban con el comando registrado para ese dominio.")
 
 
 def sparql_console(domain):
     """Una consola para escribir y ejecutar SPARQL sobre el Ontop del dominio, con el SQL que genera."""
-    folder, port = CONSOLE[domain]
+    method = answer.DOMAINS[domain]["method"]
+    folder, port = str(answer.ROOT / method["queries"]), method["ontop"]["port"]
     show_instances(domain)
     st.markdown("### Consola SPARQL", help=ayuda("consola"))
     st.caption(f"Corre sobre Rastro, en el endpoint SPARQL de este dominio. Otras herramientas pueden usar el mismo endpoint: "
@@ -662,15 +598,11 @@ def wkt_coords(wkt):
 
 @st.cache_data(show_spinner="Armando el mapa…")
 def map_data(domain):
-    concessions = run(prefixed(GEO + """SELECT ?name ?operator ?wkt (COUNT(DISTINCT ?d) AS ?n) (SAMPLE(?why) AS ?reason) WHERE {
-        ?c a energia:Concession ; energia:name ?name ; geo:asWKT ?wkt .
-        OPTIONAL { ?c energia:operatorOnMap/energia:name ?operator }
-        OPTIONAL { ?d a energia:DetectedVenting ; energia:inConcession ?c }
-        OPTIONAL { ?c a energia:ConcessionToReview ; energia:reviewReason ?why }
-    } GROUP BY ?name ?operator ?wkt""", domain), domain)[1]
-    points = run(prefixed(GEO + "SELECT ?wkt WHERE { ?d a energia:DetectedVenting ; geo:asWKT ?wkt }", domain), domain)[1]
-    pipes = run(prefixed(GEO + "SELECT ?name ?wkt WHERE { ?p a energia:Pipeline ; energia:name ?name ; geo:asWKT ?wkt }", domain),
-                domain)[1]
+    config = technical(domain).get("map")
+    if not config:
+        raise ValueError("This domain has no map configuration")
+    concessions, points, pipes = [run(prefixed(config["queries"][key], domain), domain)[1]
+                                  for key in ("concessions", "points", "pipes")]
     return concessions, points, pipes
 
 
@@ -691,12 +623,10 @@ def show_map(domain):
         pdk.Layer("ScatterplotLayer", dots, get_position="pos", get_fill_color=[214, 39, 40, 170], radius_min_pixels=2,
                   get_radius=400),
     ]
-    st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=pdk.ViewState(latitude=-38.4, longitude=-68.9, zoom=6.4),
-                             tooltip={"html": "<b>{nombre}</b><br>{operadora}<br>{venteos} posibles venteos<br>{revisar}"}),
+    st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=pdk.ViewState(**technical(domain)["map"]["view_state"]),
+                             tooltip={"html": technical(domain)["map"]["tooltip"]}),
                     use_container_width=True)
-    st.caption("Puntos rojos: posibles venteos vistos por satélite desde 2024. Líneas ámbar: gasoductos de transporte "
-               "(ENARGAS). Concesiones en rojo: para revisar, según la regla del diccionario; en azul, con posibles "
-               "venteos. Todo sale de Rastro, con geometrías en el estándar de OGC (GeoSPARQL).", help=ayuda("mapa"))
+    st.caption(technical(domain)["map"].get("caption", ""), help=ayuda("mapa"))
 
 
 def short(value):
@@ -707,13 +637,39 @@ def short(value):
     return money(value)
 
 
+def validated_questions(cfg):
+    """New domains expose only questions whose lifecycle receipts are still current."""
+    registered = answer.DOMAINS[cfg["domain"]]
+    if not registered.get("method", {}).get("lifecycle"):
+        return cfg["preguntas"]
+    from lifecycle import question_status, read_state
+    state = read_state(registered, answer.ROOT)
+    result = []
+    for question in cfg["preguntas"]:
+        entry = state["questions"].get(question["id"])
+        try:
+            if entry and question_status(entry, registered, answer.ROOT) == "validated":
+                result.append(question)
+        except (FileNotFoundError, ValueError):
+            continue  # Missing or changed inputs cannot retain validation.
+    return result
+
+
 def render(cfg_path, tech):
     warm_up()
     cfg = load_config(cfg_path)
     domain = cfg["domain"]
     evaluation = read_json(cfg["evaluacion"]) if cfg.get("evaluacion") else {}
     changes = read_json(cfg["cambio"]) if cfg.get("cambio") else {}
-    questions = cfg["preguntas"]
+    questions = validated_questions(cfg)
+    if not questions:
+        st.info("Las preguntas de este dominio están pendientes de aprobación o validación.")
+        return
+    if answer.DOMAINS[domain].get("method", {}).get("lifecycle") and cfg.get("tarjetas"):
+        from method import publication_errors
+        if publication_errors(answer.DOMAINS[domain], answer.ROOT):
+            cfg = {**cfg, "tarjetas": None, "demo": None}
+            st.caption("Los resultados de evaluación están pendientes de revisión independiente.")
 
     with st.sidebar:
         if tech:

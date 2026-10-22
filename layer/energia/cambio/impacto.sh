@@ -9,8 +9,16 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+
+# All mutations run under a snapshot guard; never overwrite pre-existing edits.
+if [ -z "${RASTRO_CHANGE_GUARD:-}" ]; then
+  case "${1:-}" in
+    registrar) exec python3 "$ROOT/layer/change_guard.py" run impacto ;;
+    *) echo "Use registrar (guarded); recover with python3 layer/change_guard.py recover"; exit 1 ;;
+  esac
+fi
 compose() { docker compose -f "$ROOT/infra/docker-compose.yml" "$@"; }
-sql() { compose exec -T postgres psql -U "${PG_USER:-rastro}" -v ON_ERROR_STOP=1 -q -c "$1"; }
+sql() { compose exec -T postgres psql -U "${PG_USER:-rastro}" -d "${PG_DB:-rastro}" -v ON_ERROR_STOP=1 -q -c "$1"; }
 REGISTRO=4703
 CORRECCION=12
 
@@ -28,7 +36,6 @@ rearmar() {
 case "${1:-}" in
   registrar)
     python3 "$ROOT/layer/energia/cambio/impacto.py" antes
-    trap 'sql "UPDATE fractura.fractura SET cantidad_fracturas = cantidad_fracturas - $CORRECCION WHERE id_base_fractura_adjiv = '"'"'$REGISTRO'"'"'"; rearmar; python3 "$ROOT/layer/energia/cambio/impacto.py" restaurado' EXIT
     sql "UPDATE fractura.fractura SET cantidad_fracturas = cantidad_fracturas + $CORRECCION WHERE id_base_fractura_adjiv = '$REGISTRO'"
     rearmar
     python3 "$ROOT/layer/energia/cambio/impacto.py" despues ;;

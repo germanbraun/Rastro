@@ -1,0 +1,20 @@
+- "CONSTRUCT { ?s energia:rule ?r ; prov:wasDerivedFrom ?f ; energia:sourceText ?t\
+  \ }\n       WHERE { ?s energia:rule ?r . OPTIONAL { ?s prov:wasDerivedFrom ?f }\
+  \ OPTIONAL { ?s energia:sourceText ?t } }"
+- "CONSTRUCT { ?s a energia:Stake ; energia:percent ?p ; energia:partner ?e ; energia:inConcession\
+  \ ?c }\n       WHERE { ?s a energia:Stake . OPTIONAL { ?s energia:percent ?p } OPTIONAL\
+  \ { ?s energia:partner ?e }\n               OPTIONAL { ?s energia:inConcession ?c\
+  \ } }"
+- "CONSTRUCT { ?p a energia:Prediction ; prov:used ?u ; energia:predictedGas ?g ;\
+  \ energia:predictedLow ?l ;\n                  energia:predictedHigh ?h . ?u a ?t\
+  \ }\n       WHERE { ?p a energia:Prediction . OPTIONAL { ?p energia:predictedGas\
+  \ ?g } OPTIONAL { ?p energia:predictedLow ?l }\n               OPTIONAL { ?p energia:predictedHigh\
+  \ ?h } OPTIONAL { ?p prov:used ?u . ?u a ?t } }"
+- CONSTRUCT { ?e a energia:Company ; energia:lei ?l } WHERE { ?e a energia:Company
+  ; energia:lei ?l }
+- "CONSTRUCT { ?t a energia:WellTrajectory ; energia:verticalDepthM ?d ; energia:lateralLengthM\
+  \ ?r }\n       WHERE { ?t a energia:WellTrajectory . OPTIONAL { ?t energia:verticalDepthM\
+  \ ?d } OPTIONAL { ?t energia:lateralLengthM ?r } }"
+- "CONSTRUCT { ?f a energia:Fracturing ; energia:maxPressurePsi ?p ; energia:waterM3\
+  \ ?a }\n       WHERE { ?f a energia:Fracturing . OPTIONAL { ?f energia:maxPressurePsi\
+  \ ?p } OPTIONAL { ?f energia:waterM3 ?a } }"

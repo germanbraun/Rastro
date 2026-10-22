@@ -5,6 +5,10 @@ description: Write, test and read Rastro's quality rules (SHACL) over a domain's
 
 # Quality rules
 
+Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
+For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
+
+
 Step 5 of the method (`docs/method.md`). A rule says what the integrated data must look like, in the words of the
 dictionary, and it is checked over all of Rastro's data after every load. **It does not fix anything:** it shows what
 fails, where, and what uses it. For someone who knows SQL, these are a table's quality checks, but over all the sources
@@ -32,12 +36,15 @@ together, their evidence and what uses them.
 - **Mark what is uncertain:** an unsure threshold goes into the proposal's open questions, never into the rules file
   as "probably right".
 
-Where it lives comes from the domain's `method.quality` in `layer/dominios.yaml`: `rules` (`ontology/<domain>/calidad/reglas.ttl`),
-`examples` (`ejemplos.yaml`), `result` (`layer/<domain>/calidad.json`) and `run` (the command). The runner is
-`ontology/calidad.py` and the tests are `tests/test_calidad.py`. **If the registry has no `method.quality` entry, the
-domain does not have quality rules yet:** create them following the existing pattern (see `examples.md`): the same three
-files, a runner pointed at the domain's Ontop (`method.ontop`), and the new entry in the registry. The runner today reads
-one domain's paths and prefix; adding a domain means making those come from the registry, not copying the script.
+Where it lives comes from `method.quality` in `layer/dominios.yaml`: `rules`, `examples`, `data` (YAML list
+of CONSTRUCT queries), `result`, `run`, optional `prefix`, and optional `predictions` (a SELECT returning
+`?prediction ?record` for the current run). The registry supplies the endpoint and namespace. The same runner and
+tests discover every configured domain; do not copy Python code for another domain.
+
+If quality coverage is missing, add these domain files and the registry entry. Run
+`python ontology/calidad.py <domain> --examples-only` before querying services. In Docker, use the shared quality
+service with `--no-deps` after starting that domain's declared endpoint, then override the command with
+`python /ontology/calidad.py <domain>`; no energy service is required for another domain.
 
 The app shows the result in «Por qué confiar» (why trust it) and, with «Ver detalles técnicos» (see technical details),
 under the hood, with a real value from Rastro and a broken one.
@@ -69,8 +76,7 @@ under the hood, with a real value from Rastro and a broken one.
    (`sh:targetClass`, `sh:targetSubjectsOf` or `sh:targetObjectsOf`) and `sh:message` in Spanish for each condition.
 3. **One good and one broken value** in the examples file. The broken one, if possible, the real case the rule found.
    The tests (`tests/test_calidad.py`) check that the rule lets the good one pass and flags the broken one.
-4. **If the rule looks at new data,** add its `CONSTRUCT` to `DATOS` in `ontology/calidad.py`: only what the rule
-   looks at.
+4. **If the rule looks at new data,** add its `CONSTRUCT` to the registered `method.quality.data` YAML file: only what the rule looks at. Do not change the generic Python runner.
 5. **Run and read:** the domain's `method.quality.run`; in the result file, for each rule, how many values it checked,
    the ones that fail (the first 10) and the affected predictions.
 
@@ -80,6 +86,13 @@ under the hood, with a real value from Rastro and a broken one.
 - **How many values the rule checks is what you expect:** if it looks at twice as many entities as the table has, the
   error is not in the data but in the dictionary. Always compare with the table count.
 - What fails, reviewed by hand in the source, one by one, before counting it as a source error.
+
+## Completion outcomes
+
+Use the contract's execution-failure / detected-defect / reviewed-disposition distinction. Successful detection is
+not runner failure. Record the human disposition of defects affecting a claim; leave them visible instead of
+weakening thresholds. Missing coverage remains pending. A new-domain runner and its tests must actually read that
+domain; the shared tests discover every domain with quality configuration and execute its own examples.
 
 ## A person approves
 
