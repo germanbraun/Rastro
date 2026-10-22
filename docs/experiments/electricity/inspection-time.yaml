@@ -1,0 +1,44 @@
+task: read-only electricity source inspection
+status: inspection_complete_review_pending
+actor: Codex/GPT
+authorization: docs/experiments/countrycodes/discussion.md
+baseline_commit: a9038f6
+budget_agent_hours: 3
+time_basis: >-
+  Measured agent session elapsed time, including tool execution and access approval
+  waits; no inference about model compute or human effort. No overlapping agent
+  session was counted. The approval waits were retained in elapsed time rather
+  than estimated away. Final handoff bookkeeping is outside the inspection interval.
+sessions:
+  - started_on: '2026-10-22T16:15:12Z'
+    ended_on: '2026-10-22T16:25:56Z'
+    local_timezone: America/Argentina/Salta
+    elapsed_seconds: 644
+    pauses: []
+    work: >-
+      Locate and download source snapshots; inspect metadata, licenses, dates,
+      record grain, join candidates and source dependencies; write the offline
+      profiler, source profile, report and at most three proposed questions.
+agent_session_hours: 0.17888888888888888
+human_hours: null
+human_time_status: not_supplied_do_not_estimate
+reviewer_time_status: Claude records their own time separately
+interventions:
+  - kind: data access
+    decision: Network access for public-source inspection and a temporary PDF reader
+    reason: Sandbox DNS resolution prevented direct source inspection
+    human_minutes: null
+    note: >-
+      Tool escalation requests were accepted. No inference is made about whether
+      acceptance came from automated review or human action; no human time is assigned.
+outputs:
+  - docs/experiments/electricity/inspection.md
+  - docs/experiments/electricity/profile.py
+  - docs/experiments/electricity/source-profile.json
+checks:
+  - Offline profile regeneration completed from ignored downloaded snapshots
+  - Ruff passed for the inspection-only profiler
+  - Git diff whitespace check passed
+scope_status: >-
+  No experiment initialized, domain registered, source loaded into a database,
+  service started, app changed, business question approved or result scored.

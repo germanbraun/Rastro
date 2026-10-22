@@ -801,3 +801,13 @@ Profile public country/currency-code datasets over verified HTTPS and retain exa
 proposal is unapproved, and no independent answer review, model comparison or two-domain generalization result is
 claimed. The next empirical step is approval of scope/questions, then the documented experiment with independent
 B/D/C evaluators and live time/intervention logging, repeated on a second unfamiliar domain.
+
+## 2026-10-22 — Read-only source inspection before domain initialization
+
+Add the generic `inspect-sources` skill and route to it from the method, `start-domain` and `add-source` when source
+feasibility is uncertain. It preserves inspected versions, actual coverage, grain, keys, reuse terms, source
+dependencies, candidate joins and measured time before proposing implementation. This avoids registering a domain
+just to discover whether its sources are suitable. Inspection returns a recommendation, not business approval.
+
+The electricity inspection motivated the skill but was performed before it existed. Keep that distinction in its
+evidence; this is a method change before any electricity implementation, not proof of unchanged-skill transfer.

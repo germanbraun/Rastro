@@ -8,6 +8,9 @@ description: Add or change a data loader in any domain of the registry (layer/do
 Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
 For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
 
+If access, reuse terms, coverage or join feasibility are still uncertain, use `inspect-sources` before the loader
+proposal. Reuse its profile and snapshot evidence; inspection does not approve loading or replace this skill.
+
 
 Step 1 of the method (`docs/method.md`). A loader downloads data, stores it in `data/raw/` and loads it into Postgres (one schema per source) or into the triplestore. Follow the pattern of the existing loaders in `data/`, in Python. The domain's loaders are listed in `method.loaders` of its entry in `layer/dominios.yaml`. Below, `<domain>` is that entry and `<source>` the new source.
 

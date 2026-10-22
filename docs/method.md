@@ -39,6 +39,20 @@ business decision, and the evidence that remains.
 Rastro Lab adds a separate step (`rastro-lab`): the same model with raw and Rastro variables, without using the future,
 and every prediction saved with the data it used.
 
+## Before choosing a domain or source: inspect candidates
+
+Use `inspect-sources` when source feasibility or the candidate domain is still uncertain. Inspect original files,
+access and reuse terms, versions, actual observation periods, record grain, units, keys and concrete join ambiguities.
+Record upstream dependencies and what is already familiar from Rastro. A different publisher does not by itself
+provide independent evidence. Return a recommendation and, when requested, candidate questions with definitions and
+independent verification plans. Keep timings, source URLs and snapshot fingerprints with the inspection report.
+
+This is read-only discovery: downloads and local profiling, without a registered domain, services or database load.
+It can precede scope approval and the domain experiment log. Follow an approved inspection budget and report limits
+or partial results honestly. An inspection does not approve scope, business questions, sources or implementation.
+Reuse existing approvals; when the selected scope is approved, hand off to `start-domain` or, for an existing domain,
+`add-question` and `add-source` as needed. If sources are already understood, no separate inspection is required.
+
 ## Before step 0: start a domain
 
 The `start-domain` skill owns initialization. A new domain starts as a minimal scaffold. Runtime readiness must be

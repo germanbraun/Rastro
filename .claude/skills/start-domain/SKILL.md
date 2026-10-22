@@ -7,6 +7,9 @@ description: Initialize a new Rastro domain and its experiment log before adding
 
 Read `docs/method.md` and `docs/method-contracts.md`. This skill owns the pre-step-0 handoff.
 
+When the domain or sources are still being selected, use `inspect-sources` first without registering a domain.
+Reuse its findings and actual approvals; a favorable inspection alone does not approve scope.
+
 ## Contract
 
 - **Takes:** a proposed domain, source candidates and the person responsible for its business definitions.

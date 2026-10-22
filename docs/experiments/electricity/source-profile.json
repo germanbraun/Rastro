@@ -1,0 +1,529 @@
+{
+  "status": "inspection_only_not_business_approved",
+  "snapshot_date": "2026-10-22",
+  "artifacts": [
+    {
+      "path": "data/raw/electricity-inspection/plant-metadata.json",
+      "url": "https://datos.energia.gob.ar/api/3/action/package_show?id=generacion-electrica-centrales-de-generacion-",
+      "sha256": "9c4eaa6a63106806c9d1eb1d62a9f7713873ac227e6162466d3cb1e0b752ad61",
+      "bytes": 5536
+    },
+    {
+      "path": "data/raw/electricity-inspection/cammesa-metadata.json",
+      "url": "https://datos.energia.gob.ar/api/3/action/package_show?id=publicaciones-cammesa",
+      "sha256": "5c54096375b714ca7005b6d9ba19ba7462dbcc3eb185d836accac1e2ba31d347",
+      "bytes": 12404
+    },
+    {
+      "path": "data/raw/electricity-inspection/cammesa-annual.html",
+      "url": "https://cammesaweb.cammesa.com/informe-anual/",
+      "sha256": "9e8d5143b64abe63ecf736f34f9f5897cb59f5cf2a9707a9c3d19ddb4d05c6bd",
+      "bytes": 195862
+    },
+    {
+      "path": "data/raw/electricity-inspection/annual-2025.download",
+      "url": "https://cammesaweb.cammesa.com/?wpdmdl=52496",
+      "sha256": "0e5c979ebda50cf9da255f81999f4f08236c46647ecc23dae76b49b4824d0823",
+      "bytes": 5356502
+    },
+    {
+      "path": "data/raw/electricity-inspection/cammesa-access-policy.html",
+      "url": "https://cammesaweb.cammesa.com/politicas-de-acceso/",
+      "sha256": "a386cfb44f9782ae574c1a1d04137693917223a3f6785635f89d6490bb7f3801",
+      "bytes": 198135
+    },
+    {
+      "path": "data/raw/electricity-inspection/pampa-report-2019.pdf",
+      "url": "https://pampa.com/wp-content/uploads/2024/01/PAM_Reporte2019_ESP.pdf",
+      "sha256": "7eb972fe7a47fee4c6bab5fca0c7bff2fb6b7685ce8d1df308145d96697e544c",
+      "bytes": 22134330
+    },
+    {
+      "path": "data/raw/electricity-inspection/pampa-annual-2024.pdf",
+      "url": "https://cdn-sites-assets.mziq.com/wp-content/uploads/sites/1438/2025/04/PESA-Memoria-Anual-2024-EXE-Edicion-Especial.pdf",
+      "sha256": "f1103037369de7adc57daa0d1c41f2dcd2f2ed8b004b2c50e4b21bc1c791c992",
+      "bytes": 4663700
+    },
+    {
+      "path": "data/raw/electricity-inspection/pampa-investor-kit.html",
+      "url": "https://ri.pampa.com/en/financial-information/investor-kit/",
+      "sha256": "b14a7f4382abdf7413beba8dccbec76a9e75e5c30585234adde6728c2075224c",
+      "bytes": 116952
+    },
+    {
+      "path": "data/raw/electricity-inspection/authorization-2019.html",
+      "url": "https://www.boletinoficial.gob.ar/detalleAviso/primera/206470/20190429",
+      "sha256": "51a991fd6e2745c3f4fd30bcc23fbc43c964fe4d009b5cc2f6cb46eb670014a0",
+      "bytes": 56858
+    },
+    {
+      "path": "data/raw/electricity-inspection/plants.csv",
+      "url": "http://datos.energia.gob.ar/dataset/c62df6c6-73af-4039-b956-db081ff6eebe/resource/230fdf38-8f12-4017-a1e8-d7a1bc4a1c1c/download/generacin-elctrica-centrales-de-generacin.csv",
+      "sha256": "609961f79c395f03197b1324bbab15f074fdb061a72f6b3ec0dd428f1fcdd0a5",
+      "bytes": 97545
+    },
+    {
+      "path": "data/raw/electricity-inspection/agents.csv",
+      "url": "http://datos.energia.gob.ar/dataset/2b4dfee6-6fca-4e4d-9611-a12d65cd4aa8/resource/ac27b401-3800-4a98-9535-3fc715228d84/download/agentes-mem.csv",
+      "sha256": "7894bc3c9727d13a4221c373fc9d1f61fb39d3315ec3597a79b2331c48296d42",
+      "bytes": 1125846
+    },
+    {
+      "path": "data/raw/electricity-inspection/generation.csv",
+      "url": "http://datos.energia.gob.ar/dataset/2b4dfee6-6fca-4e4d-9611-a12d65cd4aa8/resource/7da95282-a903-47f0-b4bc-cd1387a62dd3/download/generacin-ltimos-aos.csv",
+      "sha256": "cb8f5755161683216eda3dce55723d329d8a2c20735729bd48afdff6a02d7d79",
+      "bytes": 3772558
+    }
+  ],
+  "metadata": {
+    "plant": {
+      "id": "c62df6c6-73af-4039-b956-db081ff6eebe",
+      "license_id": "CC-BY-4.0",
+      "metadata_modified": "2026-09-22T14:21:24.796740",
+      "extras": [
+        {
+          "key": "Documentación",
+          "value": ""
+        },
+        {
+          "key": "Fuente primaria",
+          "value": ""
+        },
+        {
+          "key": "accrualPeriodicity",
+          "value": "R/P1M"
+        },
+        {
+          "key": "country",
+          "value": "None"
+        },
+        {
+          "key": "district",
+          "value": ""
+        },
+        {
+          "key": "globalGroups",
+          "value": "[]"
+        },
+        {
+          "key": "home_featured",
+          "value": "false"
+        },
+        {
+          "key": "language",
+          "value": "[]"
+        },
+        {
+          "key": "modified",
+          "value": "2026-05-18T13:20:47.436518"
+        },
+        {
+          "key": "province",
+          "value": ""
+        },
+        {
+          "key": "source",
+          "value": ""
+        },
+        {
+          "key": "spatial",
+          "value": "None"
+        },
+        {
+          "key": "superTheme",
+          "value": "[\"ENER\"]"
+        },
+        {
+          "key": "temporal",
+          "value": ""
+        }
+      ]
+    },
+    "cammesa": {
+      "id": "2b4dfee6-6fca-4e4d-9611-a12d65cd4aa8",
+      "license_id": "CC-BY-4.0",
+      "metadata_modified": "2026-09-28T08:01:32.117478",
+      "extras": [
+        {
+          "key": "Documentación",
+          "value": ""
+        },
+        {
+          "key": "accrualPeriodicity",
+          "value": "R/P1M"
+        },
+        {
+          "key": "country",
+          "value": "None"
+        },
+        {
+          "key": "district",
+          "value": ""
+        },
+        {
+          "key": "home_featured",
+          "value": "false"
+        },
+        {
+          "key": "language",
+          "value": "[]"
+        },
+        {
+          "key": "modified",
+          "value": "2026-05-26T15:18:18.293821"
+        },
+        {
+          "key": "province",
+          "value": ""
+        },
+        {
+          "key": "source",
+          "value": ""
+        },
+        {
+          "key": "spatial",
+          "value": "None"
+        },
+        {
+          "key": "superTheme",
+          "value": "[\"ENER\"]"
+        },
+        {
+          "key": "temporal",
+          "value": ""
+        }
+      ]
+    }
+  },
+  "plants": {
+    "rows": 474,
+    "columns": [
+      "nombre",
+      "central",
+      "tecnologia_etiqueta",
+      "nombre_agente",
+      "tecnologia",
+      "tecnologia_maquinas",
+      "potencia_instalada_mw",
+      "provincia",
+      "departamento",
+      "aglomeracion",
+      "sistema",
+      "pah",
+      "id_renovar",
+      "resolucion_renovables",
+      "fuente",
+      "geojson"
+    ],
+    "systems": {
+      "Interconectado MEM": 399,
+      "Interconectada no MEM": 10,
+      "Aislado": 65
+    },
+    "origins": {
+      "cammesa": 323,
+      "DIE": 58,
+      "CAMMESA": 50,
+      "CRPEE": 1,
+      "ENRE CHUBUT": 42
+    },
+    "mem_origins": {
+      "cammesa": 313,
+      "DIE": 35,
+      "CAMMESA": 50,
+      "CRPEE": 1
+    },
+    "empty_codes": 75,
+    "nonempty_distinct_codes": 399
+  },
+  "old_generation": {
+    "rows": 22444,
+    "columns": [
+      "id",
+      "anio",
+      "mes",
+      "maquina",
+      "central",
+      "agente",
+      "agente_descripcion",
+      "region",
+      "pais",
+      "tipo_maquina",
+      "fuente_generacion",
+      "tecnologia",
+      "categoria_hidraulica",
+      "categoria_region",
+      "generacion_neta_MWh",
+      "fecha_proceso",
+      "lote_id_log",
+      "indice_tiempo"
+    ],
+    "periods": [
+      "2017-01",
+      "2017-02",
+      "2017-03",
+      "2017-04",
+      "2017-05",
+      "2017-06",
+      "2017-07",
+      "2017-08",
+      "2017-09",
+      "2017-10",
+      "2017-11",
+      "2017-12",
+      "2018-01",
+      "2018-02",
+      "2018-03",
+      "2018-04",
+      "2018-05",
+      "2018-06",
+      "2018-07",
+      "2018-08",
+      "2018-09",
+      "2018-10",
+      "2018-11",
+      "2018-12",
+      "2019-01",
+      "2019-02",
+      "2019-03",
+      "2019-04",
+      "2019-05",
+      "2019-06",
+      "2019-07",
+      "2019-08",
+      "2019-09",
+      "2019-10",
+      "2019-11",
+      "2019-12",
+      "2020-01",
+      "2020-02"
+    ],
+    "process_dates": [
+      "2020-05-05 11:06:29.851206"
+    ],
+    "plant_codes": 385,
+    "exact_registry_code_overlap": 269,
+    "unmatched_code_sample": [
+      "3ARR",
+      "9JUL",
+      "ALEM",
+      "ALUM",
+      "APAR",
+      "ARGE",
+      "ARMA",
+      "ARRE",
+      "ATUC",
+      "BARK",
+      "BARR",
+      "BBLA",
+      "BERI",
+      "BOLI",
+      "BRAG",
+      "BRAN",
+      "BSAS",
+      "CALEHI",
+      "CARL",
+      "CASB"
+    ]
+  },
+  "agents": {
+    "rows": 10080,
+    "columns": [
+      "id",
+      "nemo",
+      "descipcion",
+      "agrupacion",
+      "tipo_agente",
+      "fecha_proceso",
+      "lote_id_log"
+    ],
+    "process_dates": [
+      "2020-05-05 11:08:14.531913"
+    ]
+  },
+  "annual_workbook": {
+    "sheets": [
+      "Contenido",
+      "DEMANDA",
+      "TEMPERATURA",
+      "POT. INST",
+      "GENERACIÓN",
+      "TER",
+      "REN LEY 27191",
+      "HID>50MW",
+      "COMBUSTIBLES",
+      "EMISIONES",
+      "INTERCAMBIOS",
+      "TRANSPORTE",
+      "PRECIOS",
+      "BALANCE"
+    ],
+    "generation_header_row": 33,
+    "generation_columns": {
+      "A": "AÑO",
+      "B": "MES",
+      "C": "MAQUINA",
+      "D": "CENTRAL",
+      "E": "AGENTE",
+      "F": "AGENTE DESCRIPCION",
+      "G": "REGION",
+      "H": "PROVINCIA",
+      "I": "PAIS",
+      "J": "TIPO MAQUINA",
+      "K": "FUENTE GENERACION",
+      "L": "TECNOLOGIA",
+      "M": "CATEGORIA HIDRAULICA",
+      "N": "CATEGORIA REGION",
+      "O": "MERCADO",
+      "P": "GENERACION NETA"
+    },
+    "generation_detail_unit_cell": "A31",
+    "generation_detail_unit": "Unidad: MWh",
+    "rows": 15243,
+    "year_counts": {
+      "2024": 7494,
+      "2025": 7749
+    },
+    "market_counts": {
+      "MEM": 13958,
+      "Asignado": 516,
+      "SPOT": 574,
+      "MAT": 195
+    },
+    "duplicate_year_month_machine_extra_rows": 214,
+    "duplicate_year_month_machine_market_extra_rows": 0,
+    "years": {
+      "2024": {
+        "excel_month_serials": [
+          "45292",
+          "45323",
+          "45352",
+          "45383",
+          "45413",
+          "45444",
+          "45474",
+          "45505",
+          "45536",
+          "45566",
+          "45597",
+          "45627"
+        ],
+        "plant_codes": 419,
+        "exact_registry_code_overlap": 367,
+        "unmatched_code_sample": [
+          "ALEM",
+          "APAR",
+          "ARGE",
+          "ARRE",
+          "ATI2FV",
+          "ATI3FV",
+          "ATUC",
+          "BBLA",
+          "BSAS",
+          "CALEHI",
+          "CDPI",
+          "CEJEHI",
+          "CIPO",
+          "CIPOHI",
+          "CORR",
+          "COSM",
+          "CRIV",
+          "DIQU",
+          "ENRS",
+          "FILO"
+        ]
+      },
+      "2025": {
+        "excel_month_serials": [
+          "45658",
+          "45689",
+          "45717",
+          "45748",
+          "45778",
+          "45809",
+          "45839",
+          "45870",
+          "45901",
+          "45931",
+          "45962",
+          "45992"
+        ],
+        "plant_codes": 450,
+        "exact_registry_code_overlap": 394,
+        "unmatched_code_sample": [
+          "ALEM",
+          "APAR",
+          "ARGE",
+          "ARRE",
+          "ATI2FV",
+          "ATI3FV",
+          "ATUC",
+          "BBLA",
+          "BSAS",
+          "CABO",
+          "CAL2HI",
+          "CALEHI",
+          "CDPI",
+          "CEJEHI",
+          "CIPO",
+          "CIPOHI",
+          "CORR",
+          "COSM",
+          "CRIV",
+          "DIQU"
+        ]
+      }
+    }
+  },
+  "candidate_identity_examples": [
+    {
+      "nombre": "GUEMES",
+      "central": "GUEM",
+      "nombre_agente": "PAMPA ENERGIA SA",
+      "provincia": "SALTA",
+      "fuente": "cammesa"
+    },
+    {
+      "nombre": "CAPEX AUTOPROD.",
+      "central": "CAPE",
+      "nombre_agente": "CAPEX S.A. AUTOGENERADOR",
+      "provincia": "NEUQUEN",
+      "fuente": "cammesa"
+    },
+    {
+      "nombre": "C.T. GENELBA",
+      "central": "GEBA",
+      "nombre_agente": "GENELBA - PETROBRAS - GENELBA - RES.287 - PAMPA ENERGIA SA",
+      "provincia": "BUENOS AIRES",
+      "fuente": "cammesa"
+    },
+    {
+      "nombre": "PILAR BSAS",
+      "central": "PILB",
+      "nombre_agente": "CT PILAR BS AS- PAMPA ENERGÍA",
+      "provincia": "BUENOS AIRES",
+      "fuente": "cammesa"
+    },
+    {
+      "nombre": "P.E. Pampa Energía III",
+      "central": "BAHIEO",
+      "nombre_agente": "P.EOLICO PAMPA ENERGIA",
+      "provincia": "BUENOS AIRES",
+      "fuente": "cammesa"
+    },
+    {
+      "nombre": "Parque Eólico Pampa Energía (MATER)",
+      "central": "PAMEEO",
+      "nombre_agente": "P.EOLICO PAMPA ENERGIA",
+      "provincia": "BUENOS AIRES",
+      "fuente": "cammesa"
+    },
+    {
+      "nombre": "AGUA DEL CAJON",
+      "central": "ACAJ",
+      "nombre_agente": "C.T. AGUA DEL CAJON",
+      "provincia": "NEUQUEN",
+      "fuente": "cammesa"
+    }
+  ]
+}
