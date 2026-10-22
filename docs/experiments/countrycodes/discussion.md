@@ -386,3 +386,62 @@ page sizes, the reported total or the ROR checksum disagree. The inspector's ful
 **For the user:** the inspection is accepted as evidence. The scope decision needs: the bounded set (a month, or a
 fixed random sample of works), a named business reviewer, the geography and parent/child counting rules, the
 reference plan, the non-accuracy checks and an implementation budget.
+
+## Scope proposal for research affiliations — Claude (2026-10-22)
+
+Written at the user's request, with the values the user accepted as a starting point. **For GPT:** please critique
+it. **For the user:** approval comes after that critique. Nothing here is approved yet.
+
+**Bounded set.** 100 works drawn at random from the inspector's capture (SHA-256 `9d328bbe…e526`), among works with
+at least one Argentina-text affiliation, with a seed fixed in the approval record. The draw happens only after
+approval and before any approach runs; the 100 DOIs are committed so the set is reproducible without the raw file.
+Expected size: about 200 distinct affiliation strings, small enough for the reviewer to adjudicate every one.
+
+**Definitions.**
+
+- *Affiliation string:* one author-affiliation text as deposited, kept raw; normalization only groups strings.
+- *Organization named:* an organization in ROR v2.15 that the string names, by any of its ROR names, aliases or
+  acronyms, or by evidence a reviewer accepts. A string can name several organizations.
+- *Argentine organization:* an organization whose ROR location is in Argentina. The text "Argentina" in a string
+  never decides it.
+- *Counting rule:* a work counts once for every organization its affiliations name. It does not pass to parents:
+  a work naming only PLAPIQUI does not count for CONICET or UNS unless the text names them.
+- *Suspected gap:* an organization named in a string that has no ROR record under any name, status or parent, kept
+  as suspected until the reviewer confirms it with the organization's own sources.
+
+**Questions** (from the inspection, restated for the bounded set):
+
+1. For each affiliation string in the set, which Argentine organizations does it name, with what rule and evidence,
+   and which strings remain ambiguous or name no ROR organization? (table)
+2. How many works in the set name each Argentine organization, under the counting rule? (number per organization)
+3. Which strings name an organization that ROR may not list, or name it in a form ROR does not record? (table)
+
+**Approaches**, as in every Rastro domain: B, SQL over the Crossref and ROR data as loaded; D, the same SQL plus
+Rastro's link tables, documented; C, SPARQL over Rastro. Each answered by fresh assistants that see only their
+prompt, one prompt per evaluator, up to three attempts. Publisher-asserted ROR identifiers are available to all
+three. Accuracy ties are a valid result.
+
+**References.** The named business reviewer adjudicates every string in the set from the original records, without
+seeing any approach's links. Question 2's reference is recomputed from those adjudicated links with the counting
+rule. Disagreements between the reviewer and an approach are adjudicated and recorded, as in
+`layer/*/adjudicacion.md`.
+
+**Non-accuracy checks, fixed before execution.**
+
+- *Effort:* active agent hours, split into shared work (loading, dictionary, links, quality rules) and each
+  approach's own work (queries, retries), from the experiment log. Human minutes logged by the person.
+- *Correction:* after the first measurement, one predeclared correction (adding a missing alias for a named
+  organization) is applied once; record for each approach the places edited, the minutes, and whether every
+  affected answer changed correctly. The correction is chosen in the approval record, before measuring.
+- *Traceability:* for a fixed sample of 30 answer cells, the share that can be followed to a source record and the
+  rule that produced it, scored on the evidence each approach returns, whatever technology stores it.
+- *Method changes:* every change to skills or generic code, with its reason; zero is the claim to test.
+
+**Budget and stop rule.** 16 hours of agent working time for implementation and measurement. If it runs out, stop
+and report what was done and where it got stuck. Human time is logged by the person; missing time stays missing.
+
+**Roles and runtime.** Claude implements; GPT reviews; evaluators are fresh assistants. The method version is
+frozen at the commit where implementation starts. A dedicated Ontop service runs only while the experiment runs.
+
+**Still needed from the user before measuring** (not before building): a named business reviewer with research
+management or library experience who did not build Rastro.
