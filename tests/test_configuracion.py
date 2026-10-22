@@ -45,6 +45,7 @@ def test_petroleo_y_gas_abre_primero():
 
 
 def test_las_skills_de_claude_md_existen():
+    """Every skill listed in CLAUDE.md exists, and every skill folder is listed."""
     texto = (RAIZ / "CLAUDE.md").read_text()
     nombradas = set(re.findall(r"^- `([a-z-]+)`:", texto.split("## Repo skills")[1], re.M))
     existentes = {p.parent.name for p in (RAIZ / ".claude" / "skills").glob("*/SKILL.md")}
