@@ -1,0 +1,58 @@
+# Worked examples from Rastro's domains
+
+Concrete cases for the skill `evaluate`. The generic procedure is in `SKILL.md`; the registry is `layer/dominios.yaml`.
+
+## Which domains are evaluated with `layer/evaluar.py`
+
+Oil and gas (`energia`, folder `layer/energia/`), suppliers (`proveedores`, folder `layer/proveedores/`) and the
+predictions set (`energia_lab`, folder `layer/energia_lab/`). Oncology (`oncologia`) has its evaluation in
+`layer/eval`, run with `docker compose run --rm layer-eval`.
+
+## Measure a question (oil and gas)
+
+```bash
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia prompt <q> 0 <B|D|C>
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia try <q> 0 <B|D|C> < query.sql
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje
+```
+
+Suppliers, the same with `proveedores` (for example `... evaluar.py proveedores prompt p01 0 C`).
+
+## After changing data, mappings or rules (oil and gas)
+
+```bash
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje
+git diff layer/energia/resultados.md
+git checkout layer/energia/resultados.*    # only if the date was the only change
+```
+
+## One prompt per subagent: the discarded check (oil and gas)
+
+In the consistency check of 22/10/2026, a subagent saw the four forms of a question together, repeated the same query
+and the check measured nothing. It was discarded.
+
+## Another question set: `energia_lab` (oil and gas)
+
+`energia_lab` (`layer/energia_lab/`) measures the questions about Rastro Lab's predictions (the gas model for new
+Vaca Muerta shale wells), separate from the Layer evaluation. In `layer/dominios.yaml` it inherits from `energia` with
+`<<: *energia` and has its own read-only users (`energia_lab_reader`, `energia_lab_reader_links`) and SQL notes
+(`layer/energia_lab/sql-notes.md`, `layer/energia_lab/sql-enlaces-notes.md`).
+
+## When it does not have the data (oil and gas)
+
+```bash
+docker compose run --rm -T layer-eval python /layer/fuera.py energia prompt C
+docker compose run --rm -T layer-eval python /layer/fuera.py energia guardar C < respuesta.json
+docker compose run --rm -T layer-eval python /layer/fuera.py energia puntaje
+```
+
+Questions in `layer/energia/fuera/preguntas.yaml`. Examples of missing data in this domain: prices, reserves, 2026.
+
+## Failure types seen (oil and gas, from `docs/method.md`)
+
+- Wrong link: a company name joined to the wrong group.
+- Wrong mapping: a domain in the dictionary that turned every fracture record into a fracturing.
+- Wrong query: Rastro reached the operator through the share instead of the declared name.
+- Ambiguous definition: "producing", what each company operates or what it is entitled to.
+- Impossible source value: a pressure of 111.515 psi.

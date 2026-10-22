@@ -1,47 +1,60 @@
 ---
-name: verificar
-description: Comprobar que Rastro levanta y responde en los tres dominios (servicios, conteo por fuente, ontologías, queries, Rastro Lab y la app). Usalo después de un cambio y antes de cerrar una fase o commitear.
+name: verify
+description: Check that Rastro starts and answers, for one domain or all of them (services, count per source, ontologies, competency queries, quality rules, evaluation and the app). Use it after a change and before closing a phase or committing.
 ---
 
-# Verificar Rastro
+# Verify Rastro
 
-Corré todo y contá qué pasó, con los números. Si algo falla, decilo tal cual.
+Run everything and report what happened, with the numbers. If something fails, say it as it is.
 
-## Petróleo y gas (la demo): siempre
+Everything a domain needs is in its `method:` block in `layer/dominios.yaml`: `ontop {service, port}`, `queries`, `quality`, `evaluation {folder, run}`. Verify the domain you touched; before a release, verify all of them.
 
-```bash
-docker compose ps                                      # postgres, ontop-energia y app arriba; ontop-energia healthy
-docker compose exec -T postgres psql -U rastro -c "select * from rastro_meta.source_counts"
-docker compose run --rm ontology-check                 # OK en todas las queries de los tres dominios
-for q in ontology/energia/queries/cq*.rq; do echo "$q $(curl -s -H 'Accept: text/csv' --data-urlencode "query@$q" http://localhost:8082/sparql | wc -l) filas"; done
-docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun
-docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje   # sin Rastro 7/10, SQL + enlaces 10/10, con Rastro 10/10
-git diff --stat layer/energia                          # solo debería cambiar la fecha: si es así, git checkout layer/energia/resultados.*
-python3 lab/gas/modelo.py | head -8                    # el gas de A y B coincide; error de A y B; datos dudosos
-```
+## Constraints
 
-Las reglas de calidad (SHACL) de petróleo y gas: `docker compose run --rm calidad` (unos 3 minutos). Todas en «se cumple»; si una no, el detalle está en `layer/energia/calidad.json` y en la app («Bajo el capó»).
+- **Never "fix" a check by changing its expected value** (a saved score, a count, a query): find what changed.
+- **Report failures as they are,** with the command and its output.
+- **Never leave running** an optional service that was stopped before verifying.
 
-Qué esperar:
-
-- Ontop de energía `healthy`. Si no levanta, `docker compose logs ontop-energia`: casi siempre un término del mapeo que no está en la ontología o una columna que cambió.
-- Las 10 consultas de competencia con filas, en pocos segundos cada una.
-- La evaluación con los mismos puntajes de `layer/energia/resultados.md`. Si cambian, no es un detalle: buscá qué dato o regla cambió.
-- Rastro Lab: «El gas de A (SQL) y el de B (Rastro) coinciden en todos los pozos: True».
-
-## La app
-
-Abrí http://localhost:8501 y recorré la pestaña **Demo** (los cuatro momentos) y **Rastro Lab**. Si cambiaste un módulo que importa la app (`app/dominio.py`, `app/lab.py`, `lab/gas/modelo.py`), reiniciala: `docker compose restart app`. La primera carga después de cambiar datos tarda (se recalculan y se guardan en disco).
-
-## Proveedores y oncología: cuando los tocaste
-
-Están apagados para ahorrar memoria (`ontop-proveedores`, `graphdb`). Levantalos, verificá y volvé a apagarlos:
+## Checklist for one domain
 
 ```bash
-docker compose start ontop-proveedores graphdb
-curl -s -H 'Accept: text/csv' --data-urlencode 'query@ontology/proveedores/queries/cq1.rq' http://localhost:8081/sparql | head -3
-curl -s -H 'Accept: text/csv' --data-urlencode 'query@ontology/queries/cq1.rq' http://localhost:8080/sparql | head -3
-docker compose stop ontop-proveedores graphdb
+docker compose ps                                      # postgres, <ontop service> and app up; Ontop healthy
+docker compose exec -T postgres psql -U rastro -c "select * from rastro_meta.source_counts"   # rows per source, none at 0
+docker compose run --rm ontology-check                 # OK on every query of every domain
+for q in <queries folder>/cq*.rq; do echo "$q $(curl -s -H 'Accept: text/csv' --data-urlencode "query@$q" http://localhost:<port>/sparql | wc -l) rows"; done
+<quality run>                                          # only if method.quality exists
+<evaluation run> rerun
+<evaluation run> puntaje                                # same scores as <evaluation folder>/resultados.md
+git diff --stat <evaluation folder>                    # only the date should change: if so, git checkout <evaluation folder>/resultados.*
 ```
 
-Si GraphDB se reinicia solo, casi siempre es memoria de Docker: revisá qué otros contenedores corren.
+What to expect:
+
+- The domain's Ontop `healthy`. If it does not start, `docker compose logs <ontop service>`: almost always a mapping term that is not in the ontology, or a source column that changed.
+- Every competency query with rows, in a few seconds each.
+- Quality rules: all of them hold; if one does not, the detail is in `method.quality.result` and in the app.
+- The evaluation with the same scores as the saved results. If they change, it is not a detail: find which value or rule changed.
+- Anything else the domain publishes (for example, a model on top of the layer) runs and its own consistency check passes.
+
+## The app
+
+Open http://localhost:8501 and walk through the demo for the domain you touched. If you changed a module the app imports, restart it: `docker compose restart app`. The first load after changing data is slow (values are recomputed and cached).
+
+## Domains that are stopped
+
+Some services are stopped to save memory. Start them, verify and stop them again:
+
+```bash
+docker compose start <ontop service> [other services]
+curl -s -H 'Accept: text/csv' --data-urlencode 'query@<queries folder>/cq1.rq' http://localhost:<port>/sparql | head -3
+docker compose stop <ontop service> [other services]
+```
+
+## Lessons
+
+- A score that changes after a rerun is a signal, not noise: find the changed value or rule before going on.
+- After a rerun, only the date should change in the saved results; revert the files if that is all.
+- Ontop that does not start almost always means the mapping and the ontology or the source disagree.
+- If a service restarts on its own, check Docker memory and which other containers are running.
+
+See examples.md for the commands and expected numbers from Rastro's domains.

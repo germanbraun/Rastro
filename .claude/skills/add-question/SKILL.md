@@ -1,30 +1,69 @@
 ---
-name: agregar-pregunta
-description: Sumar o cambiar una pregunta de competencia de Rastro con su query SPARQL, en cualquiera de los tres dominios, y extender la ontología solo si hace falta. Usalo al tocar ontology/**/competency-questions.md, las ontologías u ontology/**/queries/.
+name: add-question
+description: Add or change a competency question with its SPARQL query, in any domain of the registry (layer/dominios.yaml), and extend the ontology only if needed. Use it when touching ontology/**/competency-questions.md, the ontologies or ontology/**/queries/.
 ---
 
-# Agregar una pregunta de competencia
+# Add a competency question
 
-Las preguntas mandan: la ontología solo tiene lo que alguna pregunta necesita.
+Step 0 of the method (`docs/method.md`). Questions rule: the ontology only has what some question needs.
 
-| Dominio | Ontología | Preguntas y queries | Mapeo | Ontop |
-|---|---|---|---|---|
-| Petróleo y gas | `ontology/energia/energia.ttl` | `ontology/energia/` | `mappings/energia.r2rml.ttl` | :8082 |
-| Proveedores | `ontology/proveedores/proveedores.ttl` | `ontology/proveedores/` | `mappings/proveedores.r2rml.ttl` | :8081 |
-| Oncología | `ontology/rastro.ttl` | `ontology/` | `mappings/rastro.r2rml.ttl` | :8080 |
+## Contract
 
-## Pasos
+- **Takes:** a business question from a client or from the demo, and the domain it belongs to.
+- **Returns:** the question in the domain's questions file, its SPARQL query, and the query answering in Rastro.
+- **Does not:** add terms or mappings on its own (that is the skill `map-source`), or load data (skill `add-source`).
 
-1. **La pregunta en palabras de negocio**, como la diría un cliente. Tiene que cruzar al menos dos fuentes; si una sola tabla la responde, no muestra el valor de Rastro. Si depende de una definición («operadora», «no convencional»), escribila en la pregunta.
-2. **Sumala a la tabla** de `competency-questions.md` del dominio, con número, fuentes y para qué es (demo, Layer o Lab).
-3. **Escribí la query** en `queries/cq<N>.rq` del dominio:
-   - Primera línea: `# <N>. <la pregunta>`.
-   - El prefijo del dominio (`energia:`, `proveedores:`, `oncologia:`), nunca el prefijo vacío.
-   - Sin caminos `*` o `+`: Ontop no los soporta. Lo que necesite clausura se precalcula en Postgres.
-   - Valores de la fuente tal cual (`"vaca muerta"`, `"SHALE"`, `"TERMINATED"`).
-4. **Si falta un término**, agregalo a la ontología con `rdfs:label` en español y un comentario corto. Preferí un atributo a una clase nueva; una propiedad que usan dos clases va sin `rdfs:domain` (si no, Ontop deduce clases equivocadas). Sumalo a `term_sources` (y a `link_sources` si es un enlace) del dominio en `layer/dominios.yaml`, y a las notas que lee el asistente (`layer/<dominio>/sparql-notes.md`).
-5. **Si necesita un dato nuevo,** agregá su mapeo (con `rr:datatype` si la columna sale de un `GROUP BY` o `DISTINCT`) y reiniciá el Ontop del dominio.
-6. **Validá:** `docker compose run --rm ontology-check` en OK, y la query contra Ontop con una respuesta que tenga sentido para alguien del negocio:
-   `curl -s -H 'Accept: text/csv' --data-urlencode "query@ontology/energia/queries/cq<N>.rq" http://localhost:8082/sparql`
-7. **Si va a la app,** sumala a `preguntas` de `app/dominios/<dominio>.yaml` (pregunta simple, formulación técnica y, si se puede, «¿Por qué este número?»). Si va a la evaluación, seguí la skill `evaluar`.
-8. **Si es de Rastro Lab,** solo datos anteriores al inicio del pozo (ver la skill `rastro-lab`).
+## Constraints
+
+- **Never write a question that a single table answers** to show integration: it has to cross at least two sources.
+- **No internal names in the question:** it is said in business words, as a client would say it, without table,
+  column or ontology names.
+- **Definitions are written into the question,** not assumed: what counts as an operator, which category is included,
+  which period.
+- **The query uses only existing terms:** a missing term goes through the skill `map-source`, never invented in the
+  query.
+- **Mark what is uncertain:** an ambiguous word goes into the proposal's open questions, never resolved silently in the
+  query.
+
+Where each piece lives for a domain is in its entry in `layer/dominios.yaml`:
+
+| What | Registry key |
+|---|---|
+| Ontology | `ontology` |
+| Questions | `method.questions` (`competency-questions.md`) |
+| Queries | `method.queries` (`cq<N>.rq`) |
+| Mapping | `method.mapping` |
+| Ontop service and port | `method.ontop.service`, `method.ontop.port` |
+| Namespace (the domain prefix) | `namespace` |
+| Notes the assistant reads | `sparql_notes` |
+
+Below, `<domain>` is the registry entry, `<prefix>:` its prefix and `<port>` its `method.ontop.port`.
+
+## Steps: narrow down, decide, test
+
+1. **Narrow down the question, and write the proposal.** The question in business words, as a client would say it. It has to cross at least two sources; if a single table answers it, it does not show Rastro's value. If it depends on a definition (what counts as an operator, which category is included), write it in the question. Look in the existing questions and the dictionary first: maybe it is already asked or almost. Write the result as a short table, one row per question, before touching any file:
+
+   | Question (plain words) | Definitions it depends on | Sources it needs (at least two) | Expected answer type | Ambiguous words | How sure | Open question |
+   |---|---|---|---|---|---|---|
+
+   A person reviews it at a glance; definitions and ambiguous words are decided here. The table goes into the decision or the experiment log.
+2. **Add it to the table** in the domain's questions file (`method.questions`), with number, sources and what it is for (demo, Layer or Lab).
+3. **Write the query** in `method.queries` as `cq<N>.rq`:
+   - First line: `# <N>. <the question>`.
+   - The domain prefix (`<prefix>:`), never the empty prefix.
+   - No `*` or `+` paths: Ontop does not support them. Whatever needs closure is precomputed in Postgres.
+   - Source values as they are (same spelling and case as the source).
+4. **If a term or a value is missing,** follow the skill `map-source` (dictionary and mapping together, with their checks). In short: add it to the ontology with an `rdfs:label` in Spanish and a short comment. Prefer an attribute over a new class; a property used by two classes has no `rdfs:domain` (otherwise Ontop infers wrong classes). Add it to the domain's `term_sources` (and to `link_sources` if it is a link) in `layer/dominios.yaml`, and to the notes the assistant reads (`sparql_notes`). If it joins things across sources, the skill `link-entities`.
+5. **If it needs new data,** load it first (skill `add-source`), then add its mapping (with `rr:datatype` if the column comes from a `GROUP BY` or `DISTINCT`) and restart the domain's Ontop (`docker compose restart <method.ontop.service>`).
+6. **Validate:** `docker compose run --rm ontology-check` returns OK, and the query against Ontop gives an answer that makes sense to someone from the business:
+   `curl -s -H 'Accept: text/csv' --data-urlencode "query@<method.queries>cq<N>.rq" http://localhost:<port>/sparql`
+   Then the skill `verify`.
+7. **If it goes to the app,** add it to `preguntas` in `app/dominios/<domain>.yaml` (simple question, technical wording and, if possible, «¿Por qué este número?» (Why this number?)). If it goes to the evaluation, follow the skill `evaluate`. If it touches values the source can get wrong, the skill `quality-rules`.
+8. **If it is for a predictive model** (Rastro Lab), use only data known at prediction time: nothing that arrived after the case started (see the skill `rastro-lab`).
+
+## A person approves
+
+- **The proposal:** each question, its definitions and its ambiguous words, before the query is written.
+- Each definition that is a **business decision** (what a word means in that domain), and changing a question already used in the app or in the evaluation.
+
+Worked examples from the existing domains (paths, prefixes, ports, definitions): `examples.md`.

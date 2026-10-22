@@ -1,22 +1,31 @@
 ---
-name: cerrar-fase
-description: Cerrar un paso o una fase del plan de Rastro (verificar, marcar el plan, documentar decisiones y commitear). Usalo cuando termina un checkpoint o un bloque de trabajo.
+name: close-phase
+description: Close a step or a phase of the Rastro plan, in any domain (verify, check the numbers match, mark the plan, document decisions and commit). Use it when a checkpoint or a block of work is finished.
 ---
 
-# Cerrar una fase
+# Close a phase
 
-1. **Verificá** con la skill `verificar`. No cierres una fase con su checkpoint fallando.
-2. **Revisá que los números coincidan** en todos lados: lo que cambió en la app (que los lee de sus JSON) tiene que decir lo mismo en `docs/decisions.md`, el guion de la demo, el estudio de Lab y las diapositivas (skill `mazos`).
-3. **Marcá el plan** en `docs/plan.md`: los pasos hechos con `[x]`. Mantené el plan corto: un resumen de lo logrado, no la historia.
-4. **Decisiones:** una entrada en `docs/decisions.md` por cada decisión nueva, con fecha, qué se decidió, por qué y los números que la respaldan. Si una decisión es una regla que hay que seguir siempre, va también a `CLAUDE.md` o a una skill.
-5. **README y `CLAUDE.md`:** si cambió cómo se levanta, se carga o se mide algo.
-6. **Antes de commitear, revisá secretos y nombres:**
+## Constraints
+
+- **Never commit with a failing check** (verify, lint or tests).
+- **Never commit secrets or data:** no `.env`, no keys in `.env.example`, nothing from `data/raw/`.
+- **Stage only the files you changed,** never `git add -A`.
+- **Never push unless the user asks.**
+
+## Steps
+
+1. **Verify** with the skill `verify`. Do not close a phase with its checkpoint failing.
+2. **Check that the numbers match** everywhere: what changed in the app (which reads them from its JSON files) must say the same in `docs/decisions.md`, the domain's docs and the demo material (script and slides: skill `decks`).
+3. **Mark the plan** in `docs/plan.md`: finished steps with `[x]`. Keep the plan short: a summary of what was achieved, not the history.
+4. **Decisions:** one entry in `docs/decisions.md` for each new decision, with date, what was decided, why and the numbers that back it. If a decision is a rule that must always be followed, it also goes to `CLAUDE.md` or to a skill.
+5. **README and `CLAUDE.md`:** if how something is started, loaded or measured changed.
+6. **Before committing, check secrets and names:**
    ```bash
-   grep -E '^[A-Z_]*(KEY|TOKEN|PASSWORD|USER)=.+' .env.example   # solo valores de desarrollo local (rastro), nunca claves
-   git status --short                                            # nada de .env ni data/raw
-   python3 -m ruff check .                                       # sin errores
-   python3 -m pytest -q                                          # las pruebas pasan
+   grep -E '^[A-Z_]*(KEY|TOKEN|PASSWORD|USER)=.+' .env.example   # only local development values, never keys
+   git status --short                                            # no .env or data/raw
+   python3 -m ruff check .                                       # no errors
+   python3 -m pytest -q                                          # tests pass
    ```
-   Y que no haya nombres de productos ni empresas comerciales de grafos de conocimiento (ver `CLAUDE.md`).
-7. **Commit en español**: un título que diga qué se ve distinto («Rastro Lab: …», «Petróleo y gas: …») y un párrafo corto con los números. Termina con la línea `Co-Authored-By` que corresponda.
-8. **Push solo si el usuario lo pide.**
+   And that there are no names of commercial knowledge-graph products or companies (see `CLAUDE.md`).
+7. **Commit in English, staging only the files you changed** (`git add <files>`, never `git add -A`: another session may have work in progress in the same folder): a title that says what looks different (prefixed with the area or domain, "<Area>: …") and a short paragraph with the numbers. It ends with the matching `Co-Authored-By` line.
+8. **Push only if the user asks.**

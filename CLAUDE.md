@@ -1,74 +1,86 @@
 # Rastro
 
-Dos MVP comerciales sobre tecnologías semánticas, con datos públicos:
+Two commercial MVPs on semantic technologies, with public data:
 
-- **Rastro Layer:** preguntas de negocio sobre fuentes integradas, con la procedencia de cada dato.
-- **Rastro Lab:** un modelo de aprendizaje automático cuyas predicciones se explican con esa misma evidencia. Hoy, el gas de los pozos nuevos de shale de Vaca Muerta.
+- **Rastro Layer:** business questions over integrated sources, with the provenance of every value.
+- **Rastro Lab:** a machine-learning model whose predictions are explained with that same evidence. Today, the gas of new Vaca Muerta shale wells.
 
-El caso de la demo es **petróleo y gas en Argentina** (`energia`). Proveedores del Estado de EE. UU. (`proveedores`) y oncología (`oncologia`) son prueba de que el mismo Rastro sirve para otros datos: la app los muestra solo con «Ver detalles técnicos». El plan está en `docs/plan.md`; las decisiones, en `docs/decisions.md`.
+The demo case is **oil and gas in Argentina** (`energia`). US federal suppliers (`proveedores`) and oncology (`oncologia`) show that the same Rastro works for other data: the app shows them only with «Ver detalles técnicos». The plan is in `docs/plan.md`; the method in `docs/method.md`; the decisions in `docs/decisions.md`.
 
-## Regla principal: simple
+## Main rule: simple
 
-Es un MVP comercial: lo tiene que entender alguien de ventas, que tiene que poder contarlo en tres minutos.
+It is a commercial MVP: someone in sales has to understand it and be able to tell it in three minutes.
 
-- Hacé lo mínimo que funciona para la demo o para un número de la demo. Si una pieza no hace falta, no se hace.
-- Nombres simples y en palabras de negocio: "Pozo", "Concesión", "operadora". Nada de siglas internas.
-- Antes de agregar una clase, una tabla, un servicio o una dependencia, preguntate si se puede evitar.
-- Cada paso termina en algo que se ve funcionar.
+- Do the minimum that works for the demo or for a number in the demo. If a piece is not needed, don't build it.
+- Simple names in business words: "Pozo", "Concesión", "operadora". No internal acronyms.
+- Before adding a class, a table, a service or a dependency, ask whether it can be avoided.
+- Every step ends in something you can see working.
 
-## Convenciones
+## Conventions
 
-- **Idioma:** código, comentarios, docs y commits en español. Los nombres de la ontología, en inglés (`energia:Well`).
-- **Mapeos en R2RML**, un archivo por dominio (`mappings/rastro.r2rml.ttl` para oncología, `proveedores.r2rml.ttl`, `energia.r2rml.ttl`). Cada Ontop lee un solo archivo de mapeo.
-- **Ontología mínima** (`ontology/<dominio>/`): solo lo que piden sus preguntas de competencia. Una sola propiedad por relación (por ejemplo, `energia:inConcession` es la única que une algo con su concesión). Una propiedad que usan dos clases va sin `rdfs:domain`.
-- **Todo se consulta en Ontop**: oncología en :8080, proveedores en :8081, petróleo y gas en :8082. Cada dominio tiene su prefijo (`oncologia:`, `proveedores:`, `energia:`); nunca el prefijo vacío. Ontop no soporta caminos `*` ni `+`: lo que necesite clausura se precalcula en Postgres.
-- **Enriquecer** es sumar lo que sabe una fuente de afuera (hoy, Wikidata) por una clave compartida (el LEI), sin perder de dónde vino. Se hace en vivo (una consulta federada, siempre al día) o guardado en Rastro (`energia:Enrichment`, con su fecha y la huella del archivo, para que se pueda consultar sin internet y repetir; hoy lo usa la pregunta 15, no el modelo). No es «aumentar datos» en el sentido de aprendizaje automático (ejemplos sintéticos).
-- **Cada enlace es evidencia:** una `prov:Entity` con `prov:wasDerivedFrom` (la fuente) y su regla y evidencia en texto. Las correcciones van en un CSV revisado (`linking/<dominio>/`), con su motivo o su documento; las que revisó un asistente de IA dicen que falta que las confirme una persona.
-- **Datos fuera del repo:** las descargas van a `data/raw/`, que no se versiona. El repo guarda scripts. Cada carga se registra en `rastro_meta.load_run`.
-- **Secretos solo en `.env`**, nunca en `.env.example` ni en commits. Antes de commitear, revisá que `.env.example` no tenga claves.
-- **Textos de la app** en YAML (`app/dominios/*.yaml`, `app/ayuda.yaml`, `app/faq*.yaml`), no en el código. Los números medidos se leen de sus JSON (`layer/<dominio>/resultados.json`, `layer/energia/cambio/*.json`), nunca escritos a mano.
-- **Registro:** formal y sin jerga en la vista de negocio («diccionario de negocio», «evidencia»); lo técnico va detrás de «Ver detalles técnicos». En textos visibles, «Rastro deduce / traduce / genera», no el nombre de las herramientas; las herramientas se nombran solo donde se explican.
-- **Sin nombres de productos ni empresas comerciales de grafos de conocimiento** en el repo (interfaz, docs, código, commits). Para hablar de interoperabilidad, decir "otras plataformas o herramientas de grafos de conocimiento".
-- **Decisiones** en `docs/decisions.md`: una entrada corta por decisión, con el porqué y los números.
+- **Language:** code, comments, technical docs, skills and commits in English. What users see stays in Spanish: the app (`app/**/*.yaml`), the decks, the demo scripts and the ontology labels (`rdfs:label "…"@es`). Ontology names are in English (`energia:Well`). Existing Spanish comments and docs are translated when they are touched; the history in `docs/decisions.md` stays as written, new entries in English.
+- **R2RML mappings**, one file per domain (`mappings/rastro.r2rml.ttl` for oncology, `proveedores.r2rml.ttl`, `energia.r2rml.ttl`). Each Ontop reads a single mapping file.
+- **Minimal ontology** (`ontology/<domain>/`): only what its competency questions need. One property per relation (for example, `energia:inConcession` is the only one that links something to its concession). A property used by two classes has no `rdfs:domain`.
+- **Everything is queried through Ontop**: oncology on :8080, suppliers on :8081, oil and gas on :8082. Each domain has its prefix (`oncologia:`, `proveedores:`, `energia:`); never the empty prefix. Ontop does not support `*` or `+` paths: anything that needs a closure is precomputed in Postgres.
+- **Enrichment** adds what an outside source knows (today, Wikidata) through a shared key (the LEI), keeping where it came from. Done live (a federated query, always up to date) or saved in Rastro (`energia:Enrichment`, with its date and file fingerprint, so it can be queried offline and repeated; today question 15 uses it, the model does not). It is not "data augmentation" in the machine-learning sense (synthetic examples).
+- **Every link is evidence:** a `prov:Entity` with `prov:wasDerivedFrom` (the source) and its rule and evidence as text. Corrections go in a reviewed CSV (`linking/<domain>/`), with their reason or document; those reviewed by an AI assistant say a person still has to confirm them.
+- **Data outside the repo:** downloads go to `data/raw/`, which is not versioned. The repo keeps scripts. Every load is recorded in `rastro_meta.load_run`.
+- **Secrets only in `.env`**, never in `.env.example` or in commits. Before committing, check that `.env.example` has no keys.
+- **App texts** in YAML (`app/dominios/*.yaml`, `app/ayuda.yaml`, `app/faq*.yaml`), not in code. Measured numbers are read from their JSON (`layer/<domain>/resultados.json`, `layer/energia/cambio/*.json`), never typed by hand.
+- **Register (in the app, in Spanish):** formal and jargon-free in the business view («diccionario de negocio», «evidencia»); the technical part goes behind «Ver detalles técnicos». In visible texts, «Rastro deduce / traduce / genera», not the tool names; tools are named only where they are explained.
+- **No names of commercial knowledge-graph products or companies** in the repo (interface, docs, code, commits). To talk about interoperability, say "other knowledge-graph platforms or tools".
+- **The method** is in `docs/method.md`: every step with its skill, the check that decides and where a person approves.
+- **Decisions** in `docs/decisions.md`: one short entry per decision, with the why and the numbers.
+- **Commits:** stage only the files you changed (no `git add -A`): other sessions may have work in progress in the same folder.
 
-## Reglas de medición
+## Measurement rules
 
-- **Las referencias salen de Rastro**, así que la ventaja de Rastro puede ser circular. Antes de publicar un número, adjudicar con los datos de cada fuente las preguntas donde los caminos difieren (`layer/<dominio>/adjudicacion.md`), y hacer las pruebas a ciegas (`docs/preguntas-a-ciegas.md`, `docs/lab-explicaciones-a-ciegas.md`).
-- **Tres caminos, siempre:** sin Rastro (B, SQL sobre las fuentes tal como vienen), SQL con los enlaces de Rastro (D, la línea de base justa) y con Rastro (C).
-- **Un arreglo después de medir** se vuelve a medir solo en lo afectado y se dice así. Cuando cambia una regla o un dato, se vuelven a ejecutar todas las consultas guardadas (`rerun`).
-- **Rastro Lab compara el mismo modelo** con variables de las tablas crudas (A) y de Rastro (B). La precisión solo muestra que no se pierde nada; lo que se mide es la explicación.
-- **Rastro Lab no usa el futuro:** la operadora y el tipo de pozo son los del mes en que arrancó; la fractura, la informada hasta ese mes. Lo que llegó después se marca.
-- **Lo que carga solo Lab no cambia Layer:** va en su propio esquema, y se confirma volviendo a ejecutar la evaluación.
+- **The references come from Rastro**, so Rastro's advantage can be circular. Before publishing a number, adjudicate with each source's data the questions where the approaches differ (`layer/<domain>/adjudicacion.md`), and run the blind tests (`docs/preguntas-a-ciegas.md`, `docs/lab-explicaciones-a-ciegas.md`).
+- **Three approaches, always:** without Rastro (B, SQL over the sources as they come), SQL with Rastro's links (D, the fair baseline) and with Rastro (C).
+- **One prompt per evaluator:** each evaluator is a fresh assistant that sees only its prompt; never several wordings of the same question together.
+- **A fix after measuring** is re-measured only where it applies, and said so. When a rule or a value changes, all saved queries are re-run (`rerun`).
+- **Rastro Lab compares the same model** with variables from the raw tables (A) and from Rastro (B). Accuracy only shows nothing is lost; what is measured is the explanation.
+- **Rastro Lab does not use the future:** the operator and the well type are those of the month the well started; the fracturing, what was reported up to that month. Anything that arrived later is flagged.
+- **What only Lab loads does not change Layer:** it goes in its own schema, and that is confirmed by re-running the evaluation.
 
-## Comandos
+## Commands
 
 ```bash
 docker compose up -d                                   # app :8501, Postgres :5434, Ontop :8080/:8081/:8082, GraphDB :7210
-docker compose run --rm energia-loader                 # cargadores: <fuente>-loader (ver README)
-docker compose run --rm lab-gas-loader                 # Capítulo IV 2018–2022, fractura y trayectorias, solo para Lab
-docker compose run --rm wikidata-energia-loader        # enriquecimiento con Wikidata, guardado (después del enlazador, y otra vez el enlazador)
-docker compose run --rm energia-linker                 # enlaces de petróleo y gas (proveedores-linker, linker para oncología)
-docker compose restart ontop-energia                   # después de cambiar mapeos, ontología o enlaces
-docker compose run --rm ontology-check                 # ontologías y queries de competencia
-docker compose run --rm calidad                        # reglas de calidad (SHACL) sobre los datos de petróleo y gas (~3 min)
-docker compose run --rm -T layer-eval python /layer/fuera.py energia prompt|guardar|puntaje   # ¿dice cuándo no tiene el dato?
-docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun|puntaje   # evaluación (energia_lab: las preguntas sobre las predicciones)
-layer/energia/cambio/cambio.sh registrar               # prueba de cambio (siempre termina en «deshacer»)
-layer/energia/cambio/correccion.sh registrar           # una corrección, todos los resultados (~15 min)
-layer/energia/cambio/impacto.sh registrar              # qué predicciones cambian si la fuente corrige un registro (~15 min)
-python3 lab/gas/modelo.py [<pozo>|--12-meses|--como-trabajo-publicado|--publicar|--comparar]   # Rastro Lab desde la consola
-python3 docs/slides/build.py                           # arma los mazos HTML
+docker compose run --rm energia-loader                 # loaders: <source>-loader (see README)
+docker compose run --rm lab-gas-loader                 # Capítulo IV 2018–2022, fracturing and trajectories, only for Lab
+docker compose run --rm wikidata-energia-loader        # Wikidata enrichment, saved (after the linker, then the linker again)
+docker compose run --rm energia-linker                 # oil and gas links (proveedores-linker; linker for oncology)
+docker compose restart ontop-energia                   # after changing mappings, ontology or links
+docker compose run --rm ontology-check                 # ontologies and competency queries, all three domains
+docker compose run --rm calidad                        # quality rules (SHACL) over the oil and gas data (~3 min)
+docker compose run --rm -T layer-eval python /layer/fuera.py energia prompt|guardar|puntaje   # does it say when it lacks the data?
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun|puntaje   # evaluation (energia_lab: questions about the predictions)
+layer/energia/cambio/cambio.sh registrar               # change test (always ends with «deshacer»)
+layer/energia/cambio/correccion.sh registrar           # one correction, every result (~15 min)
+layer/energia/cambio/impacto.sh registrar              # which predictions change if the source corrects a record (~15 min)
+python3 lab/gas/modelo.py [<well>|--12-meses|--como-trabajo-publicado|--publicar|--comparar]   # Rastro Lab from the console
+python3 docs/slides/build.py                           # builds the HTML decks
 ```
 
-Los scripts de `lab/` y `layer/energia/cambio/correccion.py` corren en la máquina, no en Docker: necesitan Python con `requirements-dev.txt` y Ontop de energía en localhost:8082.
+The scripts in `lab/` and `layer/energia/cambio/correccion.py` run on the machine, not in Docker: they need Python with `requirements-dev.txt` and the oil and gas Ontop on localhost:8082.
 
-## Skills del repo
+## Repo skills
 
-- `verificar`: comprobar que todo levanta y responde, en los tres dominios
-- `agregar-fuente`: sumar o cambiar un cargador de datos
-- `agregar-pregunta`: sumar una pregunta de competencia con su query
-- `evaluar`: medir las preguntas con los tres caminos, puntuar y adjudicar
-- `rastro-lab`: entrenar, medir y explicar el modelo de gas con y sin Rastro
-- `pruebas-de-cambio`: la prueba de cambio y la de la corrección, y dónde se ven
-- `mazos`: armar y publicar los mazos y mantener el guion de la demo
-- `cerrar-fase`: marcar el plan, documentar y commitear
+**Method skills** — generic for any domain; each domain's paths and commands come from its `method:` block in `layer/dominios.yaml`, and real cases from each skill's `examples.md`:
+
+- `add-question`: add a competency question with its query
+- `add-source`: add or change a data loader
+- `map-source`: a source's dictionary and mapping, with their checks
+- `link-entities`: link entities across sources, with rule, evidence and reviewed corrections
+- `quality-rules`: SHACL rules over the integrated data, and the predictions that inherit what fails
+- `evaluate`: measure the questions with the three approaches, score and adjudicate
+- `show-in-app`: show a domain in the app, business and technical view, and optional modules such as questions over texts
+- `change-tests`: the change test and the correction test, and where they show
+- `verify`: check that everything starts and answers
+- `close-phase`: mark the plan, document and commit
+
+**Project and domain skills:**
+
+- `rastro-lab`: train, measure and explain the oil and gas model with and without Rastro
+- `decks`: build and publish Rastro's decks and keep the demo script consistent

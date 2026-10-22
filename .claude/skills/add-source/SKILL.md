@@ -1,33 +1,60 @@
 ---
-name: agregar-fuente
-description: Sumar o cambiar un cargador de datos de Rastro en cualquier dominio (Capítulo IV, mapas de la Secretaría de Energía, fractura, USAspending, AACT u otra fuente). Usalo cuando haya que descargar y cargar datos nuevos en Postgres o GraphDB.
+name: add-source
+description: Add or change a data loader in any domain of the registry (layer/dominios.yaml), including enrichment from an outside source through a shared key. Use it when new data has to be downloaded and loaded into Postgres or the triplestore.
 ---
 
-# Agregar una fuente de datos
+# Add a data source
 
-Un cargador baja datos, los guarda en `data/raw/` y los carga en Postgres (un esquema por fuente) o en GraphDB. Seguí el patrón de los que ya existen: `data/energia/` (varias fuentes de un dominio) y `data/lab-gas/` (las fuentes que usa solo Rastro Lab: años anteriores, fractura y trayectorias), en Python. Las trayectorias de pozo son el ejemplo más completo de una fuente sumada de punta a punta: cargador, enlace con su regla, mapeo, diccionario, modelo y explicación.
+Step 1 of the method (`docs/method.md`). A loader downloads data, stores it in `data/raw/` and loads it into Postgres (one schema per source) or into the triplestore. Follow the pattern of the existing loaders in `data/`, in Python. The domain's loaders are listed in `method.loaders` of its entry in `layer/dominios.yaml`. Below, `<domain>` is that entry and `<source>` the new source.
 
-## Pasos
+## Contract
 
-1. **Recorte primero.** Cargá solo lo que piden las preguntas de competencia del dominio. Si la fuente es grande, filtrá en origen.
-2. **No cambies lo que ya mide la demo.** Si la fuente es solo para Rastro Lab, va en su propio esquema y su propio cargador (como `capitulo4_anterior` y `fractura` en `data/lab-gas/`). Después de cargar, volvé a ejecutar la evaluación del dominio (skill `evaluar`, `rerun`) y confirmá que da lo mismo.
-3. **Escribí el cargador** en `data/<fuente>/`:
-   - `schema.sql` con las tablas, con los nombres de la fuente original. Si el enlazador lo necesita aunque la fuente no esté cargada, que no borre nada (`CREATE ... IF NOT EXISTS`) y que el cargador vacíe las tablas antes de cargar.
-   - `load.py` que registra la fuente en `rastro_meta.source` (con licencia), descarga a `data/raw/<fuente>/` con caché y reintentos, y carga con `COPY`.
-   - Una fila en `rastro_meta.load_run` por tabla, con la versión de la fuente: usá `copiar()` de `data/comun.py` y pasale el archivo descargado (`archivo=`), así queda su huella SHA-256 y el día en que se bajó.
-4. **Sumá el servicio** `<fuente>-loader` en `infra/docker-compose.yml`, con `profiles: ["load"]` y la imagen `./loaders`.
-5. **Credenciales** solo por variables de `.env`. Agregá la variable vacía a `.env.example`. Pasá contraseñas por parámetros de conexión, nunca dentro de una URL, porque los errores las imprimen.
-6. **Enlaces:** si la fuente nombra empresas, pozos o concesiones, sumala al enlazador del dominio (`linking/<dominio>/links.sql`): sus nombres a `empresa_nombre` con su `fuente`, y una tabla de enlace con regla y evidencia. Mapeala con `prov:wasDerivedFrom` a la fuente y sumá sus términos a `layer/dominios.yaml`.
-7. **Corré la carga y el enlazador**, reiniciá el Ontop del dominio y verificá con la skill `verificar`: conteos, un caso conocido y que nada quede fuera del recorte.
-8. **Documentá:** una fila en la tabla «Cargar datos» del `README.md` y una entrada en `docs/decisions.md` (qué recorte, por qué, números de la carga).
+- **Takes:** the competency questions that need the data (skill `add-question`) and a public source that has it.
+- **Returns:** a loader in `data/<source>/`, its service, the data in Postgres (or the triplestore) with each load recorded, and the source in the registry.
+- **Does not:** map the data to the dictionary (skill `map-source`) or link it to what Rastro already has (skill `link-entities`).
 
-## Enriquecer con una fuente de afuera
+## Constraints
 
-Si la fuente es de otra organización y se une por una clave compartida (como Wikidata por el LEI), es un **enriquecimiento**. Se puede consultar en vivo (una consulta federada, como `layer/energia/externo/wikidata.rq`) y, además, guardarlo como una fuente más: el patrón es `data/wikidata-energia/` (guarda la respuesta del día con su huella), un enlace por la clave con su regla y evidencia (`energia.enriquecimiento`) y una clase propia mapeada con `prov:wasDerivedFrom` a la fuente y `energia:loadedOn` con el día de la consulta.
+- **Never load beyond the scope** the questions need: the cut is decided first, and filtered at the origin if the source is large.
+- **No secrets in code, URLs or `.env.example`:** credentials only in `.env`, passed as connection parameters.
+- **Every load is recorded** in `rastro_meta.load_run` with its file fingerprint (SHA-256) and download day.
+- **Never change what is already measured** without running the evaluation again and confirming the result.
+- **Downloads never go into the repo:** they go to `data/raw/`, which is not versioned; the repo keeps the scripts.
+- **Mark what is uncertain:** an unclear license, key or unit goes into the proposal's open questions, never loaded as "probably right".
 
-## Cuidado con
+## Steps: narrow down, decide, test
 
-- **Archivos grandes** (el Capítulo IV son unos 300 MB por año): corré el cargador en segundo plano y filtrá las consultas por los pozos que hacen falta antes de unir años.
-- **Memoria:** importar RDF grande en GraphDB, por partes (ver `data/mesh/load.py`).
-- **Fuentes que se actualizan todos los días** (fractura): guardá la fecha de carga de cada dato si la tiene (`fecha_data` → `energia:loadedOn`).
-- **Codificación de `+`:** en APIs que usan `+` como espacio, `requests` lo codifica como `%2B`. Usá espacios.
+1. **Narrow down the source, and write the proposal.** Load only what the domain's competency questions (`method.questions`) ask for. If the source is large, filter at the origin. Look at the source before writing code: its documentation, a sample file, its keys and which things it names that Rastro already has. Write the result as a short source profile, before touching any file:
+
+   | Publisher | URL | License | Format and size | Update frequency | Tables and fields to load (the scope) | Keys | Entities already in Rastro | Risks | How sure | Open question |
+   |---|---|---|---|---|---|---|---|---|---|---|
+
+   A person reviews it at a glance; the scope, the license and the open questions are decided here. The profile goes into the decision or the experiment log.
+2. **Do not change what the demo already measures.** If the source is only for one consumer (for example, Rastro Lab), it goes in its own schema and its own loader. After loading, run the domain evaluation again (skill `evaluate`, `method.evaluation.run` with `rerun`) and confirm it gives the same result.
+3. **Write the loader** in `data/<source>/`:
+   - `schema.sql` with the tables, using the original source's names. If the linker needs it even when the source is not loaded, it must not drop anything (`CREATE ... IF NOT EXISTS`) and the loader must empty the tables before loading.
+   - `load.py` that registers the source in `rastro_meta.source` (with its license), downloads to `data/raw/<source>/` with cache and retries, and loads with `COPY`.
+   - One row in `rastro_meta.load_run` per table, with the source version: use `copiar()` from `data/comun.py` and pass it the downloaded file (`archivo=`), so its SHA-256 fingerprint and download day are recorded.
+4. **Add the service** `<source>-loader` in `infra/docker-compose.yml`, with `profiles: ["load"]` and the image `./loaders`, and add it to `method.loaders` in `layer/dominios.yaml`.
+5. **Credentials** only through `.env` variables. Add the empty variable to `.env.example`. Pass passwords as connection parameters, never inside a URL, because errors print them.
+6. **Dictionary, links and rules:** the terms and the mapping, with the skill `map-source`; if the source names things already in Rastro, the skill `link-entities`; and its possible values, with the skill `quality-rules`. In short, for links: add it to the domain linker (`method.linker.folder`, `links.sql`): its names, each with the source it came from, and a link table with rule and evidence. Map it with `prov:wasDerivedFrom` to the source and add its terms to `term_sources` and `link_sources` in `layer/dominios.yaml`.
+7. **Run the load and the linker** (`method.linker.service`), restart the domain's Ontop (`method.ontop.service`) and check with the skill `verify`: counts, a known case, and that nothing falls outside the cut.
+8. **Document:** a row in the «Cargar datos» (Load data) table of `README.md` and an entry in `docs/decisions.md` (which cut, why, load numbers).
+
+## A person approves
+
+- **The proposal:** the source profile, its scope, its license and its open questions, before the loader is written.
+- A load that touches a schema the evaluation already measures, and any change in its result.
+
+## Enrich with an outside source
+
+If the source belongs to another organization and joins through a shared key (an identifier both sides use), it is an **enrichment**. It can be queried live (a federated query, always up to date) and also stored as one more source, so it can be queried offline and repeated. The stored pattern: a loader that keeps the day's response with its fingerprint, a link through the key with its rule and evidence, and its own class mapped with `prov:wasDerivedFrom` to the source and a load date with the query day.
+
+## Watch out for
+
+- **Large files:** run the loader in the background and filter queries by the records you need before joining files or years.
+- **Memory:** import large RDF into the triplestore in parts.
+- **Sources updated every day:** store each record's load date if it has one, and map it.
+- **Encoding of `+`:** in APIs that use `+` as a space, `requests` encodes it as `%2B`. Use spaces.
+
+Worked examples from the existing domains (loaders, sources, the stored enrichment, sizes): `examples.md`.

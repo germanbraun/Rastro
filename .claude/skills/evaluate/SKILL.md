@@ -1,49 +1,93 @@
 ---
-name: evaluar
-description: Medir las preguntas de evaluación de un dominio (petróleo y gas o proveedores) con los tres caminos (sin Rastro, SQL con enlaces, con Rastro), puntuar, adjudicar y publicar el número. Usalo al sumar o cambiar una pregunta de evaluación, después de cambiar datos o reglas, o antes de mostrar un número.
+name: evaluate
+description: Measure a domain's evaluation questions with the three paths (without Rastro, SQL with links, with Rastro), score, adjudicate and publish the number, for any domain of the registry (layer/dominios.yaml). Use it when adding or changing an evaluation question, after changing data or rules, or before showing a number.
 ---
 
-# Evaluar un dominio
+# Evaluate a domain
 
-La evaluación compara tres caminos sobre las mismas preguntas, con el mismo asistente de IA:
+Step 6 of the method (`docs/method.md`). The evaluation compares three paths on the same questions, with the same AI assistant:
 
-- **B, sin Rastro:** SQL sobre las fuentes tal como se cargaron.
-- **D, SQL con los enlaces de Rastro:** la línea de base justa. Se informa siempre.
-- **C, con Rastro:** SPARQL sobre el Ontop del dominio.
+- **B, without Rastro:** SQL over the sources as they were loaded.
+- **D, SQL with Rastro's links:** the fair baseline. Always reported.
+- **C, with Rastro:** SPARQL over the domain's Ontop.
 
-Los archivos están en `layer/<dominio>/`: preguntas en `eval/questions.yaml`, respuestas guardadas en `respuestas/<q>-<n>-<B|D|C>.json`, resultado en `resultados.json` (lo lee la app) y `resultados.md`. El script es `layer/evaluar.py` (su docstring tiene el detalle).
+Where each piece lives for a domain is in its entry in `layer/dominios.yaml`: the folder is `method.evaluation.folder` (below, `<folder>`) and the command is `method.evaluation.run` (below, `<run>`; usually `docker compose run --rm -T layer-eval python /layer/evaluar.py <domain>`). A domain on an older harness has a different command and folder layout: use what its registry entry says, and move it to the current harness when it is next measured. The same entry has the read-only users (`readers`) and the notes each path reads (`sql_notes`, `links_notes`, `sparql_notes`).
 
-## Medir una pregunta nueva o cambiada
+The files: questions in `<folder>/eval/questions.yaml`, saved answers in `<folder>/respuestas/<q>-<n>-<B|D|C>.json`, result in `<folder>/resultados.json` (the app reads it) and `<folder>/resultados.md`. The script is `layer/evaluar.py` (its docstring has the details).
 
-1. **La pregunta,** en `eval/questions.yaml`, en palabras de negocio, con las definiciones que usa y su referencia (SPARQL sobre Rastro). Si tiene paráfrasis, en `consistencia/parafrasis.yaml`.
-2. **Un subagente por camino, que solo ve el prompt:** generá el prompt con
-   `docker compose run --rm -T layer-eval python /layer/evaluar.py energia prompt <q> 0 <B|D|C>`,
-   pasáselo a un subagente nuevo sin más contexto, y probá lo que devuelve con
-   `... evaluar.py energia try <q> 0 <B|D|C> < query.sql`. Hasta 3 intentos, devolviéndole el mensaje de error. Nunca le muestres la referencia ni otras respuestas.
-3. **Puntuá:** `... evaluar.py energia puntaje`. Tolerancia: 5 % para números; para listas, F1 de 80 % o más.
-4. **Adjudicá** cada pregunta donde los caminos difieren, con los datos de cada fuente, en `layer/<dominio>/adjudicacion.md`: quién tenía razón y por qué. La referencia sale de Rastro, así que la ventaja de Rastro puede ser circular hasta adjudicar.
+## Constraints
 
-## Después de cambiar datos, mapeos o reglas
+- **One prompt per evaluator:** each subagent gets one wording of one question for one path, never several wordings together.
+- **The evaluator never sees** the reference or the other paths' answers.
+- **A failure caused by the dictionary is recorded,** never silently fixed before publishing.
+- **A number is published only after adjudication** of every question where the paths differ.
+- **Saved answers are never edited by hand:** they change only by running the evaluation again (`try`, `rerun`).
+
+## Measure a new or changed question
+
+1. **The question, and the plan.** Before touching any file, write the plan as a short table, one row per question to
+   measure:
+
+   | Question | Reference | Where the reference comes from | Approaches | How it is scored | Open question |
+   |---|---|---|---|---|---|
+
+   Where the reference comes from is either independent of Rastro (a source's own total, a published figure) or from
+   Rastro, and then it is marked to be adjudicated. The approaches are B, D and C. How it is scored: a number with 5 %
+   tolerance, or a list with F1. A person reviews it; the table goes into the decision or the experiment log.
+   Then write the question in `eval/questions.yaml`, in business words, with the definitions it uses and its reference (SPARQL over Rastro). If it has paraphrases, in `consistencia/parafrasis.yaml`. It usually starts as a competency question (skill `add-question`).
+2. **One subagent per path, which only sees the prompt:** generate the prompt with
+   `<run> prompt <q> 0 <B|D|C>`,
+   give it to a new subagent with no other context, and test what it returns with
+   `<run> try <q> 0 <B|D|C> < query.sql`. Up to 3 attempts, giving it back the error message. Never show it the reference or other answers. **One prompt per subagent:** if a subagent sees the four forms of a question together, it repeats the same query and consistency stops measuring anything (this happened once, and that check was discarded).
+3. **Score:** `<run> puntaje`. Tolerance: 5 % for numbers; for lists, F1 of 80 % or more.
+4. **Adjudicate** each question where the paths differ, with each source's data, in `<folder>/adjudicacion.md`: who was right and why. The reference comes from Rastro, so Rastro's advantage can be circular until adjudicated.
+
+## After changing data, mappings or rules
 
 ```bash
-docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun     # las mismas consultas guardadas, sin pedir nada nuevo
-docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje
-git diff layer/energia/resultados.md
+<run> rerun     # the same saved queries, without asking for anything new
+<run> puntaje
+git diff <folder>/resultados.md
 ```
 
-Si solo cambió la fecha, descartá el cambio (`git checkout layer/energia/resultados.*`). Si cambió un puntaje, explicá por qué en `docs/decisions.md`.
+If only the date changed, discard the change (`git checkout <folder>/resultados.*`). If a score changed, explain why in `docs/decisions.md`. Before re-running, check that Rastro starts and answers (skill `verify`).
 
-## Otros conjuntos de preguntas
+## Other question sets
 
-`energia_lab` (`layer/energia_lab/`) mide las preguntas sobre las predicciones de Rastro Lab, aparte de la evaluación de Layer, con sus propios usuarios de solo lectura y notas de SQL (`layer/dominios.yaml`). Un conjunto nuevo es una entrada en `layer/dominios.yaml` (puede heredar de otra con `<<: *ancla`) y su carpeta con `eval/questions.yaml`, `consistencia/parafrasis.yaml` y `reader.sql`.
+One domain can have more than one question set (for example, questions about a model's predictions, separate from the Layer evaluation), each with its own read-only users and SQL notes. A new set is an entry in `layer/dominios.yaml` (it can inherit from another with `<<: *ancla`) and its folder with `eval/questions.yaml`, `consistencia/parafrasis.yaml` and `reader.sql`.
 
-## Cuando no tiene el dato
+## When it does not have the data
 
-`layer/fuera.py` mide si el asistente dice qué falta en lugar de inventar: preguntas que los datos no responden y una de control que sí (`layer/<dominio>/fuera/preguntas.yaml`). Un subagente por camino (A, B, D y C) con todas las preguntas juntas: `prompt <camino>`, después `guardar <camino>` con su JSON por stdin y, al final, `puntaje`. Todos los caminos tienen la misma regla: si los datos no alcanzan, «SIN DATOS:» y qué falta (`NO_DATA_RULE` en `layer/answer.py`).
+`layer/fuera.py` measures whether the assistant says what is missing instead of making things up: questions the data cannot answer and one control question that it can (`<folder>/fuera/preguntas.yaml`). One subagent per path (A, B, D and C) with all the questions together:
+`docker compose run --rm -T layer-eval python /layer/fuera.py <domain> prompt <A|B|D|C>`, then `guardar <A|B|D|C>` with its JSON on stdin and, at the end, `puntaje`. All paths have the same rule: if the data is not enough, «SIN DATOS:» (NO DATA:) and what is missing (`NO_DATA_RULE` in `layer/answer.py`).
 
-## Reglas
+## Classify each failure
 
-- Un arreglo después de medir (al diccionario, a una regla) se vuelve a medir solo en lo afectado, con subagentes nuevos, y se dice así en `docs/decisions.md`.
-- Lo reproducible son las respuestas guardadas, no la temperatura del modelo.
-- Si Rastro falla por algo del diccionario, se anota; no se arregla en silencio antes de publicar.
-- La prueba con preguntas que no armamos nosotros está en `docs/preguntas-a-ciegas.md`.
+Each failing answer is classified, to know which step of the method to strengthen (`docs/method.md`): **missing data**
+(another source, skill `add-source`, or say so), **wrong link** (skill `link-entities`), **wrong mapping** or **wrong query** (skill
+`map-source`: the mapping or the dictionary notes), **ambiguous definition** (the question, skill `add-question`, or the dictionary), or **impossible
+value from the source** (skill `quality-rules`). Write the type down in the adjudication.
+
+## A person approves
+
+- **The plan:** its questions, their references and where each reference comes from, before anything is measured.
+- The adjudication of each question where the paths differ.
+- Publishing a number (in the app, the script or the slides).
+
+## Grounding
+
+- **Score by the result of running the query,** not by how it is written, as in text-to-SQL benchmarks
+  (Spider: Yu et al., EMNLP 2018).
+- **The same question with and without a knowledge graph over an enterprise database:** the assistant gets it right much
+  more often with the graph (Sequeda, Allemang and Jacob, «A Benchmark to Understand the Role of Knowledge Graphs on Large Language
+  Model's Accuracy for Question Answering on Enterprise SQL Databases», 2023, arXiv:2311.07509). Rastro adds the fair
+  baseline (SQL with the same links), because much of the advantage comes from integration done once.
+
+## Rules
+
+- A fix after measuring (to the dictionary, to a rule) is measured again only on what it affects, with new subagents, and is stated as such in `docs/decisions.md`.
+- What is reproducible is the saved answers, not the model's temperature.
+- If Rastro fails because of something in the dictionary, it is noted; it is not silently fixed before publishing.
+- The test with questions we did not write is in `docs/preguntas-a-ciegas.md`.
+
+Worked examples from the existing domains (commands, folders, the predictions question set, the discarded check): `examples.md`.

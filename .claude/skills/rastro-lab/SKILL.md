@@ -1,57 +1,59 @@
 ---
 name: rastro-lab
-description: Entrenar, medir y explicar el modelo de gas de Rastro Lab (pozos nuevos de shale gas de Vaca Muerta) con variables de las tablas crudas y de Rastro, validarlo y armar la prueba a ciegas de las explicaciones. Usalo al tocar lab/, app/lab.py, energia:WellStart o energia:Fracturing, o al publicar un número de Lab.
+description: Train, measure and explain the Rastro Lab gas model (new Vaca Muerta shale gas wells) with features from the raw tables and from Rastro, validate it and build the blind test of the explanations. Use it when you touch lab/, app/lab.py, energia:WellStart or energia:Fracturing, or when you publish a Lab number.
 ---
 
 # Rastro Lab
 
-Rastro Lab muestra qué agrega la tecnología semántica al aprendizaje automático. **Lo que se mide es la explicación, no la precisión.** El estudio está en `docs/lab-gas-vaca-muerta.md`.
+> **Domain skill, not part of the generic method** (`docs/method.md`): it covers the oil and gas gas model. A generic "explain predictions with evidence" skill can be extracted from it when a second domain needs one.
 
-## Qué es
+Rastro Lab shows what semantic technology adds to machine learning. **What is measured is the explanation, not the accuracy.** The study is in `docs/lab-gas-vaca-muerta.md`.
 
-- **Lo que se predice:** el gas de los meses 2 a 7 de un pozo nuevo de shale gas de Vaca Muerta, en millones de m³ (`energia:gasMonths2to7`; el primer mes suele ser parcial).
-- **El mismo modelo, dos veces** (`lab/gas/modelo.py`): una regresión lineal (ridge, en numpy). A toma las variables con SQL de las tablas crudas; B, de Rastro (SPARQL). Las mismas ideas de variables: operadora, concesión, participación y fractura (rama, etapas, arena, agua, presión).
-- **Entrenar y probar por fecha:** entrena con los pozos que empezaron antes de 2025 y prueba con los de 2025.
-- **La explicación** es exacta: la predicción es el pozo promedio más el aporte de cada variable. Con Rastro se agrupa en dos factores (la concesión con su operadora y socios, y cómo se fracturó), cada uno con por qué suma o resta y sus hechos con regla, evidencia y fuente.
+## What it is
 
-## Reglas
+- **What is predicted:** the gas of months 2 to 7 of a new Vaca Muerta shale gas well, in millions of m³ (`energia:gasMonths2to7`; the first month is usually partial).
+- **The same model, twice** (`lab/gas/modelo.py`): a linear regression (ridge, in numpy). A takes the features with SQL from the raw tables; B, from Rastro (SPARQL). The same feature ideas: operator, concession, share and fracturing (lateral length, stages, sand, water, pressure).
+- **Train and test by date:** it trains on the wells that started before 2025 and tests on those from 2025.
+- **The explanation** is exact: the prediction is the average well plus the contribution of each feature. With Rastro it is grouped into two factors (the concession with its operator and partners, and how it was fractured), each with why it adds or subtracts and its facts with rule, evidence and source.
 
-1. **No usar el futuro.** La operadora y el tipo de pozo son los del primer mes (`energia:WellStart`), no los de hoy. La fractura es la informada hasta el mes en que arrancó. La fecha de carga de cada dato (`energia:loadedOn`) se guarda y se marca si llegó después.
-2. **A tiene que ser lo que haría un analista razonable con SQL,** no algo mal armado a propósito. Si un dato se calcula por los dos caminos (el gas), tiene que coincidir: el script lo controla.
-3. **La explicación no puede contradecir al modelo.** Si dos variables van juntas (la operadora y los socios son fijos dentro de una concesión; la rama y las etapas crecen juntas), se dice y se muestran juntas; nunca una regla general («más rama, más gas») que el modelo no cumple.
-4. **La explicación no muestra lo que se predice** (el gas real del pozo no va en ninguna evidencia).
-5. **Lo que se carga solo para Lab no cambia Layer** (`data/lab-gas/`, esquemas `capitulo4_anterior` y `fractura`). Después de cargar, la skill `evaluar` con `rerun` tiene que dar lo mismo.
-6. **Números honestos:** la precisión depende del corte por fecha. Se informa el error y el R² hacia el futuro y se dice que es el mejor caso si lo es.
+## Rules
 
-## Comandos (en la máquina, con `requirements-dev.txt` y Ontop de energía en :8082)
+1. **Do not use the future.** The operator and the well type are those of the first month (`energia:WellStart`), not today's. The fracturing is what was reported up to the month it started. The load date of each value (`energia:loadedOn`) is stored and flagged if it arrived later.
+2. **A must be what a reasonable analyst would do with SQL,** not something badly built on purpose. If a value is computed by both paths (the gas), it must match: the script checks it.
+3. **The explanation cannot contradict the model.** If two features go together (the operator and the partners are fixed within a concession; lateral length and stages grow together), say so and show them together; never a general rule («más rama, más gas», more lateral, more gas) that the model does not follow.
+4. **The explanation does not show what is predicted** (the well's real gas does not go into any evidence).
+5. **What is loaded only for Lab does not change Layer** (`data/lab-gas/`, schemas `capitulo4_anterior` and `fractura`). After loading, the `evaluate` skill with `rerun` must give the same results.
+6. **Honest numbers:** accuracy depends on the date split. Report the error and the R² toward the future and say it is the best case if it is.
+
+## Commands (on the machine, with `requirements-dev.txt` and the energy Ontop on :8082)
 
 ```bash
-python3 lab/gas/modelo.py                 # error de A y B, datos dudosos, lo que aprendió, un pozo explicado
-python3 lab/gas/modelo.py <idpozo>        # la explicación de otro pozo
-python3 lab/gas/modelo.py --12-meses      # validación con el gas de 12 meses
-python3 lab/gas/modelo.py --como-trabajo-publicado # validación con el diseño de un trabajo publicado con las mismas fuentes
-python3 lab/gas/a_ciegas.py               # arma docs/lab-explicaciones-a-ciegas.md (clave en lab/gas/a-ciegas-clave.json)
-python3 lab/gas/modelo.py --publicar      # guarda la corrida, su entrada y sus predicciones en Rastro (esquema lab_gas)
-python3 lab/gas/modelo.py --comparar      # qué cambió entre las dos últimas corridas, pozo por pozo
+python3 lab/gas/modelo.py                 # A and B error, doubtful data, what it learned, one well explained
+python3 lab/gas/modelo.py <idpozo>        # another well's explanation
+python3 lab/gas/modelo.py --12-meses      # validation with 12-month gas
+python3 lab/gas/modelo.py --como-trabajo-publicado # validation with the design of a published work on the same sources
+python3 lab/gas/a_ciegas.py               # builds docs/lab-explicaciones-a-ciegas.md (key in lab/gas/a-ciegas-clave.json)
+python3 lab/gas/modelo.py --publicar      # saves the run, its input and its predictions in Rastro (schema lab_gas)
+python3 lab/gas/modelo.py --comparar      # what changed between the last two runs, well by well
 ```
 
-La app lo muestra en la pestaña **Rastro Lab** (`app/lab.py`) y en el momento 3 de la demo. Después de cambiar `lab/gas/modelo.py` o `app/lab.py`, `docker compose restart app`.
+The app shows it in the **Rastro Lab** tab (`app/lab.py`) and in moment 3 of the demo. After changing `lab/gas/modelo.py` or `app/lab.py`, `docker compose restart app`.
 
-## Las predicciones, en Rastro
+## The predictions, in Rastro
 
-Cada corrida publicada queda en Rastro: `energia:ModelRun` (versión = huella de `lab/gas/modelo.py`, fecha, corte, error, `energia:current`), `energia:Prediction` (valor, rango, `prov:wasGeneratedBy` la corrida, `prov:used` el inicio del pozo, su fractura y la participación de la operadora) y `energia:Contribution` (el aporte de cada factor). Los registros de origen también están, uno por uno: `energia:FractureReport` (cada fractura informada) y `energia:MonthlyGas` (cada mes de gas), y la fractura y el inicio del pozo dicen de cuáles salen (`prov:wasDerivedFrom`). Las preguntas 11, 12 y 13 de `ontology/energia/competency-questions.md` las consultan, y el asistente de IA las puede responder en «Mi propia pregunta». Las tablas (`lab_gas`) no se borran al rearmar los enlaces.
+Every published run is stored in Rastro: `energia:ModelRun` (version = fingerprint of `lab/gas/modelo.py`, date, split, error, `energia:current`), `energia:Prediction` (value, range, `prov:wasGeneratedBy` the run, `prov:used` the well start, its fracturing and the operator's share) and `energia:Contribution` (the contribution of each factor). The source records are there too, one by one: `energia:FractureReport` (each reported fracturing) and `energia:MonthlyGas` (each month of gas), and the fracturing and the well start say which ones they come from (`prov:wasDerivedFrom`). Questions 11, 12 and 13 of `ontology/energia/competency-questions.md` query them, and the AI assistant can answer them in «Mi propia pregunta» (My own question). The tables (`lab_gas`) are not deleted when the links are rebuilt.
 
-- **Publicá una corrida nueva** cada vez que cambie el modelo o sus datos, y revisá que la pregunta 11 cuente lo mismo que «datos dudosos» del modelo.
-- **Cada corrida guarda su entrada** (`lab_gas.entrada`: lo que vio el modelo, pozo por pozo). Con el mismo código y los mismos datos, dos corridas dan lo mismo (`--comparar` da 0 cambios); si una fuente cambia, `--comparar` dice qué pozos, en qué variable y cuánto se movió la predicción.
-- **El rango** sale de los errores del año anterior a la prueba (sin mirar la prueba): se informa qué parte de los pozos de prueba cayó adentro (hoy 71 de 100), aunque no llegue a 80.
+- **Publish a new run** every time the model or its data change, and check that question 11 counts the same as the model's «datos dudosos» (doubtful data).
+- **Each run stores its input** (`lab_gas.entrada`: what the model saw, well by well). With the same code and the same data, two runs give the same result (`--comparar` gives 0 changes); if a source changes, `--comparar` says which wells, in which feature and how much the prediction moved.
+- **The range** comes from the errors of the year before the test (without looking at the test): report what share of the test wells fell inside (today 71 of 100), even if it does not reach 80.
 
-## Fuentes y preguntas sobre las predicciones
+## Sources and questions about the predictions
 
-- **Fuentes de Lab** (`data/lab-gas/`): Capítulo IV de 2018 a 2022, datos de fractura y trayectorias de pozo. Una fuente nueva sigue la skill `agregar-fuente`: su regla va al enlace (`linking/energia/links.sql`), se mapea con `prov:wasDerivedFrom` y entra al modelo por los dos caminos (SQL crudo en A, SPARQL en B). Medí el esfuerzo de cada lado y la precisión, y decilo aunque no mejore.
-- **El asistente sobre las predicciones** se mide con la skill `evaluar` y el conjunto `energia_lab` (`layer/energia_lab/`): `evaluar.py energia_lab prompt|try|puntaje`. Sin Rastro ve las fuentes y las tablas que deja el modelo (`lab_gas`), como cualquier proceso de aprendizaje automático.
+- **Lab sources** (`data/lab-gas/`): Capítulo IV from 2018 to 2022, fracturing data and well trajectories. A new source follows the `add-source` skill: its rule goes into the link (`linking/energia/links.sql`), it is mapped with `prov:wasDerivedFrom` and enters the model by both paths (raw SQL in A, SPARQL in B). Measure the effort on each side and the accuracy, and say it even if it does not improve.
+- **The assistant on the predictions** is measured with the `evaluate` skill and the `energia_lab` set (`layer/energia_lab/`): `evaluar.py energia_lab prompt|try|puntaje`. Without Rastro it sees the sources and the tables the model leaves (`lab_gas`), like any machine learning process.
 
-## Al cambiar algo
+## When you change something
 
-1. Corré `python3 lab/gas/modelo.py` y leé la explicación de dos o tres pozos: ¿dice algo falso? ¿muestra un dato que no debería?
-2. Volvé a armar la prueba a ciegas si cambió la explicación.
-3. Actualizá los números en `docs/lab-gas-vaca-muerta.md`, `docs/decisions.md`, el guion y la diapositiva «Predecir» (skill `mazos`).
+1. Run `python3 lab/gas/modelo.py` and read the explanation of two or three wells: does it say something false? does it show a value it should not?
+2. Rebuild the blind test if the explanation changed.
+3. Update the numbers in `docs/lab-gas-vaca-muerta.md`, `docs/decisions.md`, the script and the «Predecir» (Predict) slide (skill `decks`).

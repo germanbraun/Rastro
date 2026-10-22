@@ -1,132 +1,135 @@
 # Rastro
 
-Dos MVPs sobre tecnologías semánticas, con datos públicos. El caso de la demo es **petróleo y gas en Argentina**. Los otros dos casos, proveedores del Estado de EE. UU. y ensayos clínicos de oncología (AACT, ChEMBL, openFDA, MeSH), muestran que lo mismo sirve para otros datos: en la app aparecen al prender «Ver detalles técnicos».
+Two MVPs on semantic technologies, with public data. The demo case is **oil and gas in Argentina**. The other two cases, US federal suppliers and oncology clinical trials (AACT, ChEMBL, openFDA, MeSH), show that the same approach works for other data: in the app they appear when «Ver detalles técnicos» is turned on.
 
-- **Rastro Layer** — capa semántica virtual sobre fuentes heterogéneas y preguntas en lenguaje natural con trazabilidad de cada dato.
-- **Rastro Lab** — un modelo cuyas predicciones se explican con esa misma evidencia. Hoy: el gas de los pozos nuevos de shale gas de Vaca Muerta.
+- **Rastro Layer** — a virtual semantic layer over heterogeneous sources, and natural-language questions with the provenance of every value.
+- **Rastro Lab** — a model whose predictions are explained with that same evidence. Today: the gas of new Vaca Muerta shale gas wells.
 
-El plan completo, por fases y con checkpoints, está en [docs/plan.md](docs/plan.md). Cómo se integran las fuentes (heterogeneidad de esquema y de datos), en [docs/integracion.md](docs/integracion.md). Qué tiene cada fuente, para quien no es del dominio, en [docs/fuentes.md](docs/fuentes.md).
+The method (steps, skills, checks and human approvals) is in [docs/method.md](docs/method.md). The full plan, by phases and with checkpoints, is in [docs/plan.md](docs/plan.md). How the sources are integrated (schema and data heterogeneity), in [docs/integracion.md](docs/integracion.md). What each source contains, for readers outside the domain, in [docs/fuentes.md](docs/fuentes.md).
 
-## Estructura
+## Structure
 
-| Carpeta | Contenido |
+| Folder | Contents |
 |---|---|
-| `infra/` | docker-compose: Postgres, Ontop, triplestore (`compose.yaml`, en la raíz, lo incluye) |
-| `data/` | scripts de descarga y carga (los datos no se versionan) |
-| `ontology/` | preguntas de competencia, ontología y una query por pregunta |
-| `mappings/` | mapeos R2RML, uno por dominio (`rastro`, `proveedores`, `energia`), que lee el Ontop de cada dominio |
-| `linking/` | enlaces entre fuentes de cada dominio (por ejemplo, ensayos con MeSH y ChEMBL), con su revisión |
-| `layer/` | Rastro Layer: preguntas en lenguaje natural (`answer.py`) y su evaluación (`eval/`) |
-| `lab/` | Rastro Lab: el modelo de gas de Vaca Muerta (`lab/gas/`) |
-| `app/` | la demo (Streamlit) |
-| `docs/` | plan, decisiones, resultados, mazos (`slides/`), guiones de demo y verificación humana |
-| `tests/` | pruebas (pytest) |
+| `infra/` | docker-compose: Postgres, Ontop, triplestore (`compose.yaml`, at the root, includes it) |
+| `data/` | download and load scripts (the data is not versioned) |
+| `ontology/` | competency questions, ontology and one query per question; quality rules (SHACL) |
+| `mappings/` | R2RML mappings, one per domain (`rastro`, `proveedores`, `energia`), read by each domain's Ontop |
+| `linking/` | links between each domain's sources (for example, trials with MeSH and ChEMBL), with their review |
+| `layer/` | Rastro Layer: natural-language questions (`answer.py`) and their evaluation (`evaluar.py`, `eval/`) |
+| `lab/` | Rastro Lab: the Vaca Muerta gas model (`lab/gas/`) |
+| `app/` | the demo (Streamlit, in Spanish) |
+| `docs/` | method, plan, decisions, results, decks (`slides/`), demo scripts and human review |
+| `tests/` | tests (pytest) |
 
-Cada dominio usa su propio prefijo en SPARQL: `energia:`, `proveedores:` y `oncologia:` (por ejemplo, `energia:Well`).
+Each domain uses its own SPARQL prefix: `energia:`, `proveedores:` and `oncologia:` (for example, `energia:Well`).
 
-## La demo
+## The demo
 
-| Dominio | Guion | Mazo |
+The app, decks and demo scripts are in Spanish, for Argentine audiences.
+
+| Domain | Script | Deck |
 |---|---|---|
-| Petróleo y gas en Argentina | [docs/demo-guion-energia.md](docs/demo-guion-energia.md) | `docs/slides/energia.html` |
-| Proveedores del Estado de EE. UU. | [docs/demo-guion.md](docs/demo-guion.md) | `docs/slides/proveedores.html` |
-| Oncología | [docs/demo-guion-oncologia.md](docs/demo-guion-oncologia.md) | `docs/slides/oncologia.html` |
+| Oil and gas in Argentina | [docs/demo-guion-energia.md](docs/demo-guion-energia.md) | `docs/slides/energia.html` |
+| US federal suppliers | [docs/demo-guion.md](docs/demo-guion.md) | `docs/slides/proveedores.html` |
+| Oncology | [docs/demo-guion-oncologia.md](docs/demo-guion-oncologia.md) | `docs/slides/oncologia.html` |
 
-Para una audiencia técnica: [docs/demo-guion-tecnico.md](docs/demo-guion-tecnico.md). Lo que falta que confirme una persona: [docs/verificacion-humana.md](docs/verificacion-humana.md). Una evaluación con preguntas que no armamos nosotros: [docs/preguntas-a-ciegas.md](docs/preguntas-a-ciegas.md).
+For a technical audience: [docs/demo-guion-tecnico.md](docs/demo-guion-tecnico.md). What a person still has to confirm: [docs/verificacion-humana.md](docs/verificacion-humana.md). An evaluation with questions we did not write: [docs/preguntas-a-ciegas.md](docs/preguntas-a-ciegas.md), and the invitation to send: [docs/invitacion-prueba-a-ciegas.md](docs/invitacion-prueba-a-ciegas.md).
 
-## Levantar el entorno
+## Start the environment
 
-Desde la carpeta del repo:
+From the repo folder:
 
 ```bash
 docker compose up -d
 ```
 
-| Servicio | URL local | Qué es |
+| Service | Local URL | What it is |
 |---|---|---|
-| **Demo de Rastro Layer** | **http://localhost:8501** | Abre en petróleo y gas; con «Ver detalles técnicos» aparece el selector **Caso de uso** con proveedores y oncología |
-| Postgres | `localhost:5434` (usuario y clave `rastro`) | Fuentes relacionales, un esquema por fuente, y `rastro_meta` con el registro de fuentes y cargas |
-| Ontop, uno por dominio | oncología http://localhost:8080, proveedores :8081, petróleo y gas :8082 (`/sparql`) | Endpoint SPARQL virtual sobre Postgres, con la ontología y los mapeos de su dominio; recarga al editarlos |
-| GraphDB Free | http://localhost:7210 | Triplestore con el repositorio `rastro`: MeSH 2026 en el grafo `<http://id.nlm.nih.gov/mesh/2026>` y el conector Lucene `mesh` |
+| **Rastro Layer demo** | **http://localhost:8501** | Opens on oil and gas; with «Ver detalles técnicos» the **Caso de uso** selector shows suppliers and oncology |
+| Postgres | `localhost:5434` (user and password `rastro`) | Relational sources, one schema per source, and `rastro_meta` with the source and load registry |
+| Ontop, one per domain | oncology http://localhost:8080, suppliers :8081, oil and gas :8082 (`/sparql`) | Virtual SPARQL endpoint over Postgres, with its domain's ontology and mappings; reloads when they are edited |
+| GraphDB Free | http://localhost:7210 | Triplestore with the `rastro` repository: MeSH 2026 in the graph `<http://id.nlm.nih.gov/mesh/2026>` and the Lucene connector `mesh` |
 
-Los puertos se cambian copiando `.env.example` a `.env`. Por defecto evitan 5432 y 7200 para convivir con un Postgres y un GraphDB locales.
+Ports are changed by copying `.env.example` to `.env`. By default they avoid 5432 and 7200, to coexist with a local Postgres and GraphDB.
 
-Conteo por fuente (checkpoint de la Fase 0):
+Count per source (Phase 0 checkpoint):
 
 ```bash
 docker compose exec postgres psql -U rastro -c "select * from rastro_meta.source_counts"
 ```
 
-Cada script de `data/` registra sus cargas en `rastro_meta.load_run`, que alimenta esa vista.
+Every script in `data/` records its loads in `rastro_meta.load_run`, which feeds that view.
 
-## Evaluar Rastro Layer
+## Evaluate Rastro Layer
 
-Petróleo y gas y proveedores comparan tres formas de responder: **B**, sin Rastro (SQL sobre las tablas crudas); **D**, SQL con las tablas de enlaces de Rastro; y **C**, con Rastro (SPARQL). En petróleo y gas: B 7 de 10, D 10 de 10 y C 10 de 10.
+Oil and gas and suppliers compare three ways of answering: **B**, without Rastro (SQL over the raw tables); **D**, SQL with Rastro's link tables; and **C**, with Rastro (SPARQL). In oil and gas: B 7 of 10, D 10 of 10 and C 10 of 10.
 
 ```bash
-docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje   # o proveedores; también prompt, try y rerun
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje   # or proveedores; also prompt, try and rerun
 ```
 
-Los resultados quedan en `layer/<dominio>/resultados.md`; el detalle de cada comando, en el docstring de `layer/evaluar.py`.
+The results go to `layer/<domain>/resultados.md`; the detail of each command, in the docstring of `layer/evaluar.py`.
 
-Oncología compara cuántas de 20 preguntas responde bien un LLM solo, con SQL directo y con Rastro:
+Oncology compares how many of 20 questions an LLM alone, direct SQL and Rastro answer correctly:
 
 ```bash
 docker compose run --rm layer-eval
 ```
 
-Los resultados están en `layer/eval/results.md`. Las respuestas ya generadas se guardan en `layer/eval/results.json`, así que esto funciona sin API key. Para generar respuestas nuevas hace falta `ANTHROPIC_API_KEY` en `.env` (Claude API, de pago por uso: una corrida completa con Claude Opus 5.5 cuesta unos pocos dólares). `RASTRO_MODEL` elige otro modelo, por ejemplo uno más barato para una demo en vivo.
+The results are in `layer/eval/results.md`. Answers already generated are saved in `layer/eval/results.json`, so this works without an API key. Generating new answers needs `ANTHROPIC_API_KEY` in `.env` (Claude API, pay per use: a full run with Claude Opus 5.5 costs a few dollars). `RASTRO_MODEL` picks another model, for example a cheaper one for a live demo.
 
-Para revisar la ontología y las queries:
+To check the ontologies and queries of the three domains, and the oil and gas quality rules:
 
 ```bash
 docker compose run --rm ontology-check
+docker compose run --rm calidad      # SHACL over the integrated data, ~3 minutes
 ```
 
 ## Rastro Lab
 
-Un modelo lineal (regresión ridge) predice el gas de los meses 2 a 7 de un pozo nuevo de shale gas de Vaca Muerta, con las tablas crudas y con Rastro, y explica cada predicción con el aporte exacto de cada variable. Los dos predicen igual de bien; con Rastro, cada variable dice de dónde sale y cuáles están corregidas o llegaron tarde. En la app, pestaña **Rastro Lab**. Detalle en [docs/lab-gas-vaca-muerta.md](docs/lab-gas-vaca-muerta.md).
+A linear model (ridge regression) predicts the gas of months 2 to 7 of a new Vaca Muerta shale gas well, with the raw tables and with Rastro, and explains each prediction with the exact contribution of each variable. Both predict equally well; with Rastro, each variable says where it comes from and which ones were corrected or arrived late. In the app, the **Rastro Lab** tab. Details in [docs/lab-gas-vaca-muerta.md](docs/lab-gas-vaca-muerta.md).
 
-Corre en la máquina, no en Docker: necesita `python3 -m pip install -r requirements-dev.txt`, el Ontop de petróleo y gas en `localhost:8082` y los datos de `lab-gas-loader` (abajo).
+It runs on the machine, not in Docker: it needs `python3 -m pip install -r requirements-dev.txt`, the oil and gas Ontop on `localhost:8082` and the `lab-gas-loader` data (below).
 
 ```bash
-python3 lab/gas/modelo.py              # o un pozo, --12-meses, --como-trabajo-publicado
-python3 lab/gas/modelo.py --publicar   # guarda la corrida, su entrada y sus predicciones en Rastro, para consultarlas
-python3 lab/gas/modelo.py --comparar   # qué cambió entre las dos últimas corridas, pozo por pozo
-layer/energia/cambio/impacto.sh registrar   # Rastro dice qué predicciones cambian si la fuente corrige un registro, y se comprueba
-python3 lab/gas/a_ciegas.py            # arma la prueba a ciegas: docs/lab-explicaciones-a-ciegas.md
+python3 lab/gas/modelo.py              # or a well, --12-meses, --como-trabajo-publicado
+python3 lab/gas/modelo.py --publicar   # saves the run, its input and its predictions in Rastro, to query them
+python3 lab/gas/modelo.py --comparar   # what changed between the last two runs, well by well
+layer/energia/cambio/impacto.sh registrar   # Rastro says which predictions change if the source corrects a record, and it is checked
+python3 lab/gas/a_ciegas.py            # builds the blind test: docs/lab-explicaciones-a-ciegas.md
 ```
 
-## Calidad
+## Code quality
 
 ```bash
 python3 -m ruff check .
 python3 -m pytest -q
 ```
 
-También corren en GitHub con cada cambio (`.github/workflows/calidad.yml`).
+They also run on GitHub with every change (`.github/workflows/calidad.yml`).
 
-## Cargar datos
+## Load data
 
-Los cargadores corren a demanda y necesitan credenciales en `.env` (copiado de `.env.example`).
+The loaders run on demand and need credentials in `.env` (copied from `.env.example`).
 
-| Fuente | Comando | Requisito |
+| Source | Command | Requirement |
 |---|---|---|
-| AACT (oncología) | `docker compose run --rm aact-loader` | Cuenta gratuita de AACT (`AACT_USER`, `AACT_PASSWORD`) o un snapshot en `data/raw/` (`AACT_DUMP`) |
-| ChEMBL (oncología) | `docker compose run --rm chembl-loader` | Ninguno: usa la API pública de ChEMBL, MeSH de NLM y UniChem |
-| openFDA (eventos adversos) | `docker compose run --rm openfda-loader` | ChEMBL cargado antes. API key gratuita recomendada (`OPENFDA_API_KEY`): sin ella, 1000 requests por día y la descarga sigue en la próxima corrida |
-| MeSH 2026 (GraphDB) | `docker compose run --rm mesh-loader` | Unos 3 GB de memoria libres en Docker durante la importación. Crea también el conector Lucene `mesh` y copia descriptores y jerarquía a Postgres |
-| USAspending (proveedores) | `docker compose run --rm usaspending-loader` | Ninguno: API pública. Contratos del año fiscal 2025 de más de US$10 millones y el perfil de cada proveedor con sus matrices; la primera vez tarda alrededor de una hora y es reanudable |
-| NAICS 2022 (proveedores) | `docker compose run --rm naics-loader` | Ninguno: planilla pública del Census. Sectores de 2 a 6 dígitos con sus ancestros |
-| Lista Consolidada de Control (proveedores) | `docker compose run --rm csl-loader` | Ninguno: CSV público de trade.gov |
-| GLEIF (proveedores) | `docker compose run --rm gleif-loader` | USAspending cargado antes. Candidatos a LEI de matrices y de los 1000 proveedores que más facturan; 60 consultas por minuto, reanudable |
-| Wikidata (proveedores) | `docker compose run --rm wikidata-loader` | GLEIF cargado antes. Empresas con esos LEI en Wikidata, su sede y si cotizan en bolsa |
-| Petróleo y gas (Secretaría de Energía) | `docker compose run --rm energia-loader` y después `docker compose run --rm energia-linker` | Ninguno: producción 2025 por pozo y padrón de pozos (datos.energia.gob.ar), concesiones, venteos y gasoductos de ENARGAS del WFS, localidades y áreas protegidas del IGN y el LEI de las empresas en GLEIF; unos 350 MB, reanudable |
-| Rastro Lab, gas de Vaca Muerta | `docker compose run --rm lab-gas-loader` y después `docker compose run --rm energia-linker` | Ninguno: Capítulo IV de 2018 a 2022, datos de fractura de pozos (Adjunto IV) y trayectorias de pozo de Vaca Muerta, de datos.energia.gob.ar; unos 1,5 GB. No cambia lo que usa Rastro Layer |
-| Enriquecimiento con Wikidata (petróleo y gas) | `docker compose run --rm wikidata-energia-loader` y después `docker compose run --rm energia-linker` | Los LEI de Rastro (el enlazador antes). Guarda lo que Wikidata sabe de las empresas (sede, bolsa, dueño, sitio web), con el día de la consulta; en vivo se consulta sin cargar nada |
-| Enlaces de oncología | `docker compose run --rm linker` | Las fuentes de arriba ya cargadas. Enlaza ensayos con MeSH y con ChEMBL en unos segundos |
-| Tablas y enlaces de proveedores | `docker compose run --rm proveedores-linker` | USAspending y NAICS cargados (y GLEIF, la Lista Consolidada y Wikidata para los enlaces). Arma proveedores, grupos y sectores, y los enlaces con su evidencia |
+| AACT (oncology) | `docker compose run --rm aact-loader` | A free AACT account (`AACT_USER`, `AACT_PASSWORD`) or a snapshot in `data/raw/` (`AACT_DUMP`) |
+| ChEMBL (oncology) | `docker compose run --rm chembl-loader` | None: uses the public ChEMBL API, NLM's MeSH and UniChem |
+| openFDA (adverse events) | `docker compose run --rm openfda-loader` | ChEMBL loaded first. A free API key is recommended (`OPENFDA_API_KEY`): without it, 1000 requests per day and the download continues on the next run |
+| MeSH 2026 (GraphDB) | `docker compose run --rm mesh-loader` | About 3 GB of free Docker memory during the import. Also creates the Lucene connector `mesh` and copies descriptors and hierarchy to Postgres |
+| USAspending (suppliers) | `docker compose run --rm usaspending-loader` | None: public API. Fiscal-year 2025 contracts over US$10 million and each supplier's profile with its parents; the first time takes about an hour and it can resume |
+| NAICS 2022 (suppliers) | `docker compose run --rm naics-loader` | None: public Census spreadsheet. Sectors from 2 to 6 digits with their ancestors |
+| Consolidated Screening List (suppliers) | `docker compose run --rm csl-loader` | None: public CSV from trade.gov |
+| GLEIF (suppliers) | `docker compose run --rm gleif-loader` | USAspending loaded first. LEI candidates for parents and for the 1000 suppliers with the most revenue; 60 queries per minute, resumable |
+| Wikidata (suppliers) | `docker compose run --rm wikidata-loader` | GLEIF loaded first. Companies with those LEIs in Wikidata, their headquarters and whether they are listed |
+| Oil and gas (Secretaría de Energía) | `docker compose run --rm energia-loader`, then `docker compose run --rm energia-linker` | None: 2025 production by well and the well registry (datos.energia.gob.ar), concessions, ventings and ENARGAS pipelines from the WFS, IGN towns and protected areas, and the companies' LEI in GLEIF; about 350 MB, resumable |
+| Rastro Lab, Vaca Muerta gas | `docker compose run --rm lab-gas-loader`, then `docker compose run --rm energia-linker` | None: Capítulo IV from 2018 to 2022, well fracturing data (Adjunto IV) and Vaca Muerta well trajectories, from datos.energia.gob.ar; about 1.5 GB. It does not change what Rastro Layer uses |
+| Wikidata enrichment (oil and gas) | `docker compose run --rm wikidata-energia-loader`, then `docker compose run --rm energia-linker` | Rastro's LEIs (the linker first). Saves what Wikidata knows about the companies (headquarters, stock exchange, owner, website), with the query date; live, it is queried without loading anything |
+| Oncology links | `docker compose run --rm linker` | The sources above already loaded. Links trials with MeSH and with ChEMBL in a few seconds |
+| Supplier tables and links | `docker compose run --rm proveedores-linker` | USAspending and NAICS loaded (plus GLEIF, the Consolidated Screening List and Wikidata for the links). Builds suppliers, groups and sectors, and the links with their evidence |
 
-Las descargas quedan en `data/raw/`, que no se versiona: openFDA guarda ahí un JSON por fármaco y no lo vuelve a pedir.
+Downloads stay in `data/raw/`, which is not versioned: openFDA keeps one JSON per drug there and does not request it again.
 
-Si una contraseña tiene `$`, va entre comillas simples en el `.env`: Docker Compose interpreta `$` en valores sin comillas.
+If a password contains `$`, put it in single quotes in `.env`: Docker Compose interprets `$` in unquoted values.

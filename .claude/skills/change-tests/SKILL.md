@@ -1,47 +1,92 @@
 ---
-name: pruebas-de-cambio
-description: Correr y registrar las pruebas que muestran qué pasa cuando una base cambia (una columna o una unidad) y cuando se corrige un dato una vez (la corrección llega a todos los resultados). Usalo al tocar layer/*/cambio/, los mapeos que esas pruebas cambian o las correcciones revisadas.
+name: change-tests
+description: Run and record the tests that show what happens when a source changes (a renamed column, a new unit), when a value is corrected once (the correction reaches every result) and which predictions depend on a source record. Use it when you touch layer/*/cambio/, the mappings those tests change or the reviewed corrections, in any domain.
 ---
 
-# Pruebas de cambio
+# Change tests
 
-Son el argumento central de la demo: con Rastro, lo difícil se arregla o se corrige en un lugar.
+They are the central argument of the method (step 7, Maintain, in `docs/method.md`): with the semantic layer, the hard part is fixed or corrected in one place.
 
-## La base cambia (`layer/<dominio>/cambio/cambio.sh`)
+## Constraints
 
-Simula una versión nueva de la fuente y vuelve a ejecutar las consultas guardadas de la evaluación, sin Rastro y con Rastro.
+- **A change test always ends by undoing the change,** even when it fails halfway.
+- **Never leave altered** the source, the reviewed corrections CSVs or the saved answers: `git status --short` is clean
+  of them at the end.
+- **Never edit the model or the mapping while an impact test runs:** the comparison of runs would mix two changes.
+- **Report only what was measured:** every number comes from the saved JSON.
 
-```bash
-layer/energia/cambio/cambio.sh registrar    # los dos actos (columna renombrada, petróleo en barriles), con y sin arreglo
-```
+## Where they live
 
-- Cada acto cambia la base, reinicia Ontop, mide, arregla **una línea** del mapeo y vuelve a medir. Siempre termina en `deshacer`; si se corta a la mitad, corré `cambio.sh deshacer`.
-- El resultado queda en `cambio/resultado.json`, que leen «Por qué confiar» y el momento 2 de la demo.
-- Si cambiás la línea del mapeo que lee el petróleo (`prod_pet AS petroleo_m3`), actualizá el patrón en `cambio.sh` y los `arreglo` de `app/dominios/energia.yaml`.
+Read the domain's entry in `layer/dominios.yaml`:
 
-## Una corrección, todos los resultados (`layer/energia/cambio/correccion.sh`)
+- `method.change_tests`: the folder with the scripts (for example `layer/<domain>/cambio/`).
+- `method.mapping`, `method.ontop.service`, `method.linker.service`, `method.linker.corrections`, `method.evaluation`: what the scripts change, restart and measure.
 
-Saca la participación corregida de Aguada Pichana Este (`linking/energia/participaciones-revisadas.csv`), rearma Rastro, mide y la vuelve a poner. Tarda unos 15 minutos.
+If the domain has no `change_tests`, create the folder following the existing pattern (see examples.md) and add the path to the registry.
 
-```bash
-layer/energia/cambio/correccion.sh registrar
-git status --short    # al terminar, el CSV y las respuestas guardadas tienen que estar como antes
-```
+## First: the plan
 
-- Mide la respuesta de participación (con Rastro, SQL con enlaces y sin Rastro), lo que entra al modelo de Lab y su explicación.
-- El resultado queda en `cambio/correccion.json`, que lee el momento 4 de la demo.
-- Lo que se afirma tiene que coincidir con lo medido: la predicción casi no se mueve (la participación es fija dentro de la concesión), así que no se dice que cambie.
+Before running any test or touching any file, write the plan as a short table, one row per change:
 
-## Qué predicciones cambian (`layer/energia/cambio/impacto.sh`)
+| What is broken or corrected | Questions or predictions expected to change | By how much | Evidence | How sure | How it is undone | Open question |
+|---|---|---|---|---|---|---|
 
-Rastro dice de antemano qué predicciones dependen de un registro de origen (pregunta 14, el linaje al revés) y se comprueba: se corrige la fractura informada en la base, se rearma Rastro, se publica una corrida y `--comparar` dice qué cambió. Tienen que ser exactamente las que dijo Rastro. Elegí un registro de un pozo de prueba (de 2025): uno de entrenamiento cambia el modelo y mueve todas las predicciones, y Rastro lo dice («reentrenar»).
+The evidence is why the change is expected (the mapping line, the correction row, the `prov:used` records). A person
+reviews it; the table goes into the decision or the experiment log, and the result is compared with it.
 
-```bash
-layer/energia/cambio/impacto.sh registrar    # ~15 minutos; al terminar, el registro y la corrida vigente quedan como antes
-```
+## 1. The source changes (`cambio.sh` + `probar.py`)
 
-El resultado queda en `cambio/impacto.json`, que muestra la pestaña Rastro Lab.
+Simulate a new version of a source and measure all the saved evaluation queries, without the semantic layer (SQL over the raw sources) and with it.
 
-## Después
+Each "act" does the same thing:
 
-Si cambió un número, actualizalo en el guion y en las diapositivas «La base cambia» y «Una corrección» (skill `mazos`), y en `docs/decisions.md`.
+1. **Measure before**: run every saved query (`probar.py`), both paths.
+2. **Break the source on purpose**: rename a column the mapping reads, or change the unit of a value (for example, multiply by a conversion factor).
+3. **Restart the domain's Ontop** and measure again. Expect: Ontop may not start (renamed column) or answers silently change (new unit); the SQL path breaks in every query that touches the column.
+4. **Fix in one place**: change one line of the mapping, restart, measure again. Count how many SQL queries would need the same fix.
+5. **Always undo** (`cambio.sh deshacer`): the database and the mapping go back to how they were. If the script stops halfway, run `deshacer` by hand and check `git status --short`.
+
+Usual subcommands: `probar`, `renombrar`, `valores`, `arreglar <act>`, `deshacer`, `registrar` (runs all acts and saves `resultado.json`, which the app reads).
+
+Add a sanity check in `probar.py` on a known total (for example the yearly volume) so a unit change is caught even when queries "still answer".
+
+## 2. One correction, every result (`correccion.sh`)
+
+Remove one reviewed correction (a row of a file in `method.linker.corrections`), rebuild the layer (linker + Ontop restart), measure, and put it back.
+
+- Measure the affected answer with the three paths (without the layer, SQL with links, with the layer) and anything downstream that uses it (a model's inputs and explanations, if the domain has one).
+- Save the result in `correccion.json`.
+- When done, the corrections file and the saved answers must be as before (`git status --short`).
+- What is claimed must match what was measured: if a downstream result barely moves, do not say it changes.
+
+## 3. Which predictions change (`impacto.sh`)
+
+Only for domains with predictions saved with the records they used (`prov:used`). The layer says in advance which predictions depend on a source record (lineage in reverse); the test checks it:
+
+1. Ask which predictions use the record.
+2. Simulate that the source corrects it, rebuild the layer, publish a new run, compare runs.
+3. The predictions that changed must be exactly the ones announced.
+4. Restore the record and the current run.
+
+Pick a record used only by test predictions: a record used in training changes the model and moves every prediction, and the layer should say so ("retrain").
+
+Save the result in `impacto.json`.
+
+## Afterwards
+
+If a number changed, update it everywhere it is shown (app texts, demo script, slides: skill `decks`) and add an entry to `docs/decisions.md`. A fix after measuring is measured again only in what it affects, and said so.
+
+## A person approves
+
+- **The plan:** what will be broken or corrected, what is expected to change and how it is undone, before running.
+- What is claimed from the result, before it is shown in the app, the script or the slides.
+
+## Lessons
+
+- Always end in undo; a test that leaves the source broken corrupts every later measurement.
+- Fix in the mapping, not in the data: the point is that one line fixes every question.
+- A unit change is the dangerous one: queries keep answering with wrong numbers. Keep a plausibility check on a known total.
+- Tests that rebuild the layer are slow (the linker runs twice); run them only when the mapping, the corrections or the links changed.
+- Report only what was measured; the saved JSON is the source of every number shown.
+
+See examples.md for the commands, scripts and numbers from Rastro's domains.

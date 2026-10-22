@@ -741,3 +741,11 @@ Se leyó entera la tesis que sirve de validación (solo para validar, sin citarl
 - **Decisión:** no, todavía. Primero el método, escrito (`docs/metodo.md`): ocho pasos, cada uno con su skill, un control que decide si pasa y una persona que aprueba solo lo que es de negocio. Un agente con skills; agentes separados solo donde importa la independencia (evaluar, preguntas a ciegas); más agentes solo si una medición lo pide.
 - **Por qué:** en Rastro la experiencia estuvo en las skills, los errores los atraparon los controles (SHACL, evaluación, pruebas de cambio) y las decisiones difíciles fueron de negocio (operada o por participación). La literatura dice lo mismo: los modelos de lenguaje ayudan a proponer mapeos, pero inventan términos y escriben mapeos inválidos; la corrección la dan pruebas que se ejecutan.
 - **Lo que falta para venderlo:** un experimento en dos dominios nuevos que mida horas, intervenciones humanas y errores atrapados. Nada implementado todavía.
+
+## 2026-10-22 — Technical work in English; skills per method step
+
+- **Language:** from now on, code, comments, technical docs, skills and commits are in English, so the method and its skills can be reused and sold beyond Argentina. What users see stays in Spanish: the app, the decks, the demo scripts and the ontology labels (`@es`). Existing Spanish comments and docs are translated when they are touched; this log keeps its history as written.
+- **Skills, renamed to English and translated:** `add-source`, `add-question`, `verify`, `evaluate`, `rastro-lab`, `change-tests`, `decks`, `close-phase`. `docs/metodo.md` is now `docs/method.md`; `CLAUDE.md` and the README are in English.
+- **Three new skills, one per method step that had none:** `map-source` (dictionary and mapping together, steps 2 and 3), `link-entities` (step 4) and `quality-rules` (step 5). Each has a contract, the steps "narrow down, decide, test", the check that decides, what a person approves, its grounding in the literature and what went wrong in Rastro.
+- **Two lessons written into the rules:** one prompt per evaluator (`evaluate`, `CLAUDE.md`), and stage only the files you changed when committing (`close-phase`, `CLAUDE.md`).
+- **Still in Spanish, for a second pass:** comments and docstrings in the code, and the other technical docs.

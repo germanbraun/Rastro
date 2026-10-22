@@ -1,36 +1,38 @@
 ---
-name: mazos
-description: Mantener la historia de la demo coherente en la app, el guion y los mazos de diapositivas, armar los mazos HTML y publicarlos. Usalo al cambiar un número o un mensaje de la demo, una diapositiva o el guion.
+name: decks
+description: Keep the demo story consistent across the app, the demo script and the slide decks, build the HTML decks and publish them. Use it when you change a number or a message of the demo, a slide or the script.
 ---
 
-# La demo, el guion y los mazos
+# The demo, the script and the decks
 
-La historia de petróleo y gas son **cuatro momentos, una frase cada uno**, y se cuenta en tres minutos:
+> **Project skill, not part of the generic method** (`docs/method.md`): it keeps Rastro's own demo material (in Spanish) consistent.
 
-1. **Preguntar:** Rastro responde con evidencia (participación de YPF: 21,4 por quien declara contra 12,6 repartida entre los socios).
-2. **La base cambia:** sin Rastro, consultas rotas que hay que encontrar; con Rastro, una línea.
-3. **Predecir:** el mismo modelo con y sin Rastro predice igual; con Rastro la predicción se explica y marca los datos dudosos.
-4. **Una corrección:** se corrige una vez y cambian solos la respuesta, lo que entra al modelo y su explicación.
+The oil and gas story is **four moments, one sentence each**, and it is told in three minutes:
 
-Lo mismo en tres lugares, que tienen que decir lo mismo:
+1. **Ask:** Rastro answers with evidence (YPF's share: 21.4 by who reports versus 12.6 split among the partners).
+2. **The source changes:** without Rastro, broken queries you have to find; with Rastro, one line.
+3. **Predict:** the same model with and without Rastro predicts the same; with Rastro the prediction is explained and flags the doubtful data.
+4. **One correction:** you correct once and the answer, what goes into the model and its explanation all change on their own.
 
-| Dónde | Archivo |
+The same thing in three places, which must say the same:
+
+| Where | File |
 |---|---|
-| App, pestaña Demo | `demo` y `demo_porque` en `app/dominios/energia.yaml` (los números salen de los JSON medidos) |
-| Guion | `docs/demo-guion-energia.md` |
-| Mazo | `docs/slides/mazos/energia.json` (orden) y `docs/slides/slides/*.html` (una diapositiva por archivo) |
+| App, Demo tab | `demo` and `demo_porque` in `app/dominios/energia.yaml` (the numbers come from the measured JSON files) |
+| Script | `docs/demo-guion-energia.md` |
+| Deck | `docs/slides/mazos/energia.json` (order) and `docs/slides/slides/*.html` (one slide per file) |
 
-## Pasos
+## Steps
 
-1. **Cambiá el texto en los tres lugares a la vez.** Cada número de una diapositiva o del guion tiene que estar medido (en `layer/**/resultados.json`, `layer/energia/cambio/*.json` o lo que imprime `lab/gas/modelo.py`).
-2. **Una diapositiva** es un `<section>` de 1920×1080 en `docs/slides/slides/<nombre>.html`, con el estilo de las demás (fondo `#F7F6F2`, títulos en `#14213D`, «Sin Rastro» y «Con Rastro» en dos tarjetas) y las notas del orador en `<aside>`. Las primeras siete son la historia; el resto va después de `anexo`.
-3. **Estilo y HTML:** `python3 docs/slides/estilo.py` le da al mazo de petróleo y gas el estilo parejo (Times New Roman en todo el mazo, como pidió el usuario; una escala de seis tamaños, tarjetas con borde fino, el pie con el número de cada diapositiva, los dibujos a una altura que entra); se puede correr siempre, da lo mismo. Después `python3 docs/slides/build.py` (genera `docs/slides/<mazo>.html` con sus tipografías; no se editan a mano).
-4. **Revisalo en el navegador:** abrí `docs/slides/energia.html` y mirá las diapositivas que cambiaste. Medí que nada pase del pie: el contenido de cada diapositiva termina antes de los 920 px de alto (la medición con el navegador está en `docs/decisions.md`, 21 de octubre). Si algo pasa, se acorta el texto: nada se achica.
-5. **Publicá en el mazo compartido** (si el usuario lo usa): copiá `order`, `sections` y `faces` de `docs/slides/mazos/energia.json` al `project/deck.json` del mazo y las diapositivas a `project/slides/`, y publicalo en el mismo artifact (leelo antes si cambió desde la última vez). `root` es la carpeta que **contiene** `project/`, y las rutas van con `project/` adelante: con `root` en `project/` los archivos quedan un nivel arriba y el mazo no los ve. Una diapositiva que salió del orden se borra al publicar (`null` en `files`): si no, aparece al final.
-6. **Recorré la pestaña Demo** de la app y el guion de punta a punta, en voz alta: si no entra en tres minutos, hay que sacar algo.
+1. **Change the text in all three places at once.** Every number on a slide or in the script must be measured (in `layer/**/resultados.json`, `layer/energia/cambio/*.json` or what `lab/gas/modelo.py` prints).
+2. **A slide** is a 1920×1080 `<section>` in `docs/slides/slides/<nombre>.html`, with the style of the others (background `#F7F6F2`, titles in `#14213D`, «Sin Rastro» (without Rastro) and «Con Rastro» (with Rastro) in two cards) and the speaker notes in `<aside>`. The first seven are the story; the rest goes after `anexo`.
+3. **Style and HTML:** `python3 docs/slides/estilo.py` gives the oil and gas deck an even style (Times New Roman across the whole deck, as the user asked; a scale of six sizes, cards with a thin border, the footer with each slide's number, drawings at a height that fits); you can always run it, it is idempotent. Then `python3 docs/slides/build.py` (generates `docs/slides/<mazo>.html` with its fonts; not edited by hand).
+4. **Check it in the browser:** open `docs/slides/energia.html` and look at the slides you changed. Measure that nothing goes past the footer: each slide's content ends before 920 px of height (the browser measurement is in `docs/decisions.md`, October 21). If something goes past, shorten the text: nothing gets smaller.
+5. **Publish to the shared deck** (if the user uses it): copy `order`, `sections` and `faces` from `docs/slides/mazos/energia.json` to the deck's `project/deck.json` and the slides to `project/slides/`, and publish it to the same artifact (read it first if it changed since last time). `root` is the folder that **contains** `project/`, and paths start with `project/`: with `root` at `project/` the files end up one level up and the deck does not see them. A slide that left the order is deleted on publish (`null` in `files`): otherwise it shows up at the end.
+6. **Walk through the Demo tab** of the app and the script from start to end, out loud: if it does not fit in three minutes, something has to go.
 
-## Reglas
+## Rules
 
-- Solo petróleo y gas en la historia; proveedores y oncología son prueba de que generaliza (vista técnica, anexo).
-- Sin nombres de herramientas en la vista de negocio («Rastro deduce», no el nombre del motor) ni de productos comerciales de grafos de conocimiento.
-- Nada que el número medido no respalde: si un dato casi no se mueve, no se dice que cambia.
+- Only oil and gas in the story; suppliers and oncology are proof that it generalizes (technical view, appendix).
+- No tool names in the business view («Rastro deduce» (Rastro deduces), not the engine's name) and no commercial knowledge-graph products.
+- Nothing the measured number does not back: if a value barely moves, do not say it changes.
