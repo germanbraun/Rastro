@@ -1,0 +1,18 @@
+task: review research-affiliations source inspection
+actor: Codex/GPT
+reviewed_commit: a87a242
+status: review_complete_revisions_requested
+time_basis: >-
+  Measured detailed-review session elapsed time, including tools and writing.
+  Preliminary pull and reading were not timed and are excluded. This is not
+  total task effort or model compute. Final time-log bookkeeping is excluded.
+sessions:
+  - started_on: '2026-10-22T18:09:47Z'
+    ended_on: '2026-10-22T18:10:57Z'
+    elapsed_seconds: 70
+    pauses: []
+    work: Check profile arithmetic and denominators, run Ruff, write review and discussion handoff
+measured_session_hours: 0.019444444444444445
+human_hours: null
+untimed_preliminary_work: true
+raw_snapshot_verification: not_performed_inputs_absent
