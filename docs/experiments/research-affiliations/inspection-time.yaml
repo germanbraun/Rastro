@@ -24,7 +24,14 @@ sessions:
       release record; profiler with explicit missing-input errors, raw versus normalized units, nonblank-text and
       per-string gate measures, acronym sets and e-mail removal; full-registry search for suspected gaps; report and
       questions revised.
-agent_session_hours: 0.29
+  - started_on: '2026-10-22T18:23:10Z'
+    ended_on: '2026-10-22T18:24:11Z'
+    pauses: []
+    work: >-
+      After GPT's second review: compare its reviewer profile with mine (all four sections equal); fetch.py also
+      downloads the terms pages; profile.py fails on ledger, capture, page-sum, total or ROR checksum disagreement;
+      commit the inspector's full page ledger; measure the cohort by publication month for the bounded-set decision.
+agent_session_hours: 0.32
 human_hours: null
 human_time_status: not_supplied_do_not_estimate
 interventions: []
@@ -32,6 +39,7 @@ outputs:
   - docs/experiments/research-affiliations/inspection.md
   - docs/experiments/research-affiliations/profile.py
   - docs/experiments/research-affiliations/fetch.py
+  - docs/experiments/research-affiliations/crossref-ledger-inspector.json
   - docs/experiments/research-affiliations/source-profile.json
 checks:
   - ROR release MD5 matches Zenodo's published checksum

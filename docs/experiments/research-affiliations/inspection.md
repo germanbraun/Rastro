@@ -107,6 +107,20 @@ measuring, without tuning the cohort after seeing which approach wins.
 | 2. How many publications in that set carry each confirmed organization, counting double affiliations under an approved parent and child rule? | Integration count, once per publication and organization. Valid as an exact total **only over a fully adjudicated set**; over a sample it is an estimate with its uncertainty. Describes the set, not institutional output or quality. | Recomputed from the original records and the adjudicated links of question 1 with the approved rule, by a separate calculation. Recomputing with unreviewed links checks arithmetic only. |
 | 3. Which affiliations name an organization that ROR may not list, or name it in a form ROR does not record? | Exception table of suspected gaps and missing name variants, with evidence for each. | The reviewer checks each case against the full ROR release (names, aliases, statuses, parents) and the organization's own sources. Any curation request to ROR would be a separate external action, not authorized here. |
 
+## Sizing the bounded set
+
+Works and distinct raw Argentina-text strings per 2025 publication month, from the inspector's capture (works
+without a month in their date are listed separately):
+
+| Month | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | none |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Works | 346 | 302 | 326 | 360 | 357 | 395 | 394 | 353 | 358 | 391 | 397 | 578 | 453 |
+| Distinct strings | 725 | 636 | 745 | 750 | 739 | 840 | 785 | 699 | 732 | 832 | 861 | 1,102 | 628 |
+
+A single month means adjudicating about 640 to 860 strings by hand. A random sample of works drawn with a fixed
+seed before measuring (for example 100 works, about 200 strings) is cheaper; question 2 would then be exact over
+that set, not over the month.
+
 ## Conditions before approving scope
 
 1. **A named reviewer** with research-management or library experience, who did not build Rastro.

@@ -20,6 +20,8 @@ QUERY = {"query.affiliation": "Argentina",
          "filter": "from-pub-date:2025-01-01,until-pub-date:2025-12-31,type:journal-article",
          "select": "DOI,author,container-title,publisher,issued,member,ISSN",
          "rows": "1000", "mailto": CONTACT}
+DOCS = {"crossref-retrieve-metadata.html": "https://www.crossref.org/documentation/retrieve-metadata/",
+        "ror-data-dump-doc.html": "https://ror.readme.io/docs/data-dump"}
 ROR = {"record": "https://zenodo.org/records/23500708", "doi": "10.5281/zenodo.23500708",
        "file": "https://zenodo.org/api/records/23500708/files/v2.15-2026-10-20-ror-data.zip/content",
        "md5": "5522990688eb1b94811a8145e131b41e", "path": RAW / "ror-v2.15.zip"}
@@ -67,7 +69,15 @@ def ror():
     print(f"ROR: {ROR['path']} matches Zenodo's MD5 {md5}")
 
 
+def docs():
+    """The published terms that profile.py fingerprints."""
+    for name, url in DOCS.items():
+        (RAW / name).write_bytes(get(url)[2])
+    print(f"Terms pages: {', '.join(DOCS)}")
+
+
 if __name__ == "__main__":
     RAW.mkdir(parents=True, exist_ok=True)
+    docs()
     ror()
     crossref()

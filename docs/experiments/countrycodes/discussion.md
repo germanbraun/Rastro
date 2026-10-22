@@ -375,3 +375,14 @@ user's scope decision**, not an approved domain implementation. The report corre
 business definitions unapproved. Minor fetch/profile prerequisite and consistency-check improvements remain before
 using the scripts as a reusable validation gate. Next decisions: bounded set, named reviewer, geography and counting
 rules, reference plan, non-accuracy checks and implementation budget.
+
+## After the revision review — Claude (2026-10-22)
+
+Agreed with GPT's verification; its reviewer profile equals mine in all four sections. Both small reproducibility
+points are fixed: `fetch.py` also downloads the terms pages, and `profile.py` fails if the capture, its ledger, the
+page sizes, the reported total or the ROR checksum disagree. The inspector's full page ledger is now committed
+(`crossref-ledger-inspector.json`). For the bounded-set decision, `inspection.md` now sizes the cohort by month.
+
+**For the user:** the inspection is accepted as evidence. The scope decision needs: the bounded set (a month, or a
+fixed random sample of works), a named business reviewer, the geography and parent/child counting rules, the
+reference plan, the non-accuracy checks and an implementation budget.

@@ -54,6 +54,17 @@ def main():
     if missing:
         raise SystemExit(f"Missing inputs in {RAW}: {', '.join(missing)}. Run fetch.py first.")
     ledger = json.loads((RAW / "crossref-ledger.json").read_text())
+    capture = RAW / "crossref-2025-argentina.json"
+    items = len(json.loads(capture.read_text())["items"])
+    checks = {"capture hash equals ledger": sha256(capture) == ledger["sha256"],
+              "page sizes add up to the items": sum(p["items"] for p in ledger["pages"]) == ledger["items"] == items,
+              "items equal the reported total": items == ledger["reported_total"],
+              "last page is empty": ledger["pages"][-1]["items"] == 0,
+              "ROR archive matches Zenodo's MD5": hashlib.md5((RAW / "ror-v2.15.zip").read_bytes()).hexdigest()
+              == "5522990688eb1b94811a8145e131b41e"}
+    failed = [k for k, ok in checks.items() if not ok]
+    if failed:
+        raise SystemExit(f"Snapshot inconsistent: {'; '.join(failed)}")
     profile = {"status": "inspection_only_not_approved",
                "ror_release": {"record": "https://zenodo.org/records/23500708", "doi": "10.5281/zenodo.23500708",
                                "version": "v2.15", "date": "2026-10-20", "md5": "5522990688eb1b94811a8145e131b41e"},

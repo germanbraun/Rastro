@@ -1,0 +1,80 @@
+{
+ "endpoint": "https://api.crossref.org/works",
+ "query": {
+  "query.affiliation": "Argentina",
+  "filter": "from-pub-date:2025-01-01,until-pub-date:2025-12-31,type:journal-article",
+  "select": "DOI,author,container-title,publisher,issued,member,ISSN",
+  "rows": "1000",
+  "mailto": "germanbraun@gmail.com"
+ },
+ "pages": [
+  {
+   "requested": "2026-10-22T18:13:11Z",
+   "status": 200,
+   "final_url": "https://api.crossref.org/works?query.affiliation=Argentina&filter=from-pub-date%3A2025-01-01%2Cuntil-pub-date%3A2025-12-31%2Ctype%3Ajournal-article&select=DOI%2Cauthor%2Ccontainer-title%2Cpublisher%2Cissued%2Cmember%2CISSN&rows=1000&mailto=germanbraun%40gmail.com&cursor=%2A",
+   "cursor": "*",
+   "items": 1000,
+   "total_results": 5039,
+   "sha256": "b53d61fb84a0e1df91d25aa512772e73e3b5cf6c0ea7e4bf96fa1ed364c52eee"
+  },
+  {
+   "requested": "2026-10-22T18:13:18Z",
+   "status": 200,
+   "final_url": "https://api.crossref.org/works?query.affiliation=Argentina&filter=from-pub-date%3A2025-01-01%2Cuntil-pub-date%3A2025-12-31%2Ctype%3Ajournal-article&select=DOI%2Cauthor%2Ccontainer-title%2Cpublisher%2Cissued%2Cmember%2CISSN&rows=1000&mailto=germanbraun%40gmail.com&cursor=MTc0MjgyNzMyNzAwMCwxMC4xMTA5JTJGYWNjZXNzLjIwMjUuMzU1Mzc1Mg%3D%3D",
+   "cursor": "MTc0MjgyNzMyNzAwMCwxMC4xMTA5JTJGYWNjZXNzLjIwMjUuMzU1Mzc1Mg==",
+   "items": 1000,
+   "total_results": 5039,
+   "sha256": "3a6c3e00f62a7b806909a930c02bf8dd1c97cb1ae145848752e9f0713d2a690b"
+  },
+  {
+   "requested": "2026-10-22T18:13:23Z",
+   "status": 200,
+   "final_url": "https://api.crossref.org/works?query.affiliation=Argentina&filter=from-pub-date%3A2025-01-01%2Cuntil-pub-date%3A2025-12-31%2Ctype%3Ajournal-article&select=DOI%2Cauthor%2Ccontainer-title%2Cpublisher%2Cissued%2Cmember%2CISSN&rows=1000&mailto=germanbraun%40gmail.com&cursor=MTc0OTYyOTg4NjAwMCwxMC4zMzkwJTJGZm9vZHMxNDEyMjA2NQ%3D%3D",
+   "cursor": "MTc0OTYyOTg4NjAwMCwxMC4zMzkwJTJGZm9vZHMxNDEyMjA2NQ==",
+   "items": 1000,
+   "total_results": 5039,
+   "sha256": "e0f9f76144676f8709719bf9a1e669f3b38e1ee844e2f7e1c15eb07b1abf9088"
+  },
+  {
+   "requested": "2026-10-22T18:13:28Z",
+   "status": 200,
+   "final_url": "https://api.crossref.org/works?query.affiliation=Argentina&filter=from-pub-date%3A2025-01-01%2Cuntil-pub-date%3A2025-12-31%2Ctype%3Ajournal-article&select=DOI%2Cauthor%2Ccontainer-title%2Cpublisher%2Cissued%2Cmember%2CISSN&rows=1000&mailto=germanbraun%40gmail.com&cursor=MTc1NjIxNjc0OTAwMCwxMC4xMTExJTJGamVyZC43MDAyMA%3D%3D",
+   "cursor": "MTc1NjIxNjc0OTAwMCwxMC4xMTExJTJGamVyZC43MDAyMA==",
+   "items": 1000,
+   "total_results": 5039,
+   "sha256": "fc3b1235e6b52c2dcab48704df40858f886c2b59858890227b4d0055722fe119"
+  },
+  {
+   "requested": "2026-10-22T18:13:36Z",
+   "status": 200,
+   "final_url": "https://api.crossref.org/works?query.affiliation=Argentina&filter=from-pub-date%3A2025-01-01%2Cuntil-pub-date%3A2025-12-31%2Ctype%3Ajournal-article&select=DOI%2Cauthor%2Ccontainer-title%2Cpublisher%2Cissued%2Cmember%2CISSN&rows=1000&mailto=germanbraun%40gmail.com&cursor=MTc2Mjc3NjI4NTAwMCwxMC4xMTc3JTJGMDk1OTY4MzYyNTEzODcyNTU%3D",
+   "cursor": "MTc2Mjc3NjI4NTAwMCwxMC4xMTc3JTJGMDk1OTY4MzYyNTEzODcyNTU=",
+   "items": 1000,
+   "total_results": 5039,
+   "sha256": "ecabad32414d686b498d4e9198cb12742da83a752be5673f4347ef8a459c1bad"
+  },
+  {
+   "requested": "2026-10-22T18:13:39Z",
+   "status": 200,
+   "final_url": "https://api.crossref.org/works?query.affiliation=Argentina&filter=from-pub-date%3A2025-01-01%2Cuntil-pub-date%3A2025-12-31%2Ctype%3Ajournal-article&select=DOI%2Cauthor%2Ccontainer-title%2Cpublisher%2Cissued%2Cmember%2CISSN&rows=1000&mailto=germanbraun%40gmail.com&cursor=MTc3ODEyOTk2MTAwMCwxMC40NjU1MyUyRnJpaW1jdi4zOTIuMjAyNS44MQ%3D%3D",
+   "cursor": "MTc3ODEyOTk2MTAwMCwxMC40NjU1MyUyRnJpaW1jdi4zOTIuMjAyNS44MQ==",
+   "items": 39,
+   "total_results": 5039,
+   "sha256": "9388318cf9208bbab93a09de38f1af2890e6077061bbbe058058007613f06241"
+  },
+  {
+   "requested": "2026-10-22T18:13:40Z",
+   "status": 200,
+   "final_url": "https://api.crossref.org/works?query.affiliation=Argentina&filter=from-pub-date%3A2025-01-01%2Cuntil-pub-date%3A2025-12-31%2Ctype%3Ajournal-article&select=DOI%2Cauthor%2Ccontainer-title%2Cpublisher%2Cissued%2Cmember%2CISSN&rows=1000&mailto=germanbraun%40gmail.com&cursor=MTc5MjY4MDI1NzAwMCwxMC4zNTMwNSUyRmFuLnZpNS40MQ%3D%3D",
+   "cursor": "MTc5MjY4MDI1NzAwMCwxMC4zNTMwNSUyRmFuLnZpNS40MQ==",
+   "items": 0,
+   "total_results": 5039,
+   "sha256": "f646be5d491b8122543308c1491b366f94334af292905d8363bfedefbdd6f1ad"
+  }
+ ],
+ "items": 5039,
+ "reported_total": 5039,
+ "termination": "empty page after the last cursor",
+ "file": "data/raw/research-affiliations/crossref-2025-argentina.json",
+ "sha256": "9d328bbe41ad3ba27092cf08532a70007e38f5ec4aca4cb389d7c8ed6428e526"
+}
