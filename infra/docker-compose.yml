@@ -348,6 +348,8 @@ services:
       PG_PASSWORD: ${PG_PASSWORD:-rastro}
     volumes:
       - ../data:/data
+      - ../docs/experiments/research-affiliations:/data/doi-list:ro
+      - ../layer/afiliaciones:/manifest
     command: ["python", "/data/afiliaciones/load.py"]
 
   wikidata-energia-loader:

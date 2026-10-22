@@ -50,8 +50,8 @@ steps:
       pauses: []
       work: >-
         Record the reference plan; read add-question and the lifecycle; write the three proposals with definitions,
-        ambiguous words and verification plans; register them as proposed. Waiting for the user's approval of the
-        exact proposal files.
+        ambiguous words and verification plans; register them as proposed, then wait for the user's approval of the
+        exact files. (Approval arrived afterwards and was recorded at 18:54; see interventions.)
     agent_hours: 0.02
     human_hours: null
   sources:
@@ -68,7 +68,14 @@ steps:
       work: >-
         Record the question approvals; read add-source; write the schema and the snapshot loader; add the service;
         load; verify counts, fingerprints, a known case and the cut; start the process notes.
-    agent_hours: 0.03
+    - started_on: '2026-10-22T19:01:26Z'
+      ended_on: '2026-10-22T19:02:39Z'
+      pauses: []
+      work: >-
+        After GPT's loader review: the loader writes the source manifest only after a committed load (with the DOI-list
+        hash); every ROR location kept in ror.location (142 organizations have several; 538 Argentine by any
+        location, as by the first); credentials as connection keyword parameters. Reloaded and verified.
+    agent_hours: 0.05
     human_hours: null
 interventions:
 - step: initialize
@@ -101,5 +108,9 @@ errors_caught:
   check: reviewer (GPT) on the first inspection
   failure_kind: mixed counting units, acronym collisions, e-mail tokens read as evidence
   fix: revised inspection; process note 2
+- step: sources
+  check: reviewer (GPT) on the loader
+  failure_kind: manifest written by hand, not by the load; only the first ROR location kept; credentials interpolated
+  fix: loader writes the manifest after commit, ror.location table, keyword connection parameters; process notes 11-13
 method_changes: []
 result: null

@@ -21,7 +21,12 @@ CREATE TABLE IF NOT EXISTS crossref.affiliation (
 CREATE SCHEMA IF NOT EXISTS ror;
 CREATE TABLE IF NOT EXISTS ror.organization (
     id text PRIMARY KEY, status text, types text, established int,
-    country_code text, country_name text, city text
+    country_code text, country_name text, city text   -- the first listed location, for display only
+);
+-- Every location as ROR lists it: "Argentine" means any location in Argentina, not only the first.
+CREATE TABLE IF NOT EXISTS ror.location (
+    id text, position int, geonames_id text, country_code text, country_name text, city text,
+    PRIMARY KEY (id, position)
 );
 CREATE TABLE IF NOT EXISTS ror.name (id text, value text, types text, lang text);
 CREATE TABLE IF NOT EXISTS ror.relationship (id text, type text, related_id text, label text);
