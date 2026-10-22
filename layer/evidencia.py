@@ -2,7 +2,7 @@
 texto (PROV-O), y cuántas columnas de las respuestas a las preguntas de competencia dicen de qué fuente salen. Lo muestra la
 tarjeta «Cada respuesta se puede auditar» de «Por qué confiar».
 
-    docker compose run --rm -T layer-eval python /layer/evidencia.py
+    docker compose run --rm -T layer-eval python /layer/evidencia.py [<domain> ...]   # every domain by default
 """
 import json
 import sys
@@ -54,7 +54,10 @@ def columns(domain, spec):
 
 
 def main():
+    only = set(sys.argv[1:])                        # measure only these domains (their Ontop must be up)
     for domain, spec in domains():
+        if only and domain not in only:
+            continue
         n, ok = links(domain, spec)
         cols, cols_ok = columns(domain, spec)
         result = {"enlaces": n, "enlaces_con_evidencia": ok, "columnas": cols, "columnas_con_fuente": cols_ok}
