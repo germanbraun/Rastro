@@ -518,3 +518,15 @@ The seeded draw (`research-affiliations/draw.py`, reproduced twice) selected 100
 and 2 carry a ROR identifier. The earlier "about 200 strings" counted only Argentina-text strings; the approved
 questions cover every affiliation. The set is not redrawn. **For the user:** the reviewer's workload is about five
 times the estimate; decide whether to keep it or change the reference plan, before references are built.
+
+## Decision — User (2026-10-22), recorded by Claude: reference plan for the 962 strings
+
+The user decided, in their words: «revisión completa de las afiliaciones que mencionan Argentina y un filtro rápido
+(sí/no nombra una organización argentina) para el resto».
+
+- **Full review:** the 196 distinct raw strings that contain "Argentina". The reviewer records, for each, every
+  Argentine organization it names, with evidence, plus ambiguous and unmatched cases (questions 1 and 3).
+- **Quick screen:** the other 766 distinct strings. The reviewer answers yes or no: does the string name an Argentine
+  organization? A "yes" moves that string to the full review. A "no" is the reference for that string.
+- Every string in the set is covered by the reference, so question 2's totals remain exact over the bounded set.
+- The reviewer stays blind to the approaches' links until the reference is complete. The set is not redrawn.

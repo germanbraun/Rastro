@@ -43,12 +43,15 @@ interventions:
   kind: planned approval
   minutes: null
 - step: initialize
-  decision: pending — the bounded set has 962 distinct affiliation strings, not about 200 as estimated
+  decision: >-
+    Reference plan for the 962 distinct strings: full review of the 196 that contain "Argentina"; a yes/no screen
+    (does it name an Argentine organization?) for the other 766, moving any yes to the full review
+  reason: The bounded set has 962 distinct affiliation strings, not about 200 as estimated
   reason: >-
     The estimate counted only strings mentioning Argentina; the approved questions cover every affiliation in the 100
     works. The set is not redrawn; the user decides whether the reviewer's workload is acceptable or how the
-    reference plan changes.
-  kind: unexpected scope finding
+    reference plan changes. Decided by the user on 2026-10-22.
+  kind: business decision after an unexpected scope finding
   minutes: null
 errors_caught: []
 method_changes: []
