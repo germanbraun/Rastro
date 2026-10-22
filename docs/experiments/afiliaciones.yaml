@@ -100,6 +100,20 @@ steps:
         ontology-check passes in all domains; notes for the three approaches and term_sources.
     agent_hours: 0.10
     human_hours: null
+  links:
+    status: proposed_waiting_for_approval
+    evidence:
+    - docs/experiments/research-affiliations/link-proposal.md
+    sessions:
+    - started_on: '2026-10-22T19:13:48Z'
+      ended_on: '2026-10-22T19:15:13Z'
+      pauses: []
+      work: >-
+        Read link-entities; measure candidate rules on the loaded mentions (key, full name, unique acronym, each with a
+        second piece of evidence); find the doubtful cases (Brazilian homonym, UK acronym); write the link proposal
+        with an open question on cq2's reviewer wording.
+    agent_hours: 0.03
+    human_hours: null
 interventions:
 - step: initialize
   decision: Scope approved (proposal 4217cf8 with GPT's clarifications 05428c5); Claude implements, GPT reviews
