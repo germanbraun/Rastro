@@ -734,3 +734,10 @@ Se leyó entera la tesis que sirve de validación (solo para validar, sin citarl
 - **Control** (`layer/energia/remedicion-sin-datos/`): las 10 preguntas con el prompt nuevo, un subagente nuevo por camino que solo vio el prompt. Correctas 7, 10 y 10 de 10, igual que lo publicado; ningún camino dijo «SIN DATOS» en una pregunta con datos.
 - **El límite, dicho:** para ahorrar tiempo, cada subagente recibió todas las preguntas juntas, también las cuatro formas de cada una, y repitió la misma consulta en las cuatro. Por eso la consistencia de este control (sin Rastro 4 de 5) no se compara con la publicada (3 de 5) y no se usa. Lo publicado sigue siendo la medición con el protocolo estricto (un subagente por prompt).
 - **La invitación para la prueba a ciegas** quedó en `docs/invitacion-prueba-a-ciegas.md`: las dos partes (preguntas propias y explicaciones de Rastro Lab), lista para mandar a una o dos personas del sector que no hayan visto Rastro.
+
+## 2026-10-22 — El método antes que los agentes
+
+- **Pregunta:** ¿se generaliza Rastro como una orquestación de agentes, cada uno experto en algo (limpieza, mapeos, etc.)?
+- **Decisión:** no, todavía. Primero el método, escrito (`docs/metodo.md`): ocho pasos, cada uno con su skill, un control que decide si pasa y una persona que aprueba solo lo que es de negocio. Un agente con skills; agentes separados solo donde importa la independencia (evaluar, preguntas a ciegas); más agentes solo si una medición lo pide.
+- **Por qué:** en Rastro la experiencia estuvo en las skills, los errores los atraparon los controles (SHACL, evaluación, pruebas de cambio) y las decisiones difíciles fueron de negocio (operada o por participación). La literatura dice lo mismo: los modelos de lenguaje ayudan a proponer mapeos, pero inventan términos y escriben mapeos inválidos; la corrección la dan pruebas que se ejecutan.
+- **Lo que falta para venderlo:** un experimento en dos dominios nuevos que mida horas, intervenciones humanas y errores atrapados. Nada implementado todavía.
