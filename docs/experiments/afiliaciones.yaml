@@ -37,13 +37,15 @@ steps:
     agent_hours: 0.04
     human_hours: null
   questions:
-    status: approved_waiting_for_implementation
+    status: validated_technical_invariants_only
     evidence:
     - layer/afiliaciones/requirements/cq1.proposal.yaml
     - layer/afiliaciones/requirements/cq2.proposal.yaml
     - layer/afiliaciones/requirements/cq3.proposal.yaml
     - layer/afiliaciones/lifecycle.json (all three approved on 2026-10-22)
     - layer/afiliaciones/requirements/cq1.approval.yaml, cq2.approval.yaml, cq3.approval.yaml
+    - ontology/afiliaciones/queries/cq1.rq, cq2.rq, cq3.rq; layer/afiliaciones/query-checks.yaml (invariants)
+    - 'lifecycle: cq1, cq2, cq3 validated on 2026-10-22; method.py verify passed with 1,675, 69 and 125 rows'
     sessions:
     - started_on: '2026-10-22T18:49:33Z'
       ended_on: '2026-10-22T18:50:37Z'
@@ -132,7 +134,22 @@ steps:
         source URLs and GPT's validation added to the 91 corrections; possible registry gaps (cq3) now include
         segments inside mentions that already have identifications (83 candidates, 74 in identified mentions); HTML
         entities decoded in the normalization (33 mentions); linker rerun.
-    agent_hours: 0.10
+    - started_on: '2026-10-22T19:53:27Z'
+      ended_on: '2026-10-22T19:57:06Z'
+      pauses: []
+      work: >-
+        Approved identification terms written and mapped (counts equal the tables: 539, 91, 83); link_sources fixed;
+        notes for both link-aware approaches; quality proposal (6 rules, IDEHU found); cq1-cq3 written, two Ontop
+        limitations worked around (NOT EXISTS inside UNION, nondeterministic SAMPLE); query checks from invariants;
+        verify gate passed; lifecycle implement and validate (from a clean environment).
+    agent_hours: 0.12
+    human_hours: null
+  quality:
+    status: proposed_waiting_for_approval
+    evidence:
+    - 'docs/experiments/research-affiliations/quality-proposal.md (6 rules; 1 finding today: IDEHU withdrawn in ROR)'
+    sessions: []
+    agent_hours: 0.0
     human_hours: null
 interventions:
 - step: initialize
@@ -208,5 +225,15 @@ errors_caught:
   check: reading the possible-gap segments by hand
   failure_kind: publisher HTML entities (&amp;, &#x00E1;) split by the segment rule and left in normalized text
   fix: html.unescape in the single normalization; process note 23
+- step: questions
+  check: running cq3 against Ontop
+  failure_kind: Ontop rejects FILTER NOT EXISTS inside a UNION branch (no common variables in its scope)
+  fix: OPTIONAL with !BOUND inside the branch; process note 27
+- step: questions
+  check: YAML read-back of the experiment log, before commit
+  failure_kind: >-
+    an unquoted line with a colon made the log invalid; the update script failed but the commit and push ran anyway
+    (commands chained with ; instead of &&), so f82554c lacked this session and the process notes
+  fix: quoted the line, committed the log and notes separately; process note 30
 method_changes: []
 result: null
