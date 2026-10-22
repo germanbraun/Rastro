@@ -47,6 +47,12 @@ Record upstream dependencies and what is already familiar from Rastro. A differe
 provide independent evidence. Return a recommendation and, when requested, candidate questions with definitions and
 independent verification plans. Keep timings, source URLs and snapshot fingerprints with the inspection report.
 
+After inspection, when questions and source evidence are sufficient, propose the minimal semantic layer in
+`semantic-layer-proposal.md` alongside the report: concepts tied to questions and fields, grain, identifiers,
+relationships, a schema diagram and a worked example, with counting, provenance and uncertainty rules. Otherwise
+record why it remains pending. This is a conceptual handoff to `map-source`, not an implemented ontology or a new
+approval gate; reuse approvals and bring only new or changed business definitions to a person.
+
 This is read-only discovery: downloads and local profiling, without a registered domain, services or database load.
 It can precede scope approval and the domain experiment log. Follow an approved inspection budget and report limits
 or partial results honestly. An inspection does not approve scope, business questions, sources or implementation.

@@ -839,3 +839,12 @@ publication. This corrects the authorization context missing from the electricit
 authorized separately, not part of the original inspection scope. The inspection itself predates the skill.
 See the approval entry in `docs/experiments/countrycodes/discussion.md`. No domain, new inspection budget, business
 question or experiment implementation is approved by this skill decision.
+
+## 2026-10-22 — Record the semantic-layer proposal after source inspection
+
+At the user's request, retain the research-affiliations conceptual schema and its worked example in the experiment
+folder. Extend `inspect-sources` to propose a minimal question/source-grounded semantic layer after inspection when
+evidence permits; `map-source` reuses it before proposing executable terms and mappings. Missing evidence remains
+pending. This adds a reviewable handoff rather than a new approval gate, and does not retroactively change what the
+earlier inspection did. Record the skill change against the actual frozen method version if implementation has
+already begun; it is not evidence of unchanged-skill transfer.

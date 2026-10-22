@@ -8,6 +8,11 @@ description: Map a source that is already loaded to Rastro's business dictionary
 Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
 For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
 
+If inspection produced `semantic-layer-proposal.md`, read it before proposing terms. Reuse its question/concept/source
+grounding, diagram, example and recorded approvals; check against approved requirements and loaded fields. It is a
+conceptual proposal, not proof that terms, links or mappings are approved or implemented. Record differences and
+reopen approval only where business meaning changes; keep implementation minimal.
+
 
 Steps 2 and 3 of the method (`docs/method.md`): the dictionary and the mappings go together, because a new concept without
 a mapping answers nothing, and a mapping without a concept does not exist for the assistant.

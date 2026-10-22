@@ -445,3 +445,51 @@ frozen at the commit where implementation starts. A dedicated Ontop service runs
 
 **Still needed from the user before measuring** (not before building): a named business reviewer with research
 management or library experience who did not build Rastro.
+
+## Scope proposal review — Codex/GPT (2026-10-22)
+
+Reviewed proposal at `4217cf8`. **I agree with the proposed first implementation:** a random 100-work bounded set,
+explicitly named Argentine organizations, no automatic parent attribution, full adjudication for exact counts,
+fair B/D/C access and a 16-hour implementation/measurement stop budget. The user said in the Codex chat:
+“if you agree, claude will start building ..”. This records my agreement and handoff to Claude; it does not
+invent independent reference reviews or approve results that do not exist.
+
+The following are implementation clarifications within that proposal, not additional candidate-selection rounds:
+
+1. **Sampling and input scope:** sort the eligible unique DOIs before the seeded draw and record the exact seed,
+   algorithm and full source hash. The questions cover all author-affiliation strings in those 100 works, including
+   strings without the word Argentina; identify Argentine organizations through the approved ROR-location rule.
+   Commit the DOI list, and preserve the selected raw records outside Git with their fingerprint. A DOI list alone
+   does not freeze mutable affiliation text. “About 200 strings” is an estimate, not a limit: report the actual count
+   and do not redraw because a set is harder or larger than expected.
+2. **Counting:** deduplicate by DOI/organization across authors and repeated strings; retain every raw occurrence
+   and its evidence. An explicit parent name may count, but a relationship in ROR alone cannot add parent credit.
+   Preserve supplied ROR IDs and any conflict with the text rather than silently preferring one source assertion.
+3. **Evaluation:** freeze prompts, what counts as an attempt, retry conditions and the scoring/consistency rule
+   before evaluator runs. Preserve every attempt; do not report only the most favorable of three. The independent
+   reviewer stays blind to approach links until reference coding is complete. They are needed before reference
+   validation or accuracy publication; technical implementation can start while that appointment is pending.
+4. **Correction and traceability:** define the alias change as a controlled source-change scenario, apply equivalent
+   corrected source information to B/D/C and preserve the original snapshots. Declare the affected-record/reference
+   calculation and restoration check before measurement. Fix the 30-cell selection rule and reconstruction rubric
+   in advance, applying the same selected logical cells to each approach where applicable. Source-record identity
+   and the transformation/link rule are needed; a source URL alone does not suffice.
+5. **Method and budget:** initialize the experiment log before domain work, freeze the exact starting method commit
+   and track all generic-code/skill changes. Use measured session intervals and pauses, without presenting them as
+   model compute or inventing human time. Zero generic changes is a hypothesis; needing a repair remains a reported
+   result. The existing registry, lifecycle, ontology, quality, query, app and publication gates still apply.
+
+The now-committed inspector ledger also closes the previous per-page comparison limit: its query and page sizes
+match the reviewer's new capture, **1,000 / 1,000 / 1,000 / 1,000 / 1,000 / 39 / 0**. Both revised scripts pass Ruff.
+No domain code was changed during this proposal review. Claude owns implementation; GPT reviews the resulting work.
+
+## Semantic-layer proposal and skill handoff — Codex/GPT (2026-10-22)
+
+The user requested that the conceptual layer, schema and accompanying example be recorded in the experiment folder,
+and that the workflow capture proposing the semantic layer after inspecting sources. Added
+[semantic-layer-proposal.md](../research-affiliations/semantic-layer-proposal.md), including the illustrative
+UNS–CONICET–PLAPIQUI example, source grounding, occurrence identity, counting and unresolved-link behavior.
+`inspect-sources` now returns that conceptual handoff when evidence permits, and `map-source` reads and refines it.
+The document records a proposal, not approval of individual identifications or an implemented ontology. Reuse
+existing scope approvals. This skill update happened after the inspection; retain that chronology and record any
+effect on the implementation's frozen method version.
