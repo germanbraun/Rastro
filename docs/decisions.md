@@ -728,13 +728,6 @@ Se leyó entera la tesis que sirve de validación (solo para validar, sin citarl
 - **La historia de las operadoras:** las dos razones sociales de Pan American Energy ya se unen por la regla del nombre; Apache no aparece desde 2018; Petrobras Argentina declara en 2018 como empresa propia y arranca un solo pozo, que no entra al modelo. No se agregó una corrección sin documento que no cambia nada.
 - **Lo que no se tomó:** modelos de árboles (ganan precisión y pierden la explicación simple), geología interpolada (no hay datos públicos por pozo) y pozos de un mismo pad (la tesis no encontró casos concluyentes). Quedan para después: ubicación (longitud y latitud), intensidad por metro y año de inicio como variables, intervalos por bootstrap con 49 pozos de prueba, y el error por tamaño de pozo.
 
-## 2026-10-22 — La evaluación de petróleo y gas, medida de nuevo con la regla «SIN DATOS»
-
-- **Por qué:** desde el 21/10 el prompt de todos los caminos dice que, si los datos no alcanzan, se responda «SIN DATOS:» y qué falta. Los números publicados eran del prompt anterior, y la regla nueva podía hacer que el asistente se negara a responder preguntas que sí tienen datos.
-- **Cómo:** las 10 preguntas y las 3 otras formas de las 5 de consistencia, en los tres caminos, con subagentes nuevos que solo vieron el prompt. Para ahorrar, un subagente por camino respondió todas las preguntas juntas («cada una por separado, como si fuera la única»), en lugar de uno por pregunta: es un cambio de protocolo y se dice. Sin Rastro tuvo dos errores por tiempo (e05 y e08) y se le devolvió el mensaje, como siempre; en el segundo intento respondió. Las respuestas anteriores siguen en git.
-- **Resultado:** nadie dijo «SIN DATOS» en una pregunta con datos. Correctas: sin Rastro 7 de 10, SQL con enlaces 10, Rastro 10, igual que antes. Misma respuesta en las 4 formas: sin Rastro 4 de 5 (antes 3), los otros dos 5 de 5; correctas en la prueba de consistencia: 15, 20 y 20 de 20 (antes 11, 20 y 20). La mejora de sin Rastro es variación entre corridas, no la regla. Ahora sin Rastro sí calcula las distancias a los gasoductos (antes se le acababa el tiempo), pero mal: 36 concesiones en lugar de 33 y 48 para revisar en lugar de 45.
-- **La invitación a la prueba a ciegas** está en `docs/invitacion-prueba-a-ciegas.md`: las dos partes (preguntas propias y explicaciones de Rastro Lab), lista para mandar.
-
 ## 2026-10-22 — Control: la regla «SIN DATOS» no cambia las respuestas correctas
 
 - **Por qué:** la regla «si los datos no alcanzan, decí qué falta» se agregó al prompt después de medir. Podía hacer que el asistente se negara en preguntas que sí tienen datos.
