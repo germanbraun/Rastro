@@ -1,5 +1,5 @@
 task: read-only research-affiliations source inspection (Crossref + ROR, Argentine cohort)
-status: inspection_complete_review_pending
+status: revised_after_review_pending_second_review
 actor: Claude
 authorization: docs/experiments/countrycodes/discussion.md
 method_skill: inspect-sources (introduced in 002a39d)
@@ -16,13 +16,22 @@ sessions:
       Read the method and skill; download and read Crossref and ROR terms; download the ROR v2.15 release and a
       Crossref cohort of 5,039 works; write and run the offline profiler; extract concrete join examples; write the
       report and proposed questions.
-agent_session_hours: 0.23
+  - started_on: '2026-10-22T18:12:46Z'
+    ended_on: '2026-10-22T18:16:00Z'
+    pauses: []
+    work: >-
+      Revision after GPT's review (review.md): fetch.py with a request ledger and a new Crossref capture; exact ROR
+      release record; profiler with explicit missing-input errors, raw versus normalized units, nonblank-text and
+      per-string gate measures, acronym sets and e-mail removal; full-registry search for suspected gaps; report and
+      questions revised.
+agent_session_hours: 0.29
 human_hours: null
 human_time_status: not_supplied_do_not_estimate
 interventions: []
 outputs:
   - docs/experiments/research-affiliations/inspection.md
   - docs/experiments/research-affiliations/profile.py
+  - docs/experiments/research-affiliations/fetch.py
   - docs/experiments/research-affiliations/source-profile.json
 checks:
   - ROR release MD5 matches Zenodo's published checksum
