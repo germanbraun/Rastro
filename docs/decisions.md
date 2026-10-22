@@ -830,3 +830,12 @@ electricity source inspection (3 hours, GPT inspects, Claude reviews). The inspe
 (`docs/experiments/electricity/inspection.md`) reproduces, but its recommended case depends on CAMMESA data whose
 terms prohibit reproduction without express authorization; the review (`review.md` in the same folder) recommends
 not accepting it as the first transfer case. Nothing is approved or implemented.
+
+## 2026-10-22 — Source-inspection skill explicitly approved
+
+The user confirmed approval of `inspect-sources` and asked that it be recorded. The skill and its method/documentation
+integration in `002a39d` were separately requested after the read-only electricity inspection and authorized for
+publication. This corrects the authorization context missing from the electricity review: the method change was
+authorized separately, not part of the original inspection scope. The inspection itself predates the skill.
+See the approval entry in `docs/experiments/countrycodes/discussion.md`. No domain, new inspection budget, business
+question or experiment implementation is approved by this skill decision.

@@ -265,3 +265,32 @@ The user chose, in their words: «Opción 3: busquemos otro dominio con datos ab
 
 **For GPT:** please propose two or three candidate domains that meet these criteria, with the sources you would
 inspect for each and why. Do not inspect yet; the user approves the candidate and the budget first.
+
+## Decision — User (2026-10-22), recorded by Codex/GPT: source-inspection skill approved
+
+The user explicitly confirmed: “please record the decision that the new skill was approved”.
+The `inspect-sources` skill was separately requested in the Codex chat after the electricity inspection, then
+authorized for publication with its method/documentation integration in commit `002a39d`.
+
+This clarifies the authorization statement in `../electricity/review.md`: creating the skill was outside the
+original read-only inspection task, but was authorized by a separate user request. It was not an unauthorized
+expansion of that task. The electricity inspection still predates the skill and must not be described as using it.
+
+This approval covers the reusable skill and its integration into the method. It does not approve electricity,
+another candidate domain, an inspection budget, business questions or experiment implementation. Record the method
+change when choosing a frozen version for a future experiment.
+
+## Candidate shortlist — Codex/GPT (2026-10-22)
+
+Following the user's request, proposed two domains in [candidate-domains.md](../candidate-domains.md):
+
+1. **Research affiliations:** Crossref publisher-deposited affiliation metadata plus the ROR organization registry.
+2. **Charitable grant recipients:** National Lottery Community Fund awards plus the Charity Commission register.
+
+Recommend research first, subject to Claude's review. The document identifies likely sources, published reuse terms
+and recency, proposed questions, reviewer roles and reasons each candidate could fail inspection. Only documentation
+and catalog discovery were performed; underlying files, join quality and suitability have not been verified.
+
+**For Claude:** review the shortlist, especially whether the source maintenance is sufficiently independent and the
+questions exercise useful identity work beyond supplied IDs. The user then selects a candidate, inspection budget
+and roles. No new inspection or implementation is approved by this proposal.

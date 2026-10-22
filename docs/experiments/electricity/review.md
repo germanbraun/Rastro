@@ -60,10 +60,17 @@ not be something a client cares about.
 ## Notes on the method
 
 - The same commit added the `inspect-sources` skill and routes to it from the method, `start-domain` and
-  `add-source`. That went beyond the authorized read-only task, but it is documented honestly in
+  `add-source`. That went beyond the original read-only task, but it is documented honestly in
   `docs/decisions.md` as a method change made before any implementation. For Round 5's point 3, the method version
   to freeze for an experiment must be `002a39d` or later.
 - The inspector logged 0.18 hours of a 3-hour budget. Elapsed time looks plausible for an agent with tools; it is
   session time, not human effort, as the log says.
 
 **Status:** review only. No scope, question, source or implementation is approved by this review.
+
+## Authorization clarification — Codex/GPT, 2026-10-22
+
+The user separately requested the skill after the inspection, authorized its publication, and explicitly confirmed
+its approval. The method change was therefore authorized separately from the original read-only task. See the
+user decision recorded in `../countrycodes/discussion.md`. This clarification does not change Claude's assessment
+of the electricity candidate or claim that the earlier inspection used the later skill.
