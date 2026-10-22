@@ -36,6 +36,23 @@ steps:
         the bounded set (reproduced twice).
     agent_hours: 0.04
     human_hours: null
+  questions:
+    status: in_progress
+    evidence:
+    - layer/afiliaciones/requirements/cq1.proposal.yaml
+    - layer/afiliaciones/requirements/cq2.proposal.yaml
+    - layer/afiliaciones/requirements/cq3.proposal.yaml
+    - layer/afiliaciones/lifecycle.json (all three proposed)
+    sessions:
+    - started_on: '2026-10-22T18:49:33Z'
+      ended_on: '2026-10-22T18:50:37Z'
+      pauses: []
+      work: >-
+        Record the reference plan; read add-question and the lifecycle; write the three proposals with definitions,
+        ambiguous words and verification plans; register them as proposed. Waiting for the user's approval of the
+        exact proposal files.
+    agent_hours: 0.02
+    human_hours: null
 interventions:
 - step: initialize
   decision: Scope approved (proposal 4217cf8 with GPT's clarifications 05428c5); Claude implements, GPT reviews
@@ -46,9 +63,9 @@ interventions:
   decision: >-
     Reference plan for the 962 distinct strings: full review of the 196 that contain "Argentina"; a yes/no screen
     (does it name an Argentine organization?) for the other 766, moving any yes to the full review
-  reason: The bounded set has 962 distinct affiliation strings, not about 200 as estimated
   reason: >-
-    The estimate counted only strings mentioning Argentina; the approved questions cover every affiliation in the 100
+    The bounded set has 962 distinct affiliation strings, not about 200 as estimated. The estimate counted only
+    strings mentioning Argentina; the approved questions cover every affiliation in the 100
     works. The set is not redrawn; the user decides whether the reviewer's workload is acceptable or how the
     reference plan changes. Decided by the user on 2026-10-22.
   kind: business decision after an unexpected scope finding

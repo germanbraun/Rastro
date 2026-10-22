@@ -1,0 +1,57 @@
+{
+  "questions": {
+    "cq1": {
+      "state": "proposed",
+      "proposal": {
+        "path": "layer/afiliaciones/requirements/cq1.proposal.yaml",
+        "sha256": "269926871805bb83a99560424ca0a54cc15c7c609c29c02d10d1be74f177e9b4"
+      }
+    },
+    "cq2": {
+      "state": "proposed",
+      "proposal": {
+        "path": "layer/afiliaciones/requirements/cq2.proposal.yaml",
+        "sha256": "49d7e6199212927c77260faee0577daef5ced5863403cd9e1839f5de89cf5cb2"
+      }
+    },
+    "cq3": {
+      "state": "proposed",
+      "proposal": {
+        "path": "layer/afiliaciones/requirements/cq3.proposal.yaml",
+        "sha256": "47b18b87e1cdf8ac1a00d140ac1c0a56154d7cf583bc9f8d7e7aede5257223fc"
+      }
+    }
+  },
+  "events": [
+    {
+      "question": "cq1",
+      "from": null,
+      "to": "proposed",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/requirements/cq1.proposal.yaml",
+        "sha256": "269926871805bb83a99560424ca0a54cc15c7c609c29c02d10d1be74f177e9b4"
+      }
+    },
+    {
+      "question": "cq2",
+      "from": null,
+      "to": "proposed",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/requirements/cq2.proposal.yaml",
+        "sha256": "49d7e6199212927c77260faee0577daef5ced5863403cd9e1839f5de89cf5cb2"
+      }
+    },
+    {
+      "question": "cq3",
+      "from": null,
+      "to": "proposed",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/requirements/cq3.proposal.yaml",
+        "sha256": "47b18b87e1cdf8ac1a00d140ac1c0a56154d7cf583bc9f8d7e7aede5257223fc"
+      }
+    }
+  ]
+}

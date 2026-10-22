@@ -1,0 +1,24 @@
+question: >-
+  ¿Qué afiliaciones del conjunto nombran una organización argentina que ROR podría no tener registrada, o la nombran
+  de una forma que ROR no registra?
+role: exceptions (Crossref affiliation text against the full ROR release)
+answer_type: table, one row per string with the organization it names, the kind of case and the evidence
+scope:
+  set: the 100 works in docs/experiments/research-affiliations/sample-dois.txt
+  registry: the full ROR data dump v2.15, every country and status
+definitions:
+  suspected gap: >-
+    the string names an organization for which no ROR record was found under any name, alias, acronym, status or
+    relationship label; it stays suspected until the reviewer confirms it with the organization's own sources
+  unrecorded variant: >-
+    the string names an organization that ROR does list, in a form ROR does not record (for example a word-order
+    variant of its English name)
+  Argentine organization: as in question 1
+sources: [crossref, ror]
+ambiguous_words:
+  - "podría no tener": a search that finds nothing is not proof; the row stays suspected without the reviewer's evidence
+verification_plan: >-
+  The reviewer checks each row against the full ROR release (names, aliases, statuses, parents) and the organization's
+  own sources, and classifies it as suspected gap, unrecorded variant or neither. Any request to ROR to add a record
+  is a separate external action, not part of this experiment.
+open_questions: []

@@ -1,0 +1,28 @@
+question: >-
+  ¿Qué organizaciones argentinas nombra cada afiliación de las 100 publicaciones del conjunto, con qué regla y qué
+  evidencia, y qué afiliaciones quedan ambiguas o no nombran ninguna organización registrada?
+role: integration and exceptions (Crossref affiliation text joined to ROR organizations)
+answer_type: table, one row per affiliation string and organization named; unresolved strings listed with a reason
+scope:
+  set: the 100 works in docs/experiments/research-affiliations/sample-dois.txt, from Crossref capture 9d328bbe…e526
+  strings: every distinct raw affiliation string of those works (962), not only those that mention Argentina
+  registry: ROR data dump v2.15 (Zenodo record 23500708)
+definitions:
+  affiliation string: one author-affiliation text as the publisher deposited it, kept raw
+  organization named: >-
+    an organization in ROR v2.15 that the string names by one of its ROR names, aliases or acronyms, or by evidence
+    the reviewer accepts; a string can name several organizations
+  Argentine organization: an organization whose ROR location is in Argentina; the word "Argentina" in a string never decides it
+  ambiguous: the string could name more than one organization and the evidence does not decide which
+  unmatched: the string names an organization that has no ROR record found under any name, status or parent
+  not counted as naming: e-mail addresses, web addresses and street addresses inside the string
+sources: [crossref, ror]
+ambiguous_words:
+  - "nombra": an acronym alone (for example UNS, CIC) may be shared by several organizations; the reviewer decides with context
+  - "argentina": a regional centre of a national body (for example a CONICET science centre) is a distinct ROR organization
+verification_plan: >-
+  The named business reviewer, blind to the approaches' links, fully reviews the 196 distinct strings that contain
+  "Argentina" and screens the other 766 (yes or no: does it name an Argentine organization?), moving any yes to the
+  full review. The reviewed table is the reference; disagreements with an approach are adjudicated and recorded.
+open_questions:
+  - Who is the named business reviewer (pending, needed before references).

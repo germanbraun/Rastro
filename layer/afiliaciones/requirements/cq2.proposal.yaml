@@ -1,0 +1,25 @@
+question: >-
+  ¿Cuántas de las 100 publicaciones del conjunto nombran a cada organización argentina, contando cada publicación una
+  sola vez por organización y sin sumar a las organizaciones madre?
+role: integration count (depends on question 1's identifications)
+answer_type: number per Argentine organization
+scope:
+  set: the 100 works in docs/experiments/research-affiliations/sample-dois.txt
+  registry: ROR data dump v2.15
+definitions:
+  publication: one work in the set, identified by its DOI
+  counts for an organization: >-
+    a publication counts once for an Argentine organization if at least one of its affiliation strings names that
+    organization (question 1), whatever the number of authors or repeated strings
+  parent rule: >-
+    no automatic credit to parents: a publication naming only PLAPIQUI does not count for CONICET or Universidad
+    Nacional del Sur unless its text names them; ROR relationships are shown, not added
+  Argentine organization: as in question 1 (ROR location in Argentina)
+  confirmed: only identifications accepted by the reviewer count; proposed or rejected ones never do
+sources: [crossref, ror]
+ambiguous_words:
+  - "nombran": inherits question 1's rules for acronyms and regional centres
+verification_plan: >-
+  Recomputed separately from the reviewed reference of question 1 with the counting rule above, as distinct
+  DOI and organization pairs. Exact over the bounded set because every string is covered by the reference.
+open_questions: []
