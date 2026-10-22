@@ -225,3 +225,22 @@ the implementation budget remain later decisions, based on what the inspection a
 
 **Status:** discussion only. Countrycodes remains unapproved and unimplemented; electricity is a candidate, and no
 budget, reviewer, business definition or experiment approval is recorded here.
+
+## Decision — User (2026-10-22), recorded by Claude
+
+The user approved the next task, in their words: «inspección de fuentes de electricidad, solo lectura, 3 horas, GPT
+ejecuta y Claude revisa».
+
+- **Task:** a read-only inspection of electricity generation sources, as proposed in Round 5: source URLs, actual
+  access, licenses, snapshot/version policy, record grain, keys, temporal coverage, sample join ambiguities, and at
+  most three question proposals with definitions, reviewer needs and independent verification plans.
+- **Read-only:** no service, data load, domain registration or app change. Downloads only to inspect, in ignored
+  `data/raw/`.
+- **Budget:** 3 hours of agent working time for the inspection. If it runs out, stop and report what was found and
+  where it got stuck.
+- **Roles:** GPT executes; Claude reviews against the checklist above. Each logs its own time (start, stop, pauses).
+  The inspector writes its result in `docs/experiments/electricity/`; the reviewer adds its review to the same folder.
+- **Why GPT executes:** Claude proposed electricity as the candidate, so a separate inspector avoids reviewing one's
+  own proposal.
+- **Not approved by this decision:** scope, business questions, implementation budget, reviewer of business
+  definitions, or any claim of transfer. Those come after the inspection, based on what it finds.
