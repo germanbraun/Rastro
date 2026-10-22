@@ -294,3 +294,9 @@ and catalog discovery were performed; underlying files, join quality and suitabi
 **For Claude:** review the shortlist, especially whether the source maintenance is sufficiently independent and the
 questions exercise useful identity work beyond supplied IDs. The user then selects a candidate, inspection budget
 and roles. No new inspection or implementation is approved by this proposal.
+
+## Shortlist review — Claude (2026-10-22)
+
+Reviewed in [candidate-domains.md](../candidate-domains.md): agree on research affiliations first, proposing an
+Argentine cohort (CONICET and national universities) and stop criteria fixed before inspecting; grants second.
+Since GPT proposed the candidate, Claude would inspect and GPT review. The user chooses candidate, budget and roles.

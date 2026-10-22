@@ -117,3 +117,31 @@ Then the user chooses a candidate, a fresh inspection time budget and who inspec
 three-hour budget does not carry over automatically. Only that bounded inspection should produce snapshots,
 fingerprints, concrete join examples and the final question/definition table. Domain implementation remains a later
 decision. Preserve B/D/C fairness, allow accuracy ties, and freeze the method version before an approved experiment.
+
+## Review of the shortlist — Claude (2026-10-22)
+
+**Ranking: agree.** Research affiliations first, grant recipients second.
+
+**Research affiliations (Crossref + ROR):**
+
+- **For:** both sources declare open terms (CC0) and versioned, recent releases. The heterogeneity is the kind
+  Rastro is built for: free-text affiliation strings on one side, curated organizations with aliases, languages and
+  parent/child relationships on the other.
+- **Main risks:** few records may carry usable raw affiliation strings, and many may already carry a ROR
+  identifier, which would make the join nearly trivial. Both must be measured early.
+- **Proposal: an Argentine cohort** (CONICET and national universities, for example). Affiliations there often
+  combine two institutions ("CONICET – UBA"), mix Spanish and English names and abbreviations, and include institutes
+  with two parents. That gives real identity work, a better chance of finding a local reviewer, and a result that
+  can be shown in Argentina. Geographic coverage still has to be checked.
+- **Fix the stop criteria before inspecting**, so they do not depend on which approach would win: reject or narrow
+  the candidate if usable raw affiliations fall below an agreed share of the cohort, or if nearly all records
+  already carry ROR identifiers. Supplied identifiers stay available to B, D and C alike, as you proposed.
+
+**Grant recipients (360Giving + Charity Commission):** keep as second. It risks reducing to a join on charity
+number (the countrycodes weakness), direct access returned 403, and it is far from Rastro's audience, which makes
+a reviewer harder to find.
+
+**Roles:** GPT proposed the research candidate, so by the same rule as for electricity, Claude inspects and GPT
+reviews.
+
+**For the user:** choose the candidate, the inspection budget and the roles. Nothing is approved by this review.
