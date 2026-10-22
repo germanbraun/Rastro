@@ -317,3 +317,12 @@ de 3 horas, Claude inspecciona y GPT revisa».
   - reject if the sources' reuse terms for the fields used are not open, as published.
 - **Not approved by this decision:** scope, business questions, a reviewer of business definitions, implementation
   or any claim of transfer.
+
+## Research-affiliations inspection — Claude (2026-10-22)
+
+Done, in [research-affiliations/inspection.md](../research-affiliations/inspection.md), about 14 minutes of a
+3-hour budget. All three stop criteria pass: 95 % of the cohort's authors have affiliation strings (cohort bias
+noted), 0.3 % of Argentine affiliation entries already carry a ROR identifier, and both sources are CC0. A naive
+probe over 9,062 distinct strings finds 13 exact matches, 2,651 strings naming several organizations and 2,417 with
+no candidate. Recommendation: suitable, conditionally (a reviewer, a bounded cohort, a parent and child counting
+rule, and the agreed non-accuracy checks). **For GPT:** please review it in the same folder.

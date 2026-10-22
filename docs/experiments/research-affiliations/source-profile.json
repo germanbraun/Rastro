@@ -1,0 +1,329 @@
+{
+ "status": "inspection_only_not_approved",
+ "artifacts": [
+  {
+   "path": "data/raw/research-affiliations/crossref-2025-argentina.json",
+   "url": "https://api.crossref.org/works (query in the file)",
+   "bytes": 17868297,
+   "sha256": "e723ce28f96910833b867207f0b21aef53af1d5ac98de6819b6325e02be2d5e7"
+  },
+  {
+   "path": "data/raw/research-affiliations/ror-v2.15.zip",
+   "url": "https://zenodo.org/records/ (ROR data dump v2.15, 2026-10-20)",
+   "bytes": 39263398,
+   "sha256": "7a7bf58d5ac18436ed98daf5da906913761d54869edf86d405e51966609dd133"
+  },
+  {
+   "path": "data/raw/research-affiliations/ror-zenodo-latest.json",
+   "url": "https://zenodo.org/api/communities/ror-data/records?q=&sort=newest&size=3",
+   "bytes": 26220,
+   "sha256": "0ca30aab7cd60fdaa2b27d4d51b02a1bef279fd3f31e570d5f8c7856271e273c"
+  },
+  {
+   "path": "data/raw/research-affiliations/crossref-retrieve-metadata.html",
+   "url": "https://www.crossref.org/documentation/retrieve-metadata/",
+   "bytes": 76129,
+   "sha256": "3e11e4b7a219930495df16f6a82787cef2a872ac71c47f346995119ee39226e4"
+  },
+  {
+   "path": "data/raw/research-affiliations/crossref-rest-api.html",
+   "url": "https://www.crossref.org/documentation/retrieve-metadata/rest-api/",
+   "bytes": 70728,
+   "sha256": "c1fa2bf276632010301699cc37241e9499fc9d7fd3ef0c0bd20c9000e15b4480"
+  },
+  {
+   "path": "data/raw/research-affiliations/ror-data-dump-doc.html",
+   "url": "https://ror.readme.io/docs/data-dump",
+   "bytes": 145476,
+   "sha256": "e24a30ab6e6f5fdb3e40f6540302a83f6e64d6a235c468fc6142a5ea39d0fcb8"
+  }
+ ],
+ "crossref": {
+  "query": {
+   "query.affiliation": "Argentina",
+   "filter": "from-pub-date:2025-01-01,until-pub-date:2025-12-31,type:journal-article",
+   "rows": "1000",
+   "mailto": "germanbraun@gmail.com",
+   "select": "DOI,author,container-title,publisher,issued,member,ISSN"
+  },
+  "retrieved": "2026-10-22T18:00:28Z",
+  "works": 5039,
+  "distinct_dois": 5039,
+  "duplicate_dois": 0,
+  "works_with_an_affiliation_mentioning_argentina": 5028,
+  "authors": 51928,
+  "authors_with_at_least_one_affiliation": 49484,
+  "affiliation_entries": 62216,
+  "affiliation_entries_with_raw_string": 62216,
+  "affiliation_entries_with_any_id": 286,
+  "affiliation_id_types": {
+   "ROR": 286
+  },
+  "argentine_affiliation_entries": 20888,
+  "argentine_entries_with_ror_id": 65,
+  "distinct_argentine_strings": 9062,
+  "publishers_top": [
+   [
+    "Wiley",
+    1434
+   ],
+   [
+    "MDPI AG",
+    939
+   ],
+   [
+    "Ovid Technologies (Wolters Kluwer Health)",
+    260
+   ],
+   [
+    "SAGE Publications",
+    248
+   ],
+   [
+    "FapUNIFESP (SciELO)",
+    245
+   ],
+   [
+    "American Chemical Society (ACS)",
+    151
+   ],
+   [
+    "Royal Society of Chemistry (RSC)",
+    114
+   ],
+   [
+    "Oxford University Press (OUP)",
+    80
+   ]
+  ],
+  "most_frequent_argentine_strings_normalized": [
+   [
+    "consejo nacional de investigaciones cientificas y tecnicas conicet buenos aires argentina",
+    155
+   ],
+   [
+    "hospital italiano de buenos aires buenos aires argentina",
+    66
+   ],
+   [
+    "consejo nacional de investigaciones cientificas y tecnicas conicet argentina",
+    58
+   ],
+   [
+    "universidad de buenos aires buenos aires argentina",
+    57
+   ],
+   [
+    "universidad de buenos aires argentina",
+    48
+   ],
+   [
+    "fleni buenos aires buenos aires argentina",
+    47
+   ],
+   [
+    "conicet buenos aires argentina",
+    44
+   ],
+   [
+    "cognitive neuroscience center cnc universidad de san andres buenos aires buenos aires argentina",
+    40
+   ],
+   [
+    "cognitive neuroscience center university of san andres victoria buenos aires argentina",
+    40
+   ],
+   [
+    "university of buenos aires buenos aires argentina",
+    39
+   ],
+   [
+    "fleni buenos aires argentina",
+    38
+   ],
+   [
+    "universidad nacional de la plata argentina",
+    36
+   ],
+   [
+    "programa de referencia y biobanco genomico de la poblacion argentina poblar puerto madryn argentina",
+    36
+   ],
+   [
+    "consejo nacional de investigaciones cientificas y tecnicas buenos aires argentina",
+    35
+   ],
+   [
+    "universidad catolica argentina",
+    35
+   ]
+  ]
+ },
+ "ror": {
+  "records": 146716,
+  "argentine_orgs": 538,
+  "status": {
+   "active": 532,
+   "withdrawn": 3,
+   "inactive": 3
+  },
+  "types": {
+   "healthcare": 67,
+   "nonprofit": 62,
+   "facility": 139,
+   "government": 54,
+   "education": 173,
+   "funder": 76,
+   "other": 22,
+   "company": 15,
+   "archive": 7
+  },
+  "name_types": {
+   "acronym": 426,
+   "ror_display": 538,
+   "label": 718,
+   "alias": 236
+  },
+  "relationship_types": {
+   "related": 92,
+   "child": 262,
+   "parent": 272,
+   "successor": 3
+  },
+  "orgs_with_parent": 184
+ },
+ "join_probe": {
+  "distinct_argentine_strings": 9561,
+  "outcome": {
+   "one_candidate_by_containment": 4480,
+   "several_candidates_by_containment": 2651,
+   "no_candidate": 2417,
+   "exact_single": 13
+  },
+  "examples": {
+   "one_candidate_by_containment": [
+    {
+     "string": "(C1118AAT) Center for Neuroimmunological Diseases in Rosario, Neuroimmunology Clinic, Instituto de Neurología Cognitiva Neurociencias Oroño, Rosario, Argentina",
+     "candidates": [
+      "Instituto de Neurología Cognitiva"
+     ]
+    },
+    {
+     "string": "**National Scientific and Technical Research Council, Godoy Cruz 2290, Autonomous City of Buenos Aires, C1425FQB, Argentina.",
+     "candidates": [
+      "Consejo Nacional de Investigaciones Científicas y Técnicas"
+     ]
+    },
+    {
+     "string": ". Hospital Alemán Buenos Aires, Ciudad De Buenos Aires, Argentina",
+     "candidates": [
+      "Hospital Alemán"
+     ]
+    },
+    {
+     "string": "1 Universidad Nacional de San Juan, Centro de Investigaciones de la Geósfera y Biósfera, San Juan, Argentina",
+     "candidates": [
+      "National University of San Juan"
+     ]
+    },
+    {
+     "string": "1. Facultad de Ciencias Médicas, Universidad Nacional del Comahue, Cipolletti, Argentina. 2. Methods in Epidemiologic, Clinical, and Operations Research-MECOR-program, American Thoracic Society/Asociación Latinoamericana del Tórax, Montevideo, Uruguay.",
+     "candidates": [
+      "Universidad Nacional del Comahue"
+     ]
+    },
+    {
+     "string": "1. Facultad de Ciencias Médicas, Universidad Nacional del Comahue, Cipolletti, Argentina. 3. Department of Preventive Medicine, Keck School of Medicine, University of Southern California, Los Angeles, CA, USA.",
+     "candidates": [
+      "Universidad Nacional del Comahue"
+     ]
+    }
+   ],
+   "several_candidates_by_containment": [
+    {
+     "string": "(UNS - CONICET), Planta Piloto de Ingeniería Química (PLAPIQUI), Camino “La Carrindanga” Km. 7, Bahía Blanca B8000, Argentina",
+     "candidates": [
+      "Consejo Nacional de Investigaciones Científicas y Técnicas",
+      "Planta Piloto de Ingeniería Química"
+     ]
+    },
+    {
+     "string": "(peter@df.uba.ar) National Scientific and Technical Research Council of Argentina, Buenos Aires",
+     "candidates": [
+      "Consejo Nacional de Investigaciones Científicas y Técnicas",
+      "Universidad de Buenos Aires"
+     ]
+    },
+    {
+     "string": "*Instituto Sabato, UNSAM/CNEA, Av. Gral. Paz 1499, San Martín, Buenos Aires, B1650KNA, Argentina.",
+     "candidates": [
+      "Comisión Nacional de Energía Atómica",
+      "National University of General San Martín"
+     ]
+    },
+    {
+     "string": "1 Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET), Universidad Nacional del Comahue, Buenos Aires 1400, Neuquén 8300, Argentina",
+     "candidates": [
+      "Consejo Nacional de Investigaciones Científicas y Técnicas",
+      "Universidad Nacional del Comahue"
+     ]
+    },
+    {
+     "string": "1 IFLP CONICET , Diagonal 113 y 64, La Plata , Buenos Aires , Argentina",
+     "candidates": [
+      "Consejo Nacional de Investigaciones Científicas y Técnicas",
+      "Instituto de Física La Plata"
+     ]
+    },
+    {
+     "string": "10Department of Hematology, Hospital Privado Universitario de Córdoba, Instituto Universitario de Ciencias Biomédicas de Córdoba, Córdoba, Argentina",
+     "candidates": [
+      "Hospital Privado",
+      "Instituto Universitario de Ciencias Biomédicas de Córdoba"
+     ]
+    }
+   ],
+   "no_candidate": [
+    {
+     "string": "***National Commission of Atomic Energy of Argentina, Av. Gral. Paz 1499, San Martín, Buenos Aires, B1650KNA, Argentina."
+    },
+    {
+     "string": "1 Instituto Patagónico de Geología y Paleontología, Boulevard Brown 2915, Puerto Madryn, Chubut, Argentina"
+    },
+    {
+     "string": "1 Lithium Argentina AG, Zug 6300, Switzerland"
+    },
+    {
+     "string": "1 Lithium Argentina AG, Zug, Switzerland"
+    },
+    {
+     "string": "10Hospital Allende, Córdoba, Argentina"
+    },
+    {
+     "string": "10Hospital Italiano La Plata, Buenos Aires, Argentina"
+    }
+   ],
+   "exact_single": [
+    {
+     "string": "Facultad Latinoamericana de Ciencias Sociales,  Argentina"
+    },
+    {
+     "string": "Instituto Universitario de la Policía Federal Argentina"
+    },
+    {
+     "string": "Instituto de Historia Argentina y Americana \"Dr. Emilio Ravignani\""
+    },
+    {
+     "string": "Instituto de Historia Argentina y Americana Dr. Emilio Ravignani"
+    },
+    {
+     "string": "National Scientific and Technical Research Council of Argentina"
+    },
+    {
+     "string": "Pontifical Catholic University of Argentina"
+    }
+   ]
+  },
+  "note": "naive probe of difficulty; candidates are not links and need evidence and review"
+ }
+}

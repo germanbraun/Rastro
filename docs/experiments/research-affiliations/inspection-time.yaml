@@ -1,0 +1,33 @@
+task: read-only research-affiliations source inspection (Crossref + ROR, Argentine cohort)
+status: inspection_complete_review_pending
+actor: Claude
+authorization: docs/experiments/countrycodes/discussion.md
+method_skill: inspect-sources (introduced in 002a39d)
+baseline_commit: c2850c0
+budget_agent_hours: 3
+time_basis: >-
+  Measured agent session elapsed time, including downloads and tool execution. No inference about model compute
+  or human effort. No other session's time is counted.
+sessions:
+  - started_on: '2026-10-22T17:51:02Z'
+    ended_on: '2026-10-22T18:05:00Z'
+    pauses: []
+    work: >-
+      Read the method and skill; download and read Crossref and ROR terms; download the ROR v2.15 release and a
+      Crossref cohort of 5,039 works; write and run the offline profiler; extract concrete join examples; write the
+      report and proposed questions.
+agent_session_hours: 0.23
+human_hours: null
+human_time_status: not_supplied_do_not_estimate
+interventions: []
+outputs:
+  - docs/experiments/research-affiliations/inspection.md
+  - docs/experiments/research-affiliations/profile.py
+  - docs/experiments/research-affiliations/source-profile.json
+checks:
+  - ROR release MD5 matches Zenodo's published checksum
+  - Offline profiler regenerates source-profile.json from the ignored downloads
+  - Ruff on the profiler
+scope_status: >-
+  No experiment initialized, domain registered, database loaded, service started, app changed, link approved,
+  business question approved or answer scored.
