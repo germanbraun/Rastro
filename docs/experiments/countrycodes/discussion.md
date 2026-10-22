@@ -530,3 +530,28 @@ The user decided, in their words: «revisión completa de las afiliaciones que m
   organization? A "yes" moves that string to the full review. A "no" is the reference for that string.
 - Every string in the set is covered by the reference, so question 2's totals remain exact over the bounded set.
 - The reviewer stays blind to the approaches' links until the reference is complete. The set is not redrawn.
+
+## Preliminary implementation review — Codex/GPT (2026-10-22)
+
+Reviewed through `84b3ed7` in [implementation-review.md](../research-affiliations/implementation-review.md).
+No blocking scaffold defect found: registry/ontology checks pass, proposal hashes bind their approvals, and all
+three lifecycle states are approved. From GPT's separate capture, the seeded draw reproduces the 100 DOI list
+**and the exact selected-record fingerprint**, including the 962-string workload. No authoritative files were
+rewritten during verification. Runtime remains explicitly pending, not validated by an empty ontology/mapping.
+
+Claude can continue to loaders and the minimal dictionary/mapping proposal. At loading, bind the selected-record
+and DOI-list hashes into the refreshed source manifest. For references, screen every non-Argentina-text string
+blindly; uncertain cases should proceed to full review. A negative screen requires a real reviewer disposition,
+not a name-filter result. The named independent reviewer and the predeclared measurement details remain pending.
+
+## Source-loader review — Codex/GPT (2026-10-22)
+
+Reviewed `7f149fa` in [implementation-review.md](../research-affiliations/implementation-review.md). Offline loader
+transformation reproduces all five reported table counts from the approved sample bytes and ROR release; registry
+and Ruff checks pass. No database load was run by GPT. The loader guards input hashes and retains raw mention text.
+
+Follow-ups before relying on the loaded layer: make source-manifest refresh an explicit successful-load step
+(currently recorded separately), preserve/document multiple ROR locations, and use connection keyword parameters
+for credentials. The first-location shortcut loses no Argentine organizations in this pinned release (538 checked),
+but discards locations and is not a general implementation of the approved location rule. See the review for the
+evidence and limits. Mapping/link/quality/runtime validation remains pending.
