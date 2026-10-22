@@ -169,6 +169,10 @@ afiliaciones:
   sql_notes: layer/afiliaciones/sql-notes.md
   links_notes: layer/afiliaciones/sql-enlaces-notes.md
   namespace: https://w3id.org/rastro/afiliaciones#
+  term_sources:
+    crossref: [Publication, doi, AffiliationMention, inPublication, affiliationText, authorPosition,
+               affiliationPosition, suppliedOrganization]
+    ror: [Organization, ArgentineOrganization, name, acronym, status, country, hasParent]
   # A new domain experiment (research affiliations). Keys for pieces not built yet are left out.
   method:
     questions: ontology/afiliaciones/competency-questions.md

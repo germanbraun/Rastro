@@ -1,4 +1,66 @@
-# R2RML mapping for research affiliations, one section per source. Empty until map-source adds the first terms.
+# R2RML mapping for research affiliations, one section per source.
 @prefix rr: <http://www.w3.org/ns/r2rml#> .
-@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .
+
+# --- Sources ---------------------------------------------------------------
+
+<#DataSource> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, name FROM rastro_meta.source WHERE id IN ('crossref', 'ror')" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/source/{id}" ; rr:class afiliaciones:DataSource ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:name ; rr:objectMap [ rr:column "name" ] ] .
+
+# --- Crossref: the 100 works and their affiliation mentions ---------------
+
+<#Publication> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT CONCAT('https://doi.org/', doi) AS iri, doi FROM crossref.\"work\"" ] ;
+    rr:subjectMap [ rr:column "iri" ; rr:termType rr:IRI ; rr:class afiliaciones:Publication ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:doi ; rr:objectMap [ rr:column "doi" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/crossref> ] ] .
+
+<#AffiliationMention> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery """SELECT doi, author_position, affiliation_position, name, ror_id,
+                                            CONCAT('https://doi.org/', doi) AS publication
+                                     FROM crossref.affiliation""" ] ;
+    rr:subjectMap [ rr:template "https://w3id.org/rastro/afiliaciones/mention/{doi}/{author_position}/{affiliation_position}" ;
+                    rr:class afiliaciones:AffiliationMention ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:inPublication ; rr:objectMap [ rr:column "publication" ; rr:termType rr:IRI ] ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:affiliationText ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:authorPosition ; rr:objectMap [ rr:column "author_position" ; rr:datatype xsd:integer ] ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:affiliationPosition ; rr:objectMap [ rr:column "affiliation_position" ; rr:datatype xsd:integer ] ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:suppliedOrganization ; rr:objectMap [ rr:column "ror_id" ; rr:termType rr:IRI ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/crossref> ] ] .
+
+# --- ROR v2.15: organizations, names, locations, parents -------------------
+
+<#Organization> a rr:TriplesMap ;
+    rr:logicalTable [ rr:tableName "ror.organization" ] ;
+    rr:subjectMap [ rr:column "id" ; rr:termType rr:IRI ; rr:class afiliaciones:Organization ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:status ; rr:objectMap [ rr:column "status" ] ] ;
+    rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/ror> ] ] .
+
+<#OrganizationName> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, value FROM ror.name WHERE types ~ '(ror_display|label|alias)'" ] ;
+    rr:subjectMap [ rr:column "id" ; rr:termType rr:IRI ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:name ; rr:objectMap [ rr:column "value" ] ] .
+
+<#OrganizationAcronym> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, value FROM ror.name WHERE types LIKE '%acronym%'" ] ;
+    rr:subjectMap [ rr:column "id" ; rr:termType rr:IRI ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:acronym ; rr:objectMap [ rr:column "value" ] ] .
+
+<#OrganizationCountry> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, country_code FROM ror.location WHERE country_code IS NOT NULL" ] ;
+    rr:subjectMap [ rr:column "id" ; rr:termType rr:IRI ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:country ; rr:objectMap [ rr:column "country_code" ] ] .
+
+# Approved definition: an organization with at least one ROR location in Argentina.
+<#ArgentineOrganization> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'" ] ;
+    rr:subjectMap [ rr:column "id" ; rr:termType rr:IRI ; rr:class afiliaciones:ArgentineOrganization ] .
+
+<#OrganizationParent> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, related_id FROM ror.relationship WHERE type = 'parent'" ] ;
+    rr:subjectMap [ rr:column "id" ; rr:termType rr:IRI ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:hasParent ; rr:objectMap [ rr:column "related_id" ; rr:termType rr:IRI ] ] .

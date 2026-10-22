@@ -1,11 +1,84 @@
 # Business dictionary for research affiliations: only what the approved questions need.
-# Scope: docs/experiments/countrycodes/discussion.md; conceptual proposal:
-# docs/experiments/research-affiliations/semantic-layer-proposal.md. Terms are added by map-source.
+# Scope: docs/experiments/countrycodes/discussion.md; terms approved in
+# docs/experiments/research-affiliations/mapping-proposal.md. Identification links are added by link-entities.
 @prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 
 <https://w3id.org/rastro/afiliaciones> a owl:Ontology ;
     rdfs:label "Rastro · Afiliaciones de investigación"@es ;
     rdfs:comment "Diccionario de negocio para identificar organizaciones de investigación argentinas en las afiliaciones de publicaciones."@es .
+
+# --- Clases ---------------------------------------------------------------
+
+afiliaciones:Publication a owl:Class ;
+    rdfs:label "Publicación"@es ;
+    rdfs:comment "Una de las 100 publicaciones del conjunto (Crossref, 2025), identificada por su DOI."@es .
+
+afiliaciones:AffiliationMention a owl:Class ;
+    rdfs:label "Mención de afiliación"@es ;
+    rdfs:comment "Un texto de afiliación tal como lo depositó la editorial, para un autor en una publicación. La posición del autor identifica la aparición, no a la persona."@es .
+
+afiliaciones:Organization a owl:Class ;
+    rdfs:label "Organización de investigación"@es ;
+    rdfs:comment "Una organización del Research Organization Registry (ROR v2.15), de cualquier país y estado."@es .
+
+afiliaciones:ArgentineOrganization a owl:Class ;
+    rdfs:subClassOf afiliaciones:Organization ;
+    rdfs:label "Organización argentina"@es ;
+    rdfs:comment "Una organización con al menos una ubicación en Argentina según ROR. La palabra «Argentina» en un texto nunca lo decide."@es .
+
+afiliaciones:DataSource a owl:Class ;
+    rdfs:label "Fuente de datos"@es .
+
+# --- De la publicación y sus menciones ------------------------------------
+
+afiliaciones:doi a owl:DatatypeProperty ;
+    rdfs:domain afiliaciones:Publication ;
+    rdfs:label "DOI"@es .
+
+afiliaciones:inPublication a owl:ObjectProperty ;
+    rdfs:domain afiliaciones:AffiliationMention ; rdfs:range afiliaciones:Publication ;
+    rdfs:label "de la publicación"@es .
+
+afiliaciones:affiliationText a owl:DatatypeProperty ;
+    rdfs:domain afiliaciones:AffiliationMention ;
+    rdfs:label "texto de la afiliación"@es ;
+    rdfs:comment "El texto tal como vino, sin normalizar."@es .
+
+afiliaciones:authorPosition a owl:DatatypeProperty ;
+    rdfs:domain afiliaciones:AffiliationMention ; rdfs:range xsd:integer ;
+    rdfs:label "posición del autor"@es .
+
+afiliaciones:affiliationPosition a owl:DatatypeProperty ;
+    rdfs:domain afiliaciones:AffiliationMention ; rdfs:range xsd:integer ;
+    rdfs:label "posición de la afiliación"@es .
+
+afiliaciones:suppliedOrganization a owl:ObjectProperty ;
+    rdfs:domain afiliaciones:AffiliationMention ; rdfs:range afiliaciones:Organization ;
+    rdfs:label "organización indicada por la editorial"@es ;
+    rdfs:comment "El identificador ROR que agregó la editorial, cuando lo hay. Sirve de control, no de referencia."@es .
+
+# --- De la organización (sin dominio: podrían compartirlas otras clases) -----
+
+afiliaciones:name a owl:DatatypeProperty ;
+    rdfs:label "nombre"@es ;
+    rdfs:comment "Nombre visible, etiqueta o alias en ROR, en cualquier idioma."@es .
+
+afiliaciones:acronym a owl:DatatypeProperty ;
+    rdfs:label "sigla"@es ;
+    rdfs:comment "Una sigla en ROR. Varias organizaciones pueden compartirla."@es .
+
+afiliaciones:status a owl:DatatypeProperty ;
+    rdfs:label "estado en ROR"@es .
+
+afiliaciones:country a owl:DatatypeProperty ;
+    rdfs:label "país (código ISO)"@es ;
+    rdfs:comment "Uno por cada ubicación de la organización en ROR."@es .
+
+afiliaciones:hasParent a owl:ObjectProperty ;
+    rdfs:range afiliaciones:Organization ;
+    rdfs:label "depende de"@es ;
+    rdfs:comment "La relación «parent» de ROR. Se muestra para explicar; nunca suma publicaciones a la organización madre."@es .

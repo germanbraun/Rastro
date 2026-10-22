@@ -78,9 +78,12 @@ steps:
     agent_hours: 0.05
     human_hours: null
   mapping:
-    status: approved_being_implemented
+    status: completed
     evidence:
-    - docs/experiments/research-affiliations/mapping-proposal.md
+    - docs/experiments/research-affiliations/mapping-proposal.md (approved)
+    - ontology/afiliaciones/afiliaciones.ttl, mappings/afiliaciones.r2rml.ttl
+    - Ontop healthy; counts equal the tables (100, 1456, 146716, 538 Argentine, 2 sources)
+    - layer/afiliaciones/sparql-notes.md, sql-notes.md, sql-enlaces-notes.md; term_sources in layer/dominios.yaml
     sessions:
     - started_on: '2026-10-22T19:04:13Z'
       ended_on: '2026-10-22T19:05:07Z'
@@ -88,7 +91,14 @@ steps:
       work: >-
         Read map-source and the semantic-layer proposal; inspect loaded fields and sample values; write the term
         proposal (4 classes plus ArgentineOrganization, 12 properties, IRIs) for the user's approval.
-    agent_hours: 0.03
+    - started_on: '2026-10-22T19:11:18Z'
+      ended_on: '2026-10-22T19:13:48Z'
+      pauses: []
+      work: >-
+        Record the approval; write the ontology and the R2RML mapping; Ontop failed twice (string concatenation
+        parse, then the reserved table name WORK) and started after quoting it; counts in Rastro equal the tables;
+        ontology-check passes in all domains; notes for the three approaches and term_sources.
+    agent_hours: 0.10
     human_hours: null
 interventions:
 - step: initialize
@@ -130,5 +140,9 @@ errors_caught:
   check: reviewer (GPT) on the loader
   failure_kind: manifest written by hand, not by the load; only the first ROR location kept; credentials interpolated
   fix: loader writes the manifest after commit, ror.location table, keyword connection parameters; process notes 11-13
+- step: mapping
+  check: Ontop startup with the new mapping
+  failure_kind: Ontop's SQL parser rejected the source query because WORK is a reserved word (table crossref.work)
+  fix: quote the table name in the mapping's source query; process note 15
 method_changes: []
 result: null
