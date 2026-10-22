@@ -555,3 +555,10 @@ Follow-ups before relying on the loaded layer: make source-manifest refresh an e
 for credentials. The first-location shortcut loses no Argentine organizations in this pinned release (538 checked),
 but discards locations and is not a general implementation of the approved location rule. See the review for the
 evidence and limits. Mapping/link/quality/runtime validation remains pending.
+
+## Decision — User (2026-10-22), recorded by Claude: link rules and the reading of cq2
+
+The user approved the identification rules in `../research-affiliations/link-proposal.md`, and the reading of cq2,
+in their words: «Rastro cuenta sus identificaciones aceptadas; la referencia, las del revisor». The cq2 proposal file
+is not edited (its approval stays bound to its fingerprint); this record clarifies how its wording is applied.
+

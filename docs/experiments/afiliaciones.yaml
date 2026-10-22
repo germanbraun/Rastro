@@ -101,7 +101,7 @@ steps:
     agent_hours: 0.10
     human_hours: null
   links:
-    status: proposed_waiting_for_approval
+    status: approved_being_implemented
     evidence:
     - docs/experiments/research-affiliations/link-proposal.md
     sessions:
@@ -134,6 +134,14 @@ interventions:
 - step: questions
   decision: The user approved the three proposals as written (cq1, cq2, cq3)
   reason: Business definitions belong to the user; approval records bind each proposal's SHA-256
+  kind: planned approval
+  minutes: null
+- step: links
+  decision: >-
+    The user approved the link rules (R0 key, R1 full name and R2 unique acronym, each with a second piece of
+    evidence; doubtful cases to a reviewed CSV) and the reading of cq2: Rastro counts its own accepted
+    identifications, the reference counts the reviewer's, and the evaluation compares them
+  reason: The rules and the reading of a business definition belong to the user
   kind: planned approval
   minutes: null
 - step: mapping

@@ -1,7 +1,6 @@
 # Link proposal: which Argentine organizations each affiliation names
 
-Step 4 of the method (`link-entities`), for cq1–cq3. Status: **proposed, for the user's approval before the linker is
-written**. Numbers measured on the 1,456 loaded mentions (one probe run, before any linker exists).
+Step 4 of the method (`link-entities`), for cq1–cq3. Status: **approved by the user on 2026-10-22**, including the reading of cq2 below. Numbers measured on the 1,456 loaded mentions (one probe run, before any linker exists).
 
 Entity: an **identification**, one row per affiliation mention and Argentine organization it names. Each row carries
 the rule in words, the evidence (the values from each source that justify it), its source, and its status.
