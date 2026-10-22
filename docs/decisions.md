@@ -848,3 +848,16 @@ evidence permits; `map-source` reuses it before proposing executable terms and m
 pending. This adds a reviewable handoff rather than a new approval gate, and does not retroactively change what the
 earlier inspection did. Record the skill change against the actual frozen method version if implementation has
 already begun; it is not evidence of unchanged-skill transfer.
+
+## 2026-10-22 — Research affiliations: a new domain for the transfer experiment
+
+- **What:** the domain `afiliaciones` identifies Argentine research organizations (ROR v2.15) in the affiliations of a
+  bounded set of 100 Crossref works from 2025, drawn with seed 20261022. Scope, questions and the reference plan were
+  approved by the user; the discussion is in `docs/experiments/countrycodes/discussion.md` and the log in
+  `docs/experiments/afiliaciones.yaml` (method frozen at `05428c5`).
+- **Load:** one loader, two schemas (`crossref`, `ror`). It loads the approved snapshots and checks their
+  fingerprints instead of downloading, because Crossref is a live API. 100 works and 1,456 affiliations (962 distinct
+  strings, 2 with a publisher-supplied ROR identifier); ROR complete: 146,716 organizations, 538 in Argentina.
+- **Not yet:** mapping, links, quality rules, evaluation and app. The named reference reviewer is pending.
+- **Process notes** for improving the skills are kept as the experiment runs, in
+  `docs/experiments/research-affiliations/process-notes.md`.

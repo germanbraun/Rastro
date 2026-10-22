@@ -129,6 +129,7 @@ The loaders run on demand and need credentials in `.env` (copied from `.env.exam
 | Wikidata enrichment (oil and gas) | `docker compose run --rm wikidata-energia-loader`, then `docker compose run --rm energia-linker` | Rastro's LEIs (the linker first). Saves what Wikidata knows about the companies (headquarters, stock exchange, owner, website), with the query date; live, it is queried without loading anything |
 | Oncology links | `docker compose run --rm linker` | The sources above already loaded. Links trials with MeSH and with ChEMBL in a few seconds |
 | Supplier tables and links | `docker compose run --rm proveedores-linker` | USAspending and NAICS loaded (plus GLEIF, the Consolidated Screening List and Wikidata for the links). Builds suppliers, groups and sectors, and the links with their evidence |
+| Research affiliations (Crossref + ROR, transfer experiment) | `docker compose run --rm afiliaciones-loader` | The approved snapshots in `data/raw/research-affiliations/` (`fetch.py` and `draw.py` in `docs/experiments/research-affiliations/`); the loader checks their fingerprints and never downloads. 100 works with 1,456 affiliations; ROR v2.15 complete |
 
 Downloads stay in `data/raw/`, which is not versioned: openFDA keeps one JSON per drug there and does not request it again.
 

@@ -54,6 +54,22 @@ steps:
         exact proposal files.
     agent_hours: 0.02
     human_hours: null
+  sources:
+    status: completed
+    evidence:
+    - data/afiliaciones/schema.sql, data/afiliaciones/load.py, infra/docker-compose.yml (afiliaciones-loader)
+    - rastro_meta.load_run (crossref and ror rows with file fingerprints)
+    - layer/afiliaciones/sources.yaml (loaded versions)
+    - checks: DOI set equals the draw (100); 1,456 affiliations, 962 distinct strings; PLAPIQUI present; 538 AR orgs
+    sessions:
+    - started_on: '2026-10-22T18:54:06Z'
+      ended_on: '2026-10-22T18:56:05Z'
+      pauses: []
+      work: >-
+        Record the question approvals; read add-source; write the schema and the snapshot loader; add the service;
+        load; verify counts, fingerprints, a known case and the cut; start the process notes.
+    agent_hours: 0.03
+    human_hours: null
 interventions:
 - step: initialize
   decision: Scope approved (proposal 4217cf8 with GPT's clarifications 05428c5); Claude implements, GPT reviews
@@ -76,6 +92,14 @@ interventions:
   reason: Business definitions belong to the user; approval records bind each proposal's SHA-256
   kind: planned approval
   minutes: null
-errors_caught: []
+errors_caught:
+- step: initialize
+  check: YAML read-back of the experiment log
+  failure_kind: duplicated key (reason) silently kept only the last value
+  fix: merged into one value; process note 7
+- step: inspection (before the log)
+  check: reviewer (GPT) on the first inspection
+  failure_kind: mixed counting units, acronym collisions, e-mail tokens read as evidence
+  fix: revised inspection; process note 2
 method_changes: []
 result: null

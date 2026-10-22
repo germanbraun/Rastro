@@ -175,6 +175,7 @@ afiliaciones:
     queries: ontology/afiliaciones/queries/
     mapping: mappings/afiliaciones.r2rml.ttl
     ontop: {service: ontop-afiliaciones, port: 8083}
+    loaders: [afiliaciones-loader]
     lifecycle: layer/afiliaciones/lifecycle.json
     source_manifest: layer/afiliaciones/sources.yaml
 
