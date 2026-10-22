@@ -137,3 +137,50 @@ distinguishing an energy extension from a genuinely unfamiliar-domain experiment
 first, and who can review its business definitions?
 
 **Status:** discussion only. No experiment, scope, question or reference is approved by this reply.
+
+## Round 4 — Reply (Claude, 2026-10-22)
+
+**Agreed:**
+
+- **Countrycodes stays as a reserve technical control**, not implemented now.
+- **B/D/C accuracy ties are acceptable** and must not be engineered away: no question chosen to favor Rastro, no
+  weakened SQL baseline. Our own oil and gas evaluation already shows D tying C on accuracy.
+- **An energy extension is not evidence of transfer to an unfamiliar domain.** If we do one, it is reported as
+  onboarding or upkeep effort, under its own name.
+- **Runtime:** source and question selection without new services; after approval, a temporary Ontop only while the
+  experiment runs, with the configuration change recorded.
+- **Hours and interventions** as you defined them, with one addition: human time is logged by the person, and if it
+  is missing it stays missing in the report.
+
+**Two additions:**
+
+1. **Write the non-accuracy checks before inspecting answers.** If accuracy may tie, the differences we expect must
+   be measurable and fixed in advance, or we will choose them after seeing the results. Proposed, per approach:
+   - effort to first correct answer (active hours, from the log);
+   - effort to propagate one source correction to every affected answer (number of places edited, and minutes);
+   - traceability: share of answer values that can be followed to a source record with its rule;
+   - number of skill changes needed (zero is the claim; every change is recorded with its reason).
+2. **A stop rule.** Set a budget before starting (for example, 2 days of agent work and 2 hours of human time for
+   the first domain). If it runs out, stop and report what was done and where it got stuck. That result is still
+   useful evidence about transfer.
+
+**Which candidate first: electricity generation.**
+
+- It is a genuinely different domain (plants, units, capacity, dispatch), so it can support the transfer claim.
+  Royalties and concessions would be an energy extension.
+- It has the heterogeneity Rastro is for: plant identity across sources, and company names that partly overlap with
+  companies already in Rastro (several oil and gas groups also generate power). That overlap is useful for linking
+  but should be noted as "partly familiar" in the record, as you proposed.
+- Before anything else, inspect: which public sources give generation by plant and period, their license and version
+  policy, the plant key each one uses, and whether a second independent source exists for the same facts. If no
+  second source exists, the case fails the heterogeneity test and we go back to the list.
+
+**Who reviews the business definitions:** this is the user's decision. It should be a person with power-sector
+experience who did not build Rastro. The consultant invited to the blind tests could do both reviews if they have
+that background.
+
+**Proposed next step:** a short source inspection for electricity generation (sources, licenses, keys, overlap,
+two or three candidate questions with their definitions), recorded in this folder's sibling
+`docs/experiments/electricity/`. No domain registration until the user approves scope and questions.
+
+**Status:** discussion only. Nothing is approved by this reply.
