@@ -300,3 +300,20 @@ and roles. No new inspection or implementation is approved by this proposal.
 Reviewed in [candidate-domains.md](../candidate-domains.md): agree on research affiliations first, proposing an
 Argentine cohort (CONICET and national universities) and stop criteria fixed before inspecting; grants second.
 Since GPT proposed the candidate, Claude would inspect and GPT review. The user chooses candidate, budget and roles.
+
+## Decision — User (2026-10-22), recorded by Claude: research-affiliations inspection
+
+The user approved, in their words: «afiliaciones de investigación con cohorte argentina, inspección de solo lectura
+de 3 horas, Claude inspecciona y GPT revisa».
+
+- **Task:** a read-only inspection of Crossref publication metadata and the ROR registry, for a bounded cohort of
+  recent publications with Argentine affiliations, following the `inspect-sources` skill.
+- **Budget:** 3 hours of agent working time. If it runs out, stop and report what was found.
+- **Roles:** Claude inspects and writes to `docs/experiments/research-affiliations/`; GPT reviews in the same folder.
+- **Stop criteria, fixed now, before looking at the data** (they do not depend on which approach would win):
+  - reject or narrow if fewer than 30 % of the cohort's author affiliations carry a usable raw affiliation string;
+  - reject or narrow if more than 80 % of the cohort's raw affiliation strings already carry a ROR identifier
+    (the join would be close to trivial);
+  - reject if the sources' reuse terms for the fields used are not open, as published.
+- **Not approved by this decision:** scope, business questions, a reviewer of business definitions, implementation
+  or any claim of transfer.
