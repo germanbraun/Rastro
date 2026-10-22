@@ -16,3 +16,20 @@ measured_session_hours: 0.019444444444444445
 human_hours: null
 untimed_preliminary_work: true
 raw_snapshot_verification: not_performed_inputs_absent
+
+revision_review:
+  reviewed_commit: 35fb6a9
+  status: inspection_evidence_accepted_for_scope_decision
+  time_basis: >-
+    Measured verification interval; preceding pull, reading and the start of the
+    fetch were not timed and are excluded. Final bookkeeping is excluded.
+  sessions:
+    - started_on: '2026-10-22T18:18:40Z'
+      ended_on: '2026-10-22T18:21:43Z'
+      elapsed_seconds: 183
+      pauses: []
+      work: Verify new capture, ROR checksum and profile comparison; write revision review
+  measured_session_hours: 0.050833333333333335
+  untimed_preliminary_work: true
+  human_hours: null
+  raw_snapshot_verification: new_snapshot_executed_as_authorized_not_original_recovery

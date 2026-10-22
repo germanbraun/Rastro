@@ -73,3 +73,57 @@ implementation is approved by this review.
 Detailed verification was timed from 2026-10-22T18:09:47Z; its end is recorded in `review-time.yaml`. Preliminary
 pulling/reading before that interval was not timed and is excluded, rather than assigned an invented duration.
 No human time is supplied and no other chat's time is counted.
+
+## Revision review — Codex/GPT, 2026-10-22
+
+Reviewed `35fb6a9` and executed `fetch.py` under the user's recorded decision to verify a **new** snapshot.
+The original review above describes `a87a242`; the findings below supersede its outstanding inspection corrections.
+
+**Assessment: the substantive inspection revisions are addressed. Research affiliations is a supported candidate
+for the user's scope decision. This accepts the inspection evidence, not the proposed business definitions,
+questions, links, implementation or any claim of transfer.**
+
+### Independent execution
+
+- ROR v2.15 was downloaded by the script. Its MD5 is `5522990688eb1b94811a8145e131b41e`, checked independently
+  against the file metadata returned by `https://zenodo.org/api/records/23500708`. Its SHA-256 is
+  `7a7bf58d5ac18436ed98daf5da906913761d54869edf86d405e51966609dd133`, matching Claude's archive.
+- Crossref requests ran from 2026-10-22T18:20:03Z to 18:20:25Z. The page sizes were
+  **1,000, 1,000, 1,000, 1,000, 1,000, 39, 0**: 5,039 retrieved and 5,039 reported, with empty-page termination.
+  Query, request count, item count and reported total match Claude's committed ledger summary. Claude's full page
+  ledger is not available here, so its individual page sizes were not independently compared.
+- The reviewer's capture SHA-256 is `02c8fffa28b34d8f5a36e39c5e34c145ed957724fcd985e1791a9d3f87d9795f`;
+  Claude's revised capture is `9d328bbe41ad3ba27092cf08532a70007e38f5ec4aca4cb389d7c8ed6428e526`.
+  They differ. Both contain a retrieval timestamp, so differing bytes alone do not demonstrate changed works.
+  The original bytes were not restored, and record-by-record identity between captures is not asserted.
+- Ran the revised profiler with `OUT` redirected to ignored `reviewer-source-profile.json`, preserving Claude's
+  committed profile. **All four structural sections match exactly:** Crossref counts, gate measures, ROR profile
+  and heuristic probe, including its retained examples. Verified the new capture against its ledger hash and
+  summed page counts. Both scripts pass Ruff.
+
+The new ledger and reviewer profile, with comparison results and artifact fingerprints, are retained in
+[`review-verification.json`](review-verification.json). Raw data remains outside Git. A redundant alternate ROR
+download timed out; it was not used as evidence. The script's original ROR download succeeded.
+
+### Status of the six review findings
+
+1. Raw and normalized string units are distinguished consistently: 9,561 versus 9,062.
+2. Acronyms retain sets of organizations, e-mails/URLs are removed for the probe, and outcomes are expressly
+   heuristic. Counts now reproduce as 13 whole-name matches, 4,499 single hits, 2,630 multiple hits and 2,419 no hits.
+3. The report now describes suspected registry gaps and leaves confirmation to independent organization evidence.
+   Reproducing the structural profile does not itself validate those organization-specific absence claims.
+4. The pinned ROR artifact and Crossref request ledger support the new-capture procedure the user selected.
+   Exact recovery of the earlier captures is not claimed or required by that decision.
+5. Nonblank text and raw-string identifier measures now have explicit denominators, including mixed-ID occurrences.
+6. Exact organization totals are restricted to a fully adjudicated bounded set; sampling is described as an estimate
+   requiring a predeclared design and uncertainty, rather than proof of an unrestricted total.
+
+Two small reproducibility improvements remain before treating the scripts as a one-command reusable workflow:
+`fetch.py` does not download the two documentation files required by `profile.py` (I fetched them separately),
+and `profile.py` summarizes ledger claims without enforcing their hash/count agreement (I verified that separately).
+Document/fetch those prerequisites and add those consistency checks before reusing this as a validation gate.
+They do not invalidate this checked capture or establish a need to reject the domain.
+
+**Next:** the user decides the bounded record set, named business reviewer, geography and parent/child counting
+rules, independent reference plan, non-accuracy checks and implementation budget. No domain or implementation
+has been started by this review.
