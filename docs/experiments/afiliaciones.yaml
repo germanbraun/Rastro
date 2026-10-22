@@ -101,9 +101,13 @@ steps:
     agent_hours: 0.10
     human_hours: null
   links:
-    status: approved_being_implemented
+    status: implemented_waiting_for_gpt_validation_of_corrections
     evidence:
-    - docs/experiments/research-affiliations/link-proposal.md
+    - docs/experiments/research-affiliations/link-proposal.md (approved)
+    - linking/afiliaciones/links.sql, link.py, correcciones.csv; infra/docker-compose.yml (afiliaciones-linker)
+    - afiliaciones.identificacion 539 (R0 2, R1 329, R2 201, accepted corrections 7); afiliaciones.dudosa 91
+      (84 rejected, 7 accepted, all AI-reviewed and pending GPT validation); afiliaciones.sin_identificar 42
+    - no identification without evidence; 316 of 358 Argentina-text mentions have one
     sessions:
     - started_on: '2026-10-22T19:13:48Z'
       ended_on: '2026-10-22T19:15:13Z'
@@ -112,7 +116,15 @@ steps:
         Read link-entities; measure candidate rules on the loaded mentions (key, full name, unique acronym, each with a
         second piece of evidence); find the doubtful cases (Brazilian homonym, UK acronym); write the link proposal
         with an open question on cq2's reviewer wording.
-    agent_hours: 0.03
+    - started_on: '2026-10-22T19:19:25Z'
+      ended_on: '2026-10-22T19:22:22Z'
+      pauses: []
+      work: >-
+        Record the approval; write the linker (schema, rules, doubtful cases, unidentified mentions); run it; read the
+        unidentified list by hand and find a normalization bug (non-ASCII dashes glued words); fix and rerun (466 to
+        532 rule identifications, 66 to 42 unidentified); review the 91 doubtful cases into the corrections CSV;
+        rerun. Stopped here for GPT to validate the corrections, at the user's request.
+    agent_hours: 0.08
     human_hours: null
 interventions:
 - step: initialize
@@ -166,5 +178,11 @@ errors_caught:
   check: Ontop startup with the new mapping
   failure_kind: Ontop's SQL parser rejected the source query because WORK is a reserved word (table crossref.work)
   fix: quote the table name in the mapping's source query; process note 15
+- step: links
+  check: reading the unidentified Argentina-text mentions by hand
+  failure_kind: >-
+    the normalization dropped non-ASCII dashes (— and ‐) while removing accents, gluing words ("airesconicet"), so
+    rules missed CONICET and UBA in 24 mentions
+  fix: drop only combining accents and turn every other symbol into a space; process note 20
 method_changes: []
 result: null

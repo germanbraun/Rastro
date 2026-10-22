@@ -180,6 +180,8 @@ afiliaciones:
     mapping: mappings/afiliaciones.r2rml.ttl
     ontop: {service: ontop-afiliaciones, port: 8083}
     loaders: [afiliaciones-loader]
+    linker: {service: afiliaciones-linker, folder: linking/afiliaciones/,
+             corrections: [linking/afiliaciones/correcciones.csv]}
     lifecycle: layer/afiliaciones/lifecycle.json
     source_manifest: layer/afiliaciones/sources.yaml
 

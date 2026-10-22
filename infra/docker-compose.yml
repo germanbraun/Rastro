@@ -336,6 +336,20 @@ services:
     command: ["python", "-u", "/data/lab-gas/load.py"]
 
   # Enriquecimiento con Wikidata, materializado (data/wikidata-energia/): corre después de energia-linker
+  afiliaciones-linker:          # research affiliations: identifications with rule and evidence
+    build: ./loaders
+    profiles: ["load"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PG_DB: ${PG_DB:-rastro}
+      PG_USER: ${PG_USER:-rastro}
+      PG_PASSWORD: ${PG_PASSWORD:-rastro}
+    volumes:
+      - ../linking/afiliaciones:/linking/afiliaciones:ro
+    command: ["python", "/linking/afiliaciones/link.py"]
+
   afiliaciones-loader:          # research affiliations: loads the approved snapshots (no download)
     build: ./loaders
     profiles: ["load"]
