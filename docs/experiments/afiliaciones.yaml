@@ -78,7 +78,7 @@ steps:
     agent_hours: 0.05
     human_hours: null
   mapping:
-    status: proposed_waiting_for_approval
+    status: approved_being_implemented
     evidence:
     - docs/experiments/research-affiliations/mapping-proposal.md
     sessions:
@@ -110,6 +110,11 @@ interventions:
 - step: questions
   decision: The user approved the three proposals as written (cq1, cq2, cq3)
   reason: Business definitions belong to the user; approval records bind each proposal's SHA-256
+  kind: planned approval
+  minutes: null
+- step: mapping
+  decision: The user approved the dictionary as shown (5 classes, 11 properties) after asking to see the Turtle draft
+  reason: New terms are business-facing definitions; the user asked to see the actual dictionary before approving
   kind: planned approval
   minutes: null
 errors_caught:

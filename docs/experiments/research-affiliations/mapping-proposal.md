@@ -1,8 +1,7 @@
 # Dictionary and mapping proposal: research affiliations
 
 Step 2 and 3 of the method (`map-source`), for the approved questions cq1–cq3. Starts from
-[semantic-layer-proposal.md](semantic-layer-proposal.md); differences are listed at the end. Status: **proposed, for
-the user's approval before the mapping is written**. The identification links (mention → organization, with rule and
+[semantic-layer-proposal.md](semantic-layer-proposal.md); differences are listed at the end. Status: **approved by the user on 2026-10-22**, after seeing the Turtle draft of the dictionary. The identification links (mention → organization, with rule and
 evidence) come next, with `link-entities`; they are not part of this proposal.
 
 Prefix `afiliaciones:` (`https://w3id.org/rastro/afiliaciones#`). Names in English, labels in Spanish.
