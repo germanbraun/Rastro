@@ -1,0 +1,3 @@
+# The predictions of the current Rastro Lab model run: the ones that inherit what fails a quality rule
+# (ontology/calidad.py; the energia: and prov: prefixes are added by the script)
+SELECT ?p WHERE { ?r a energia:ModelRun ; energia:current true . ?p prov:wasGeneratedBy ?r }
