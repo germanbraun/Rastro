@@ -16,4 +16,13 @@ Prefix: `PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>`. Ontop do
 - **Argentine organization** (`afiliaciones:ArgentineOrganization`): an organization with at least one ROR location in
   Argentina (538). The word "Argentina" in an affiliation text never decides it.
 - **Parents never add credit:** a publication counts for an organization only if its text names it.
-- Which organizations a mention names (identifications with their rule and evidence) is not mapped yet.
+- **Identification** (`afiliaciones:Identification`): that a mention (`afiliaciones:ofMention`) names an Argentine
+  organization (`afiliaciones:identifies`), with `afiliaciones:rule`, `afiliaciones:sourceText` (the evidence) and
+  `afiliaciones:linkStatus` («rule» or «correction-accepted»). **These are what Rastro counts.** A mention can have
+  several identifications, or none.
+- **Doubtful candidate** (`afiliaciones:DoubtfulCandidate`): an organization a mention might name without enough
+  evidence (`afiliaciones:candidate`, reason in `afiliaciones:sourceText`), with `afiliaciones:reviewDecision`
+  («accept» or «reject»). Accepted ones are already identifications; doubtful candidates are never counted.
+- **Possible gap** (`afiliaciones:PossibleGap`): a segment of a mention's text (`afiliaciones:segmentText`) that names
+  an institution no Argentine ROR name covers. A candidate, not proof that ROR lacks it; it can appear in mentions
+  that also have identifications.

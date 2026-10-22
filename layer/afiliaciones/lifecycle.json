@@ -1,7 +1,7 @@
 {
   "questions": {
     "cq1": {
-      "state": "approved",
+      "state": "validated",
       "proposal": {
         "path": "layer/afiliaciones/requirements/cq1.proposal.yaml",
         "sha256": "269926871805bb83a99560424ca0a54cc15c7c609c29c02d10d1be74f177e9b4"
@@ -9,10 +9,35 @@
       "approval": {
         "path": "layer/afiliaciones/requirements/cq1.approval.yaml",
         "sha256": "5d971b65b7d510de46fc9ee932fa9a717d62b36ed380e755cd3e4b5b082124f1"
+      },
+      "query": {
+        "path": "ontology/afiliaciones/queries/cq1.rq",
+        "sha256": "31c72907250015f447c70ef6aff104d3c3f16293faedca08b550734192dec7d4"
+      },
+      "context": [
+        {
+          "path": "ontology/afiliaciones/afiliaciones.ttl",
+          "sha256": "b886669b4dd45e72c37680675ba85f140e3c01e7cf02ff6aa6d96cda61b4f4db"
+        },
+        {
+          "path": "mappings/afiliaciones.r2rml.ttl",
+          "sha256": "2cd901ca1b6bd008b0e59751680ee44d36b378adc123bb7f63c4d01649536939"
+        },
+        {
+          "path": "layer/afiliaciones/sources.yaml",
+          "sha256": "b7931a0b4eaed8833d9b5e530aa225187725a3fb9ac306101ab7d9747c4abe16"
+        }
+      ],
+      "validation": {
+        "expectations": {
+          "path": "layer/afiliaciones/query-checks.yaml",
+          "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
+        },
+        "date": "2026-10-22"
       }
     },
     "cq2": {
-      "state": "approved",
+      "state": "validated",
       "proposal": {
         "path": "layer/afiliaciones/requirements/cq2.proposal.yaml",
         "sha256": "5cdf2777d6aaa5b2deacd19abdd289e5a848dea46c1974c8bfe2470df9d28809"
@@ -20,10 +45,35 @@
       "approval": {
         "path": "layer/afiliaciones/requirements/cq2.approval.yaml",
         "sha256": "8892f1e898251a7bb7add4785abc55e3e16845c5273b75436e16d1ef5fc379f8"
+      },
+      "query": {
+        "path": "ontology/afiliaciones/queries/cq2.rq",
+        "sha256": "dbc69b0a6be8f02e1571b28315f35511633a97d8120e5aa562b34558d73d59fa"
+      },
+      "context": [
+        {
+          "path": "ontology/afiliaciones/afiliaciones.ttl",
+          "sha256": "b886669b4dd45e72c37680675ba85f140e3c01e7cf02ff6aa6d96cda61b4f4db"
+        },
+        {
+          "path": "mappings/afiliaciones.r2rml.ttl",
+          "sha256": "2cd901ca1b6bd008b0e59751680ee44d36b378adc123bb7f63c4d01649536939"
+        },
+        {
+          "path": "layer/afiliaciones/sources.yaml",
+          "sha256": "b7931a0b4eaed8833d9b5e530aa225187725a3fb9ac306101ab7d9747c4abe16"
+        }
+      ],
+      "validation": {
+        "expectations": {
+          "path": "layer/afiliaciones/query-checks.yaml",
+          "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
+        },
+        "date": "2026-10-22"
       }
     },
     "cq3": {
-      "state": "approved",
+      "state": "validated",
       "proposal": {
         "path": "layer/afiliaciones/requirements/cq3.proposal.yaml",
         "sha256": "47b18b87e1cdf8ac1a00d140ac1c0a56154d7cf583bc9f8d7e7aede5257223fc"
@@ -31,6 +81,31 @@
       "approval": {
         "path": "layer/afiliaciones/requirements/cq3.approval.yaml",
         "sha256": "f0f3bcf1622aae1497c06542554ed2190a3417ff5f71e73019073b77f0e5d91a"
+      },
+      "query": {
+        "path": "ontology/afiliaciones/queries/cq3.rq",
+        "sha256": "2312552cb15c0e4735f9f6d14957662343b7b6eab501ccd71fc50f54f1d1984e"
+      },
+      "context": [
+        {
+          "path": "ontology/afiliaciones/afiliaciones.ttl",
+          "sha256": "b886669b4dd45e72c37680675ba85f140e3c01e7cf02ff6aa6d96cda61b4f4db"
+        },
+        {
+          "path": "mappings/afiliaciones.r2rml.ttl",
+          "sha256": "2cd901ca1b6bd008b0e59751680ee44d36b378adc123bb7f63c4d01649536939"
+        },
+        {
+          "path": "layer/afiliaciones/sources.yaml",
+          "sha256": "b7931a0b4eaed8833d9b5e530aa225187725a3fb9ac306101ab7d9747c4abe16"
+        }
+      ],
+      "validation": {
+        "expectations": {
+          "path": "layer/afiliaciones/query-checks.yaml",
+          "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
+        },
+        "date": "2026-10-22"
       }
     }
   },
@@ -113,6 +188,66 @@
       "artifact": {
         "path": "layer/afiliaciones/requirements/cq2.approval.yaml",
         "sha256": "8892f1e898251a7bb7add4785abc55e3e16845c5273b75436e16d1ef5fc379f8"
+      }
+    },
+    {
+      "question": "cq1",
+      "from": "approved",
+      "to": "implemented",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "ontology/afiliaciones/queries/cq1.rq",
+        "sha256": "31c72907250015f447c70ef6aff104d3c3f16293faedca08b550734192dec7d4"
+      }
+    },
+    {
+      "question": "cq2",
+      "from": "approved",
+      "to": "implemented",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "ontology/afiliaciones/queries/cq2.rq",
+        "sha256": "dbc69b0a6be8f02e1571b28315f35511633a97d8120e5aa562b34558d73d59fa"
+      }
+    },
+    {
+      "question": "cq3",
+      "from": "approved",
+      "to": "implemented",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "ontology/afiliaciones/queries/cq3.rq",
+        "sha256": "2312552cb15c0e4735f9f6d14957662343b7b6eab501ccd71fc50f54f1d1984e"
+      }
+    },
+    {
+      "question": "cq1",
+      "from": "implemented",
+      "to": "validated",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/query-checks.yaml",
+        "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
+      }
+    },
+    {
+      "question": "cq2",
+      "from": "implemented",
+      "to": "validated",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/query-checks.yaml",
+        "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
+      }
+    },
+    {
+      "question": "cq3",
+      "from": "implemented",
+      "to": "validated",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/query-checks.yaml",
+        "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
       }
     }
   ]

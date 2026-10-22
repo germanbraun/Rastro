@@ -16,4 +16,13 @@
 - **Argentine organization:** an organization with at least one row in `ror.location` with `country_code = 'AR'`
   (538). The word "Argentina" in an affiliation text never decides it.
 - **Parents never add credit:** a work counts for an organization only if its text names it.
-- Which organizations an affiliation names (Rastro's identifications, with their rule and evidence) is not built yet.
+- `afiliaciones.identificacion` (`doi`, `author_position`, `affiliation_position`, `organization`, `rule`, `evidence`,
+  `status`): that a mention names an Argentine organization (`organization` is its ROR identifier), with the rule and
+  the evidence; `status` is `rule` or `correction-accepted`. **These are what Rastro counts.** A mention can have
+  several rows, or none.
+- `afiliaciones.dudosa` (`doi`, `author_position`, `affiliation_position`, `organization`, `reason`, `decision`,
+  `decision_reason`): an organization a mention might name without enough evidence, with the reviewed `decision`
+  (`accept` or `reject`). Accepted ones are already in `identificacion`; doubtful candidates are never counted.
+- `afiliaciones.posible_hueco` (`doi`, `author_position`, `affiliation_position`, `segment`, `reason`): a segment of a
+  mention's text that names an institution no Argentine ROR name covers. A candidate, not proof that ROR lacks it;
+  it can appear in mentions that also have identifications.

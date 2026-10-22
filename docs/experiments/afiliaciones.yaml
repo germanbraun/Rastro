@@ -164,6 +164,11 @@ interventions:
   reason: The rules and the reading of a business definition belong to the user
   kind: planned approval
   minutes: null
+- step: links
+  decision: The user approved the identification, doubtful-candidate and possible-gap terms as shown in Turtle
+  reason: New terms are business-facing definitions
+  kind: planned approval
+  minutes: null
 - step: mapping
   decision: The user approved the dictionary as shown (5 classes, 11 properties) after asking to see the Turtle draft
   reason: New terms are business-facing definitions; the user asked to see the actual dictionary before approving

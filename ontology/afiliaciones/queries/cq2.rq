@@ -1,0 +1,12 @@
+# 2. ¿Cuántas de las 100 publicaciones nombran a cada organización argentina, contando cada publicación una sola vez por organización y sin sumar a las organizaciones madre?
+# Only Rastro's accepted identifications count (rules and accepted corrections); doubtful candidates never do.
+PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>
+SELECT ?organization (MIN(?orgName) AS ?organizationName) (COUNT(DISTINCT ?publication) AS ?publications)
+WHERE {
+  ?identification a afiliaciones:Identification ; afiliaciones:identifies ?organization ;
+                  afiliaciones:ofMention ?mention .
+  ?mention afiliaciones:inPublication ?publication .
+  ?organization afiliaciones:name ?orgName .
+}
+GROUP BY ?organization
+ORDER BY DESC(?publications) ?organization

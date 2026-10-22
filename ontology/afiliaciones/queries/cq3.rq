@@ -1,0 +1,25 @@
+# 3. ¿Qué afiliaciones nombran una organización argentina que ROR podría no tener registrada, o la nombran de una forma que ROR no registra?
+# Candidates, not conclusions: segments naming an institution that no Argentine ROR name covers (also inside mentions
+# that have identifications), and mentions that mention Argentina but have no identification.
+PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>
+SELECT ?doi ?authorPosition ?affiliationPosition ?affiliation ?candidate ?kind
+WHERE {
+  {
+    ?mention a afiliaciones:AffiliationMention ; afiliaciones:inPublication ?publication ;
+             afiliaciones:affiliationText ?affiliation ;
+             afiliaciones:authorPosition ?authorPosition ; afiliaciones:affiliationPosition ?affiliationPosition .
+    ?gap a afiliaciones:PossibleGap ; afiliaciones:ofMention ?mention ; afiliaciones:segmentText ?candidate .
+    BIND ("tramo que nombra una institución sin nombre en ROR" AS ?kind)
+  } UNION {
+    ?mention a afiliaciones:AffiliationMention ; afiliaciones:inPublication ?publication ;
+             afiliaciones:affiliationText ?affiliation ;
+             afiliaciones:authorPosition ?authorPosition ; afiliaciones:affiliationPosition ?affiliationPosition .
+    FILTER (CONTAINS(LCASE(?affiliation), "argentin"))
+    OPTIONAL { ?identification a afiliaciones:Identification ; afiliaciones:ofMention ?mention }
+    FILTER (!BOUND(?identification))
+    BIND (?affiliation AS ?candidate)
+    BIND ("menciona Argentina sin organización identificada" AS ?kind)
+  }
+  ?publication afiliaciones:doi ?doi .
+}
+ORDER BY ?doi ?authorPosition ?affiliationPosition ?candidate

@@ -173,6 +173,10 @@ afiliaciones:
     crossref: [Publication, doi, AffiliationMention, inPublication, affiliationText, authorPosition,
                affiliationPosition, suppliedOrganization]
     ror: [Organization, ArgentineOrganization, name, acronym, status, country, hasParent]
+  link_sources:
+    crossref: [Identification, ofMention, identifies, rule, sourceText, linkStatus, DoubtfulCandidate, candidate,
+               reviewDecision, PossibleGap, segmentText]
+    ror: [Identification, identifies, DoubtfulCandidate, candidate]
   # A new domain experiment (research affiliations). Keys for pieces not built yet are left out.
   method:
     questions: ontology/afiliaciones/competency-questions.md

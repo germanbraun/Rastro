@@ -82,3 +82,53 @@ afiliaciones:hasParent a owl:ObjectProperty ;
     rdfs:range afiliaciones:Organization ;
     rdfs:label "depende de"@es ;
     rdfs:comment "La relación «parent» de ROR. Se muestra para explicar; nunca suma publicaciones a la organización madre."@es .
+
+# --- Identificaciones (enlaces con regla y evidencia), approved 2026-10-22 ---
+
+afiliaciones:Identification a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Identificación"@es ;
+    rdfs:comment "Que una mención de afiliación nombra a una organización argentina, según una regla aprobada o una corrección aceptada, con su evidencia. Es lo que Rastro cuenta en sus respuestas."@es .
+
+afiliaciones:ofMention a owl:ObjectProperty ;
+    rdfs:range afiliaciones:AffiliationMention ;
+    rdfs:label "de la mención"@es .                    # sin dominio: la usan las tres clases de esta sección
+
+afiliaciones:identifies a owl:ObjectProperty ;
+    rdfs:domain afiliaciones:Identification ; rdfs:range afiliaciones:ArgentineOrganization ;
+    rdfs:label "identifica a"@es .
+
+afiliaciones:rule a owl:DatatypeProperty ;
+    rdfs:label "regla"@es .                            # sin dominio: identificaciones y candidatos
+
+afiliaciones:sourceText a owl:DatatypeProperty ;
+    rdfs:label "evidencia"@es ;
+    rdfs:comment "Los valores de cada fuente que justifican el enlace, o el motivo del candidato."@es .
+
+afiliaciones:linkStatus a owl:DatatypeProperty ;
+    rdfs:domain afiliaciones:Identification ;
+    rdfs:label "estado del enlace"@es ;
+    rdfs:comment "«rule» (por una regla) o «correction-accepted» (corrección revisada y aceptada)."@es .
+
+# --- Lo que no se cuenta, pero queda a la vista ---------------------------
+
+afiliaciones:DoubtfulCandidate a owl:Class ;
+    rdfs:label "Candidato dudoso"@es ;
+    rdfs:comment "Una organización que una mención podría nombrar, sin evidencia suficiente para una regla; queda con la decisión revisada (aceptada o rechazada) y su motivo."@es .
+
+afiliaciones:candidate a owl:ObjectProperty ;
+    rdfs:domain afiliaciones:DoubtfulCandidate ; rdfs:range afiliaciones:ArgentineOrganization ;
+    rdfs:label "organización candidata"@es .
+
+afiliaciones:reviewDecision a owl:DatatypeProperty ;
+    rdfs:domain afiliaciones:DoubtfulCandidate ;
+    rdfs:label "decisión revisada"@es ;
+    rdfs:comment "«accept» o «reject», revisada por un asistente de IA y validada por otro; a confirmar por una persona."@es .
+
+afiliaciones:PossibleGap a owl:Class ;
+    rdfs:label "Posible hueco en ROR"@es ;
+    rdfs:comment "Un tramo de una afiliación que nombra una institución y que ningún nombre de una organización argentina en ROR cubre. Es un candidato: que una búsqueda no encuentre nada no prueba que ROR no la tenga."@es .
+
+afiliaciones:segmentText a owl:DatatypeProperty ;
+    rdfs:domain afiliaciones:PossibleGap ;
+    rdfs:label "tramo del texto"@es .

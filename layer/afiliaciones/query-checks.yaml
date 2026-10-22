@@ -1,0 +1,19 @@
+# Executable checks for the afiliaciones competency queries (python layer/method.py verify afiliaciones ...).
+# These are invariants from the approved definitions and the inspection, not accuracy: the answers are compared with
+# the blind reviewer's reference later (evaluate). Never copy a query's output here to make it pass.
+cq1.rq:
+  query_sha256: 31c72907250015f447c70ef6aff104d3c3f16293faedca08b550734192dec7d4
+  columns: [doi, authorPosition, affiliationPosition, affiliation, organization, organizationName, rule, evidence, disposition]
+  # Approved scope: every affiliation of the 100 works appears (1,456 mentions loaded), identified or not.
+  min_rows: 1456
+cq2.rq:
+  query_sha256: dbc69b0a6be8f02e1571b28315f35511633a97d8120e5aa562b34558d73d59fa
+  columns: [organization, organizationName, publications]
+  # Only Argentine organizations can be counted (538 in ROR v2.15), and the set has Argentine affiliations.
+  min_rows: 1
+  max_rows: 538
+cq3.rq:
+  query_sha256: 2312552cb15c0e4735f9f6d14957662343b7b6eab501ccd71fc50f54f1d1984e
+  columns: [doi, authorPosition, affiliationPosition, affiliation, candidate, kind]
+  # The inspection found at least one suspected gap in the cohort (Instituto Sabato), independently of the linker.
+  min_rows: 1

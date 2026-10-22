@@ -1,0 +1,21 @@
+# 1. ¿Qué organizaciones argentinas nombra cada afiliación de las 100 publicaciones, con qué regla y qué evidencia, y qué afiliaciones no nombran ninguna organización identificada?
+# One row per mention and identified organization; a mention with no identification appears once, with its disposition.
+PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>
+SELECT ?doi ?authorPosition ?affiliationPosition ?affiliation ?organization (MIN(?orgName) AS ?organizationName)
+       ?rule ?evidence ?disposition
+WHERE {
+  ?mention a afiliaciones:AffiliationMention ; afiliaciones:inPublication ?publication ;
+           afiliaciones:affiliationText ?affiliation ;
+           afiliaciones:authorPosition ?authorPosition ; afiliaciones:affiliationPosition ?affiliationPosition .
+  ?publication afiliaciones:doi ?doi .
+  OPTIONAL {
+    ?identification a afiliaciones:Identification ; afiliaciones:ofMention ?mention ;
+                    afiliaciones:identifies ?organization ; afiliaciones:rule ?rule ; afiliaciones:sourceText ?evidence .
+    ?organization afiliaciones:name ?orgName .
+  }
+  BIND (IF(BOUND(?organization), "identificada",
+           IF(CONTAINS(LCASE(?affiliation), "argentin"), "menciona Argentina sin organización identificada",
+              "sin organización argentina identificada")) AS ?disposition)
+}
+GROUP BY ?doi ?authorPosition ?affiliationPosition ?affiliation ?organization ?rule ?evidence ?disposition
+ORDER BY ?doi ?authorPosition ?affiliationPosition ?organization
