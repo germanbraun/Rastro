@@ -23,6 +23,14 @@ CREATE TABLE afiliaciones.dudosa (
     PRIMARY KEY (doi, author_position, affiliation_position, organization)
 );
 
+-- Possible registry gaps (cq3), also inside mentions that already have identifications: a segment of the text that
+-- names an institution (Instituto, Laboratorio, Centro, Hospital...) and that no Argentine ROR name covers.
+-- Candidates for the reviewer, not conclusions: a search that finds nothing is not proof that ROR lacks it.
+CREATE TABLE afiliaciones.posible_hueco (
+    doi text, author_position int, affiliation_position int, segment text, reason text,
+    PRIMARY KEY (doi, author_position, affiliation_position, segment)
+);
+
 -- Mentions that contain "Argentina" and have no accepted identification: unresolved for cq1, candidates for cq3.
 CREATE TABLE afiliaciones.sin_identificar (
     doi text, author_position int, affiliation_position int, text text, reason text,

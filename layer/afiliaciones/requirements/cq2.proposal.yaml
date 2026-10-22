@@ -15,7 +15,10 @@ definitions:
     no automatic credit to parents: a publication naming only PLAPIQUI does not count for CONICET or Universidad
     Nacional del Sur unless its text names them; ROR relationships are shown, not added
   Argentine organization: as in question 1 (ROR location in Argentina)
-  confirmed: only identifications accepted by the reviewer count; proposed or rejected ones never do
+  confirmed: >-
+    Rastro's answer counts its own accepted identifications (by an approved rule, or an accepted correction);
+    doubtful or rejected candidates never count. The reference counts the identifications accepted by the blind
+    reference reviewer, and the evaluation compares the two (approved by the user on 2026-10-22, link decision).
 sources: [crossref, ror]
 ambiguous_words:
   - "nombran": inherits question 1's rules for acronyms and regional centres

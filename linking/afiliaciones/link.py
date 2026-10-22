@@ -6,11 +6,14 @@ R1: a ROR name, label or alias of an Argentine organization (12 characters or mo
 R2: an acronym used by only one Argentine organization appears as a separate word, with the same second evidence.
 Anything else that looks like a candidate goes to afiliaciones.dudosa; reviewed decisions come from
 linking/afiliaciones/correcciones.csv. Normalization is one function, used by every rule.
+For cq3, segments that name an institution and that no Argentine ROR name covers go to afiliaciones.posible_hueco,
+in every mention with an Argentine context (it mentions Argentina or has an identification), as candidates.
 
 Run with: docker compose run --rm afiliaciones-linker
 """
 
 import csv
+import html
 import os
 import re
 import unicodedata
@@ -21,11 +24,13 @@ import psycopg
 
 HERE = Path(__file__).parent
 CONTACT = re.compile(r"\S+@\S+|https?://\S+|www\.\S+")   # e-mails and web addresses are not evidence
+INSTITUTION = re.compile(r"^(instituto|institute|laboratorio|laboratory|centro|center|centre|hospital|fundacion|"
+                         r"foundation|unidad|unit|observatorio|observatory|museo|museum|estacion|station)\b")
 
 
 def norm(text):
     """Lowercase, no accents, no punctuation, single spaces; contact data removed. The only normalization."""
-    text = CONTACT.sub(" ", text or "")
+    text = CONTACT.sub(" ", html.unescape(text or ""))   # publishers leave HTML entities (&amp;, &#x00E1;)
     # Drop only the accents; any other symbol (including non-ASCII dashes such as — or ‐) becomes a space, so that
     # "Aires—CONICET" stays two words
     text = "".join(c for c in unicodedata.normalize("NFKD", text) if unicodedata.category(c) != "Mn")
@@ -107,7 +112,28 @@ def corrections():
         return {}
     with path.open(newline="", encoding="utf-8") as f:
         return {(r["doi"], int(r["author_position"]), int(r["affiliation_position"]), r["organization"]):
-                (r["decision"], r["reason"]) for r in csv.DictReader(f)}
+                (r["decision"], r["reason"] + (f" Fuente: {r['source']}" if r.get("source") else ""))
+                for r in csv.DictReader(f)}
+
+
+def possible_gaps(conn, names):
+    """Segments that name an institution and that no Argentine ROR name covers, in mentions with an Argentine context."""
+    known = list(names)
+    rows = conn.execute("""
+        SELECT a.doi, a.author_position, a.affiliation_position, a.name FROM crossref.affiliation a
+        WHERE a.name ~* 'argentin' OR EXISTS (SELECT 1 FROM afiliaciones.identificacion i
+              WHERE (i.doi, i.author_position, i.affiliation_position) = (a.doi, a.author_position, a.affiliation_position))
+    """).fetchall()
+    gaps = {}
+    for doi, ap, fp, raw in rows:
+        for part in re.split(r"[,;()\[\]/]|\s[-–—‐]\s", CONTACT.sub(" ", html.unescape(raw or ""))):
+            segment, key = part.strip(" .*"), norm(part)
+            if not INSTITUTION.match(key) or len(key) < 15:
+                continue
+            if any(name in key or key in name for name in known):
+                continue
+            gaps[(doi, ap, fp, segment)] = "Ningún nombre de una organización argentina en ROR cubre este segmento."
+    return gaps
 
 
 def main():
@@ -129,6 +155,10 @@ def main():
             for k, reason in doubtful.items():
                 decision, why = reviewed.get(k, (None, None))
                 cp.write_row(k + (reason, decision, why))
+        gaps = possible_gaps(conn, organizations(conn)[0])   # before the COPY: one command at a time
+        with conn.cursor().copy("COPY afiliaciones.posible_hueco FROM STDIN") as cp:
+            for k, reason in gaps.items():
+                cp.write_row(k + (reason,))
         conn.execute("""
             INSERT INTO afiliaciones.sin_identificar
             SELECT a.doi, a.author_position, a.affiliation_position, a.name,
@@ -140,7 +170,8 @@ def main():
                                     = (a.doi, a.author_position, a.affiliation_position))""")
         for label, sql in [("identificaciones por regla", "SELECT rule, count(*) FROM afiliaciones.identificacion GROUP BY 1 ORDER BY 1"),
                            ("dudosas", "SELECT coalesce(decision, 'sin revisar'), count(*) FROM afiliaciones.dudosa GROUP BY 1"),
-                           ("sin identificar (mencionan Argentina)", "SELECT 'total', count(*) FROM afiliaciones.sin_identificar")]:
+                           ("sin identificar (mencionan Argentina)", "SELECT 'total', count(*) FROM afiliaciones.sin_identificar"),
+                           ("posibles huecos (cq3, candidatos)", "SELECT 'segmentos', count(*) FROM afiliaciones.posible_hueco")]:
             print(label)
             for name, n in conn.execute(sql):
                 print(f"  {name:<75}{n:>6}")

@@ -101,7 +101,7 @@ steps:
     agent_hours: 0.10
     human_hours: null
   links:
-    status: implemented_waiting_for_gpt_validation_of_corrections
+    status: implemented_corrections_validated_by_gpt
     evidence:
     - docs/experiments/research-affiliations/link-proposal.md (approved)
     - linking/afiliaciones/links.sql, link.py, correcciones.csv; infra/docker-compose.yml (afiliaciones-linker)
@@ -124,7 +124,15 @@ steps:
         unidentified list by hand and find a normalization bug (non-ASCII dashes glued words); fix and rerun (466 to
         532 rule identifications, 66 to 42 unidentified); review the 91 doubtful cases into the corrections CSV;
         rerun. Stopped here for GPT to validate the corrections, at the user's request.
-    agent_hours: 0.08
+    - started_on: '2026-10-22T19:27:46Z'
+      ended_on: '2026-10-22T19:51:20Z'
+      pauses: []
+      work: >-
+        After GPT's review (6f22ed0): cq2 requirement revised and re-approved with the user's recorded approval;
+        source URLs and GPT's validation added to the 91 corrections; possible registry gaps (cq3) now include
+        segments inside mentions that already have identifications (83 candidates, 74 in identified mentions); HTML
+        entities decoded in the normalization (33 mentions); linker rerun.
+    agent_hours: 0.10
     human_hours: null
 interventions:
 - step: initialize
@@ -184,5 +192,16 @@ errors_caught:
     the normalization dropped non-ASCII dashes (— and ‐) while removing accents, gluing words ("airesconicet"), so
     rules missed CONICET and UBA in 24 mentions
   fix: drop only combining accents and turn every other symbol into a space; process note 20
+- step: links
+  check: reviewer (GPT) on the linker and requirements
+  failure_kind: >-
+    cq2 requirement still carried the old definition after the user approved a new reading; cq3 gaps only searched
+    mentions without any identification; correction evidence lacked its sources
+  fix: cq2 re-proposed and re-approved; posible_hueco table over all Argentine-context mentions; URLs in the CSV;
+    process notes 23-24
+- step: links
+  check: reading the possible-gap segments by hand
+  failure_kind: publisher HTML entities (&amp;, &#x00E1;) split by the segment rule and left in normalized text
+  fix: html.unescape in the single normalization; process note 23
 method_changes: []
 result: null

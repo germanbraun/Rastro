@@ -2,9 +2,12 @@ actor: human
 decision: approved
 reviewer: German Braun (the user, business owner of the experiment)
 reviewed_on: 2026-10-22
-proposal_sha256: 49d7e6199212927c77260faee0577daef5ced5863403cd9e1839f5de89cf5cb2
+proposal_sha256: 5cdf2777d6aaa5b2deacd19abdd289e5a848dea46c1974c8bfe2470df9d28809
 evidence: >-
-  The user's message in the Claude Code session, recorded verbatim: «Apruebo las tres propuestas tal como están
-  (cq1, cq2, cq3).» The proposals were presented as a table with their definitions and verification plans.
-note: >-
-  Approves the business requirement only. The named business reviewer for the references is still pending.
+  Revised definition of "confirmed". The user approved this reading in the Claude Code session, recorded verbatim:
+  «Apruebo las reglas de enlace y la lectura de cq2 (Rastro cuenta sus identificaciones aceptadas; la referencia,
+  las del revisor).» That approval is reused here, not requested again (docs/experiments/countrycodes/discussion.md).
+history: >-
+  The first approval (same day) bound the earlier proposal, which said only reviewer-accepted identifications count.
+  GPT's review of 55388d9 pointed out that the requirement file had not been updated; this record replaces it.
+note: Approves the business requirement only. The named reference reviewer is still pending.
