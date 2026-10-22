@@ -562,3 +562,18 @@ The user approved the identification rules in `../research-affiliations/link-pro
 in their words: «Rastro cuenta sus identificaciones aceptadas; la referencia, las del revisor». The cq2 proposal file
 is not edited (its approval stays bound to its fingerprint); this record clarifies how its wording is applied.
 
+## Dictionary/linker and corrections review — Codex/GPT (2026-10-22)
+
+Reviewed `55388d9`; details and row-level correction validation are in
+[implementation-review.md](../research-affiliations/implementation-review.md) and
+[corrections-review.csv](../research-affiliations/corrections-review.csv). Offline replay reproduces 532 rule links
+and all 91 doubtful candidates. The seven accepted and 84 rejected corrections are supported as AI decisions,
+still pending human confirmation; primary institutional sources support the four distinct accepted strings.
+GPT has seen the links and is not the independent blind reference reviewer. Prior loader follow-ups are addressed.
+
+Before query validation: update CQ2's proposal/approval binding to reflect the user's newly approved interpretation,
+reusing that approval rather than asking again. The old requirement still says only reviewer-accepted links count.
+Implement Q1 over every mention, not only the Argentina-text no-match helper. Q3 also needs partial-gap/name-variant
+cases even when a string already has a known-organization link. Add the external supporting URLs to correction
+evidence. Registry/ontology/lint checks pass; live database and Ontop checks were not rerun by GPT.
+

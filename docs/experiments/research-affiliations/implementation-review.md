@@ -100,3 +100,65 @@ or support repeated identifiers if the source scope later changes. This is not a
 
 No generic method/skill changes were made in this review. Dictionary/mapping and link proposals remain the next
 implementation stage; live Ontop, quality, query and app checks have not become valid merely because row counts agree.
+
+## Dictionary and linker update — review of `55388d9`
+
+**Assessment: loader follow-ups are addressed; all 91 correction decisions are supported as AI-reviewed decisions,
+with human confirmation still pending. Fix the CQ2 contract inconsistency before implementing/validating that
+question. Q1/Q3 must retain coverage beyond the linker's Argentina-only no-match helper.**
+
+### What was independently checked
+
+- The loader now preserves all locations in `ror.location`, uses connection keyword parameters and writes a
+  manifest after the database transaction commits. These address the three previous follow-ups. I reviewed the
+  code; I did not rerun the loader or independently verify its live database receipt.
+- Replayed `link()` offline against rows reconstructed from the verified raw sample and ROR release. A small
+  in-memory adapter supplied the four SELECT result sets; it did not simulate SQL execution or database writes.
+  The result reproduces **532 rule identifications and 91 doubtful candidates**. Every doubtful candidate has
+  exactly one correction in the CSV, with no missing or extra candidate keys. There are seven accepts and 84 rejects.
+- Read all 91 correction cases (57 distinct raw strings, four distinct accepted strings). Row-level review is in
+  [`corrections-review.csv`](corrections-review.csv). This is technical AI validation, not the blind reference:
+  I have seen approach links and cannot act as the independent blind adjudicator for this set.
+- Registry, ontology checker and Ruff for the loader/linker pass. The ontology now has five classes, three object
+  properties and eight datatype properties. The source mapping preserves the approved any-AR-location definition
+  and does not infer parent credit. Identification terms/mappings and competency queries are not yet present.
+  I did not run live Ontop checks; the experiment log's healthy service/count evidence is Claude's reported result.
+
+### Accepted corrections: external supporting evidence
+
+These checks support acronym disambiguation, not independent reference approval or historical operational claims:
+
+| Source case | Accepted target and occurrences | Supporting primary source |
+|---|---|---|
+| LIDTUA / Universidad Austral, `(CIC)` | Comisión de Investigaciones Científicas; two occurrences | [Universidad Austral](https://www.austral.edu.ar/laboratorios/lidtua/) explicitly identifies the provincial commission as LIDTUA's associated CIC. |
+| CEQUINOR, `Asociado a CIC` | Same commission; two occurrences | [CEQUINOR](https://cequinor.conicet.gov.ar/personal-de-apoyo/) identifies its CIC association; the institutional context supports the provincial commission rather than the cardiovascular centre. |
+| LIOMM, `Centro de Investigaciones Científicas (CIC)` | Same commission; two occurrences | [The commission's own LIOMM entry](https://www.cic.gba.gob.ar/centros/laboratorio-de-investigaciones-en-osteopatias-y-metabolismo-mineral-liomm/) states CIC–UNLP dependence. This supports the interpretation despite the deposited name saying Centro rather than Comisión. |
+| `INENCO - UNSa` | Universidad Nacional de Salta; one occurrence | [INENCO's contact page](https://inenco.conicet.gov.ar/contacto/) expands UNSa and locates INENCO there. UNSa is explicitly named in the string; this does not grant automatic CONICET credit. |
+
+The rejected cases are acronym/location or partial-name false candidates: UK, foreign city names and foreign
+institutes do not identify their Argentine homonyms. Rejections of the cardiovascular CIC in the accepted provincial
+commission cases are supported by the context above. Keep human-confirmation flags. Add these source URLs to the
+relevant correction evidence so the rationale travels with the links rather than living only in this review.
+
+### Items to resolve before query validation
+
+1. **CQ2's meaning changed but its requirement artifact did not.** The user explicitly approved Rastro counting
+   its own accepted identifications and the reference counting the blind reviewer's identifications. Yet
+   `cq2.proposal.yaml` still defines confirmed as only identifications accepted by the reviewer. The discussion
+   deliberately leaves that old fingerprint intact. The executable lifecycle cannot bind the new meaning from
+   that side note. Update the requirement and its bound approval/history using the approval already recorded;
+   do not request the same decision again or claim the old hash proves the revised definition.
+2. **The no-match helper is not the Q1 universe.** `sin_identificar` contains only mentions whose text matches
+   `argentin`, while the approved set includes every affiliation occurrence. Implement Q1 from all mentions with
+   optional identifications and explicit dispositions, rather than omitting non-Argentina-text no-match strings.
+   The approved linker helper can remain a useful subset if clearly labeled.
+3. **Q3 must check partial gaps too.** A string can identify a known university and also name an institute absent
+   from ROR or use an unrecorded name variant. Such a string is not in `sin_identificar` because some link exists.
+   Use a candidate/exception procedure that can retain these cases; zero accepted links is not the definition
+   of a suspected gap. Continue to distinguish heuristic absence from confirmed registry evidence.
+
+The accepted rules are heuristics whose accuracy remains to be measured. Geographic text is not necessarily
+independent of the matched name itself; do not interpret the label “second evidence” as independently verified
+ground truth. This review does not approve all 532 rule-generated identifications. The seven AI-reviewed accepted
+corrections can proceed in the proposed-answer layer under the user's approved rule policy, with independent human
+references still required for evaluation/publication.
