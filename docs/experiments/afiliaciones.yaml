@@ -184,7 +184,31 @@ steps:
         Then, with the user's approval, the runner keeps severities (method change); both domains rerun.
     agent_hours: 0.48
     human_hours: null
+  app:
+    status: implemented_sources_term_pending
+    evidence:
+    - docs/experiments/research-affiliations/app-proposal.md (approved)
+    - app/dominios/afiliaciones.yaml; app/dominios.yaml; method.app in layer/dominios.yaml
+    - 'check_domain.py afiliaciones: cq1 1,675, cq2 69, cq3 125 rows; business and technical views pass'
+    - checked in the browser; app log without errors after the fix
+    sessions:
+    - started_on: '2026-10-23T02:58:00Z'
+      ended_on: '2026-10-23T03:10:51Z'
+      pauses: []
+      work: >-
+        Start time approximate. Recorded the deferral and the approval; wrote the domain's app configuration (three
+        questions, why-this-number queries, three-moment demo, quality and an unmeasured notice, technical view);
+        generic app changes: the trust tab shows quality without measured cards, findings show their severity, and
+        widget keys include the tab (the demo and «Preguntar» drew the same question and collided); checked
+        afiliaciones, energia and proveedores with check_domain.py; fixed a shortened quotation in the demo.
+    agent_hours: 0.21
+    human_hours: null
 interventions:
+- step: app
+  decision: Approved the app proposal as written (three questions, quality, no optional modules, three-moment demo)
+  reason: The business view's content belongs to the user
+  kind: planned approval
+  minutes: null
 - step: evaluate
   decision: >-
     Defer the blind reference review to the end of the experiment; continue with show-in-app, evaluation set-up without
@@ -309,6 +333,16 @@ errors_caught:
     good/bad pairs passed throughout
   fix: severity on the shape; pending-only confirmation state; status completeness; non-blank patterns;
     quality-cases.py with severities; process notes 37-38
+- step: app
+  check: browser visit and the app log (check_domain.py had passed)
+  failure_kind: >-
+    duplicate widget key: the demo and «Preguntar» drew the same question at once, so its table, why-this-number
+    selector and explain button got the same keys
+  fix: keys include the tab that draws them (generic app change); process note 39
+- step: app
+  check: reading the demo text against the data
+  failure_kind: a quotation of the IQUIFIB affiliation was shortened inside «», misquoting the source
+  fix: quoted in full
 method_changes:
 - change: >-
     ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports
@@ -319,4 +353,13 @@ method_changes:
     a withdrawn ROR record (warning) and 91 pending human confirmations (info) were saved as defects; caught by GPT
     (2c84127), approved by the user on 2026-10-22 (local time) as a recorded method change; oil and gas rerun with the
     same counts (19 violations)
+- change: >-
+    app/dominio.py: «Por qué confiar» also shows for a domain with quality rules but no measured cards (a notice from
+    the domain's sin_medir text plus the quality table); quality results show violations, warnings and informational
+    findings apart; widget keys of an answer include the tab that draws it
+  scope: generic
+  reason: >-
+    needed to show the approved app proposal (quality without an evaluation) and to fix a duplicate-key crash when the
+    demo and «Preguntar» show the same question; made while building the approved app, reported to the user
+    afterwards; energia and proveedores pass check_domain.py
 result: null

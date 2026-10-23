@@ -1,0 +1,227 @@
+# What belongs to the research-affiliations domain in the app (drawn by app/dominio.py).
+# Paths inside the app container. Approved proposal: docs/experiments/research-affiliations/app-proposal.md.
+# No evaluation yet (the blind reference review is deferred), so no measured cards: only quality and a notice.
+
+domain: afiliaciones           # the one in layer/dominios.yaml: endpoint, dictionary and notes for the LLM
+resumen: >-
+  Qué organizaciones argentinas nombran los autores de 100 publicaciones científicas de 2025: los textos de
+  afiliación que publica Crossref, unidos con el registro mundial de organizaciones de investigación (ROR).
+ejemplo_libre: "Por ejemplo: ¿en qué publicaciones aparece la Universidad Nacional de La Plata?"
+ontologia: /ontology/afiliaciones/afiliaciones.ttl
+calidad:
+  archivo: /layer/afiliaciones/calidad.json
+  intro: >-
+    Rastro comprueba estas reglas sobre todos sus datos después de cada carga. No cambian nada: muestran qué no se
+    cumple para que una persona decida. Un aviso o un pendiente no es un error en los datos.
+  tecnico: >-
+    Las mismas reglas, escritas en SHACL (el estándar del W3C para validar un grafo), con un dato real de Rastro que
+    las cumple y un ejemplo roto. Cada hallazgo guarda su severidad: violación, aviso o informativo.
+sin_medir: >-
+  Estas respuestas todavía no se compararon con una referencia independiente: una persona que no vea los enlaces de
+  Rastro va a revisar las afiliaciones al final. Hasta entonces, lo que se comprobó es que cada respuesta cubre todos
+  los datos y que cada identificación tiene su regla, su evidencia y sus dos fuentes.
+
+# The demo in three moments, approved with the proposal
+demo_porque: >-
+  Tres momentos, uno por pregunta: qué organizaciones nombra una afiliación y por qué, cuántas publicaciones tiene
+  una organización sin sumarle las de sus institutos, y qué podría faltar en el registro.
+demo:
+  - paso: Identificar
+    titulo: "Una afiliación, tres organizaciones"
+    pregunta: cq1
+    que_es: >-
+      Leer el texto de una afiliación y reconocer las organizaciones argentinas que nombra, con la regla que se usó
+      y la evidencia: qué decía el texto y qué dice el registro.
+    muestra: >-
+      «Institute of Biological Chemistry and Biophysics (IQUIFIB), CONICET/University of Buenos Aires, Buenos Aires,
+      Argentina» nombra tres organizaciones: el instituto (IQUIFIB), el CONICET y la Universidad de Buenos Aires. Cada
+      una se identifica por separado, con su evidencia.
+  - paso: Contar
+    titulo: "Las publicaciones del CONICET, sin sumar las de sus institutos"
+    pregunta: cq2
+    que_es: >-
+      Contar cada publicación una sola vez por organización, aunque la nombren varios autores, y solo cuando el texto
+      la nombra: un instituto no le suma publicaciones a la organización de la que depende.
+    muestra: >-
+      El CONICET cuenta las publicaciones donde el texto lo nombra. Las de sus institutos se cuentan para cada
+      instituto, y el registro muestra de quién dependen sin sumarlas.
+  - paso: Lo que falta
+    titulo: "Instituto Sabato: un candidato para revisar"
+    pregunta: cq3
+    que_es: >-
+      Encontrar los tramos de texto que nombran una institución que el registro no tiene con ese nombre. Son
+      candidatos para que una persona los revise, no conclusiones.
+    muestra: >-
+      El Instituto Sabato aparece en una afiliación y ningún nombre del registro lo cubre. Rastro lo deja como
+      candidato, con su evidencia, y no inventa una organización.
+
+# Sources: short names for the technical-view headings
+fuentes:
+  crossref: Crossref
+  ror: ROR
+  rastro: enlace Rastro
+nota_rastro: >-
+  Las identificaciones entre el texto de cada afiliación y el registro, que Rastro hace una vez con una regla escrita
+  y guarda con su evidencia
+
+# How the answer columns are shown
+columnas:
+  doi: Publicación (DOI)
+  authorPosition: Autor (orden, desde 0)
+  affiliationPosition: Afiliación (orden, desde 0)
+  affiliation: Texto de la afiliación
+  organization: Organización (ROR)
+  organizationName: Organización
+  rule: Regla
+  evidence: Evidencia
+  disposition: Resultado
+  publications: Publicaciones
+  candidate: Candidato
+  kind: Tipo de caso
+
+preguntas:
+  - id: cq1
+    query: /ontology/afiliaciones/queries/cq1.rq
+    porque:
+      columna: organizationName
+      titulo: "Dónde aparece {valor}, y por qué"
+      explica: "Cada afiliación se une a la organización por una regla escrita; la evidencia dice qué decía el texto y qué dice el registro."
+      query: |
+        SELECT ?afiliacion ?regla ?evidencia ?doi WHERE {
+          ?o afiliaciones:name "{valor}" .
+          ?i a afiliaciones:Identification ; afiliaciones:identifies ?o ; afiliaciones:ofMention ?m ;
+             afiliaciones:rule ?regla ; afiliaciones:sourceText ?evidencia .
+          ?m afiliaciones:affiliationText ?afiliacion ; afiliaciones:inPublication ?p .
+          ?p afiliaciones:doi ?doi .
+        } ORDER BY ?doi LIMIT 40
+      nodo: "{doi}"
+      detalle: "{regla}"
+      flecha: la nombra
+      columnas: {afiliacion: Texto de la afiliación, regla: Regla, evidencia: Evidencia, doi: Publicación (DOI)}
+    explicacion: |
+      - **Qué busca:** todas las afiliaciones de las 100 publicaciones y, para cada una, las organizaciones argentinas identificadas.
+      - **Qué devuelve:** una fila por afiliación y organización, con la regla y la evidencia; si no se identificó ninguna, la afiliación aparece igual y dice por qué.
+      - **Lo que en SQL habría que hacer a mano:** comparar cada texto con todos los nombres, siglas y ciudades del registro, cada vez. Acá la identificación ya está hecha, con su regla y su evidencia.
+    simple: ¿Qué organizaciones argentinas nombra cada afiliación de las 100 publicaciones?
+    tecnica: ¿Qué organizaciones argentinas de ROR identifica Rastro en cada afiliación de Crossref, con su regla y evidencia?
+    ventaja: "El texto libre se une al registro con una regla escrita: el nombre completo o una sigla única, siempre con una segunda evidencia (Argentina o la ciudad de la organización). Los casos dudosos no se cuentan."
+    terminos:
+      Afiliación: el texto donde un autor dice a qué institución pertenece, tal como lo publica la revista.
+      Organización argentina: una organización con al menos una sede en Argentina en el registro ROR.
+      Identificación: que una afiliación nombra una organización, con la regla que se usó y la evidencia.
+
+  - id: cq2
+    query: /ontology/afiliaciones/queries/cq2.rq
+    porque:
+      columna: organizationName
+      titulo: "Las afiliaciones de {valor}"
+      explica: "Cada publicación cuenta una vez, aunque la nombren varios autores; solo cuentan las identificaciones aceptadas."
+      query: |
+        SELECT ?doi ?afiliacion ?evidencia WHERE {
+          ?o afiliaciones:name "{valor}" .
+          ?i a afiliaciones:Identification ; afiliaciones:identifies ?o ; afiliaciones:ofMention ?m ;
+             afiliaciones:sourceText ?evidencia .
+          ?m afiliaciones:affiliationText ?afiliacion ; afiliaciones:inPublication ?p .
+          ?p afiliaciones:doi ?doi .
+        } ORDER BY ?doi LIMIT 40
+      nodo: "{doi}"
+      detalle: "{afiliacion}"
+      flecha: la nombra
+      columnas: {doi: Publicación (DOI), afiliacion: Texto de la afiliación, evidencia: Evidencia}
+    explicacion: |
+      - **Qué cuenta:** para cada organización argentina, las publicaciones distintas donde alguna afiliación la nombra.
+      - **Qué no cuenta:** los candidatos dudosos ni las organizaciones madre: un instituto no le suma a la organización de la que depende.
+      - **Lo particular:** el conteo es por publicación, no por autor ni por afiliación.
+    simple: ¿En cuántas de las 100 publicaciones aparece cada organización argentina?
+    tecnica: ¿Cuántas publicaciones distintas nombran a cada organización argentina, sin sumar a las organizaciones madre?
+    ventaja: "Cada publicación cuenta una vez por organización, y solo si el texto la nombra. Lo que el registro dice de quién depende cada instituto se muestra, pero no suma."
+    terminos:
+      Publicación: un artículo científico de 2025, identificado por su DOI.
+      Organización madre: de la que depende un instituto en el registro; no recibe las publicaciones del instituto.
+
+  - id: cq3
+    query: /ontology/afiliaciones/queries/cq3.rq
+    porque:
+      columna: candidate
+      titulo: "Por qué «{valor}» es un candidato"
+      explica: "Lo que Rastro encontró en esa afiliación: el tramo que ningún nombre del registro cubre y las organizaciones que sí identificó."
+      query: |
+        SELECT ?que ?texto ?doi WHERE {
+          { ?h a afiliaciones:PossibleGap ; afiliaciones:segmentText "{valor}" ; afiliaciones:sourceText ?texto ;
+               afiliaciones:ofMention ?m .
+            BIND ("el tramo" AS ?que) }
+          UNION
+          { ?h a afiliaciones:PossibleGap ; afiliaciones:segmentText "{valor}" ; afiliaciones:ofMention ?m .
+            ?i a afiliaciones:Identification ; afiliaciones:ofMention ?m ; afiliaciones:sourceText ?texto .
+            BIND ("lo que sí se identificó" AS ?que) }
+          ?m afiliaciones:inPublication ?p . ?p afiliaciones:doi ?doi .
+        } LIMIT 20
+      nodo: "{que}"
+      detalle: "{doi}"
+      flecha: en la afiliación
+      columnas: {que: Qué, texto: Evidencia, doi: Publicación (DOI)}
+    explicacion: |
+      - **Qué busca:** dos tipos de candidatos: tramos de una afiliación que nombran una institución que ningún nombre argentino del registro cubre, y afiliaciones que mencionan Argentina sin ninguna organización identificada.
+      - **Qué devuelve:** el texto, el candidato, el tipo de caso y la evidencia.
+      - **Lo particular:** es una búsqueda heurística; una persona decide si es una organización que falta en el registro, otro nombre de una que ya está, o ninguna de las dos.
+    simple: ¿Qué organizaciones argentinas podrían faltar en el registro, o aparecer con otro nombre?
+    tecnica: ¿Qué afiliaciones nombran una organización argentina que ROR podría no tener registrada, o la nombran de una forma que ROR no registra?
+    ventaja: "Lo que no encaja queda a la vista, con su evidencia, para que una persona lo revise; Rastro no inventa organizaciones."
+    terminos:
+      Candidato: algo que una persona tiene que revisar; no es una conclusión.
+      Búsqueda heurística: una regla simple para encontrar candidatos, que puede dejar casos afuera.
+
+faq:
+  - pregunta: ¿Qué muestra este dominio?
+    respuesta: >-
+      Que el mismo Rastro sirve para otros datos: los autores de 100 publicaciones científicas de 2025 con al menos
+      una afiliación argentina, y las organizaciones que nombran, unidas con el registro mundial ROR. Es una prueba de
+      cuánto del método se puede repetir en un dominio nuevo.
+  - pregunta: ¿Las respuestas ya están verificadas?
+    respuesta: >-
+      Todavía no contra una referencia independiente: una persona que no vea los enlaces de Rastro va a revisar las
+      afiliaciones al final. Lo que sí se comprobó es que cada respuesta cubre todas las afiliaciones y que cada
+      identificación tiene su regla, su evidencia y sus dos fuentes.
+  - pregunta: ¿Qué pasa con los casos dudosos?
+    respuesta: >-
+      Un nombre sin una segunda evidencia, o una sigla que comparten varias organizaciones, no se cuenta. Cada caso
+      dudoso tiene una decisión y su motivo; los decidió un asistente de IA, otro los validó, y falta que una persona
+      los confirme. La app lo muestra en «Por qué confiar».
+  - pregunta: ¿Por qué el IDEHU aparece con un aviso?
+    respuesta: >-
+      Porque su registro figura como retirado en la versión del registro que usa Rastro, que indica al CONICET como
+      sucesor. La publicación lo nombra, así que la identificación no cambia: una persona decide si se mantiene.
+  - pregunta: ¿Dónde está cada pieza?
+    tecnico: true
+    respuesta: >-
+      Datos en Postgres, un esquema por fuente (`crossref`, `ror`); identificaciones, casos dudosos y posibles
+      huecos en el esquema `afiliaciones` (`linking/afiliaciones/`); un Ontop en el puerto 8083 con su ontología
+      (`ontology/afiliaciones/`) y su mapeo (`mappings/afiliaciones.r2rml.ttl`). Cada identificación se expone con
+      PROV-O.
+
+# Technical view configuration; no per-domain lists in Python.
+technical:
+  instances:
+    'Una publicación': https://doi.org/10.1002/cnma.202500585
+    'Una afiliación: Instituto Sabato': https://w3id.org/rastro/afiliaciones/mention/10.1002%2Fcnma.202500585/0/1
+    'Una organización: el CONICET': https://ror.org/03cqe8w59
+    'Una identificación, con su regla y evidencia': https://w3id.org/rastro/afiliaciones/identification/10.1002%2Fcnma.202500585/0/0/https%3A%2F%2Fror.org%2F03cqe8w59
+    'Un caso dudoso aceptado': https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjoc.8919/1/0/https%3A%2F%2Fror.org%2F02s7sax82
+  pieces:
+    mapeos: /mappings/afiliaciones.r2rml.ttl
+    enlaces:
+    - - Identificaciones, con su regla y su evidencia
+      - "SELECT a.name AS afiliacion, i.organization AS organizacion, i.rule AS regla, i.evidence AS evidencia
+         FROM afiliaciones.identificacion i JOIN crossref.affiliation a USING (doi, author_position, affiliation_position)
+         WHERE i.doi = '10.1001/jamaneurol.2025.0023' ORDER BY a.name, i.organization LIMIT 8"
+    - - Casos dudosos, con la decisión y su motivo
+      - "SELECT organization AS organizacion, reason AS por_que_es_dudoso, decision AS decision,
+         decision_reason AS motivo, human_confirmation AS confirmacion_de_una_persona
+         FROM afiliaciones.dudosa ORDER BY decision, doi LIMIT 8"
+    - - Posibles huecos en el registro (candidatos)
+      - "SELECT doi, segment AS tramo, reason AS por_que FROM afiliaciones.posible_hueco ORDER BY doi LIMIT 8"
+    mapas:
+    - - Identificación, caso dudoso y posible hueco
+      - - Identification
+        - DoubtfulCandidate
+        - PossibleGap

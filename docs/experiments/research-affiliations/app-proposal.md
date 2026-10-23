@@ -1,7 +1,7 @@
 # App proposal: research affiliations
 
-Step "Show" of the method (`show-in-app`). Status: **proposed, for the user's approval before the configuration is
-written**. The three approved competency questions, all validated on technical invariants (`query-checks.yaml`,
+Step "Show" of the method (`show-in-app`). Status: **approved by the user on 2026-10-23**, as written: «Apruebo la propuesta de la app
+tal como está (tres preguntas, calidad, sin módulos opcionales, demo de tres momentos).» The three approved competency questions, all validated on technical invariants (`query-checks.yaml`,
 `structural-checks.json`). No accuracy number exists yet: the blind reference review is deferred to the end
 (user decision, 2026-10-23), so the app shows no evaluation cards and says the answers are not yet checked against
 a reference.

@@ -190,6 +190,7 @@ afiliaciones:
               examples: ontology/afiliaciones/calidad/ejemplos.yaml, data: ontology/afiliaciones/calidad/datos.yaml,
               result: layer/afiliaciones/calidad.json,
               run: docker compose run --rm --no-deps calidad python /ontology/calidad.py afiliaciones}
+    app: app/dominios/afiliaciones.yaml
     lifecycle: layer/afiliaciones/lifecycle.json
     source_manifest: layer/afiliaciones/sources.yaml
 

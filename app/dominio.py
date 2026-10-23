@@ -179,7 +179,8 @@ def as_table(columns, rows, cfg, tech, col_sources):
     return pd.DataFrame(data, columns=headers)
 
 
-def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
+def show_answer(cfg, tech, query, columns, rows, item=None, note=None, where="preguntar"):
+    # where: the tab drawing it; the demo and «Preguntar» can show the same question at once, so keys include it
     domain = cfg["domain"]
     info = sources(domain)
     labels = cfg.get("fuentes", {})
@@ -194,11 +195,12 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
         st.info("La consulta no devolvió resultados.")
     else:
         table, config = logos.with_logos(as_table(columns, rows, cfg, tech, col_sources), columns)
-        tabla(table, hide_index=True, use_container_width=True, column_config=config)
+        tabla(table, hide_index=True, use_container_width=True, column_config=config,
+              key=f"{where}_{item['id']}" if item and item.get("id") else None)
         if item and item.get("mapa"):
             show_map(domain)
         if item and item.get("porque"):
-            show_why(domain, item["porque"], columns, rows)
+            show_why(domain, item["porque"], columns, rows, where)
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}."
                    + (" La evidencia está en «¿De dónde sale la respuesta?»." if item and item.get("evidencia") else ""))
 
@@ -236,7 +238,7 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
             st.code(sql, language="sql")
         except requests.RequestException:
             st.caption("No se pudo obtener el SQL de esta consulta.")
-        explain(query, sql, domain, item)
+        explain(query, sql, domain, item, where)
         st.markdown("**3. Las fuentes:**")
         for s in used:
             if s == "rastro":
@@ -256,10 +258,10 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None):
             tabla(pd.DataFrame(ev_rows, columns=ev_cols), hide_index=True, use_container_width=True)
 
 
-def explain(query, sql, domain, item=None):
+def explain(query, sql, domain, item=None, where="preguntar"):
     """«Explicame la consulta»: las preguntas de ejemplo traen su explicación guardada; las propias
     se explican en vivo si hay un LLM configurado."""
-    key = f"explain_{abs(hash(query))}"
+    key = f"explain_{where}_{abs(hash(query))}"
     stored = (item or {}).get("explicacion")
     available, _ = llm_status()
     if st.button("💬 Explicame la consulta", key=f"{key}_boton", disabled=not stored and not available,
@@ -497,6 +499,17 @@ def quality_result(quality):
     return read_json(path) if path and Path(path).exists() else None
 
 
+def finding(rule, long=True):
+    """A rule's result in words: violations do not hold; warnings and informational findings ask a person to review."""
+    if not rule["revisados"]:
+        return "⏳ sin datos revisados" if long else "⏳"
+    counts = rule.get("por_severidad") or {"Violation": rule["fallas"]}
+    parts = [f"⚠️ {money(counts['Violation'])}" + (" no cumplen" if long else "") if counts.get("Violation") else "",
+             f"🟡 {money(counts['Warning'])}" + (" para revisar (aviso)" if long else "") if counts.get("Warning") else "",
+             f"ℹ️ {money(counts['Info'])}" + (" pendientes (informativo)" if long else "") if counts.get("Info") else ""]
+    return " · ".join(p for p in parts if p) or ("✅ se cumple" if long else "✅")
+
+
 def show_quality(quality):
     """Las reglas de calidad, en palabras de negocio: qué se comprueba y si se cumple."""
     result = quality_result(quality)
@@ -505,8 +518,7 @@ def show_quality(quality):
     st.markdown("### Reglas de calidad", help=ayuda("calidad"))
     st.caption(md(quality["intro"]))
     tabla(pd.DataFrame([{"Regla": r["nombre"], "Por qué importa": r["porque"], "Datos revisados": money(r["revisados"]),
-                         "Resultado": ("⏳ sin datos revisados" if not r["revisados"] else
-                                       "✅ se cumple" if not r["fallas"] else f"⚠️ {money(r['fallas'])} no cumplen"),
+                         "Resultado": finding(r),
                          "Predicciones que los usan": len(r.get("predicciones_afectadas", [])) or ""}
                         for r in result["reglas"]]),
           column_config={"Regla": st.column_config.TextColumn(width="medium"),
@@ -523,7 +535,7 @@ def show_quality_shacl(quality):
     st.markdown("### Reglas de calidad en SHACL", help=ayuda("calidad_shacl"))
     st.caption(md(quality["tecnico"]))
     for r in result["reglas"]:
-        mark = "⏳" if not r["revisados"] else "✅" if not r["fallas"] else f"⚠️ {money(r['fallas'])}"
+        mark = finding(r, long=False)
         with st.expander(f"{mark} · {r['nombre']} · {money(r['revisados'])} datos revisados"):
             st.markdown("**La regla, en SHACL**")
             st.code(r["shacl"], language="turtle")
@@ -539,6 +551,7 @@ def show_quality_shacl(quality):
             if r["ejemplos"]:
                 st.markdown("**Lo que no cumple**" + (" (los primeros 10)" if r["fallas"] > 10 else ""))
                 tabla(pd.DataFrame([{"Dato": e["dato"], "Qué falla": e["mensaje"],
+                                     **({"Severidad": e["severidad"]} if e.get("severidad") else {}),
                                      "Predicciones que lo usan (prov:used)":
                                          ", ".join(p.rsplit("/", 1)[-1] for p in e.get("predicciones", []))}
                                     for e in r["ejemplos"]]))
@@ -682,11 +695,11 @@ def render(cfg_path, tech):
         else:
             st.caption(md(cfg["resumen"]))
 
-    # «Por qué confiar» necesita una evaluación medida; un dominio sin ella no muestra la pestaña
+    # «Por qué confiar» needs a measured evaluation or quality rules; a domain with neither does not show the tab
     # Pocas pestañas: la demo, preguntar, por qué confiar y preguntas frecuentes; en la vista técnica, todo
     # lo de adentro (consola, diccionario, enlaces y mapeos) junto en «Bajo el capó»
     names = (["Demo"] if cfg.get("demo") else []) + ["Preguntar"] \
-        + (["Por qué confiar"] if cfg.get("tarjetas") else []) + (["Rastro Lab"] if cfg.get("lab") else []) \
+        + (["Por qué confiar"] if cfg.get("tarjetas") or cfg.get("calidad") else []) + (["Rastro Lab"] if cfg.get("lab") else []) \
         + ["Preguntas frecuentes"] + (["Bajo el capó"] if tech else [])
     tabs = dict(zip(names, st.tabs(names)))
     ask_tab, trust_tab, faq_tab = tabs["Preguntar"], tabs.get("Por qué confiar"), tabs["Preguntas frecuentes"]
@@ -802,7 +815,7 @@ def show_faq(domain, specific, tech, diagrams, diagram_title="diccionario"):
     block([(q, a) for q, a, t in specific if t])
 
 
-def show_why(domain, why, columns, rows):
+def show_why(domain, why, columns, rows, where="preguntar"):
     """«¿Por qué este número?»: se elige una fila de la respuesta y se ve la evidencia que hay detrás,
     dibujada como grafo (la fila al centro, cada enlace alrededor) y en una tabla."""
     import grafo
@@ -812,7 +825,7 @@ def show_why(domain, why, columns, rows):
     with st.container(border=True):
         st.markdown("**¿Por qué este número?**", help="Elija una fila de la respuesta: se ve de dónde sale, enlace por "
                     "enlace, con la fuente y la regla de cada uno.")
-        value = st.selectbox("Fila", values, key=f"{domain}_porque_{why['columna']}", label_visibility="collapsed")
+        value = st.selectbox("Fila", values, key=f"{domain}_{where}_porque_{why['columna']}", label_visibility="collapsed")
         st.markdown(f"**{md(why['titulo'].format(valor=value))}.** {md(why.get('explica', ''))}")
         cols, found = run(prefixed(why["query"].replace("{valor}", str(value).replace('"', '\\"')), domain), domain)
         if not found:
@@ -834,7 +847,7 @@ def show_why(domain, why, columns, rows):
         st.markdown(f'<img src="data:image/svg+xml;base64,{base64.b64encode(drawing.encode()).decode()}" '
                     'style="width:100%;border-radius:12px">', unsafe_allow_html=True)
         table = pd.DataFrame(records).rename(columns=why.get("columnas", {}))
-        tabla(table, hide_index=True, use_container_width=True)
+        tabla(table, hide_index=True, use_container_width=True, key=f"{domain}_{where}_porque_tabla")
 
 
 def before_after(card):
@@ -885,7 +898,7 @@ def show_demo(cfg, tech):
         columns, rows = run(query, domain)
         if item.get("antes_despues"):
             before_after(item["antes_despues"])
-        show_answer(cfg, tech, query, columns, rows, item, note="Se ejecuta ahora, en vivo, sobre los datos.")
+        show_answer(cfg, tech, query, columns, rows, item, note="Se ejecuta ahora, en vivo, sobre los datos.", where="demo")
     back, _, forward = st.columns([2, 3, 2])
     if i > 0 and back.button("← Anterior", key=f"{key}_back"):
         st.session_state[key] = i - 1
@@ -1180,6 +1193,13 @@ def llm_status():
 
 
 def trust(cfg, tech, evaluation, changes):
+    if not cfg.get("tarjetas"):   # not measured yet: say so, and show only what has been checked
+        st.markdown("### Por qué confiar", help=ayuda("confiar"))
+        if cfg.get("sin_medir"):
+            st.info(md(cfg["sin_medir"]))
+        show_quality(cfg.get("calidad"))
+        show_no_data(cfg.get("fuera"), tech)
+        return
     totals = evaluation.get("totals", {})
     consistency = evaluation.get("consistency", {})
     broken = max((sum(n for s, n in changes.get(c["antes"], {}).get("totals", {}).get("B", {}).items() if s not in ("✅", "—"))
