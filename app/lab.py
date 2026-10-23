@@ -156,6 +156,25 @@ def registros(pozo):
     return pd.DataFrame(rows, columns=columns)
 
 
+def show_calculation():
+    """The example well's prediction with Rastro, as the model computes it: the training average plus each group of
+    contributions, grouped by dictionary concept. Read from the model in memory, never typed."""
+    _, b, _, r, *_ = datos()
+    pozo = modelo.pozo_ejemplo(b)
+    fila = b.index[b.idpozo == pozo][0]
+    aportes, base = r["B"]["aportes"].loc[fila], r["B"]["base"]
+    grupos = [("La concesión, con su operadora y sus socios", modelo.UBICACION),
+              ("Cómo se fracturó el pozo", modelo.FRACTURA_B), ("La profundidad del pozo", modelo.PROFUNDIDAD_B)]
+    filas = [{"Parte del cálculo": "Promedio del entrenamiento", "Millones de m³": round(float(base), 2)}]
+    filas += [{"Parte del cálculo": nombre, "Millones de m³": round(float(aportes[[c for c in cols if c in aportes.index]].sum()), 2)}
+              for nombre, cols in grupos]
+    pred = float(r["B"]["pred"][b.index.get_loc(fila)])
+    filas.append({"Parte del cálculo": "Gas predicho para los meses 2 a 7", "Millones de m³": round(pred, 2)})
+    st.markdown(f"**El cálculo para el pozo {pozo}** (el pozo de ejemplo de esta pestaña):")
+    st.dataframe(pd.DataFrame(filas), hide_index=True, use_container_width=True)
+    st.caption("Cada fila sale del modelo en vivo; la suma da la predicción (las cifras se redondean al mostrarlas).")
+
+
 def show_well(key, pozo=None):
     """Un pozo de 2025: la predicción sin Rastro y con Rastro, lado a lado. Con pozo, sin selector (para la demo)."""
     a, b, ctx, r, *_, (desde_hasta, dentro) = datos()

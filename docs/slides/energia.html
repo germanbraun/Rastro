@@ -646,37 +646,37 @@ prov:wasGeneratedBy	lo generó (la regla)	rastro:activity/energia-stake-parsing
 <div class="slide">
 <section id="e-ejemplo-mapeo" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
 <style>#e-ejemplo-mapeo p{font-size:32px;line-height:1.35} #e-ejemplo-mapeo .cards{display:flex;gap:32px} #e-ejemplo-mapeo .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-ejemplo-mapeo h3{font-size:36px;margin-bottom:16px}</style>
-<p style="color:#2F6FB5">Paso a paso · Ejemplo ficticio, sin datos ni resultados medidos</p>
-<h2 style="font-size:56px;line-height:1.1">Columnas distintas, un mismo pozo</h2>
-<div class="cards"><div class="card"><h3>Operadora</h3><p>well_id: <b>ARG-00421</b><br>well_name: Campo Norte 12</p></div><div class="card"><h3>Registro regulatorio</h3><p>official_code: <b>ARG-00421</b><br>registered_name: CN-12</p></div></div><p><b>Ambas tablas → Pozo → urn:rastro:well:ARG-00421</b></p><p>Mapear los campos da un significado común. Una clave oficial verificada establece que es el mismo pozo.</p><p>Se conservan ambos nombres con su fuente. Se comprueba que el código identifica un pozo, no una rama.</p>
+<p style="color:#2F6FB5">Paso a paso · Datos reales · Parte de Rastro: diccionario y mapeos</p>
+<h2 style="font-size:56px;line-height:1.1">Un pozo, dos tablas</h2>
+<p><b>Para qué:</b> unir tablas que describen lo mismo con columnas distintas, sin cambiar los datos.</p><div class="cards"><div class="card"><h3>Padrón de pozos</h3><p>idpozo: <b>164166</b> · sigla CGC.SC.CS-4002<br>empresa: COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.<br>Cañadón Seco, Santa Cruz</p></div><div class="card"><h3>Declaraciones juradas</h3><p>idpozo: <b>164166</b> · enero de 2025<br>empresa: CGC ENERGIA SAU<br>gas: 3.404 miles de m³</p></div></div><p><b>Las dos tablas → un Pozo en Rastro (164166), con su operadora y sus 12 declaraciones de 2025.</b></p><p>La unión es por el identificador oficial del pozo, el mismo en las dos tablas. No por parecido del nombre.</p>
 <div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>28</span></div>
-<aside>Mostrar las columnas originales, la clase Well y el identificador compartido. La clave debe tener el mismo alcance en ambas fuentes. No deducir identidad por compartir una clase.</aside>
+<aside>Datos reales, consultados el 23/10/2026 (capitulo4.pozo y capitulo4.produccion, idpozo 164166; en la app, pestaña «Paso a paso», paso 1, con las consultas en la vista técnica). Señalar que la empresa se nombra distinto en cada tabla: es el paso siguiente.</aside>
 </section>
 </div>
 <div class="slide">
 <section id="e-ejemplo-enlace" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
 <style>#e-ejemplo-enlace p{font-size:32px;line-height:1.35} #e-ejemplo-enlace .cards{display:flex;gap:32px} #e-ejemplo-enlace .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-ejemplo-enlace h3{font-size:36px;margin-bottom:16px}</style>
-<p style="color:#2F6FB5">Paso a paso · Ejemplo ficticio, sin datos ni resultados medidos</p>
-<h2 style="font-size:56px;line-height:1.1">Un nombre sin código necesita evidencia</h2>
-<div class="cards"><div class="card"><h3>Parte M-017</h3><p>CN12 — Campo Norte<br>Sin código oficial</p></div><div class="card"><h3>Pozo candidato</h3><p>ARG-00421 · CN-12<br>Yacimiento Campo Norte</p></div></div><p><b>Mención → identificación candidata → Pozo</b></p><p>Se comparan el nombre, el yacimiento y las coordenadas disponibles. En este ejemplo no hay coordenadas verificadas.</p><p><b>Pendiente de revisión.</b> El parte conserva su identidad. Ante varios pozos compatibles, la mención queda sin resolver.</p>
+<p style="color:#2F6FB5">Paso a paso · Datos reales · Parte de Rastro: enlaces con evidencia</p>
+<h2 style="font-size:56px;line-height:1.1">Una empresa, dos nombres</h2>
+<p><b>Para qué:</b> unir lo que no comparte ningún código, y que cada unión diga por qué.</p><div class="cards"><div class="card"><h3>Declaraciones juradas</h3><p><b>CGC ENERGIA SAU</b></p></div><div class="card"><h3>Padrón y mapa de concesiones</h3><p><b>COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.</b></p></div></div><p><b>En Rastro: una empresa.</b> Regla: corrección revisada. Evidencia: «Las declaraciones juradas la nombran CGC Energía; el padrón de pozos y el mapa de concesiones, Compañía General de Combustibles. Es la misma empresa.»</p><p>Revisada por un asistente de IA: <b>espera la confirmación de una persona</b>, y Rastro lo muestra siempre.</p>
 <div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>29</span></div>
-<aside>Una coincidencia propone un vínculo, no lo confirma. Guardar el texto original, las fuentes, la regla y el estado de revisión. Las coordenadas son una evidencia posible, no un dato inventado en este ejemplo.</aside>
+<aside>Fila real de linking/energia/correcciones.csv, expuesta como energia:CompanyName con energia:rule, energia:sourceText y prov:wasDerivedFrom (paso 2 en la app). Insistir: la unión es una propuesta con evidencia hasta que una persona la confirma.</aside>
 </section>
 </div>
 <div class="slide">
 <section id="e-ejemplo-respuesta" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
 <style>#e-ejemplo-respuesta p{font-size:32px;line-height:1.35} #e-ejemplo-respuesta .cards{display:flex;gap:32px} #e-ejemplo-respuesta .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-ejemplo-respuesta h3{font-size:36px;margin-bottom:16px}</style>
-<p style="color:#2F6FB5">Paso a paso · Ejemplo ficticio, sin datos ni resultados medidos</p>
-<h2 style="font-size:56px;line-height:1.1">De la pregunta a los registros de origen</h2>
-<p><b>¿Qué pozos tuvieron mantenimiento y una caída de producción en el mismo mes?</b></p><div class="cards"><div class="card"><h3>Producción del pozo ARG-00421</h3><p>P-08 · agosto 2025: 100 m³<br>P-09 · septiembre 2025: 80 m³</p></div><div class="card"><h3>Mantenimiento</h3><p>M-017 · septiembre 2025<br>Identificación pendiente</p></div></div><p><b>Hoy: vínculo pendiente.</b> Si una persona confirma la identificación con evidencia suficiente, el pozo aparece con mantenimiento y menor producción en septiembre.</p><p>Respuesta → P-08 y P-09 + M-017 → identificación revisada → registro del pozo. Coincidir en el mes no demuestra causalidad.</p>
+<p style="color:#2F6FB5">Paso a paso · Datos reales · Parte de Rastro: la respuesta y su origen</p>
+<h2 style="font-size:56px;line-height:1.1">La respuesta vuelve a sus registros</h2>
+<p><b>¿Cuánto gas declaró en 2025 la Compañía General de Combustibles?</b></p><div class="cards"><div class="card"><h3>Sin Rastro: SQL por nombre</h3><p>«CGC ENERGIA SAU»: 78.621 declaraciones, 760.242 miles de m³<br>«COMPAÑÍA GENERAL…»: 8.684 declaraciones, 1.198.629 miles de m³<br>Cada nombre encuentra una parte.</p></div><div class="card"><h3>Con Rastro: una empresa</h3><p><b>87.305 declaraciones<br>1.958.871 miles de m³</b><br>Y el porqué: el enlace del paso anterior.</p></div></div><p>De cada número se vuelve a sus declaraciones, a su pozo y a la unión que las suma. Eso es lo que mide «Por qué confiar».</p>
 <div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>30</span></div>
-<aside>Los volúmenes, meses y registros son ficticios. Comparar septiembre con agosto; no afirmar una respuesta confirmada mientras el enlace esté pendiente. El ejemplo no conecta una fuente real de mantenimiento ni mide precisión.</aside>
+<aside>Cifras de las dos consultas del paso 3 en la app, el 23/10/2026; si se recargan los datos, mostrarlas en vivo en la app en lugar de leer esta diapositiva. Las dos filas de «sin Rastro» suman lo mismo que Rastro: la diferencia es saber que son la misma empresa, con evidencia.</aside>
 </section>
 </div>
 <div class="slide">
 <section id="e-lab-entrada" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
 <style>#e-lab-entrada p{font-size:32px;line-height:1.35} #e-lab-entrada .cards{display:flex;gap:32px} #e-lab-entrada .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-lab-entrada h3{font-size:36px;margin-bottom:16px}</style>
-<p style="color:#2F6FB5">Rastro Lab · Paso a paso</p>
+<p style="color:#2F6FB5">Rastro Lab · Paso a paso · Parte de Rastro: diccionario, mapeos y enlaces</p>
 <h2 style="font-size:56px;line-height:1.1">La ontología da significado; el modelo recibe columnas</h2>
 <p><b>Fuentes → enlaces con evidencia → mapeos → consulta → tabla de entrenamiento</b></p><div class="cards"><div class="card"><h3>Lo que hace Rastro</h3><p>Expone Pozo, Inicio, Fractura, Trayectoria y Participación. Conserva identificadores, reglas y fuentes.</p></div><div class="card"><h3>Lo que recibe el modelo</h3><p>Una fila por pozo: concesión, empresa, participación, fractura y profundidad. Categorías y números.</p></div></div><p>El objetivo es el gas de los meses 2 a 7. Se entrena con pozos anteriores a 2025 y se prueba con pozos de 2025.</p><p>No se etiqueta manualmente cada fila. Los mapeos y la consulta construyen la tabla; el modelo no aprende de triples RDF.</p>
 <div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>31</span></div>
@@ -686,17 +686,17 @@ prov:wasGeneratedBy	lo generó (la regla)	rastro:activity/energia-stake-parsing
 <div class="slide">
 <section id="e-lab-aportes" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
 <style>#e-lab-aportes p{font-size:32px;line-height:1.35} #e-lab-aportes .cards{display:flex;gap:32px} #e-lab-aportes .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-lab-aportes h3{font-size:36px;margin-bottom:16px}</style>
-<p style="color:#2F6FB5">Rastro Lab · Paso a paso</p>
+<p style="color:#2F6FB5">Rastro Lab · Paso a paso · Datos reales · Parte de Rastro: la explicación</p>
 <h2 style="font-size:56px;line-height:1.1">Un número explicado por la cuenta que lo produce</h2>
-<p>La regresión suma una base y los aportes de las variables de ese pozo.</p><div class="cards"><div class="card"><h3>Cálculo ficticio · millones de m³</h3><p>Base del entrenamiento: 100<br>Concesión, operadora y socios: +20<br>Fractura: −5 · Profundidad: +3</p></div><div class="card"><h3>Gas predicho: 118</h3><p><b>100 + 20 − 5 + 3 = 118</b><br>Gas acumulado de los meses 2 a 7.<br>Los valores son solo ilustrativos.</p></div></div><p>En cada caso real: aporte = (valor codificado − promedio del entrenamiento) × coeficiente.</p><p>El código agrupa los aportes y arma el texto. La explicación no la inventa una IA y no demuestra causalidad.</p>
+<p><b>Para qué:</b> mostrar que la explicación es la cuenta del modelo, agrupada con los conceptos de Rastro.</p><div class="cards"><div class="card"><h3>Pozo 165404 · millones de m³</h3><p>Promedio del entrenamiento: 51,64<br>Concesión, operadora y socios: −3,57<br>Cómo se fracturó: +6,80 · Profundidad: −0,72</p></div><div class="card"><h3>Gas predicho: 54,15</h3><p><b>51,64 − 3,57 + 6,80 − 0,72 = 54,15</b><br>Gas acumulado de los meses 2 a 7.</p></div></div><p>Cada aporte = (valor de la variable − promedio del entrenamiento) × coeficiente.</p><p>Lo calcula el código, no lo escribe una IA. Dice cómo llegó el modelo al número; no prueba causas.</p>
 <div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>32</span></div>
-<aside>La fórmula está en entrenar(); explicacion_b agrupa UBICACION, FRACTURA_B y PROFUNDIDAD_B. Se usa la suma sin redondear; la pantalla puede redondear. No presentar 118 como una predicción medida.</aside>
+<aside>Pozo de ejemplo de la pestaña Rastro Lab (modelo.pozo_ejemplo), corrida en memoria del 23/10/2026; en la app, paso 3 del recorrido de Lab, en vivo. Si el modelo se reentrena, las cifras cambian: mostrarlas en la app.</aside>
 </section>
 </div>
 <div class="slide">
 <section id="e-lab-evidencia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
 <style>#e-lab-evidencia p{font-size:32px;line-height:1.35} #e-lab-evidencia .cards{display:flex;gap:32px} #e-lab-evidencia .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-lab-evidencia h3{font-size:36px;margin-bottom:16px}</style>
-<p style="color:#2F6FB5">Rastro Lab · Paso a paso</p>
+<p style="color:#2F6FB5">Rastro Lab · Paso a paso · Parte de Rastro: trazabilidad</p>
 <h2 style="font-size:56px;line-height:1.1">Del gas predicho a los registros que lo respaldan</h2>
 <p><b>Pozo → entradas → aportes → explicación → fuentes</b></p><div class="cards"><div class="card"><h3>En la app</h3><p>Elegir un pozo. Ver la suma y sus factores. Abrir «¿De dónde sale?» para consultar regla, evidencia y fechas.</p></div><div class="card"><h3>Al publicar una corrida</h3><p>Se guardan entradas, predicciones y aportes, con el pozo y la versión de la corrida. Cada predicción conserva los registros usados.</p></div></div><p>La vista interactiva usa el modelo en memoria; una corrida publicada se consulta como datos de Rastro.</p><p>Uniones pendientes y registros tardíos siguen a la vista. Un valor de gas aislado no permite reconstruir toda la explicación.</p>
 <div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>33</span></div>

@@ -321,10 +321,11 @@ def short_iri(iri, domain):
 # Los enlaces se leen en vivo de las tablas de Rastro; los mapeos, del archivo R2RML del dominio.
 
 
-def sql_table(query, domain):
-    """Una consulta de solo lectura sobre las tablas de enlaces de Rastro."""
+def sql_table(query, domain, approach="D"):
+    """Una consulta de solo lectura: con approach «D», sobre las tablas de enlaces de Rastro; con «B», solo sobre las
+    fuentes tal como vienen."""
     import psycopg
-    user = answer.DOMAINS[domain]["readers"]["D"]
+    user = answer.DOMAINS[domain]["readers"][approach]
     with psycopg.connect(answer.READER.format(user) % os.environ["PG_DB"]) as conn:
         cur = conn.execute(query)
         return [c.name for c in cur.description], cur.fetchall()
@@ -722,7 +723,7 @@ def render(cfg_path, tech):
             import lab
             if cfg.get("ejemplo_lab"):
                 with st.expander(cfg["ejemplo_lab"]["titulo"]):
-                    show_integration_example(cfg["ejemplo_lab"], f"{domain}_lab", tech)
+                    show_integration_example(cfg["ejemplo_lab"], domain, tech, key=f"{domain}_lab")
             lab.show_lab(tech)
     if tech:
         with tabs["Bajo el capó"]:
@@ -876,15 +877,37 @@ def before_after(card):
         st.warning("**Lo que cuesta no integrar:** " + md(card["impacto"]))
 
 
-def show_integration_example(example, domain, tech):
-    """Render a self-contained teaching example without querying production data."""
-    st.info(example["aviso"])
+def show_integration_example(example, domain, tech, key=None):
+    """A walkthrough on real data: what it is for, which part of Rastro each step shows, and each step's live
+    queries (raw sources with SQL as they come, Rastro with SPARQL), so every number on screen comes from a query."""
     steps = example["pasos"]
+    if example.get("encabezado"):
+        st.markdown(f"### {md(example['encabezado'])}")
+    if example.get("para_que"):
+        with st.container(border=True):
+            st.markdown(f"**Para qué sirve.** {md(example['para_que'])}")
+            st.markdown("**Qué parte de Rastro muestra cada paso:**\n"
+                        + "\n".join(f"- **{s['titulo']}**: {md(s['parte'])}" for s in steps if s.get("parte")))
+    st.caption(md(example["aviso"]))
     selected = st.radio(example["selector"], range(len(steps)),
                         format_func=lambda index: steps[index]["titulo"],
-                        key=f"{domain}_integration_example", horizontal=True)
+                        key=f"{key or domain}_integration_example", horizontal=True)
     step = steps[selected]
+    if step.get("parte"):
+        st.info(f"**Parte de Rastro:** {md(step['parte'])}")
     st.markdown(step["contenido"])
+    for n, query in enumerate(step.get("consultas", [])):
+        st.markdown(f"**{md(query['titulo'])}**")
+        if query.get("sql"):
+            columns, rows = sql_table(query["sql"], domain, approach="B")
+        else:
+            columns, rows = run(prefixed(query["sparql"], domain), domain)
+        tabla(pd.DataFrame(rows, columns=columns), key=f"{key or domain}_paso{selected}_{n}")
+        if tech:
+            st.code(query.get("sql") or query["sparql"], language="sql" if query.get("sql") else "sparql")
+    if step.get("calculo_pozo"):
+        import lab
+        lab.show_calculation()
     if tech and step.get("tecnico"):
         st.code(step["tecnico"], language=step.get("lenguaje", "turtle"))
 

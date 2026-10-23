@@ -724,99 +724,101 @@ technical:
       Rastro, con geometrías en el estándar de OGC (GeoSPARQL).'
 
 
-# Illustrative teaching fixture, separate from live questions and measured results.
+# Two walkthroughs on real data, read live. Each says what it is for and which part of Rastro each step shows.
 ejemplo_integracion:
   titulo: Paso a paso
+  encabezado: Cómo Rastro une los datos, con un pozo y una empresa reales
+  para_que: >-
+    Mostrar con un caso real cómo Rastro hace de tablas que no se hablan una respuesta que se puede auditar:
+    el mismo pozo en dos tablas, la misma empresa con dos nombres, y una respuesta que vuelve a sus registros.
+    Es lo que en SQL habría que resolver a mano en cada consulta.
   aviso: >-
-    Ejemplo didáctico con registros ficticios. No son datos públicos cargados en Rastro,
-    resultados medidos ni una nueva fuente de mantenimiento conectada.
-  selector: Cómo se conectan los datos de un pozo
+    Datos reales, consultados ahora: el pozo 164166 de la Compañía General de Combustibles (CGC), en Cañadón Seco,
+    Santa Cruz. Cada número sale de la consulta que se muestra en el paso.
+  selector: Elegí un paso
   pasos:
-    - titulo: 1 · Dos tablas, un pozo
+    - titulo: 1 · Un pozo, dos tablas
+      parte: >-
+        Diccionario y mapeos: cada fuente se traduce a los mismos conceptos de negocio (Pozo, Empresa, Producción),
+        sin cambiar los datos originales.
       contenido: |
-        ### Columnas distintas, el mismo pozo
-        | Fuente ficticia | Campo del código | Campo del nombre | Registro |
-        |---|---|---|---|
-        | Operadora | `well_id` | `well_name` | `ARG-00421` · Campo Norte 12 |
-        | Registro regulatorio | `official_code` | `registered_name` | `ARG-00421` · CN-12 |
-
-        **Traducción de campos:** ambos registros describen un **Pozo**; sus campos de nombre describen cómo lo llama cada fuente.
-
-        **Identidad:** comprobado que ambos códigos pertenecen al mismo registro oficial y designan un pozo (no una rama),
-        se construye el mismo identificador: `urn:rastro:well:ARG-00421`.
-
-        **Operadora → Pozo ARG-00421 ← Registro regulatorio**
-
-        Los nombres originales y su fuente se conservan. Compartir el concepto «Pozo» no basta para unir dos registros:
-        hace falta una clave común verificada.
-      tecnico: |
-        # Illustrative mapping, not the deployed energy mapping.
-        # Operator: well_id -> subject; well_name -> energia:name
-        # Registry: official_code -> subject; registered_name -> energia:name
-        @prefix energia: <https://w3id.org/rastro/energia#> .
-        <urn:rastro:well:ARG-00421> a energia:Well ;
-            energia:name "Campo Norte 12", "CN-12" .
-        # Source-specific names and provenance remain in the original records.
-    - titulo: 2 · Un nombre sin código
+        Las declaraciones juradas de producción y el padrón de pozos describen el mismo pozo con columnas distintas
+        y nombran a la empresa de otra forma. Rastro los une por el **identificador oficial del pozo** (`idpozo`),
+        el que la Secretaría de Energía usa en las dos tablas: no por parecido del nombre.
+      consultas:
+        - titulo: Lo que dice el padrón de pozos (tal como viene)
+          sql: >-
+            SELECT idpozo, sigla, empresa, area, provincia FROM capitulo4.pozo WHERE idpozo = '164166'
+        - titulo: Lo que dicen las declaraciones juradas (los dos primeros meses de 2025, tal como vienen)
+          sql: >-
+            SELECT idpozo, mes, empresa, areapermisoconcesion AS concesion, prod_gas AS gas_miles_m3
+            FROM capitulo4.produccion WHERE idpozo = '164166' ORDER BY mes LIMIT 2
+        - titulo: Lo que sabe Rastro de ese pozo (un solo Pozo, con su operadora)
+          sparql: >-
+            SELECT ?pozo ?operadora (COUNT(?declaracion) AS ?declaraciones) WHERE {
+              <https://w3id.org/rastro/energia/well/164166> energia:wellId ?pozo ;
+                  energia:operator/energia:name ?operadora .
+              ?declaracion energia:well <https://w3id.org/rastro/energia/well/164166> .
+            } GROUP BY ?pozo ?operadora
+    - titulo: 2 · Una empresa, dos nombres
+      parte: >-
+        Enlaces con evidencia: cada unión dice su regla, su evidencia y de qué fuente sale (PROV-O). Las revisadas por
+        un asistente de IA esperan la confirmación de una persona, y la app lo dice.
       contenido: |
-        ### Identificar una mención con evidencia
-        | Fuente ficticia | Dato original |
-        |---|---|
-        | Parte de mantenimiento `M-017` | `CN12 — Campo Norte`, sin código oficial |
-        | Registro regulatorio | `ARG-00421`, nombre `CN-12`, yacimiento `Campo Norte` |
-
-        **Mención del parte → identificación candidata → Pozo ARG-00421**
-
-        La regla propuesta compara el nombre normalizado, el yacimiento y las coordenadas cuando están disponibles.
-        Cada comparación debe guardar los valores originales y su fuente.
-
-        **Estado: pendiente de revisión.** La coincidencia de nombre e indicios de ubicación no confirma por sí sola la identidad.
-        Si hay varios pozos o ramas compatibles, la mención queda sin resolver. El parte conserva su propio identificador.
-      tecnico: |
-        # Proposed identification record (illustrative, not an accepted link):
-        # mention: M-017 / "CN12 — Campo Norte"
-        # candidate: urn:rastro:well:ARG-00421
-        # evidence: compatible normalized name + same field
-        # coordinates: not supplied in this fixture; no distance verified
-        # status: pending_review
+        Las declaraciones nombran a la empresa **CGC ENERGIA SAU**; el padrón y el mapa de concesiones,
+        **COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.** Ningún código común las une. Una **corrección revisada** dice que son
+        la misma empresa y por qué. Está revisada por un asistente de IA y espera que una persona la confirme.
+      consultas:
+        - titulo: Cada nombre, en cada fuente, con su regla y su evidencia
+          sparql: >-
+            SELECT ?nombre ?fuente ?regla ?evidencia WHERE {
+              ?n a energia:CompanyName ; energia:company ?c ; energia:nameInSource ?nombre ; energia:rule ?regla ;
+                 energia:sourceText ?evidencia ; prov:wasDerivedFrom ?f .
+              ?c energia:name "COMPAÑIA GENERAL DE COMBUSTIBLES" .
+              BIND (STRAFTER(STR(?f), "/source/") AS ?fuente)
+            } ORDER BY ?nombre ?fuente
     - titulo: 3 · La respuesta y su origen
+      parte: >-
+        La respuesta: una consulta sobre el diccionario. De cada número se vuelve a sus registros y a los enlaces
+        que lo sostienen (lo que mide «Por qué confiar»).
       contenido: |
-        ### ¿Qué pozos tuvieron mantenimiento y una caída de producción en el mismo mes?
-        Para responder se necesitan fechas, producción comparable y una identificación confirmada del pozo.
-        Estos son datos ficticios adicionales para explicar el recorrido:
+        **¿Cuánto gas declaró en 2025 la Compañía General de Combustibles?**
 
-        | Registro | Pozo o mención | Mes | Dato |
-        |---|---|---|---|
-        | Producción `P-08` | `ARG-00421` | agosto de 2025 | 100 m³ de petróleo |
-        | Producción `P-09` | `ARG-00421` | septiembre de 2025 | 80 m³ de petróleo |
-        | Parte `M-017` | `CN12 — Campo Norte` | septiembre de 2025 | mantenimiento |
+        En las declaraciones juradas, la empresa aparece con **los dos nombres**. Una consulta SQL que busca uno solo
+        encuentra una parte. Con Rastro, la producción de los dos nombres es de una sola empresa, y el porqué es el
+        enlace del paso 2.
+      consultas:
+        - titulo: "Sin Rastro: lo que encuentra cada nombre en las declaraciones"
+          sql: >-
+            SELECT empresa, count(*) AS declaraciones, round(sum(prod_gas)::numeric, 1) AS gas_miles_m3
+            FROM capitulo4.produccion
+            WHERE empresa ILIKE '%general de combustibles%' OR empresa ILIKE 'cgc%' GROUP BY empresa ORDER BY empresa
+        - titulo: "Con Rastro: una sola empresa"
+          sparql: >-
+            SELECT (COUNT(?p) AS ?declaraciones) (ROUND(SUM(?g) * 10) / 10 AS ?gas_miles_m3) WHERE {
+              ?p a energia:WellProduction ; energia:declaredBy ?c ; energia:gas ?g .
+              ?c energia:name "COMPAÑIA GENERAL DE COMBUSTIBLES" .
+            }
 
-        **Hoy: la relación con el mantenimiento queda pendiente**, porque la identificación de `M-017` aún no está confirmada.
-
-        **Si una persona confirma el vínculo con evidencia suficiente:** el ejemplo muestra al pozo `ARG-00421`
-        con mantenimiento en septiembre y una caída de 100 a 80 m³ respecto de agosto.
-        Coincidir en el mes no demuestra que el mantenimiento causó la caída.
-
-        **Recorrido de evidencia:** respuesta → registros `P-08` y `P-09` + parte `M-017`
-        → identificación y su revisión → registro del pozo. Cada valor conserva su fuente.
-
-
-# Describes the implemented Lab pipeline; the arithmetic example is explicitly fictional.
 ejemplo_lab:
   titulo: Paso a paso · Del dato a la explicación
+  encabezado: Cómo Rastro Lab predice el gas de un pozo y explica el número
+  para_que: >-
+    Mostrar qué recibe el modelo, cómo calcula y de dónde sale cada parte de la explicación, con el mismo pozo real
+    que abre esta pestaña. Responde a la duda más común: el modelo no lee la ontología; recibe una tabla armada con
+    los conceptos de Rastro, y cada número de la explicación vuelve a sus registros.
   aviso: >-
-    Este recorrido describe cómo funciona Rastro Lab hoy. El cálculo de 118 millones de m³ es ficticio,
-    solo para explicar la suma. Las predicciones reales y sus fuentes se consultan debajo, eligiendo un pozo.
-  selector: Cómo se construye y se explica una predicción
+    Datos reales: el pozo de ejemplo de esta pestaña y la corrida actual del modelo. El cálculo del paso 3 sale del
+    modelo, en vivo.
+  selector: Elegí un paso
   pasos:
     - titulo: 1 · Dar significado a las fuentes
+      parte: >-
+        Diccionario, mapeos y enlaces: las variables del modelo salen de conceptos de Rastro (Inicio del pozo,
+        Fractura, Trayectoria, Participación), con la concesión y la empresa ya unidas.
       contenido: |
-        ### ¿Se etiqueta cada fila antes de entrenar?
-        Las fuentes se cargan en tablas y conservan sus registros originales. Los enlaces identifican el pozo,
-        la concesión y las empresas, guardando su regla y su evidencia.
-
-        Los mapeos exponen esos registros con el diccionario de Rastro: **Pozo**, **Inicio del pozo**,
-        **Fractura**, **Trayectoria** y **Participación**. No se agrega una etiqueta manual a cada fila del archivo.
+        Las fuentes se cargan tal como vienen. Los enlaces identifican el pozo, la concesión y las empresas, con su
+        regla y su evidencia, y los mapeos exponen esos registros con el diccionario. No se etiqueta a mano cada fila.
 
         **Tablas de origen → enlaces con evidencia → mapeos al diccionario → consulta → tabla para el modelo.**
 
@@ -834,20 +836,17 @@ ejemplo_lab:
         # preparar(gas, a, b) converts its result into aligned DataFrames.
         # The ridge model consumes columns, not RDF triples or ontology classes.
     - titulo: 2 · Preparar y entrenar
+      parte: >-
+        Rastro Lab: el mismo modelo, entrenado dos veces (con las tablas tal como vienen y con Rastro), sin usar el
+        futuro.
       contenido: |
-        ### El modelo recibe una tabla, no la ontología
-        Cada fila representa un pozo elegible, con su identificador y fecha de inicio. Se alinean los mismos pozos
-        para comparar las tablas originales con los datos consultados a través de Rastro.
+        Cada fila es un pozo elegible, con su identificador y su fecha de inicio. **Objetivo:** el gas acumulado de los
+        meses 2 a 7 desde que empezó, en millones de m³. Ese gas sirve para entrenar y comprobar; no entra como variable.
 
-        **Objetivo:** gas acumulado de los meses 2 a 7 desde que empezó el pozo, en millones de m³.
-        Ese gas observado sirve para entrenar o comprobar el modelo; no entra como una variable para predecirse a sí mismo.
-
-        Se entrena con pozos que empezaron antes de 2025 y se evalúa con los que empezaron en 2025.
-        Las categorías se convierten en columnas numéricas y los valores numéricos faltantes se rellenan
-        con el promedio del entrenamiento. Se ajusta una regresión lineal regularizada.
-
-        Las fechas de los datos también importan: la fractura se selecciona según el inicio del pozo y se conserva
-        su fecha de carga para mostrar registros que llegaron después. No alcanza con conocer su significado.
+        Se entrena con los pozos que empezaron antes de 2025 y se prueba con los de 2025. Las categorías pasan a
+        columnas numéricas, lo que falta se completa con el promedio del entrenamiento, y se ajusta una regresión lineal
+        regularizada. La fractura se toma según el inicio del pozo, y se guarda cuándo se cargó, para marcar lo que
+        llegó después.
       lenguaje: python
       tecnico: |
         # Actual training calculation, simplified variable names:
@@ -857,51 +856,36 @@ ejemplo_lab:
         # Coefficients: ridge regression, alpha = 1.0.
         # Observed gas is the target; explanatory columns are VARIABLES["B"].
     - titulo: 3 · Explicar el número
+      parte: >-
+        La explicación: una base y lo que suma o resta cada concepto del diccionario, calculado por el modelo, no
+        escrito por una IA.
       contenido: |
-        ### ¿De dónde sale la predicción de gas de un pozo?
-        El modelo calcula un valor de base y cuánto suma o resta cada variable para ese pozo.
-        Los aportes se agrupan con los conceptos del diccionario.
+        El modelo parte del promedio del entrenamiento y le suma o resta lo de cada variable de ese pozo. Los aportes
+        se agrupan con los conceptos del diccionario. La concesión, la operadora y los socios van juntos porque no
+        cambian dentro de una concesión, así que el modelo no los puede separar.
 
-        **Cálculo ficticio, en millones de m³:**
-
-        | Parte del cálculo | Aporte |
-        |---|---:|
-        | Promedio del entrenamiento | 100 |
-        | Concesión con su operadora y socios | +20 |
-        | Cómo se fracturó el pozo | −5 |
-        | Profundidad del pozo | +3 |
-        | **Gas predicho para los meses 2 a 7** | **118** |
-
-        **100 + 20 − 5 + 3 = 118.** En las predicciones reales, los aportes salen de los coeficientes y de los
-        valores de entrada, antes del redondeo de pantalla. No los inventa un asistente de IA.
-
-        La explicación numérica dice cómo el modelo obtuvo el valor; no prueba que esos factores causen ese gas.
-        La concesión, la operadora y los socios se muestran juntos porque sus efectos no se pueden separar aquí.
+        La explicación dice cómo el modelo llegó al número; no prueba que esos factores causen ese gas.
+      calculo_pozo: true
       lenguaje: python
       tecnico: |
         # Actual formula in entrenar():
         aportes = (x - media_x) * coef
         pred = media_y + aportes.sum(axis=1).values
-        # explicacion_b() groups these same contributions:
-        # UBICACION, FRACTURA_B, PROFUNDIDAD_B.
+        # The groups: UBICACION, FRACTURA_B, PROFUNDIDAD_B (lab/gas/modelo.py).
     - titulo: 4 · Abrir la evidencia
+      parte: >-
+        Trazabilidad (PROV-O): cada predicción publicada guarda la corrida, el pozo y los registros que usó, y se puede
+        consultar como cualquier dato de Rastro.
       contenido: |
-        ### Del aporte a la fuente original
-        Debajo, elija un pozo en la comparación de predicciones. El resumen y los aportes los construye
-        el código a partir de ese pozo, el modelo entrenado y el contexto consultado a Rastro.
-
-        En **«Lo que respalda la predicción» → «¿De dónde sale?»** se muestran la regla, el texto de evidencia
-        y las fuentes. Los registros de fractura incluyen su fecha y cuándo se cargaron.
-        Las uniones revisadas por IA mantienen su aviso de confirmación humana pendiente.
+        Debajo, en la comparación de predicciones, **«Lo que respalda la predicción» → «¿De dónde sale?»** muestra la
+        regla, el texto de evidencia y las fuentes de este pozo. Los registros de fractura dicen su fecha y cuándo se
+        cargaron, y las uniones revisadas por IA conservan su aviso.
 
         **Pozo → datos usados → aportes del modelo → explicación → regla y registros de origen.**
 
-        Cuando se publica una corrida, Rastro guarda por separado la versión de la corrida, las entradas,
-        las predicciones y los aportes. Los mapeos exponen cada predicción con el pozo, la corrida que la generó
-        y los registros usados. Así también se pueden consultar las predicciones publicadas.
-
-        La vista interactiva calcula sus explicaciones con el modelo en memoria; consultar una corrida publicada
-        es otro recorrido. Una predicción aislada, sin su entrada y su corrida, no alcanza para reconstruir la explicación.
+        Cuando se publica una corrida, Rastro guarda la versión, las entradas, las predicciones y los aportes. La vista
+        de esta pestaña calcula con el modelo en memoria; consultar una corrida publicada es el mismo recorrido sobre
+        lo guardado.
       lenguaje: turtle
       tecnico: |
         # Structure exposed for published runs; identifiers are placeholders.

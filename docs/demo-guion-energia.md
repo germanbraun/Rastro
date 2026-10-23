@@ -59,32 +59,32 @@ Abrir **¿De dónde sale?** en la fractura: dice cuándo se cargó el dato.
 
 
 
-## Optional walkthrough: mapping and entity linking
+## Recorrido opcional: cómo Rastro une los datos (fuera de los 3 minutos)
 
-Outside the timed demo, open **Paso a paso** in the oil and gas app, or the three
-«Paso a paso» slides at the end of the appendix. All records are fictional;
-this does not add a maintenance source or a measured business question.
+**Para qué:** mostrar, con un pozo y una empresa reales, lo que en SQL habría que resolver a mano en cada consulta.
+Pestaña **Paso a paso** de la app, o las tres diapositivas «Paso a paso» del anexo. Los datos son reales y la app los
+consulta en vivo: el pozo 164166 de la Compañía General de Combustibles (CGC), en Cañadón Seco, Santa Cruz.
 
-1. Show `well_id` and `official_code`: both describe a well, and the verified shared
-   official key produces `urn:rastro:well:ARG-00421`. Preserve each source's name.
-2. Show maintenance mention `M-017`: compatible names propose an identification;
-   its status remains pending. No coordinate distance has been verified.
-3. Show production records `P-08` and `P-09` and the September maintenance date.
-   Only after an evidence-backed confirmation could that report be associated with
-   this well in the answer. A production decline in the same month is not causality.
+1. **Un pozo, dos tablas** (parte de Rastro: *diccionario y mapeos*). El padrón y las declaraciones juradas describen
+   el mismo pozo con columnas distintas. Rastro los une por el identificador oficial del pozo, no por el nombre.
+2. **Una empresa, dos nombres** (parte de Rastro: *enlaces con evidencia*). «CGC ENERGIA SAU» y «COMPAÑÍA GENERAL DE
+   COMBUSTIBLES S.A.» son la misma empresa según una corrección revisada, con su motivo. Decir que la revisó un
+   asistente de IA y que espera la confirmación de una persona.
+3. **La respuesta y su origen** (parte de Rastro: *la respuesta y su trazabilidad*). ¿Cuánto gas declaró la empresa
+   en 2025? En SQL, cada nombre encuentra una parte; con Rastro, es una sola empresa, y el porqué es el enlace del
+   paso 2.
 
+## Recorrido opcional de Rastro Lab: del dato a la explicación
 
-## Optional Lab walkthrough: from inputs to an explanation
+**Para qué:** responder la duda más común. El modelo no lee la ontología: recibe una tabla armada con los conceptos
+de Rastro, y cada número de la explicación vuelve a sus registros. Pestaña **Rastro Lab → Paso a paso · Del dato a la
+explicación**, o las tres diapositivas de Lab del anexo. Es el mismo pozo real que abre la pestaña (165404).
 
-Open **Rastro Lab → Paso a paso · Del dato a la explicación**, or the three Lab walkthrough
-slides at the end of the appendix. This describes the current code; the 118 M m³ arithmetic example is fictional.
-
-1. Source rows are exposed through ontology mappings and evidence-backed links. `SPARQL_B` selects concepts;
-   `preparar()` builds a tabular dataset. The model consumes numeric/categorical columns, not RDF triples.
-2. The target is gas in months 2–7. Training precedes 2025; 2025 wells are the test cohort. Missing numeric
-   values use training means. Explain observation dates separately from source arrival dates.
-3. `entrenar()` computes the training mean plus centered feature contributions. `explicacion_b()` groups those
-   contributions and adds the well's context. This is a deterministic numerical explanation, not causal attribution.
-4. Select a real well below the walkthrough and open «¿De dónde sale?». Distinguish the live in-memory model from
-   `publicar()`: stored runs retain input values, predictions, grouped contributions and source-record identifiers,
-   exposed through ModelRun, Prediction, Contribution and PROV links. A gas number alone is insufficient.
+1. **Dar significado a las fuentes** (parte de Rastro: *diccionario, mapeos y enlaces*). Las variables salen de Inicio
+   del pozo, Fractura, Trayectoria y Participación, con la concesión y la empresa ya unidas.
+2. **Preparar y entrenar** (parte de Rastro: *Rastro Lab*). El objetivo es el gas de los meses 2 a 7. Se entrena con
+   pozos anteriores a 2025 y se prueba con los de 2025, sin usar datos que llegaron después.
+3. **Explicar el número** (parte de Rastro: *la explicación*). La app muestra en vivo la cuenta de ese pozo: el
+   promedio del entrenamiento más lo que suma o resta cada concepto. La calcula el código; no prueba causas.
+4. **Abrir la evidencia** (parte de Rastro: *trazabilidad*). Elegir el pozo debajo y abrir «¿De dónde sale?»: regla,
+   evidencia, fuentes y fechas de carga. Una corrida publicada guarda lo mismo y se consulta como cualquier dato.
