@@ -64,18 +64,29 @@ Recommendation: (b), for the same reason as before: the skills and their scripts
 ## Result (2026-10-23)
 
 Measured with `layer/afiliaciones/cambio/correccion.sh registrar` under the guard. The numbers come from
-`layer/afiliaciones/cambio/correccion.json` and `trazabilidad.json`.
+`layer/afiliaciones/cambio/correccion.json` and `trazabilidad.json`. The checker asserts each expectation exactly
+(list contents, both affected affiliations, cq1 coverage) and fails on any measurement error; that strict version,
+added after GPT's review (`7d515f4`), produced the result below.
 
-- **With Rastro (C) and SQL with links (D):** 11 of 11 saved runs each changed exactly as declared: e3 69 → 70,
-  e5 42 → 40, e1, e2 and e4 unchanged. cq1 shows Garrahan in the two affiliations, cq2 has 70 organizations
-  (Garrahan with 1 publication), cq3 has 123 rows. No query or mapping line was edited. The source change took 1 s;
-  rerunning the linker and restarting Ontop took 15 s.
+- **With Rastro (C) and SQL with links (D):** 11 of 11 saved runs each **behaved as expected**. e3 went 69 → 70 and
+  e5 42 → 40, while e1, e2 and e4 stayed the same, as declared.
+  - cq1 covers the same 1,456 affiliations and now shows Garrahan, and only Garrahan, in both affected ones.
+  - cq2 went 69 → 70 organizations, with Garrahan at 1 publication.
+  - cq3 went 125 → 123 rows.
+  - No query or mapping line was edited. Elapsed machine time: about 1 s for the source change, and 15 s to rerun the
+    linker and restart Ontop. These are not active work hours.
 - **Without Rastro (B):** none of its saved answers changed (e3 stayed at 62, e5 at 49). Its queries compare ROR names
-  with the text literally, punctuation included, so the alias «Prof. Dr. Juan P.» does not match the text «Prof Dr.
-  Juan P». Reaching the corrected answer would need edits to each B query that matches names. That was not measured,
-  since no B query was edited.
-- **Restoration:** the corrections file, the saved answers and the five tables matched the starting fingerprints exactly.
-- **Traceability (30 cells):** C 30, D 30, B 0. In B, 16 of the 30 values appear in some saved answer, but none comes
-  with its Crossref record and rule.
-- **Not counted as a result:** a first run measured D after the rebuild without the read-only grants (the linker
-  recreates the schema). That was a defect in the test script, fixed and rerun, and the result above is the rerun.
+  with the text literally, punctuation included, so «Prof. Dr. Juan P.» does not match «Prof Dr. Juan P». This shows
+  that the source change alone did not reach B's answers. It does **not** measure how many edits B would need, because
+  no B query was edited.
+- **Restoration:** the corrections file, the saved answers and the five tables matched the starting fingerprints
+  exactly, in each run.
+- **Traceability (30 cells, approved rubric):** C 30, D 30, B 0.
+  - The result describes the evidence each approach returns or keeps in this setup, not an intrinsic limit of SQL.
+  - The cells are drawn from Rastro's own identifications, whose correctness is not yet reviewed.
+  - In B, 16 cells have their organization or DOI in some saved answer and 14 do not; none comes with its record and
+    rule. B's scorer inspects its answers; it does not reject them by default.
+- **Not counted as a result:**
+  - a first run measured D after the rebuild without the read-only grants (the linker recreates the schema), which was
+    fixed and rerun;
+  - the first checker accepted wrong lists and errors (GPT's probe), which was replaced and rerun.

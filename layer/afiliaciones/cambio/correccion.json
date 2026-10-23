@@ -6,22 +6,25 @@
   "D": "0 saved queries edited; linker rerun",
   "C": "0 saved queries edited, 0 mapping lines; linker rerun and Ontop restart"
  },
- "seconds": {
+ "elapsed_seconds": {
   "source_change": 0,
-  "rebuild_links_and_ontop": 15
+  "rebuild_links_and_ontop": 15,
+  "note": "machine time of each step, not active work"
  },
- "expected_queries": {
-  "cq1": "the two affiliations show Garrahan",
-  "cq2": "Garrahan with 1 publication",
-  "cq3": "the two affiliations leave the list (125 -> 123)"
- },
+ "answers_changed_by_the_source_change_alone": [],
  "queries": {
   "before": {
    "cq1": {
     "rows": 1675,
-    "affected": [
-     ""
-    ]
+    "mentions": 1456,
+    "by_mention": {
+     "10.1002/epd2.70126/4/0": [
+      ""
+     ],
+     "10.1002/epd2.70126/5/0": [
+      ""
+     ]
+    }
    },
    "cq2": {
     "rows": 69,
@@ -35,9 +38,15 @@
   "after_source_change": {
    "cq1": {
     "rows": 1675,
-    "affected": [
-     ""
-    ]
+    "mentions": 1456,
+    "by_mention": {
+     "10.1002/epd2.70126/4/0": [
+      ""
+     ],
+     "10.1002/epd2.70126/5/0": [
+      ""
+     ]
+    }
    },
    "cq2": {
     "rows": 69,
@@ -51,9 +60,15 @@
   "after_rebuild": {
    "cq1": {
     "rows": 1675,
-    "affected": [
-     "https://ror.org/051mda743"
-    ]
+    "mentions": 1456,
+    "by_mention": {
+     "10.1002/epd2.70126/4/0": [
+      "https://ror.org/051mda743"
+     ],
+     "10.1002/epd2.70126/5/0": [
+      "https://ror.org/051mda743"
+     ]
+    }
    },
    "cq2": {
     "rows": 70,
@@ -63,13 +78,21 @@
     "rows": 123,
     "affected": 0
    }
+  },
+  "expectations": {
+   "cq1 rows unchanged": true,
+   "cq1 covers the same mentions": true,
+   "cq1: both affected affiliations had no organization before": true,
+   "cq1: both affected affiliations show Garrahan, and only Garrahan, after": true,
+   "cq2: Garrahan from 0 to 1 publication": true,
+   "cq2: one more organization": true,
+   "cq3: two fewer candidates": true,
+   "cq3: the affected affiliations leave the list": true
   }
  },
- "queries_as_expected": true,
  "runs": {
   "e1-0-B": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": null,
@@ -78,7 +101,6 @@
   },
   "e1-0-C": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": 0,
@@ -87,7 +109,6 @@
   },
   "e1-0-D": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": 0,
@@ -96,7 +117,6 @@
   },
   "e1-1-B": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": null,
@@ -105,7 +125,6 @@
   },
   "e1-1-C": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": 0,
@@ -114,7 +133,6 @@
   },
   "e1-1-D": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": 0,
@@ -123,7 +141,6 @@
   },
   "e1-2-B": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": null,
@@ -132,7 +149,6 @@
   },
   "e1-2-C": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": 0,
@@ -141,7 +157,6 @@
   },
   "e1-2-D": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": 0,
@@ -150,7 +165,6 @@
   },
   "e1-3-B": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": null,
@@ -159,7 +173,6 @@
   },
   "e1-3-C": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": 0,
@@ -168,7 +181,6 @@
   },
   "e1-3-D": {
    "before": 63.0,
-   "after_source_change": 63.0,
    "after_rebuild": 63.0,
    "change": 0.0,
    "expected_change": 0,
@@ -177,11 +189,6 @@
   },
   "e2-0-B": {
    "before": [
-    "https://ror.org/0081fs513",
-    "https://ror.org/03cqe8w59",
-    "https://ror.org/0469ejq24"
-   ],
-   "after_source_change": [
     "https://ror.org/0081fs513",
     "https://ror.org/03cqe8w59",
     "https://ror.org/0469ejq24"
@@ -206,12 +213,6 @@
     "https://ror.org/03cqe8w59",
     "https://ror.org/0469ejq24"
    ],
-   "after_source_change": [
-    "https://ror.org/0081fs513",
-    "https://ror.org/0145s0423",
-    "https://ror.org/03cqe8w59",
-    "https://ror.org/0469ejq24"
-   ],
    "after_rebuild": [
     "https://ror.org/0081fs513",
     "https://ror.org/0145s0423",
@@ -222,7 +223,7 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
@@ -233,12 +234,6 @@
     "https://ror.org/03cqe8w59",
     "https://ror.org/0469ejq24"
    ],
-   "after_source_change": [
-    "https://ror.org/0081fs513",
-    "https://ror.org/0145s0423",
-    "https://ror.org/03cqe8w59",
-    "https://ror.org/0469ejq24"
-   ],
    "after_rebuild": [
     "https://ror.org/0081fs513",
     "https://ror.org/0145s0423",
@@ -249,13 +244,12 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
   "e3-0-B": {
    "before": 62.0,
-   "after_source_change": 62.0,
    "after_rebuild": 62.0,
    "change": 0.0,
    "expected_change": null,
@@ -264,7 +258,6 @@
   },
   "e3-0-C": {
    "before": 69.0,
-   "after_source_change": 69.0,
    "after_rebuild": 70.0,
    "change": 1.0,
    "expected_change": 1,
@@ -273,7 +266,6 @@
   },
   "e3-0-D": {
    "before": 69.0,
-   "after_source_change": 69.0,
    "after_rebuild": 70.0,
    "change": 1.0,
    "expected_change": 1,
@@ -282,30 +274,6 @@
   },
   "e4-0-B": {
    "before": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
-   "after_source_change": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
     "10.1002/ange.202422693",
@@ -386,30 +354,6 @@
     "10.3390/pathogens14050437",
     "10.5252/cryptogamie-mycologie2025v46a4"
    ],
-   "after_source_change": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
    "after_rebuild": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
@@ -438,7 +382,7 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
@@ -467,30 +411,6 @@
     "10.3390/pathogens14050437",
     "10.5252/cryptogamie-mycologie2025v46a4"
    ],
-   "after_source_change": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
    "after_rebuild": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
@@ -519,36 +439,12 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
   "e4-1-B": {
    "before": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
-   "after_source_change": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
     "10.1002/ange.202422693",
@@ -629,30 +525,6 @@
     "10.3390/pathogens14050437",
     "10.5252/cryptogamie-mycologie2025v46a4"
    ],
-   "after_source_change": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
    "after_rebuild": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
@@ -681,7 +553,7 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
@@ -710,30 +582,6 @@
     "10.3390/pathogens14050437",
     "10.5252/cryptogamie-mycologie2025v46a4"
    ],
-   "after_source_change": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
    "after_rebuild": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
@@ -762,34 +610,12 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
   "e4-2-B": {
    "before": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
-   "after_source_change": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
     "10.1002/ange.202422693",
@@ -866,30 +692,6 @@
     "10.3390/pathogens14050437",
     "10.5252/cryptogamie-mycologie2025v46a4"
    ],
-   "after_source_change": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
    "after_rebuild": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
@@ -918,7 +720,7 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
@@ -947,30 +749,6 @@
     "10.3390/pathogens14050437",
     "10.5252/cryptogamie-mycologie2025v46a4"
    ],
-   "after_source_change": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
    "after_rebuild": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
@@ -999,36 +777,12 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
   "e4-3-B": {
    "before": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
-   "after_source_change": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
     "10.1002/ange.202422693",
@@ -1109,30 +863,6 @@
     "10.3390/pathogens14050437",
     "10.5252/cryptogamie-mycologie2025v46a4"
    ],
-   "after_source_change": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
    "after_rebuild": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
@@ -1161,7 +891,7 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
@@ -1190,30 +920,6 @@
     "10.3390/pathogens14050437",
     "10.5252/cryptogamie-mycologie2025v46a4"
    ],
-   "after_source_change": [
-    "10.1001/jamaneurol.2025.0023",
-    "10.1002/14651858.cd016019",
-    "10.1002/ange.202422693",
-    "10.1002/cmdc.202500623",
-    "10.1002/ece3.70820",
-    "10.1002/jbm.a.37927",
-    "10.1021/acs.inorgchem.5c03575",
-    "10.1021/acsomega.4c07147",
-    "10.1029/2025gl115483",
-    "10.1063/5.0306490",
-    "10.1071/fp25196",
-    "10.1080/00288233.2024.2333841",
-    "10.1097/bsd.0000000000001683",
-    "10.1097/hjh.0000000000004053",
-    "10.1111/cla.70007",
-    "10.1111/jen.13409",
-    "10.1136/bmjopen-2024-090662",
-    "10.1142/s0219887825400407",
-    "10.1177/20501579251347487",
-    "10.1590/1809-4341.2025v22e01000",
-    "10.3390/pathogens14050437",
-    "10.5252/cryptogamie-mycologie2025v46a4"
-   ],
    "after_rebuild": [
     "10.1001/jamaneurol.2025.0023",
     "10.1002/14651858.cd016019",
@@ -1242,13 +948,12 @@
     "added": [],
     "removed": []
    },
-   "expected_change": 0,
+   "expected_change": [],
    "as_expected": true,
    "errors": []
   },
   "e5-0-B": {
    "before": 49.0,
-   "after_source_change": 49.0,
    "after_rebuild": 49.0,
    "change": 0.0,
    "expected_change": null,
@@ -1257,7 +962,6 @@
   },
   "e5-0-C": {
    "before": 42.0,
-   "after_source_change": 42.0,
    "after_rebuild": 40.0,
    "change": -2.0,
    "expected_change": -2,
@@ -1266,7 +970,6 @@
   },
   "e5-0-D": {
    "before": 42.0,
-   "after_source_change": 42.0,
    "after_rebuild": 40.0,
    "change": -2.0,
    "expected_change": -2,
@@ -1276,12 +979,14 @@
  },
  "summary": {
   "D": {
-   "as_expected": 11,
+   "behaved_as_expected": 11,
    "runs": 11
   },
   "C": {
-   "as_expected": 11,
+   "behaved_as_expected": 11,
    "runs": 11
   }
- }
+ },
+ "failures": [],
+ "passed": true
 }

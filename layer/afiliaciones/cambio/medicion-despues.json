@@ -424,9 +424,15 @@
  "queries": {
   "cq1": {
    "rows": 1675,
-   "affected": [
-    "https://ror.org/051mda743"
-   ]
+   "mentions": 1456,
+   "by_mention": {
+    "10.1002/epd2.70126/4/0": [
+     "https://ror.org/051mda743"
+    ],
+    "10.1002/epd2.70126/5/0": [
+     "https://ror.org/051mda743"
+    ]
+   }
   },
   "cq2": {
    "rows": 70,

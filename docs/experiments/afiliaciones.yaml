@@ -100,7 +100,7 @@ steps:
         Record the approval; write the ontology and the R2RML mapping; Ontop failed twice (string concatenation
         parse, then the reserved table name WORK) and started after quoting it; counts in Rastro equal the tables;
         ontology-check passes in all domains; notes for the three approaches and term_sources.
-    agent_hours: 0.10
+    agent_hours: 0.06
     human_hours: null
   links:
     status: implemented_corrections_validated_by_gpt
@@ -142,7 +142,7 @@ steps:
         notes for both link-aware approaches; quality proposal (6 rules, IDEHU found); cq1-cq3 written, two Ontop
         limitations worked around (NOT EXISTS inside UNION, nondeterministic SAMPLE); query checks from invariants;
         verify gate passed; lifecycle implement and validate (from a clean environment).
-    agent_hours: 0.12
+    agent_hours: 0.53
     human_hours: null
   quality:
     status: implemented_review_findings_awaiting_person
@@ -182,7 +182,7 @@ steps:
         confirmation record is approved); non-blank rule, evidence, reason and text; 16 extra cases with severities
         (quality-cases.py); rules rerun, same findings; dates reconciled (the user's local date is 2026-10-22, UTC-3).
         Then, with the user's approval, the runner keeps severities (method change); both domains rerun.
-    agent_hours: 0.48
+    agent_hours: 0.47
     human_hours: null
   app:
     status: implemented
@@ -192,7 +192,7 @@ steps:
     - 'check_domain.py afiliaciones: cq1 1,675, cq2 69, cq3 125 rows; business and technical views pass'
     - checked in the browser; app log without errors after the fix
     sessions:
-    - started_on: '2026-10-23T02:58:00Z'
+    - started_on: '2026-10-23T02:58:27Z'
       ended_on: '2026-10-23T03:10:51Z'
       pauses: []
       work: >-
@@ -412,6 +412,29 @@ errors_caught:
     the linker recreates the afiliaciones schema and drops the read-only users' grants; the measurement script did not
     grant them again (the evaluation harness does), so D's after-rebuild answers were errors, not results
   fix: medir.py applies reader.sql first; whole test rerun; process note 45
+- step: experiment log
+  check: reviewer (GPT) comparing declared hours with the listed session intervals (7d515f4)
+  failure_kind: >-
+    declared agent_hours summed to 1.02 h while the intervals summed to 1.39 h: links declared 0.12 h for four sessions
+    of 0.53 h (not updated after the third), mapping 0.10 h for 0.06 h, and the quality and app sessions overlapped
+    by 27 s
+  fix: >-
+    each step's agent_hours is now the sum of its own intervals; the app session starts when the quality session
+    ends; total without overlaps 1.89 h of 16. Starts marked approximate stay approximate; these are wall-clock
+    session intervals, not measured active work, and human time stays missing; process note 47
+- step: change_tests
+  check: reviewer (GPT) running the correction checker on an altered copy of the measurements (7d515f4)
+  failure_kind: >-
+    the checker accepted a wrong organization in a same-size list, a measurement error and a broken cq1 coverage, and
+    the traceability scorer rejected B by default instead of inspecting its answers
+  fix: >-
+    exact expectations, errors fail, exit nonzero, tests with GPT's broken fixtures; whole guarded test rerun (passed,
+    restore identical); B's scorer inspects its answers (same result, 0 of 30, 16 with the value present); process
+    notes 48-49
+- step: app
+  check: reviewer (GPT) on the app's notice (7d515f4)
+  failure_kind: the notice said every answer covers all the data; only cq1's coverage was checked, cq3 is a heuristic
+  fix: notice and FAQ say what was checked technically and that cq3 can miss cases
 method_changes:
 - change: >-
     ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports

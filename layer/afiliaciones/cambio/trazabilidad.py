@@ -59,15 +59,24 @@ def with_links(cell, conn):
 
 
 def without_rastro(cell):
-    """B keeps no link records: its saved answers are counts or identifier lists, with no record key or rule."""
-    doi, _, _, org = cell
-    returned = []
+    """B is read from what its saved answers return: each answer item is inspected for the cell's Crossref record
+    (DOI and positions), its ROR record and a rule. Today B's answers are counts and identifier lists."""
+    doi, author, position, org = cell
+    found = {"organization": [], "doi": [], "record_and_rule": []}
     for path in sorted((HERE.parent / "respuestas").glob("*-B.json")):
         answer = json.loads(path.read_text()).get("answer")
-        if isinstance(answer, list) and (org in answer or doi in answer):
-            returned.append(path.stem)
-    return {"traceable": False, "returned_by": returned,
-            "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"}
+        for item in answer if isinstance(answer, list) else [answer]:
+            text = json.dumps(item, ensure_ascii=False).lower()
+            if org.lower() in text:
+                found["organization"].append(path.stem)
+            if doi.lower() in text:
+                found["doi"].append(path.stem)
+            if (org.lower() in text and doi.lower() in text and f"{author}" in text and f"{position}" in text
+                    and ("rule" in text or "regla" in text)):
+                found["record_and_rule"].append(path.stem)
+    return {"traceable": bool(found["record_and_rule"]),
+            "value_in_outputs": bool(found["organization"] or found["doi"]),
+            "found_in": {k: sorted(set(v)) for k, v in found.items()}}
 
 
 def main():
@@ -77,8 +86,14 @@ def main():
         scored = [{"cell": {"doi": c[0], "author": c[1], "affiliation": c[2], "organization": c[3]},
                    "C": with_rastro(c), "D": with_links(c, conn), "B": without_rastro(c)} for c in sample]
     totals = {a: sum(s[a]["traceable"] for s in scored) for a in "BDC"}
+    in_b = sum(s["B"]["value_in_outputs"] for s in scored)
+    scope = ("Scored on the evidence each approach returns or keeps in this setup, with the approved rubric. The 30 "
+             "cells are drawn from Rastro's own identifications, whose correctness is not yet reviewed. For B, "
+             f"{in_b} cells have their organization or DOI in some saved answer and {len(scored) - in_b} do not; none "
+             "comes with its record and rule. This says what B's saved answers keep, not that SQL cannot be audited.")
     (HERE / "trazabilidad.json").write_text(json.dumps(
-        {"fecha": date.today().isoformat(), "cells": len(scored), "traceable": totals, "detail": scored},
+        {"fecha": date.today().isoformat(), "cells": len(scored), "traceable": totals,
+         "b_value_in_outputs": in_b, "scope": scope, "detail": scored},
         ensure_ascii=False, indent=1) + "\n")
     print(totals)
 

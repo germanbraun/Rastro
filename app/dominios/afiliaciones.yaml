@@ -18,8 +18,9 @@ calidad:
     las cumple y un ejemplo roto. Cada hallazgo guarda su severidad: violación, aviso o informativo.
 sin_medir: >-
   Estas respuestas todavía no se compararon con una referencia independiente: una persona que no vea los enlaces de
-  Rastro va a revisar las afiliaciones al final. Hasta entonces, lo que se comprobó es que cada respuesta cubre todos
-  los datos y que cada identificación tiene su regla, su evidencia y sus dos fuentes.
+  Rastro va a revisar las afiliaciones al final. Hasta entonces, lo que se comprobó es técnico: la primera pregunta
+  muestra cada una de las afiliaciones de las 100 publicaciones, y cada identificación tiene su regla, su evidencia y
+  sus dos fuentes. La tercera pregunta es una búsqueda de candidatos: puede dejar casos afuera.
 
 # The demo in three moments, approved with the proposal
 demo_porque: >-
@@ -180,8 +181,9 @@ faq:
   - pregunta: ¿Las respuestas ya están verificadas?
     respuesta: >-
       Todavía no contra una referencia independiente: una persona que no vea los enlaces de Rastro va a revisar las
-      afiliaciones al final. Lo que sí se comprobó es que cada respuesta cubre todas las afiliaciones y que cada
-      identificación tiene su regla, su evidencia y sus dos fuentes.
+      afiliaciones al final. Lo que sí se comprobó es técnico: la primera pregunta muestra cada una de las afiliaciones,
+      y cada identificación tiene su regla, su evidencia y sus dos fuentes. Que una organización esté bien identificada,
+      o que no falte ninguna, se sabrá con esa revisión.
   - pregunta: ¿Qué pasa con los casos dudosos?
     respuesta: >-
       Un nombre sin una segunda evidencia, o una sigla que comparten varias organizaciones, no se cuenta. Cada caso

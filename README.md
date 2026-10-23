@@ -109,8 +109,10 @@ recorded. Claude implemented it and another assistant reviewed every stage.
   - seven quality rules (one registry warning, 91 AI decisions awaiting a person);
   - the app's two views;
   - 33 evaluation answers, collected but not scored;
-  - an alias correction that reached every affected answer with Rastro and with SQL plus links, and none without them;
-  - 30 of 30 answer cells traceable with Rastro.
+  - an alias correction: with Rastro and with SQL plus links every saved answer behaved as declared, with no edits,
+    while the raw-SQL answers did not change;
+  - 30 of 30 sampled answer cells traceable to their records and rule with Rastro, for the evidence kept in this
+    setup.
 - **Still missing:** accuracy against a blind human reference, and closing the experiment.
 - **Where to read more:** [docs/experiments/afiliaciones.yaml](docs/experiments/afiliaciones.yaml) (the log) and
   [process notes](docs/experiments/research-affiliations/process-notes.md) (what the skills got right, missed or

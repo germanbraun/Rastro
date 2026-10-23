@@ -42,8 +42,12 @@ def main(step):
         records = [dict(zip(columns, r)) for r in rows]
         queries[name] = {"rows": len(records)}
         if name == "cq1":
-            queries[name]["affected"] = sorted({(r["organization"] or "") for r in records
-                                                if (r["doi"], str(r["authorPosition"]), str(r["affiliationPosition"])) in AFFECTED})
+            keys = {(r["doi"], str(r["authorPosition"]), str(r["affiliationPosition"])) for r in records}
+            queries[name]["mentions"] = len(keys)
+            queries[name]["by_mention"] = {"/".join(k): sorted({r["organization"] or "" for r in records
+                                                                if (r["doi"], str(r["authorPosition"]),
+                                                                    str(r["affiliationPosition"])) == k})
+                                           for k in AFFECTED}
         if name == "cq2":
             queries[name]["garrahan"] = next((int(float(r["publications"])) for r in records if r["organization"] == GARRAHAN), 0)
         if name == "cq3":

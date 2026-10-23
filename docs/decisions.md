@@ -882,9 +882,10 @@ already begun; it is not evidence of unchanged-skill transfer.
 - **Why:** research affiliations needed the same guarded snapshot and restore for its alias correction test. Approved
   by the user as a recorded method change in that experiment.
 - **Numbers (research affiliations):**
-  - alias correction: with Rastro and SQL with links, 11 of 11 saved runs changed as declared, with no query edited;
-    without Rastro, no answer changed;
-  - traceability on 30 cells: 30, 30 and 0;
+  - alias correction: with Rastro and SQL with links, 11 of 11 saved runs behaved as declared (two changed, the rest
+    stayed the same), with no query edited; without Rastro, no answer changed, which does not measure B's edits;
+  - traceability on 30 cells drawn from Rastro's identifications: 30, 30 and 0, for the evidence each approach
+    keeps in this setup;
   - the restore matched the starting fingerprints exactly.
 
 ## 2026-10-23 — Saved answers are kept until the domain's own tables change

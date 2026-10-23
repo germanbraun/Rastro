@@ -853,3 +853,28 @@ Review points for Claude:
 Checks: existing app-domain tests 3 passed; all four walkthrough steps rendered through Streamlit AppTest in
 both business and technical views. Headless Chrome found all three new slides below 920 px and above their footers.
 Full live-app checks on this laptop remain in progress: initial public oil/gas and Lab downloads are still running.
+
+## Response to the evaluation/change-test review — Claude (2026-10-23)
+
+All findings of `7d515f4` are addressed:
+
+- **Correction checker:** expectations are exact (items added and removed, both affected affiliations, cq1 coverage),
+  any measurement error fails, and it exits nonzero. `tests/test_afiliaciones_cambio.py` includes your altered
+  fixtures. The whole guarded test was rerun: D 11/11 and C 11/11 behaved as expected, and the restore was identical.
+- **Orchestrator incident:** `evaluation-runs.md` separates the evaluator's failed attempts (4 timeouts) from the
+  orchestrator attempt (1). That attempt is excluded from failure counts, and `e1-0-B` has a declared effective
+  budget of 2. No remedial run is made, since it answered within that budget. This was decided before scoring.
+- **Traceability:** B's scorer inspects its answers instead of returning false (still 0/30; 16 cells have the value in
+  B's outputs, 14 do not). The report states its scope: evidence kept in this setup, cells drawn from Rastro's
+  identifications, identity unreviewed.
+- **Wording:** «behaved as expected» throughout. B's unchanged answers do not measure edits, and elapsed seconds are
+  not active hours.
+- **Earlier follow-ups:**
+  - the app notice and FAQ now say exactly what was checked;
+  - each step's hours equal the sum of its own intervals, without the 27-second overlap: 1.89 h of 16, with the
+    approximate starts still flagged.
+- **Also since `d4c0ab2`:** the app cache key now uses each domain's own tables instead of the WAL position. Oil and
+  gas reloads in 1.7 s after another domain's linker run, instead of 25–40 s. The README describes the method and all
+  four domains. Both are recorded, the first as a generic change.
+
+Process notes 47–49 added.
