@@ -1,8 +1,9 @@
 # Worked example: oil and gas (`energia`)
 
 `app/dominios/energia.yaml`, keys `ejemplo_integracion` (tab «Paso a paso») and `ejemplo_lab` (inside «Rastro Lab»).
-Slides: `e-ejemplo-mapeo`, `e-ejemplo-enlace`, `e-ejemplo-respuesta`, `e-lab-entrada`, `e-lab-aportes`,
-`e-lab-evidencia`. Script: the two optional sections at the end of `docs/demo-guion-energia.md`.
+Slides: `e-ejemplo-mapeo`, `e-ejemplo-enlace` and `e-ejemplo-respuesta` open the technical appendix (10–12),
+followed by the bridge `e-ejemplo-ia` (13: B 7, D 10 and C 10 of 10 from `layer/energia/resultados.json`);
+`e-lab-entrada`, `e-lab-aportes` and `e-lab-evidencia` follow the Rastro Lab slide (18–20). Script: the two optional sections at the end of `docs/demo-guion-energia.md`.
 
 ## The case
 

@@ -36,6 +36,8 @@ the semantic layer, one step per part of Rastro, and every number on screen come
   last, so the audience follows one thread.
 - **Pending stays pending.** If a link in the case was reviewed by an AI assistant, the step says that a person still
   has to confirm it.
+- **Claim about AI only what was measured.** If SQL with Rastro's links scores like Rastro, say so: the argument is
+  integrating once, with evidence, not that a graph query is smarter than SQL.
 - **Explanations are not causes.** A model's explanation says how it reached the number, not why the world is so.
 - **Slides are a snapshot.** The slide repeats the values of the day and its notes (`aside`) say which query and date
   they come from, and to show them live in the app if the data changed.
@@ -61,9 +63,17 @@ the semantic layer, one step per part of Rastro, and every number on screen come
 
    `app/dominio.py` (`show_integration_example`) renders it; a domain needs no code.
 3. **Slides and script:** one slide per step in `docs/slides/slides/`, kicker «Paso a paso · Datos reales · Parte de
-   Rastro: …» and a «Para qué» line, added at the end of the domain's appendix (`docs/slides/mazos/<domain>.json`),
-   then `python3 docs/slides/build.py` (skill `decks`). In the demo script, one short optional section: its purpose,
-   and one line per step with its part of Rastro.
+   Rastro: …» and a «Para qué» line.
+   - **Placement:** the semantic-layer walkthrough opens the technical appendix, right after its title slide and
+     before the results: it is the technical motivation. It is followed by one bridge slide, «Lo mismo le pasa a un
+     asistente de IA», with the domain's measured B, D and C scores read from its results file. The slide says
+     plainly that the gain comes from integrating once with evidence (D scores like C), and what the graph adds: where
+     the integration is defined, documented and audited, and concepts and evidence the AI can cite.
+   - A model's walkthrough goes right after the model's slide.
+   - Renumber the footers and the slide references in the demo script, then run `python3 docs/slides/build.py`
+     (skill `decks`).
+   - In the demo script, one short optional section per walkthrough: its purpose, and one line per step with its part
+     of Rastro.
 
 ## The check that decides
 

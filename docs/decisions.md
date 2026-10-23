@@ -925,3 +925,15 @@ already begun; it is not evidence of unchanged-skill transfer.
   - «CGC ENERGIA SAU» had 78,621 declarations and «COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.» 8,684; Rastro counts
     87,305 for one company;
   - Lab well 165404: 51.64 − 3.57 + 6.80 − 0.72 = 54.15 million m³.
+
+## 2026-10-23 — The walkthrough opens the technical part of the deck, with a bridge on AI
+
+- **What:** in the oil and gas deck, the three «Paso a paso» slides open the technical appendix (10–12), before
+  the results. A new slide 13, «Lo mismo le pasa a un asistente de IA», shows the measured scores: without Rastro 7 of
+  10, SQL with Rastro's links 10 of 10, with Rastro 10 of 10. The Lab walkthrough follows the Rastro Lab slide
+  (18–20). Footers and the demo script's slide references were renumbered. The `walkthrough` skill now says where its
+  slides go.
+- **Why:** the user saw the walkthrough as the motivation for semantic technologies and for using LLMs with knowledge
+  graphs. The bridge slide states the measured reason: the gain comes from integrating once, with evidence (SQL with
+  the same links scores the same); the graph is where that integration is defined, documented and audited, and gives
+  the AI concepts and evidence to cite.
