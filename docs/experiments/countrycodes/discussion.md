@@ -740,3 +740,10 @@ then, the saved result still counts the warning and the info findings as «falla
 **Dates:** the user's local date is 2026-10-22 (UTC-3). Log times are UTC. The proposal, ontology comment and rule header
 now say 2026-10-22 local time; the runner writes the container's UTC date (2026-10-23) in `calidad.json`. My two earlier
 discussion headings say 2026-10-23 in UTC and are left as written.
+
+**Runner severity, applied (2026-10-22, local time):** the user approved fixing it as a recorded method change
+(`method_changes` in `../afiliaciones.yaml`). `ontology/calidad.py` now saves each finding's `severidad`,
+`por_severidad` per rule and in total, and the status `review_findings` when there are only warnings or info.
+`defects_detected` now requires a violation. Afiliaciones: `review_findings`, 0 violations, 1 warning, 91 info. Oil and
+gas rerun: unchanged, 19 violations. A new test covers a warning-only result, and the `quality-rules` skill says where
+`sh:severity` goes.

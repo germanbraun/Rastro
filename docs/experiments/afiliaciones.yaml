@@ -145,7 +145,7 @@ steps:
     agent_hours: 0.12
     human_hours: null
   quality:
-    status: implemented_findings_awaiting_person
+    status: implemented_review_findings_awaiting_person
     evidence:
     - 'ontology/afiliaciones/calidad/{reglas.ttl, ejemplos.yaml, datos.yaml}; layer/afiliaciones/calidad.json'
     - >-
@@ -174,14 +174,15 @@ steps:
         the seven rules, examples and data queries; registered quality; ran it; cq1-cq3 re-implemented and
         revalidated after the ontology change; structural checks still pass.
     - started_on: '2026-10-23T02:43:00Z'
-      ended_on: '2026-10-23T02:49:21Z'
+      ended_on: '2026-10-23T02:58:27Z'
       pauses: []
       work: >-
         Start time approximate (after GPT's commit at 02:42:46Z). After GPT's rule review: warning severity moved to
         the shape; status completeness; free-text confirmation rejected (pending is the only valid state until a
         confirmation record is approved); non-blank rule, evidence, reason and text; 16 extra cases with severities
         (quality-cases.py); rules rerun, same findings; dates reconciled (the user's local date is 2026-10-22, UTC-3).
-    agent_hours: 0.33
+        Then, with the user's approval, the runner keeps severities (method change); both domains rerun.
+    agent_hours: 0.48
     human_hours: null
 interventions:
 - step: quality
@@ -301,5 +302,14 @@ errors_caught:
     good/bad pairs passed throughout
   fix: severity on the shape; pending-only confirmation state; status completeness; non-blank patterns;
     quality-cases.py with severities; process notes 37-38
-method_changes: []
+method_changes:
+- change: >-
+    ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports
+    review_findings (warnings or info only) apart from defects_detected (any violation); quality-rules skill says where
+    sh:severity goes; tests/test_generic_method.py covers a warning-only result
+  scope: generic
+  reason: >-
+    a withdrawn ROR record (warning) and 91 pending human confirmations (info) were saved as defects; caught by GPT
+    (2c84127), approved by the user on 2026-10-22 (local time) as a recorded method change; oil and gas rerun with the
+    same counts (19 violations)
 result: null

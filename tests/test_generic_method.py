@@ -41,8 +41,20 @@ def test_unknown_domain_quality_uses_its_own_prefixes_and_finds_defect(unknown_q
     result = calidad.evaluate(unknown_quality, data, {"urn:library:a": {"urn:prediction:one"}})
     assert result["domain"] == "library"
     assert result["status"] == "defects_detected"
+    assert result["reglas"][0]["por_severidad"] == {"Violation": 1, "Warning": 0, "Info": 0}
     assert result["reglas"][0]["predicciones_afectadas"] == ["urn:prediction:one"]
     assert result["reglas"][0]["revisados"] == 1
+
+
+def test_warning_only_findings_ask_for_review_not_defects(unknown_quality):
+    rules = unknown_quality.rules.read_text().replace("library:Pages a sh:NodeShape;",
+                                                      "library:Pages a sh:NodeShape; sh:severity sh:Warning;")
+    unknown_quality.rules.write_text(rules.replace("sh:minInclusive 1 ]", "sh:minInclusive 1; sh:severity sh:Warning ]"))
+    data = Graph().parse(data='@prefix l: <urn:library:> . l:a a l:Book; l:pages -1 .', format="turtle")
+    result = calidad.evaluate(unknown_quality, data)
+    assert result["status"] == "review_findings"
+    assert result["por_severidad"] == {"Violation": 0, "Warning": 1, "Info": 0}
+    assert result["reglas"][0]["ejemplos"][0]["severidad"] == "Warning"
 
 
 def test_zero_target_quality_is_pending_not_success(unknown_quality):

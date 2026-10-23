@@ -2,6 +2,8 @@
 
 Execution failures exit nonzero. Detected source defects remain in the result with their
 coverage and affected predictions; they are not silently corrected or treated as runner errors.
+Each finding keeps its SHACL severity: only violations are defects; warnings and informational
+findings ask a person to review, and the status says so.
 """
 import argparse
 import json
@@ -17,6 +19,7 @@ from rdflib import BNode, RDF, RDFS, Graph, Namespace
 
 ROOT = Path(__file__).resolve().parents[1]
 SH = Namespace("http://www.w3.org/ns/shacl#")
+SEVERITIES = ("Violation", "Warning", "Info")
 
 
 @dataclass
@@ -162,6 +165,7 @@ def evaluate(config, data, predictions=None):
     for shape, graph in bloques(config):
         _, report, _ = validate(data, shacl_graph=graph, advanced=True)
         failures = [{"dato": str(report.value(node, SH.focusNode)), "mensaje": str(report.value(node, SH.resultMessage)),
+                     "severidad": str(report.value(node, SH.resultSeverity)).rsplit("#", 1)[-1],
                      "predicciones": sorted(predictions.get(str(report.value(node, SH.focusNode)), []))}
                     for node in report.subjects(RDF.type, SH.ValidationResult)]
         bad = {failure["dato"] for failure in failures}
@@ -176,11 +180,15 @@ def evaluate(config, data, predictions=None):
             "revisados": len(targets), "coverage": "checked" if targets else "no_targets",
             "un_dato": en_turtle(data, passing[0], bool(list(graph.objects(shape, SH.targetObjectsOf)))) if passing else None,
             "roto": broken, "roto_dice": sorted({str(message) for message in broken_report.objects(None, SH.resultMessage)}),
-            "fallas": len(failures), "ejemplos": sorted(failures, key=lambda item: item["dato"])[:10],
+            "fallas": len(failures),
+            "por_severidad": {s: sum(f["severidad"] == s for f in failures) for s in SEVERITIES},
+            "ejemplos": sorted(failures, key=lambda item: item["dato"])[:10],
             "predicciones_afectadas": sorted({p for failure in failures for p in failure["predicciones"]}),
         })
+    result["por_severidad"] = {s: sum(row["por_severidad"][s] for row in result["reglas"]) for s in SEVERITIES}
     result["status"] = "coverage_pending" if any(not row["revisados"] for row in result["reglas"]) else (
-        "defects_detected" if any(row["fallas"] for row in result["reglas"]) else "checked")
+        "defects_detected" if result["por_severidad"]["Violation"] else
+        "review_findings" if any(row["fallas"] for row in result["reglas"]) else "checked")
     return result
 
 

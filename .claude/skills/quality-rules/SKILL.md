@@ -91,7 +91,9 @@ under the hood, with a real value from Rastro and a broken one.
 
 Use the contract's execution-failure / detected-defect / reviewed-disposition distinction. Successful detection is
 not runner failure. Record the human disposition of defects affecting a claim; leave them visible instead of
-weakening thresholds. Missing coverage remains pending. A new-domain runner and its tests must actually read that
+weakening thresholds. Missing coverage remains pending. Each finding keeps its SHACL severity: only violations are defects
+(`defects_detected`); warnings and informational findings ask a person to review (`review_findings`). Put
+`sh:severity` on the shape or property shape that owns the constraint, not on a `sh:sparql` node. A new-domain runner and its tests must actually read that
 domain; the shared tests discover every domain with quality configuration and execute its own examples.
 
 ## A person approves

@@ -16,55 +16,70 @@
     "Decidido por un asistente de IA; falta que una persona lo confirme."
    ],
    "fallas": 91,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 91
+   },
    "ejemplos": [
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Falr.70038/28/0/https%3A%2F%2Fror.org%2F03e47dk66",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Falr.70038/8/0/https%3A%2F%2Fror.org%2F03e47dk66",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fhon.70094_218/10/0/https%3A%2F%2Fror.org%2F03e47dk66",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fhon.70094_218/11/0/https%3A%2F%2Fror.org%2F03e47dk66",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjbm.a.37927/4/2/https%3A%2F%2Fror.org%2F00568z619",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjbm.a.37927/4/2/https%3A%2F%2Fror.org%2F01ebs6k31",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjoc.8919/1/0/https%3A%2F%2Fror.org%2F02s7sax82",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjoc.8919/1/0/https%3A%2F%2Fror.org%2F04ebzxq58",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjoc.8919/4/0/https%3A%2F%2Fror.org%2F02s7sax82",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjoc.8919/4/0/https%3A%2F%2Fror.org%2F04ebzxq58",
      "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "severidad": "Info",
      "predicciones": []
     }
    ],
@@ -85,6 +100,11 @@
     "Su confirmación no es «pending», y todavía no hay un registro de confirmación aprobado (quién, cuándo y con qué evidencia)."
    ],
    "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
    "ejemplos": [],
    "predicciones_afectadas": []
   },
@@ -101,6 +121,11 @@
     "No dice que sale de ROR."
    ],
    "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
    "ejemplos": [],
    "predicciones_afectadas": []
   },
@@ -118,6 +143,11 @@
     "No tiene su texto."
    ],
    "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
    "ejemplos": [],
    "predicciones_afectadas": []
   },
@@ -134,6 +164,11 @@
     "La organización identificada no tiene una sede en Argentina en ROR."
    ],
    "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
    "ejemplos": [],
    "predicciones_afectadas": []
   },
@@ -150,6 +185,11 @@
     "No tiene un DOI, tiene más de uno, o uno con otro formato."
    ],
    "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
    "ejemplos": [],
    "predicciones_afectadas": []
   },
@@ -166,15 +206,26 @@
     "El registro figura como «withdrawn» en ROR v2.15; sucesora en ROR: https://ror.org/03cqe8w59 (uno de sus nombres: National Scientific and Technical Research Council). La identificación no cambia: una persona decide."
    ],
    "fallas": 1,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 1,
+    "Info": 0
+   },
    "ejemplos": [
     {
      "dato": "https://ror.org/0425cyr19",
      "mensaje": "El registro figura como «withdrawn» en ROR v2.15; sucesora en ROR: https://ror.org/03cqe8w59 (uno de sus nombres: Argentinian National Council for Scientific and Technical Research). La identificación no cambia: una persona decide.",
+     "severidad": "Warning",
      "predicciones": []
     }
    ],
    "predicciones_afectadas": []
   }
  ],
- "status": "defects_detected"
+ "por_severidad": {
+  "Violation": 0,
+  "Warning": 1,
+  "Info": 91
+ },
+ "status": "review_findings"
 }

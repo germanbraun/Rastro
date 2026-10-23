@@ -1,65 +1,26 @@
 {
- "fecha": "2026-10-21",
+ "fecha": "2026-10-23",
+ "domain": "energia",
  "triples": 456263,
  "reglas": [
-  {
-   "id": "EnlaceConEvidencia",
-   "nombre": "Cada enlace dice de qué fuente sale y por qué",
-   "porque": "Todo lo que une o corrige Rastro tiene una regla. Si además no tiene su fuente y su evidencia, no se puede auditar.",
-   "shacl": "calidad:EnlaceConEvidencia a sh:NodeShape ;\n    rdfs:label \"Cada enlace dice de qué fuente sale y por qué\" ;\n    rdfs:comment \"Todo lo que une o corrige Rastro tiene una regla. Si además no tiene su fuente y su evidencia, no se puede auditar.\" ;\n    sh:targetSubjectsOf energia:rule ;\n    sh:property [ sh:path prov:wasDerivedFrom ; sh:minCount 1 ; sh:message \"No dice de qué fuente sale.\" ] ;\n    sh:property [ sh:path energia:sourceText ; sh:minCount 1 ; sh:minLength 1 ; sh:message \"No tiene evidencia.\" ] .",
-   "revisados": 113913,
-   "un_dato": "<https://w3id.org/rastro/energia/companyname/008725207f53f22f5b33d39107a39134> prov:wasDerivedFrom <https://w3id.org/rastro/source/fractura> ;\n    energia:rule \"mismo nombre normalizado\" ;\n    energia:sourceText \"Coincide el nombre sin acentos, puntuación ni forma societaria: «TOTAL AUSTRAL».\" .",
-   "roto": "e:enlace energia:rule \"punto dentro del contorno\" ; prov:wasDerivedFrom e:fuente .",
-   "roto_dice": [
-    "No tiene evidencia."
-   ],
-   "fallas": 0,
-   "ejemplos": [],
-   "predicciones_afectadas": []
-  },
-  {
-   "id": "Participacion",
-   "nombre": "Cada participación es de una empresa en una concesión, entre 0 y 100 %",
-   "porque": "Con la participación se calcula lo que le corresponde a cada empresa y entra al modelo de Rastro Lab.",
-   "shacl": "calidad:Participacion a sh:NodeShape ;\n    rdfs:label \"Cada participación es de una empresa en una concesión, entre 0 y 100 %\" ;\n    rdfs:comment \"Con la participación se calcula lo que le corresponde a cada empresa y entra al modelo de Rastro Lab.\" ;\n    sh:targetClass energia:Stake ;\n    sh:property [ sh:path energia:percent ; sh:minCount 1 ; sh:maxCount 1 ; sh:minExclusive 0 ; sh:maxInclusive 100 ;\n                  sh:message \"El porcentaje falta o no está entre 0 y 100.\" ] ;\n    sh:property [ sh:path energia:partner ; sh:minCount 1 ; sh:maxCount 1 ; sh:message \"No es de una sola empresa.\" ] ;\n    sh:property [ sh:path energia:inConcession ; sh:minCount 1 ; sh:maxCount 1 ; sh:message \"No es de una sola concesión.\" ] .",
-   "revisados": 474,
-   "un_dato": "<https://w3id.org/rastro/energia/stake/AAB/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> ;\n    energia:percent 10.9 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"CONIPA S A CONSTRUCTORA INDUSTRIAL COMERCIAL FINANCIERA Y DE MANDATOS: 10.90 %\" .",
-   "roto": "e:socio a energia:Stake ; energia:percent 120 ; energia:partner e:ypf ; energia:inConcession e:concesion .",
-   "roto_dice": [
-    "El porcentaje falta o no está entre 0 y 100."
-   ],
-   "fallas": 0,
-   "ejemplos": [],
-   "predicciones_afectadas": []
-  },
   {
    "id": "ConcesionHasta100",
    "nombre": "Las participaciones de una concesión suman 100 % o menos",
    "porque": "Si suman más, a los socios les toca más gas del que hay. Se tolera medio punto por el redondeo del mapa.",
-   "shacl": "calidad:ConcesionHasta100 a sh:NodeShape ;\n    rdfs:label \"Las participaciones de una concesión suman 100 % o menos\" ;\n    rdfs:comment \"Si suman más, a los socios les toca más gas del que hay. Se tolera medio punto por el redondeo del mapa.\" ;\n    sh:targetObjectsOf energia:inConcession ;\n    sh:sparql [\n        sh:message \"Sus participaciones suman {?total} %.\" ;\n        sh:select \"\"\"\n            SELECT $this (SUM(?p) AS ?total) WHERE {\n                ?s <https://w3id.org/rastro/energia#inConcession> $this ; <https://w3id.org/rastro/energia#percent> ?p .\n            } GROUP BY $this HAVING (SUM(?p) > 100.5)\n        \"\"\" ] .",
+   "shacl": "@prefix calidad: <https://w3id.org/rastro/energia/calidad#> .\n@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:ConcesionHasta100 a sh:NodeShape ;\n    rdfs:label \"Las participaciones de una concesión suman 100 % o menos\" ;\n    rdfs:comment \"Si suman más, a los socios les toca más gas del que hay. Se tolera medio punto por el redondeo del mapa.\" ;\n    sh:sparql [ sh:message \"Sus participaciones suman {?total} %.\" ;\n            sh:select \"\"\"\n            SELECT $this (SUM(?p) AS ?total) WHERE {\n                ?s <https://w3id.org/rastro/energia#inConcession> $this ; <https://w3id.org/rastro/energia#percent> ?p .\n            } GROUP BY $this HAVING (SUM(?p) > 100.5)\n        \"\"\" ] ;\n    sh:targetObjectsOf energia:inConcession .\n\n",
    "revisados": 293,
-   "un_dato": "<https://w3id.org/rastro/energia/stake/AAB/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> ;\n    energia:percent 10.9 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"CONIPA S A CONSTRUCTORA INDUSTRIAL COMERCIAL FINANCIERA Y DE MANDATOS: 10.90 %\" .\n\n<https://w3id.org/rastro/energia/stake/AAB/FOMICRUZ%20S%20E> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/FOMICRUZ%20S%20E> ;\n    energia:percent 3.5 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"FOMICRUZ S.E.: 3.5 %\" .\n\n<https://w3id.org/rastro/energia/stake/AAB/INGENIERIA%20ALPA> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/INGENIERIA%20ALPA> ;\n    energia:percent 10.9 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"INGENIERIA ALPA S.A.: 10.90 %\" .\n\n<https://w3id.org/rastro/energia/stake/AAB/QUINTANA%20E%26P%20ARGENTINA> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/QUINTANA%20E%26P%20ARGENTINA> ;\n    energia:percent 72.5 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"QUINTANA E&P ARGENTINA S.R.L.: 72.50 %\" .",
+   "coverage": "checked",
+   "un_dato": "@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n<https://w3id.org/rastro/energia/stake/AAB/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> ;\n    energia:percent 10.9 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"CONIPA S A CONSTRUCTORA INDUSTRIAL COMERCIAL FINANCIERA Y DE MANDATOS: 10.90 %\" .\n\n<https://w3id.org/rastro/energia/stake/AAB/FOMICRUZ%20S%20E> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/FOMICRUZ%20S%20E> ;\n    energia:percent 3.5 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"FOMICRUZ S.E.: 3.5 %\" .\n\n<https://w3id.org/rastro/energia/stake/AAB/INGENIERIA%20ALPA> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/INGENIERIA%20ALPA> ;\n    energia:percent 10.9 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"INGENIERIA ALPA S.A.: 10.90 %\" .\n\n<https://w3id.org/rastro/energia/stake/AAB/QUINTANA%20E%26P%20ARGENTINA> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/QUINTANA%20E%26P%20ARGENTINA> ;\n    energia:percent 72.5 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"QUINTANA E&P ARGENTINA S.R.L.: 72.50 %\" .\n\n",
    "roto": "e:socio1 energia:inConcession e:concesion ; energia:percent 70 .\ne:socio2 energia:inConcession e:concesion ; energia:percent 40 .",
    "roto_dice": [
     "Sus participaciones suman 110 %."
    ],
    "fallas": 0,
-   "ejemplos": [],
-   "predicciones_afectadas": []
-  },
-  {
-   "id": "Prediccion",
-   "nombre": "Cada predicción sale de un inicio de pozo y cae dentro de su rango",
-   "porque": "Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.",
-   "shacl": "calidad:Prediccion a sh:NodeShape ;\n    rdfs:label \"Cada predicción sale de un inicio de pozo y cae dentro de su rango\" ;\n    rdfs:comment \"Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.\" ;\n    sh:targetClass energia:Prediction ;\n    sh:property [ sh:path prov:used ; sh:qualifiedValueShape [ sh:class energia:WellStart ] ;\n                  sh:qualifiedMinCount 1 ; sh:qualifiedMaxCount 1 ; sh:message \"No dice de qué inicio de pozo sale.\" ] ;\n    sh:property [ sh:path energia:predictedLow ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedGas ;\n                  sh:message \"El mínimo del rango es mayor que la predicción.\" ] ;\n    sh:property [ sh:path energia:predictedGas ; sh:minCount 1 ; sh:lessThanOrEquals energia:predictedHigh ;\n                  sh:message \"La predicción es mayor que el máximo del rango.\" ] .",
-   "revisados": 5590,
-   "un_dato": "<https://w3id.org/rastro/energia/prediction/20261021-0855-baf6d8fa/158961> a energia:Prediction ;\n    prov:used <https://w3id.org/rastro/energia/fracturing/158961>,\n        <https://w3id.org/rastro/energia/stake/FOR/TECPETROL>,\n        <https://w3id.org/rastro/energia/wellstart/158961> ;\n    energia:predictedGas 52.003 ;\n    energia:predictedHigh 68.337 ;\n    energia:predictedLow 19.022 .",
-   "roto": "e:prediccion a energia:Prediction ; energia:predictedLow 25 ; energia:predictedGas 20 ; energia:predictedHigh 30 .",
-   "roto_dice": [
-    "El mínimo del rango es mayor que la predicción.",
-    "No dice de qué inicio de pozo sale."
-   ],
-   "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
    "ejemplos": [],
    "predicciones_afectadas": []
   },
@@ -67,69 +28,79 @@
    "id": "EmpresaUnLei",
    "nombre": "Cada empresa tiene a lo sumo un LEI, con su formato de 20 caracteres",
    "porque": "Por el LEI se unen GLEIF y Wikidata: dos LEI en una empresa son dos empresas unidas por error.",
-   "shacl": "calidad:EmpresaUnLei a sh:NodeShape ;\n    rdfs:label \"Cada empresa tiene a lo sumo un LEI, con su formato de 20 caracteres\" ;\n    rdfs:comment \"Por el LEI se unen GLEIF y Wikidata: dos LEI en una empresa son dos empresas unidas por error.\" ;\n    sh:targetClass energia:Company ;\n    sh:property [ sh:path energia:lei ; sh:maxCount 1 ; sh:pattern \"^[A-Z0-9]{18}[0-9]{2}$\" ;\n                  sh:message \"Tiene más de un LEI, o uno con otro formato.\" ] .",
+   "shacl": "@prefix calidad: <https://w3id.org/rastro/energia/calidad#> .\n@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:EmpresaUnLei a sh:NodeShape ;\n    rdfs:label \"Cada empresa tiene a lo sumo un LEI, con su formato de 20 caracteres\" ;\n    rdfs:comment \"Por el LEI se unen GLEIF y Wikidata: dos LEI en una empresa son dos empresas unidas por error.\" ;\n    sh:property [ sh:maxCount 1 ;\n            sh:message \"Tiene más de un LEI, o uno con otro formato.\" ;\n            sh:path energia:lei ;\n            sh:pattern \"^[A-Z0-9]{18}[0-9]{2}$\" ] ;\n    sh:targetClass energia:Company .\n\n",
    "revisados": 12,
-   "un_dato": "<https://w3id.org/rastro/energia/company/CAPEX> a energia:Company ;\n    energia:lei \"529900C9G66T1U8FMX69\" .",
+   "coverage": "checked",
+   "un_dato": "@prefix energia: <https://w3id.org/rastro/energia#> .\n\n<https://w3id.org/rastro/energia/company/CAPEX> a energia:Company ;\n    energia:lei \"529900C9G66T1U8FMX69\" .\n\n",
    "roto": "e:ypf a energia:Company ; energia:lei \"549300BS2ZHDWDKUGX28\", \"ABC\" .",
    "roto_dice": [
     "Tiene más de un LEI, o uno con otro formato."
    ],
    "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
    "ejemplos": [],
    "predicciones_afectadas": []
   },
   {
-   "id": "TrayectoriaPosible",
-   "nombre": "Cada trayectoria tiene una profundidad y una rama posibles",
-   "porque": "En Vaca Muerta la profundidad vertical va de 1.000 a 6.000 m y la rama horizontal no pasa de 6.000 m. Fuera de eso es un error de carga, y lo que lo use hereda el error.",
-   "shacl": "calidad:TrayectoriaPosible a sh:NodeShape ;\n    rdfs:label \"Cada trayectoria tiene una profundidad y una rama posibles\" ;\n    rdfs:comment \"En Vaca Muerta la profundidad vertical va de 1.000 a 6.000 m y la rama horizontal no pasa de 6.000 m. Fuera de eso es un error de carga, y lo que lo use hereda el error.\" ;\n    sh:targetClass energia:WellTrajectory ;\n    sh:property [ sh:path energia:verticalDepthM ; sh:minInclusive 1000 ; sh:maxInclusive 6000 ;\n                  sh:message \"La profundidad vertical no es posible.\" ] ;\n    sh:property [ sh:path energia:lateralLengthM ; sh:minInclusive 0 ; sh:maxInclusive 6000 ;\n                  sh:message \"La rama horizontal no es posible.\" ] .",
-   "revisados": 1903,
-   "un_dato": "<https://w3id.org/rastro/energia/trajectory/0> a energia:WellTrajectory ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/trayectorias> ;\n    energia:lateralLengthM 4342.13 ;\n    energia:rule \"una por pozo: la de rama más larga entre las perforadas antes de que arrancara\" ;\n    energia:sourceText \"Trayectoria YPF.Nq.LLL-1639(h): profundidad vertical de 2943 m, rama horizontal de 4342 m, perforado hasta el 27/01/2023.\" ;\n    energia:verticalDepthM 2943.0 .",
-   "roto": "e:trayectoria a energia:WellTrajectory ; energia:verticalDepthM 276939 ; energia:lateralLengthM 2555 .",
+   "id": "EnlaceConEvidencia",
+   "nombre": "Cada enlace dice de qué fuente sale y por qué",
+   "porque": "Todo lo que une o corrige Rastro tiene una regla. Si además no tiene su fuente y su evidencia, no se puede auditar.",
+   "shacl": "@prefix calidad: <https://w3id.org/rastro/energia/calidad#> .\n@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:EnlaceConEvidencia a sh:NodeShape ;\n    rdfs:label \"Cada enlace dice de qué fuente sale y por qué\" ;\n    rdfs:comment \"Todo lo que une o corrige Rastro tiene una regla. Si además no tiene su fuente y su evidencia, no se puede auditar.\" ;\n    sh:property [ sh:message \"No dice de qué fuente sale.\" ;\n            sh:minCount 1 ;\n            sh:path prov:wasDerivedFrom ],\n        [ sh:message \"No tiene evidencia.\" ;\n            sh:minCount 1 ;\n            sh:minLength 1 ;\n            sh:path energia:sourceText ] ;\n    sh:targetSubjectsOf energia:rule .\n\n",
+   "revisados": 113913,
+   "coverage": "checked",
+   "un_dato": "@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n\n<https://w3id.org/rastro/energia/companyname/008725207f53f22f5b33d39107a39134> prov:wasDerivedFrom <https://w3id.org/rastro/source/fractura> ;\n    energia:rule \"mismo nombre normalizado\" ;\n    energia:sourceText \"Coincide el nombre sin acentos, puntuación ni forma societaria: «TOTAL AUSTRAL».\" .\n\n",
+   "roto": "e:enlace energia:rule \"punto dentro del contorno\" ; prov:wasDerivedFrom e:fuente .",
    "roto_dice": [
-    "La profundidad vertical no es posible."
+    "No tiene evidencia."
    ],
-   "fallas": 2,
-   "ejemplos": [
-    {
-     "dato": "https://w3id.org/rastro/energia/trajectory/157567",
-     "mensaje": "La rama horizontal no es posible.",
-     "predicciones": []
-    },
-    {
-     "dato": "https://w3id.org/rastro/energia/trajectory/163577",
-     "mensaje": "La profundidad vertical no es posible.",
-     "predicciones": []
-    }
-   ],
+   "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
+   "ejemplos": [],
    "predicciones_afectadas": []
   },
   {
    "id": "FracturaPosible",
    "nombre": "Cada fractura tiene una presión y un agua posibles",
    "porque": "La presión máxima de bombeo no pasa de 20.000 psi y el agua de un pozo, de 200.000 m³ (lo común es 11.000 psi y 28.000 m³). Fuera de eso es un error de carga, y la predicción que lo use hereda el error.",
-   "shacl": "calidad:FracturaPosible a sh:NodeShape ;\n    rdfs:label \"Cada fractura tiene una presión y un agua posibles\" ;\n    rdfs:comment \"La presión máxima de bombeo no pasa de 20.000 psi y el agua de un pozo, de 200.000 m³ (lo común es 11.000 psi y 28.000 m³). Fuera de eso es un error de carga, y la predicción que lo use hereda el error.\" ;\n    sh:targetClass energia:Fracturing ;\n    sh:property [ sh:path energia:maxPressurePsi ; sh:minInclusive 0 ; sh:maxInclusive 20000 ;\n                  sh:message \"La presión máxima no es posible.\" ] ;\n    sh:property [ sh:path energia:waterM3 ; sh:minInclusive 0 ; sh:maxInclusive 200000 ;\n                  sh:message \"El agua no es posible.\" ] .",
+   "shacl": "@prefix calidad: <https://w3id.org/rastro/energia/calidad#> .\n@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:FracturaPosible a sh:NodeShape ;\n    rdfs:label \"Cada fractura tiene una presión y un agua posibles\" ;\n    rdfs:comment \"La presión máxima de bombeo no pasa de 20.000 psi y el agua de un pozo, de 200.000 m³ (lo común es 11.000 psi y 28.000 m³). Fuera de eso es un error de carga, y la predicción que lo use hereda el error.\" ;\n    sh:property [ sh:maxInclusive 20000 ;\n            sh:message \"La presión máxima no es posible.\" ;\n            sh:minInclusive 0 ;\n            sh:path energia:maxPressurePsi ],\n        [ sh:maxInclusive 200000 ;\n            sh:message \"El agua no es posible.\" ;\n            sh:minInclusive 0 ;\n            sh:path energia:waterM3 ] ;\n    sh:targetClass energia:Fracturing .\n\n",
    "revisados": 4733,
-   "un_dato": "<https://w3id.org/rastro/energia/fracturing/10119> a energia:Fracturing ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/energia/fracturereport/3390>,\n        <https://w3id.org/rastro/source/fractura> ;\n    energia:maxPressurePsi 8948.0 ;\n    energia:rule \"las fracturas informadas hasta el mes en que arrancó el pozo, sumadas\" ;\n    energia:sourceText \"Fractura informada por CAPEX S.A desde 13/08/2021: rama horizontal de 0 m, 1 etapas, 12 t de arena, 51 m³ de agua, presión máxima 8948 psi. Cargada en el portal el 14/09/2021.\" ;\n    energia:waterM3 50.8 .",
+   "coverage": "checked",
+   "un_dato": "@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n<https://w3id.org/rastro/energia/fracturing/10119> a energia:Fracturing ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/energia/fracturereport/3390>,\n        <https://w3id.org/rastro/source/fractura> ;\n    energia:maxPressurePsi 8948.0 ;\n    energia:rule \"las fracturas informadas hasta el mes en que arrancó el pozo, sumadas\" ;\n    energia:sourceText \"Fractura informada por CAPEX S.A desde 13/08/2021: rama horizontal de 0 m, 1 etapas, 12 t de arena, 51 m³ de agua, presión máxima 8948 psi. Cargada en el portal el 14/09/2021.\" ;\n    energia:waterM3 50.8 .\n\n",
    "roto": "e:fractura a energia:Fracturing ; energia:maxPressurePsi 111515 ; energia:waterM3 109996 .",
    "roto_dice": [
     "La presión máxima no es posible."
    ],
    "fallas": 17,
+   "por_severidad": {
+    "Violation": 17,
+    "Warning": 0,
+    "Info": 0
+   },
    "ejemplos": [
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/157804",
      "mensaje": "La presión máxima no es posible.",
+     "severidad": "Violation",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/158182",
      "mensaje": "El agua no es posible.",
+     "severidad": "Violation",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/160191",
      "mensaje": "El agua no es posible.",
+     "severidad": "Violation",
      "predicciones": [
       "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160191"
      ]
@@ -137,6 +108,7 @@
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/160192",
      "mensaje": "El agua no es posible.",
+     "severidad": "Violation",
      "predicciones": [
       "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160192"
      ]
@@ -144,6 +116,7 @@
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/160193",
      "mensaje": "El agua no es posible.",
+     "severidad": "Violation",
      "predicciones": [
       "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160193"
      ]
@@ -151,21 +124,25 @@
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/162243",
      "mensaje": "La presión máxima no es posible.",
+     "severidad": "Violation",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/163171",
      "mensaje": "La presión máxima no es posible.",
+     "severidad": "Violation",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/164398",
      "mensaje": "La presión máxima no es posible.",
+     "severidad": "Violation",
      "predicciones": []
     },
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/164779",
      "mensaje": "La presión máxima no es posible.",
+     "severidad": "Violation",
      "predicciones": [
       "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/164779"
      ]
@@ -173,6 +150,7 @@
     {
      "dato": "https://w3id.org/rastro/energia/fracturing/165551",
      "mensaje": "La presión máxima no es posible.",
+     "severidad": "Violation",
      "predicciones": []
     }
    ],
@@ -182,6 +160,89 @@
     "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160193",
     "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/164779"
    ]
+  },
+  {
+   "id": "Participacion",
+   "nombre": "Cada participación es de una empresa en una concesión, entre 0 y 100 %",
+   "porque": "Con la participación se calcula lo que le corresponde a cada empresa y entra al modelo de Rastro Lab.",
+   "shacl": "@prefix calidad: <https://w3id.org/rastro/energia/calidad#> .\n@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:Participacion a sh:NodeShape ;\n    rdfs:label \"Cada participación es de una empresa en una concesión, entre 0 y 100 %\" ;\n    rdfs:comment \"Con la participación se calcula lo que le corresponde a cada empresa y entra al modelo de Rastro Lab.\" ;\n    sh:property [ sh:maxCount 1 ;\n            sh:maxInclusive 100 ;\n            sh:message \"El porcentaje falta o no está entre 0 y 100.\" ;\n            sh:minCount 1 ;\n            sh:minExclusive 0 ;\n            sh:path energia:percent ],\n        [ sh:maxCount 1 ;\n            sh:message \"No es de una sola empresa.\" ;\n            sh:minCount 1 ;\n            sh:path energia:partner ],\n        [ sh:maxCount 1 ;\n            sh:message \"No es de una sola concesión.\" ;\n            sh:minCount 1 ;\n            sh:path energia:inConcession ] ;\n    sh:targetClass energia:Stake .\n\n",
+   "revisados": 474,
+   "coverage": "checked",
+   "un_dato": "@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n<https://w3id.org/rastro/energia/stake/AAB/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> a energia:Stake ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/sig_energia> ;\n    energia:inConcession <https://w3id.org/rastro/energia/concession/AAB> ;\n    energia:partner <https://w3id.org/rastro/energia/company/CONIPA%20CONSTRUCTORA%20INDUSTRIAL%20COMERCIAL%20FINANCIERA%20Y%20DE%20MANDATOS> ;\n    energia:percent 10.9 ;\n    energia:rule \"texto de socios del mapa\" ;\n    energia:sourceText \"CONIPA S A CONSTRUCTORA INDUSTRIAL COMERCIAL FINANCIERA Y DE MANDATOS: 10.90 %\" .\n\n",
+   "roto": "e:socio a energia:Stake ; energia:percent 120 ; energia:partner e:ypf ; energia:inConcession e:concesion .",
+   "roto_dice": [
+    "El porcentaje falta o no está entre 0 y 100."
+   ],
+   "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
+   "ejemplos": [],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "Prediccion",
+   "nombre": "Cada predicción sale de un inicio de pozo y cae dentro de su rango",
+   "porque": "Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.",
+   "shacl": "@prefix calidad: <https://w3id.org/rastro/energia/calidad#> .\n@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:Prediccion a sh:NodeShape ;\n    rdfs:label \"Cada predicción sale de un inicio de pozo y cae dentro de su rango\" ;\n    rdfs:comment \"Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.\" ;\n    sh:property [ sh:lessThanOrEquals energia:predictedHigh ;\n            sh:message \"La predicción es mayor que el máximo del rango.\" ;\n            sh:minCount 1 ;\n            sh:path energia:predictedGas ],\n        [ sh:message \"No dice de qué inicio de pozo sale.\" ;\n            sh:path prov:used ;\n            sh:qualifiedMaxCount 1 ;\n            sh:qualifiedMinCount 1 ;\n            sh:qualifiedValueShape [ sh:class energia:WellStart ] ],\n        [ sh:lessThanOrEquals energia:predictedGas ;\n            sh:message \"El mínimo del rango es mayor que la predicción.\" ;\n            sh:minCount 1 ;\n            sh:path energia:predictedLow ] ;\n    sh:targetClass energia:Prediction .\n\n",
+   "revisados": 5590,
+   "coverage": "checked",
+   "un_dato": "@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n<https://w3id.org/rastro/energia/prediction/20261021-0855-baf6d8fa/158961> a energia:Prediction ;\n    prov:used <https://w3id.org/rastro/energia/fracturing/158961>,\n        <https://w3id.org/rastro/energia/stake/FOR/TECPETROL>,\n        <https://w3id.org/rastro/energia/wellstart/158961> ;\n    energia:predictedGas 52.003 ;\n    energia:predictedHigh 68.337 ;\n    energia:predictedLow 19.022 .\n\n",
+   "roto": "e:prediccion a energia:Prediction ; energia:predictedLow 25 ; energia:predictedGas 20 ; energia:predictedHigh 30 .",
+   "roto_dice": [
+    "El mínimo del rango es mayor que la predicción.",
+    "No dice de qué inicio de pozo sale."
+   ],
+   "fallas": 0,
+   "por_severidad": {
+    "Violation": 0,
+    "Warning": 0,
+    "Info": 0
+   },
+   "ejemplos": [],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "TrayectoriaPosible",
+   "nombre": "Cada trayectoria tiene una profundidad y una rama posibles",
+   "porque": "En Vaca Muerta la profundidad vertical va de 1.000 a 6.000 m y la rama horizontal no pasa de 6.000 m. Fuera de eso es un error de carga, y lo que lo use hereda el error.",
+   "shacl": "@prefix calidad: <https://w3id.org/rastro/energia/calidad#> .\n@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:TrayectoriaPosible a sh:NodeShape ;\n    rdfs:label \"Cada trayectoria tiene una profundidad y una rama posibles\" ;\n    rdfs:comment \"En Vaca Muerta la profundidad vertical va de 1.000 a 6.000 m y la rama horizontal no pasa de 6.000 m. Fuera de eso es un error de carga, y lo que lo use hereda el error.\" ;\n    sh:property [ sh:maxInclusive 6000 ;\n            sh:message \"La profundidad vertical no es posible.\" ;\n            sh:minInclusive 1000 ;\n            sh:path energia:verticalDepthM ],\n        [ sh:maxInclusive 6000 ;\n            sh:message \"La rama horizontal no es posible.\" ;\n            sh:minInclusive 0 ;\n            sh:path energia:lateralLengthM ] ;\n    sh:targetClass energia:WellTrajectory .\n\n",
+   "revisados": 1903,
+   "coverage": "checked",
+   "un_dato": "@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n<https://w3id.org/rastro/energia/trajectory/0> a energia:WellTrajectory ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/trayectorias> ;\n    energia:lateralLengthM 4342.13 ;\n    energia:rule \"una por pozo: la de rama más larga entre las perforadas antes de que arrancara\" ;\n    energia:sourceText \"Trayectoria YPF.Nq.LLL-1639(h): profundidad vertical de 2943 m, rama horizontal de 4342 m, perforado hasta el 27/01/2023.\" ;\n    energia:verticalDepthM 2943.0 .\n\n",
+   "roto": "e:trayectoria a energia:WellTrajectory ; energia:verticalDepthM 276939 ; energia:lateralLengthM 2555 .",
+   "roto_dice": [
+    "La profundidad vertical no es posible."
+   ],
+   "fallas": 2,
+   "por_severidad": {
+    "Violation": 2,
+    "Warning": 0,
+    "Info": 0
+   },
+   "ejemplos": [
+    {
+     "dato": "https://w3id.org/rastro/energia/trajectory/157567",
+     "mensaje": "La rama horizontal no es posible.",
+     "severidad": "Violation",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/energia/trajectory/163577",
+     "mensaje": "La profundidad vertical no es posible.",
+     "severidad": "Violation",
+     "predicciones": []
+    }
+   ],
+   "predicciones_afectadas": []
   }
- ]
+ ],
+ "por_severidad": {
+  "Violation": 19,
+  "Warning": 0,
+  "Info": 0
+ },
+ "status": "defects_detected"
 }

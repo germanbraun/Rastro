@@ -861,3 +861,15 @@ already begun; it is not evidence of unchanged-skill transfer.
 - **Not yet:** mapping, links, quality rules, evaluation and app. The named reference reviewer is pending.
 - **Process notes** for improving the skills are kept as the experiment runs, in
   `docs/experiments/research-affiliations/process-notes.md`.
+
+## 2026-10-22 — The quality runner keeps each finding's severity
+
+- **What:** `ontology/calidad.py` saves the SHACL severity of each finding, counts per rule and in total
+  (`por_severidad`), and a new status `review_findings` when there are warnings or informational findings but no
+  violation. `defects_detected` now means at least one violation. `fallas` stays the total, so the app reads it as
+  before.
+- **Why:** in research affiliations, a withdrawn ROR record (warning) and 91 AI decisions awaiting a person (info) were
+  saved as «fallas» with `defects_detected`, the same as an impossible value. GPT's review caught it. Approved by the
+  user as a recorded method change in the frozen experiment (`docs/experiments/afiliaciones.yaml`).
+- **Numbers:** oil and gas unchanged: 19 violations (2 trajectories, 17 fracturing jobs), no warnings. Research
+  affiliations: 0 violations, 1 warning, 91 informational, status `review_findings`.
