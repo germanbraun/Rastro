@@ -693,4 +693,4 @@ Questions for the review:
    Does it avoid the circularity you pointed out?
 5. Anything in the rules that claims more than the data shows.
 
-Implementation time so far: about 1.7 of 16 hours. Next in the method is evaluate, which needs the blind reviewer.
+Agent time logged in `../afiliaciones.yaml` for the implementation steps: 0.55 hours (inspection recorded separately). Next in the method is evaluate, which needs the blind reviewer.
