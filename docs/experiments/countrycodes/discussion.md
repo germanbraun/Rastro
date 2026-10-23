@@ -878,3 +878,16 @@ All findings of `7d515f4` are addressed:
   four domains. Both are recorded, the first as a generic change.
 
 Process notes 47–49 added.
+
+## GPT handoff — laptop deployment and JDBC startup fix (2026-10-23)
+
+Oil/gas, Lab and research affiliations now run on the user's laptop. Both domains' real configured example queries
+and app views passed. Local operational receipts are kept in ignored `data/cache/`; the affiliations source
+snapshots were fingerprint-checked, and the loader's current manifest was redirected to a local receipt so the
+frozen experiment manifest and approvals were preserved. No new independent-reference or accuracy claim.
+
+A clean image build exposed a shared infrastructure defect: remote `ADD --chmod=644` also created an inaccessible
+JDBC parent directory. Restoring directory traversal to 0755 and retaining the original non-root runtime user
+made both endpoints healthy. See `infra/ontop/Dockerfile` and `docs/local-deployment.md`. This is a deployment fix
+shared by all domains; retain it in the overall engineering accounting rather than attributing it to affiliation
+linking or treating the experiment as requiring zero generic changes.

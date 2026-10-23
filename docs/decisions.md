@@ -899,3 +899,14 @@ already begun; it is not evidence of unchanged-skill transfer.
   - first load after the change: about 26 s, since every answer gets a new key once;
   - warm reload: 1.7 s;
   - reload after an afiliaciones linker run and the 60-second key refresh: 1.7 s (before: about 25–40 s).
+
+## 2026-10-23 — Keep the JDBC directory traversable in clean container builds
+
+- **Problem:** building Ontop from scratch with remote `ADD --chmod=644` created its JDBC parent directory with
+  mode 0644. The non-root `ontop` user could not traverse it, and both deployed endpoints exited with
+  `Cannot load the driver: org.postgresql.Driver`.
+- **Change:** name the downloaded JAR explicitly, restore mode 0755 on its directory as root, and return to the
+  original `ontop` runtime user. The JAR stays readable with mode 0644. No mappings or source rules change.
+- **Validation:** rebuilt images; checked directory traversal and JAR readability as the runtime user; both oil/gas
+  and affiliations endpoints became healthy. Both domains' live app checks passed in business and technical views.
+  Deployment scope and restart commands are in `docs/local-deployment.md`.
