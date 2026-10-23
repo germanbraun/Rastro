@@ -955,3 +955,18 @@ already begun; it is not evidence of unchanged-skill transfer.
   - lateral length (3,186 − 2,278 m) × −0.0050 = −4.53;
   - the grouped explanation sums to 54.15, and the published prediction is 54.148.
   - The fracturing was reported on 04/10/2024, before the well started in 02/2025, and loaded on 24/04/2025, after it.
+
+## 2026-10-23 — The oil and gas deck opens with five measured facts
+
+- **What:** the cover keeps the logo and «Los datos cambian. Las preguntas, no.», and adds five measured facts, each
+  with its «without Rastro» value:
+  - 10 of 10 correct answers (without Rastro, 7);
+  - 5 of 5 consistent answers (without Rastro, 3);
+  - 1 line to absorb a source change;
+  - 1 place to correct a value (without Rastro, 5);
+  - 100 % of the 107,841 links with source, rule and evidence.
+
+  A line says how and with which limits they were measured, in the appendix.
+- **Why:** the user asked for a high-impact first slide with the strongest facts, explained later. All five come from
+  the measurement files (`resultados.json`, the change and correction tests, `evidencia.json`). The slide's notes keep
+  the caveat that SQL with Rastro's links also scores 10 of 10 (slide 13).

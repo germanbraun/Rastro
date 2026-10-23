@@ -11,6 +11,8 @@ Para operadoras y consultoras del sector, sin conocimientos técnicos. Cuatro mo
 
 ## 0:00 – 0:30 · Una pregunta, dos significados, y qué es Rastro (diapositivas 1 a 3)
 
+> (Diapositiva 1, unos segundos) «Cinco cifras, medidas con datos públicos reales: respuestas correctas, la misma respuesta aunque cambie la pregunta, una línea cuando una fuente cambia, un lugar para corregir un dato, y el origen de cada enlace. En los próximos tres minutos les muestro de dónde sale cada una.» No explicarlas ahora: salen en la demo y en el anexo.
+
 > «¿Quién produjo más gas en Argentina en 2025? Los rankings publicados, un SQL sobre la declaración jurada y un asistente de IA con búsqueda dicen Total Austral, YPF y Tecpetrol: es lo que opera cada una, también el gas de sus socios. Si la pregunta es cuánto le corresponde a cada una, es YPF, Tecpetrol y Total Austral. Nadie dice qué midió. Rastro escribe la definición una vez, muestra las dos y por qué.»
 
 > «Las bases de datos del sector no están conectadas entre sí. Rastro incorpora un diccionario de negocio: pozo, concesión, empresa, participación. Cada fuente se traduce a esos términos una sola vez, con datos públicos de la Secretaría de Energía, ENARGAS, el IGN y el registro global de empresas.»
