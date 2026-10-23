@@ -1,28 +1,140 @@
 # Rastro
 
-Two MVPs on semantic technologies, with public data. The demo case is **oil and gas in Argentina**. The other two cases, US federal suppliers and oncology clinical trials (AACT, ChEMBL, openFDA, MeSH), show that the same approach works for other data: in the app they appear when «Ver detalles técnicos» is turned on.
+Two commercial MVPs on semantic technologies, with public data:
 
-- **Rastro Layer** — a virtual semantic layer over heterogeneous sources, and natural-language questions with the provenance of every value.
-- **Rastro Lab** — a model whose predictions are explained with that same evidence. Today: the gas of new Vaca Muerta shale gas wells.
+- **Rastro Layer** — business questions over integrated sources, with the provenance of every value.
+- **Rastro Lab** — a machine-learning model whose predictions are explained with that same evidence. Today: the gas of
+  new Vaca Muerta shale gas wells.
 
-The method (steps, skills, checks and human approvals) is in [docs/method.md](docs/method.md). The full plan, by phases and with checkpoints, is in [docs/plan.md](docs/plan.md). How the sources are integrated (schema and data heterogeneity), in [docs/integracion.md](docs/integracion.md). What each source contains, for readers outside the domain, in [docs/fuentes.md](docs/fuentes.md).
+The demo case is **oil and gas in Argentina**. Three more domains show that the same Rastro works for other data:
+US federal suppliers, oncology clinical trials and research affiliations. In the app they appear when «Ver detalles
+técnicos» is turned on.
+
+## The approach
+
+**An agent builds and maintains the semantic layer, every decision keeps its evidence, and a person approves what is
+a business decision.** The agent does the work, executable checks decide whether it is right, and a person decides
+what it means. Three principles:
+
+1. **Questions first.** What to map, and how to measure whether it works, comes from the business questions.
+2. **Correctness is decided by checks that run,** not by a model's opinion: it loads, it answers, it passes the quality
+   rules, and it gets the questions right against independent references.
+3. **What a value means is decided by a person.** «Operates», «owns» and «has a share in» are not interchangeable. The
+   agent proposes, with evidence and alternatives, and does not decide silently.
+
+The method is a sequence of steps. Each one has a skill that does it (`.claude/skills/`), a check that decides, and a
+person's approval only where there is a business decision:
+
+| Step | Skill | What decides | A person approves |
+|---|---|---|---|
+| Inspect candidate sources | `inspect-sources` | Versions, keys, join evidence, read-only | Which domain and sources |
+| Start a domain | `start-domain` | Registry entry, its Ontop starts, experiment log | The scope |
+| Business questions | `add-question` | Each question has definitions, a query and an executable check | What each word means |
+| Connect the sources | `add-source` | Counts, file fingerprints, repeatable load | What goes in |
+| Dictionary and mappings | `map-source` | Every term exists; counts equal the tables | The terms, as they will be written |
+| Links with evidence | `link-entities` | Every link has its source, rule and evidence | Doubtful corrections |
+| Quality rules | `quality-rules` | SHACL after every load, with a good and a broken example per rule | Thresholds and what to do with findings |
+| Measure | `evaluate` | Three approaches with independent evaluators; independent references | The plan and each adjudication |
+| Show | `show-in-app` | Both views load; every number comes from its file | The business wording and the demo |
+| Maintain | `change-tests` | A source changes or a value is corrected: the smallest fix reaches every answer, then everything is restored | The plan and what is claimed |
+| Verify and close | `verify`, `close-phase` | Registry, lifecycle and query checks pass | The phase |
+
+What this means in practice:
+
+- **Every link is evidence.** A link is a `prov:Entity` with its source (`prov:wasDerivedFrom`), its rule and its
+  evidence text. Corrections live in a reviewed CSV, with their reason. Those reviewed by an AI assistant say that a
+  person still has to confirm them.
+- **Three approaches, always.** Without Rastro (B: SQL over the sources as they come), SQL with Rastro's links (D: the
+  fair baseline) and with Rastro (C: SPARQL). Each evaluator is a fresh assistant that sees only its prompt. Where
+  approaches differ, the answer is adjudicated with each source's data.
+- **Generic machinery, one registry.** A domain is an entry in `layer/dominios.yaml` (its Ontop, ontology, notes,
+  readers and a `method:` block) plus its files. The skills, the quality runner, the evaluation harness, the change
+  guard and the app read their paths from it. The aim is that a new domain needs data and decisions, not new code.
+  The research-affiliations experiment tests that aim, and records every change to generic code it needed.
+- **Requirements have a lifecycle.** A question goes proposed → approved → implemented → validated
+  (`layer/lifecycle.py`). Approvals bind the exact text approved, and changing an approved artifact invalidates what
+  depends on it.
+- **A second reviewer.** Each stage of a new domain is reviewed by an independent assistant, and the discussion and
+  decisions are kept in the repo (`docs/experiments/`).
+
+The full method, with its contracts and gates: [docs/method.md](docs/method.md) and
+[docs/method-contracts.md](docs/method-contracts.md). The plan by phases: [docs/plan.md](docs/plan.md). Decisions,
+with their numbers: [docs/decisions.md](docs/decisions.md). How sources are integrated:
+[docs/integracion.md](docs/integracion.md). What each source contains: [docs/fuentes.md](docs/fuentes.md).
+
+## The domains
+
+### Oil and gas in Argentina (`energia`, the demo)
+
+Production by well, the well registry, concessions and their partners, ventings, pipelines, towns and protected areas,
+from the Secretaría de Energía, ENARGAS and IGN, linked with the companies' LEI (GLEIF) and enriched with Wikidata.
+Rastro answers who operates and who owns each concession, how much each company is entitled to by its share, and where
+wells are. Every value says where it comes from. **Rastro Lab** predicts the gas of new Vaca Muerta shale wells with the
+same model trained twice, on the raw tables and on Rastro, and explains each prediction with the records it used.
+
+- **Measured:** B 7 of 10, D 10 of 10, C 10 of 10 questions.
+- **Also running:** quality rules in SHACL, a test for what Rastro says when it lacks the data, and change tests
+  (a source renames a column or changes a unit; one correction reaches every result; which predictions change when the
+  source corrects a record).
+- **Ontop** on :8082. Script: [docs/demo-guion-energia.md](docs/demo-guion-energia.md).
+
+### US federal suppliers (`proveedores`)
+
+Federal contracts over US$10 million from fiscal year 2025 (USAspending), sectors (NAICS), the global company
+identifier (GLEIF), the government's screening lists (trade.gov) and Wikidata. Rastro builds corporate groups once,
+with the evidence of each company's membership. For example, Leidos is split across 13 parents in the contracts data,
+and the 2013 SAIC rename is resolved explicitly.
+
+- **Measured:** B 4 of 9, D 8 of 9, C 8 of 9.
+- **Also:** a question over texts, where an exact query picks the contracts and an assistant summarizes only those,
+  citing each one.
+- **Ontop** on :8081.
+
+### Oncology (`oncologia`)
+
+Clinical trials (AACT), drugs and targets (ChEMBL), adverse events (openFDA) and the MeSH 2026 vocabulary, with trials
+linked to drugs and conditions. The first domain. It compares an LLM alone, direct SQL and Rastro on 20 questions, and
+has its own evaluation (`layer/eval/`). **Ontop** on :8080; MeSH lives in GraphDB.
+
+### Research affiliations in Argentina (`afiliaciones`, transfer experiment)
+
+Which Argentine research organizations (ROR, the global registry) the authors of 100 scientific publications from
+2025 name in their affiliation texts (Crossref), and which organizations the registry might be missing. It is a test
+of the method itself: a new domain built only with the skills, with the method frozen and every change to generic code
+recorded. Claude implemented it and another assistant reviewed every stage.
+
+- **Built so far:**
+  - three validated questions;
+  - 539 identifications, each with its rule and evidence;
+  - seven quality rules (one registry warning, 91 AI decisions awaiting a person);
+  - the app's two views;
+  - 33 evaluation answers, collected but not scored;
+  - an alias correction that reached every affected answer with Rastro and with SQL plus links, and none without them;
+  - 30 of 30 answer cells traceable with Rastro.
+- **Still missing:** accuracy against a blind human reference, and closing the experiment.
+- **Where to read more:** [docs/experiments/afiliaciones.yaml](docs/experiments/afiliaciones.yaml) (the log) and
+  [process notes](docs/experiments/research-affiliations/process-notes.md) (what the skills got right, missed or
+  should flag).
+- **Ontop** on :8083, with `--profile afiliaciones`.
 
 ## Structure
 
 | Folder | Contents |
 |---|---|
-| `infra/` | docker-compose: Postgres, Ontop, triplestore (`compose.yaml`, at the root, includes it) |
+| `infra/` | docker-compose: Postgres, one Ontop per domain, triplestore (`compose.yaml`, at the root, includes it) |
 | `data/` | download and load scripts (the data is not versioned) |
-| `ontology/` | competency questions, ontology and one query per question; quality rules (SHACL) |
-| `mappings/` | R2RML mappings, one per domain (`rastro`, `proveedores`, `energia`), read by each domain's Ontop |
-| `linking/` | links between each domain's sources (for example, trials with MeSH and ChEMBL), with their review |
-| `layer/` | Rastro Layer: natural-language questions (`answer.py`) and their evaluation (`evaluar.py`, `eval/`) |
+| `ontology/` | per domain: competency questions, ontology, one query per question, quality rules (SHACL) |
+| `mappings/` | R2RML mappings, one per domain, read by that domain's Ontop |
+| `linking/` | links between each domain's sources, with their rule, evidence and reviewed corrections |
+| `layer/` | the domain registry (`dominios.yaml`), lifecycle and method commands, natural-language questions (`answer.py`), the evaluation (`evaluar.py`) and each domain's evaluation, change tests and notes |
 | `lab/` | Rastro Lab: the Vaca Muerta gas model (`lab/gas/`) |
-| `app/` | the demo (Streamlit, in Spanish) |
-| `docs/` | method, plan, decisions, results, decks (`slides/`), demo scripts and human review |
+| `app/` | the demo (Streamlit, in Spanish); each domain is a YAML file in `app/dominios/` |
+| `.claude/skills/` | the method's skills, generic for any domain |
+| `docs/` | method, plan, decisions, experiments, decks (`slides/`), demo scripts and human review |
 | `tests/` | tests (pytest) |
 
-Each domain uses its own SPARQL prefix: `energia:`, `proveedores:` and `oncologia:` (for example, `energia:Well`).
+Each domain uses its own SPARQL prefix (`energia:`, `proveedores:`, `oncologia:`, `afiliaciones:`), for example
+`energia:Well`.
 
 ## The demo
 
@@ -46,9 +158,9 @@ docker compose up -d
 
 | Service | Local URL | What it is |
 |---|---|---|
-| **Rastro Layer demo** | **http://localhost:8501** | Opens on oil and gas; with «Ver detalles técnicos» the **Caso de uso** selector shows suppliers and oncology |
+| **Rastro Layer demo** | **http://localhost:8501** | Opens on oil and gas; with «Ver detalles técnicos» the **Caso de uso** selector shows the other domains |
 | Postgres | `localhost:5434` (user and password `rastro`) | Relational sources, one schema per source, and `rastro_meta` with the source and load registry |
-| Ontop, one per domain | oncology http://localhost:8080, suppliers :8081, oil and gas :8082 (`/sparql`) | Virtual SPARQL endpoint over Postgres, with its domain's ontology and mappings; reloads when they are edited |
+| Ontop, one per domain | oncology http://localhost:8080, suppliers :8081, oil and gas :8082, research affiliations :8083 (`/sparql`; the last one with `docker compose --profile afiliaciones up -d`) | Virtual SPARQL endpoint over Postgres, with its domain's ontology and mappings; reloads when they are edited |
 | GraphDB Free | http://localhost:7210 | Triplestore with the `rastro` repository: MeSH 2026 in the graph `<http://id.nlm.nih.gov/mesh/2026>` and the Lucene connector `mesh` |
 
 Ports are changed by copying `.env.example` to `.env`. By default they avoid 5432 and 7200, to coexist with a local Postgres and GraphDB.
@@ -63,10 +175,10 @@ Every script in `data/` records its loads in `rastro_meta.load_run`, which feeds
 
 ## Evaluate Rastro Layer
 
-Oil and gas and suppliers compare three ways of answering: **B**, without Rastro (SQL over the raw tables); **D**, SQL with Rastro's link tables; and **C**, with Rastro (SPARQL). In oil and gas: B 7 of 10, D 10 of 10 and C 10 of 10.
+Oil and gas, suppliers and research affiliations compare three ways of answering: **B**, without Rastro (SQL over the raw tables); **D**, SQL with Rastro's link tables; and **C**, with Rastro (SPARQL). In oil and gas: B 7 of 10, D 10 of 10 and C 10 of 10; in suppliers: B 4 of 9, D 8 of 9 and C 8 of 9. Research affiliations has its answers collected and waits for a blind reference before scoring.
 
 ```bash
-docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje   # or proveedores; also prompt, try and rerun
+docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje   # or another domain; also prompt, try and rerun
 ```
 
 The results go to `layer/<domain>/resultados.md`; the detail of each command, in the docstring of `layer/evaluar.py`.
@@ -79,11 +191,12 @@ docker compose run --rm layer-eval
 
 The results are in `layer/eval/results.md`. Answers already generated are saved in `layer/eval/results.json`, so this works without an API key. Generating new answers needs `ANTHROPIC_API_KEY` in `.env` (Claude API, pay per use: a full run with Claude Opus 5.5 costs a few dollars). `RASTRO_MODEL` picks another model, for example a cheaper one for a live demo.
 
-To check the ontologies and queries of the three domains, and the oil and gas quality rules:
+To check the ontologies and queries of every domain, and the quality rules:
 
 ```bash
 docker compose run --rm ontology-check
-docker compose run --rm calidad      # SHACL over the integrated data, ~3 minutes
+docker compose run --rm calidad      # SHACL over the oil and gas data, ~3 minutes
+docker compose run --rm --no-deps calidad python /ontology/calidad.py afiliaciones   # another domain
 ```
 
 ## Rastro Lab
