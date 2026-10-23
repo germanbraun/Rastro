@@ -435,6 +435,12 @@ errors_caught:
   check: reviewer (GPT) on the app's notice (7d515f4)
   failure_kind: the notice said every answer covers all the data; only cq1's coverage was checked, cq3 is a heuristic
   fix: notice and FAQ say what was checked technically and that cq3 can miss cases
+- step: experiment log
+  check: reading the output of the commit command
+  failure_kind: >-
+    the log update failed on a stale anchor, but the commit ran anyway because the commands were chained with ;
+    (the same failure as note 30)
+  fix: log fixed and the local commit amended before pushing; process note 30 applies
 method_changes:
 - change: >-
     ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports
@@ -473,4 +479,12 @@ method_changes:
   reason: >-
     the user found the app slow; writes in this experiment's domain (linker, change tests) discarded oil and gas
     answers and Lab models; reported to the user, browser timings in docs/decisions.md
+- change: >-
+    new method skill `walkthrough` (step 7b, «Paso a paso»); app/dominio.py show_integration_example renders a
+    walkthrough's purpose, each step's part of Rastro and its live queries (sql_table takes the reader approach);
+    app/lab.py show_calculation
+  scope: generic
+  reason: >-
+    the user asked to rebuild GPT's walkthroughs on real data with an explicit purpose, and to make them a skill of
+    the semantic-layer workflow; made outside this domain's steps, recorded here because it changes the method
 result: null

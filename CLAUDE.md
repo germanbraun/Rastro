@@ -78,6 +78,7 @@ The scripts in `lab/` and `layer/energia/cambio/correccion.py` run on the machin
 - `quality-rules`: SHACL rules over the integrated data, and the predictions that inherit what fails
 - `evaluate`: measure the questions with the three approaches, score and adjudicate
 - `show-in-app`: show a domain in the app, business and technical view, and optional modules such as questions over texts
+- `walkthrough`: a «Paso a paso» on real data, read live: one case through each part of Rastro, saying what each step shows, with its slides
 - `change-tests`: the change test and the correction test, and where they show
 - `verify`: check that everything starts and answers
 - `close-phase`: mark the plan, document and commit

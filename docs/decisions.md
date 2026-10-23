@@ -910,3 +910,18 @@ already begun; it is not evidence of unchanged-skill transfer.
 - **Validation:** rebuilt images; checked directory traversal and JAR readability as the runtime user; both oil/gas
   and affiliations endpoints became healthy. Both domains' live app checks passed in business and technical views.
   Deployment scope and restart commands are in `docs/local-deployment.md`.
+
+## 2026-10-23 — «Paso a paso» walkthroughs use real data, and become a method skill
+
+- **What:** the oil and gas walkthroughs follow real records, read live. The integration walkthrough follows well
+  164166 and the two names of the Compañía General de Combustibles; the Lab walkthrough shows the model's real
+  calculation for its example well. Each walkthrough says what it is for (`para_que`) and which part of Rastro each
+  step shows (`parte`). The new `walkthrough` skill (step 7b, after `show-in-app`) makes this the method for any
+  domain. The renderer runs each step's queries: raw SQL as the «without Rastro» reader, SPARQL over Rastro.
+- **Why:** the first version, written by GPT at the user's request, used invented wells and a maintenance source
+  Rastro does not load. Next to real data that was hard to tell apart and sold a missing feature. The user asked for
+  each walkthrough's purpose to be explicit.
+- **Numbers (23/10/2026):**
+  - «CGC ENERGIA SAU» had 78,621 declarations and «COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.» 8,684; Rastro counts
+    87,305 for one company;
+  - Lab well 165404: 51.64 − 3.57 + 6.80 − 0.72 = 54.15 million m³.

@@ -36,6 +36,7 @@ person's approval only where there is a business decision:
 | Quality rules | `quality-rules` | SHACL after every load, with a good and a broken example per rule | Thresholds and what to do with findings |
 | Measure | `evaluate` | Three approaches with independent evaluators; independent references | The plan and each adjudication |
 | Show | `show-in-app` | Both views load; every number comes from its file | The business wording and the demo |
+| Explain how («Paso a paso») | `walkthrough` | One real case through each part of Rastro, read live; every number matches a query | The case and the purpose of each step |
 | Maintain | `change-tests` | A source changes or a value is corrected: the smallest fix reaches every answer, then everything is restored | The plan and what is claimed |
 | Verify and close | `verify`, `close-phase` | Registry, lifecycle and query checks pass | The phase |
 
