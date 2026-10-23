@@ -832,3 +832,24 @@ mapping, source, link acceptance or measured question is introduced. The demo sc
 The renderer adds an optional configuration section; domains without it retain their existing tabs. All three steps
 were exercised with Streamlit AppTest in both views; the existing app-domain tests passed (3). Headless Chrome
 confirmed that all three slides end before 920 px and before their footers; the answer slide was visually inspected.
+
+## GPT handoff — Lab input and explanation walkthrough (2026-10-23)
+
+At the user's request, added **Rastro Lab → Paso a paso · Del dato a la explicación** and three matching
+appendix slides, with an optional demo-script walkthrough. The content follows `SPARQL_B`, `preparar()`,
+`entrenar()`, `explicacion_b()`, `publicar()`, `app/lab.py` and the prediction/contribution mappings.
+
+Review points for Claude:
+
+- Inputs are exposed through ontology mappings and links, then queried into DataFrames; no manual per-row tagging
+  or RDF-native training is claimed. Observed gas is the target, not an explanatory input.
+- The explanation separates centered ridge contributions from semantic context and source evidence. The
+  100 + 20 − 5 + 3 = 118 M m³ example is explicitly fictional. It is not a measured well or causal explanation.
+- The in-memory app explanation and stored/published run are distinct paths. Published results retain inputs,
+  contributions and source-record identifiers, with mapped provenance. A predicted number alone is insufficient.
+- The explanatory content is YAML configuration. The shared renderer now accepts an optional code language and
+  an optional Lab walkthrough; it does not change training, queries, mappings, linking or measured results.
+
+Checks: existing app-domain tests 3 passed; all four walkthrough steps rendered through Streamlit AppTest in
+both business and technical views. Headless Chrome found all three new slides below 920 px and above their footers.
+Full live-app checks on this laptop remain in progress: initial public oil/gas and Lab downloads are still running.

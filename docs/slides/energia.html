@@ -673,4 +673,34 @@ prov:wasGeneratedBy	lo generó (la regla)	rastro:activity/energia-stake-parsing
 <aside>Los volúmenes, meses y registros son ficticios. Comparar septiembre con agosto; no afirmar una respuesta confirmada mientras el enlace esté pendiente. El ejemplo no conecta una fuente real de mantenimiento ni mide precisión.</aside>
 </section>
 </div>
+<div class="slide">
+<section id="e-lab-entrada" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<style>#e-lab-entrada p{font-size:32px;line-height:1.35} #e-lab-entrada .cards{display:flex;gap:32px} #e-lab-entrada .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-lab-entrada h3{font-size:36px;margin-bottom:16px}</style>
+<p style="color:#2F6FB5">Rastro Lab · Paso a paso</p>
+<h2 style="font-size:56px;line-height:1.1">La ontología da significado; el modelo recibe columnas</h2>
+<p><b>Fuentes → enlaces con evidencia → mapeos → consulta → tabla de entrenamiento</b></p><div class="cards"><div class="card"><h3>Lo que hace Rastro</h3><p>Expone Pozo, Inicio, Fractura, Trayectoria y Participación. Conserva identificadores, reglas y fuentes.</p></div><div class="card"><h3>Lo que recibe el modelo</h3><p>Una fila por pozo: concesión, empresa, participación, fractura y profundidad. Categorías y números.</p></div></div><p>El objetivo es el gas de los meses 2 a 7. Se entrena con pozos anteriores a 2025 y se prueba con pozos de 2025.</p><p>No se etiqueta manualmente cada fila. Los mapeos y la consulta construyen la tabla; el modelo no aprende de triples RDF.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>31</span></div>
+<aside>Explicar SPARQL_B y preparar en lab/gas/modelo.py. La ontología organiza el significado y la procedencia; la regresión recibe una matriz. El gas observado es el objetivo, no una variable explicativa. Las fechas de carga y las restricciones temporales importan además del significado.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="e-lab-aportes" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<style>#e-lab-aportes p{font-size:32px;line-height:1.35} #e-lab-aportes .cards{display:flex;gap:32px} #e-lab-aportes .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-lab-aportes h3{font-size:36px;margin-bottom:16px}</style>
+<p style="color:#2F6FB5">Rastro Lab · Paso a paso</p>
+<h2 style="font-size:56px;line-height:1.1">Un número explicado por la cuenta que lo produce</h2>
+<p>La regresión suma una base y los aportes de las variables de ese pozo.</p><div class="cards"><div class="card"><h3>Cálculo ficticio · millones de m³</h3><p>Base del entrenamiento: 100<br>Concesión, operadora y socios: +20<br>Fractura: −5 · Profundidad: +3</p></div><div class="card"><h3>Gas predicho: 118</h3><p><b>100 + 20 − 5 + 3 = 118</b><br>Gas acumulado de los meses 2 a 7.<br>Los valores son solo ilustrativos.</p></div></div><p>En cada caso real: aporte = (valor codificado − promedio del entrenamiento) × coeficiente.</p><p>El código agrupa los aportes y arma el texto. La explicación no la inventa una IA y no demuestra causalidad.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>32</span></div>
+<aside>La fórmula está en entrenar(); explicacion_b agrupa UBICACION, FRACTURA_B y PROFUNDIDAD_B. Se usa la suma sin redondear; la pantalla puede redondear. No presentar 118 como una predicción medida.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="e-lab-evidencia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<style>#e-lab-evidencia p{font-size:32px;line-height:1.35} #e-lab-evidencia .cards{display:flex;gap:32px} #e-lab-evidencia .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-lab-evidencia h3{font-size:36px;margin-bottom:16px}</style>
+<p style="color:#2F6FB5">Rastro Lab · Paso a paso</p>
+<h2 style="font-size:56px;line-height:1.1">Del gas predicho a los registros que lo respaldan</h2>
+<p><b>Pozo → entradas → aportes → explicación → fuentes</b></p><div class="cards"><div class="card"><h3>En la app</h3><p>Elegir un pozo. Ver la suma y sus factores. Abrir «¿De dónde sale?» para consultar regla, evidencia y fechas.</p></div><div class="card"><h3>Al publicar una corrida</h3><p>Se guardan entradas, predicciones y aportes, con el pozo y la versión de la corrida. Cada predicción conserva los registros usados.</p></div></div><p>La vista interactiva usa el modelo en memoria; una corrida publicada se consulta como datos de Rastro.</p><p>Uniones pendientes y registros tardíos siguen a la vista. Un valor de gas aislado no permite reconstruir toda la explicación.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>33</span></div>
+<aside>Seguir app/lab.py show_well(), modelo.explicacion_b() y publicar(). Los mapeos Prediction, ModelRun y Contribution exponen los resultados guardados; prov:used conecta registros usados. La publicación no reemplaza el entrenamiento ni garantiza que toda evidencia sea correcta.</aside>
+</section>
+</div>
 </body></html>

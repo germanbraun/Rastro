@@ -720,6 +720,9 @@ def render(cfg_path, tech):
     if cfg.get("lab"):
         with tabs["Rastro Lab"]:
             import lab
+            if cfg.get("ejemplo_lab"):
+                with st.expander(cfg["ejemplo_lab"]["titulo"]):
+                    show_integration_example(cfg["ejemplo_lab"], f"{domain}_lab", tech)
             lab.show_lab(tech)
     if tech:
         with tabs["Bajo el capó"]:
@@ -883,7 +886,7 @@ def show_integration_example(example, domain, tech):
     step = steps[selected]
     st.markdown(step["contenido"])
     if tech and step.get("tecnico"):
-        st.code(step["tecnico"], language="turtle")
+        st.code(step["tecnico"], language=step.get("lenguaje", "turtle"))
 
 
 def show_demo(cfg, tech):

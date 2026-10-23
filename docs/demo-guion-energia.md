@@ -72,3 +72,19 @@ this does not add a maintenance source or a measured business question.
 3. Show production records `P-08` and `P-09` and the September maintenance date.
    Only after an evidence-backed confirmation could that report be associated with
    this well in the answer. A production decline in the same month is not causality.
+
+
+## Optional Lab walkthrough: from inputs to an explanation
+
+Open **Rastro Lab → Paso a paso · Del dato a la explicación**, or the three Lab walkthrough
+slides at the end of the appendix. This describes the current code; the 118 M m³ arithmetic example is fictional.
+
+1. Source rows are exposed through ontology mappings and evidence-backed links. `SPARQL_B` selects concepts;
+   `preparar()` builds a tabular dataset. The model consumes numeric/categorical columns, not RDF triples.
+2. The target is gas in months 2–7. Training precedes 2025; 2025 wells are the test cohort. Missing numeric
+   values use training means. Explain observation dates separately from source arrival dates.
+3. `entrenar()` computes the training mean plus centered feature contributions. `explicacion_b()` groups those
+   contributions and adds the well's context. This is a deterministic numerical explanation, not causal attribution.
+4. Select a real well below the walkthrough and open «¿De dónde sale?». Distinguish the live in-memory model from
+   `publicar()`: stored runs retain input values, predictions, grouped contributions and source-record identifiers,
+   exposed through ModelRun, Prediction, Contribution and PROV links. A gas number alone is insufficient.

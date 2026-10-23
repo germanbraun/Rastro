@@ -799,3 +799,116 @@ ejemplo_integracion:
 
         **Recorrido de evidencia:** respuesta → registros `P-08` y `P-09` + parte `M-017`
         → identificación y su revisión → registro del pozo. Cada valor conserva su fuente.
+
+
+# Describes the implemented Lab pipeline; the arithmetic example is explicitly fictional.
+ejemplo_lab:
+  titulo: Paso a paso · Del dato a la explicación
+  aviso: >-
+    Este recorrido describe cómo funciona Rastro Lab hoy. El cálculo de 118 millones de m³ es ficticio,
+    solo para explicar la suma. Las predicciones reales y sus fuentes se consultan debajo, eligiendo un pozo.
+  selector: Cómo se construye y se explica una predicción
+  pasos:
+    - titulo: 1 · Dar significado a las fuentes
+      contenido: |
+        ### ¿Se etiqueta cada fila antes de entrenar?
+        Las fuentes se cargan en tablas y conservan sus registros originales. Los enlaces identifican el pozo,
+        la concesión y las empresas, guardando su regla y su evidencia.
+
+        Los mapeos exponen esos registros con el diccionario de Rastro: **Pozo**, **Inicio del pozo**,
+        **Fractura**, **Trayectoria** y **Participación**. No se agrega una etiqueta manual a cada fila del archivo.
+
+        **Tablas de origen → enlaces con evidencia → mapeos al diccionario → consulta → tabla para el modelo.**
+
+        | Dato de origen | Significado en Rastro | Uso en el modelo |
+        |---|---|---|
+        | Declaración de producción | Inicio del pozo y gas observado | Cohorte, fecha de corte y objetivo |
+        | Parte de fractura | Largo de rama, etapas, arena, agua y presión | Variables numéricas |
+        | Trayectoria del pozo | Profundidad vertical | Variable numérica |
+        | Concesión y socios | Concesión, empresa y participación | Variables de contexto |
+      lenguaje: python
+      tecnico: |
+        # Implemented in lab/gas/modelo.py:
+        # SPARQL_B selects WellStart, Fracturing, WellTrajectory and Stake.
+        # Ontop translates the query through mappings/energia.r2rml.ttl.
+        # preparar(gas, a, b) converts its result into aligned DataFrames.
+        # The ridge model consumes columns, not RDF triples or ontology classes.
+    - titulo: 2 · Preparar y entrenar
+      contenido: |
+        ### El modelo recibe una tabla, no la ontología
+        Cada fila representa un pozo elegible, con su identificador y fecha de inicio. Se alinean los mismos pozos
+        para comparar las tablas originales con los datos consultados a través de Rastro.
+
+        **Objetivo:** gas acumulado de los meses 2 a 7 desde que empezó el pozo, en millones de m³.
+        Ese gas observado sirve para entrenar o comprobar el modelo; no entra como una variable para predecirse a sí mismo.
+
+        Se entrena con pozos que empezaron antes de 2025 y se evalúa con los que empezaron en 2025.
+        Las categorías se convierten en columnas numéricas y los valores numéricos faltantes se rellenan
+        con el promedio del entrenamiento. Se ajusta una regresión lineal regularizada.
+
+        Las fechas de los datos también importan: la fractura se selecciona según el inicio del pozo y se conserva
+        su fecha de carga para mostrar registros que llegaron después. No alcanza con conocer su significado.
+      lenguaje: python
+      tecnico: |
+        # Actual training calculation, simplified variable names:
+        training = df.inicio < PRUEBA  # PRUEBA = 2025-01-01
+        # Numeric missing values: training means only.
+        # Categories: one-hot encoding.
+        # Coefficients: ridge regression, alpha = 1.0.
+        # Observed gas is the target; explanatory columns are VARIABLES["B"].
+    - titulo: 3 · Explicar el número
+      contenido: |
+        ### ¿De dónde sale la predicción de gas de un pozo?
+        El modelo calcula un valor de base y cuánto suma o resta cada variable para ese pozo.
+        Los aportes se agrupan con los conceptos del diccionario.
+
+        **Cálculo ficticio, en millones de m³:**
+
+        | Parte del cálculo | Aporte |
+        |---|---:|
+        | Promedio del entrenamiento | 100 |
+        | Concesión con su operadora y socios | +20 |
+        | Cómo se fracturó el pozo | −5 |
+        | Profundidad del pozo | +3 |
+        | **Gas predicho para los meses 2 a 7** | **118** |
+
+        **100 + 20 − 5 + 3 = 118.** En las predicciones reales, los aportes salen de los coeficientes y de los
+        valores de entrada, antes del redondeo de pantalla. No los inventa un asistente de IA.
+
+        La explicación numérica dice cómo el modelo obtuvo el valor; no prueba que esos factores causen ese gas.
+        La concesión, la operadora y los socios se muestran juntos porque sus efectos no se pueden separar aquí.
+      lenguaje: python
+      tecnico: |
+        # Actual formula in entrenar():
+        aportes = (x - media_x) * coef
+        pred = media_y + aportes.sum(axis=1).values
+        # explicacion_b() groups these same contributions:
+        # UBICACION, FRACTURA_B, PROFUNDIDAD_B.
+    - titulo: 4 · Abrir la evidencia
+      contenido: |
+        ### Del aporte a la fuente original
+        Debajo, elija un pozo en la comparación de predicciones. El resumen y los aportes los construye
+        el código a partir de ese pozo, el modelo entrenado y el contexto consultado a Rastro.
+
+        En **«Lo que respalda la predicción» → «¿De dónde sale?»** se muestran la regla, el texto de evidencia
+        y las fuentes. Los registros de fractura incluyen su fecha y cuándo se cargaron.
+        Las uniones revisadas por IA mantienen su aviso de confirmación humana pendiente.
+
+        **Pozo → datos usados → aportes del modelo → explicación → regla y registros de origen.**
+
+        Cuando se publica una corrida, Rastro guarda por separado la versión de la corrida, las entradas,
+        las predicciones y los aportes. Los mapeos exponen cada predicción con el pozo, la corrida que la generó
+        y los registros usados. Así también se pueden consultar las predicciones publicadas.
+
+        La vista interactiva calcula sus explicaciones con el modelo en memoria; consultar una corrida publicada
+        es otro recorrido. Una predicción aislada, sin su entrada y su corrida, no alcanza para reconstruir la explicación.
+      lenguaje: turtle
+      tecnico: |
+        # Structure exposed for published runs; identifiers are placeholders.
+        @prefix energia: <https://w3id.org/rastro/energia#> .
+        @prefix prov: <http://www.w3.org/ns/prov#> .
+        # Prediction --energia:aboutWell--> Well
+        # Prediction --prov:wasGeneratedBy--> ModelRun
+        # Prediction --prov:used--> WellStart / Fracturing / Stake / WellTrajectory
+        # Contribution --energia:ofPrediction--> Prediction
+        # Storage: lab_gas.corrida, entrada, prediccion, aporte.
