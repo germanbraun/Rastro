@@ -2,6 +2,7 @@
 
 Prefix: `PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>`. Ontop does not support `*` or `+` paths.
 
+- **Data source** (`afiliaciones:DataSource`): Crossref and ROR, with `afiliaciones:name` and `afiliaciones:license`.
 - **Publication** (`afiliaciones:Publication`): one of the 100 works of the set. Its IRI is `https://doi.org/<doi>`;
   `afiliaciones:doi` holds the DOI in lowercase.
 - **Affiliation mention** (`afiliaciones:AffiliationMention`): one affiliation text of one author in one publication,

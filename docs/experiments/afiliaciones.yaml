@@ -185,7 +185,7 @@ steps:
     agent_hours: 0.48
     human_hours: null
   app:
-    status: implemented_sources_term_pending
+    status: implemented
     evidence:
     - docs/experiments/research-affiliations/app-proposal.md (approved)
     - app/dominios/afiliaciones.yaml; app/dominios.yaml; method.app in layer/dominios.yaml
@@ -204,6 +204,11 @@ steps:
     agent_hours: 0.21
     human_hours: null
 interventions:
+- step: app
+  decision: Approved the dictionary term afiliaciones:license on DataSource, mapped from rastro_meta.source
+  reason: Dictionary terms belong to the user; the app shows each source with its licence
+  kind: unplanned approval
+  minutes: null
 - step: app
   decision: Approved the app proposal as written (three questions, quality, no optional modules, three-moment demo)
   reason: The business view's content belongs to the user

@@ -7,9 +7,10 @@
 # --- Sources ---------------------------------------------------------------
 
 <#DataSource> a rr:TriplesMap ;
-    rr:logicalTable [ rr:sqlQuery "SELECT id, name FROM rastro_meta.source WHERE id IN ('crossref', 'ror')" ] ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, name, license FROM rastro_meta.source WHERE id IN ('crossref', 'ror')" ] ;
     rr:subjectMap [ rr:template "https://w3id.org/rastro/source/{id}" ; rr:class afiliaciones:DataSource ] ;
-    rr:predicateObjectMap [ rr:predicate afiliaciones:name ; rr:objectMap [ rr:column "name" ] ] .
+    rr:predicateObjectMap [ rr:predicate afiliaciones:name ; rr:objectMap [ rr:column "name" ] ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:license ; rr:objectMap [ rr:column "license" ] ] .
 
 # --- Crossref: the 100 works and their affiliation mentions ---------------
 

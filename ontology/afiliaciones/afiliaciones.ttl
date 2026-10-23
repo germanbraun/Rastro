@@ -33,6 +33,12 @@ afiliaciones:ArgentineOrganization a owl:Class ;
 afiliaciones:DataSource a owl:Class ;
     rdfs:label "Fuente de datos"@es .
 
+# Approved 2026-10-23: the app shows each source with its licence
+afiliaciones:license a owl:DatatypeProperty ;
+    rdfs:domain afiliaciones:DataSource ;
+    rdfs:label "licencia"@es ;
+    rdfs:comment "La licencia con la que la fuente publica sus datos."@es .
+
 # --- De la publicación y sus menciones ------------------------------------
 
 afiliaciones:doi a owl:DatatypeProperty ;
