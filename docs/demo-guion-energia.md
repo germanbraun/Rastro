@@ -57,3 +57,18 @@ Abrir **¿De dónde sale?** en la fractura: dice cuándo se cargó el dato.
 - **«¿Y si la IA inventa?»** (Por qué confiar → Cuando no tiene el dato; diapositiva 12) Le hicimos preguntas que los datos no responden (precios, reservas, inversiones, 2026, empleo). Con la regla de decir qué falta, ningún camino inventó, tampoco la IA sola. La diferencia está en lo que sí está: el gas que declaró Tecpetrol en 2025 (6.910 millones de m³) lo responden los caminos con datos, con su fuente; la IA sola no puede.
 - **«¿Y si leo una cifra en un informe?»** (Preguntar → Comprobar una afirmación; diapositiva 12) Rastro dice si se sostiene, si no (con el valor correcto) o si no tiene el dato. «Total Austral fue la mayor productora de gas de 2025» se sostiene para el gas que opera y no para el que le corresponde (es la tercera).
 
+
+
+## Optional walkthrough: mapping and entity linking
+
+Outside the timed demo, open **Paso a paso** in the oil and gas app, or the three
+«Paso a paso» slides at the end of the appendix. All records are fictional;
+this does not add a maintenance source or a measured business question.
+
+1. Show `well_id` and `official_code`: both describe a well, and the verified shared
+   official key produces `urn:rastro:well:ARG-00421`. Preserve each source's name.
+2. Show maintenance mention `M-017`: compatible names propose an identification;
+   its status remains pending. No coordinate distance has been verified.
+3. Show production records `P-08` and `P-09` and the September maintenance date.
+   Only after an evidence-backed confirmation could that report be associated with
+   this well in the answer. A production decline in the same month is not causality.

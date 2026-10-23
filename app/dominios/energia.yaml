@@ -722,3 +722,80 @@ technical:
       ámbar: gasoductos de transporte (ENARGAS). Concesiones en rojo: para revisar,
       según la regla del diccionario; en azul, con posibles venteos. Todo sale de
       Rastro, con geometrías en el estándar de OGC (GeoSPARQL).'
+
+
+# Illustrative teaching fixture, separate from live questions and measured results.
+ejemplo_integracion:
+  titulo: Paso a paso
+  aviso: >-
+    Ejemplo didáctico con registros ficticios. No son datos públicos cargados en Rastro,
+    resultados medidos ni una nueva fuente de mantenimiento conectada.
+  selector: Cómo se conectan los datos de un pozo
+  pasos:
+    - titulo: 1 · Dos tablas, un pozo
+      contenido: |
+        ### Columnas distintas, el mismo pozo
+        | Fuente ficticia | Campo del código | Campo del nombre | Registro |
+        |---|---|---|---|
+        | Operadora | `well_id` | `well_name` | `ARG-00421` · Campo Norte 12 |
+        | Registro regulatorio | `official_code` | `registered_name` | `ARG-00421` · CN-12 |
+
+        **Traducción de campos:** ambos registros describen un **Pozo**; sus campos de nombre describen cómo lo llama cada fuente.
+
+        **Identidad:** comprobado que ambos códigos pertenecen al mismo registro oficial y designan un pozo (no una rama),
+        se construye el mismo identificador: `urn:rastro:well:ARG-00421`.
+
+        **Operadora → Pozo ARG-00421 ← Registro regulatorio**
+
+        Los nombres originales y su fuente se conservan. Compartir el concepto «Pozo» no basta para unir dos registros:
+        hace falta una clave común verificada.
+      tecnico: |
+        # Illustrative mapping, not the deployed energy mapping.
+        # Operator: well_id -> subject; well_name -> energia:name
+        # Registry: official_code -> subject; registered_name -> energia:name
+        @prefix energia: <https://w3id.org/rastro/energia#> .
+        <urn:rastro:well:ARG-00421> a energia:Well ;
+            energia:name "Campo Norte 12", "CN-12" .
+        # Source-specific names and provenance remain in the original records.
+    - titulo: 2 · Un nombre sin código
+      contenido: |
+        ### Identificar una mención con evidencia
+        | Fuente ficticia | Dato original |
+        |---|---|
+        | Parte de mantenimiento `M-017` | `CN12 — Campo Norte`, sin código oficial |
+        | Registro regulatorio | `ARG-00421`, nombre `CN-12`, yacimiento `Campo Norte` |
+
+        **Mención del parte → identificación candidata → Pozo ARG-00421**
+
+        La regla propuesta compara el nombre normalizado, el yacimiento y las coordenadas cuando están disponibles.
+        Cada comparación debe guardar los valores originales y su fuente.
+
+        **Estado: pendiente de revisión.** La coincidencia de nombre e indicios de ubicación no confirma por sí sola la identidad.
+        Si hay varios pozos o ramas compatibles, la mención queda sin resolver. El parte conserva su propio identificador.
+      tecnico: |
+        # Proposed identification record (illustrative, not an accepted link):
+        # mention: M-017 / "CN12 — Campo Norte"
+        # candidate: urn:rastro:well:ARG-00421
+        # evidence: compatible normalized name + same field
+        # coordinates: not supplied in this fixture; no distance verified
+        # status: pending_review
+    - titulo: 3 · La respuesta y su origen
+      contenido: |
+        ### ¿Qué pozos tuvieron mantenimiento y una caída de producción en el mismo mes?
+        Para responder se necesitan fechas, producción comparable y una identificación confirmada del pozo.
+        Estos son datos ficticios adicionales para explicar el recorrido:
+
+        | Registro | Pozo o mención | Mes | Dato |
+        |---|---|---|---|
+        | Producción `P-08` | `ARG-00421` | agosto de 2025 | 100 m³ de petróleo |
+        | Producción `P-09` | `ARG-00421` | septiembre de 2025 | 80 m³ de petróleo |
+        | Parte `M-017` | `CN12 — Campo Norte` | septiembre de 2025 | mantenimiento |
+
+        **Hoy: la relación con el mantenimiento queda pendiente**, porque la identificación de `M-017` aún no está confirmada.
+
+        **Si una persona confirma el vínculo con evidencia suficiente:** el ejemplo muestra al pozo `ARG-00421`
+        con mantenimiento en septiembre y una caída de 100 a 80 m³ respecto de agosto.
+        Coincidir en el mes no demuestra que el mantenimiento causó la caída.
+
+        **Recorrido de evidencia:** respuesta → registros `P-08` y `P-09` + parte `M-017`
+        → identificación y su revisión → registro del pozo. Cada valor conserva su fuente.

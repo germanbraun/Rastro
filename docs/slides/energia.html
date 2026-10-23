@@ -643,4 +643,34 @@ prov:wasGeneratedBy	lo generó (la regla)	rastro:activity/energia-stake-parsing
 <aside>Dos tipos de heterogeneidad. De datos: la misma empresa con nombres distintos en cada fuente (CGC), o dos fuentes que nombran operadoras distintas para el mismo pozo; el entity linking decide una vez, con una regla escrita y su evidencia. De esquema: la empresa está en una columna de la declaración jurada, en otra del mapa y dentro de un texto de socios; los mapeos las vuelven los mismos conceptos.</aside>
 </section>
 </div>
+<div class="slide">
+<section id="e-ejemplo-mapeo" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<style>#e-ejemplo-mapeo p{font-size:32px;line-height:1.35} #e-ejemplo-mapeo .cards{display:flex;gap:32px} #e-ejemplo-mapeo .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-ejemplo-mapeo h3{font-size:36px;margin-bottom:16px}</style>
+<p style="color:#2F6FB5">Paso a paso · Ejemplo ficticio, sin datos ni resultados medidos</p>
+<h2 style="font-size:56px;line-height:1.1">Columnas distintas, un mismo pozo</h2>
+<div class="cards"><div class="card"><h3>Operadora</h3><p>well_id: <b>ARG-00421</b><br>well_name: Campo Norte 12</p></div><div class="card"><h3>Registro regulatorio</h3><p>official_code: <b>ARG-00421</b><br>registered_name: CN-12</p></div></div><p><b>Ambas tablas → Pozo → urn:rastro:well:ARG-00421</b></p><p>Mapear los campos da un significado común. Una clave oficial verificada establece que es el mismo pozo.</p><p>Se conservan ambos nombres con su fuente. Se comprueba que el código identifica un pozo, no una rama.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>28</span></div>
+<aside>Mostrar las columnas originales, la clase Well y el identificador compartido. La clave debe tener el mismo alcance en ambas fuentes. No deducir identidad por compartir una clase.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="e-ejemplo-enlace" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<style>#e-ejemplo-enlace p{font-size:32px;line-height:1.35} #e-ejemplo-enlace .cards{display:flex;gap:32px} #e-ejemplo-enlace .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-ejemplo-enlace h3{font-size:36px;margin-bottom:16px}</style>
+<p style="color:#2F6FB5">Paso a paso · Ejemplo ficticio, sin datos ni resultados medidos</p>
+<h2 style="font-size:56px;line-height:1.1">Un nombre sin código necesita evidencia</h2>
+<div class="cards"><div class="card"><h3>Parte M-017</h3><p>CN12 — Campo Norte<br>Sin código oficial</p></div><div class="card"><h3>Pozo candidato</h3><p>ARG-00421 · CN-12<br>Yacimiento Campo Norte</p></div></div><p><b>Mención → identificación candidata → Pozo</b></p><p>Se comparan el nombre, el yacimiento y las coordenadas disponibles. En este ejemplo no hay coordenadas verificadas.</p><p><b>Pendiente de revisión.</b> El parte conserva su identidad. Ante varios pozos compatibles, la mención queda sin resolver.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>29</span></div>
+<aside>Una coincidencia propone un vínculo, no lo confirma. Guardar el texto original, las fuentes, la regla y el estado de revisión. Las coordenadas son una evidencia posible, no un dato inventado en este ejemplo.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="e-ejemplo-respuesta" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
+<style>#e-ejemplo-respuesta p{font-size:32px;line-height:1.35} #e-ejemplo-respuesta .cards{display:flex;gap:32px} #e-ejemplo-respuesta .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-ejemplo-respuesta h3{font-size:36px;margin-bottom:16px}</style>
+<p style="color:#2F6FB5">Paso a paso · Ejemplo ficticio, sin datos ni resultados medidos</p>
+<h2 style="font-size:56px;line-height:1.1">De la pregunta a los registros de origen</h2>
+<p><b>¿Qué pozos tuvieron mantenimiento y una caída de producción en el mismo mes?</b></p><div class="cards"><div class="card"><h3>Producción del pozo ARG-00421</h3><p>P-08 · agosto 2025: 100 m³<br>P-09 · septiembre 2025: 80 m³</p></div><div class="card"><h3>Mantenimiento</h3><p>M-017 · septiembre 2025<br>Identificación pendiente</p></div></div><p><b>Hoy: vínculo pendiente.</b> Si una persona confirma la identificación con evidencia suficiente, el pozo aparece con mantenimiento y menor producción en septiembre.</p><p>Respuesta → P-08 y P-09 + M-017 → identificación revisada → registro del pozo. Coincidir en el mes no demuestra causalidad.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>30</span></div>
+<aside>Los volúmenes, meses y registros son ficticios. Comparar septiembre con agosto; no afirmar una respuesta confirmada mientras el enlace esté pendiente. El ejemplo no conecta una fuente real de mantenimiento ni mide precisión.</aside>
+</section>
+</div>
 </body></html>

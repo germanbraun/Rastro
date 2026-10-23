@@ -700,12 +700,16 @@ def render(cfg_path, tech):
     # lo de adentro (consola, diccionario, enlaces y mapeos) junto en «Bajo el capó»
     names = (["Demo"] if cfg.get("demo") else []) + ["Preguntar"] \
         + (["Por qué confiar"] if cfg.get("tarjetas") or cfg.get("calidad") else []) + (["Rastro Lab"] if cfg.get("lab") else []) \
+        + ([cfg["ejemplo_integracion"]["titulo"]] if cfg.get("ejemplo_integracion") else []) \
         + ["Preguntas frecuentes"] + (["Bajo el capó"] if tech else [])
     tabs = dict(zip(names, st.tabs(names)))
     ask_tab, trust_tab, faq_tab = tabs["Preguntar"], tabs.get("Por qué confiar"), tabs["Preguntas frecuentes"]
     if cfg.get("demo"):
         with tabs["Demo"]:
             show_demo(cfg, tech)
+    if cfg.get("ejemplo_integracion"):
+        with tabs[cfg["ejemplo_integracion"]["titulo"]]:
+            show_integration_example(cfg["ejemplo_integracion"], domain, tech)
     if cfg.get("lab"):
         with tabs["Rastro Lab"]:
             import lab
@@ -860,6 +864,19 @@ def before_after(card):
             st.markdown(md(card[key]["detalle"]))
     if card.get("impacto"):
         st.warning("**Lo que cuesta no integrar:** " + md(card["impacto"]))
+
+
+def show_integration_example(example, domain, tech):
+    """Render a self-contained teaching example without querying production data."""
+    st.info(example["aviso"])
+    steps = example["pasos"]
+    selected = st.radio(example["selector"], range(len(steps)),
+                        format_func=lambda index: steps[index]["titulo"],
+                        key=f"{domain}_integration_example", horizontal=True)
+    step = steps[selected]
+    st.markdown(step["contenido"])
+    if tech and step.get("tecnico"):
+        st.code(step["tecnico"], language="turtle")
 
 
 def show_demo(cfg, tech):
