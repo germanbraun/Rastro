@@ -110,6 +110,12 @@ energia: &energia
     evaluation: {folder: layer/energia, harness: current, run: docker compose run --rm -T layer-eval python /layer/evaluar.py energia,
                  title: petróleo y gas en Argentina, normalize: energia.normalizar}
     change_tests: layer/energia/cambio/
+    change_guard:                 # what each change test may change; layer/change_guard.py restores it exactly
+      files: [mappings/energia.r2rml.ttl, linking/energia/participaciones-revisadas.csv, layer/energia/respuestas]
+      tables:
+        cambio: [capitulo4.produccion]
+        correccion: []
+        impacto: [fractura.fractura, lab_gas.corrida, lab_gas.prediccion, lab_gas.entrada, lab_gas.aporte]
     evidence: {result: layer/energia/evidencia.json,
                link_classes: [Stake, OperatorLink, CompanyName, LocationLink, PipelineLink, SurroundingsLink,
                               LeiLink, StudyLink, OperatorChange],
@@ -195,6 +201,12 @@ afiliaciones:
               result: layer/afiliaciones/calidad.json,
               run: docker compose run --rm --no-deps calidad python /ontology/calidad.py afiliaciones}
     app: app/dominios/afiliaciones.yaml
+    change_tests: layer/afiliaciones/cambio/
+    change_guard:
+      files: [linking/afiliaciones/correcciones.csv, layer/afiliaciones/respuestas]
+      tables:
+        correccion: [ror.name, afiliaciones.identificacion, afiliaciones.dudosa, afiliaciones.posible_hueco,
+                     afiliaciones.sin_identificar]
     evaluation: {folder: layer/afiliaciones, harness: current,
                  run: docker compose run --rm -T layer-eval python /layer/evaluar.py afiliaciones,
                  title: afiliaciones de investigación en Argentina}

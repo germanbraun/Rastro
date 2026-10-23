@@ -873,3 +873,16 @@ already begun; it is not evidence of unchanged-skill transfer.
   user as a recorded method change in the frozen experiment (`docs/experiments/afiliaciones.yaml`).
 - **Numbers:** oil and gas unchanged: 19 violations (2 trajectories, 17 fracturing jobs), no warnings. Research
   affiliations: 0 violations, 1 warning, 91 informational, status `review_findings`.
+
+## 2026-10-23 — The change-test guard reads each domain's lists from the registry
+
+- **What:** `layer/change_guard.py` takes the files and tables each change test may change from the domain's
+  `method.change_guard` entry, and the linker, Ontop service and script folder from its method block. Oil and gas
+  keeps its exact lists, moved to the registry. Usage: `run <test> [domain]`, defaulting to energia.
+- **Why:** research affiliations needed the same guarded snapshot and restore for its alias correction test. Approved
+  by the user as a recorded method change in that experiment.
+- **Numbers (research affiliations):**
+  - alias correction: with Rastro and SQL with links, 11 of 11 saved runs changed as declared, with no query edited;
+    without Rastro, no answer changed;
+  - traceability on 30 cells: 30, 30 and 0;
+  - the restore matched the starting fingerprints exactly.

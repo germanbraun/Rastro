@@ -1,6 +1,6 @@
 # Change test proposal: research affiliations
 
-Step 8 of the method (`change-tests`). Status: **proposed, for the user's approval before anything is changed**.
+Step 8 of the method (`change-tests`). Status: **approved by the user on 2026-10-23**, as written, with option (b) for the guard. **Result** at the end.
 The approved scope predeclared the scenario: after the first measurement, one missing alias is added once, as a
 controlled source change applied equally to B, D and C. It also fixed a traceability check on 30 answer cells. The
 exact alias was not chosen then, so it is chosen here, before running.
@@ -60,3 +60,22 @@ files and tables.
   harness and the quality runner.
 
 Recommendation: (b), for the same reason as before: the skills and their scripts are meant to be domain-generic.
+
+## Result (2026-10-23)
+
+Measured with `layer/afiliaciones/cambio/correccion.sh registrar` under the guard. The numbers come from
+`layer/afiliaciones/cambio/correccion.json` and `trazabilidad.json`.
+
+- **With Rastro (C) and SQL with links (D):** 11 of 11 saved runs each changed exactly as declared: e3 69 → 70,
+  e5 42 → 40, e1, e2 and e4 unchanged. cq1 shows Garrahan in the two affiliations, cq2 has 70 organizations
+  (Garrahan with 1 publication), cq3 has 123 rows. No query or mapping line was edited. The source change took 1 s;
+  rerunning the linker and restarting Ontop took 15 s.
+- **Without Rastro (B):** none of its saved answers changed (e3 stayed at 62, e5 at 49). Its queries compare ROR names
+  with the text literally, punctuation included, so the alias «Prof. Dr. Juan P.» does not match the text «Prof Dr.
+  Juan P». Reaching the corrected answer would need edits to each B query that matches names. That was not measured,
+  since no B query was edited.
+- **Restoration:** the corrections file, the saved answers and the five tables matched the starting fingerprints exactly.
+- **Traceability (30 cells):** C 30, D 30, B 0. In B, 16 of the 30 values appear in some saved answer, but none comes
+  with its Crossref record and rule.
+- **Not counted as a result:** a first run measured D after the rebuild without the read-only grants (the linker
+  recreates the schema). That was a defect in the test script, fixed and rerun, and the result above is the rerun.

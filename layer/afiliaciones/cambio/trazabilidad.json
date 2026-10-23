@@ -1,0 +1,835 @@
+{
+ "fecha": "2026-10-23",
+ "cells": 30,
+ "traceable": {
+  "B": 0,
+  "D": 30,
+  "C": 30
+ },
+ "detail": [
+  {
+   "cell": {
+    "doi": "10.31687/saremnms25.1267",
+    "author": 1,
+    "affiliation": 0,
+    "organization": "https://ror.org/04jwe2p45"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1111/jen.13409",
+    "author": 0,
+    "affiliation": 1,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B",
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1021/acsomega.4c07147",
+    "author": 3,
+    "affiliation": 0,
+    "organization": "https://ror.org/0081fs513"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B",
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1002/cmdc.202500623",
+    "author": 1,
+    "affiliation": 1,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B",
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1109/jsen.2025.3528721",
+    "author": 1,
+    "affiliation": 0,
+    "organization": "https://ror.org/02t6gq889"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1097/bsd.0000000000001683",
+    "author": 13,
+    "affiliation": 0,
+    "organization": "https://ror.org/0081fs513"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B",
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1109/access.2025.3575724",
+    "author": 0,
+    "affiliation": 0,
+    "organization": "https://ror.org/02rsnav77"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1001/jamaneurol.2025.0023",
+    "author": 0,
+    "affiliation": 1,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B",
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1002/slct.202500903",
+    "author": 1,
+    "affiliation": 0,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1002/cnma.202500585",
+    "author": 1,
+    "affiliation": 0,
+    "organization": "https://ror.org/01xz39a70"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1039/d5sm00660k",
+    "author": 0,
+    "affiliation": 1,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1039/d4nj01152j",
+    "author": 6,
+    "affiliation": 0,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1163/1568539x-bja10305",
+    "author": 2,
+    "affiliation": 0,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1002/joc.8919",
+    "author": 4,
+    "affiliation": 0,
+    "organization": "https://ror.org/02s7sax82"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "Corrección revisada",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "Corrección revisada"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1021/acs.inorgchem.5c03575",
+    "author": 2,
+    "affiliation": 1,
+    "organization": "https://ror.org/0081fs513"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B",
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.47193/mafis.3922026010401",
+    "author": 4,
+    "affiliation": 0,
+    "organization": "https://ror.org/03h0e2s88"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1002/ldr.70057",
+    "author": 2,
+    "affiliation": 0,
+    "organization": "https://ror.org/02jszmk54"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1080/00288233.2024.2333841",
+    "author": 3,
+    "affiliation": 1,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B",
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.3390/plants14142204",
+    "author": 2,
+    "affiliation": 1,
+    "organization": "https://ror.org/056tb7j80"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1002/14651858.cd016019",
+    "author": 12,
+    "affiliation": 0,
+    "organization": "https://ror.org/04djj4v98"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1002/ldr.70057",
+    "author": 1,
+    "affiliation": 1,
+    "organization": "https://ror.org/022g6pv04"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.3390/biology14020185",
+    "author": 2,
+    "affiliation": 0,
+    "organization": "https://ror.org/05q52xn14"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1021/acs.inorgchem.5c03575",
+    "author": 0,
+    "affiliation": 0,
+    "organization": "https://ror.org/0081fs513"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B",
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.2174/0113862073319590240801112332",
+    "author": 3,
+    "affiliation": 1,
+    "organization": "https://ror.org/00pt8r998"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.3390/toxins17010039",
+    "author": 2,
+    "affiliation": 0,
+    "organization": "https://ror.org/0002pcv65"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1002/cnma.202500585",
+    "author": 0,
+    "affiliation": 1,
+    "organization": "https://ror.org/00v29jp57"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1002/cnma.202500585",
+    "author": 2,
+    "affiliation": 0,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1021/acs.inorgchem.5c03575",
+    "author": 1,
+    "affiliation": 1,
+    "organization": "https://ror.org/057xgqr91"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.1021/acs.inorgchem.5c03575",
+    "author": 1,
+    "affiliation": 1,
+    "organization": "https://ror.org/03cqe8w59"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R2: sigla única entre organizaciones argentinas y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [
+     "e2-0-B",
+     "e4-0-B",
+     "e4-1-B",
+     "e4-2-B",
+     "e4-3-B"
+    ],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  },
+  {
+   "cell": {
+    "doi": "10.3390/polym17243279",
+    "author": 0,
+    "affiliation": 0,
+    "organization": "https://ror.org/00xpayr72"
+   },
+   "C": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia",
+    "sources": [
+     "https://w3id.org/rastro/source/crossref",
+     "https://w3id.org/rastro/source/ror"
+    ]
+   },
+   "D": {
+    "traceable": true,
+    "rule": "R1: nombre completo en ROR y una segunda evidencia"
+   },
+   "B": {
+    "traceable": false,
+    "returned_by": [],
+    "why": "the value can appear in an answer, but no saved answer gives its Crossref record and rule"
+   }
+  }
+ ]
+}

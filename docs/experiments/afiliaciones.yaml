@@ -219,7 +219,30 @@ steps:
         fresh subagent each; 5 timeouts retried with the error message; one orchestrator transcription error recorded.
     agent_hours: 0.2
     human_hours: null
+  change_tests:
+    status: measured
+    evidence:
+    - docs/experiments/research-affiliations/change-test-proposal.md (approved, with result)
+    - layer/afiliaciones/cambio/correccion.json, trazabilidad.json; restore checked against independent fingerprints
+    - 'alias correction: C 11/11 and D 11/11 runs as declared, B 0 answers changed; traceability C 30, D 30, B 0'
+    sessions:
+    - started_on: '2026-10-23T10:48:00Z'
+      ended_on: '2026-10-23T11:06:43Z'
+      pauses: []
+      work: >-
+        Start time approximate (before the proposal commit at 10:55:53Z). Chose the alias from real unidentified affiliations; proposal approved; guard made
+        registry-driven (method change); correction and traceability scripts; two guarded runs (the first had a
+        profile lookup error before any change, then a missing re-grant for D); restore identical both times.
+    agent_hours: 0.31
+    human_hours: null
 interventions:
+- step: change_tests
+  decision: >-
+    Approved the change test as written (official Garrahan alias, 30-cell traceability) and option (b): the guard reads
+    files and tables from the registry, as a method change
+  reason: The plan, expectations and generic changes belong to the user
+  kind: planned approval
+  minutes: null
 - step: evaluate
   decision: >-
     Approved the evaluation plan as written (five questions, B/D/C, 33 runs, scored only against the blind
@@ -377,6 +400,18 @@ errors_caught:
     Claude copied a subagent's JSON reply by hand with its backslash escaping left in, so the saved first attempt was
     a broken regular expression the subagent did not write
   fix: replies decoded with a script from then on; recorded in evaluation-runs.md; process note 42
+- step: change_tests
+  check: first guarded run
+  failure_kind: >-
+    the guard looked up the domain's Ontop in `docker compose config`, which leaves out services behind a profile;
+    it stopped before any change (no snapshot, ror.name unchanged)
+  fix: tolerate a missing service in the port lookup; process note 44
+- step: change_tests
+  check: reading correccion.json (D failed after the rebuild with permission denied)
+  failure_kind: >-
+    the linker recreates the afiliaciones schema and drops the read-only users' grants; the measurement script did not
+    grant them again (the evaluation harness does), so D's after-rebuild answers were errors, not results
+  fix: medir.py applies reader.sql first; whole test rerun; process note 45
 method_changes:
 - change: >-
     ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports
@@ -402,4 +437,10 @@ method_changes:
     proveedores, energia and energia_lab with their previous values
   scope: generic
   reason: approved by the user as option (b) of the evaluation plan; the harness had per-domain Python dictionaries
+- change: >-
+    layer/change_guard.py reads each domain's files and tables per test from method.change_guard, and its linker,
+    Ontop service and script folder from the method block; `run <test> [domain]`, defaulting to energia, whose
+    lists moved to the registry unchanged; services behind a compose profile no longer break the port lookup
+  scope: generic
+  reason: approved by the user as option (b) of the change-test plan; tests/test_change_guard.py passes
 result: null

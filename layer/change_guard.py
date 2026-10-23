@@ -1,9 +1,11 @@
 """Preserve exact change-test inputs. Recovery data survives an interrupted runner.
 
-Use: python layer/change_guard.py run cambio|correccion|impacto
+Use: python layer/change_guard.py run cambio|correccion|impacto [domain]   (domain defaults to energia)
      python layer/change_guard.py recover
 Internal: restore-source restores the source and mapping between cambio acts.
 Run only on an isolated development database, with other writers stopped.
+What each test may change comes from the domain's method.change_guard entry in layer/dominios.yaml (files, and
+tables per test); the linker and Ontop to rebuild, and the folder with the test scripts, from the same method block.
 """
 import fcntl
 import json
@@ -16,15 +18,25 @@ import time
 import uuid
 from pathlib import Path
 
+import yaml
+
 ROOT = Path(__file__).resolve().parents[1]
 STATE = ROOT / "data/cache/change-test-guard"
 COMPOSE = ["docker", "compose", "-f", str(ROOT / "infra/docker-compose.yml")]
-FILES = ["mappings/energia.r2rml.ttl", "linking/energia/participaciones-revisadas.csv", "layer/energia/respuestas"]
-TABLES = {
-    "cambio": ["capitulo4.produccion"],
-    "correccion": [],
-    "impacto": ["fractura.fractura", "lab_gas.corrida", "lab_gas.prediccion", "lab_gas.entrada", "lab_gas.aporte"],
-}
+DOMAIN, FILES, TABLES, LINKER, ONTOP, SCRIPTS = None, [], {}, None, None, None
+
+
+def configure(domain):
+    """Read what the domain's change tests may change, and what to rebuild, from the registry."""
+    global DOMAIN, FILES, TABLES, LINKER, ONTOP, SCRIPTS
+    method = yaml.safe_load((ROOT / "layer/dominios.yaml").read_text())[domain]["method"]
+    guard = method["change_guard"]
+    DOMAIN, FILES, TABLES = domain, guard["files"], guard["tables"]
+    LINKER, ONTOP = method["linker"]["service"], method["ontop"]["service"]
+    SCRIPTS = method["change_tests"]
+
+
+configure("energia")
 
 
 def sql(query):
@@ -59,7 +71,7 @@ def save_files(state):
 
 def restore_files(state, only_mapping=False):
     for index, name in enumerate(state["files"]):
-        if only_mapping and name != FILES[0]:
+        if only_mapping and name != state["files"][0]:
             continue
         target, saved = ROOT / name, STATE / f"file{index}"
         if tree(target) == tree(saved):
@@ -77,13 +89,13 @@ def restore_files(state, only_mapping=False):
 
 
 def snapshot(kind):
-    if kind == "cambio":
+    if kind == "cambio" and DOMAIN == "energia":
         count = sql("SELECT count(*) FROM information_schema.columns WHERE table_schema='capitulo4' "
                     "AND table_name='produccion' AND column_name='prod_pet'")
         if count != "1":
             raise ValueError("Expected prod_pet column before mutation; recover earlier changes first")
     STATE.mkdir()  # Never overwrite an unfinished recovery.
-    state = {"kind": kind, "schema": "rastro_test_" + uuid.uuid4().hex, "tables": TABLES[kind],
+    state = {"kind": kind, "domain": DOMAIN, "schema": "rastro_test_" + uuid.uuid4().hex, "tables": TABLES[kind],
              "database": os.environ.get("PG_DB", "rastro"), "user": os.environ.get("PG_USER", "rastro")}
     save_files(state)
     schema = state["schema"]
@@ -129,9 +141,9 @@ RAISE EXCEPTION 'Restoration differs: {table}'; END IF; END $$""")
 
 
 def rebuild():
-    subprocess.run(COMPOSE + ["run", "--rm", "energia-linker"], check=True)
-    subprocess.run(COMPOSE + ["restart", "ontop-energia"], check=True)
-    container = subprocess.check_output(COMPOSE + ["ps", "-aq", "ontop-energia"], text=True).strip()
+    subprocess.run(COMPOSE + ["run", "--rm", LINKER], check=True)
+    subprocess.run(COMPOSE + ["restart", ONTOP], check=True)
+    container = subprocess.check_output(COMPOSE + ["ps", "-aq", ONTOP], text=True).strip()
     for _ in range(90):
         status = subprocess.check_output(["docker", "inspect", "-f", "{{.State.Health.Status}}", container], text=True).strip()
         if status == "healthy":
@@ -155,9 +167,9 @@ def configure_database():
     postgres = config["services"]["postgres"]["environment"]
     os.environ["PG_DB"] = str(postgres["POSTGRES_DB"])
     os.environ["PG_USER"] = str(postgres["POSTGRES_USER"])
-    ports = config["services"]["ontop-energia"].get("ports", [])
+    ports = config["services"].get(ONTOP, {}).get("ports", [])   # services behind a profile are not listed
     if ports:
-        os.environ["ONTOP_ENERGIA_PORT"] = str(ports[0]["published"])
+        os.environ[f"ONTOP_{DOMAIN.upper()}_PORT"] = str(ports[0]["published"])
 
 
 def main():
@@ -173,12 +185,18 @@ def main():
     lock_path.parent.mkdir(parents=True, exist_ok=True)
     with lock_path.open("a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-        configure_database()
         if args == ["recover"]:
-            recover(json.loads((STATE / "state.json").read_text()))
+            state = json.loads((STATE / "state.json").read_text())
+            configure(state.get("domain", "energia"))
+            configure_database()
+            recover(state)
             return
-        if len(args) != 2 or args[0] != "run" or args[1] not in TABLES:
+        if len(args) not in (2, 3) or args[0] != "run":
             raise ValueError(__doc__)
+        configure(args[2] if len(args) == 3 else "energia")
+        if args[1] not in TABLES:
+            raise ValueError(__doc__)
+        configure_database()
         if STATE.exists():
             raise ValueError("Unfinished recovery exists; inspect it and run change_guard.py recover first")
         kind = args[1]
@@ -195,7 +213,7 @@ def main():
         signal.signal(signal.SIGINT, interrupted)
         code = 1
         try:
-            process = subprocess.Popen(["bash", str(ROOT / f"layer/energia/cambio/{kind}.sh"), "registrar"],
+            process = subprocess.Popen(["bash", str(ROOT / SCRIPTS / f"{kind}.sh"), "registrar"],
                                        env=child_env, start_new_session=True)
             code = process.wait()
         finally:
