@@ -185,6 +185,13 @@ steps:
     agent_hours: 0.48
     human_hours: null
 interventions:
+- step: evaluate
+  decision: >-
+    Defer the blind reference review to the end of the experiment; continue with show-in-app, evaluation set-up without
+    references and the change test; no accuracy number until the review
+  reason: The user's choice of order; the reviewer is not named yet
+  kind: unplanned decision
+  minutes: null
 - step: quality
   decision: >-
     Approved the three dictionary terms (decisionReason, humanConfirmation, successor) and the seven quality rules as

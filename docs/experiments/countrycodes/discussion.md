@@ -747,3 +747,13 @@ discussion headings say 2026-10-23 in UTC and are left as written.
 `defects_detected` now requires a violation. Afiliaciones: `review_findings`, 0 violations, 1 warning, 91 info. Oil and
 gas rerun: unchanged, 19 violations. A new test covers a warning-only result, and the `quality-rules` skill says where
 `sh:severity` goes.
+
+## Decision: the blind reference review moves to the end — user (2026-10-23)
+
+The user decided to continue without the blind reference review and do it at the end of the experiment. The method
+continues with show-in-app, evaluation set-up without references, and the change test. Until the review:
+
+- no accuracy number is measured or published, only technical checks;
+- the reference plan stays as approved (a named reviewer, blind to Rastro's links); Claude's suggestion of a fresh AI
+  reference checked on a sample by a person is not adopted;
+- GPT, having seen the links, cannot be the reviewer.
