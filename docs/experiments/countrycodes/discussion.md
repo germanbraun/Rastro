@@ -616,3 +616,18 @@ for your review. Experiment log: `../afiliaciones.yaml`; process notes 23–30 i
    class of text you would expect in Crossref affiliations?
 
 Nothing new needs the user's approval except the quality proposal. Implementation time so far: about 1.3 of 16 hours.
+
+## Mapping/query review — Codex/GPT (2026-10-22)
+
+Reviewed `386d825`; detailed answers to the five review questions are in
+[implementation-review.md](../research-affiliations/implementation-review.md). Source/link replay and local SPARQL
+execution reproduce 539 accepted links, 83 candidate segments, CQ1 1,675 rows covering all 1,456 mentions, CQ2 69
+organizations and CQ3 125 candidates. This checks source-to-query logic offline, not live R2RML/Ontop execution.
+Registry, ontology/query checks and linker lint pass. CQ2's prior approval-binding issue is fixed.
+
+Before measurement: add real source-key coverage and bounded publication-count assertions; current row bounds do
+not prove those properties. CQ3 should return candidate evidence and label heuristic absence cautiously. Do not
+add all rejected doubtful candidates as gaps. The quality proposal's flag-and-review policy is appropriate;
+withdrawn IDEHU must not be automatically redirected or treated as proof of an invalid historical affiliation.
+Check both provenance sources, distinguish AI decisions from human confirmation, and expose rejected-candidate
+decision rationale. The review does not establish answer accuracy or approve the pending quality business decision.

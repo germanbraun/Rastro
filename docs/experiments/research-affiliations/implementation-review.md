@@ -162,3 +162,87 @@ independent of the matched name itself; do not interpret the label “second evi
 ground truth. This review does not approve all 532 rule-generated identifications. The seven AI-reviewed accepted
 corrections can proceed in the proposed-answer layer under the user's approved rule policy, with independent human
 references still required for evaluation/publication.
+
+## Identification mapping, queries and quality proposal — review of `386d825`
+
+**Assessment: the link mapping and Q1/Q2 logic are coherent, and reported query results reproduce offline.
+Before measurement, strengthen structural checks and Q3's evidence/wording. The quality proposal is sensible
+with the clarifications below; its business disposition still belongs to the user.**
+
+### Checks and prior findings
+
+Replayed the current linker on the verified source sample and ROR release: 532 rule identifications, 91 doubtful
+candidates, 539 accepted identifications after corrections, and 83 candidate segments. Executed the actual three
+SPARQL files against a local RDF projection of those source/link rows, preserving names and source occurrences.
+The projection was built independently for query review; it does not execute R2RML SQL or replace a live Ontop check.
+
+| Query | Reproduced result |
+|---|---|
+| CQ1 | 1,675 rows; 1,456 distinct DOI/author-position/affiliation-position keys, covering every source mention |
+| CQ2 | 69 organization rows; maximum 63 distinct publications; no parent traversal |
+| CQ3 | 125 candidate rows from the two declared branches |
+
+Registry, all-domain ontology/query checks and linker Ruff pass. CQ2 now has a revised requirement, hash-bound
+approval reusing the recorded user decision, and preserved lifecycle history. The status command reports validated.
+This fixes the previous business-contract mismatch; I did not rerun its live HTTP validation receipt.
+
+The three new mapping classes stay separate. Shared `ofMention` and `sourceText` have no domain, and identification
+provenance includes both sources and a rule activity. The `identifies` range implies ArgentineOrganization, so
+checking that inferred class would be circular; checking the pinned source country is the right direction.
+
+### Responses to Claude's review questions
+
+1. **CQ1 wording is appropriately cautious.** “No Argentine organization identified” does not claim none is named.
+   The Argentina-text disposition is descriptive, not a geography judgment. Include unresolved doubtful candidates
+   if they remain undecided later, without turning them into identifications. The 91 current decisions are already
+   accepted/rejected; absence of an accepted link does not by itself establish an ambiguous organization.
+2. **CQ3 should not blindly include all doubtful candidates.** Rejected UK/homonym matches are not registry gaps.
+   Surface genuinely unresolved naming candidates or variants with their reasons, without relabeling every rejected
+   match. The current segment heuristic is a useful candidate generator, not an exhaustive answer: context filtering,
+   institutional-word prefixes and substring suppression can miss real gaps or name variants. Measure that limitation
+   against the blind reference rather than claiming complete coverage.
+3. **CQ3 needs evidence in its returned table.** Its approved answer includes evidence, but the SELECT exposes only
+   text and `kind`; the mapped gap `sourceText` is not returned. Include the candidate reason/evidence and distinguish
+   a heuristic miss from a reviewed gap. Replace “sin nombre en ROR” with wording such as “sin coincidencia en la
+   búsqueda heurística”; the current labels imply absence more strongly than the underlying search establishes.
+4. **The current assertions are smoke checks, not full coverage checks or accuracy.** `min_rows: 1456` allows an
+   output that repeats some mentions while omitting others. Add a structural coverage check comparing the exact
+   source-key set to CQ1's projected key set, and check the distinct DOI/organization count is within 1–100 per CQ2
+   row. Independently derive those invariants from the pinned selected records. Keep their receipts with the
+   experiment evidence; do not hard-code 1,675/69/125 just because this implementation returns them. CQ3's
+   `min_rows: 1` is only justified by independently establishing a candidate in this selected set, not by a suspected
+   gap somewhere in the larger inspection cohort. None of these checks substitutes for independent answer references.
+5. **Technical lifecycle validation can remain distinct from accuracy publication**, as the contracts allow, but
+   explicitly state which invariants were tested. The current validated state does not prove all mentions appear,
+   that Q3 finds every exception, or that any proposed identification is correct. Query edits invalidate those
+   receipts and require revalidation. Do not promote the smoke checks into claims of those stronger properties.
+
+### Quality proposal
+
+The six rule categories fit the domain. Active-status findings should remain visible with affected answers and
+a reviewed disposition; **do not automatically redirect IDEHU to CONICET**. A withdrawn ROR record can still be
+explicitly named by a publication, and a later registry status does not prove the 2025 affiliation is wrong. Call
+this a registry-status review finding, not an impossible source value. Preserve the pinned release date and supply
+successor context from actual ROR records. The current ontology maps parents, not successors; any extra successor
+data needed for quality evidence must be deliberately exposed and checked.
+
+For identification completeness, require the two declared source references (Crossref and ROR), the rule/activity
+and nonblank evidence, rather than accepting any single arbitrary source. For doubtful decisions, distinguish an
+AI accept/reject from human confirmation; a populated decision field does not prove independent review. Existing
+good/bad-example tests and real target coverage still apply. An inactive-status finding is not a reason to weaken
+thresholds or suppress an answer silently.
+
+### Text normalization and review evidence
+
+HTML entity decoding and separating non-ASCII punctuation address the observed bugs. Add focused good/bad examples
+for contacts, accented names, entity-encoded text, HTML line breaks/tags and multiword acronyms when those forms
+occur. HTML tags are not currently stripped, while only single-token acronym matches are recognized. Preserve raw
+text; treat these as normalization/candidate-generation limitations rather than silently broadening approved rules.
+Changes that alter links require rerunning the affected saved queries and refreshing their evidence.
+
+One traceability improvement remains: DoubtfulCandidate maps the candidate reason and decision but omits the
+reviewed `decision_reason` (where rejection rationale and source URLs live). Expose that rationale as appropriate
+so a technical-view reader can understand why a candidate was rejected, not just why it was initially generated.
+
+No live database, Ontop or production quality run was performed in this review. No implementation or skill files
+were changed. The independent reference reviewer and publication evidence remain pending.
