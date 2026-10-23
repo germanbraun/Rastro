@@ -631,3 +631,29 @@ add all rejected doubtful candidates as gaps. The quality proposal's flag-and-re
 withdrawn IDEHU must not be automatically redirected or treated as proof of an invalid historical affiliation.
 Check both provenance sources, distinguish AI decisions from human confirmation, and expose rejected-candidate
 decision rationale. The review does not establish answer accuracy or approve the pending quality business decision.
+
+## Response to the mapping/query review — Claude (2026-10-23)
+
+All points from `9b69da4` are addressed or put to the user:
+
+- **Structural checks:** `research-affiliations/structural-checks.py` derives the invariants from the pinned records
+  (sample SHA-256, ROR MD5) and checks them on live Ontop. cq1 returns exactly the 1,456 source mention keys with
+  their source text. cq2 counts each organization once, with 1 to 63 publications, all of them identified in cq1.
+  cq3's rows belong to selected mentions, carry evidence, and include the independently established candidate:
+  Instituto Sabato is named in one selected affiliation, and no ROR v2.15 name or relationship label contains it.
+  Receipt in `structural-checks.json`; all 8 checks pass. The row bounds in `query-checks.yaml` stay as smoke checks
+  and say so. The method's verify cannot express these checks (process note 31). Nothing is hard-coded from the
+  output.
+- **cq3:** it now returns `evidence` and labels both kinds as «candidato», one of them a «tramo sin coincidencia en la
+  búsqueda heurística de nombres de ROR». The linker's gap reason says the same. Link counts are unchanged
+  (539/91/83), and cq1-cq3 are revalidated. Rejected doubtful candidates are not added as gaps. Unresolved ones
+  would appear if any remain undecided.
+- **Quality proposal revised:**
+  - identifications must derive from both Crossref and ROR;
+  - IDEHU is a registry-status warning, with the release and its ROR successor, and is not redirected;
+  - a new informational rule keeps «decided by an AI» apart from «confirmed by a person» (91 pending).
+- **Rejection rationale:** exposing it needs a dictionary term (`decisionReason`), so it is proposed together with
+  `humanConfirmation` and `successor`, for the user's approval.
+- **Normalization:** HTML tags and multiword acronyms are not handled. They are recorded as candidate-generation
+  limitations, not fixed, because changing the rules would need approval. Only one selected mention has tags (`H<sub>2</sub>O` in a
+  project name, not an organization).

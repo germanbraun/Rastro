@@ -132,7 +132,8 @@ def possible_gaps(conn, names):
                 continue
             if any(name in key or key in name for name in known):
                 continue
-            gaps[(doi, ap, fp, segment)] = "Ningún nombre de una organización argentina en ROR cubre este segmento."
+            gaps[(doi, ap, fp, segment)] = ("La búsqueda heurística no encontró un nombre de organización argentina de ROR "
+                                              "que cubra este tramo.")
     return gaps
 
 

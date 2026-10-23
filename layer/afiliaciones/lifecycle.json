@@ -31,7 +31,7 @@
       "validation": {
         "expectations": {
           "path": "layer/afiliaciones/query-checks.yaml",
-          "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
+          "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
         },
         "date": "2026-10-22"
       }
@@ -67,7 +67,7 @@
       "validation": {
         "expectations": {
           "path": "layer/afiliaciones/query-checks.yaml",
-          "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
+          "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
         },
         "date": "2026-10-22"
       }
@@ -84,7 +84,7 @@
       },
       "query": {
         "path": "ontology/afiliaciones/queries/cq3.rq",
-        "sha256": "2312552cb15c0e4735f9f6d14957662343b7b6eab501ccd71fc50f54f1d1984e"
+        "sha256": "48b005d20e90bd67b0f545cef223bf857ce96518002ad67928945110f9b22c58"
       },
       "context": [
         {
@@ -103,7 +103,7 @@
       "validation": {
         "expectations": {
           "path": "layer/afiliaciones/query-checks.yaml",
-          "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
+          "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
         },
         "date": "2026-10-22"
       }
@@ -248,6 +248,46 @@
       "artifact": {
         "path": "layer/afiliaciones/query-checks.yaml",
         "sha256": "b8902f51e8791c5c1dcece10b16887f7a4937655759b703c97434f0e48d21e2d"
+      }
+    },
+    {
+      "question": "cq3",
+      "from": "approved",
+      "to": "implemented",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "ontology/afiliaciones/queries/cq3.rq",
+        "sha256": "48b005d20e90bd67b0f545cef223bf857ce96518002ad67928945110f9b22c58"
+      }
+    },
+    {
+      "question": "cq3",
+      "from": "implemented",
+      "to": "validated",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/query-checks.yaml",
+        "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
+      }
+    },
+    {
+      "question": "cq1",
+      "from": "implemented",
+      "to": "validated",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/query-checks.yaml",
+        "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
+      }
+    },
+    {
+      "question": "cq2",
+      "from": "implemented",
+      "to": "validated",
+      "date": "2026-10-22",
+      "artifact": {
+        "path": "layer/afiliaciones/query-checks.yaml",
+        "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
       }
     }
   ]

@@ -147,9 +147,20 @@ steps:
   quality:
     status: proposed_waiting_for_approval
     evidence:
-    - 'docs/experiments/research-affiliations/quality-proposal.md (6 rules; 1 finding today: IDEHU withdrawn in ROR)'
-    sessions: []
-    agent_hours: 0.0
+    - 'docs/experiments/research-affiliations/quality-proposal.md (revised after GPT: 7 rules, 3 new dictionary terms)'
+    - 'findings today: IDEHU withdrawn in ROR v2.15 (warning), 91 AI decisions without human confirmation (info)'
+    sessions:
+    - started_on: '2026-10-23T02:05:00Z'
+      ended_on: '2026-10-23T02:30:00Z'
+      pauses: []
+      work: >-
+        Start time approximate (not recorded when the session opened). After GPT's review (9b69da4): structural
+        checks from the pinned records (cq1 exact key coverage, cq2 1-100 once per organization, cq3 returns the
+        independently established Instituto Sabato candidate), receipt structural-checks.json, all 8 pass; cq3
+        returns evidence and labels its rows as heuristic candidates; gap reason softened in the linker (counts
+        unchanged); cq1-cq3 revalidated; quality proposal revised (both sources, registry-status warning, human
+        confirmation apart from AI decisions, three terms for approval).
+    agent_hours: 0.42
     human_hours: null
 interventions:
 - step: initialize
@@ -235,5 +246,14 @@ errors_caught:
     an unquoted line with a colon made the log invalid; the update script failed but the commit and push ran anyway
     (commands chained with ; instead of &&), so f82554c lacked this session and the process notes
   fix: quoted the line, committed the log and notes separately; process note 30
+- step: questions
+  check: reviewer (GPT) on the queries and query checks (9b69da4)
+  failure_kind: >-
+    row-count bounds could pass with repeated and missing mentions; cq3 returned no evidence and its labels implied
+    absence from ROR more strongly than a heuristic search shows; the quality proposal accepted any single source and
+    read a filled decision field as review
+  fix: >-
+    structural-checks.py from the pinned records; cq3 evidence column and candidate wording; quality proposal revised;
+    process notes 31-33
 method_changes: []
 result: null

@@ -1,6 +1,9 @@
 # Executable checks for the afiliaciones competency queries (python layer/method.py verify afiliaciones ...).
 # These are invariants from the approved definitions and the inspection, not accuracy: the answers are compared with
 # the blind reviewer's reference later (evaluate). Never copy a query's output here to make it pass.
+# Row bounds are smoke checks. The structural properties (cq1 covers exactly the source mention keys, cq2 counts 1-100
+# publications once per organization, cq3 returns the independently established candidate) are checked from the
+# pinned records by docs/experiments/research-affiliations/structural-checks.py, receipt structural-checks.json.
 cq1.rq:
   query_sha256: 31c72907250015f447c70ef6aff104d3c3f16293faedca08b550734192dec7d4
   columns: [doi, authorPosition, affiliationPosition, affiliation, organization, organizationName, rule, evidence, disposition]
@@ -13,7 +16,8 @@ cq2.rq:
   min_rows: 1
   max_rows: 538
 cq3.rq:
-  query_sha256: 2312552cb15c0e4735f9f6d14957662343b7b6eab501ccd71fc50f54f1d1984e
-  columns: [doi, authorPosition, affiliationPosition, affiliation, candidate, kind]
-  # The inspection found at least one suspected gap in the cohort (Instituto Sabato), independently of the linker.
+  query_sha256: 48b005d20e90bd67b0f545cef223bf857ce96518002ad67928945110f9b22c58
+  columns: [doi, authorPosition, affiliationPosition, affiliation, candidate, kind, evidence]
+  # Instituto Sabato is named in a selected affiliation and no ROR v2.15 name or relationship label has it
+  # (established from the pinned records, independently of the linker; see structural-checks.py).
   min_rows: 1

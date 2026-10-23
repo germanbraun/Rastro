@@ -1,0 +1,46 @@
+{
+  "queries": {
+    "cq1.rq": "31c72907250015f447c70ef6aff104d3c3f16293faedca08b550734192dec7d4",
+    "cq2.rq": "dbc69b0a6be8f02e1571b28315f35511633a97d8120e5aa562b34558d73d59fa",
+    "cq3.rq": "48b005d20e90bd67b0f545cef223bf857ce96518002ad67928945110f9b22c58"
+  },
+  "sources": {
+    "sample-100.json sha256": "707ec8cc38e325d9edada4b4e375146208e86a527e28e06a5f12e77e2c402e76",
+    "ror-v2.15.zip md5": "5522990688eb1b94811a8145e131b41e"
+  },
+  "checks": {
+    "cq1 covers exactly the source mention keys": {
+      "passed": true,
+      "detail": "1456 source keys; 1456 in cq1; missing 0, extra 0"
+    },
+    "cq1 shows each mention's source text": {
+      "passed": true,
+      "detail": "0 keys with another text"
+    },
+    "cq2 counts each organization once": {
+      "passed": true,
+      "detail": "69 rows, 69 organizations"
+    },
+    "cq2 counts 1 to 100 publications per organization": {
+      "passed": true,
+      "detail": "range 1-63"
+    },
+    "cq2 counts only organizations cq1 identifies": {
+      "passed": true,
+      "detail": "0 not in cq1"
+    },
+    "cq3 rows belong to selected mentions": {
+      "passed": true,
+      "detail": "0 outside"
+    },
+    "cq3 rows carry evidence": {
+      "passed": true,
+      "detail": "125 rows"
+    },
+    "cq3 returns the independently established candidate (Instituto Sabato)": {
+      "passed": true,
+      "detail": "1 selected mentions name it; 0 ROR records name it; 1 cq3 rows"
+    }
+  },
+  "passed": true
+}
