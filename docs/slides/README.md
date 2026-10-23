@@ -2,7 +2,7 @@
 
 Un mazo por caso de uso, con la misma estructura: qué es Rastro, el dominio y su problema, las preguntas, la demo en tres momentos (sin Rastro y con Rastro), por qué confiar, consideraciones y un anexo técnico (arquitectura, diccionario de negocio y por qué funciona).
 
-El mazo de petróleo y gas, el de la demo, es más corto: la historia va en las diapositivas 1 a 7, con la demo en cuatro momentos (preguntar, la base cambia, predecir y una corrección), y todo lo demás (pruebas, otras preguntas, mapas, textos y el detalle técnico) queda en el anexo.
+El mazo de petróleo y gas, el de la demo, es más corto: la historia va en las diapositivas 1 a 9 (la segunda, por qué una capa semántica), con la demo en cuatro momentos (preguntar, la base cambia, predecir y una corrección), y todo lo demás (pruebas, otras preguntas, mapas, textos y el detalle técnico) queda en el anexo.
 
 | Mazo | Archivo | Guion |
 |---|---|---|

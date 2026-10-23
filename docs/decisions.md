@@ -970,3 +970,17 @@ already begun; it is not evidence of unchanged-skill transfer.
 - **Why:** the user asked for a high-impact first slide with the strongest facts, explained later. All five come from
   the measurement files (`resultados.json`, the change and correction tests, `evidencia.json`). The slide's notes keep
   the caveat that SQL with Rastro's links also scores 10 of 10 (slide 13).
+
+## 2026-10-23 — The cover stays; slide 2 says why a semantic layer, in words
+
+- **What:** replaces the previous entry. The cover is back as it was. A new slide 2, «Por qué una capa semántica»,
+  gives six reasons without figures:
+  - meaning is defined once;
+  - sources are joined once, with evidence;
+  - questions do not depend on how the data is stored;
+  - every answer can be audited;
+  - AI asks about concepts instead of guessing tables;
+  - open standards, not a black box.
+
+  Each reason is shown later with real data. Footers and every slide reference in the demo script moved by one.
+- **Why:** the user wanted the original cover, and the conceptual case for a semantic layer before any number.
