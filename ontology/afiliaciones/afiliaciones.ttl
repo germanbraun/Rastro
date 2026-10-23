@@ -125,7 +125,7 @@ afiliaciones:reviewDecision a owl:DatatypeProperty ;
     rdfs:label "decisión revisada"@es ;
     rdfs:comment "«accept» o «reject», revisada por un asistente de IA y validada por otro; a confirmar por una persona."@es .
 
-# --- Approved 2026-10-23 with the quality rules ---
+# --- Approved 2026-10-22 (local time, UTC-3) with the quality rules ---
 
 afiliaciones:decisionReason a owl:DatatypeProperty ;
     rdfs:domain afiliaciones:DoubtfulCandidate ;

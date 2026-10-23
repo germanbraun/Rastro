@@ -1,0 +1,170 @@
+{
+  "rules_sha256": "3e843366c332abbebd36e1d7aa0c2ba3448ee667e253ffe3df4dd96d5efa7a25",
+  "cases": [
+    {
+      "rule": "RegistroActivo",
+      "case": "active record",
+      "expected": [],
+      "got": [],
+      "passed": true
+    },
+    {
+      "rule": "RegistroActivo",
+      "case": "withdrawn record is a warning",
+      "expected": [
+        "Warning"
+      ],
+      "got": [
+        "Warning"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "RegistroActivo",
+      "case": "missing status is not active",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "ConfirmadaPorPersona",
+      "case": "pending is informational",
+      "expected": [
+        "Info"
+      ],
+      "got": [
+        "Info"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "DudosaDecidida",
+      "case": "pending is the only valid state",
+      "expected": [],
+      "got": [],
+      "passed": true
+    },
+    {
+      "rule": "DudosaDecidida",
+      "case": "empty confirmation",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "DudosaDecidida",
+      "case": "«no» as confirmation",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "DudosaDecidida",
+      "case": "free text as confirmation",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "DudosaDecidida",
+      "case": "«confirmed» without a record",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "DudosaDecidida",
+      "case": "missing confirmation state",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "DudosaDecidida",
+      "case": "blank decision reason",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "IdentificacionCompleta",
+      "case": "complete",
+      "expected": [],
+      "got": [],
+      "passed": true
+    },
+    {
+      "rule": "IdentificacionCompleta",
+      "case": "blank evidence",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "IdentificacionCompleta",
+      "case": "blank rule",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "OrganizacionEnArgentina",
+      "case": "typed Argentine but only GB",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    },
+    {
+      "rule": "MencionCompleta",
+      "case": "blank text",
+      "expected": [
+        "Violation"
+      ],
+      "got": [
+        "Violation"
+      ],
+      "passed": true
+    }
+  ],
+  "passed": true
+}

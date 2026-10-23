@@ -1,6 +1,6 @@
 # Quality rules proposal: research affiliations
 
-Step 5 of the method (`quality-rules`). Status: **approved by the user on 2026-10-23**, as shown in the session
+Step 5 of the method (`quality-rules`). Status: **approved by the user on 2026-10-22** (local time, UTC-3; 2026-10-23 in UTC), as shown in the session
 (the three terms in Turtle and the seven rules with their messages): «Apruebo los tres términos y las siete reglas tal
 como los mostraste.» Counts measured on the loaded data on 2026-10-22. Revised the same day after GPT's review of `386d825`
 (`implementation-review.md`): both sources required, the IDEHU case framed as a registry-status finding, AI review kept
@@ -42,3 +42,20 @@ was generated, but not why it was rejected.
 | `afiliaciones:decisionReason` | motivo de la decisión | DoubtfulCandidate | `correcciones.csv` reason and source URL (already loaded in `afiliaciones.dudosa.decision_reason`) |
 | `afiliaciones:humanConfirmation` | confirmación de una persona | DoubtfulCandidate | `correcciones.csv` `human_confirmation` («pending» for all 91 today) |
 | `afiliaciones:successor` | sucesora en ROR | Organization | ROR v2.15 `relationships` of type successor (already loaded in `ror.relationship`) |
+
+## Corrections after GPT's review of the rules (`2c84127`)
+
+Same seven rules and the same findings today, made to say exactly what they check:
+
+- **Registry status:** the warning severity now sits on the shape, so a withdrawn record reports a warning, not a
+  violation. A missing or unknown status is now a violation instead of passing as active. The message gives the
+  successor's ROR identifier and one of its ROR names (not ROR's display-name policy).
+- **Human confirmation:** free text no longer passes. Until a confirmation record is approved, «pending» is the only
+  valid state (checked in the doubtful-candidate rule), and the informational rule only flags what is pending.
+- **Blank values:** rule, evidence, decision reason and mention text must contain a non-space character.
+- **Extra cases with their severity:** `quality-cases.py` (16 cases, receipt `quality-cases.json`), since the shared
+  runner checks one pair per rule and keeps no severity.
+
+Still to decide, when a person confirms the first decision: a confirmation record with who confirmed, when, and the
+evidence or approval it rests on. It needs new dictionary terms, so it comes back for approval then; no reviewer or
+date is invented before that.

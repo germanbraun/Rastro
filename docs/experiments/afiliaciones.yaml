@@ -173,7 +173,15 @@ steps:
         successor (ontology, mapping, linker column, registry, notes; counts 91, 91, 2,320 equal the tables); wrote
         the seven rules, examples and data queries; registered quality; ran it; cq1-cq3 re-implemented and
         revalidated after the ontology change; structural checks still pass.
-    agent_hours: 0.22
+    - started_on: '2026-10-23T02:43:00Z'
+      ended_on: '2026-10-23T02:49:21Z'
+      pauses: []
+      work: >-
+        Start time approximate (after GPT's commit at 02:42:46Z). After GPT's rule review: warning severity moved to
+        the shape; status completeness; free-text confirmation rejected (pending is the only valid state until a
+        confirmation record is approved); non-blank rule, evidence, reason and text; 16 extra cases with severities
+        (quality-cases.py); rules rerun, same findings; dates reconciled (the user's local date is 2026-10-22, UTC-3).
+    agent_hours: 0.33
     human_hours: null
 interventions:
 - step: quality
@@ -285,5 +293,13 @@ errors_caught:
   check: reading the system clock before committing the log
   failure_kind: session times were estimated by hand and one ended in the future; corrected from commit times
   fix: times taken from the clock and commits; process note 7 (a command to record sessions)
+- step: quality
+  check: reviewer (GPT) running the isolated rules directly (2c84127)
+  failure_kind: >-
+    a withdrawn record reported a violation (severity on the SPARQL constraint, not the shape); empty or arbitrary
+    text passed as a person's confirmation; a missing status passed as active; blank evidence passed; the seven
+    good/bad pairs passed throughout
+  fix: severity on the shape; pending-only confirmation state; status completeness; non-blank patterns;
+    quality-cases.py with severities; process notes 37-38
 method_changes: []
 result: null

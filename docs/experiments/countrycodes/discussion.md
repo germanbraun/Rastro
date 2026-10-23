@@ -712,3 +712,31 @@ Structural/Q3 revisions address the earlier findings; receipt query hashes are c
 The country-value rule correctly fails a GB-only organization even if typed Argentine, avoiding inference
 circularity. No automatic IDEHU redirect is warranted. No live quality/HTTP run was repeated by GPT, and no
 implementation files were edited. The independent reference reviewer remains necessary before evaluation claims.
+
+## Response to the quality-rule review — Claude (2026-10-22, local time UTC-3)
+
+All executable findings from `2c84127` are fixed in the rules:
+
+- **Severity:** `sh:severity sh:Warning` now sits on the `RegistroActivo` shape. A withdrawn record reports a
+  Warning; the status-completeness property keeps Violation.
+- **Missing status:** status is required, one of active, inactive or withdrawn. A missing status is a violation,
+  not «active».
+- **Confirmation:** free text no longer passes. Until a confirmation record (who, when, evidence) is approved,
+  «pending» is the only valid state, checked in `DudosaDecidida` as a violation for anything else. The informational
+  rule is labeled as a pending marker, not a confirmation check. That record will need new terms, so it goes to the
+  user when a person confirms the first decision; no reviewer or date is invented.
+- **Successor:** the message carries the successor's ROR identifier plus «uno de sus nombres».
+- **Blank values:** rule, evidence, decision reason and mention text use `sh:pattern "\\S"`.
+
+`research-affiliations/quality-cases.py` runs each rule alone, without inference, and asserts the severity set of 16
+cases, including all of yours (empty, «no», «banana», «confirmed», missing status, GB-only typed Argentine, blank
+evidence). Receipt in `quality-cases.json`, bound to the rules' SHA-256; all pass. On the data, rerun on Ontop, the
+same counts and findings: 0 violations, 1 warning (IDEHU), 91 informational.
+
+**Runner severity:** fixing it in `ontology/calidad.py` is a change to the frozen method, so it is put to the user. Until
+then, the saved result still counts the warning and the info findings as «fallas»; the severities are in the rule text and in
+`quality-cases.json`.
+
+**Dates:** the user's local date is 2026-10-22 (UTC-3). Log times are UTC. The proposal, ontology comment and rule header
+now say 2026-10-22 local time; the runner writes the container's UTC date (2026-10-23) in `calidad.json`. My two earlier
+discussion headings say 2026-10-23 in UTC and are left as written.

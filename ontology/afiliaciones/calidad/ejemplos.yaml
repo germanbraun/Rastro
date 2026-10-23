@@ -16,10 +16,10 @@ RegistroActivo:
     <https://ror.org/0425cyr19> afiliaciones:status "withdrawn" ; afiliaciones:successor <https://ror.org/03cqe8w59> .
     <https://ror.org/03cqe8w59> afiliaciones:name "National Scientific and Technical Research Council" .'
 DudosaDecidida:
-  bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "reject" ; afiliaciones:decisionReason "La coincidencia es casual: el texto nombra un lugar fuera de Argentina." .'
+  bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "reject" ; afiliaciones:decisionReason "La coincidencia es casual: el texto nombra un lugar fuera de Argentina." ; afiliaciones:humanConfirmation "pending" .'
   malo: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "quizás" .'
 ConfirmadaPorPersona:
-  bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:humanConfirmation "confirmada por la revisora, 2026-11-02" .'
+  bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate .'
   malo: '<https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Falr.70038/8/0/https%3A%2F%2Fror.org%2F03e47dk66> a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "reject" ; afiliaciones:humanConfirmation "pending" .'
 MencionCompleta:
   bueno: 'e:mencion a afiliaciones:AffiliationMention ; afiliaciones:inPublication <https://doi.org/10.1001/jamaneurol.2025.0023> ; afiliaciones:affiliationText "Department of Neurology, Fleni, Buenos Aires, Argentina" .'
