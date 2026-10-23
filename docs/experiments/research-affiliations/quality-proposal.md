@@ -1,7 +1,8 @@
 # Quality rules proposal: research affiliations
 
-Step 5 of the method (`quality-rules`). Status: **proposed, for the user's approval before the rules file is
-written**. Counts measured on the loaded data on 2026-10-22. Revised the same day after GPT's review of `386d825`
+Step 5 of the method (`quality-rules`). Status: **approved by the user on 2026-10-23**, as shown in the session
+(the three terms in Turtle and the seven rules with their messages): «Apruebo los tres términos y las siete reglas tal
+como los mostraste.» Counts measured on the loaded data on 2026-10-22. Revised the same day after GPT's review of `386d825`
 (`implementation-review.md`): both sources required, the IDEHU case framed as a registry-status finding, AI review kept
 apart from human confirmation. No numeric thresholds: every rule checks completeness or consistency against the
 approved definitions.
@@ -31,7 +32,7 @@ stays visible with what uses it (the cq1 and cq2 answers).
 Each rule gets a good and a broken example, from the real case where there is one: IDEHU for registry status and a
 reviewed UK candidate for human confirmation.
 
-## Dictionary terms the rules need (approval needed)
+## Dictionary terms the rules need (approved)
 
 The mapped dictionary has none of these yet. GPT pointed out that a technical-view reader can see why a candidate
 was generated, but not why it was rejected.

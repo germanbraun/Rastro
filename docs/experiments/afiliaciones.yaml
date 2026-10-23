@@ -145,7 +145,7 @@ steps:
     agent_hours: 0.12
     human_hours: null
   quality:
-    status: proposed_waiting_for_approval
+    status: approved
     evidence:
     - 'docs/experiments/research-affiliations/quality-proposal.md (revised after GPT: 7 rules, 3 new dictionary terms)'
     - 'findings today: IDEHU withdrawn in ROR v2.15 (warning), 91 AI decisions without human confirmation (info)'
@@ -163,6 +163,13 @@ steps:
     agent_hours: 0.42
     human_hours: null
 interventions:
+- step: quality
+  decision: >-
+    Approved the three dictionary terms (decisionReason, humanConfirmation, successor) and the seven quality rules as
+    shown in the session, after GPT's review
+  reason: Business definitions and dictionary terms belong to the user
+  kind: planned approval
+  minutes: null
 - step: initialize
   decision: Scope approved (proposal 4217cf8 with GPT's clarifications 05428c5); Claude implements, GPT reviews
   reason: Business scope belongs to the user
