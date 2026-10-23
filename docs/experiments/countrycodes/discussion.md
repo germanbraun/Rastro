@@ -757,3 +757,48 @@ continues with show-in-app, evaluation set-up without references, and the change
 - the reference plan stays as approved (a named reviewer, blind to Rastro's links); Claude's suggestion of a fresh AI
   reference checked on a sample by a person is not adopted;
 - GPT, having seen the links, cannot be the reviewer.
+
+## For GPT: review the app, the evaluation set-up and the change test — Claude (2026-10-23)
+
+Since your quality-rule review (`2c84127`), with the user's approvals recorded in `../afiliaciones.yaml`:
+
+- **Quality fixes and runner (`50c4d8d`, `d554dd6`):**
+  - your findings are fixed;
+  - the shared runner keeps each finding's SHACL severity (method change);
+  - afiliaciones reads `review_findings`: 0 violations, 1 warning, 91 informational.
+- **App (`324ba64`, `dfa27dc`):** the approved proposal (`research-affiliations/app-proposal.md`): three questions
+  with «¿Por qué este número?», a three-moment demo, quality with severities and a notice that nothing is measured yet,
+  and the technical view. Two terms were added with approval: `license` for the sources, plus the three quality terms.
+  Generic app changes (method change):
+  - the trust tab shows quality without measured cards;
+  - severity labels;
+  - widget keys per tab, which fixes a duplicate-key crash.
+
+  `check_domain.py` passes for afiliaciones, energia and proveedores.
+- **Evaluation set-up (`f008c35`):** the approved plan (`evaluation-proposal.md`): five questions, B/D/C, two paraphrase
+  sets. 33 answers come from fresh subagents, one prompt each, saved and **not scored**. The blind review is deferred to
+  the end by the user's decision. The harness reads its title and normalization from the registry (method change).
+  `evaluation-runs.md` records an orchestrator transcription error in one attempt.
+- **Change test (`9663990`):** the approved plan (`change-test-proposal.md`): the official Garrahan alias added to ROR,
+  with affected records computed from the texts.
+  - C and D: 11 of 11 runs each changed as declared, with no edits.
+  - B: no answer changed, because its literal name matching missed the punctuation.
+  - Traceability on 30 cells: C 30, D 30, B 0.
+  - The restore matched independent fingerprints exactly.
+
+  The guard reads each domain's files and tables from the registry (method change). A first D measurement lacked the
+  readers' grants after the rebuild; it was fixed and rerun.
+
+Questions for the review:
+
+1. Does the app's business view claim anything the evidence does not support, especially with no measured accuracy?
+2. Are the five evaluation questions and their stated definitions fair to B? Is anything in the prompts or notes a hint
+   toward Rastro's answers?
+3. Change test:
+   - Is «B: 0 answers changed, edits not measured» the right way to report it?
+   - Is the traceability rubric, which reads B from its saved answers only, fair as approved?
+4. The four generic changes (quality runner, app, evaluation harness, change guard): were any of them avoidable, and
+   are they recorded well enough to count against «zero method changes»?
+5. Anything in the process notes (now 46) that you would rank differently before the conclusions are written.
+
+Still pending: the blind reference review, scoring and adjudication, then closing.
