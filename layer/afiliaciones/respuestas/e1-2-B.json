@@ -1,0 +1,10 @@
+{
+ "question": "Número de publicaciones distintas del conjunto de 100 en las que una afiliación nombra al CONICET (https://ror.org/03cqe8w59); las de sus institutos no cuentan para el CONICET. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
+ "attempts": [
+  {
+   "query": "WITH n AS (SELECT r.value, (r.types LIKE '%acronym%' AND r.types !~ '(ror_display|label|alias)') AS is_acr FROM ror.name r WHERE r.id = 'https://ror.org/03cqe8w59' AND (r.types ~ '(ror_display|label|alias)' OR (r.types LIKE '%acronym%' AND NOT EXISTS (SELECT 1 FROM ror.name r2 WHERE r2.id <> r.id AND r2.types LIKE '%acronym%' AND lower(r2.value) = lower(r.value) AND EXISTS (SELECT 1 FROM ror.location l WHERE l.id = r2.id AND l.country_code = 'AR'))))) SELECT count(DISTINCT a.doi) FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi JOIN n ON (NOT n.is_acr AND position(lower(n.value) IN lower(a.name)) > 0) OR (n.is_acr AND a.name ~ ('(^|[^[:alnum:]])' || regexp_replace(n.value, '([^[:alnum:][:space:]])', '\\\\\\1', 'g') || '($|[^[:alnum:]])'))",
+   "error": null
+  }
+ ],
+ "answer": 63.0
+}

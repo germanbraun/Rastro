@@ -1,0 +1,14 @@
+{
+ "question": "¿Qué organizaciones argentinas nombran las afiliaciones de la publicación con DOI 10.1001/jamaneurol.2025.0023? Respondé con el identificador ROR completo de cada una (https://ror.org/...). Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+ "attempts": [
+  {
+   "query": "WITH aff AS (SELECT DISTINCT ' ' || regexp_replace(name, '[^[:alnum:]]+', ' ', 'g') || ' ' AS t FROM crossref.affiliation WHERE doi = '10.1001/jamaneurol.2025.0023'), ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), nm AS (SELECT n.id, n.types, trim(regexp_replace(n.value, '[^[:alnum:]]+', ' ', 'g')) AS v FROM ror.name n JOIN ar ON ar.id = n.id), acr AS (SELECT v FROM nm WHERE types LIKE '%acronym%' AND v <> '' GROUP BY v HAVING count(DISTINCT id) = 1), cand AS (SELECT DISTINCT nm.id FROM aff JOIN nm ON nm.v <> '' AND ((nm.types ~ '(ror_display|label|alias)' AND lower(aff.t) LIKE '% ' || lower(nm.v) || ' %') OR (nm.types LIKE '%acronym%' AND nm.v IN (SELECT v FROM acr) AND aff.t LIKE '% ' || nm.v || ' %'))) SELECT id FROM cand ORDER BY id",
+   "error": null
+  }
+ ],
+ "answer": [
+  "https://ror.org/0081fs513",
+  "https://ror.org/03cqe8w59",
+  "https://ror.org/0469ejq24"
+ ]
+}

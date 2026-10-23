@@ -1,0 +1,14 @@
+{
+ "question": "¿Cuántas publicaciones del conjunto, cada una contada una vez, nombran al CONICET (organización ROR https://ror.org/03cqe8w59) en al menos una afiliación? No se suman las de sus institutos. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
+ "attempts": [
+  {
+   "query": "WITH conicet_names AS (\n  SELECT n.value\n  FROM ror.name n\n  WHERE n.id = 'https://ror.org/03cqe8w59'\n    AND (n.types LIKE '%ror_display%' OR n.types LIKE '%label%' OR n.types LIKE '%alias%')\n),\nar_orgs AS (\n  SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'\n),\nconicet_acronyms AS (\n  SELECT n.value\n  FROM ror.name n\n  WHERE n.id = 'https://ror.org/03cqe8w59'\n    AND n.types LIKE '%acronym%'\n    AND NOT EXISTS (\n      SELECT 1 FROM ror.name n2\n      JOIN ar_orgs a ON a.id = n2.id\n      WHERE n2.types LIKE '%acronym%'\n        AND upper(n2.value) = upper(n.value)\n        AND n2.id <> n.id\n    )\n)\nSELECT COUNT(DISTINCT af.doi)\nFROM crossref.affiliation af\nWHERE EXISTS (\n    SELECT 1 FROM conicet_names cn\n    WHERE position(lower(cn.value) IN lower(af.name)) > 0\n  )\n  OR EXISTS (\n    SELECT 1 FROM conicet_acronyms ca\n    WHERE af.name ~ ('(^|[^[:alnum:]])' || regexp_replace(ca.value, '([.^$*+?()\\[\\]{}|\\\\-])', '\\\\\\1', 'g') || '($|[^[:alnum:]])')\n  )",
+   "error": "canceling statement due to statement timeout"
+  },
+  {
+   "query": "WITH ar_orgs AS MATERIALIZED (\n  SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'\n),\nconicet AS MATERIALIZED (\n  SELECT value, types FROM ror.name WHERE id = 'https://ror.org/03cqe8w59'\n),\nother_ar_acr AS MATERIALIZED (\n  SELECT DISTINCT upper(n.value) AS v\n  FROM ror.name n JOIN ar_orgs a ON a.id = n.id\n  WHERE n.types LIKE '%acronym%' AND n.id <> 'https://ror.org/03cqe8w59'\n),\npatterns AS MATERIALIZED (\n  SELECT lower(value) AS name_pat, NULL::text AS acr_pat\n  FROM conicet\n  WHERE types LIKE '%ror_display%' OR types LIKE '%label%' OR types LIKE '%alias%'\n  UNION ALL\n  SELECT NULL, '(^|[^[:alnum:]])' || regexp_replace(c.value, '([.^$*+?()\\[\\]{}|\\\\-])', '\\\\\\1', 'g') || '($|[^[:alnum:]])'\n  FROM conicet c\n  WHERE c.types LIKE '%acronym%'\n    AND upper(c.value) NOT IN (SELECT v FROM other_ar_acr)\n),\ntexts AS MATERIALIZED (\n  SELECT DISTINCT name FROM crossref.affiliation WHERE name IS NOT NULL\n),\nmatching AS MATERIALIZED (\n  SELECT t.name\n  FROM texts t\n  WHERE EXISTS (\n    SELECT 1 FROM patterns p\n    WHERE (p.name_pat IS NOT NULL AND position(p.name_pat IN lower(t.name)) > 0)\n       OR (p.acr_pat IS NOT NULL AND t.name ~ p.acr_pat)\n  )\n)\nSELECT COUNT(DISTINCT af.doi)\nFROM crossref.affiliation af\nJOIN matching m ON m.name = af.name",
+   "error": null
+  }
+ ],
+ "answer": 63.0
+}

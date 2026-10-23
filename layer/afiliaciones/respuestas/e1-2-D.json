@@ -1,0 +1,10 @@
+{
+ "question": "Número de publicaciones distintas del conjunto de 100 en las que una afiliación nombra al CONICET (https://ror.org/03cqe8w59); las de sus institutos no cuentan para el CONICET. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
+ "attempts": [
+  {
+   "query": "SELECT COUNT(DISTINCT i.doi) AS n FROM afiliaciones.identificacion i JOIN crossref.work w ON w.doi = i.doi WHERE i.organization = 'https://ror.org/03cqe8w59' AND i.status IN ('rule', 'correction-accepted')",
+   "error": null
+  }
+ ],
+ "answer": 63.0
+}

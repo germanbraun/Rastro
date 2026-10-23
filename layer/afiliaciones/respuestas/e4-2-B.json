@@ -1,0 +1,31 @@
+{
+ "question": "¿En qué publicaciones del conjunto (DOI en minúsculas) alguna afiliación nombra a la Universidad de Buenos Aires, organización ROR https://ror.org/0081fs513? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Las menciones de sus institutos no cuentan para la universidad.",
+ "attempts": [
+  {
+   "query": "WITH n AS (SELECT DISTINCT value, (types LIKE '%acronym%' AND types NOT LIKE '%label%' AND types NOT LIKE '%alias%' AND types NOT LIKE '%ror_display%') AS is_acr FROM ror.name WHERE id = 'https://ror.org/0081fs513'), terms AS (SELECT value, is_acr FROM n WHERE NOT is_acr OR NOT EXISTS (SELECT 1 FROM ror.name o WHERE o.value = n.value AND o.id <> 'https://ror.org/0081fs513' AND o.types LIKE '%acronym%')) SELECT DISTINCT a.doi FROM crossref.affiliation a JOIN terms t ON (CASE WHEN t.is_acr THEN a.name ~ ('\\m' || regexp_replace(t.value, '([.^$*+?()\\[\\]{}|\\\\-])', '\\\\\\1', 'g') || '\\M') ELSE position(lower(t.value) IN lower(a.name)) > 0 END) ORDER BY a.doi",
+   "error": null
+  }
+ ],
+ "answer": [
+  "10.1001/jamaneurol.2025.0023",
+  "10.1002/14651858.cd016019",
+  "10.1002/ange.202422693",
+  "10.1002/cmdc.202500623",
+  "10.1002/jbm.a.37927",
+  "10.1021/acs.inorgchem.5c03575",
+  "10.1021/acsomega.4c07147",
+  "10.1063/5.0306490",
+  "10.1071/fp25196",
+  "10.1080/00288233.2024.2333841",
+  "10.1097/bsd.0000000000001683",
+  "10.1097/hjh.0000000000004053",
+  "10.1111/cla.70007",
+  "10.1111/jen.13409",
+  "10.1136/bmjopen-2024-090662",
+  "10.1142/s0219887825400407",
+  "10.1177/20501579251347487",
+  "10.1590/1809-4341.2025v22e01000",
+  "10.3390/pathogens14050437",
+  "10.5252/cryptogamie-mycologie2025v46a4"
+ ]
+}

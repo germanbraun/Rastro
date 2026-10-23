@@ -1,0 +1,37 @@
+{
+ "question": "Listá los DOI, en minúsculas, de las publicaciones del conjunto con al menos una afiliación que nombra a la Universidad de Buenos Aires (ROR https://ror.org/0081fs513). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+ "attempts": [
+  {
+   "query": "WITH ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), acr AS (SELECT n.value FROM ror.name n JOIN ar ON ar.id = n.id WHERE n.types LIKE '%acronym%' GROUP BY n.value HAVING count(DISTINCT n.id) = 1 AND min(n.id) = 'https://ror.org/0081fs513'), nm AS (SELECT value FROM ror.name WHERE id = 'https://ror.org/0081fs513' AND (types LIKE '%ror_display%' OR types LIKE '%label%' OR types LIKE '%alias%')) SELECT DISTINCT lower(a.doi) AS doi FROM crossref.affiliation a JOIN crossref.work w ON lower(w.doi) = lower(a.doi) WHERE EXISTS (SELECT 1 FROM nm WHERE position(lower(nm.value) IN lower(a.name)) > 0) OR EXISTS (SELECT 1 FROM acr WHERE a.name ~ ('\\m' || regexp_replace(acr.value, '([^[:alnum:] ])', '\\\\\\1', 'g') || '\\M')) ORDER BY 1",
+   "error": "canceling statement due to statement timeout"
+  },
+  {
+   "query": "WITH uba AS MATERIALIZED (SELECT value, types FROM ror.name WHERE id = 'https://ror.org/0081fs513'), ar AS MATERIALIZED (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR' AND id <> 'https://ror.org/0081fs513'), acr AS MATERIALIZED (SELECT u.value FROM uba u WHERE u.types LIKE '%acronym%' AND NOT EXISTS (SELECT 1 FROM ror.name n JOIN ar ON ar.id = n.id WHERE n.value = u.value AND n.types LIKE '%acronym%')), nm AS MATERIALIZED (SELECT lower(value) AS v FROM uba WHERE types LIKE '%ror_display%' OR types LIKE '%label%' OR types LIKE '%alias%'), pat AS MATERIALIZED (SELECT '\\m' || regexp_replace(value, '([^[:alnum:] ])', '\\\\\\1', 'g') || '\\M' AS p FROM acr), aff AS MATERIALIZED (SELECT DISTINCT lower(doi) AS doi, name FROM crossref.affiliation WHERE lower(doi) IN (SELECT lower(doi) FROM crossref.work)) SELECT DISTINCT f.doi FROM aff f WHERE EXISTS (SELECT 1 FROM nm WHERE position(nm.v IN lower(f.name)) > 0) OR EXISTS (SELECT 1 FROM pat WHERE f.name ~ pat.p) ORDER BY 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "10.1001/jamaneurol.2025.0023",
+  "10.1002/14651858.cd016019",
+  "10.1002/ange.202422693",
+  "10.1002/cmdc.202500623",
+  "10.1002/ece3.70820",
+  "10.1002/jbm.a.37927",
+  "10.1021/acs.inorgchem.5c03575",
+  "10.1021/acsomega.4c07147",
+  "10.1029/2025gl115483",
+  "10.1063/5.0306490",
+  "10.1071/fp25196",
+  "10.1080/00288233.2024.2333841",
+  "10.1097/bsd.0000000000001683",
+  "10.1097/hjh.0000000000004053",
+  "10.1111/cla.70007",
+  "10.1111/jen.13409",
+  "10.1136/bmjopen-2024-090662",
+  "10.1142/s0219887825400407",
+  "10.1177/20501579251347487",
+  "10.1590/1809-4341.2025v22e01000",
+  "10.3390/pathogens14050437",
+  "10.5252/cryptogamie-mycologie2025v46a4"
+ ]
+}

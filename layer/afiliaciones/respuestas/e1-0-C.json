@@ -1,0 +1,10 @@
+{
+ "question": "¿En cuántas de las 100 publicaciones del conjunto alguna afiliación nombra al CONICET (organización ROR https://ror.org/03cqe8w59), contando cada publicación una vez y sin sumarle las de sus institutos? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+ "attempts": [
+  {
+   "query": "PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>\nSELECT (COUNT(DISTINCT ?pub) AS ?n) WHERE {\n  ?id a afiliaciones:Identification ;\n      afiliaciones:identifies <https://ror.org/03cqe8w59> ;\n      afiliaciones:ofMention ?m .\n  ?m afiliaciones:inPublication ?pub .\n}",
+   "error": null
+  }
+ ],
+ "answer": 63.0
+}

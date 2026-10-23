@@ -62,7 +62,8 @@ proveedores:
     ontop: {service: ontop-proveedores, port: 8081}
     loaders: [usaspending-loader, naics-loader, csl-loader, gleif-loader, wikidata-loader]
     linker: {service: proveedores-linker, folder: linking/proveedores/, corrections: [linking/proveedores/correcciones.csv]}
-    evaluation: {folder: layer/proveedores, harness: current, run: docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores}
+    evaluation: {folder: layer/proveedores, harness: current, run: docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores,
+                 title: proveedores del Estado, normalize: proveedores.normalize}
     change_tests: layer/proveedores/cambio/
     evidence: {result: layer/proveedores/evidencia.json, link_classes: [GroupLink, LeiLink, WatchlistLink],
                pattern: "?l prov:wasDerivedFrom ?f ; proveedores:sourceText ?t ."}
@@ -106,7 +107,8 @@ energia: &energia
     quality: {prefix: energia, rules: ontology/energia/calidad/reglas.ttl, examples: ontology/energia/calidad/ejemplos.yaml,
               result: layer/energia/calidad.json, run: docker compose run --rm calidad,
               data: ontology/energia/calidad/datos.yaml, predictions: ontology/energia/calidad/predicciones.rq}
-    evaluation: {folder: layer/energia, harness: current, run: docker compose run --rm -T layer-eval python /layer/evaluar.py energia}
+    evaluation: {folder: layer/energia, harness: current, run: docker compose run --rm -T layer-eval python /layer/evaluar.py energia,
+                 title: petróleo y gas en Argentina, normalize: energia.normalizar}
     change_tests: layer/energia/cambio/
     evidence: {result: layer/energia/evidencia.json,
                link_classes: [Stake, OperatorLink, CompanyName, LocationLink, PipelineLink, SurroundingsLink,
@@ -156,7 +158,8 @@ energia_lab:
   method:
     <<: *energia_method
     evaluation: {folder: layer/energia_lab, harness: current,
-                 run: docker compose run --rm -T layer-eval python /layer/evaluar.py energia_lab}
+                 run: docker compose run --rm -T layer-eval python /layer/evaluar.py energia_lab,
+                 title: las predicciones de Rastro Lab, normalize: energia.normalizar}
 
 afiliaciones:
   base: >-
@@ -168,6 +171,7 @@ afiliaciones:
   sparql_notes: layer/afiliaciones/sparql-notes.md
   sql_notes: layer/afiliaciones/sql-notes.md
   links_notes: layer/afiliaciones/sql-enlaces-notes.md
+  readers: {B: afiliaciones_reader, D: afiliaciones_reader_links}
   namespace: https://w3id.org/rastro/afiliaciones#
   term_sources:
     crossref: [Publication, doi, AffiliationMention, inPublication, affiliationText, authorPosition,
@@ -191,6 +195,9 @@ afiliaciones:
               result: layer/afiliaciones/calidad.json,
               run: docker compose run --rm --no-deps calidad python /ontology/calidad.py afiliaciones}
     app: app/dominios/afiliaciones.yaml
+    evaluation: {folder: layer/afiliaciones, harness: current,
+                 run: docker compose run --rm -T layer-eval python /layer/evaluar.py afiliaciones,
+                 title: afiliaciones de investigación en Argentina}
     lifecycle: layer/afiliaciones/lifecycle.json
     source_manifest: layer/afiliaciones/sources.yaml
 

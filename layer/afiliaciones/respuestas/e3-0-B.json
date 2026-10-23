@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántas organizaciones argentinas distintas nombra al menos una afiliación de las 100 publicaciones del conjunto? Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+ "attempts": [
+  {
+   "query": "WITH ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), txt AS (SELECT DISTINCT a.name FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi WHERE a.name IS NOT NULL AND a.name <> ''), acr AS (SELECT value FROM ror.name WHERE types LIKE '%acronym%' GROUP BY value HAVING COUNT(DISTINCT id) = 1), nm AS (SELECT n.id, n.value, (n.types LIKE '%acronym%') AS is_acr, regexp_replace(n.value, '([.^$*+?()\\[\\]{}|\\\\-])', '\\\\\\1', 'g') AS pat FROM ror.name n JOIN ar ON ar.id = n.id WHERE n.value IS NOT NULL AND n.value <> '' AND (n.types NOT LIKE '%acronym%' OR n.value IN (SELECT value FROM acr))) SELECT COUNT(DISTINCT nm.id) AS organizaciones FROM nm JOIN txt ON CASE WHEN nm.is_acr THEN txt.name ~ ('\\m' || nm.pat || '\\M') ELSE txt.name ~* ('\\m' || nm.pat || '\\M') END",
+   "error": null
+  }
+ ],
+ "answer": 62.0
+}

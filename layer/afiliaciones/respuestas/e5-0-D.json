@@ -1,0 +1,10 @@
+{
+ "question": "De las afiliaciones de las 100 publicaciones cuyo texto menciona Argentina (contiene «argentin», sin importar mayúsculas: Argentina, Argentine, argentino…), ¿cuántas no nombran ninguna organización argentina registrada en ROR? Cuente cada afiliación de cada autor por separado. Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
+ "attempts": [
+  {
+   "query": "SELECT count(*) FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi WHERE a.name ILIKE '%argentin%' AND NOT EXISTS (SELECT 1 FROM afiliaciones.identificacion i WHERE i.doi = a.doi AND i.author_position = a.author_position AND i.affiliation_position = a.affiliation_position AND i.status IN ('rule','correction-accepted'))",
+   "error": null
+  }
+ ],
+ "answer": 42.0
+}

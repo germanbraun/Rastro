@@ -1,4 +1,5 @@
-"""Evaluación de un dominio (proveedores, energia): sin Rastro (SQL) y con Rastro (SPARQL).
+"""Evaluación de un dominio: sin Rastro (SQL) y con Rastro (SPARQL). The results title and the optional SQL
+function that normalizes company names come from the domain's method.evaluation entry in layer/dominios.yaml.
 
 Las respuestas las escribe un LLM que solo ve el prompt (subagentes, a mano o con otro
 asistente): este script le da el prompt, ejecuta cada query que propone y puntúa.
@@ -34,13 +35,13 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from answer import MAX_ATTEMPTS, output_schema, retry_message, run_sparql, system_prompt, to_answer, try_query  # noqa: E402
+from answer import DOMAINS, MAX_ATTEMPTS, output_schema, retry_message, run_sparql, system_prompt, to_answer, try_query  # noqa: E402
 
 DOMAIN = sys.argv[1]
 HERE = Path(__file__).parent / DOMAIN
-NORMALIZE = {"proveedores": "proveedores.normalize", "energia": "energia.normalizar", "energia_lab": "energia.normalizar"}[DOMAIN]
-TITLE = {"proveedores": "proveedores del Estado", "energia": "petróleo y gas en Argentina",
-         "energia_lab": "las predicciones de Rastro Lab"}[DOMAIN]
+EVALUATION = DOMAINS[DOMAIN]["method"]["evaluation"]
+NORMALIZE = EVALUATION.get("normalize")   # SQL function for company names; without one, lists compare exactly
+TITLE = EVALUATION["title"]
 ANSWERS = HERE / "respuestas"
 SPEC = yaml.safe_load((HERE / "eval" / "questions.yaml").read_text())
 QUESTIONS = {q["id"]: q for q in SPEC["questions"]}
@@ -103,7 +104,7 @@ def normalize(values, items, conn):
     normalizado (la misma función que usa Rastro para enlazar)."""
     out = set()
     for v in values or []:
-        if items == "empresas":
+        if items == "empresas" and NORMALIZE:
             out.add(conn.execute(f"SELECT {NORMALIZE}(%s)", (v,)).fetchone()[0])
         else:
             out.add(" ".join(str(v).lower().split()))

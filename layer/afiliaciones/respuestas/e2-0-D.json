@@ -1,0 +1,15 @@
+{
+ "question": "¿Qué organizaciones argentinas nombran las afiliaciones de la publicación con DOI 10.1001/jamaneurol.2025.0023? Respondé con el identificador ROR completo de cada una (https://ror.org/...). Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+ "attempts": [
+  {
+   "query": "SELECT DISTINCT i.organization FROM afiliaciones.identificacion i WHERE i.doi = '10.1001/jamaneurol.2025.0023' ORDER BY i.organization",
+   "error": null
+  }
+ ],
+ "answer": [
+  "https://ror.org/0081fs513",
+  "https://ror.org/0145s0423",
+  "https://ror.org/03cqe8w59",
+  "https://ror.org/0469ejq24"
+ ]
+}

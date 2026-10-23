@@ -1,0 +1,10 @@
+{
+ "question": "¿Cuántas organizaciones argentinas distintas nombra al menos una afiliación de las 100 publicaciones del conjunto? Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+ "attempts": [
+  {
+   "query": "SELECT COUNT(DISTINCT i.organization) FROM afiliaciones.identificacion i JOIN crossref.work w ON w.doi = i.doi WHERE EXISTS (SELECT 1 FROM ror.location l WHERE l.id = i.organization AND l.country_code = 'AR')",
+   "error": null
+  }
+ ],
+ "answer": 69.0
+}

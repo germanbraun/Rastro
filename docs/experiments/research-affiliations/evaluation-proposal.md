@@ -1,6 +1,7 @@
 # Evaluation plan: research affiliations
 
-Step 6 of the method (`evaluate`). Status: **proposed, for the user's approval before anything is measured**.
+Step 6 of the method (`evaluate`). Status: **approved by the user on 2026-10-23**, as written, with option (b) for the harness: «Apruebo el plan de
+evaluación tal como está, con la opción (b)».
 The blind reference review is deferred to the end (user decision, 2026-10-23). So this step prepares everything and
 collects the three paths' answers now. Scoring happens only against the reviewer's reference, and no accuracy number is
 published before then.

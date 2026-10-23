@@ -1,0 +1,37 @@
+{
+ "question": "¿Qué publicaciones del conjunto nombran a la Universidad de Buenos Aires (organización ROR https://ror.org/0081fs513) en alguna afiliación? Respondé con el DOI de cada una, en minúsculas. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+ "attempts": [
+  {
+   "query": "WITH ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), nombres AS (SELECT value FROM ror.name WHERE id = 'https://ror.org/0081fs513' AND types ~ '(ror_display|label|alias)'), siglas AS (SELECT n.value FROM ror.name n WHERE n.id = 'https://ror.org/0081fs513' AND n.types LIKE '%acronym%' AND NOT EXISTS (SELECT 1 FROM ror.name m JOIN ar ON ar.id = m.id WHERE m.types LIKE '%acronym%' AND upper(m.value) = upper(n.value) AND m.id <> n.id)) SELECT DISTINCT lower(a.doi) AS doi FROM crossref.affiliation a JOIN crossref.work w ON lower(w.doi) = lower(a.doi) WHERE EXISTS (SELECT 1 FROM nombres WHERE position(lower(nombres.value) IN lower(a.name)) > 0) OR EXISTS (SELECT 1 FROM siglas WHERE a.name ~ ('\\m' || regexp_replace(siglas.value, '([^[:alnum:]])', '\\\\\\1', 'g') || '\\M')) ORDER BY 1",
+   "error": "canceling statement due to statement timeout"
+  },
+  {
+   "query": "WITH ar AS MATERIALIZED (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), uba AS MATERIALIZED (SELECT value, types FROM ror.name WHERE id = 'https://ror.org/0081fs513'), siglas_ar AS MATERIALIZED (SELECT upper(n.value) AS v, count(DISTINCT n.id) AS c FROM ror.name n JOIN ar ON ar.id = n.id WHERE n.types LIKE '%acronym%' AND upper(n.value) IN (SELECT upper(value) FROM uba WHERE types LIKE '%acronym%') GROUP BY upper(n.value)), nombres AS MATERIALIZED (SELECT lower(value) AS v FROM uba WHERE types ~ '(ror_display|label|alias)'), siglas AS MATERIALIZED (SELECT '\\m' || regexp_replace(u.value, '([^[:alnum:]])', '\\\\\\1', 'g') || '\\M' AS re FROM uba u JOIN siglas_ar s ON s.v = upper(u.value) WHERE u.types LIKE '%acronym%' AND s.c = 1), afil AS MATERIALIZED (SELECT DISTINCT lower(a.doi) AS doi, a.name FROM crossref.affiliation a WHERE lower(a.doi) IN (SELECT lower(doi) FROM crossref.work)) SELECT DISTINCT f.doi FROM afil f WHERE EXISTS (SELECT 1 FROM nombres WHERE position(nombres.v IN lower(f.name)) > 0) OR EXISTS (SELECT 1 FROM siglas WHERE f.name ~ siglas.re) ORDER BY 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "10.1001/jamaneurol.2025.0023",
+  "10.1002/14651858.cd016019",
+  "10.1002/ange.202422693",
+  "10.1002/cmdc.202500623",
+  "10.1002/ece3.70820",
+  "10.1002/jbm.a.37927",
+  "10.1021/acs.inorgchem.5c03575",
+  "10.1021/acsomega.4c07147",
+  "10.1029/2025gl115483",
+  "10.1063/5.0306490",
+  "10.1071/fp25196",
+  "10.1080/00288233.2024.2333841",
+  "10.1097/bsd.0000000000001683",
+  "10.1097/hjh.0000000000004053",
+  "10.1111/cla.70007",
+  "10.1111/jen.13409",
+  "10.1136/bmjopen-2024-090662",
+  "10.1142/s0219887825400407",
+  "10.1177/20501579251347487",
+  "10.1590/1809-4341.2025v22e01000",
+  "10.3390/pathogens14050437",
+  "10.5252/cryptogamie-mycologie2025v46a4"
+ ]
+}

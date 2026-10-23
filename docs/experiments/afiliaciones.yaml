@@ -203,7 +203,30 @@ steps:
         afiliaciones, energia and proveedores with check_domain.py; fixed a shortened quotation in the demo.
     agent_hours: 0.21
     human_hours: null
+  evaluate:
+    status: answers_collected_not_scored
+    evidence:
+    - docs/experiments/research-affiliations/evaluation-proposal.md (approved); evaluation-runs.md
+    - layer/afiliaciones/eval/questions.yaml, consistencia/parafrasis.yaml, reader.sql; 33 saved answers
+    - not scored until the blind reviewer's reference exists (decision of 2026-10-23)
+    sessions:
+    - started_on: '2026-10-23T03:35:00Z'
+      ended_on: '2026-10-23T03:46:44Z'
+      pauses: []
+      work: >-
+        Start time approximate. Plan proposed, shown and approved; harness reads title and normalization from the
+        registry (method change); readers, five questions with provisional references, paraphrases; 33 prompts, one
+        fresh subagent each; 5 timeouts retried with the error message; one orchestrator transcription error recorded.
+    agent_hours: 0.2
+    human_hours: null
 interventions:
+- step: evaluate
+  decision: >-
+    Approved the evaluation plan as written (five questions, B/D/C, 33 runs, scored only against the blind
+    reference) and option (b): the harness reads title and normalization from the registry, as a method change
+  reason: The plan and references belong to the user
+  kind: planned approval
+  minutes: null
 - step: app
   decision: Approved the dictionary term afiliaciones:license on DataSource, mapped from rastro_meta.source
   reason: Dictionary terms belong to the user; the app shows each source with its licence
@@ -348,6 +371,12 @@ errors_caught:
   check: reading the demo text against the data
   failure_kind: a quotation of the IQUIFIB affiliation was shortened inside «», misquoting the source
   fix: quoted in full
+- step: evaluate
+  check: running the first saved answer of e1-0-B
+  failure_kind: >-
+    Claude copied a subagent's JSON reply by hand with its backslash escaping left in, so the saved first attempt was
+    a broken regular expression the subagent did not write
+  fix: replies decoded with a script from then on; recorded in evaluation-runs.md; process note 42
 method_changes:
 - change: >-
     ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports
@@ -367,4 +396,10 @@ method_changes:
     needed to show the approved app proposal (quality without an evaluation) and to fix a duplicate-key crash when the
     demo and «Preguntar» show the same question; made while building the approved app, reported to the user
     afterwards; energia and proveedores pass check_domain.py
+- change: >-
+    layer/evaluar.py reads the results title and the optional name-normalization SQL function from the domain's
+    method.evaluation entry (title, normalize); without a function, lists compare exactly. Registry entries added for
+    proveedores, energia and energia_lab with their previous values
+  scope: generic
+  reason: approved by the user as option (b) of the evaluation plan; the harness had per-domain Python dictionaries
 result: null

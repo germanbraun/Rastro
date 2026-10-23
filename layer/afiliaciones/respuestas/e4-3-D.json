@@ -1,0 +1,33 @@
+{
+ "question": "Publicaciones del conjunto, por DOI en minúsculas, que nombran a la Universidad de Buenos Aires (https://ror.org/0081fs513) en una afiliación. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+ "attempts": [
+  {
+   "query": "SELECT DISTINCT lower(i.doi) AS doi FROM afiliaciones.identificacion i JOIN crossref.work w ON lower(w.doi) = lower(i.doi) WHERE i.organization = 'https://ror.org/0081fs513' AND i.status IN ('rule', 'correction-accepted') ORDER BY 1",
+   "error": null
+  }
+ ],
+ "answer": [
+  "10.1001/jamaneurol.2025.0023",
+  "10.1002/14651858.cd016019",
+  "10.1002/ange.202422693",
+  "10.1002/cmdc.202500623",
+  "10.1002/ece3.70820",
+  "10.1002/jbm.a.37927",
+  "10.1021/acs.inorgchem.5c03575",
+  "10.1021/acsomega.4c07147",
+  "10.1029/2025gl115483",
+  "10.1063/5.0306490",
+  "10.1071/fp25196",
+  "10.1080/00288233.2024.2333841",
+  "10.1097/bsd.0000000000001683",
+  "10.1097/hjh.0000000000004053",
+  "10.1111/cla.70007",
+  "10.1111/jen.13409",
+  "10.1136/bmjopen-2024-090662",
+  "10.1142/s0219887825400407",
+  "10.1177/20501579251347487",
+  "10.1590/1809-4341.2025v22e01000",
+  "10.3390/pathogens14050437",
+  "10.5252/cryptogamie-mycologie2025v46a4"
+ ]
+}

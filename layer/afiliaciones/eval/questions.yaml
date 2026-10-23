@@ -1,0 +1,88 @@
+# Evaluation questions for research affiliations: the approved plan in
+# docs/experiments/research-affiliations/evaluation-proposal.md, built from the three competency questions.
+#
+#   kind: "lista" or "número"
+#   items: what a list names (organizaciones: full ROR identifiers; publicaciones: DOIs), compared exactly
+#   reference: SPARQL over Rastro with one ?answer column. PROVISIONAL: it comes from Rastro and was written by an
+#              AI assistant (Claude Code), not by the evaluated model. The final reference is the blind reviewer's
+#              annotation of every affiliation; no accuracy number is published before it exists.
+#
+# Every question states its definitions, so that the three paths can answer it.
+
+prefixes: |
+  PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>
+
+questions:
+
+  - id: e1
+    question: >-
+      ¿En cuántas de las 100 publicaciones del conjunto alguna afiliación nombra al CONICET (organización ROR
+      https://ror.org/03cqe8w59), contando cada publicación una vez y sin sumarle las de sus institutos? Una afiliación
+      nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra
+      ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones
+      de sus institutos.
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?p) AS ?answer) WHERE {
+        ?i a afiliaciones:Identification ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:ofMention ?m .
+        ?m afiliaciones:inPublication ?p .
+      }
+
+  - id: e2
+    question: >-
+      ¿Qué organizaciones argentinas nombran las afiliaciones de la publicación con DOI 10.1001/jamaneurol.2025.0023?
+      Respondé con el identificador ROR completo de cada una (https://ror.org/...). Una organización argentina es una
+      organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización
+      cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR
+      usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.
+    kind: lista
+    items: organizaciones
+    reference: |
+      SELECT DISTINCT ?answer WHERE {
+        ?m afiliaciones:inPublication <https://doi.org/10.1001/jamaneurol.2025.0023> .
+        ?i a afiliaciones:Identification ; afiliaciones:ofMention ?m ; afiliaciones:identifies ?o .
+        BIND (STR(?o) AS ?answer)
+      }
+
+  - id: e3
+    question: >-
+      ¿Cuántas organizaciones argentinas distintas nombra al menos una afiliación de las 100 publicaciones del
+      conjunto? Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión
+      2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o
+      alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no
+      recibe las menciones de sus institutos.
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?o) AS ?answer) WHERE { ?i a afiliaciones:Identification ; afiliaciones:identifies ?o }
+
+  - id: e4
+    question: >-
+      ¿Qué publicaciones del conjunto nombran a la Universidad de Buenos Aires (organización ROR
+      https://ror.org/0081fs513) en alguna afiliación? Respondé con el DOI de cada una, en minúsculas. Una afiliación
+      nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra
+      ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones
+      de sus institutos.
+    kind: lista
+    items: publicaciones
+    reference: |
+      SELECT DISTINCT ?answer WHERE {
+        ?i a afiliaciones:Identification ; afiliaciones:identifies <https://ror.org/0081fs513> ; afiliaciones:ofMention ?m .
+        ?m afiliaciones:inPublication ?p . ?p afiliaciones:doi ?answer .
+      }
+
+  - id: e5
+    question: >-
+      De las afiliaciones de las 100 publicaciones cuyo texto menciona Argentina (contiene «argentin», sin importar
+      mayúsculas: Argentina, Argentine, argentino…), ¿cuántas no nombran ninguna organización argentina registrada en
+      ROR? Cuente cada afiliación de cada autor por separado. Una organización argentina es una organización con al
+      menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto
+      contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa
+      organización argentina.
+    kind: número
+    reference: |
+      SELECT (COUNT(DISTINCT ?m) AS ?answer) WHERE {
+        ?m a afiliaciones:AffiliationMention ; afiliaciones:affiliationText ?t .
+        FILTER (CONTAINS(LCASE(?t), "argentin"))
+        OPTIONAL { ?i a afiliaciones:Identification ; afiliaciones:ofMention ?m }
+        FILTER (!BOUND(?i))
+      }

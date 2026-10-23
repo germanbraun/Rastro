@@ -1,0 +1,10 @@
+{
+ "question": "Contando cada publicación una sola vez, ¿cuántas de las 100 publicaciones del conjunto tienen alguna afiliación que nombra al CONICET (ROR https://ror.org/03cqe8w59), sin sumarle las publicaciones de sus institutos? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+ "attempts": [
+  {
+   "query": "WITH nombres AS (SELECT n.value, (n.types LIKE '%acronym%') AS es_sigla FROM ror.name n WHERE n.id = 'https://ror.org/03cqe8w59' AND (n.types NOT LIKE '%acronym%' OR NOT EXISTS (SELECT 1 FROM ror.name n2 WHERE n2.id <> n.id AND n2.types LIKE '%acronym%' AND upper(n2.value) = upper(n.value) AND EXISTS (SELECT 1 FROM ror.location l WHERE l.id = n2.id AND l.country_code = 'AR')))) SELECT count(DISTINCT a.doi) FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi JOIN nombres nm ON (NOT nm.es_sigla AND position(lower(nm.value) IN lower(a.name)) > 0) OR (nm.es_sigla AND a.name ~ ('\\m' || regexp_replace(nm.value, '([.^$*+?()\\[\\]{}|\\\\-])', '\\\\\\1', 'g') || '\\M'))",
+   "error": null
+  }
+ ],
+ "answer": 63.0
+}
