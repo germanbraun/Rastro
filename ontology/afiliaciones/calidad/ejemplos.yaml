@@ -1,0 +1,29 @@
+# For each quality rule (reglas.ttl), a value that passes and a broken one, in Turtle (prefixes afiliaciones:, prov:,
+# fuente: and e:). The tests (tests/test_calidad.py) and the app use them. Real cases where there is one: IDEHU,
+# withdrawn in ROR v2.15, and a reviewed «UK» candidate still waiting for a person.
+IdentificacionCompleta:
+  bueno: 'e:id a afiliaciones:Identification ; afiliaciones:ofMention e:mencion ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:rule "R2: sigla única" ; afiliaciones:sourceText "El texto contiene la sigla «CONICET» y «Argentina»." ; prov:wasDerivedFrom fuente:crossref, fuente:ror .'
+  malo: 'e:id a afiliaciones:Identification ; afiliaciones:ofMention e:mencion ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:rule "R2: sigla única" ; afiliaciones:sourceText "El texto contiene la sigla «CONICET» y «Argentina»." ; prov:wasDerivedFrom fuente:crossref .'
+OrganizacionEnArgentina:
+  bueno: 'e:id afiliaciones:identifies <https://ror.org/03cqe8w59> .
+    <https://ror.org/03cqe8w59> afiliaciones:country "AR" .'
+  malo: 'e:id afiliaciones:identifies <https://ror.org/04abc0000> .
+    <https://ror.org/04abc0000> afiliaciones:country "GB" .'
+RegistroActivo:
+  bueno: 'e:id afiliaciones:identifies <https://ror.org/03cqe8w59> .
+    <https://ror.org/03cqe8w59> afiliaciones:status "active" .'
+  malo: 'e:id afiliaciones:identifies <https://ror.org/0425cyr19> .
+    <https://ror.org/0425cyr19> afiliaciones:status "withdrawn" ; afiliaciones:successor <https://ror.org/03cqe8w59> .
+    <https://ror.org/03cqe8w59> afiliaciones:name "National Scientific and Technical Research Council" .'
+DudosaDecidida:
+  bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "reject" ; afiliaciones:decisionReason "La coincidencia es casual: el texto nombra un lugar fuera de Argentina." .'
+  malo: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "quizás" .'
+ConfirmadaPorPersona:
+  bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:humanConfirmation "confirmada por la revisora, 2026-11-02" .'
+  malo: '<https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Falr.70038/8/0/https%3A%2F%2Fror.org%2F03e47dk66> a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "reject" ; afiliaciones:humanConfirmation "pending" .'
+MencionCompleta:
+  bueno: 'e:mencion a afiliaciones:AffiliationMention ; afiliaciones:inPublication <https://doi.org/10.1001/jamaneurol.2025.0023> ; afiliaciones:affiliationText "Department of Neurology, Fleni, Buenos Aires, Argentina" .'
+  malo: 'e:mencion a afiliaciones:AffiliationMention ; afiliaciones:affiliationText "" .'
+PublicacionConDoi:
+  bueno: '<https://doi.org/10.1001/jamaneurol.2025.0023> a afiliaciones:Publication ; afiliaciones:doi "10.1001/jamaneurol.2025.0023" .'
+  malo: '<https://doi.org/jamaneurol.2025.0023> a afiliaciones:Publication ; afiliaciones:doi "jamaneurol.2025.0023" .'

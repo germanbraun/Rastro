@@ -1,0 +1,75 @@
+# Quality rules for research affiliations, in SHACL (the W3C standard for validating a graph). Approved by the user on
+# 2026-10-23 (docs/experiments/research-affiliations/quality-proposal.md). They read Rastro's data after every load
+# and never change it: an identification is not redirected, removed or hidden; a person records the disposition.
+# Run: docker compose run --rm --no-deps calidad python /ontology/calidad.py afiliaciones
+# One rule per block, separated by a blank line: the app shows each block as is.
+
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .
+@prefix fuente: <https://w3id.org/rastro/source/> .
+@prefix calidad: <https://w3id.org/rastro/afiliaciones/calidad#> .
+
+calidad:IdentificacionCompleta a sh:NodeShape ;
+    rdfs:label "Cada identificación dice qué mención, qué organización, con qué regla y evidencia, y de qué dos fuentes sale" ;
+    rdfs:comment "Las identificaciones son lo que Rastro cuenta. Sin su mención, su organización, su regla, su evidencia o alguna de sus dos fuentes (Crossref y ROR), no se pueden auditar." ;
+    sh:targetClass afiliaciones:Identification ;
+    sh:property [ sh:path afiliaciones:ofMention ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "No es de una sola mención." ] ;
+    sh:property [ sh:path afiliaciones:identifies ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "No identifica una sola organización." ] ;
+    sh:property [ sh:path afiliaciones:rule ; sh:minCount 1 ; sh:message "No dice con qué regla se identificó." ] ;
+    sh:property [ sh:path afiliaciones:sourceText ; sh:minCount 1 ; sh:minLength 1 ; sh:message "No tiene evidencia." ] ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:hasValue fuente:crossref ; sh:message "No dice que sale de Crossref." ] ;
+    sh:property [ sh:path prov:wasDerivedFrom ; sh:hasValue fuente:ror ; sh:message "No dice que sale de ROR." ] .
+
+calidad:OrganizacionEnArgentina a sh:NodeShape ;
+    rdfs:label "Cada organización identificada tiene una sede en Argentina en ROR" ;
+    rdfs:comment "Solo se identifican organizaciones argentinas. Se comprueba el país de ROR y no la clase, porque Rastro deduce la clase de la propia identificación." ;
+    sh:targetObjectsOf afiliaciones:identifies ;
+    sh:property [ sh:path afiliaciones:country ; sh:qualifiedValueShape [ sh:hasValue "AR" ] ; sh:qualifiedMinCount 1 ;
+                  sh:message "La organización identificada no tiene una sede en Argentina en ROR." ] .
+
+calidad:RegistroActivo a sh:NodeShape ;
+    rdfs:label "Cada organización identificada está activa en ROR v2.15 (aviso para revisar)" ;
+    rdfs:comment "Un registro retirado o inactivo en ROR no hace falsa la afiliación: la publicación la nombra. Es un aviso para que una persona decida si la mantiene o suma la sucesora; la regla no la cambia." ;
+    sh:targetObjectsOf afiliaciones:identifies ;
+    sh:sparql [
+        sh:severity sh:Warning ;
+        sh:message "El registro figura como «{?status}» en ROR v2.15; sucesora en ROR: {?successorName}. La identificación no cambia: una persona decide." ;
+        sh:select """
+            SELECT $this (MIN(?s) AS ?status) (COALESCE(MIN(?n), "ninguna") AS ?successorName) WHERE {
+                $this <https://w3id.org/rastro/afiliaciones#status> ?s .
+                FILTER (?s != "active")
+                OPTIONAL { $this <https://w3id.org/rastro/afiliaciones#successor> ?x .
+                           ?x <https://w3id.org/rastro/afiliaciones#name> ?n }
+            } GROUP BY $this HAVING (COUNT(?s) > 0)
+        """ ] .
+
+calidad:DudosaDecidida a sh:NodeShape ;
+    rdfs:label "Cada candidato dudoso tiene una decisión, aceptar o rechazar, y su motivo" ;
+    rdfs:comment "Sin decisión, un candidato no se sabe si cuenta; sin motivo, no se puede revisar por qué se aceptó o rechazó." ;
+    sh:targetClass afiliaciones:DoubtfulCandidate ;
+    sh:property [ sh:path afiliaciones:reviewDecision ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "accept" "reject" ) ;
+                  sh:message "No tiene una decisión, aceptar o rechazar." ] ;
+    sh:property [ sh:path afiliaciones:decisionReason ; sh:minCount 1 ; sh:minLength 1 ; sh:message "No dice el motivo de la decisión." ] .
+
+calidad:ConfirmadaPorPersona a sh:NodeShape ;
+    rdfs:label "Cada decisión sobre un candidato dudoso la confirmó una persona (informativa)" ;
+    rdfs:comment "Las decisiones las tomó un asistente de IA y las validó otro. Quién decidió y si una persona confirmó son dos datos distintos; esta regla no bloquea las respuestas." ;
+    sh:targetClass afiliaciones:DoubtfulCandidate ;
+    sh:property [ sh:path afiliaciones:humanConfirmation ; sh:minCount 1 ; sh:not [ sh:in ( "pending" ) ] ; sh:severity sh:Info ;
+                  sh:message "Decidido por un asistente de IA; falta que una persona lo confirme." ] .
+
+calidad:MencionCompleta a sh:NodeShape ;
+    rdfs:label "Cada mención de afiliación es de una publicación y tiene su texto" ;
+    rdfs:comment "La mención es lo que se lee para identificar organizaciones; sin publicación no se cuenta, sin texto no hay evidencia." ;
+    sh:targetClass afiliaciones:AffiliationMention ;
+    sh:property [ sh:path afiliaciones:inPublication ; sh:minCount 1 ; sh:maxCount 1 ; sh:message "No es de una sola publicación." ] ;
+    sh:property [ sh:path afiliaciones:affiliationText ; sh:minCount 1 ; sh:maxCount 1 ; sh:minLength 1 ; sh:message "No tiene su texto." ] .
+
+calidad:PublicacionConDoi a sh:NodeShape ;
+    rdfs:label "Cada publicación tiene un solo DOI, con su formato" ;
+    rdfs:comment "Por el DOI se identifica la publicación en Crossref y se cuenta una sola vez por organización." ;
+    sh:targetClass afiliaciones:Publication ;
+    sh:property [ sh:path afiliaciones:doi ; sh:minCount 1 ; sh:maxCount 1 ; sh:pattern "^10\\.[0-9]+(\\.[0-9]+)*/\\S+$" ;
+                  sh:message "No tiene un DOI, tiene más de uno, o uno con otro formato." ] .

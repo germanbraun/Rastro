@@ -1,0 +1,27 @@
+# What the quality rules look at, and nothing else (ontology/calidad.py fetches it from Rastro with these CONSTRUCTs):
+# the identifications with their sources; the identified organizations with country, status and successor names;
+# the doubtful candidates with decision, reason and confirmation; the mentions; the publications. The afiliaciones:
+# and prov: prefixes are added by the script.
+- |-
+  CONSTRUCT { ?i a afiliaciones:Identification ; afiliaciones:ofMention ?m ; afiliaciones:identifies ?o ;
+                 afiliaciones:rule ?r ; afiliaciones:sourceText ?t ; prov:wasDerivedFrom ?f }
+         WHERE { ?i a afiliaciones:Identification . OPTIONAL { ?i afiliaciones:ofMention ?m }
+                 OPTIONAL { ?i afiliaciones:identifies ?o } OPTIONAL { ?i afiliaciones:rule ?r }
+                 OPTIONAL { ?i afiliaciones:sourceText ?t } OPTIONAL { ?i prov:wasDerivedFrom ?f } }
+- |-
+  CONSTRUCT { ?o afiliaciones:country ?c ; afiliaciones:status ?s ; afiliaciones:successor ?x . ?x afiliaciones:name ?n }
+         WHERE { ?i a afiliaciones:Identification ; afiliaciones:identifies ?o .
+                 OPTIONAL { ?o afiliaciones:country ?c } OPTIONAL { ?o afiliaciones:status ?s }
+                 OPTIONAL { ?o afiliaciones:successor ?x . ?x afiliaciones:name ?n } }
+- |-
+  CONSTRUCT { ?d a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision ?r ; afiliaciones:decisionReason ?w ;
+                 afiliaciones:humanConfirmation ?h }
+         WHERE { ?d a afiliaciones:DoubtfulCandidate . OPTIONAL { ?d afiliaciones:reviewDecision ?r }
+                 OPTIONAL { ?d afiliaciones:decisionReason ?w } OPTIONAL { ?d afiliaciones:humanConfirmation ?h } }
+- |-
+  CONSTRUCT { ?m a afiliaciones:AffiliationMention ; afiliaciones:inPublication ?p ; afiliaciones:affiliationText ?t }
+         WHERE { ?m a afiliaciones:AffiliationMention . OPTIONAL { ?m afiliaciones:inPublication ?p }
+                 OPTIONAL { ?m afiliaciones:affiliationText ?t } }
+- |-
+  CONSTRUCT { ?p a afiliaciones:Publication ; afiliaciones:doi ?d }
+         WHERE { ?p a afiliaciones:Publication . OPTIONAL { ?p afiliaciones:doi ?d } }

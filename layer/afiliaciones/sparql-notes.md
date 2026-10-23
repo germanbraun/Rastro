@@ -12,7 +12,8 @@ Prefix: `PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>`. Ontop do
 - **Organization** (`afiliaciones:Organization`): every organization in ROR v2.15, any country or status. Its IRI is
   its ROR identifier (`https://ror.org/...`). `afiliaciones:name` holds display names, labels and aliases;
   `afiliaciones:acronym` its acronyms (several organizations can share one); `afiliaciones:status` is active, inactive
-  or withdrawn; `afiliaciones:country` one ISO code per location; `afiliaciones:hasParent` its parent organizations.
+  or withdrawn; `afiliaciones:country` one ISO code per location; `afiliaciones:hasParent` its parent organizations;
+  `afiliaciones:successor` the organization ROR names as its replacement (shown to explain, never used to redirect).
 - **Argentine organization** (`afiliaciones:ArgentineOrganization`): an organization with at least one ROR location in
   Argentina (538). The word "Argentina" in an affiliation text never decides it.
 - **Parents never add credit:** a publication counts for an organization only if its text names it.
@@ -22,7 +23,8 @@ Prefix: `PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>`. Ontop do
   several identifications, or none.
 - **Doubtful candidate** (`afiliaciones:DoubtfulCandidate`): an organization a mention might name without enough
   evidence (`afiliaciones:candidate`, reason in `afiliaciones:sourceText`), with `afiliaciones:reviewDecision`
-  («accept» or «reject»). Accepted ones are already identifications; doubtful candidates are never counted.
+  («accept» or «reject»), `afiliaciones:decisionReason` (why, with the source consulted) and
+  `afiliaciones:humanConfirmation` («pending» until a person confirms the AI decision). Accepted ones are already identifications; doubtful candidates are never counted.
 - **Possible gap** (`afiliaciones:PossibleGap`): a segment of a mention's text (`afiliaciones:segmentText`) that names
   an institution no Argentine ROR name covers. A candidate, not proof that ROR lacks it; it can appear in mentions
   that also have identifications.

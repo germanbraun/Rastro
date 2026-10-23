@@ -12,7 +12,7 @@
 - `ror.name` (`id`, `value`, `types`, `lang`): every name of an organization; `types` lists one or more of
   `ror_display`, `label`, `alias`, `acronym` separated by commas. Several organizations can share an acronym.
 - `ror.location` (`id`, `position`, `geonames_id`, `country_code`, `country_name`, `city`): every location.
-- `ror.relationship` (`id`, `type`, `related_id`, `label`): `type = 'parent'` gives an organization's parents.
+- `ror.relationship` (`id`, `type`, `related_id`, `label`): `type = 'parent'` gives an organization's parents; `type = 'successor'` the organization that replaces it.
 - **Argentine organization:** an organization with at least one row in `ror.location` with `country_code = 'AR'`
   (538). The word "Argentina" in an affiliation text never decides it.
 - **Parents never add credit:** a work counts for an organization only if its text names it.
@@ -21,8 +21,8 @@
   the evidence; `status` is `rule` or `correction-accepted`. **These are what Rastro counts.** A mention can have
   several rows, or none.
 - `afiliaciones.dudosa` (`doi`, `author_position`, `affiliation_position`, `organization`, `reason`, `decision`,
-  `decision_reason`): an organization a mention might name without enough evidence, with the reviewed `decision`
-  (`accept` or `reject`). Accepted ones are already in `identificacion`; doubtful candidates are never counted.
+  `decision_reason`, `human_confirmation`): an organization a mention might name without enough evidence, with the
+  reviewed `decision` (`accept` or `reject`), why, and `pending` until a person confirms the AI decision. Accepted ones are already in `identificacion`; doubtful candidates are never counted.
 - `afiliaciones.posible_hueco` (`doi`, `author_position`, `affiliation_position`, `segment`, `reason`): a segment of a
   mention's text that names an institution no Argentine ROR name covers. A candidate, not proof that ROR lacks it;
   it can appear in mentions that also have identifications.

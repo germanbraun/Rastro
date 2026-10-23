@@ -1,0 +1,179 @@
+{
+ "fecha": "2026-10-23",
+ "domain": "afiliaciones",
+ "triples": 8852,
+ "reglas": [
+  {
+   "id": "ConfirmadaPorPersona",
+   "nombre": "Cada decisión sobre un candidato dudoso la confirmó una persona (informativa)",
+   "porque": "Las decisiones las tomó un asistente de IA y las validó otro. Quién decidió y si una persona confirmó son dos datos distintos; esta regla no bloquea las respuestas.",
+   "shacl": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix calidad: <https://w3id.org/rastro/afiliaciones/calidad#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:ConfirmadaPorPersona a sh:NodeShape ;\n    rdfs:label \"Cada decisión sobre un candidato dudoso la confirmó una persona (informativa)\" ;\n    rdfs:comment \"Las decisiones las tomó un asistente de IA y las validó otro. Quién decidió y si una persona confirmó son dos datos distintos; esta regla no bloquea las respuestas.\" ;\n    sh:property [ sh:message \"Decidido por un asistente de IA; falta que una persona lo confirme.\" ;\n            sh:minCount 1 ;\n            sh:not [ sh:in ( \"pending\" ) ] ;\n            sh:path afiliaciones:humanConfirmation ;\n            sh:severity sh:Info ] ;\n    sh:targetClass afiliaciones:DoubtfulCandidate .\n\n",
+   "revisados": 91,
+   "coverage": "checked",
+   "un_dato": null,
+   "roto": "<https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Falr.70038/8/0/https%3A%2F%2Fror.org%2F03e47dk66> a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision \"reject\" ; afiliaciones:humanConfirmation \"pending\" .",
+   "roto_dice": [
+    "Decidido por un asistente de IA; falta que una persona lo confirme."
+   ],
+   "fallas": 91,
+   "ejemplos": [
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Falr.70038/28/0/https%3A%2F%2Fror.org%2F03e47dk66",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Falr.70038/8/0/https%3A%2F%2Fror.org%2F03e47dk66",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fhon.70094_218/10/0/https%3A%2F%2Fror.org%2F03e47dk66",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fhon.70094_218/11/0/https%3A%2F%2Fror.org%2F03e47dk66",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjbm.a.37927/4/2/https%3A%2F%2Fror.org%2F00568z619",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjbm.a.37927/4/2/https%3A%2F%2Fror.org%2F01ebs6k31",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjoc.8919/1/0/https%3A%2F%2Fror.org%2F02s7sax82",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjoc.8919/1/0/https%3A%2F%2Fror.org%2F04ebzxq58",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjoc.8919/4/0/https%3A%2F%2Fror.org%2F02s7sax82",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    },
+    {
+     "dato": "https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Fjoc.8919/4/0/https%3A%2F%2Fror.org%2F04ebzxq58",
+     "mensaje": "Decidido por un asistente de IA; falta que una persona lo confirme.",
+     "predicciones": []
+    }
+   ],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "DudosaDecidida",
+   "nombre": "Cada candidato dudoso tiene una decisión, aceptar o rechazar, y su motivo",
+   "porque": "Sin decisión, un candidato no se sabe si cuenta; sin motivo, no se puede revisar por qué se aceptó o rechazó.",
+   "shacl": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix calidad: <https://w3id.org/rastro/afiliaciones/calidad#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:DudosaDecidida a sh:NodeShape ;\n    rdfs:label \"Cada candidato dudoso tiene una decisión, aceptar o rechazar, y su motivo\" ;\n    rdfs:comment \"Sin decisión, un candidato no se sabe si cuenta; sin motivo, no se puede revisar por qué se aceptó o rechazó.\" ;\n    sh:property [ sh:in ( \"accept\" \"reject\" ) ;\n            sh:maxCount 1 ;\n            sh:message \"No tiene una decisión, aceptar o rechazar.\" ;\n            sh:minCount 1 ;\n            sh:path afiliaciones:reviewDecision ],\n        [ sh:message \"No dice el motivo de la decisión.\" ;\n            sh:minCount 1 ;\n            sh:minLength 1 ;\n            sh:path afiliaciones:decisionReason ] ;\n    sh:targetClass afiliaciones:DoubtfulCandidate .\n\n",
+   "revisados": 91,
+   "coverage": "checked",
+   "un_dato": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n\n<https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Falr.70038/28/0/https%3A%2F%2Fror.org%2F03e47dk66> a afiliaciones:DoubtfulCandidate ;\n    afiliaciones:decisionReason \"La coincidencia es casual: el texto nombra una institución o un lugar fuera de Argentina (ence and UCL Cancer Institute  London UK). Revisado por un asistente de IA (Claude), validado por otro (GPT); a confirmar por una persona.\" ;\n    afiliaciones:humanConfirmation \"pending\" ;\n    afiliaciones:reviewDecision \"reject\" .\n\n",
+   "roto": "e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision \"quizás\" .",
+   "roto_dice": [
+    "No dice el motivo de la decisión.",
+    "No tiene una decisión, aceptar o rechazar."
+   ],
+   "fallas": 0,
+   "ejemplos": [],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "IdentificacionCompleta",
+   "nombre": "Cada identificación dice qué mención, qué organización, con qué regla y evidencia, y de qué dos fuentes sale",
+   "porque": "Las identificaciones son lo que Rastro cuenta. Sin su mención, su organización, su regla, su evidencia o alguna de sus dos fuentes (Crossref y ROR), no se pueden auditar.",
+   "shacl": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix calidad: <https://w3id.org/rastro/afiliaciones/calidad#> .\n@prefix fuente: <https://w3id.org/rastro/source/> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:IdentificacionCompleta a sh:NodeShape ;\n    rdfs:label \"Cada identificación dice qué mención, qué organización, con qué regla y evidencia, y de qué dos fuentes sale\" ;\n    rdfs:comment \"Las identificaciones son lo que Rastro cuenta. Sin su mención, su organización, su regla, su evidencia o alguna de sus dos fuentes (Crossref y ROR), no se pueden auditar.\" ;\n    sh:property [ sh:maxCount 1 ;\n            sh:message \"No es de una sola mención.\" ;\n            sh:minCount 1 ;\n            sh:path afiliaciones:ofMention ],\n        [ sh:maxCount 1 ;\n            sh:message \"No identifica una sola organización.\" ;\n            sh:minCount 1 ;\n            sh:path afiliaciones:identifies ],\n        [ sh:message \"No dice con qué regla se identificó.\" ;\n            sh:minCount 1 ;\n            sh:path afiliaciones:rule ],\n        [ sh:message \"No tiene evidencia.\" ;\n            sh:minCount 1 ;\n            sh:minLength 1 ;\n            sh:path afiliaciones:sourceText ],\n        [ sh:hasValue fuente:crossref ;\n            sh:message \"No dice que sale de Crossref.\" ;\n            sh:path prov:wasDerivedFrom ],\n        [ sh:hasValue fuente:ror ;\n            sh:message \"No dice que sale de ROR.\" ;\n            sh:path prov:wasDerivedFrom ] ;\n    sh:targetClass afiliaciones:Identification .\n\n",
+   "revisados": 539,
+   "coverage": "checked",
+   "un_dato": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n\n<https://w3id.org/rastro/afiliaciones/identification/10.1001%2Fjamaneurol.2025.0023/0/0/https%3A%2F%2Fror.org%2F0145s0423> a afiliaciones:Identification ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/crossref>,\n        <https://w3id.org/rastro/source/ror> ;\n    afiliaciones:identifies <https://ror.org/0145s0423> ;\n    afiliaciones:ofMention <https://w3id.org/rastro/afiliaciones/mention/10.1001%2Fjamaneurol.2025.0023/0/0> ;\n    afiliaciones:rule \"R2: sigla única entre organizaciones argentinas y una segunda evidencia\" ;\n    afiliaciones:sourceText \"El texto «Department of Neurology, Fleni, Buenos Aires, Argentina» contiene la sigla «FLENI», que en ROR usa solo Fundación para la Lucha contra las Enfermedades Neurológicas de la Infancia, y «Argentina».\" .\n\n",
+   "roto": "e:id a afiliaciones:Identification ; afiliaciones:ofMention e:mencion ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:rule \"R2: sigla única\" ; afiliaciones:sourceText \"El texto contiene la sigla «CONICET» y «Argentina».\" ; prov:wasDerivedFrom fuente:crossref .",
+   "roto_dice": [
+    "No dice que sale de ROR."
+   ],
+   "fallas": 0,
+   "ejemplos": [],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "MencionCompleta",
+   "nombre": "Cada mención de afiliación es de una publicación y tiene su texto",
+   "porque": "La mención es lo que se lee para identificar organizaciones; sin publicación no se cuenta, sin texto no hay evidencia.",
+   "shacl": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix calidad: <https://w3id.org/rastro/afiliaciones/calidad#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:MencionCompleta a sh:NodeShape ;\n    rdfs:label \"Cada mención de afiliación es de una publicación y tiene su texto\" ;\n    rdfs:comment \"La mención es lo que se lee para identificar organizaciones; sin publicación no se cuenta, sin texto no hay evidencia.\" ;\n    sh:property [ sh:maxCount 1 ;\n            sh:message \"No es de una sola publicación.\" ;\n            sh:minCount 1 ;\n            sh:path afiliaciones:inPublication ],\n        [ sh:maxCount 1 ;\n            sh:message \"No tiene su texto.\" ;\n            sh:minCount 1 ;\n            sh:minLength 1 ;\n            sh:path afiliaciones:affiliationText ] ;\n    sh:targetClass afiliaciones:AffiliationMention .\n\n",
+   "revisados": 1456,
+   "coverage": "checked",
+   "un_dato": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n\n<https://w3id.org/rastro/afiliaciones/mention/10.1001%2Fjamaneurol.2025.0023/0/0> a afiliaciones:AffiliationMention ;\n    afiliaciones:affiliationText \"Department of Neurology, Fleni, Buenos Aires, Argentina\" ;\n    afiliaciones:inPublication <https://doi.org/10.1001/jamaneurol.2025.0023> .\n\n",
+   "roto": "e:mencion a afiliaciones:AffiliationMention ; afiliaciones:affiliationText \"\" .",
+   "roto_dice": [
+    "No es de una sola publicación.",
+    "No tiene su texto."
+   ],
+   "fallas": 0,
+   "ejemplos": [],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "OrganizacionEnArgentina",
+   "nombre": "Cada organización identificada tiene una sede en Argentina en ROR",
+   "porque": "Solo se identifican organizaciones argentinas. Se comprueba el país de ROR y no la clase, porque Rastro deduce la clase de la propia identificación.",
+   "shacl": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix calidad: <https://w3id.org/rastro/afiliaciones/calidad#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:OrganizacionEnArgentina a sh:NodeShape ;\n    rdfs:label \"Cada organización identificada tiene una sede en Argentina en ROR\" ;\n    rdfs:comment \"Solo se identifican organizaciones argentinas. Se comprueba el país de ROR y no la clase, porque Rastro deduce la clase de la propia identificación.\" ;\n    sh:property [ sh:message \"La organización identificada no tiene una sede en Argentina en ROR.\" ;\n            sh:path afiliaciones:country ;\n            sh:qualifiedMinCount 1 ;\n            sh:qualifiedValueShape [ sh:hasValue \"AR\" ] ] ;\n    sh:targetObjectsOf afiliaciones:identifies .\n\n",
+   "revisados": 69,
+   "coverage": "checked",
+   "un_dato": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n\n<https://w3id.org/rastro/afiliaciones/identification/10.1021%2Facs.orglett.5c02127/1/0/https%3A%2F%2Fror.org%2F0002pcv65> a afiliaciones:Identification ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/crossref>,\n        <https://w3id.org/rastro/source/ror> ;\n    afiliaciones:identifies <https://ror.org/0002pcv65> ;\n    afiliaciones:ofMention <https://w3id.org/rastro/afiliaciones/mention/10.1021%2Facs.orglett.5c02127/1/0> ;\n    afiliaciones:rule \"R1: nombre completo en ROR y una segunda evidencia\" ;\n    afiliaciones:sourceText \"El texto «Instituto para el Desarrollo Agroindustrial y de la Salud (CONICET), Departamento de Química, Facultad de Ciencias Exactas Físico-Químicas y Naturales, Universidad Nacional de Río Cuarto, Ruta Nacional 36 Km 601, X5804BYA Río Cuarto, Córdoba, Argentina» contiene el nombre «Universidad Nacional de Río Cuarto» de ROR y «Argentina».\" .\n\n<https://w3id.org/rastro/afiliaciones/identification/10.1021%2Facs.orglett.5c02127/4/0/https%3A%2F%2Fror.org%2F0002pcv65> a afiliaciones:Identification ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/crossref>,\n        <https://w3id.org/rastro/source/ror> ;\n    afiliaciones:identifies <https://ror.org/0002pcv65> ;\n    afiliaciones:ofMention <https://w3id.org/rastro/afiliaciones/mention/10.1021%2Facs.orglett.5c02127/4/0> ;\n    afiliaciones:rule \"R1: nombre completo en ROR y una segunda evidencia\" ;\n    afiliaciones:sourceText \"El texto «Instituto para el Desarrollo Agroindustrial y de la Salud (CONICET), Departamento de Química, Facultad de Ciencias Exactas Físico-Químicas y Naturales, Universidad Nacional de Río Cuarto, Ruta Nacional 36 Km 601, X5804BYA Río Cuarto, Córdoba, Argentina» contiene el nombre «Universidad Nacional de Río Cuarto» de ROR y «Argentina».\" .\n\n<https://w3id.org/rastro/afiliaciones/identification/10.3390%2Ffermentation11090536/7/0/https%3A%2F%2Fror.org%2F0002pcv65> a afiliaciones:Identification ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/crossref>,\n        <https://w3id.org/rastro/source/ror> ;\n    afiliaciones:identifies <https://ror.org/0002pcv65> ;\n    afiliaciones:ofMention <https://w3id.org/rastro/afiliaciones/mention/10.3390%2Ffermentation11090536/7/0> ;\n    afiliaciones:rule \"R1: nombre completo en ROR y una segunda evidencia\" ;\n    afiliaciones:sourceText \"El texto «Instituto de Investigación en Micología y Micotoxicología (IMICO), Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)-Universidad Nacional de Río Cuarto, Ruta Nac. 36 km 601, Río Cuarto 5800, Argentina» contiene el nombre «Universidad Nacional de Río Cuarto» de ROR y «Argentina».\" .\n\n<https://w3id.org/rastro/afiliaciones/identification/10.3390%2Ftoxins17010039/0/0/https%3A%2F%2Fror.org%2F0002pcv65> a afiliaciones:Identification ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/crossref>,\n        <https://w3id.org/rastro/source/ror> ;\n    afiliaciones:identifies <https://ror.org/0002pcv65> ;\n    afiliaciones:ofMention <https://w3id.org/rastro/afiliaciones/mention/10.3390%2Ftoxins17010039/0/0> ;\n    afiliaciones:rule \"R1: nombre completo en ROR y una segunda evidencia\" ;\n    afiliaciones:sourceText \"El texto «Instituto de Investigación en Micología y Micotoxicología (IMICO), Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)-Universidad Nacional de Río Cuarto (UNRC), Ruta Nacional 36 Km 601, Río Cuarto 5800, Argentina» contiene el nombre «Universidad Nacional de Río Cuarto» de ROR y «Argentina».\" .\n\n<https://ror.org/0002pcv65> afiliaciones:country \"AR\" ;\n    afiliaciones:status \"active\" .\n\n",
+   "roto": "e:id afiliaciones:identifies <https://ror.org/04abc0000> . <https://ror.org/04abc0000> afiliaciones:country \"GB\" .",
+   "roto_dice": [
+    "La organización identificada no tiene una sede en Argentina en ROR."
+   ],
+   "fallas": 0,
+   "ejemplos": [],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "PublicacionConDoi",
+   "nombre": "Cada publicación tiene un solo DOI, con su formato",
+   "porque": "Por el DOI se identifica la publicación en Crossref y se cuenta una sola vez por organización.",
+   "shacl": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix calidad: <https://w3id.org/rastro/afiliaciones/calidad#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:PublicacionConDoi a sh:NodeShape ;\n    rdfs:label \"Cada publicación tiene un solo DOI, con su formato\" ;\n    rdfs:comment \"Por el DOI se identifica la publicación en Crossref y se cuenta una sola vez por organización.\" ;\n    sh:property [ sh:maxCount 1 ;\n            sh:message \"No tiene un DOI, tiene más de uno, o uno con otro formato.\" ;\n            sh:minCount 1 ;\n            sh:path afiliaciones:doi ;\n            sh:pattern \"^10\\\\.[0-9]+(\\\\.[0-9]+)*/\\\\S+$\" ] ;\n    sh:targetClass afiliaciones:Publication .\n\n",
+   "revisados": 100,
+   "coverage": "checked",
+   "un_dato": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n\n<https://doi.org/10.1001/jamaneurol.2025.0023> a afiliaciones:Publication ;\n    afiliaciones:doi \"10.1001/jamaneurol.2025.0023\" .\n\n",
+   "roto": "<https://doi.org/jamaneurol.2025.0023> a afiliaciones:Publication ; afiliaciones:doi \"jamaneurol.2025.0023\" .",
+   "roto_dice": [
+    "No tiene un DOI, tiene más de uno, o uno con otro formato."
+   ],
+   "fallas": 0,
+   "ejemplos": [],
+   "predicciones_afectadas": []
+  },
+  {
+   "id": "RegistroActivo",
+   "nombre": "Cada organización identificada está activa en ROR v2.15 (aviso para revisar)",
+   "porque": "Un registro retirado o inactivo en ROR no hace falsa la afiliación: la publicación la nombra. Es un aviso para que una persona decida si la mantiene o suma la sucesora; la regla no la cambia.",
+   "shacl": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix calidad: <https://w3id.org/rastro/afiliaciones/calidad#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:RegistroActivo a sh:NodeShape ;\n    rdfs:label \"Cada organización identificada está activa en ROR v2.15 (aviso para revisar)\" ;\n    rdfs:comment \"Un registro retirado o inactivo en ROR no hace falsa la afiliación: la publicación la nombra. Es un aviso para que una persona decida si la mantiene o suma la sucesora; la regla no la cambia.\" ;\n    sh:sparql [ sh:message \"El registro figura como «{?status}» en ROR v2.15; sucesora en ROR: {?successorName}. La identificación no cambia: una persona decide.\" ;\n            sh:select \"\"\"\n            SELECT $this (MIN(?s) AS ?status) (COALESCE(MIN(?n), \"ninguna\") AS ?successorName) WHERE {\n                $this <https://w3id.org/rastro/afiliaciones#status> ?s .\n                FILTER (?s != \"active\")\n                OPTIONAL { $this <https://w3id.org/rastro/afiliaciones#successor> ?x .\n                           ?x <https://w3id.org/rastro/afiliaciones#name> ?n }\n            } GROUP BY $this HAVING (COUNT(?s) > 0)\n        \"\"\" ;\n            sh:severity sh:Warning ] ;\n    sh:targetObjectsOf afiliaciones:identifies .\n\n",
+   "revisados": 69,
+   "coverage": "checked",
+   "un_dato": "@prefix afiliaciones: <https://w3id.org/rastro/afiliaciones#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n\n<https://w3id.org/rastro/afiliaciones/identification/10.1021%2Facs.orglett.5c02127/1/0/https%3A%2F%2Fror.org%2F0002pcv65> a afiliaciones:Identification ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/crossref>,\n        <https://w3id.org/rastro/source/ror> ;\n    afiliaciones:identifies <https://ror.org/0002pcv65> ;\n    afiliaciones:ofMention <https://w3id.org/rastro/afiliaciones/mention/10.1021%2Facs.orglett.5c02127/1/0> ;\n    afiliaciones:rule \"R1: nombre completo en ROR y una segunda evidencia\" ;\n    afiliaciones:sourceText \"El texto «Instituto para el Desarrollo Agroindustrial y de la Salud (CONICET), Departamento de Química, Facultad de Ciencias Exactas Físico-Químicas y Naturales, Universidad Nacional de Río Cuarto, Ruta Nacional 36 Km 601, X5804BYA Río Cuarto, Córdoba, Argentina» contiene el nombre «Universidad Nacional de Río Cuarto» de ROR y «Argentina».\" .\n\n<https://w3id.org/rastro/afiliaciones/identification/10.1021%2Facs.orglett.5c02127/4/0/https%3A%2F%2Fror.org%2F0002pcv65> a afiliaciones:Identification ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/crossref>,\n        <https://w3id.org/rastro/source/ror> ;\n    afiliaciones:identifies <https://ror.org/0002pcv65> ;\n    afiliaciones:ofMention <https://w3id.org/rastro/afiliaciones/mention/10.1021%2Facs.orglett.5c02127/4/0> ;\n    afiliaciones:rule \"R1: nombre completo en ROR y una segunda evidencia\" ;\n    afiliaciones:sourceText \"El texto «Instituto para el Desarrollo Agroindustrial y de la Salud (CONICET), Departamento de Química, Facultad de Ciencias Exactas Físico-Químicas y Naturales, Universidad Nacional de Río Cuarto, Ruta Nacional 36 Km 601, X5804BYA Río Cuarto, Córdoba, Argentina» contiene el nombre «Universidad Nacional de Río Cuarto» de ROR y «Argentina».\" .\n\n<https://w3id.org/rastro/afiliaciones/identification/10.3390%2Ffermentation11090536/7/0/https%3A%2F%2Fror.org%2F0002pcv65> a afiliaciones:Identification ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/crossref>,\n        <https://w3id.org/rastro/source/ror> ;\n    afiliaciones:identifies <https://ror.org/0002pcv65> ;\n    afiliaciones:ofMention <https://w3id.org/rastro/afiliaciones/mention/10.3390%2Ffermentation11090536/7/0> ;\n    afiliaciones:rule \"R1: nombre completo en ROR y una segunda evidencia\" ;\n    afiliaciones:sourceText \"El texto «Instituto de Investigación en Micología y Micotoxicología (IMICO), Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)-Universidad Nacional de Río Cuarto, Ruta Nac. 36 km 601, Río Cuarto 5800, Argentina» contiene el nombre «Universidad Nacional de Río Cuarto» de ROR y «Argentina».\" .\n\n<https://w3id.org/rastro/afiliaciones/identification/10.3390%2Ftoxins17010039/0/0/https%3A%2F%2Fror.org%2F0002pcv65> a afiliaciones:Identification ;\n    prov:wasDerivedFrom <https://w3id.org/rastro/source/crossref>,\n        <https://w3id.org/rastro/source/ror> ;\n    afiliaciones:identifies <https://ror.org/0002pcv65> ;\n    afiliaciones:ofMention <https://w3id.org/rastro/afiliaciones/mention/10.3390%2Ftoxins17010039/0/0> ;\n    afiliaciones:rule \"R1: nombre completo en ROR y una segunda evidencia\" ;\n    afiliaciones:sourceText \"El texto «Instituto de Investigación en Micología y Micotoxicología (IMICO), Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)-Universidad Nacional de Río Cuarto (UNRC), Ruta Nacional 36 Km 601, Río Cuarto 5800, Argentina» contiene el nombre «Universidad Nacional de Río Cuarto» de ROR y «Argentina».\" .\n\n<https://ror.org/0002pcv65> afiliaciones:country \"AR\" ;\n    afiliaciones:status \"active\" .\n\n",
+   "roto": "e:id afiliaciones:identifies <https://ror.org/0425cyr19> . <https://ror.org/0425cyr19> afiliaciones:status \"withdrawn\" ; afiliaciones:successor <https://ror.org/03cqe8w59> . <https://ror.org/03cqe8w59> afiliaciones:name \"National Scientific and Technical Research Council\" .",
+   "roto_dice": [
+    "El registro figura como «withdrawn» en ROR v2.15; sucesora en ROR: National Scientific and Technical Research Council. La identificación no cambia: una persona decide."
+   ],
+   "fallas": 1,
+   "ejemplos": [
+    {
+     "dato": "https://ror.org/0425cyr19",
+     "mensaje": "El registro figura como «withdrawn» en ROR v2.15; sucesora en ROR: Argentinian National Council for Scientific and Technical Research. La identificación no cambia: una persona decide.",
+     "predicciones": []
+    }
+   ],
+   "predicciones_afectadas": []
+  }
+ ],
+ "status": "defects_detected"
+}

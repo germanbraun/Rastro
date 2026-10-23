@@ -145,22 +145,35 @@ steps:
     agent_hours: 0.12
     human_hours: null
   quality:
-    status: approved
+    status: implemented_findings_awaiting_person
     evidence:
+    - 'ontology/afiliaciones/calidad/{reglas.ttl, ejemplos.yaml, datos.yaml}; layer/afiliaciones/calidad.json'
+    - >-
+      7 rules checked 539 identifications, 69 identified organizations (two rules), 91 doubtful candidates (two rules),
+      1,456 mentions and 100 publications, equal to the tables; findings: IDEHU withdrawn (warning), 91 pending human
+      confirmation (info); 7 good/bad pairs pass; tests/test_calidad.py covers afiliaciones
     - 'docs/experiments/research-affiliations/quality-proposal.md (revised after GPT: 7 rules, 3 new dictionary terms)'
     - 'findings today: IDEHU withdrawn in ROR v2.15 (warning), 91 AI decisions without human confirmation (info)'
     sessions:
-    - started_on: '2026-10-23T02:05:00Z'
-      ended_on: '2026-10-23T02:30:00Z'
+    - started_on: '2026-10-23T02:16:00Z'
+      ended_on: '2026-10-23T02:23:18Z'
       pauses: []
       work: >-
-        Start time approximate (not recorded when the session opened). After GPT's review (9b69da4): structural
+        Start time approximate (after GPT's commit at 02:15:27; end is commit 0ea4258). After GPT's review (9b69da4): structural
         checks from the pinned records (cq1 exact key coverage, cq2 1-100 once per organization, cq3 returns the
         independently established Instituto Sabato candidate), receipt structural-checks.json, all 8 pass; cq3
         returns evidence and labels its rows as heuristic candidates; gap reason softened in the linker (counts
         unchanged); cq1-cq3 revalidated; quality proposal revised (both sources, registry-status warning, human
         confirmation apart from AI decisions, three terms for approval).
-    agent_hours: 0.42
+    - started_on: '2026-10-23T02:24:30Z'
+      ended_on: '2026-10-23T02:30:12Z'
+      pauses: []
+      work: >-
+        Start time approximate (the user's approval). Recorded the approval and pushed; added decisionReason, humanConfirmation and
+        successor (ontology, mapping, linker column, registry, notes; counts 91, 91, 2,320 equal the tables); wrote
+        the seven rules, examples and data queries; registered quality; ran it; cq1-cq3 re-implemented and
+        revalidated after the ontology change; structural checks still pass.
+    agent_hours: 0.22
     human_hours: null
 interventions:
 - step: quality
@@ -262,5 +275,15 @@ errors_caught:
   fix: >-
     structural-checks.py from the pinned records; cq3 evidence column and candidate wording; quality proposal revised;
     process notes 31-33
+- step: quality
+  check: good/bad examples (calidad.py --examples-only)
+  failure_kind: >-
+    the registry-status rule's aggregate SPARQL returned a row for an active organization (empty group with $this
+    pre-bound), so the good example failed
+  fix: HAVING (COUNT(?s) > 0); process note 35
+- step: quality
+  check: reading the system clock before committing the log
+  failure_kind: session times were estimated by hand and one ended in the future; corrected from commit times
+  fix: times taken from the clock and commits; process note 7 (a command to record sessions)
 method_changes: []
 result: null

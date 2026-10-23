@@ -172,10 +172,10 @@ afiliaciones:
   term_sources:
     crossref: [Publication, doi, AffiliationMention, inPublication, affiliationText, authorPosition,
                affiliationPosition, suppliedOrganization]
-    ror: [Organization, ArgentineOrganization, name, acronym, status, country, hasParent]
+    ror: [Organization, ArgentineOrganization, name, acronym, status, country, hasParent, successor]
   link_sources:
     crossref: [Identification, ofMention, identifies, rule, sourceText, linkStatus, DoubtfulCandidate, candidate,
-               reviewDecision, PossibleGap, segmentText]
+               reviewDecision, decisionReason, humanConfirmation, PossibleGap, segmentText]
     ror: [Identification, identifies, DoubtfulCandidate, candidate]
   # A new domain experiment (research affiliations). Keys for pieces not built yet are left out.
   method:
@@ -186,6 +186,10 @@ afiliaciones:
     loaders: [afiliaciones-loader]
     linker: {service: afiliaciones-linker, folder: linking/afiliaciones/,
              corrections: [linking/afiliaciones/correcciones.csv]}
+    quality: {prefix: afiliaciones, rules: ontology/afiliaciones/calidad/reglas.ttl,
+              examples: ontology/afiliaciones/calidad/ejemplos.yaml, data: ontology/afiliaciones/calidad/datos.yaml,
+              result: layer/afiliaciones/calidad.json,
+              run: docker compose run --rm --no-deps calidad python /ontology/calidad.py afiliaciones}
     lifecycle: layer/afiliaciones/lifecycle.json
     source_manifest: layer/afiliaciones/sources.yaml
 

@@ -20,6 +20,7 @@ CREATE TABLE afiliaciones.identificacion (
 CREATE TABLE afiliaciones.dudosa (
     doi text, author_position int, affiliation_position int, organization text,
     reason text, decision text, decision_reason text,
+    human_confirmation text,             -- «pending» until a person confirms the AI decision
     PRIMARY KEY (doi, author_position, affiliation_position, organization)
 );
 

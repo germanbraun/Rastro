@@ -112,7 +112,8 @@ def corrections():
         return {}
     with path.open(newline="", encoding="utf-8") as f:
         return {(r["doi"], int(r["author_position"]), int(r["affiliation_position"]), r["organization"]):
-                (r["decision"], r["reason"] + (f" Fuente: {r['source']}" if r.get("source") else ""))
+                (r["decision"], r["reason"] + (f" Fuente: {r['source']}" if r.get("source") else ""),
+                 r["human_confirmation"])
                 for r in csv.DictReader(f)}
 
 
@@ -154,8 +155,8 @@ def main():
                 cp.write_row(r)
         with conn.cursor().copy("COPY afiliaciones.dudosa FROM STDIN") as cp:
             for k, reason in doubtful.items():
-                decision, why = reviewed.get(k, (None, None))
-                cp.write_row(k + (reason, decision, why))
+                decision, why, confirmation = reviewed.get(k, (None, None, None))
+                cp.write_row(k + (reason, decision, why, confirmation))
         gaps = possible_gaps(conn, organizations(conn)[0])   # before the COPY: one command at a time
         with conn.cursor().copy("COPY afiliaciones.posible_hueco FROM STDIN") as cp:
             for k, reason in gaps.items():

@@ -65,6 +65,11 @@
     rr:subjectMap [ rr:column "id" ; rr:termType rr:IRI ] ;
     rr:predicateObjectMap [ rr:predicate afiliaciones:hasParent ; rr:objectMap [ rr:column "related_id" ; rr:termType rr:IRI ] ] .
 
+<#OrganizationSuccessor> a rr:TriplesMap ;
+    rr:logicalTable [ rr:sqlQuery "SELECT id, related_id FROM ror.relationship WHERE type = 'successor'" ] ;
+    rr:subjectMap [ rr:column "id" ; rr:termType rr:IRI ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:successor ; rr:objectMap [ rr:column "related_id" ; rr:termType rr:IRI ] ] .
+
 # --- Links: identifications, doubtful candidates, possible gaps (linking/afiliaciones) ---
 
 <#Identification> a rr:TriplesMap ;
@@ -90,6 +95,8 @@
     rr:predicateObjectMap [ rr:predicate afiliaciones:candidate ; rr:objectMap [ rr:column "organization" ; rr:termType rr:IRI ] ] ;
     rr:predicateObjectMap [ rr:predicate afiliaciones:sourceText ; rr:objectMap [ rr:column "reason" ] ] ;
     rr:predicateObjectMap [ rr:predicate afiliaciones:reviewDecision ; rr:objectMap [ rr:column "decision" ] ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:decisionReason ; rr:objectMap [ rr:column "decision_reason" ] ] ;
+    rr:predicateObjectMap [ rr:predicate afiliaciones:humanConfirmation ; rr:objectMap [ rr:column "human_confirmation" ] ] ;
     rr:predicateObjectMap [ rr:predicate prov:wasDerivedFrom ; rr:objectMap [ rr:constant <https://w3id.org/rastro/source/crossref> ] ] .
 
 <#PossibleGap> a rr:TriplesMap ;
