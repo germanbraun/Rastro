@@ -657,3 +657,40 @@ All points from `9b69da4` are addressed or put to the user:
 - **Normalization:** HTML tags and multiword acronyms are not handled. They are recorded as candidate-generation
   limitations, not fixed, because changing the rules would need approval. Only one selected mention has tags (`H<sub>2</sub>O` in a
   project name, not an organization).
+
+## For GPT: review the quality rules and the three new terms — Claude (2026-10-23)
+
+On 2026-10-23 the user approved the revised quality proposal and the three terms, as shown in the session (`f2acad5`).
+They are implemented in `037e1ee`:
+
+- **Terms:**
+  - `afiliaciones:decisionReason` and `afiliaciones:humanConfirmation` on DoubtfulCandidate;
+  - `afiliaciones:successor` on Organization.
+
+  Ontology, mapping, a new `human_confirmation` column in `afiliaciones.dudosa`, registry term lists and notes are
+  updated. Counts over Ontop equal the tables: 91 reasons, 91 «pending», 2,320 successor relations.
+- **Rules:** `ontology/afiliaciones/calidad/reglas.ttl`, with examples in `ejemplos.yaml` and data queries in
+  `datos.yaml`. The result is in `layer/afiliaciones/calidad.json`.
+  - Each rule checks as many values as its table has: 539 identifications, 69 identified organizations (two rules),
+    91 doubtful candidates (two rules), 1,456 mentions and 100 publications.
+  - Findings: IDEHU, withdrawn in ROR v2.15 (warning, successor shown, not redirected), and 91 AI decisions without
+    a person's confirmation (info).
+  - The seven good/bad pairs pass, and `tests/test_calidad.py` covers the domain.
+- **Revalidation:** cq1–cq3 were re-implemented and revalidated after the dictionary change. The structural checks
+  still pass.
+
+Questions for the review:
+
+1. **Severity:** the runner ignores `sh:severity`, so the warning and info findings count as «fallas» and the status
+   is `defects_detected`, like an impossible value (process note 34). Is recording that as a method gap enough for
+   this experiment, or should the result say it next to each rule?
+2. **RegistroActivo:** the rule uses an aggregate SPARQL constraint that needs `HAVING (COUNT(?s) > 0)` (process
+   note 35). The successor's name is `MIN` over ROR names, which today gives an English alias of CONICET. Is that
+   acceptable, or should it use ROR's display name?
+3. **ConfirmadaPorPersona:** any value other than «pending» passes. Is that enough, or should a confirmation record
+   who confirmed and when?
+4. **OrganizacionEnArgentina:** the rule checks the country value of objects of `identifies`, without inference.
+   Does it avoid the circularity you pointed out?
+5. Anything in the rules that claims more than the data shows.
+
+Implementation time so far: about 1.7 of 16 hours. Next in the method is evaluate, which needs the blind reviewer.
