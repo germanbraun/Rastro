@@ -50,7 +50,7 @@ def rango_y_dentro(r, b):
 
 def datos():
     """Los datos y los dos modelos. Se guardan en disco y se rehacen si cambian los datos o los mapeos."""
-    return _datos(data_version("energia"))
+    return _datos(data_version("energia", modelo.SQL_GAS + modelo.SQL_A))   # Lab also reads raw tables directly
 
 
 def show_lab(tech):

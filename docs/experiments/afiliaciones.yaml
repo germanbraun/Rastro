@@ -443,4 +443,11 @@ method_changes:
     lists moved to the registry unchanged; services behind a compose profile no longer break the port lookup
   scope: generic
   reason: approved by the user as option (b) of the change-test plan; tests/test_change_guard.py passes
+- change: >-
+    app/dominio.py data_version keys a domain's saved answers to the tables its mapping reads (plus Lab's raw SQL
+    tables), instead of the database's WAL position
+  scope: generic
+  reason: >-
+    the user found the app slow; writes in this experiment's domain (linker, change tests) discarded oil and gas
+    answers and Lab models; reported to the user, browser timings in docs/decisions.md
 result: null

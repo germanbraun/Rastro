@@ -886,3 +886,15 @@ already begun; it is not evidence of unchanged-skill transfer.
     without Rastro, no answer changed;
   - traceability on 30 cells: 30, 30 and 0;
   - the restore matched the starting fingerprints exactly.
+
+## 2026-10-23 — Saved answers are kept until the domain's own tables change
+
+- **What:** the app's cache key (`data_version` in `app/dominio.py`) uses only the tables the domain's mapping reads:
+  each table's id and its row-change counters. Rastro Lab adds the raw tables its SQL reads. Before, the key was the
+  database's WAL position, so any write in any domain discarded every domain's saved answers.
+- **Why:** the app felt slow. Oil and gas, the domain the app opens with, recomputed everything, including retraining
+  the two Lab models, after any linker or load in another domain.
+- **Numbers (browser, real app):**
+  - first load after the change: about 26 s, since every answer gets a new key once;
+  - warm reload: 1.7 s;
+  - reload after an afiliaciones linker run and the 60-second key refresh: 1.7 s (before: about 25–40 s).

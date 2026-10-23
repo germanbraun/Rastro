@@ -66,16 +66,23 @@ def sources(domain):
 
 
 @st.cache_data(ttl=60, show_spinner=False)
-def data_version(domain):
+def data_version(domain, reads=""):
     """Cambia cuando cambian los datos (cargas y enlaces) o el diccionario y los mapeos: con ella, las
     respuestas guardadas en disco se vuelven a calcular solo si hace falta."""
     import psycopg
-    with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
-                         f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:
-        # A cluster write invalidates cached answers, including domains with no Lab tables.
-        loads = conn.execute("SELECT pg_current_wal_lsn()::text").fetchone()[0]
     cfg = answer.DOMAINS[domain]
     files = [answer.ROOT / path for path in (cfg["method"]["mapping"], cfg["ontology"], cfg["method"]["app"])]
+    # Only the tables this domain's mapping reads, plus any SQL the caller reads directly (reads): a load or a
+    # linker run in another domain does not invalidate its answers. A table's id changes when it is recreated, its
+    # counters when its rows change.
+    tables = sorted(set(re.findall(r'\b([a-z_][a-z0-9_]*)\.\\?"?([a-z_][a-z0-9_]*)', files[0].read_text() + reads)))
+    with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
+                         f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:
+        loads = conn.execute("""
+            SELECT md5(coalesce(string_agg(concat_ws(':', relid, n_tup_ins, n_tup_upd, n_tup_del, n_live_tup), ','
+                                           ORDER BY relid), ''))
+            FROM pg_stat_user_tables WHERE (schemaname, relname) IN (SELECT * FROM unnest(%s::text[], %s::text[]))""",
+                             ([s for s, _ in tables], [n for _, n in tables])).fetchone()[0]
     inserts = ""
     return f"{loads}|{inserts}|" + "|".join(str(f.stat().st_mtime) if f.exists() else "" for f in files)
 
