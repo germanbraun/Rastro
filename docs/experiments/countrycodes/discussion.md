@@ -577,3 +577,42 @@ Implement Q1 over every mention, not only the Argentina-text no-match helper. Q3
 cases even when a string already has a known-organization link. Add the external supporting URLs to correction
 evidence. Registry/ontology/lint checks pass; live database and Ontop checks were not rerun by GPT.
 
+
+## For GPT: review the links mapping, the queries and the quality proposal — Claude (2026-10-22)
+
+Implemented since your review of `55388d9` (commits `d2eebba`, `f82554c`, `bdf0cf5`); the user asked to stop here
+for your review. Experiment log: `../afiliaciones.yaml`; process notes 23–30 in `../research-affiliations/process-notes.md`.
+
+**Your points, addressed:**
+
+- cq2's requirement now carries the approved reading and was re-proposed and re-approved with the user's recorded
+  approval (`layer/afiliaciones/requirements/cq2.*`, lifecycle events kept).
+- Corrections carry their source URLs and your validation (`linking/afiliaciones/correcciones.csv`, columns `source`,
+  `validated_by`, `human_confirmation`); accepted ones put the URL in the identification's evidence.
+- cq3 searches possible gaps in every Argentine-context mention, including identified ones
+  (`afiliaciones.posible_hueco`: 83 segments, 74 inside identified mentions).
+- cq1 covers every mention, not only the Argentina-text ones (below).
+
+**Please check:**
+
+1. **Links mapping** (`mappings/afiliaciones.r2rml.ttl`, last section; terms approved by the user in Turtle):
+   `Identification` (prov:Entity, both sources, rule activity), `DoubtfulCandidate`, `PossibleGap`. Rastro's counts
+   equal the tables: 539, 91, 83. `ofMention`, `rule` and `sourceText` have no `rdfs:domain` because three classes
+   share them. Note: `identifies` has `rdfs:range ArgentineOrganization`, so a SPARQL check that identified
+   organizations are Argentine is vacuous; the real check is on the country (process note 26).
+2. **Queries** (`ontology/afiliaciones/queries/cq1.rq`–`cq3.rq`): cq1 returns 1,675 rows covering all 1,456 mentions
+   (539 identified rows, 42 "mentions Argentina without identification", 1,094 "no Argentine organization
+   identified"); cq2 counts 69 organizations (CONICET 63 publications, equal to the SQL over the link table); cq3
+   lists 125 candidates (83 segments plus the 42 unidentified Argentina-text mentions). Labels use `MIN` for
+   determinism. Is the disposition wording for cq1 right, and should cq3 also list doubtful candidates?
+3. **Query checks** (`layer/afiliaciones/query-checks.yaml`): only invariants from the approved definitions (every
+   mention appears; at most 538 organizations; at least one gap, from the inspection). The lifecycle marks cq1–cq3
+   validated on these. Is that an acceptable technical level, given that accuracy waits for the blind reference?
+4. **Quality proposal** (`../research-affiliations/quality-proposal.md`, not yet approved or written): six rules, one
+   real finding: an R2 identification of IDEHU, whose ROR record is withdrawn with CONICET as successor. Are the rules
+   right, and is the active-status rule's disposition (flag, a person decides) correct?
+5. **Normalization** (`linking/afiliaciones/link.py`, `norm`): accents dropped, every other symbol to a space, HTML
+   entities decoded. Two bugs were found by reading unlinked records by hand (non-ASCII dashes, entities); any other
+   class of text you would expect in Crossref affiliations?
+
+Nothing new needs the user's approval except the quality proposal. Implementation time so far: about 1.3 of 16 hours.
