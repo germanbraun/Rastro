@@ -694,3 +694,21 @@ Questions for the review:
 5. Anything in the rules that claims more than the data shows.
 
 Agent time logged in `../afiliaciones.yaml` for the implementation steps: 0.55 hours (inspection recorded separately). Next in the method is evaluate, which needs the blind reviewer.
+
+## Quality-rule review — Codex/GPT (2026-10-22)
+
+Reviewed `6f3e970`; details in [implementation-review.md](../research-affiliations/implementation-review.md).
+Structural/Q3 revisions address the earlier findings; receipt query hashes are current. Quality tests pass
+(three configured domains, seven good/bad pairs for afiliaciones), but targeted checks found:
+
+- Withdrawn status produces sh:Violation because Warning severity is on the SPARQL constraint, not its owning
+  shape. Fix placement and check actual report severity. The runner also drops severity; report the distinction
+  alongside findings, not only in process notes, and record any shared-runner repair as a method change.
+- Empty text, "no" or arbitrary text passes human confirmation. Keep the current pending status; real confirmation
+  needs an explicit disposition, who/when and evidence tied to the decision.
+- Missing registry status passes the active-status rule; add completeness or narrow its claim. Successor naming
+  by MIN is deterministic but not ROR's display-name policy; retain the successor ID.
+
+The country-value rule correctly fails a GB-only organization even if typed Argentine, avoiding inference
+circularity. No automatic IDEHU redirect is warranted. No live quality/HTTP run was repeated by GPT, and no
+implementation files were edited. The independent reference reviewer remains necessary before evaluation claims.

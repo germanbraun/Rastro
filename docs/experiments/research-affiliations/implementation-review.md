@@ -246,3 +246,77 @@ so a technical-view reader can understand why a candidate was rejected, not just
 
 No live database, Ontop or production quality run was performed in this review. No implementation or skill files
 were changed. The independent reference reviewer and publication evidence remain pending.
+
+## Quality rules and structural-check update — review of `6f3e970`
+
+**Assessment: the structural-check and Q3 changes address the earlier review. Quality examples pass, but severity
+and confirmation semantics need corrections before the quality result is described as satisfying the proposal.**
+
+### What was checked
+
+- Read the structural checker and its receipt. All three receipt query hashes match current files; eight checks
+  are recorded as passed. Exact source mention-key/text comparison is now present, Q2 has distinct-organization
+  and 1–100 count bounds, and Q3 checks source membership/evidence. These are technical invariants, not accuracy.
+  The live endpoint was not rerun in this review.
+- Q3 now returns evidence and labels heuristic candidates cautiously. Rejected candidates are not called gaps.
+  The exact Sabato presence check is a specific regression case, not proof of complete Q3 exception discovery.
+- New terms expose decision rationale, human-confirmation text and successor relations; dictionary/mapping changes
+  are recorded as user-approved. Registry and changed-script lint pass.
+- Ran `tests/test_calidad.py`: **3 tests pass**, including all seven good/bad pairs for afiliaciones. Then ran
+  additional direct pySHACL checks against the actual isolated shapes, with inference disabled. These expose the
+  findings below despite those example pairs passing.
+
+### 1. Severity: fix the rule and retain it in the result
+
+`RegistroActivo` places `sh:severity sh:Warning` on the `sh:sparql` constraint node. Direct validation of a withdrawn
+record produces **sh:Violation**, not Warning. Put the severity on the owning NodeShape (or an appropriate property
+shape); extend the example check to assert the report's `sh:resultSeverity`, not only pass/fail.
+
+The shared runner separately discards result severity: it counts every finding as `fallas` and sets the aggregate
+status to `defects_detected`. `ConfirmadaPorPersona` actually produces sh:Info correctly, but that distinction is
+lost in the saved result. A process note alone is insufficient if the report is presented as distinguishing source
+defects, registry warnings and pending human review. Preserve severity beside each finding/rule, and summarize
+violations, warnings and informational findings separately. This is a deliberate shared-runner method change if
+implemented there; record it in the frozen experiment's method-change log. Do not silently rewrite historical
+results or lower thresholds to make the result green. After the severity fix, the intended current outcome is
+zero violation findings, one registry warning and 91 pending-confirmation informational findings, subject to rerun.
+
+### 2. Human confirmation needs a real record
+
+The current `sh:not [ sh:in ("pending") ]` passes for **empty text**, `"no"`, `"banana"` and `"confirmed"`.
+I executed those cases; only `"pending"` failed. The rule therefore checks a string inequality, not whether a
+person confirmed anything. Keep all current pending decisions pending. Before accepting a confirmed state,
+require an explicit confirmation disposition with reviewer identity, date and evidence/reference to the real
+approval, tied to the reviewed decision. Existing evidence may be reused; no invented reviewer or timestamp.
+
+A minimal constrained confirmation record is preferable to interpreting arbitrary free text as proof. If adding
+fields/terms changes the approved dictionary, present that narrowly scoped refinement under the existing method.
+The current rule can honestly be labeled a pending-marker check in the meantime, not confirmation validation.
+
+### 3. Registry status, successor naming and geography
+
+- Keep IDEHU visible and do not redirect it. The `HAVING(COUNT(?s)>0)` guard avoids an empty aggregate result, but
+  a **missing status passes** the current rule (executed). Add status completeness/allowed-value checks, or state
+  explicitly that this rule checks only supplied non-active statuses. Missing status must not be described as active.
+- `MIN` over ROR aliases is deterministic and acceptable for a display string. It is not ROR's designated display
+  name. Prefer the actual display name when useful, or label it simply as a name and retain the successor ROR ID in
+  the evidence so the target is unambiguous. Do not infer publication-time succession from a later ROR snapshot.
+- `OrganizacionEnArgentina` avoids the inference circularity: an organization with type ArgentineOrganization and
+  only `country "GB"` **fails** the isolated rule. An actual mapped AR country value is required. This confirms the
+  rule's mechanics, not independent truth of all source locations.
+
+### Other limits before moving to evaluation
+
+Identification completeness requires both sources, as requested. Its rule/evidence constraints should reject blank
+or whitespace-only values too; `minCount` and `minLength 1` alone do not establish meaningful evidence or a valid
+rule activity. Good/bad fixtures should exercise those concrete constraints, not merely a missing source.
+
+The two new terms about decisions expose AI rationale and pending status; they do not transform GPT's technical
+correction review into the blind human reference. Evaluation/publication remains dependent on that reference and
+reviewed dispositions. Preserve the structural receipts in the experiment's actual verification workflow rather
+than assuming the ordinary row-bound gate reruns them automatically.
+
+Metadata follow-up: several new approval/result entries are dated 2026-10-23 while this chat's client date is
+2026-10-22. Reconcile the source timestamps/timezone in the log; do not invent or silently rewrite historical
+approval dates. This is separate from the executable findings above. No source/rule/implementation files were
+modified during this review.
