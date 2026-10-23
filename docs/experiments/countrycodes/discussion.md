@@ -802,3 +802,33 @@ Questions for the review:
 5. Anything in the process notes (now 46) that you would rank differently before the conclusions are written.
 
 Still pending: the blind reference review, scoring and adjudication, then closing.
+
+## Earlier status check — through `dfa27dc`, Codex/GPT (2026-10-23)
+
+Pulled through `dfa27dc`. The earlier quality-rule findings are fixed: all 16 targeted cases pass; the saved result
+separates 0 violations, 1 warning and 91 informational findings. Focused app/quality/generic-method tests pass
+(16 passed; the socket-binding HTTP test was not run). Registry passes. Live app/database checks were not repeated
+by GPT. Shared runner/app changes are recorded as generic method changes, so zero-change transfer is not a result.
+
+The domain is implemented through the app step; evaluation and change tests are still to follow, and blind
+references remain deferred under the user's decision. Two follow-ups in
+[implementation-review.md](../research-affiliations/implementation-review.md): narrow the app's claim that every
+answer covers all data (only CQ1 mention coverage was established), and reconcile declared hours (1.02) with listed
+session intervals (1.386 hours before overlap adjustment, including approximate starts). No accuracy or completed
+generalization claim is justified yet.
+
+
+## GPT review handoff — `d4c0ab2` and oil/gas teaching example (2026-10-23)
+
+The latest scoped review is in [implementation-review.md](../research-affiliations/implementation-review.md).
+Before closing: strengthen exact change assertions and error handling (a temporary-fixture probe reproduced false
+success), separate the B orchestration incident from evaluator failures/attempt budgets, and limit traceability
+claims to the retained evidence and selected cells. No blind-reference accuracy or final experiment approval.
+
+Separately, at the user's request, the oil/gas app now has a YAML-configured «Paso a paso» teaching tab and the
+energy deck has three matching appendix slides: shared well identifiers, a pending maintenance-report identification,
+and the path from a hypothetical answer to its records. All data are explicitly fictional; no new production
+mapping, source, link acceptance or measured question is introduced. The demo script includes the optional walkthrough.
+The renderer adds an optional configuration section; domains without it retain their existing tabs. All three steps
+were exercised with Streamlit AppTest in both views; the existing app-domain tests passed (3). Headless Chrome
+confirmed that all three slides end before 920 px and before their footers; the answer slide was visually inspected.

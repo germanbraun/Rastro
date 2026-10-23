@@ -320,3 +320,79 @@ Metadata follow-up: several new approval/result entries are dated 2026-10-23 whi
 2026-10-22. Reconcile the source timestamps/timezone in the log; do not invent or silently rewrite historical
 approval dates. This is separate from the executable findings above. No source/rule/implementation files were
 modified during this review.
+
+## Current-status review — `dfa27dc`, 2026-10-23
+
+**Technical progress:** dictionary/mapping, links, three queries, quality checks and app configuration are
+implemented. The earlier executable quality findings are addressed. The blind reference review is explicitly
+deferred by the user, not replaced with an AI reference; accuracy/publication remains pending. Evaluation setup
+and the change/correction experiment remain subsequent work, and the overall experiment is not complete.
+
+Independent checks in this checkout:
+
+- All **16 quality severity/edge cases** pass, including withdrawn Warning, missing-status Violation, rejection
+  of arbitrary confirmation text and blank evidence. The saved quality receipt reports `review_findings` with
+  **0 violations, 1 warning and 91 informational findings**.
+- Focused quality, app and generic-method tests: **16 passed, one HTTP-server test deliberately deselected**
+  (its local socket requires a different sandbox permission). This is not a full-suite or live-app claim.
+- Registry check passes. Read the shared severity runner and app changes: per-rule and aggregate severity are
+  preserved, warning/info-only results are separated from defects, and the app has a no-independent-reference
+  notice and no accuracy cards. The committed energy quality result retains 19 violations.
+- I did not rerun the live database, Ontop, browser or app-service checks. Their successful runs are recorded by
+  Claude in the experiment log. The two generic changes (quality runner and app) are explicitly in `method_changes`;
+  therefore this run cannot be reported as requiring zero generic method changes.
+
+Two follow-ups remain:
+
+1. **Narrow the app's completeness claim.** `sin_medir` says every answer covers all data. Exact mention-key
+   coverage was checked for CQ1; CQ3 remains a non-exhaustive heuristic candidate list. Say specifically that
+   source-mention coverage and link provenance were technically checked. Do not imply complete organization/gap
+   discovery across all three answers before independent references exist.
+2. **Reconcile logged hours with intervals.** Declared `agent_hours` sum to **1.02 h**, while the listed session
+   intervals sum to **1.386 h** before accounting for overlaps. Most of the discrepancy is `links`: about 0.526 h
+   of listed intervals versus 0.12 h declared. Some starts are explicitly approximate and quality/app intervals
+   overlap, so neither aggregate is a verified active-work total. Derive the reported budget usage consistently,
+   retain approximation flags, remove double counting and keep missing human time missing. No timing history was
+   rewritten by this review.
+
+No implementation files were edited. Remaining reference work: name the independent human reviewer, complete
+the approved full-review/screening plan and adjudication, then run the accuracy/publication gates. Pending human
+confirmation and IDEHU disposition must stay visible meanwhile.
+
+
+## Evaluation/change-test review — through `d4c0ab2`, 2026-10-23
+
+This follows the earlier `dfa27dc` review above. Claude has now collected 33 answers and recorded an alias-change
+and traceability run; these are exploratory evidence, not independently scored accuracy. I inspected the saved
+measurements and comparison scripts without mutating the live database or rerunning the change scenario.
+
+Findings for Claude before closing:
+
+1. **The correction checker accepts incorrect results.** In an isolated temporary copy of the committed measurement
+   JSONs, I replaced one organization in `e2-0-C` with a wrong URI, attached an error, and changed CQ1's post-rebuild
+   row count to 1. `correccion.py` still reported that run `as_expected: true` and `queries_as_expected: true`.
+   List comparisons check only net cardinality, errors do not invalidate success, and CQ1 checks the union of
+   organization IDs rather than both affected mention keys and unchanged coverage. Assert the exact expected
+   additions/removals, unchanged sets, both mention identities and CQ1 row coverage; any measurement error or failed
+   assertion must fail the check and exit nonzero. This probe establishes a validation gap, not that the saved live
+   answers are wrong.
+2. **Separate the orchestration incident from evaluator performance.** `evaluation-runs.md` says an incorrectly
+   transcribed `e1-0-B` query consumed one of three attempts. Preserve it in the audit trail, but exclude it from
+   model-generated failure counts. Report the unequal effective attempt budget, and define/document any remedial
+   run before scoring rather than silently replacing the original. The current 33-answer collection is not yet a
+   clean retry/failure-rate comparison.
+3. **Scope the traceability result to these artifacts and this rubric.** C and D retrieve retained link evidence;
+   B is scored from aggregate/list answer files, and `without_rastro()` unconditionally returns false. The reported
+   30/30, 30/30, 0/30 describes retained evidence in this setup, not an intrinsic inability to audit SQL or an
+   accuracy result. Separate sampled cells whose value appears in B's outputs from those absent there. Explain
+   that the sample is drawn from Rastro identifications and that identity correctness remains unreviewed. A reusable
+   scorer must inspect evidence rather than always rejecting B, regardless of future output structure.
+4. **Keep the change result distinct from maintenance effort.** No saved query was edited for any approach. B's
+   unchanged results after the alias addition do not measure how many edits B would require. Preserve that limitation;
+   source-change and rebuild elapsed seconds are not active agent hours. For D/C, say all runs behaved as expected,
+   not that all answers changed: e1, e2 and e4 were expected to remain unchanged.
+
+The two earlier follow-ups (app completeness wording and consistent time accounting) remain open unless addressed
+with updated evidence. Generic runner/app/evaluation/change-guard changes must remain in the transfer accounting.
+No final approval of evaluation fairness, answer accuracy or experiment completion is given here. The blind human
+reference, scoring, adjudication and publication gate remain pending.
