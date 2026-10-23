@@ -38,6 +38,9 @@ the semantic layer, one step per part of Rastro, and every number on screen come
   has to confirm it.
 - **Claim about AI only what was measured.** If SQL with Rastro's links scores like Rastro, say so: the argument is
   integrating once, with evidence, not that a graph query is smarter than SQL.
+- **A formula is explained with its origin and one real case.** Say where it comes from (how the parameters are
+  learned) and show it computed for one record, term by term. A traceability step shows the actual records with their
+  rule, evidence and source, never only a description of them.
 - **Explanations are not causes.** A model's explanation says how it reached the number, not why the world is so.
 - **Slides are a snapshot.** The slide repeats the values of the day and its notes (`aside`) say which query and date
   they come from, and to show them live in the app if the data changed.
@@ -58,8 +61,9 @@ the semantic layer, one step per part of Rastro, and every number on screen come
    - for the walkthrough: `titulo` (the tab), `encabezado`, `para_que`, `aviso` (which real case, read live) and
      `selector`;
    - for each step in `pasos`: `titulo`, `parte`, `contenido`, `consultas` (each with `titulo` and `sql` or
-     `sparql`), and optionally `tecnico` with `lenguaje` (shown only in the technical view) and `calculo_pozo` (the
-     model's real calculation for its example record).
+     `sparql`; `{pozo_ejemplo}` in a query is replaced by the model's example record), and optionally `tecnico` with
+     `lenguaje` (shown only in the technical view) and `calculo_pozo` (the model's real calculation for its example
+     record, variable by variable and grouped).
 
    `app/dominio.py` (`show_integration_example`) renders it; a domain needs no code.
 3. **Slides and script:** one slide per step in `docs/slides/slides/`, kicker «Paso a paso · Datos reales · Parte de

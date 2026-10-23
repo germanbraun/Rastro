@@ -860,39 +860,83 @@ ejemplo_lab:
         La explicación: una base y lo que suma o resta cada concepto del diccionario, calculado por el modelo, no
         escrito por una IA.
       contenido: |
-        El modelo parte del promedio del entrenamiento y le suma o resta lo de cada variable de ese pozo. Los aportes
-        se agrupan con los conceptos del diccionario. La concesión, la operadora y los socios van juntos porque no
-        cambian dentro de una concesión, así que el modelo no los puede separar.
+        **¿De dónde sale la fórmula?** Rastro Lab usa una **regresión lineal**, el modelo más simple que se puede
+        leer entero. Para un pozo:
 
-        La explicación dice cómo el modelo llegó al número; no prueba que esos factores causen ese gas.
+        **gas predicho = gas promedio del entrenamiento + Σ coeficiente × (valor del pozo − valor promedio)**
+
+        Los **coeficientes** se aprenden con los pozos que empezaron antes de 2025. Son los números que hacen que esa
+        suma se acerque lo más posible al gas que esos pozos dieron de verdad, con una pequeña penalización (*ridge*)
+        para que ninguno se dispare. Una vez aprendidos quedan fijos, y se aplican a los pozos de 2025.
+
+        Se lee así: un pozo igual al promedio recibe el promedio, y cada diferencia con el promedio, multiplicada por
+        su coeficiente, suma o resta. La concesión y la operadora son categorías, así que el modelo aprende un efecto
+        para cada una.
+
+        Abajo, **la cuenta completa del pozo de ejemplo**, variable por variable, y la misma cuenta agrupada como la
+        muestra la explicación. Un coeficiente solo puede parecer raro (por ejemplo, uno negativo en el largo de la
+        rama): las variables de la fractura cambian juntas y el modelo reparte su efecto entre ellas. Por eso la
+        explicación las suma en «cómo se fracturó el pozo». Dice cómo llegó el modelo al número; no prueba causas.
       calculo_pozo: true
       lenguaje: python
       tecnico: |
-        # Actual formula in entrenar():
+        # lab/gas/modelo.py: ajustar() fits the ridge model; entrenar() and detalle() use the same fit.
+        coef = solve(xc.T @ xc + alpha * I, xc.T @ (gas - media_y))   # xc: training inputs minus their average
         aportes = (x - media_x) * coef
-        pred = media_y + aportes.sum(axis=1).values
-        # The groups: UBICACION, FRACTURA_B, PROFUNDIDAD_B (lab/gas/modelo.py).
+        pred = media_y + aportes.sum(axis=1)
+        # The explanation groups the contributions: UBICACION, FRACTURA_B, PROFUNDIDAD_B.
     - titulo: 4 · Abrir la evidencia
       parte: >-
-        Trazabilidad (PROV-O): cada predicción publicada guarda la corrida, el pozo y los registros que usó, y se puede
-        consultar como cualquier dato de Rastro.
+        Trazabilidad (PROV-O): cada predicción publicada guarda la corrida, lo que sumó cada factor y los registros
+        que usó, y se consulta como cualquier dato de Rastro.
       contenido: |
-        Debajo, en la comparación de predicciones, **«Lo que respalda la predicción» → «¿De dónde sale?»** muestra la
-        regla, el texto de evidencia y las fuentes de este pozo. Los registros de fractura dicen su fecha y cuándo se
-        cargaron, y las uniones revisadas por IA conservan su aviso.
+        Cuando se publica una corrida del modelo, Rastro guarda cada predicción como un dato más: la corrida que la
+        generó, lo que sumó cada factor y **los registros de origen que usó** (`prov:used`). Abajo, la predicción
+        publicada del pozo de ejemplo, consultada ahora:
 
-        **Pozo → datos usados → aportes del modelo → explicación → regla y registros de origen.**
+        1. el número y su rango;
+        2. sus factores, tal como quedaron guardados (los mismos del paso 3);
+        3. cada registro que usó, con la regla que lo eligió, su evidencia y su fuente.
 
-        Cuando se publica una corrida, Rastro guarda la versión, las entradas, las predicciones y los aportes. La vista
-        de esta pestaña calcula con el modelo en memoria; consultar una corrida publicada es el mismo recorrido sobre
-        lo guardado.
+        Así, del gas predicho se llega a las declaraciones de gas del pozo, a la fractura que informó la operadora (y
+        cuándo se cargó), a la trayectoria y a la participación en la concesión.
+      consultas:
+        - titulo: La predicción publicada (corrida vigente, millones de m³)
+          sparql: >-
+            SELECT ?prediccion ?minimo ?maximo ?corrida WHERE {
+              ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{pozo_ejemplo}> ;
+                 prov:wasGeneratedBy ?run ; energia:predictedGas ?prediccion ; energia:predictedLow ?minimo ;
+                 energia:predictedHigh ?maximo .
+              ?run energia:current true .
+              BIND (STRAFTER(STR(?run), "/modelrun/") AS ?corrida)
+            }
+        - titulo: Lo que sumó cada factor, guardado con la predicción
+          sparql: >-
+            SELECT ?factor ?aporte WHERE {
+              ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{pozo_ejemplo}> ;
+                 prov:wasGeneratedBy ?run .
+              ?run energia:current true .
+              ?c energia:ofPrediction ?p ; energia:factor ?factor ; energia:amount ?aporte .
+            } ORDER BY ?factor
+        - titulo: Los registros que usó, con su regla, su evidencia y su fuente
+          sparql: >-
+            SELECT ?registro ?regla ?evidencia ?fuente ?cargado WHERE {
+              ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{pozo_ejemplo}> ;
+                 prov:wasGeneratedBy ?run ; prov:used ?r .
+              ?run energia:current true .
+              VALUES (?tipo ?registro) { (energia:WellStart "Inicio del pozo") (energia:Fracturing "Fractura informada")
+                                         (energia:WellTrajectory "Trayectoria") (energia:Stake "Participación en la concesión") }
+              ?r a ?tipo ; energia:rule ?regla ; energia:sourceText ?evidencia ; prov:wasDerivedFrom ?src .
+              FILTER (STRSTARTS(STR(?src), "https://w3id.org/rastro/source/"))
+              BIND (STRAFTER(STR(?src), "/source/") AS ?fuente)
+              OPTIONAL { ?r energia:loadedOn ?cargado }
+            } ORDER BY ?registro
       lenguaje: turtle
       tecnico: |
-        # Structure exposed for published runs; identifiers are placeholders.
+        # How a published prediction is exposed (identifiers from the current run).
         @prefix energia: <https://w3id.org/rastro/energia#> .
         @prefix prov: <http://www.w3.org/ns/prov#> .
-        # Prediction --energia:aboutWell--> Well
-        # Prediction --prov:wasGeneratedBy--> ModelRun
-        # Prediction --prov:used--> WellStart / Fracturing / Stake / WellTrajectory
-        # Contribution --energia:ofPrediction--> Prediction
+        # Prediction --energia:aboutWell--> Well;  --prov:wasGeneratedBy--> ModelRun (energia:current true)
+        # Prediction --prov:used--> WellStart, Fracturing, WellTrajectory, Stake (each with rule, sourceText, source)
+        # Contribution --energia:ofPrediction--> Prediction (energia:factor, energia:amount)
         # Storage: lab_gas.corrida, entrada, prediccion, aporte.

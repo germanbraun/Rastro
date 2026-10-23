@@ -85,7 +85,10 @@ explicación**, o las diapositivas 18 a 20, después de la de Rastro Lab. Es el 
    del pozo, Fractura, Trayectoria y Participación, con la concesión y la empresa ya unidas.
 2. **Preparar y entrenar** (parte de Rastro: *Rastro Lab*). El objetivo es el gas de los meses 2 a 7. Se entrena con
    pozos anteriores a 2025 y se prueba con los de 2025, sin usar datos que llegaron después.
-3. **Explicar el número** (parte de Rastro: *la explicación*). La app muestra en vivo la cuenta de ese pozo: el
-   promedio del entrenamiento más lo que suma o resta cada concepto. La calcula el código; no prueba causas.
-4. **Abrir la evidencia** (parte de Rastro: *trazabilidad*). Elegir el pozo debajo y abrir «¿De dónde sale?»: regla,
-   evidencia, fuentes y fechas de carga. Una corrida publicada guarda lo mismo y se consulta como cualquier dato.
+3. **Explicar el número** (parte de Rastro: *la explicación*). De dónde sale la fórmula: una regresión lineal, cuyos
+   coeficientes se aprenden con los pozos anteriores a 2025. La app muestra en vivo la cuenta de ese pozo, variable por
+   variable (valor, promedio, coeficiente, aporte), y agrupada por concepto. Usar el coeficiente negativo de la rama
+   para explicar por qué se agrupa la fractura. La calcula el código; no prueba causas.
+4. **Abrir la evidencia** (parte de Rastro: *trazabilidad*). La predicción publicada de ese pozo, consultada en vivo:
+   su número, sus factores guardados y los cuatro registros que usó (inicio, fractura, trayectoria y participación),
+   cada uno con su regla, su evidencia y su fuente. Señalar la fractura: informada antes del arranque, cargada después.

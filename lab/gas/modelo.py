@@ -212,9 +212,9 @@ def r2(p, y):
     return float(1 - ((p - y) ** 2).sum() / ((y - y.mean()) ** 2).sum())
 
 
-def entrenar(df, categorias, numeros, prueba=PRUEBA, alpha=1.0):
-    """Regresión lineal con un poco de regularización (ridge). Devuelve la predicción, el aporte de cada
-    variable (en millones de m³, respecto del pozo promedio de entrenamiento), el error y el R² en la prueba."""
+def ajustar(df, categorias, numeros, prueba=PRUEBA, alpha=1.0):
+    """El ajuste de la regresión ridge: la tabla de entrada (categorías en columnas 0/1, faltantes con el promedio
+    del entrenamiento), sus promedios en el entrenamiento, el gas promedio y un coeficiente por columna."""
     entreno = (df.inicio < prueba).values
     x = pd.get_dummies(df[categorias].astype(str), prefix_sep="=", dtype=float)
     n = df[numeros].astype(float)
@@ -223,6 +223,30 @@ def entrenar(df, categorias, numeros, prueba=PRUEBA, alpha=1.0):
     media_x, media_y = x[entreno].mean(), df.gas[entreno].mean()
     xc = (x[entreno] - media_x).values
     coef = np.linalg.solve(xc.T @ xc + alpha * np.eye(xc.shape[1]), xc.T @ (df.gas[entreno].values - media_y))
+    return x, n, entreno, media_x, media_y, coef
+
+
+def detalle(df, categorias, numeros, pozo, prueba=PRUEBA):
+    """La cuenta de un pozo, variable por variable: su valor, el promedio del entrenamiento, el coeficiente y el
+    aporte, (valor − promedio) × coeficiente. Una categoría suma el efecto aprendido de la suya (sus columnas 0/1)."""
+    x, _, _, media_x, media_y, coef = ajustar(df, categorias, numeros, prueba)
+    coef, i = pd.Series(coef, index=x.columns), df.index[df.idpozo == pozo][0]
+    filas = []
+    for c in categorias:
+        cols = [k for k in x.columns if k.startswith(f"{c}=")]
+        filas.append({"variable": c, "valor": df.at[i, c], "promedio": None, "coeficiente": None,
+                      "aporte": float(((x.loc[i, cols] - media_x[cols]) * coef[cols]).sum()), "faltaba": False})
+    for c in numeros:
+        filas.append({"variable": c, "valor": float(x.at[i, c]), "promedio": float(media_x[c]),
+                      "coeficiente": float(coef[c]), "aporte": float((x.at[i, c] - media_x[c]) * coef[c]),
+                      "faltaba": bool(pd.isna(df.at[i, c]))})
+    return float(media_y), filas
+
+
+def entrenar(df, categorias, numeros, prueba=PRUEBA, alpha=1.0):
+    """Regresión lineal con un poco de regularización (ridge). Devuelve la predicción, el aporte de cada
+    variable (en millones de m³, respecto del pozo promedio de entrenamiento), el error y el R² en la prueba."""
+    x, n, entreno, media_x, media_y, coef = ajustar(df, categorias, numeros, prueba, alpha)
     aportes = (x - media_x) * coef
     pred = media_y + aportes.sum(axis=1).values
     # el aporte de una categoría es la suma de sus columnas («empresa=…»)

@@ -937,3 +937,21 @@ already begun; it is not evidence of unchanged-skill transfer.
   graphs. The bridge slide states the measured reason: the gain comes from integrating once, with evidence (SQL with
   the same links scores the same); the graph is where that integration is defined, documented and audited, and gives
   the AI concepts and evidence to cite.
+
+## 2026-10-23 — The Lab walkthrough explains the formula's origin and shows the real trail
+
+- **What:**
+  - Step 3 says where the formula comes from: a linear regression whose coefficients are learned on the wells
+    before 2025, with ridge so that none takes off.
+  - It then shows the example well's calculation variable by variable (value, training average, coefficient,
+    contribution), followed by the grouped explanation.
+  - Step 4 queries that well's published prediction live: its value and range, the factors stored with it, and the
+    four records it used (`prov:used`), each with its rule, evidence and source.
+  - `lab/gas/modelo.py` gains `ajustar()`, the fit shared by `entrenar()` and the new `detalle()`. Predictions are
+    identical to before (maximum difference 0) and the model's tests pass.
+- **Why:** the user found the formula unexplained and the traceability step to be text without a concrete example.
+- **Numbers (well 165404, 23/10/2026):**
+  - stages (53 − 38.8) × 0.651 = +9.28;
+  - lateral length (3,186 − 2,278 m) × −0.0050 = −4.53;
+  - the grouped explanation sums to 54.15, and the published prediction is 54.148.
+  - The fracturing was reported on 04/10/2024, before the well started in 02/2025, and loaded on 24/04/2025, after it.

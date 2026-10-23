@@ -156,23 +156,34 @@ def registros(pozo):
     return pd.DataFrame(rows, columns=columns)
 
 
+ETIQUETAS = {"grupo": ("Operadora", ""), "area": ("Concesión", ""), "pct": ("Participación de la operadora", "%"),
+             "profundidad": ("Profundidad vertical", "m"),
+             **{k: (v[0][0].upper() + v[0][1:], v[1]) for k, v in modelo.FRACTURA.items()}}
+
+
 def show_calculation():
-    """The example well's prediction with Rastro, as the model computes it: the training average plus each group of
-    contributions, grouped by dictionary concept. Read from the model in memory, never typed."""
+    """The example well's prediction with Rastro, as the model computes it: variable by variable (value, training
+    average, coefficient, contribution) and grouped by dictionary concept. Read from the model, never typed."""
     _, b, _, r, *_ = datos()
     pozo = modelo.pozo_ejemplo(b)
-    fila = b.index[b.idpozo == pozo][0]
-    aportes, base = r["B"]["aportes"].loc[fila], r["B"]["base"]
+    base, filas = modelo.detalle(b, **modelo.VARIABLES["B"], pozo=pozo)
+    pred = float(r["B"]["pred"][b.index.get_loc(b.index[b.idpozo == pozo][0])])
+    st.markdown(f"**La cuenta del pozo {pozo}, variable por variable** (millones de m³):")
+    tabla(pd.DataFrame([{"Variable": ETIQUETAS[f["variable"]][0] + (f" ({ETIQUETAS[f['variable']][1]})" if ETIQUETAS[f["variable"]][1] else ""),
+                         "Valor de este pozo": f["valor"] if f["promedio"] is None else round(f["valor"], 1),
+                         "Promedio del entrenamiento": "—" if f["promedio"] is None else round(f["promedio"], 1),
+                         "Coeficiente": "efecto de la categoría" if f["coeficiente"] is None else f"{f['coeficiente']:.6f}",
+                         "Aporte": round(f["aporte"], 3)} for f in filas]), key="lab_detalle")
     grupos = [("La concesión, con su operadora y sus socios", modelo.UBICACION),
               ("Cómo se fracturó el pozo", modelo.FRACTURA_B), ("La profundidad del pozo", modelo.PROFUNDIDAD_B)]
-    filas = [{"Parte del cálculo": "Promedio del entrenamiento", "Millones de m³": round(float(base), 2)}]
-    filas += [{"Parte del cálculo": nombre, "Millones de m³": round(float(aportes[[c for c in cols if c in aportes.index]].sum()), 2)}
-              for nombre, cols in grupos]
-    pred = float(r["B"]["pred"][b.index.get_loc(fila)])
-    filas.append({"Parte del cálculo": "Gas predicho para los meses 2 a 7", "Millones de m³": round(pred, 2)})
-    st.markdown(f"**El cálculo para el pozo {pozo}** (el pozo de ejemplo de esta pestaña):")
-    st.dataframe(pd.DataFrame(filas), hide_index=True, use_container_width=True)
-    st.caption("Cada fila sale del modelo en vivo; la suma da la predicción (las cifras se redondean al mostrarlas).")
+    resumen = [{"Parte del cálculo": "Promedio del entrenamiento", "Millones de m³": round(base, 3)}]
+    resumen += [{"Parte del cálculo": nombre, "Millones de m³": round(sum(f["aporte"] for f in filas if f["variable"] in cols), 3)}
+                for nombre, cols in grupos]
+    resumen.append({"Parte del cálculo": "Gas predicho para los meses 2 a 7", "Millones de m³": round(pred, 3)})
+    st.markdown("**La misma cuenta, agrupada como la muestra la explicación:**")
+    st.dataframe(pd.DataFrame(resumen), hide_index=True, use_container_width=True)
+    st.caption("Aporte = (valor del pozo − promedio del entrenamiento) × coeficiente. Todo sale del modelo en vivo; la "
+               "suma da la predicción (las cifras se redondean al mostrarlas).")
 
 
 def show_well(key, pozo=None):

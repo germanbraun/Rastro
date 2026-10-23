@@ -20,9 +20,16 @@ counted 87,305 for one company.
 
 ## The model (Rastro Lab)
 
-The example well of the Lab tab (`modelo.pozo_ejemplo`; 165404 on 23/10/2026). Step 3 shows the model's real
-calculation (`lab.show_calculation`): the training average plus the contributions grouped as concession with
-operator and partners, fracturing and depth. That day it was 51.64 − 3.57 + 6.80 − 0.72 = 54.15 million m³.
+The example well of the Lab tab (`modelo.pozo_ejemplo`; 165404 on 23/10/2026).
+
+- **Step 3** says where the formula comes from: a linear regression whose coefficients are learned on the earlier
+  wells. It then shows the real calculation variable by variable (`modelo.detalle`: value, training average,
+  coefficient, contribution) and grouped by concept (`lab.show_calculation`). That day it was
+  51.64 − 3.57 + 6.80 − 0.72 = 54.15 million m³. Lateral length had a negative coefficient and stages a large
+  positive one: a good moment to explain why the explanation groups correlated variables.
+- **Step 4** queries the published prediction of that well (`{pozo_ejemplo}` in the query): its value and range, the
+  contributions stored with it, and the four records it used (`prov:used`), each with its rule, evidence and source.
+  The fracturing was reported before the well started but loaded after it: the flag for late data.
 
 ## What was replaced
 

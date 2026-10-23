@@ -897,6 +897,10 @@ def show_integration_example(example, domain, tech, key=None):
         st.info(f"**Parte de Rastro:** {md(step['parte'])}")
     st.markdown(step["contenido"])
     for n, query in enumerate(step.get("consultas", [])):
+        if "{pozo_ejemplo}" in str(query):   # the model's example well, the same one the Lab tab opens with
+            import lab
+            pozo = lab.modelo.pozo_ejemplo(lab.datos()[1])
+            query = {k: v.replace("{pozo_ejemplo}", str(pozo)) for k, v in query.items()}
         st.markdown(f"**{md(query['titulo'])}**")
         if query.get("sql"):
             columns, rows = sql_table(query["sql"], domain, approach="B")
