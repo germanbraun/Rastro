@@ -153,6 +153,8 @@ def main():
         conn.execute(sql)
         # Rearmar el esquema borra los permisos de los usuarios de la evaluación (sin Rastro y SQL + enlaces)
         conn.execute(Path("/layer/energia/reader.sql").read_text())
+        # Lab's source drill-down uses its existing raw-source reader, including historical years.
+        conn.execute(Path("/layer/energia_lab/reader.sql").read_text())
 
         for tipo in ("detectado", "declarado"):
             total = sum(1 for p in ubicados if p[1] == tipo)

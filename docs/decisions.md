@@ -984,3 +984,18 @@ already begun; it is not evidence of unchanged-skill transfer.
 
   Each reason is shown later with real data. Footers and every slide reference in the demo script moved by one.
 - **Why:** the user wanted the original cover, and the conceptual case for a semantic layer before any number.
+
+## 2026-10-24 — One selected well connects Lab inputs, calculation and evidence
+
+- **Approval:** the user asked to implement the proposed walkthrough improvements.
+- **Behavior:** one Lab selector drives its input/mapping table, numerical contribution explorer, raw source rows,
+  semantic provenance and prediction comparison. Original missing values remain visible beside imputed values;
+  late arrivals and pending human confirmations remain explicit. The split is chronological, but the example is
+  retrospective and does not claim historical availability of every input.
+- **Run identity:** compare the complete saved input table and code version, plus the selected well's prediction,
+  contributions and source IDs, respecting saved precision. Audit queries use the exact captured run ID. Current
+  evidence is distinguished from the historical run's saved numeric inputs and outputs.
+- **Deployment:** reuse the existing Lab read-only role and initialize it through the energy linker on new installs.
+  Layer's baseline role is unchanged. No model algorithm, source rule or measured evaluation result changes.
+- **Deck:** four slides follow 165404 from report 4799 through 53 stages and its 54.14767395030741 M m³ prediction;
+  slide footers and script references were updated. Details and validation: `docs/walkthrough-improvements.md`.

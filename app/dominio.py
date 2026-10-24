@@ -321,13 +321,13 @@ def short_iri(iri, domain):
 # Los enlaces se leen en vivo de las tablas de Rastro; los mapeos, del archivo R2RML del dominio.
 
 
-def sql_table(query, domain, approach="D"):
+def sql_table(query, domain, approach="D", params=None):
     """Una consulta de solo lectura: con approach «D», sobre las tablas de enlaces de Rastro; con «B», solo sobre las
     fuentes tal como vienen."""
     import psycopg
     user = answer.DOMAINS[domain]["readers"][approach]
     with psycopg.connect(answer.READER.format(user) % os.environ["PG_DB"]) as conn:
-        cur = conn.execute(query)
+        cur = conn.execute(query, params)
         return [c.name for c in cur.description], cur.fetchall()
 
 
@@ -721,10 +721,14 @@ def render(cfg_path, tech):
     if cfg.get("lab"):
         with tabs["Rastro Lab"]:
             import lab
+            pozo = None
             if cfg.get("ejemplo_lab"):
+                pozo = lab.select_well(cfg["ejemplo_lab"])
+                run_status = lab.show_run_status(pozo, cfg["ejemplo_lab"])
                 with st.expander(cfg["ejemplo_lab"]["titulo"]):
-                    show_integration_example(cfg["ejemplo_lab"], domain, tech, key=f"{domain}_lab")
-            lab.show_lab(tech)
+                    show_integration_example(cfg["ejemplo_lab"], domain, tech, key=f"{domain}_lab", pozo=pozo,
+                                             run_id=run_status["run_id"])
+            lab.show_lab(tech, pozo=pozo)
     if tech:
         with tabs["Bajo el capó"]:
             under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"), cfg.get("calidad"))
@@ -877,7 +881,7 @@ def before_after(card):
         st.warning("**Lo que cuesta no integrar:** " + md(card["impacto"]))
 
 
-def show_integration_example(example, domain, tech, key=None):
+def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=None):
     """A walkthrough on real data: what it is for, which part of Rastro each step shows, and each step's live
     queries (raw sources with SQL as they come, Rastro with SPARQL), so every number on screen comes from a query."""
     steps = example["pasos"]
@@ -896,10 +900,24 @@ def show_integration_example(example, domain, tech, key=None):
     if step.get("parte"):
         st.info(f"**Parte de Rastro:** {md(step['parte'])}")
     st.markdown(step["contenido"])
+    missing_run_shown = False
     for n, query in enumerate(step.get("consultas", [])):
+        if "{corrida_publicada}" in str(query):
+            import lab
+            from urllib.parse import quote
+            if run_id is None:
+                snapshot = lab.published_snapshot()
+                run_id = snapshot["run"]["id"] if snapshot else ""
+            if not run_id:
+                if not missing_run_shown:
+                    st.info(example["ui"]["run_missing"])
+                    missing_run_shown = True
+                continue
+            query = {k: v.replace("{corrida_publicada}", quote(str(run_id), safe=""))
+                     for k, v in query.items()}
         if "{pozo_ejemplo}" in str(query):   # the model's example well, the same one the Lab tab opens with
             import lab
-            pozo = lab.modelo.pozo_ejemplo(lab.datos()[1])
+            pozo = pozo if pozo is not None else lab.modelo.pozo_ejemplo(lab.datos()[1])
             query = {k: v.replace("{pozo_ejemplo}", str(pozo)) for k, v in query.items()}
         st.markdown(f"**{md(query['titulo'])}**")
         if query.get("sql"):
@@ -909,9 +927,17 @@ def show_integration_example(example, domain, tech, key=None):
         tabla(pd.DataFrame(rows, columns=columns), key=f"{key or domain}_paso{selected}_{n}")
         if tech:
             st.code(query.get("sql") or query["sparql"], language="sql" if query.get("sql") else "sparql")
+    if step.get("entrada_pozo"):
+        import lab
+        lab.show_input_row(pozo, example, tech)
     if step.get("calculo_pozo"):
         import lab
-        lab.show_calculation()
+        lab.show_calculation(pozo=pozo, config=example, tech=tech)
+    if step.get("evidencia_pozo"):
+        import lab
+        st.markdown(example["ui"]["current_evidence_title"])
+        tabla(lab.current_evidence(pozo).rename(columns=example["ui"]["evidence_columns"]),
+              key=f"{key or domain}_current_evidence")
     if tech and step.get("tecnico"):
         st.code(step["tecnico"], language=step.get("lenguaje", "turtle"))
 

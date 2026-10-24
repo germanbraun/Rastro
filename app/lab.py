@@ -10,6 +10,7 @@ import pandas as pd
 import streamlit as st
 
 import answer
+from lab_walkthrough import GROUPS, compare_run, value_status
 from dominio import ayuda, data_version, md, tabla
 
 sys.path.insert(0, "/lab/gas")
@@ -27,7 +28,7 @@ def sparql_df(query):
 
 
 @st.cache_data(persist="disk", show_spinner="Entrenando el modelo dos veces…")
-def _datos(version):
+def _datos(version, model_version):
     import psycopg
     with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
                          f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:
@@ -50,10 +51,10 @@ def rango_y_dentro(r, b):
 
 def datos():
     """Los datos y los dos modelos. Se guardan en disco y se rehacen si cambian los datos o los mapeos."""
-    return _datos(data_version("energia", modelo.SQL_GAS + modelo.SQL_A))   # Lab also reads raw tables directly
+    return _datos(data_version("energia", modelo.SQL_GAS + modelo.SQL_A), modelo.version())   # Lab also reads raw tables directly
 
 
-def show_lab(tech):
+def show_lab(tech, pozo=None):
     st.markdown("#### ¿Cuánto gas va a dar un pozo nuevo?")
     st.markdown(
         "Un modelo predice el gas de los meses 2 a 7 de un pozo nuevo de shale gas de Vaca Muerta. "
@@ -119,7 +120,7 @@ def show_lab(tech):
                 + (f" (de {num(cambio['antes'])} a {num(cambio['despues'])} millones de m³)" if cambio else "")
                 + ", ninguna otra. Sin Rastro, para saberlo hay que rehacer todas y comparar."))
 
-    show_well(key="lab_pozo")
+    show_well(key="lab_pozo", pozo=pozo)
 
     with st.expander("Las predicciones, en Rastro", expanded=False):
         show_published(tech)
@@ -161,29 +162,192 @@ ETIQUETAS = {"grupo": ("Operadora", ""), "area": ("Concesión", ""), "pct": ("Pa
              **{k: (v[0][0].upper() + v[0][1:], v[1]) for k, v in modelo.FRACTURA.items()}}
 
 
-def show_calculation():
-    """The example well's prediction with Rastro, as the model computes it: variable by variable (value, training
-    average, coefficient, contribution) and grouped by dictionary concept. Read from the model, never typed."""
+def variable_label(variable):
+    label, unit = ETIQUETAS[variable]
+    return f"{label} ({unit})" if unit else label
+
+
+def walkthrough_config():
+    from dominio import load_config
+    return load_config("/app/dominios/energia.yaml")["ejemplo_lab"]
+
+
+def select_well(config, key="energia_lab_selected_well"):
+    """One selection drives the walkthrough and the existing prediction comparison."""
+    b = datos()[1]
+    test = b[b.inicio >= modelo.PRUEBA]
+    options = test.idpozo.astype(str).tolist()
+    example = str(modelo.pozo_ejemplo(b))
+    labels = {str(row.idpozo): f"{row.idpozo} · {modelo.concesion(row.areaNombre if isinstance(row.areaNombre, str) else row.area)}"
+              for row in test.itertuples()}
+    return st.selectbox(config["ui"]["well_selector"], options,
+                        index=options.index(example), format_func=labels.get, key=key)
+
+
+@st.cache_data(ttl=15, show_spinner=False)
+def published_snapshot():
+    """Read a single run and its complete persisted input snapshot without writing to the database."""
+    import psycopg
+    user = answer.DOMAINS["energia_lab"]["readers"]["B"]
+    with psycopg.connect(host="postgres", port=5432, dbname=os.environ["PG_DB"],
+                         user=user, password=user,
+                         options="-c default_transaction_read_only=on") as conn:
+        def frame(sql, params=None):
+            cursor = conn.execute(sql, params)
+            return pd.DataFrame(cursor.fetchall(), columns=[column.name for column in cursor.description])
+        runs = frame("SELECT id, version, fecha FROM lab_gas.corrida WHERE vigente ORDER BY fecha DESC LIMIT 1")
+        if runs.empty:
+            return None
+        run = runs.iloc[0].to_dict()
+        return {"run": run,
+                "inputs": frame("SELECT * FROM lab_gas.entrada WHERE corrida = %s", (run["id"],)),
+                "predictions": frame("SELECT * FROM lab_gas.prediccion WHERE corrida = %s", (run["id"],)),
+                "contributions": frame("SELECT * FROM lab_gas.aporte WHERE corrida = %s", (run["id"],))}
+
+
+def show_run_status(pozo, config):
     _, b, _, r, *_ = datos()
-    pozo = modelo.pozo_ejemplo(b)
-    base, filas = modelo.detalle(b, **modelo.VARIABLES["B"], pozo=pozo)
-    pred = float(r["B"]["pred"][b.index.get_loc(b.index[b.idpozo == pozo][0])])
-    st.markdown(f"**La cuenta del pozo {pozo}, variable por variable** (millones de m³):")
-    tabla(pd.DataFrame([{"Variable": ETIQUETAS[f["variable"]][0] + (f" ({ETIQUETAS[f['variable']][1]})" if ETIQUETAS[f["variable"]][1] else ""),
-                         "Valor de este pozo": f["valor"] if f["promedio"] is None else round(f["valor"], 1),
-                         "Promedio del entrenamiento": "—" if f["promedio"] is None else round(f["promedio"], 1),
-                         "Coeficiente": "efecto de la categoría" if f["coeficiente"] is None else f"{f['coeficiente']:.6f}",
-                         "Aporte": round(f["aporte"], 3)} for f in filas]), key="lab_detalle")
-    grupos = [("La concesión, con su operadora y sus socios", modelo.UBICACION),
-              ("Cómo se fracturó el pozo", modelo.FRACTURA_B), ("La profundidad del pozo", modelo.PROFUNDIDAD_B)]
-    resumen = [{"Parte del cálculo": "Promedio del entrenamiento", "Millones de m³": round(base, 3)}]
-    resumen += [{"Parte del cálculo": nombre, "Millones de m³": round(sum(f["aporte"] for f in filas if f["variable"] in cols), 3)}
-                for nombre, cols in grupos]
-    resumen.append({"Parte del cálculo": "Gas predicho para los meses 2 a 7", "Millones de m³": round(pred, 3)})
-    st.markdown("**La misma cuenta, agrupada como la muestra la explicación:**")
-    st.dataframe(pd.DataFrame(resumen), hide_index=True, use_container_width=True)
-    st.caption("Aporte = (valor del pozo − promedio del entrenamiento) × coeficiente. Todo sale del modelo en vivo; la "
-               "suma da la predicción (las cifras se redondean al mostrarlas).")
+    ui = config["ui"]
+    snapshot = published_snapshot()
+    result = compare_run(b, r["B"], pozo, snapshot, modelo.version())
+    if snapshot is None:
+        result["run_id"] = ""
+        st.info(ui["run_missing"])
+        return result
+    run = snapshot["run"]
+    result["run_id"] = run["id"]
+    st.caption(ui["run_identity"].format(run=run["id"], date=run["fecha"],
+                                         published=run["version"], current=modelo.version()))
+    failed = [ui["checks"][name] for name, passed in result["checks"].items() if not passed]
+    if failed:
+        st.warning(ui["run_different"].format(checks=", ".join(failed)))
+    else:
+        st.success(ui["run_matched"])
+    st.caption(ui["run_scope"])
+    return result
+
+
+def _selected_row(pozo):
+    a, b, *_ = datos()
+    if pozo is None:
+        pozo = modelo.pozo_ejemplo(b)
+    row = b[b.idpozo.astype(str) == str(pozo)].iloc[0]
+    raw = a[a.idpozo.astype(str) == str(pozo)].iloc[0]
+    return row, raw
+
+
+def input_rows(pozo, config):
+    row, raw = _selected_row(pozo)
+    r = datos()[3]["B"]
+    ui = config["ui"]
+    records = []
+    for item in config["inputs"]:
+        variable = item["variable"]
+        original = row[variable]
+        effective = r["relleno"][variable] if pd.isna(original) else original
+        def display(value):
+            return ui["not_reported"] if pd.isna(value) else str(value)
+        records.append({ui["columns"]["variable"]: variable_label(variable),
+                        ui["columns"]["field"]: item["field"],
+                        ui["columns"]["raw"]: display(raw[item["raw"]]),
+                        ui["columns"]["concept"]: item["concept"],
+                        ui["columns"]["model"]: variable,
+                        ui["columns"]["original"]: display(original),
+                        ui["columns"]["effective"]: display(effective),
+                        ui["columns"]["status"]: " · ".join(ui["statuses"][flag]
+                                                                  for flag in value_status(row, variable))})
+    return records
+
+
+def show_input_row(pozo, config, tech=False):
+    ui = config["ui"]
+    row, _ = _selected_row(pozo)
+    st.markdown(ui["input_title"].format(well=row.idpozo))
+    st.caption(ui["input_scope"])
+    tabla(pd.DataFrame(input_rows(pozo, config)), key="lab_selected_inputs")
+    st.caption(ui["availability_scope"])
+    st.caption(ui["target"].format(date=f"{row.inicio:%m/%Y}", gas=num(row.gas)))
+
+
+def current_evidence(pozo, group=None):
+    """Read current entity URIs and their actual source records, independently of published results."""
+    row, _ = _selected_row(pozo)
+    keys = {"location": ["s", "st"], "fracture": ["fr"], "depth": ["tr"]}.get(group, ["s", "fr", "st", "tr"])
+    uris = [str(row[key]) for key in keys if pd.notna(row[key]) and str(row[key]).startswith("https://w3id.org/rastro/energia/")]
+    if not uris:
+        return pd.DataFrame(columns=["dato", "regla", "evidencia", "origen", "identificador", "mes", "cargado"])
+    from urllib.parse import quote
+    values = " ".join("<" + quote(uri, safe=":/%#-._~") + ">" for uri in uris)
+    return sparql_df("""PREFIX energia: <https://w3id.org/rastro/energia#>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+SELECT ?dato ?regla ?evidencia ?origen ?identificador ?mes ?cargado WHERE {
+  { VALUES ?dato { """ + values + """ } }
+  UNION {
+    VALUES ?contexto { """ + values + """ }
+    ?contexto energia:declaredName ?nombre ; energia:company ?empresa .
+    ?dato a energia:CompanyName ; energia:nameInSource ?nombre ; energia:company ?empresa .
+  }
+  ?dato energia:rule ?regla ; energia:sourceText ?evidencia ; prov:wasDerivedFrom ?origen .
+  OPTIONAL { ?origen energia:reportId ?identificador }
+  OPTIONAL { ?origen energia:productionMonth ?mes }
+  OPTIONAL { ?origen energia:loadedOn ?fechaOrigen }
+  OPTIONAL { ?dato energia:loadedOn ?fechaDato }
+  BIND(COALESCE(?fechaDato, ?fechaOrigen) AS ?cargado)
+} ORDER BY ?dato ?origen""")
+
+
+def show_source_evidence(pozo, variable, config, key="lab_variable", tech=False):
+    from dominio import sql_table
+    ui = config["ui"]
+    item = next(item for item in config["inputs"] if item["variable"] == variable)
+    source = config["sources"][item["source"]]
+    columns, rows = sql_table(source["sql"], "energia_lab", approach="B", params=(str(pozo),))
+    st.markdown(ui["source_title"].format(variable=variable_label(variable)))
+    st.caption(source["note"])
+    tabla(pd.DataFrame(rows, columns=columns), key=f"{key}_{pozo}_{variable}_raw")
+    if tech:
+        st.code(source["sql"], language="sql")
+    group = next(name for name, variables in GROUPS.items() if variable in variables)
+    tabla(current_evidence(pozo, group).rename(columns=ui["evidence_columns"]), key=f"{key}_{pozo}_{variable}_evidence")
+
+
+def show_calculation(pozo=None, config=None, tech=False):
+    """Explore actual contributions and source records for the shared selected well."""
+    config = config or walkthrough_config()
+    ui = config["ui"]
+    _, b, _, r, *_ = datos()
+    row, _ = _selected_row(pozo)
+    pozo = row.idpozo
+    base, detail = modelo.detalle(b, **modelo.VARIABLES["B"], pozo=pozo)
+    pred = float(r["B"]["pred"][b.index.get_loc(row.name)])
+    summary = [{ui["summary_part"]: ui["base"], ui["summary_amount"]: round(base, 3)}]
+    summary += [{ui["summary_part"]: ui["groups"][group], ui["summary_amount"]:
+                 round(sum(item["aporte"] for item in detail if item["variable"] in variables), 3)}
+                for group, variables in GROUPS.items()]
+    summary.append({ui["summary_part"]: ui["prediction"], ui["summary_amount"]: round(pred, 3)})
+    st.markdown(ui["calculation_title"].format(well=pozo))
+    tabla(pd.DataFrame(summary), key="lab_grouped_calculation")
+    group = st.selectbox(ui["group_selector"], list(GROUPS), format_func=ui["groups"].get, key="lab_explore_group")
+    selected = [item for item in detail if item["variable"] in GROUPS[group]]
+    table = []
+    for item in selected:
+        variable = item["variable"]
+        original = row[variable]
+        table.append({ui["columns"]["variable"]: variable_label(variable),
+                      ui["columns"]["original"]: ui["not_reported"] if pd.isna(original) else str(original),
+                      ui["columns"]["effective"]: str(item["valor"]),
+                      ui["training_mean"]: ui["category"] if item["promedio"] is None else num(item["promedio"], 3),
+                      ui["coefficient"]: ui["category"] if item["coeficiente"] is None else f"{item['coeficiente']:.6g}",
+                      ui["contribution"]: round(item["aporte"], 6),
+                      ui["columns"]["status"]: " · ".join(ui["statuses"][flag] for flag in value_status(row, variable))})
+    tabla(pd.DataFrame(table), key="lab_variable_calculation")
+    variable = st.selectbox(ui["variable_selector"], GROUPS[group], format_func=variable_label,
+                            key=f"lab_explore_variable_{group}")
+    with st.container(border=True):
+        st.markdown(f"**{ui['source_expander']}**")
+        show_source_evidence(pozo, variable, config, tech=tech)
+    st.caption(ui["formula_scope"])
+
 
 
 def show_well(key, pozo=None):

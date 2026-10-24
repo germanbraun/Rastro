@@ -891,3 +891,21 @@ JDBC parent directory. Restoring directory traversal to 0755 and retaining the o
 made both endpoints healthy. See `infra/ontop/Dockerfile` and `docs/local-deployment.md`. This is a deployment fix
 shared by all domains; retain it in the overall engineering accounting rather than attributing it to affiliation
 linking or treating the experiment as requiring zero generic changes.
+
+## GPT handoff — connected Lab walkthrough (2026-10-24)
+
+Implemented the user's approved improvements in the app and energy deck. One selected test well now controls the
+Lab walkthrough and its existing prediction comparison. The input view connects source fields, ontology properties,
+baseline and integrated values, actual effective inputs and explicit observed/imputed/late/human-review states.
+The calculation explorer opens a concept, then a variable and its source rows and provenance URIs.
+
+Published-run status checks the code version, the complete saved input snapshot and the selected well's prediction,
+contributions and source IDs; SPARQL audit queries are pinned to that captured run. The old published run remains
+intact and correctly reports its code-version mismatch despite equal values. Current evidence is not presented as
+an immutable historical snapshot. The no-future wording is replaced with a chronological split and explicit
+retrospective availability limits.
+
+The existing Lab raw-source reader is reused and initialized by the energy linker for fresh deployments. Layer's
+baseline reader permissions, model algorithm, source/link rules and frozen experiment results are unchanged. These
+are approved follow-on UI/deployment enhancements, not evidence that the earlier transfer required zero shared changes.
+See `docs/walkthrough-improvements.md` for the scope, implementation and validation receipts.

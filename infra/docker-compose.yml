@@ -395,6 +395,7 @@ services:
       - ../data/lab-gas/schema.sql:/data/lab-gas/schema.sql:ro
       - ../data/wikidata-energia/schema.sql:/data/wikidata-energia/schema.sql:ro
       - ../layer/energia/reader.sql:/layer/energia/reader.sql:ro
+      - ../layer/energia_lab/reader.sql:/layer/energia_lab/reader.sql:ro
     command: ["python", "-u", "/linking/energia/link.py"]
 
   # Enlaza ensayos con MeSH y ChEMBL (linking/): docker compose run --rm linker

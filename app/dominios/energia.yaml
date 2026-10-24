@@ -805,14 +805,155 @@ ejemplo_lab:
   encabezado: Cómo Rastro Lab predice el gas de un pozo y explica el número
   para_que: >-
     Mostrar qué recibe el modelo, cómo calcula y de dónde sale cada parte de la explicación, con el mismo pozo real
-    que abre esta pestaña. Responde a la duda más común: el modelo no lee la ontología; recibe una tabla armada con
+    que se selecciona arriba. Responde a la duda más común: el modelo no lee la ontología; recibe una tabla armada con
     los conceptos de Rastro, y cada número de la explicación vuelve a sus registros.
   aviso: >-
-    Datos reales: el pozo de ejemplo de esta pestaña y la corrida actual del modelo. El cálculo del paso 3 sale del
-    modelo, en vivo.
+    Datos reales: el pozo seleccionado arriba, compartido por todo Rastro Lab. El cálculo del paso 3 sale del
+    modelo actual, en vivo; la corrida publicada se identifica y compara por separado.
   selector: Elegí un paso
+  ui:
+    well_selector: Pozo que seguimos en todo Rastro Lab
+    run_missing: No hay una corrida publicada. El cálculo en vivo y su evidencia actual siguen disponibles.
+    run_identity: 'Corrida publicada: {run} · {date} · versión publicada {published} · código actual {current}.'
+    run_different: 'La corrida publicada y el cálculo actual difieren en: {checks}. Se muestran por separado; no se
+      afirma que sean la misma explicación.'
+    run_matched: Coinciden la versión, todas las entradas guardadas y el resultado, los aportes y los registros del
+      pozo seleccionado.
+    run_scope: 'Comparación de la corrida capturada, con la precisión con que se guardaron sus valores. La evidencia
+      se consulta en las fuentes actuales; no es una copia histórica inmutable. Puede tardar hasta un minuto
+      en reflejar cambios en las fuentes.'
+    checks:
+      version: versión del código
+      inputs: tabla completa de entradas
+      prediction: predicción del pozo
+      contributions: aportes del pozo
+      records: identificadores de los registros usados
+    statuses:
+      observed: Observado
+      imputed: Imputado
+      late: Llegó tarde
+      pending: Pendiente de confirmación humana
+    columns:
+      variable: Variable
+      field: Campo de origen
+      raw: Valor calculado sobre fuentes originales
+      concept: Concepto de Rastro
+      model: Columna del modelo
+      original: Valor integrado antes de imputar
+      effective: Valor usado por el modelo
+      status: Estado
+    not_reported: No informado
+    input_title: '**La fila del pozo {well}: de los campos al modelo**'
+    input_scope: 'La comparación original proviene del SQL que prepara las fuentes: puede sumar varios registros.
+      El valor integrado conserva lo que había antes de completar faltantes. «Observado» indica un valor disponible
+      hoy, no una confirmación independiente de sus enlaces.'
+    availability_scope: 'Una carga posterior al mes de inicio se marca «Llegó tarde». No todas las fuentes guardan
+      una fecha de publicación histórica: este recorrido es retrospectivo y no garantiza disponibilidad al inicio
+      del pozo.'
+    target: 'Inicio: {date} · Gas observado de los meses 2 a 7: {gas} millones de m³. Es el objetivo de evaluación,
+      no una variable predictora.'
+    summary_part: Parte del cálculo
+    summary_amount: Millones de m³
+    base: Promedio del entrenamiento
+    prediction: Gas predicho para los meses 2 a 7
+    groups:
+      location: Concesión, operadora y socios
+      fracture: Fractura
+      depth: Profundidad
+    calculation_title: '**La cuenta del pozo {well}, con sus aportes reales**'
+    group_selector: Explorar un aporte
+    variable_selector: Abrir una variable de ese aporte
+    current_evidence_title: "**Evidencia actual del pozo seleccionado (no una copia histórica de la corrida)**"
+    source_expander: Ver registros de origen y evidencia de la variable
+    source_title: '**Origen de {variable}**'
+    training_mean: Promedio del entrenamiento
+    category: Efecto agrupado de columnas 0/1
+    coefficient: Coeficiente
+    contribution: Aporte (millones de m³)
+    formula_scope: Los aportes numéricos son (valor usado − promedio del entrenamiento) × coeficiente; las categorías
+      suman sus columnas 0/1 centradas. Los faltantes se sustituyen por el promedio del entrenamiento, con aporte
+      cero. Se calcula sin redondear; la pantalla redondea. Esto explica la cuenta, no causas físicas.
+    evidence_columns:
+      dato: Entidad de Rastro (URI)
+      regla: Regla
+      evidencia: Evidencia
+      origen: Registro o fuente de origen (URI)
+      identificador: Identificador original
+      mes: Mes de producción
+      cargado: Fecha de carga
+  inputs:
+  - variable: grupo
+    field: empresa
+    raw: empresa
+    concept: energia:company → energia:name
+    source: inicio
+  - variable: area
+    field: idareapermisoconcesion
+    raw: area
+    concept: energia:inConcession → energia:concessionId
+    source: inicio
+  - variable: pct
+    field: participacion (texto del mapa)
+    raw: porcentaje
+    concept: energia:Stake → energia:percent
+    source: socios
+  - variable: rama
+    field: longitud_rama_horizontal_m
+    raw: longitud_rama_horizontal_m
+    concept: energia:Fracturing → energia:lateralLengthM
+    source: fractura
+  - variable: etapas
+    field: cantidad_fracturas
+    raw: cantidad_fracturas
+    concept: energia:Fracturing → energia:fracStages
+    source: fractura
+  - variable: arena
+    field: arena_bombeada_nacional_tn + arena_bombeada_importada_tn
+    raw: arena_tn
+    concept: energia:Fracturing → energia:proppantTonnes
+    source: fractura
+  - variable: agua
+    field: agua_inyectada_m3
+    raw: agua_inyectada_m3
+    concept: energia:Fracturing → energia:waterM3
+    source: fractura
+  - variable: presion
+    field: presion_maxima_psi
+    raw: presion_maxima_psi
+    concept: energia:Fracturing → energia:maxPressurePsi
+    source: fractura
+  - variable: profundidad
+    field: profundidad_vertical_mt
+    raw: profundidad_vertical_mt
+    concept: energia:WellTrajectory → energia:verticalDepthM
+    source: trayectoria
+  sources:
+    inicio:
+      note: Registros de producción originales del pozo. La evidencia enlazada indica el primer mes seleccionado;
+        los meses posteriores se usan para calcular el objetivo observado, no como predictores.
+      sql: "SELECT anio, mes, idpozo, empresa, idareapermisoconcesion, prod_gas, formacion\nFROM (SELECT * FROM capitulo4.produccion\
+        \ UNION ALL SELECT * FROM capitulo4.produccion_historica\n      UNION ALL SELECT * FROM capitulo4_anterior.produccion)\
+        \ p\nWHERE idpozo = %s ORDER BY anio, mes"
+    fractura:
+      note: Partes originales del pozo, incluidos los que la regla podría excluir por fecha. La evidencia de Rastro
+        muestra la selección y agregación usadas; las fechas de carga permiten ver llegadas tardías.
+      sql: "SELECT id_base_fractura_adjiv, idpozo, longitud_rama_horizontal_m, cantidad_fracturas,\n       arena_bombeada_nacional_tn,\
+        \ arena_bombeada_importada_tn, agua_inyectada_m3,\n       presion_maxima_psi, fecha_inicio_fractura, fecha_data\n\
+        FROM fractura.fractura WHERE idpozo = %s ORDER BY fecha_inicio_fractura, id_base_fractura_adjiv"
+    socios:
+      note: Texto original del mapa para la concesión del pozo. La evidencia enlazada muestra si Rastro aplica una
+        corrección revisada; conservar esa diferencia es parte de la comparación.
+      sql: "SELECT c.id_concesion, c.areapermisoconcesion, c.participacion\nFROM sig_energia.concesion c WHERE c.id_concesion IN\
+        \ (\n SELECT idareapermisoconcesion FROM capitulo4.produccion WHERE idpozo = %s)"
+    trayectoria:
+      note: Trayectorias originales del pozo. La regla enlazada indica cuál fue seleccionada; no se afirma que todas
+        estas filas entren en el modelo.
+      sql: 'SELECT idpo, sigla, profundidad_vertical_mt, largo_rama_horizontal_mt, drilfin
+
+        FROM trayectoria.trayectoria WHERE idpo = %s ORDER BY drilfin, sigla'
   pasos:
     - titulo: 1 · Dar significado a las fuentes
+      entrada_pozo: true
       parte: >-
         Diccionario, mapeos y enlaces: las variables del modelo salen de conceptos de Rastro (Inicio del pozo,
         Fractura, Trayectoria, Participación), con la concesión y la empresa ya unidas.
@@ -836,9 +977,10 @@ ejemplo_lab:
         # preparar(gas, a, b) converts its result into aligned DataFrames.
         # The ridge model consumes columns, not RDF triples or ontology classes.
     - titulo: 2 · Preparar y entrenar
+      entrada_pozo: true
       parte: >-
-        Rastro Lab: el mismo modelo, entrenado dos veces (con las tablas tal como vienen y con Rastro), sin usar el
-        futuro.
+        Rastro Lab: el mismo modelo, entrenado dos veces, con corte cronológico y llegadas tardías visibles.
+        El recorrido es retrospectivo; no garantiza que todos los datos estuvieran disponibles al iniciar el pozo.
       contenido: |
         Cada fila es un pozo elegible, con su identificador y su fecha de inicio. **Objetivo:** el gas acumulado de los
         meses 2 a 7 desde que empezó, en millones de m³. Ese gas sirve para entrenar y comprobar; no entra como variable.
@@ -873,7 +1015,7 @@ ejemplo_lab:
         su coeficiente, suma o resta. La concesión y la operadora son categorías, así que el modelo aprende un efecto
         para cada una.
 
-        Abajo, **la cuenta completa del pozo de ejemplo**, variable por variable, y la misma cuenta agrupada como la
+        Abajo, **la cuenta completa del pozo seleccionado**, variable por variable, y la misma cuenta agrupada como la
         muestra la explicación. Un coeficiente solo puede parecer raro (por ejemplo, uno negativo en el largo de la
         rama): las variables de la fractura cambian juntas y el modelo reparte su efecto entre ellas. Por eso la
         explicación las suma en «cómo se fracturó el pozo». Dice cómo llegó el modelo al número; no prueba causas.
@@ -886,28 +1028,29 @@ ejemplo_lab:
         pred = media_y + aportes.sum(axis=1)
         # The explanation groups the contributions: UBICACION, FRACTURA_B, PROFUNDIDAD_B.
     - titulo: 4 · Abrir la evidencia
+      evidencia_pozo: true
       parte: >-
         Trazabilidad (PROV-O): cada predicción publicada guarda la corrida, lo que sumó cada factor y los registros
         que usó, y se consulta como cualquier dato de Rastro.
       contenido: |
         Cuando se publica una corrida del modelo, Rastro guarda cada predicción como un dato más: la corrida que la
         generó, lo que sumó cada factor y **los registros de origen que usó** (`prov:used`). Abajo, la predicción
-        publicada del pozo de ejemplo, consultada ahora:
+        publicada del pozo seleccionado, consultada ahora:
 
         1. el número y su rango;
-        2. sus factores, tal como quedaron guardados (los mismos del paso 3);
+        2. sus factores, tal como quedaron guardados; el estado de comparación indica si coinciden con el paso 3;
         3. cada registro que usó, con la regla que lo eligió, su evidencia y su fuente.
 
         Así, del gas predicho se llega a las declaraciones de gas del pozo, a la fractura que informó la operadora (y
         cuándo se cargó), a la trayectoria y a la participación en la concesión.
       consultas:
-        - titulo: La predicción publicada (corrida vigente, millones de m³)
+        - titulo: La predicción publicada (corrida comparada, millones de m³)
           sparql: >-
             SELECT ?prediccion ?minimo ?maximo ?corrida WHERE {
               ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{pozo_ejemplo}> ;
                  prov:wasGeneratedBy ?run ; energia:predictedGas ?prediccion ; energia:predictedLow ?minimo ;
                  energia:predictedHigh ?maximo .
-              ?run energia:current true .
+              VALUES ?run { <https://w3id.org/rastro/energia/modelrun/{corrida_publicada}> }
               BIND (STRAFTER(STR(?run), "/modelrun/") AS ?corrida)
             }
         - titulo: Lo que sumó cada factor, guardado con la predicción
@@ -915,15 +1058,15 @@ ejemplo_lab:
             SELECT ?factor ?aporte WHERE {
               ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{pozo_ejemplo}> ;
                  prov:wasGeneratedBy ?run .
-              ?run energia:current true .
+              VALUES ?run { <https://w3id.org/rastro/energia/modelrun/{corrida_publicada}> }
               ?c energia:ofPrediction ?p ; energia:factor ?factor ; energia:amount ?aporte .
             } ORDER BY ?factor
         - titulo: Los registros que usó, con su regla, su evidencia y su fuente
           sparql: >-
-            SELECT ?registro ?regla ?evidencia ?fuente ?cargado WHERE {
+            SELECT ?r ?registro ?regla ?evidencia ?src ?fuente ?cargado WHERE {
               ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{pozo_ejemplo}> ;
                  prov:wasGeneratedBy ?run ; prov:used ?r .
-              ?run energia:current true .
+              VALUES ?run { <https://w3id.org/rastro/energia/modelrun/{corrida_publicada}> }
               VALUES (?tipo ?registro) { (energia:WellStart "Inicio del pozo") (energia:Fracturing "Fractura informada")
                                          (energia:WellTrajectory "Trayectoria") (energia:Stake "Participación en la concesión") }
               ?r a ?tipo ; energia:rule ?regla ; energia:sourceText ?evidencia ; prov:wasDerivedFrom ?src .
