@@ -721,14 +721,18 @@ def render(cfg_path, tech):
     if cfg.get("lab"):
         with tabs["Rastro Lab"]:
             import lab
-            pozo = None
-            if cfg.get("ejemplo_lab"):
-                pozo = lab.select_well(cfg["ejemplo_lab"])
-                run_status = lab.show_run_status(pozo, cfg["ejemplo_lab"])
-                with st.expander(cfg["ejemplo_lab"]["titulo"]):
-                    show_integration_example(cfg["ejemplo_lab"], domain, tech, key=f"{domain}_lab", pozo=pozo,
-                                             run_id=run_status["run_id"])
-            lab.show_lab(tech, pozo=pozo)
+            import lab_alternative
+            choice = lab_alternative.select_model(cfg["alternative_lab"]) if cfg.get("alternative_lab") else "ridge"
+            pozo = lab.select_well(cfg["ejemplo_lab"]) if cfg.get("ejemplo_lab") else None
+            if choice == "alternative":
+                lab_alternative.show_alternative(tech, pozo, cfg["alternative_lab"], cfg["ejemplo_lab"])
+            else:
+                if cfg.get("ejemplo_lab"):
+                    run_status = lab.show_run_status(pozo, cfg["ejemplo_lab"])
+                    with st.expander(cfg["ejemplo_lab"]["titulo"]):
+                        show_integration_example(cfg["ejemplo_lab"], domain, tech, key=f"{domain}_lab", pozo=pozo,
+                                                 run_id=run_status["run_id"])
+                lab.show_lab(tech, pozo=pozo)
     if tech:
         with tabs["Bajo el capó"]:
             under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"), cfg.get("calidad"))

@@ -999,3 +999,30 @@ already begun; it is not evidence of unchanged-skill transfer.
   Layer's baseline role is unchanged. No model algorithm, source rule or measured evaluation result changes.
 - **Deck:** four slides follow 165404 from report 4799 through 53 stages and its 54.14767395030741 M m³ prediction;
   slide footers and script references were updated. Details and validation: `docs/walkthrough-improvements.md`.
+
+
+## 2026-10-24 · Connect the regression formula to the Lab example
+
+The user approved a short explanation in Lab step 3 and one appendix slide before the numeric example. Show the generic linear prediction and its equivalent training-mean form, define the symbols, and explain that fracture groups five terms. Keep the selected well calculation live; the model and data are unchanged.
+
+
+## 2026-10-24 · Evaluate trees before adding them to Lab
+
+The user approved a controlled experiment and a visual tree. Compare the unchanged ridge with a fixed forest and a depth-2 tree, on both raw and semantic paths, for 2023/2024/2025 and a late-fracture sensitivity. In 2025 retrospective path B, MAE is 16.67 for ridge, 16.92–16.98 for three forest seeds and 21.17 for the small tree (million m³). Improvements are not consistent across years or availability conditions; retain ridge in the app. The small tree is an experimental diagram, not a forest explanation. Evidence and limitations: `docs/experiments/gas-trees/README.md` and `results.json`. No model run was published.
+
+
+## 2026-10-24 · Attempt a thesis-style Q12 tree replication
+
+The user requested a tree-based reproduction before considering app integration. The original PDF/code could not be retrieved because UTDT redirects to maintenance; requested a local/alternate copy. The existing Q12 check was rerun, followed by a fixed-seed Random Forest comparison on 501 local wells. Existing features give interleaved R² 0.496–0.500; a separately labeled extension with loaded registry coordinates, depth, start year and fracture intensities gives 0.671–0.675, and 0.355–0.361 on starts from 2023. The thesis values (0.75, 642 wells) remain prior-note references pending primary-source verification. Keep the result experimental: cohort, preprocessing, feature and ensemble differences prevent claiming reproduction or replacing the current Lab model. Evidence: `docs/experiments/gas-thesis/`.
+
+## 2026-10-24 · Verify the supplied thesis and replay its tree pipeline
+
+The user provided `MiM_Fernandez Gazzaniga_2026.pdf`, SHA-256 `2e1e9cd9e1375c4ca763acba96493440c460fea1e46dff6d6fa24affd8de336b`. Reviewed its methodology and verified Table 4 directly. Downloaded the public nonconventional-production history into an isolated ignored folder and filtered observations through March 2026. Implemented the reported RF/XGB/LGBM hyperparameters, log target, KNN, target encoding, derived features and training-only temporal neighbors. Strict coverage gives 609 wells, versus 642 in the thesis, and ensemble R² about 0.69 versus its 0.7539. A separate cutoff-only completeness sensitivity gives 616 wells and similar interleaved results. Record the missing fluid-window coefficients, source-version differences, preprocessing ambiguities, unit labels and retrospective limitations; no exact-reproduction or independent-validation claim. Preserve the earlier simplified experiments. No database or published model changes. Evidence: `docs/experiments/gas-thesis/pdf-replay/`.
+
+## 2026-10-24 · Add a thesis-algorithm alternative and real tree visualization
+
+The user clarified that exact thesis reproduction is not the goal: compare its algorithms and add a useful alternative to the app. Compared fixed RF/XGB/LGBM configurations with direct and log targets on the existing months-2–7 variables. Select using mean annual MAE in 2023–2024; show 2025 separately. Direct Random Forest was selected (validation MAE 15.802 million m³); 2025 MAE is 16.274 versus ridge 16.672, with lower R² (0.430 versus 0.457). Treat the small improvement as exploratory. Keep ridge as default and all candidate results visible.
+
+Added the alternative selector, shared-well comparison, source explorer, a real first-tree path with its estimate distinguished from the complete forest average, and SVG download. Added plain Spanish FAQ descriptions of ridge, RF, XGBoost, LightGBM, selection and the visualization. Saved outputs are fingerprinted and disabled when inputs/code differ; no production ML dependencies, mapping edits or replacement of the published RDF run. Evidence and generation instructions: `docs/experiments/gas-alternative/`. The independent-reference publication gate remains pending, so the UI explicitly labels this evaluation experimental.
+
+The user also approved highlighting the selection and comparing each well against regression. Mark Random Forest as selected on 2023–2024 and direct XGBoost as the lowest-MAE tree configuration in 2025; these are different distinctions. Compare each selected well's absolute prediction errors against observed gas, showing better, worse or equal accuracy. The example well favors regression despite the forest's lower overall MAE. Verification: 89 tests passed, 5 skipped; both app views and desktop/mobile browser checks passed, including wells where the forest performs better and worse.

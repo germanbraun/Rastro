@@ -1,0 +1,4 @@
+# Optional research dependencies; not installed in the Streamlit app.
+# Use alongside requirements-dev.txt. macOS also requires an OpenMP runtime.
+xgboost==2.1.4
+lightgbm==4.6.0

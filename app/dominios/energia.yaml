@@ -631,6 +631,38 @@ faq:
       y sitio web. Así aparece que YPF y Pampa Energía cotizan en la Bolsa de Nueva York, un dato que no
       está en ninguna de las seis fuentes. Solo 3 de las 12 empresas con LEI lo tienen cargado en
       Wikidata (YPF, Pan American Energy y Pampa Energía). Detalle en layer/energia/externo/.
+  - pregunta: ¿Qué hace la regresión lineal de Rastro Lab?
+    respuesta: >-
+      Aprende un coeficiente para cada característica del pozo. La predicción se puede escribir como el gas promedio
+      más lo que suma o resta cada característica. La variante ridge limita los coeficientes para reducir ajustes
+      excesivos. Sus aportes explican la cuenta del modelo; no demuestran causas físicas.
+  - pregunta: ¿Qué es Random Forest?
+    respuesta: >-
+      Es un bosque de árboles de decisión. Cada árbol hace preguntas sobre los datos del pozo y llega a una
+      estimación; el bosque promedia las estimaciones. Cada árbol usa una muestra aleatoria de los pozos y
+      considera distintas variables al tomar cada decisión, para reducir la dependencia de un solo árbol. En el dibujo de la app se sigue un árbol real
+      del bosque para el pozo seleccionado.
+  - pregunta: ¿Qué es XGBoost?
+    respuesta: >-
+      Construye árboles sucesivamente: cada nuevo árbol ayuda a corregir los errores de los anteriores.
+      Combina esas correcciones para estimar el gas y limita la complejidad para reducir el sobreajuste.
+      Puede aprender relaciones entre variables que una suma lineal no representa directamente.
+  - pregunta: ¿Qué es LightGBM?
+    respuesta: >-
+      También construye árboles que corrigen los errores anteriores. Elige qué hoja dividir según cuánto puede
+      reducir el error, buscando un entrenamiento eficiente. En Rastro Lab se limitan la profundidad y el tamaño
+      de las hojas. Usar este algoritmo no garantiza mejores predicciones: se comprueba con los mismos pozos.
+  - pregunta: ¿Cómo se eligió el modelo alternativo?
+    respuesta: >-
+      Se compararon Random Forest, XGBoost y LightGBM, entrenando sobre el gas directo y sobre su logaritmo.
+      Se eligió la combinación con menor error medio en los pozos de 2023 y 2024; los de 2025 se muestran por
+      separado como evaluación. Todos predicen el gas de los meses 2 a 7 con las mismas variables. La tabla de
+      Rastro Lab conserva los resultados de todas las opciones y de la regresión. Es una evaluación experimental.
+  - pregunta: ¿El árbol dibujado explica toda la predicción?
+    respuesta: >-
+      El dibujo muestra la ruta real del pozo por el primer árbol. En Random Forest se promedian muchos árboles;
+      en XGBoost y LightGBM se combinan correcciones de muchos árboles. Un solo árbol muestra una parte del cálculo.
+      Rastro permite abrir los valores usados y sus fuentes. Las decisiones del modelo no prueban causas físicas.
   - pregunta: Referencias
     respuesta: |-
       Un trabajo publicado une estas mismas fuentes públicas (producción por pozo, padrón, datos de fractura y
@@ -799,6 +831,84 @@ ejemplo_integracion:
               ?p a energia:WellProduction ; energia:declaredBy ?c ; energia:gas ?g .
               ?c energia:name "COMPAÑIA GENERAL DE COMBUSTIBLES" .
             }
+
+alternative_lab:
+  selector: Modelo para explorar
+  ridge: Regresión lineal · explicación por aportes
+  alternative: '{model} · modelo alternativo'
+  unavailable_name: Árboles
+  title: Otro modelo, la misma pregunta
+  scope: >-
+    Gas de los meses 2 a 7, los mismos pozos y las mismas variables. Se comparan tres algoritmos usados en la tesis;
+    esta evaluación no intenta reproducir sus resultados de 12 meses.
+  experimental: >-
+    Modelo experimental. Elegido por su menor error medio en 2023 y 2024; 2025 se muestra por separado.
+    Estos datos ya se exploraron: la evaluación no es una validación independiente.
+  selected: '**⭐ Alternativa elegida: {model} · menor error en 2023–2024.**'
+  distinction: Destacado
+  chosen_badge: ⭐ Elegido en 2023–2024
+  best_badge: 🏆 Menor error en 2025
+  ranking_note: 'La fila verde es la alternativa elegida con 2023–2024. El trofeo señala el árbol con menor error medio en 2025.'
+  well_comparison:
+    better: '✅ En este pozo, el modelo alternativo es más preciso que la regresión: error de {error} frente a {ridge} M m³.'
+    worse: 'En este pozo, el modelo alternativo es menos preciso que la regresión: error de {error} frente a {ridge} M m³.'
+    tie: 'En este pozo, ambos modelos tienen el mismo error: {error} M m³.'
+  accuracy_note: 'Error = distancia entre la predicción y el gas observado. Menor error significa mayor precisión para este pozo; puede variar de un pozo a otro.'
+  sample: 'Entrenamiento: {train} pozos anteriores a 2025 · Evaluación: {test} pozos de 2025.'
+  validation: Comparación para elegir · 2023 y 2024
+  evaluation: Resultados en 2025 · menor error es mejor
+  model: Modelo
+  transformation: Forma de entrenar
+  transforms:
+    direct: Gas directo
+    log: Escala logarítmica
+  training_scale: 'Forma de entrenar la alternativa elegida: {scale}.'
+  selection_error: Error medio en 2023 y 2024 (M m³)
+  error: Error medio en 2025 (M m³)
+  r2: R² en 2025
+  ridge_label: Regresión lineal
+  actual: Gas observado · evaluación
+  prediction: 'Predicción · {model}'
+  well: '**Pozo {well} · mismo objetivo y mismas entradas**'
+  source_comparison: 'Con las tablas originales: error {raw} M m³. Con Rastro: {semantic} M m³. Es el mismo algoritmo en ambos casos.'
+  inputs: Entradas y fuentes de esta predicción
+  input_note: >-
+    El modelo recibe los mismos valores integrados y completa los faltantes con los promedios del entrenamiento.
+    Las fechas de carga y las correcciones pendientes siguen a la vista. Este recorrido es retrospectivo.
+  source_selector: Ver la fuente de una variable
+  tree: Ver decisiones de un árbol
+  tree_heading: 'Primer árbol · pozo {well}'
+  tree_subtitle: La predicción combina muchos árboles
+  download_tree: Descargar recorrido (SVG)
+  tree_scope: >-
+    Ruta real del pozo por el primer árbol del modelo. La predicción combina muchos árboles: este dibujo muestra
+    una parte del cálculo.
+  tree_value: 'Valor usado: {value}'
+  'yes': Sí
+  'no': 'No'
+  leaf: Se combina con los demás árboles
+  forest_leaf: 'Este árbol: {gas} millones de m³'
+  forest_prediction: 'Promedio del bosque: {gas} millones de m³'
+  forest_average: 'Este árbol estima {single} M m³. Random Forest promedia todos sus árboles y obtiene {prediction} M m³.'
+  feature_labels:
+    grupo: Operadora
+    area: Concesión
+    pct: Participación (%)
+    rama: Rama horizontal (m)
+    etapas: Etapas
+    arena: Arena (t)
+    agua: Agua (m³)
+    presion: Presión (psi)
+    profundidad: Profundidad (m)
+  missing: El modelo alternativo todavía no tiene resultados calculados para estas entradas.
+  stale: Las entradas o el código cambiaron. Hay que actualizar el modelo alternativo para mostrar esta predicción.
+  technical: Detalles del modelo alternativo
+  timezone: America/Argentina/Salta
+  identity: 'Calculado: {date} (Argentina) · versión {version} · huella de entradas {inputs}.'
+  publication: >-
+    Esta evaluación guardada es independiente de la corrida de regresión publicada en Rastro. Los registros de origen
+    se consultan ahora; el modelo alternativo conserva los identificadores que usó.
+  command: 'Para actualizar: python lab/gas/alternative.py, con las dependencias opcionales de requirements-thesis.txt.'
 
 ejemplo_lab:
   titulo: Paso a paso · Del dato a la explicación
@@ -1002,23 +1112,26 @@ ejemplo_lab:
         La explicación: una base y lo que suma o resta cada concepto del diccionario, calculado por el modelo, no
         escrito por una IA.
       contenido: |
-        **¿De dónde sale la fórmula?** Rastro Lab usa una **regresión lineal**, el modelo más simple que se puede
-        leer entero. Para un pozo:
+        **La fórmula general de la regresión lineal:**
 
-        **gas predicho = gas promedio del entrenamiento + Σ coeficiente × (valor del pozo − valor promedio)**
+        $$\hat y = \beta_0 + \sum_i \beta_i x_i$$
 
-        Los **coeficientes** se aprenden con los pozos que empezaron antes de 2025. Son los números que hacen que esa
-        suma se acerque lo más posible al gas que esos pozos dieron de verdad, con una pequeña penalización (*ridge*)
-        para que ninguno se dispare. Una vez aprendidos quedan fijos, y se aplican a los pozos de 2025.
+        Aquí, **ŷ** es el gas estimado; **xᵢ**, cada característica del pozo; **βᵢ**, su coeficiente aprendido;
+        y **β₀**, el intercepto. Rastro Lab usa esta regresión con regularización (*ridge*).
 
-        Se lee así: un pozo igual al promedio recibe el promedio, y cada diferencia con el promedio, multiplicada por
-        su coeficiente, suma o resta. La concesión y la operadora son categorías, así que el modelo aprende un efecto
-        para cada una.
+        **La misma cuenta, partiendo del promedio:**
 
-        Abajo, **la cuenta completa del pozo seleccionado**, variable por variable, y la misma cuenta agrupada como la
-        muestra la explicación. Un coeficiente solo puede parecer raro (por ejemplo, uno negativo en el largo de la
-        rama): las variables de la fractura cambian juntas y el modelo reparte su efecto entre ellas. Por eso la
-        explicación las suma en «cómo se fracturó el pozo». Dice cómo llegó el modelo al número; no prueba causas.
+        $$\hat y = \bar y + \sum_i \beta_i (x_i - \bar x_i)$$
+
+        **ȳ** es el gas promedio del entrenamiento y **x̄ᵢ**, el promedio de cada entrada.
+        Cada término de la suma es un **aporte**. «Fractura» suma los aportes de rama, etapas, arena, agua y presión;
+        los otros grupos reúnen los de ubicación y profundidad. Abajo se muestra la cuenta del pozo seleccionado.
+
+        Los **coeficientes** se aprenden con los pozos anteriores a 2025 y se aplican a los de 2025.
+        Las categorías se convierten en columnas 0/1. Si falta un valor numérico, se usa el promedio del entrenamiento.
+
+        Abajo se puede abrir cada grupo y ver sus variables, coeficientes y fuentes.
+        Los aportes explican la cuenta del modelo; **no prueban causas físicas**.
       calculo_pozo: true
       lenguaje: python
       tecnico: |

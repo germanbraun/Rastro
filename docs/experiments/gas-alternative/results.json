@@ -1,0 +1,197 @@
+{
+  "created_utc": "2026-10-25T01:05:47.682175+00:00",
+  "code_sha256": "fe07a3c0c721a8c925fdd6ff3374e186bf65d05de98ca331d08ccf915c0f06d5",
+  "input_sha256": "dd9470d3f44ce35ab5dfe3704d20cf4aaac90b8908327d1b6eece1d6d10bc7fc",
+  "selected": "rf_direct",
+  "selected_label": "Random Forest",
+  "target_transform": "direct",
+  "selection_rule": "minimum_mean_annual_mae_2023_2024",
+  "candidates": [
+    {
+      "name": "rf",
+      "label": "Random Forest",
+      "validation": [
+        {
+          "year": 2023,
+          "train": 337,
+          "test": 88,
+          "mae": 17.685410820632264,
+          "r2": 0.1712566730693057
+        },
+        {
+          "year": 2024,
+          "train": 425,
+          "test": 85,
+          "mae": 15.046860149351257,
+          "r2": 0.32048293145551754
+        }
+      ],
+      "target_transform": "log",
+      "selection_mae": 16.36613548499176
+    },
+    {
+      "name": "xgb",
+      "label": "XGBoost",
+      "validation": [
+        {
+          "year": 2023,
+          "train": 337,
+          "test": 88,
+          "mae": 18.05740042461048,
+          "r2": 0.13901304644007384
+        },
+        {
+          "year": 2024,
+          "train": 425,
+          "test": 85,
+          "mae": 14.640113305574305,
+          "r2": 0.3667509927142806
+        }
+      ],
+      "target_transform": "log",
+      "selection_mae": 16.348756865092394
+    },
+    {
+      "name": "lgbm",
+      "label": "LightGBM",
+      "validation": [
+        {
+          "year": 2023,
+          "train": 337,
+          "test": 88,
+          "mae": 19.31317833886744,
+          "r2": 0.09775040921850242
+        },
+        {
+          "year": 2024,
+          "train": 425,
+          "test": 85,
+          "mae": 17.6828898620942,
+          "r2": 0.1136036085526888
+        }
+      ],
+      "target_transform": "log",
+      "selection_mae": 18.498034100480822
+    },
+    {
+      "name": "rf_direct",
+      "label": "Random Forest",
+      "validation": [
+        {
+          "year": 2023,
+          "train": 337,
+          "test": 88,
+          "mae": 16.894723875758537,
+          "r2": 0.15622072146265886
+        },
+        {
+          "year": 2024,
+          "train": 425,
+          "test": 85,
+          "mae": 14.709303052579788,
+          "r2": 0.3584937284637243
+        }
+      ],
+      "target_transform": "direct",
+      "selection_mae": 15.802013464169162
+    },
+    {
+      "name": "xgb_direct",
+      "label": "XGBoost",
+      "validation": [
+        {
+          "year": 2023,
+          "train": 337,
+          "test": 88,
+          "mae": 18.07565025815097,
+          "r2": 0.026419856002484976
+        },
+        {
+          "year": 2024,
+          "train": 425,
+          "test": 85,
+          "mae": 14.155825077371034,
+          "r2": 0.3702881338126689
+        }
+      ],
+      "target_transform": "direct",
+      "selection_mae": 16.115737667761003
+    },
+    {
+      "name": "lgbm_direct",
+      "label": "LightGBM",
+      "validation": [
+        {
+          "year": 2023,
+          "train": 337,
+          "test": 88,
+          "mae": 19.721047400159264,
+          "r2": -0.13045997752659133
+        },
+        {
+          "year": 2024,
+          "train": 425,
+          "test": 85,
+          "mae": 15.827373348065757,
+          "r2": 0.23804413863734775
+        }
+      ],
+      "target_transform": "direct",
+      "selection_mae": 17.77421037411251
+    }
+  ],
+  "test_2025": [
+    {
+      "name": "rf",
+      "label": "Random Forest",
+      "target_transform": "log",
+      "mae": 18.636492581910378,
+      "r2": 0.20396077156918357
+    },
+    {
+      "name": "xgb",
+      "label": "XGBoost",
+      "target_transform": "log",
+      "mae": 18.452746265956332,
+      "r2": 0.2114285584413763
+    },
+    {
+      "name": "lgbm",
+      "label": "LightGBM",
+      "target_transform": "log",
+      "mae": 19.662995317215763,
+      "r2": 0.13903501882251756
+    },
+    {
+      "name": "rf_direct",
+      "label": "Random Forest",
+      "target_transform": "direct",
+      "mae": 16.27358380141584,
+      "r2": 0.43015102995450805
+    },
+    {
+      "name": "xgb_direct",
+      "label": "XGBoost",
+      "target_transform": "direct",
+      "mae": 16.12168651752083,
+      "r2": 0.3959170736821155
+    },
+    {
+      "name": "lgbm_direct",
+      "label": "LightGBM",
+      "target_transform": "direct",
+      "mae": 16.88069667300225,
+      "r2": 0.39660843177081406
+    }
+  ],
+  "train": 510,
+  "test": 49,
+  "ridge_test": {
+    "mae": 16.671905241548473,
+    "r2": 0.45704783637132207
+  },
+  "raw_test": {
+    "mae": 16.446384550170905,
+    "r2": 0.42704388575015684
+  }
+}

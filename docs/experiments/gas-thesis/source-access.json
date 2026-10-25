@@ -1,0 +1,18 @@
+{
+  "checked_utc": "2026-10-25T00:20:57.388315+00:00",
+  "url": "https://repositorio.utdt.edu/handle/20.500.13098/14415",
+  "effective_url": "https://www.utdt.edu/mantenimiento",
+  "status": "maintenance_redirect",
+  "response_sha256": "65eefe91943f0bf64b12127cb1b1372c34378762c05c50b7b018965c260bb06b",
+  "local_response": "data/cache/gas-thesis/repository-maintenance.html",
+  "primary_pdf_available": false,
+  "metadata_endpoints": "HTTP 403; core item handle lookup, pid lookup, XMLUI and OAI requests unavailable.",
+  "subsequent_local_pdf": {
+    "provided_by": "user",
+    "filename": "MiM_Fernandez Gazzaniga_2026.pdf",
+    "sha256": "2e1e9cd9e1375c4ca763acba96493440c460fea1e46dff6d6fa24affd8de336b",
+    "pages": 84,
+    "primary_pdf_available": true,
+    "cached_copy": "data/raw/gas-thesis/thesis.pdf"
+  }
+}

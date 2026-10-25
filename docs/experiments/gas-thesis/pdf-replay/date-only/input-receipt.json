@@ -1,0 +1,46 @@
+{
+  "created_utc": "2026-10-25T00:35:38.419430+00:00",
+  "audit": {
+    "rows_through_march_2026": 401132,
+    "all_wells": 4878,
+    "after_cuenca": 4651,
+    "after_tipopozo": 2221,
+    "after_sub_tipo_recurso": 840,
+    "after_formacion": 831,
+    "complete_by_date_only": 701,
+    "observed_month_counts": {
+      "12": 669,
+      "1": 8,
+      "3": 4,
+      "7": 3,
+      "5": 3,
+      "10": 3,
+      "6": 2,
+      "2": 2,
+      "4": 2,
+      "9": 2,
+      "8": 2,
+      "11": 1
+    },
+    "complete_12_observations": 669,
+    "require_12_observations": false,
+    "fracture_rows": 4999,
+    "after_fracture_join": 650,
+    "trajectory_rows": 2363,
+    "before_target_trim": 623,
+    "q12_p99_source_units": 170136.05018,
+    "after_target_trim": 616,
+    "missing_depth_retained_for_knn": 31,
+    "final": 616,
+    "first_start": "2014-01-01",
+    "last_start": "2025-03-01"
+  },
+  "prepared_sha256": "bba445027754157dd2564bd2d7140955085c8aa72ce161b559d8c179af93c1c8",
+  "sources": {
+    "data/raw/gas-thesis/nonconventional.csv": "61cecc31c8dd81fd474c4094f2605b2b01b5a5d157e2089db7f3c548c410deae",
+    "data/raw/gas-thesis/thesis.pdf": "2e1e9cd9e1375c4ca763acba96493440c460fea1e46dff6d6fa24affd8de336b",
+    "data/raw/lab-gas/fractura.csv": "af87ed4dfe35ab47ed35b6a0d00ed9ece2eb6573705528527d4465cf5a05f7f8",
+    "data/raw/lab-gas/trayectorias-vm.csv": "83093dc4b7bad3b7ab54449bbfb074264f3b6cb17d675c9494a2336403db3034",
+    "data/raw/energia/pozos.csv": "a8a7c757a6167f4ef78cebec884d7f9077ed938b117ec8d0c8a87d2091022a71"
+  }
+}

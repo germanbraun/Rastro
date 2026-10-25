@@ -1,0 +1,21 @@
+{
+  "command": "python lab/gas/modelo.py --como-trabajo-publicado",
+  "stdout_stderr_sha256": "9fc00cf5d436101bace12e6a10040e6e57c0489eb5a045b1c4b4af2fe4868832",
+  "local_log": "/tmp/rastro-thesis-existing-check.log",
+  "cohort": 501,
+  "every_fifth": {
+    "test": 100,
+    "area_median_r2": 0.45,
+    "ridge_A_r2": 0.59,
+    "ridge_B_r2": 0.59,
+    "forest_r2": 0.49
+  },
+  "from_2023": {
+    "test": 174,
+    "area_median_r2": 0.26,
+    "ridge_A_r2": -0.48,
+    "ridge_B_r2": -0.4,
+    "forest_r2": 0.3
+  },
+  "precision": "Rounded console output; the new runner results are separate."
+}

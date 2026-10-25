@@ -51,3 +51,9 @@ keeping the frozen shared experiment manifest unchanged. Source fingerprints wer
 The live quality run completed with 19 violations, no warnings and no informational findings, matching the existing
 energy receipt's totals. These source-quality findings remain visible in the app; deployment did not repair or
 remove them. The check's status is `defects_detected`, not a defect-free validation.
+
+## Experimental alternative model
+
+Rastro Lab now has a model selector: the default ridge and a saved alternative selected from Random Forest, XGBoost and LightGBM, with direct/log target variants. The selected alternative uses the existing months-2–7 target and cohort. Its first-tree path is visualized and downloadable; the domain FAQ describes the algorithms.
+
+The laptop artifact lives in ignored `data/cache/gas-alternative/model.json`, already mounted in the app. The app needs no additional ML libraries to read it. The artifact persists across restarts, but a clean checkout needs generation with `python lab/gas/alternative.py`, using development dependencies plus `lab/gas/requirements-thesis.txt` and an OpenMP runtime on macOS. This session ran the optional libraries/runtime from `/tmp`; regenerate those dependencies if needed after cleanup. Code/input fingerprint mismatches disable the saved results rather than showing stale predictions. This artifact is separate from the current ridge run in `lab_gas`; `modelo.py --publicar` publishes ridge, not this alternative.

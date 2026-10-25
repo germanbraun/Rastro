@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700">
+<rect width="1600" height="700" fill="#F7F6F2"/>
+<g font-family="sans-serif" text-anchor="middle" fill="#14213D">
+<text x="800" y="35" font-size="25">Árbol pequeño · modelo independiente del bosque · gas de meses 2 a 7</text>
+<text x="800" y="65" font-size="19">Pozo 165404: 64,63 millones de m³ · recorrido resaltado</text>
+<path d="M800.0,157 L400.0,293" stroke="#7A8699" stroke-width="3" fill="none"/>
+<text x="600.0" y="225" font-size="19">Sí</text>
+<path d="M400.0,377 L200.0,513" stroke="#7A8699" stroke-width="3" fill="none"/>
+<text x="300.0" y="445" font-size="19">Sí</text>
+<rect x="15.0" y="515" width="370" height="90" rx="12" fill="white" stroke="#2F6FB5"/>
+<text x="200.0" y="545" font-size="18">Predicción</text>
+<text x="200.0" y="573" font-size="18">20,45 millones de m³ · 69 pozos</text>
+<path d="M400.0,377 L600.0,513" stroke="#7A8699" stroke-width="3" fill="none"/>
+<text x="500.0" y="445" font-size="19">No</text>
+<rect x="415.0" y="515" width="370" height="90" rx="12" fill="white" stroke="#2F6FB5"/>
+<text x="600.0" y="545" font-size="18">Predicción</text>
+<text x="600.0" y="573" font-size="18">43,92 millones de m³ · 112 pozos</text>
+<rect x="215.0" y="295" width="370" height="90" rx="12" fill="white" stroke="#2F6FB5"/>
+<text x="400.0" y="325" font-size="18">Agua (m³) ≤ 36.154,3?</text>
+<text x="400.0" y="353" font-size="18">34,97 millones de m³ · 181 pozos</text>
+<path d="M800.0,157 L1200.0,293" stroke="#B36B00" stroke-width="3" fill="none"/>
+<text x="1000.0" y="225" font-size="19">No</text>
+<path d="M1200.0,377 L1000.0,513" stroke="#B36B00" stroke-width="3" fill="none"/>
+<text x="1100.0" y="445" font-size="19">Sí</text>
+<rect x="815.0" y="515" width="370" height="90" rx="12" fill="#FFF0CF" stroke="#2F6FB5"/>
+<text x="1000.0" y="545" font-size="18">Predicción</text>
+<text x="1000.0" y="573" font-size="18">64,63 millones de m³ · 273 pozos</text>
+<path d="M1200.0,377 L1400.0,513" stroke="#7A8699" stroke-width="3" fill="none"/>
+<text x="1300.0" y="445" font-size="19">No</text>
+<rect x="1215.0" y="515" width="370" height="90" rx="12" fill="white" stroke="#2F6FB5"/>
+<text x="1400.0" y="545" font-size="18">Predicción</text>
+<text x="1400.0" y="573" font-size="18">42,15 millones de m³ · 56 pozos</text>
+<rect x="1015.0" y="295" width="370" height="90" rx="12" fill="#FFF0CF" stroke="#2F6FB5"/>
+<text x="1200.0" y="325" font-size="18">Operadora = YPF S.A. (0/1) ≤ 0.50?</text>
+<text x="1200.0" y="353" font-size="18">60,80 millones de m³ · 329 pozos</text>
+<rect x="615.0" y="75" width="370" height="90" rx="12" fill="#FFF0CF" stroke="#2F6FB5"/>
+<text x="800.0" y="105" font-size="18">Etapas ≤ 33,5?</text>
+<text x="800.0" y="133" font-size="18">51,64 millones de m³ · 510 pozos</text>
+<text x="800" y="650" font-size="18">Entrenado antes de 2025 · datos retrospectivos · las reglas describen el modelo, no causas físicas.</text></g></svg>

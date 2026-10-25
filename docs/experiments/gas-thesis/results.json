@@ -1,0 +1,316 @@
+{
+  "created_utc": "2026-10-25T00:20:40.742083+00:00",
+  "status": "partial_replication",
+  "thesis_primary_verified": false,
+  "thesis_url": "https://repositorio.utdt.edu/handle/20.500.13098/14415",
+  "thesis_access": "University maintenance redirect; original PDF/code unavailable.",
+  "thesis_prior_notes": {
+    "cohort": 642,
+    "area_median_r2": 0.47,
+    "best_ensemble_r2": 0.75,
+    "forward_r2": 0.254
+  },
+  "script_sha256": "3a3198c9b544df22411f67d3edb33c08d21cd35bd5977ddefdd59d7eab72b789",
+  "helper_sha256": "5a03457cb7834687421893b134e65d9e1b7e025dde2a7fa156cac60a89314dad",
+  "model_sha256": "e646727aae17ce9dc96e2109462fb85915e0ea26a0a09582a81a99b3888be241",
+  "input_sha256": "ac0197b39f93227596dffbf04d3e7f173c6db61cfd7db5d4ac8d4245db8e3e81",
+  "sklearn": "1.5.2",
+  "query_sha256": {
+    "gas12": "5d0310854372ddfcbd65fd79ac92bacb8a21496ab7c2fd48123a4d30cf35f246",
+    "raw_features": "da0c62c42f3d0ab5ab678656a70bb5c35cfdd08473ba5d28cb1cbe6b34e1a1a6",
+    "semantic_features": "b5889228e410cd6e9b5ce55f9630252def4ec188ae4a53dffc9a0f11416b7d61",
+    "coordinates": "3b14bc288cb17b2dd321cdffdbf3e32e57fabf68333ae9defc745e8db1d0ae3f"
+  },
+  "cohort": {
+    "eligible_before_fracture_filter": 512,
+    "with_fracture": 501,
+    "earliest_start": "2018-02-01",
+    "latest_start": "2025-01-01",
+    "coordinate_missing": 0
+  },
+  "settings": {
+    "forest_trees": 500,
+    "forest_min_leaf": 4,
+    "seeds": [
+      42,
+      7,
+      123
+    ],
+    "ridge_alpha": 1.0,
+    "test_tuning": false
+  },
+  "comparisons": [
+    {
+      "train": 401,
+      "test": 100,
+      "features": [
+        "grupo=EXXONMOBIL EXPLORATION ARGENTINA S.R.L.",
+        "grupo=O&G DEVELOPMENTS LTD S.A.",
+        "grupo=PAMPA ENERGIA S.A.",
+        "grupo=PAN AMERICAN ENERGY SL",
+        "grupo=PLUSPETROL",
+        "grupo=SHELL ARGENTINA S.A.",
+        "grupo=TECPETROL S.A.",
+        "grupo=TOTAL AUSTRAL S.A.",
+        "grupo=YPF S.A.",
+        "area=AGA",
+        "area=AGCA",
+        "area=APE",
+        "area=APO",
+        "area=BANE",
+        "area=CDLO",
+        "area=ELOR",
+        "area=FOR",
+        "area=GRU",
+        "area=LCA",
+        "area=LRIB",
+        "area=LTII",
+        "area=LTN1",
+        "area=PDYI",
+        "area=RDM",
+        "area=RLCZ",
+        "area=SICH",
+        "area=SRO",
+        "pct",
+        "rama",
+        "etapas",
+        "arena",
+        "agua",
+        "presion"
+      ],
+      "models": {
+        "area_median": {
+          "mae": 22.578590000000005,
+          "r2": 0.44827309713269825
+        },
+        "ridge": {
+          "mae": 20.17370090184305,
+          "r2": 0.5846239243019189
+        },
+        "forest_42": {
+          "mae": 22.100403603370413,
+          "r2": 0.49755856092669504
+        },
+        "forest_7": {
+          "mae": 22.227896090670253,
+          "r2": 0.4960540751804603
+        },
+        "forest_123": {
+          "mae": 22.082964555264983,
+          "r2": 0.49990256462808325
+        }
+      },
+      "test_ids_sha256": "4fd5a8598a83ef0046cdc7d8be07d2df24841f1fefd266339db009a68063f815",
+      "feature_set": "existing_design",
+      "split": "every_fifth",
+      "predictions_sha256": "bd03806a8e758f4c8fa47013048b79c9304d4bf5637feb946e7e7442d1050885"
+    },
+    {
+      "train": 327,
+      "test": 174,
+      "features": [
+        "grupo=EXXONMOBIL EXPLORATION ARGENTINA S.R.L.",
+        "grupo=O&G DEVELOPMENTS LTD S.A.",
+        "grupo=PAMPA ENERGIA S.A.",
+        "grupo=PAN AMERICAN ENERGY SL",
+        "grupo=PLUSPETROL",
+        "grupo=SHELL ARGENTINA S.A.",
+        "grupo=TECPETROL S.A.",
+        "grupo=TOTAL AUSTRAL S.A.",
+        "grupo=YPF S.A.",
+        "area=AGA",
+        "area=AGCA",
+        "area=APE",
+        "area=APO",
+        "area=BANE",
+        "area=CDLO",
+        "area=ELOR",
+        "area=FOR",
+        "area=GRU",
+        "area=LCA",
+        "area=LRIB",
+        "area=LTN1",
+        "area=PDYI",
+        "area=RDM",
+        "area=RLCZ",
+        "area=SICH",
+        "area=SRO",
+        "pct",
+        "rama",
+        "etapas",
+        "arena",
+        "agua",
+        "presion"
+      ],
+      "models": {
+        "area_median": {
+          "mae": 24.059399425287364,
+          "r2": 0.2610582016506888
+        },
+        "ridge": {
+          "mae": 25.774109200729573,
+          "r2": -0.3905668160487987
+        },
+        "forest_42": {
+          "mae": 24.571983179686534,
+          "r2": 0.3008339179796461
+        },
+        "forest_7": {
+          "mae": 24.61119098762863,
+          "r2": 0.3006146305778993
+        },
+        "forest_123": {
+          "mae": 24.62663968449827,
+          "r2": 0.29964505445513234
+        }
+      },
+      "test_ids_sha256": "5c1b5623cc5e08926f515da777c61ed225c8346870a2d9538e210a804ef95305",
+      "feature_set": "existing_design",
+      "split": "from_2023",
+      "predictions_sha256": "851cd6d4c6d4b9bf56949a3cf0bf28c029ab3b261b6818a45eed11edf52b7db1"
+    },
+    {
+      "train": 401,
+      "test": 100,
+      "features": [
+        "grupo=EXXONMOBIL EXPLORATION ARGENTINA S.R.L.",
+        "grupo=O&G DEVELOPMENTS LTD S.A.",
+        "grupo=PAMPA ENERGIA S.A.",
+        "grupo=PAN AMERICAN ENERGY SL",
+        "grupo=PLUSPETROL",
+        "grupo=SHELL ARGENTINA S.A.",
+        "grupo=TECPETROL S.A.",
+        "grupo=TOTAL AUSTRAL S.A.",
+        "grupo=YPF S.A.",
+        "area=AGA",
+        "area=AGCA",
+        "area=APE",
+        "area=APO",
+        "area=BANE",
+        "area=CDLO",
+        "area=ELOR",
+        "area=FOR",
+        "area=GRU",
+        "area=LCA",
+        "area=LRIB",
+        "area=LTII",
+        "area=LTN1",
+        "area=PDYI",
+        "area=RDM",
+        "area=RLCZ",
+        "area=SICH",
+        "area=SRO",
+        "pct",
+        "rama",
+        "etapas",
+        "arena",
+        "agua",
+        "presion",
+        "profundidad",
+        "lon",
+        "lat",
+        "start_year",
+        "stages_per_m",
+        "sand_per_m",
+        "water_per_m"
+      ],
+      "models": {
+        "area_median": {
+          "mae": 22.578590000000005,
+          "r2": 0.44827309713269825
+        },
+        "ridge": {
+          "mae": 19.47529461161057,
+          "r2": 0.6208011996649514
+        },
+        "forest_42": {
+          "mae": 18.474696456999762,
+          "r2": 0.6751709377737765
+        },
+        "forest_7": {
+          "mae": 18.634724899165818,
+          "r2": 0.6709644933954191
+        },
+        "forest_123": {
+          "mae": 18.613938303420856,
+          "r2": 0.6720904830631482
+        }
+      },
+      "test_ids_sha256": "4fd5a8598a83ef0046cdc7d8be07d2df24841f1fefd266339db009a68063f815",
+      "feature_set": "public_extension",
+      "split": "every_fifth",
+      "predictions_sha256": "86df4ace4a7347bffa2dbcedc18ff2d606fbfafab7f70a92c49109ef9f86f58d"
+    },
+    {
+      "train": 327,
+      "test": 174,
+      "features": [
+        "grupo=EXXONMOBIL EXPLORATION ARGENTINA S.R.L.",
+        "grupo=O&G DEVELOPMENTS LTD S.A.",
+        "grupo=PAMPA ENERGIA S.A.",
+        "grupo=PAN AMERICAN ENERGY SL",
+        "grupo=PLUSPETROL",
+        "grupo=SHELL ARGENTINA S.A.",
+        "grupo=TECPETROL S.A.",
+        "grupo=TOTAL AUSTRAL S.A.",
+        "grupo=YPF S.A.",
+        "area=AGA",
+        "area=AGCA",
+        "area=APE",
+        "area=APO",
+        "area=BANE",
+        "area=CDLO",
+        "area=ELOR",
+        "area=FOR",
+        "area=GRU",
+        "area=LCA",
+        "area=LRIB",
+        "area=LTN1",
+        "area=PDYI",
+        "area=RDM",
+        "area=RLCZ",
+        "area=SICH",
+        "area=SRO",
+        "pct",
+        "rama",
+        "etapas",
+        "arena",
+        "agua",
+        "presion",
+        "profundidad",
+        "lon",
+        "lat",
+        "start_year",
+        "stages_per_m",
+        "sand_per_m",
+        "water_per_m"
+      ],
+      "models": {
+        "area_median": {
+          "mae": 24.059399425287364,
+          "r2": 0.2610582016506888
+        },
+        "ridge": {
+          "mae": 28.902557486146222,
+          "r2": -0.357801934272842
+        },
+        "forest_42": {
+          "mae": 23.168848097314985,
+          "r2": 0.35728026473561725
+        },
+        "forest_7": {
+          "mae": 23.21784718279854,
+          "r2": 0.3606787856683352
+        },
+        "forest_123": {
+          "mae": 23.248560843564686,
+          "r2": 0.35480922901100764
+        }
+      },
+      "test_ids_sha256": "5c1b5623cc5e08926f515da777c61ed225c8346870a2d9538e210a804ef95305",
+      "feature_set": "public_extension",
+      "split": "from_2023",
+      "predictions_sha256": "255795152998fc76811b44a6a05b10bc64863f57db0e13292e4a00cdb4cf1757"
+    }
+  ]
+}

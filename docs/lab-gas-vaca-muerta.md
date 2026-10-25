@@ -93,7 +93,7 @@ Sin Rastro, la explicación usa el 27,27 % del mapa y nadie lo nota. Con Rastro,
 - **Más pozos:** 559 pozos de shale gas con sus meses 2 a 7 (510 para entrenar, de 2018 a 2024; los mismos 49 de 2025 para probar); 542 tienen fractura.
 - **Resultado hacia el futuro (pozos de 2025):** A y B, error medio 16,8 y 16,9 millones de m³, R² 0,46 y 0,45 (antes 0,44). Con estos datos, la fractura agrega poco al predecir pozos nuevos; pesa la mitad que la concesión con su operadora (4,4 contra 9,1 millones de m³ por pozo, en promedio).
 - **La explicación con Rastro tiene dos factores:** la concesión con su operadora y socios, y cómo se fracturó el pozo, cada uno con por qué suma o resta y sus hechos con regla y evidencia.
-- **Validación con el diseño de un trabajo publicado con las mismas fuentes** (gas de 12 meses, pozos con fractura; `python3 lab/gas/modelo.py --como-trabajo-publicado`): la mediana del área da R² 0,45 (ese trabajo, 0,47), así que los datos coinciden. Con su forma de separar la prueba (uno de cada cinco pozos en orden cronológico), nuestro modelo lineal da 0,58; su mejor modelo, 0,75, con más variables (coordenadas, profundidad, vecinos, año) y una combinación de modelos de árboles. Hacia el futuro (pozos desde 2023), todos quedan cerca de 0,25 a 0,30.
+- **Validación con el diseño de un trabajo publicado con las mismas fuentes** (gas de 12 meses, pozos con fractura; `python3 lab/gas/modelo.py --como-trabajo-publicado`): la mediana del área da R² 0,45 (ese trabajo, 0,47), una línea de base cercana que no demuestra igualdad de muestras ni de predicciones. Con su forma de separar la prueba (uno de cada cinco pozos en orden cronológico), nuestro modelo lineal da 0,58; su mejor modelo, 0,75, con más variables (coordenadas, profundidad, vecinos, año) y una combinación de modelos de árboles. Hacia el futuro (pozos desde 2023), todos quedan cerca de 0,25 a 0,30.
 
 ## Cuando la fuente cambia: la fractura llega tarde (21 de octubre de 2026)
 
@@ -160,3 +160,17 @@ Con números, no con opiniones.
 - **Fugas de futuro.** La operadora y el tipo de pozo de hoy (ver paso 1), y los socios y correcciones actuales: el Acuerdo Marco es de septiembre de 2026. Fecharlos o declararlos.
 - **Un hueco de Rastro:** «Mobil Argentina» (socia de Sierra Chata en el mapa) y «ExxonMobil Exploration Argentina» (Capítulo IV) todavía no están unidas.
 - **El gas no depende solo del pozo:** la demanda de invierno y la capacidad de transporte también pesan.
+
+
+## 2026-10-24 · Alternative tree models
+
+The user approved a read-only comparison of ridge, a random forest and a small visual tree for the existing months-2–7 target. Annual tests and late-fracture sensitivity do not show a consistent forest advantage. The app retains ridge. Protocol, all metrics, limitations and an actual small-tree diagram are recorded in [the experiment](experiments/gas-trees/README.md). This comparison does not reproduce or independently validate the thesis.
+
+
+## 2026-10-24 · Partial thesis-style tree replication
+
+The user requested a Q12 replication attempt. With the current 501-well cohort, the existing-feature forest gives R² 0.496–0.500 in the interleaved test. Adding existing public coordinates, vertical depth, start year and fracture intensities raises it to 0.671–0.675; the forward test yields 0.355–0.361. The original thesis PDF/code is unavailable during university repository maintenance, and prior notes describe 642 wells and a different ensemble. These are partial-replication results, not confirmation of its reported 0.75 or prospective validation. Full protocol, deviations, metrics and source-access evidence: [Q12 experiment](experiments/gas-thesis/README.md). The app model remains unchanged.
+
+## 2026-10-24 · Primary thesis PDF reviewed and pipeline replayed
+
+The user supplied the original 84-page PDF (cover year 2026; suggested citation year 2025). Its Table 4 confirms R² 0.7269 for RF, 0.7466 for XGB, 0.7424 for LGBM and 0.7539 for the ensemble. A new isolated replay uses the published hyperparameters, log target, KNN, target encoding and training-only prior-year neighbors. It reaches approximately 0.68–0.69 on current snapshots; exact reproduction remains unconfirmed because of cohort, missing geology-calibration formula and implementation differences. Both strict monthly coverage and cutoff-only completeness are reported. The original document-access blocker is resolved. See [the PDF-guided replay](experiments/gas-thesis/pdf-replay/README.md) for verified specifications, full results and limits. The current app model remains unchanged.
