@@ -1,0 +1,188 @@
+# Texts of the oil and gas «Rastro Lab» tab (app/lab.py), in Spanish and English. Read with idioma.t("<key>").
+# The per-well explanation sentences, factor and fact names come from lab/gas/modelo.py and stay Spanish for now.
+lab.datos.spinner: {es: "Entrenando el modelo dos veces…", en: "Training the model twice…"}
+
+lab.show_lab.title: {es: "#### ¿Cuánto gas va a dar un pozo nuevo?", en: "#### How much gas will a new well produce?"}
+lab.show_lab.intro:
+  es: "Un modelo predice el gas de los meses 2 a 7 de un pozo nuevo de shale gas de Vaca Muerta. Es **el mismo
+    modelo, entrenado dos veces**: una con las tablas tal como vienen y otra con Rastro. Rastro no lo hace más
+    preciso: hace que **cada predicción se explique en conceptos de negocio, con los hechos que la respaldan, y
+    que se pueda comprobar**."
+  en: "A model predicts the gas of months 2 to 7 of a new Vaca Muerta shale gas well. It is **the same model, trained
+    twice**: once with the tables as they come and once with Rastro. Rastro does not make it more accurate: it
+    makes **every prediction explained in business concepts, with the facts that back it, and verifiable**."
+lab.show_lab.error_without: {es: "Error sin Rastro", en: "Error without Rastro"}
+lab.show_lab.error_with: {es: "Error con Rastro", en: "Error with Rastro"}
+lab.show_lab.corrected: {es: "Con un dato corregido", en: "With a corrected value"}
+lab.show_lab.corrected_value: {es: "{n} de {total}", en: "{n} of {total}"}
+lab.show_lab.trained:
+  es: "Entrenado con {train} pozos que empezaron de {start} a 2024; probado con {test} de 2025. Error medio por pozo,
+    en millones de m³. Sin modelo, usar la mediana de cada concesión da {concession}, y la de cada operadora,
+    {operator}."
+  en: "Trained with {train} wells that started from {start} to 2024; tested with {test} from 2025. Mean error per
+    well, in millions of m³. Without a model, using each concession's median gives {concession}, and each
+    operator's, {operator}."
+lab.show_lab.inputs_title: {es: "Lo que entra al modelo", en: "What goes into the model"}
+lab.show_lab.inputs_text:
+  es: "Los mismos {n} pozos y las mismas ideas de variables, de dos formas. Sin Rastro, las columnas de las tablas
+    tal como vienen; con Rastro, conceptos del diccionario, cada uno con su fuente."
+  en: "The same {n} wells and the same variable ideas, in two ways. Without Rastro, the table columns as they come;
+    with Rastro, concepts from the dictionary, each one with its source."
+lab.show_lab.without_rastro: {es: "Sin Rastro", en: "Without Rastro"}
+lab.show_lab.with_rastro: {es: "Con Rastro", en: "With Rastro"}
+lab.show_lab.inputs_raw_note:
+  es: "El porcentaje sale de buscar el nombre de la empresa en el texto de socios del mapa: si el nombre no coincide,
+    queda vacío; si el mapa está mal, nada lo dice."
+  en: "The percentage comes from searching the company's name in the map's partner text: if the name does not match,
+    it stays empty; if the map is wrong, nothing says so."
+lab.show_lab.inputs_origin: {es: "**De dónde sale cada columna:**", en: "**Where each column comes from:**"}
+lab.show_lab.learned_title: {es: "Qué aprendió el modelo", en: "What the model learned"}
+lab.show_lab.learned_text:
+  es: "El modelo explica el {r2} % de la diferencia entre los pozos de 2025; la mediana de cada concesión, sola, el
+    {r2_concession} %. Casi todo lo que sabe es dónde está el pozo: la fractura y la profundidad agregan poco, y
+    eso también es una conclusión. Pesa dos cosas, en millones de m³ por pozo, en promedio: {weights}. La
+    operadora y los socios no se pueden separar de la concesión: Rastro muestra que dentro de una concesión son
+    siempre los mismos."
+  en: "The model explains {r2} % of the difference between the 2025 wells; each concession's median, alone,
+    {r2_concession} %. Almost everything it knows is where the well is: fracturing and depth add little, and that
+    is also a conclusion. It weighs two things, in millions of m³ per well, on average: {weights}. The operator
+    and the partners cannot be separated from the concession: Rastro shows that within a concession they are
+    always the same."
+lab.show_lab.learned_note:
+  es: "Operadora y socios, de Rastro (con sus correcciones). Efecto: cuánto suma o resta, en millones de m³, estar en
+    esa concesión, respecto de un pozo promedio."
+  en: "Operator and partners, from Rastro (with their corrections). Effect: how much being in that concession adds or
+    subtracts, in millions of m³, compared with an average well."
+lab.show_lab.change_title: {es: "Cuando la fuente cambia", en: "When the source changes"}
+lab.show_lab.change_text:
+  es: "Los datos de fractura llegan tarde: de los {with_fracturing} pozos de 2025 que los tienen, en **{late}** se
+    cargaron después de que el pozo empezó a producir (a la mitad, {months} meses o más). Si la predicción se hace
+    cuando el pozo arranca, esos pozos todavía no tenían fractura: **su predicción cambia {mean_change} millones
+    de m³ en promedio** (hasta {max_change}) cuando la fractura llega.\n\nSin Rastro, el número cambia y nada dice
+    por qué. Con Rastro, cada predicción dice qué datos usó y cuándo se cargó cada uno (en «¿De dónde sale?» de la
+    fractura), y marca los que llegaron después de que el pozo arrancó."
+  en: "Fracturing data arrives late: of the {with_fracturing} 2025 wells that have it, for **{late}** it was loaded
+    after the well started producing (for half of them, {months} months or more). If the prediction is made when
+    the well starts, those wells did not have fracturing data yet: **their prediction changes by {mean_change}
+    million m³ on average** (up to {max_change}) when the fracturing data arrives.\n\nWithout Rastro, the number
+    changes and nothing says why. With Rastro, every prediction says which data it used and when each value was
+    loaded (in «Where does it come from?» for the fracturing), and flags the values that arrived after the well
+    started."
+lab.show_lab.impact_text:
+  es: "**Rastro sabe qué cambia.** Si la fuente corrige la fractura informada n.º {record}, Rastro dice de antemano
+    qué predicciones dependen de ella (pozo {wells}), recorriendo de qué registros sale cada una. Se probó: se
+    corrigió el registro, se rehízo todo y cambiaron exactamente esas{change}, ninguna otra. Sin Rastro, para
+    saberlo hay que rehacer todas y comparar."
+  en: "**Rastro knows what changes.** If the source corrects reported fracturing no. {record}, Rastro says in advance
+    which predictions depend on it (well {wells}), by following which records each one comes from. It was tested:
+    the record was corrected, everything was redone and exactly those changed{change}, no other. Without Rastro,
+    finding out means redoing them all and comparing."
+lab.show_lab.impact_change: {es: " (de {before} a {after} millones de m³)", en: " (from {before} to {after} million m³)"}
+lab.show_lab.published_title: {es: "Las predicciones, en Rastro", en: "The predictions, in Rastro"}
+lab.show_lab.how_title: {es: "¿Cómo se calcula?", en: "How is it calculated?"}
+lab.show_lab.how_text:
+  es: "Es una regresión lineal: la predicción es el gas de un pozo promedio más el aporte de cada variable, en
+    millones de m³. Las dos versiones usan las mismas ideas de variables (operadora, concesión, participación y
+    fractura); cambia de dónde salen. Sin Rastro: la empresa como se declara, el código de la concesión y el
+    porcentaje del texto de socios del mapa. Con Rastro: la operadora unida entre fuentes, la concesión y la
+    participación corregida, cada una con su regla y su evidencia. La operadora es la del primer mes del pozo, no
+    la de hoy: usar la de hoy sería usar el futuro. La fractura (rama horizontal, etapas, arena, agua y presión)
+    es la informada hasta el mes en que arrancó el pozo. El gas que se predice también sale de Rastro (el gas de
+    los meses 2 a 7 de cada pozo), y coincide con el que calcula el SQL.\n\nOjo: la explicación dice cómo llegó el
+    modelo a su número, no la causa física. Que un factor sume no prueba que produzca más gas; es lo que el modelo
+    aprendió de los pozos anteriores."
+  en: "It is a linear regression: the prediction is the gas of an average well plus the contribution of each
+    variable, in millions of m³. Both versions use the same variable ideas (operator, concession, share and
+    fracturing); what changes is where they come from. Without Rastro: the company as declared, the concession
+    code and the percentage from the map's partner text. With Rastro: the operator linked across sources, the
+    concession and the corrected share, each one with its rule and its evidence. The operator is the one of the
+    well's first month, not today's: using today's would be using the future. The fracturing (lateral, stages,
+    sand, water and pressure) is what was reported up to the month the well started. The predicted gas also comes
+    from Rastro (the gas of months 2 to 7 of each well), and it matches the one the SQL calculates.\n\nNote: the
+    explanation says how the model reached its number, not the physical cause. That a factor adds does not prove
+    it produces more gas; it is what the model learned from earlier wells."
+lab.show_lab.how_sql:
+  es: "**Sin Rastro (SQL sobre las tablas tal como vienen):** la consulta que arma la entrada del modelo A. Cada
+    cruce está en la consulta: el mes en que arrancó cada pozo, la empresa como se declaró, el texto de socios del
+    mapa (el porcentaje se busca después por nombre) y la fractura sumada de la tabla cruda."
+  en: "**Without Rastro (SQL over the tables as they come):** the query that builds model A's input. Every join is in
+    the query: the month each well started, the company as declared, the map's partner text (the percentage is
+    looked up later by name) and the fracturing summed from the raw table."
+lab.show_lab.how_sparql:
+  es: "**Con Rastro (SPARQL):** la misma entrada, pedida en conceptos del diccionario. Los cruces y las reglas están
+    definidos una vez en Rastro; la consulta trae además la regla y la evidencia de cada dato."
+  en: "**With Rastro (SPARQL):** the same input, asked in dictionary concepts. The joins and the rules are defined
+    once in Rastro; the query also brings the rule and the evidence of each value."
+lab.show_lab.how_code: {es: "Código del modelo: lab/gas/modelo.py.", en: "Model code: lab/gas/modelo.py."}
+
+# Model variables in words (Spanish fracturing labels: lab/gas/modelo.py FRACTURA, capitalized).
+lab.variable_label.grupo: {es: "Operadora", en: "Operator"}
+lab.variable_label.area: {es: "Concesión", en: "Concession"}
+lab.variable_label.pct: {es: "Participación de la operadora", en: "Operator's share"}
+lab.variable_label.profundidad: {es: "Profundidad vertical", en: "Vertical depth"}
+lab.variable_label.rama: {es: "Largo de la rama horizontal", en: "Lateral length"}
+lab.variable_label.etapas: {es: "Etapas de fractura", en: "Fracturing stages"}
+lab.variable_label.arena: {es: "Arena bombeada", en: "Sand pumped"}
+lab.variable_label.agua: {es: "Agua inyectada", en: "Water injected"}
+lab.variable_label.presion: {es: "Presión máxima", en: "Maximum pressure"}
+
+lab.show_well.option:
+  es: "{concession} · {operator} · empezó en {start} · pozo {well}"
+  en: "{concession} · {operator} · started in {start} · well {well}"
+lab.show_well.selector: {es: "Pozo de 2025", en: "2025 well"}
+lab.show_well.actual:
+  es: "Dio **{gas} millones de m³** en sus meses 2 a 7{months}."
+  en: "It produced **{gas} million m³** in its months 2 to 7{months}."
+lab.show_well.months: {es: " (declaraciones juradas de {first} a {last})", en: " (sworn production declarations from {first} to {last})"}
+lab.show_well.without_title: {es: "##### Sin Rastro", en: "##### Without Rastro"}
+lab.show_well.with_title: {es: "##### Con Rastro", en: "##### With Rastro"}
+lab.show_well.prediction: {es: "Predicción", en: "Prediction"}
+lab.show_well.base:
+  es: "Un pozo promedio da {base}; cada columna suma o resta:"
+  en: "An average well gives {base}; each column adds or subtracts:"
+lab.show_well.without_note:
+  es: "Tres números para un mismo efecto: las tres columnas cambian juntas, pero nada en las tablas lo dice. Y si un
+    dato está mal (como el porcentaje del mapa), nada lo marca."
+  en: "Three numbers for one effect: the three columns change together, but nothing in the tables says so. And if a
+    value is wrong (like the map's percentage), nothing flags it."
+lab.show_well.range:
+  es: "Rango: de {low} a {high} millones de m³. En {inside} de cada 100 pozos de prueba, el gas real cayó dentro de
+    su rango."
+  en: "Range: from {low} to {high} million m³. In {inside} of every 100 test wells, the actual gas fell within its
+    range."
+lab.show_well.facts: {es: "**Lo que respalda la predicción:**", en: "**What backs the prediction:**"}
+lab.show_well.where_from: {es: "¿De dónde sale?", en: "Where does it come from?"}
+lab.show_well.rule_evidence: {es: "**Regla:** {rule}.  \n**Evidencia:** {evidence}", en: "**Rule:** {rule}.  \n**Evidence:** {evidence}"}
+lab.show_well.name: {es: "  \n**Nombre:** {name}", en: "  \n**Name:** {name}"}
+lab.show_well.sources: {es: "  \n**Fuentes:** {sources}.", en: "  \n**Sources:** {sources}."}
+lab.show_well.origin_records: {es: "**Registros de origen:** {records}.", en: "**Source records:** {records}."}
+lab.show_well.origin_record:
+  es: "fractura informada n.º {id}, del {date}, cargada el {loaded}"
+  en: "reported fracturing no. {id}, of {date}, loaded on {loaded}"
+
+lab.show_published.missing:
+  es: "Todavía no hay una corrida publicada: `python3 lab/gas/modelo.py --publicar`."
+  en: "There is no published run yet: `python3 lab/gas/modelo.py --publicar`."
+lab.show_published.intro:
+  es: "Cada predicción queda en Rastro como un dato más: con su rango, el aporte de cada factor, la corrida que la
+    hizo (versión {version}, del {date}, {n} predicciones) y los datos de Rastro que usó. Así se le puede
+    preguntar a Rastro por las predicciones, con una consulta o en palabras en «Preguntar → Mi propia pregunta»."
+  en: "Every prediction stays in Rastro as one more piece of data: with its range, the contribution of each factor,
+    the run that made it (version {version}, of {date}, {n} predictions) and the Rastro data it used. So Rastro
+    can be asked about the predictions, with a query or in words in «Ask → My own question»."
+lab.show_published.cq11:
+  es: "**¿Qué predicciones de 2025 se apoyan en un dato corregido?**"
+  en: "**Which 2025 predictions rest on a corrected value?**"
+lab.show_published.cq12:
+  es: "**¿Qué pozos de 2025 se esperan con más gas, y qué los explica?**"
+  en: "**Which 2025 wells are expected to produce the most gas, and what explains it?**"
+lab.show_published.column_pozo: {es: "Pozo", en: "Well"}
+lab.show_published.column_concesion: {es: "Concesión", en: "Concession"}
+lab.show_published.column_gasEsperado: {es: "Gas esperado (M m³)", en: "Expected gas (M m³)"}
+lab.show_published.column_dato: {es: "Dato corregido", en: "Corrected value"}
+lab.show_published.column_regla: {es: "Regla", en: "Rule"}
+lab.show_published.column_desde: {es: "Desde", en: "From"}
+lab.show_published.column_hasta: {es: "Hasta", en: "To"}
+lab.show_published.column_concesionYOperadora: {es: "Concesión con su operadora", en: "Concession with its operator"}
+lab.show_published.column_fractura: {es: "Cómo se fracturó", en: "How it was fractured"}
+lab.show_published.column_profundidad: {es: "Su profundidad", en: "Its depth"}

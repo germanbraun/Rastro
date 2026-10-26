@@ -137,13 +137,15 @@ def answer(approach, question, kind, domain="oncologia"):
     return {"answer": None, "attempts": attempts}
 
 
-def explain_query(query, sql, domain="oncologia"):
+def explain_query(query, sql, domain="oncologia", language="es"):
     """Explains in simple words a SPARQL query and the SQL that Ontop generated, for someone who
-    knows SQL but not semantic technologies. Returns Markdown bullets."""
+    knows SQL but not semantic technologies. Returns Markdown bullets, in Spanish or, with language="en", English."""
     system = ("Explicás consultas a una persona de negocio que sabe SQL pero no conoce tecnologías "
               "semánticas. En español, en 3 a 5 viñetas cortas: qué busca, qué une o filtra, qué "
               "devuelve, y qué habría que hacer a mano en SQL que acá ya resuelve el diccionario de "
               "negocio. Sin jerga: no digas RDF, tripletas ni IRI.\n\n" + (ROOT / DOMAINS[domain]["sparql_notes"]).read_text())
+    if language == "en":   # the interface is in English; the Spanish default is what the evaluation was measured with
+        system = system.replace("En español,", "In English,")
     content = f"Consulta SPARQL:\n{query}" + (f"\n\nSQL que generó Ontop:\n{sql}" if sql else "")
     _, data = ask(system, [{"role": "user", "content": content}],
                   {"type": "object", "properties": {"explicacion": {"type": "string"}},
@@ -236,9 +238,12 @@ def term_sources(domain="oncologia"):
 
 
 
-def ask_rastro(question, domain="oncologia"):
-    """Answers a free question with SPARQL over Rastro. Needs a configured LLM."""
+def ask_rastro(question, domain="oncologia", language="es"):
+    """Answers a free question with SPARQL over Rastro. Needs a configured LLM. With language="en", the explanation
+    after «SIN DATOS:» is written in English (the marker stays, the code looks for it)."""
     system = system_prompt("C", domain).replace(QUERY_RULES, FREE_RULES)
+    if language == "en":
+        system += "\n\nThe person reads English: after «SIN DATOS:», explain in English what is missing."
     schema = output_schema("C", "lista")
     messages = [{"role": "user", "content": question}]
     attempts = []

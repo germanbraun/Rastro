@@ -21,13 +21,14 @@ import streamlit as st
 import yaml
 
 import answer
+import idioma
 import logos
 
 PROV = "PREFIX prov: <http://www.w3.org/ns/prov#>\n"
 
 
 def load_config(path):
-    return _load_yaml(path, Path(path).stat().st_mtime)
+    return idioma.localized(path)
 
 
 def read_json(path):
@@ -40,15 +41,10 @@ def _load_yaml(path, mtime):   # the file's date is part of the key: if it chang
     return yaml.safe_load(Path(path).read_text())
 
 
-@st.cache_data
-def _ayuda(mtime):
-    return yaml.safe_load(Path("/app/ayuda.yaml").read_text()) or {}
-
-
 def ayuda(key):
-    """The text of the «?» icon for each part of the app (app/ayuda.yaml)."""
+    """The text of the «?» icon for each part of the app (app/ayuda.yaml, with its English overlay)."""
     p = Path("/app/ayuda.yaml")
-    return _ayuda(p.stat().st_mtime).get(key) if p.exists() else None
+    return (idioma.localized(p) or {}).get(key) if p.exists() else None
 
 
 @st.cache_data
@@ -105,7 +101,7 @@ def warm_up():
     import threading
 
     def work():
-        for config in sorted(Path("/app/dominios").glob("*.yaml")):
+        for config in sorted(p for p in Path("/app/dominios").glob("*.yaml") if not p.name.endswith(".en.yaml")):
             cfg = yaml.safe_load(config.read_text())
             for q in (validated_questions(cfg) if cfg.get("preguntas") else []):
                 try:
@@ -152,7 +148,7 @@ def tabla(data, hide_index=True, use_container_width=True, column_config=None, k
                 if pd.notna(row[c]) and str(row[c]).strip():
                     st.markdown(f"**{str(c).strip()}:** {md(row[c])}")
     else:
-        st.caption("Hay textos que no entran en la celda: elija una fila (la casilla de la izquierda) para leerla completa.")
+        st.caption(idioma.t("dominio.tabla.long_text"))
     return event
 
 
@@ -162,7 +158,7 @@ def md(text):
 
 
 def money(value):
-    return f"{float(value):,.0f}".replace(",", ".")
+    return idioma.number(value)
 
 
 def as_table(columns, rows, cfg, tech, col_sources):
@@ -193,13 +189,13 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None, where="pr
     labels = cfg.get("fuentes", {})
     used, col_sources = answer.column_sources(query, domain)
     if tech:
-        st.markdown("**Fuentes que usó esta respuesta:** " + " · ".join(f"`{labels.get(s, s)}`" for s in used),
+        st.markdown(idioma.t("dominio.show_answer.sources_used") + " · ".join(f"`{labels.get(s, s)}`" for s in used),
                     help=ayuda("fuentes_respuesta"))
     else:
-        names = [info[s]["name"] for s in used if s in info] + (["enlaces de Rastro"] if "rastro" in used else [])
-        st.markdown("**Fuentes:** " + ", ".join(names), help=ayuda("fuentes_respuesta"))
+        names = [info[s]["name"] for s in used if s in info] + ([idioma.t("dominio.show_answer.rastro_links")] if "rastro" in used else [])
+        st.markdown(idioma.t("dominio.show_answer.sources") + ", ".join(names), help=ayuda("fuentes_respuesta"))
     if not rows:
-        st.info("La consulta no devolvió resultados.")
+        st.info(idioma.t("dominio.show_answer.no_results"))
     else:
         visible = item.get("columnas_respuesta") if item and not tech else None
         shown_columns = [c for c in columns if not visible or c in visible]
@@ -211,57 +207,54 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None, where="pr
             show_map(domain)
         if item and item.get("porque"):
             show_why(domain, item["porque"], columns, rows, where, tech)
-        st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}."
-                   + (" La evidencia está en «¿De dónde sale la respuesta?»." if item and item.get("evidencia") else ""))
+        st.caption(idioma.t("dominio.show_answer.rows_one" if len(rows) == 1 else "dominio.show_answer.rows_many", n=len(rows))
+                   + (idioma.t("dominio.show_answer.evidence_hint") if item and item.get("evidencia") else ""))
 
-    with st.expander("¿De dónde sale la respuesta?"):
+    with st.expander(idioma.t("dominio.show_answer.where_from")):
         evidence = (item or {}).get("evidencia")
         if not tech:
-            st.markdown("**Dónde buscó Rastro:**")
+            st.markdown(idioma.t("dominio.show_answer.where_looked"))
             for s in used:
                 if s == "rastro":
-                    st.markdown(f"- **{cfg.get('nota_rastro', 'Los enlaces de Rastro')}**")
+                    st.markdown(f"- **{cfg.get('nota_rastro', idioma.t('dominio.show_answer.rastro_links_default'))}**")
                 elif s in info:
-                    st.markdown(f"- **{info[s]['name']}** · licencia: {info[s]['license']}")
+                    st.markdown(idioma.t("dominio.show_answer.source_line", name=info[s]["name"], license=info[s]["license"]))
             if item and item.get("ventaja"):
-                st.markdown("**Qué aportó Rastro:** " + md(item["ventaja"]))
+                st.markdown(idioma.t("dominio.show_answer.contributed") + md(item["ventaja"]))
             if item and item.get("definicion"):
-                st.markdown("La regla está escrita una sola vez, en el **diccionario de negocio**, y vale para "
-                            "todas las preguntas que la usan.")
+                st.markdown(idioma.t("dominio.show_answer.rule_once"))
             if evidence:
                 st.markdown(f"**{md(evidence['texto'])}**")
                 ev_cols, ev_rows = run(prefixed(evidence["query"], domain), domain)
                 for r in ev_rows:
                     st.markdown("- " + md(evidence["formato"].format(**dict(zip(ev_cols, r)))))
-                st.caption("Cada respuesta se puede auditar: la evidencia dice qué dice cada fuente y con qué regla "
-                           "se unieron.")
-            st.caption("Para ver la consulta y el SQL, active «Ver detalles técnicos» en la barra lateral.")
+                st.caption(idioma.t("dominio.show_answer.auditable"))
+            st.caption(idioma.t("dominio.show_answer.tech_hint"))
             return
         if note:
             st.caption(note)
-        st.markdown("**1. La consulta**, sobre los conceptos de Rastro (SPARQL):")
+        st.markdown(idioma.t("dominio.show_answer.step_query"))
         st.code(query, language="sparql")
-        st.markdown("**2. El SQL que Rastro generó y ejecutó en Postgres** (lo traduce Rastro con los mapeos):")
+        st.markdown(idioma.t("dominio.show_answer.step_sql"))
         sql = None
         try:
             sql = sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper", indent_width=2)
             st.code(sql, language="sql")
         except requests.RequestException:
-            st.caption("No se pudo obtener el SQL de esta consulta.")
+            st.caption(idioma.t("dominio.show_answer.no_sql"))
         explain(query, sql, domain, item, where)
-        st.markdown("**3. Las fuentes:**")
+        st.markdown(idioma.t("dominio.show_answer.step_sources"))
         for s in used:
             if s == "rastro":
-                st.markdown(f"- 🐘 **Enlaces de Rastro**: {cfg.get('nota_rastro', '')}")
+                st.markdown(idioma.t("dominio.show_answer.tech_rastro_line", note=cfg.get("nota_rastro", "")))
             elif s in info:
-                st.markdown(f"- 🐘 **{info[s]['name']}** · licencia: {info[s]['license']}")
+                st.markdown(idioma.t("dominio.show_answer.tech_source_line", name=info[s]["name"], license=info[s]["license"]))
         if item and item.get("definicion"):
-            st.markdown("**4. La regla de negocio, en la ontología.** Ningún mapeo la asigna: Rastro la deduce.")
+            st.markdown(idioma.t("dominio.show_answer.step_rule"))
             st.code(item["definicion"], language="turtle")
         if evidence:
-            st.markdown("**4. La evidencia**, pedida al grafo"
-                        + (" (cada enlace es una entidad PROV-O, con la fuente de la que se derivó):"
-                           if "prov:" in evidence["query"] else ":"))
+            st.markdown(idioma.t("dominio.show_answer.step_evidence")
+                        + (idioma.t("dominio.show_answer.step_evidence_prov") if "prov:" in evidence["query"] else ":"))
             ev_query = prefixed(evidence["query"], domain)
             st.code(ev_query, language="sparql")
             ev_cols, ev_rows = run(ev_query, domain)
@@ -279,7 +272,7 @@ def explain(query, sql, domain, item=None, where="preguntar"):
         st.session_state[key] = stored
         if not stored:
             with st.spinner("El LLM está leyendo la consulta..."):
-                st.session_state[key] = answer.explain_query(query, sql, domain)
+                st.session_state[key] = answer.explain_query(query, sql, domain, idioma.lang())
     if st.session_state.get(key):
         st.info(md(st.session_state[key]))
 
@@ -513,12 +506,13 @@ def quality_result(quality):
 def finding(rule, long=True):
     """A rule's result in words: violations do not hold; warnings and informational findings ask a person to review."""
     if not rule["revisados"]:
-        return "⏳ sin datos revisados" if long else "⏳"
+        return idioma.t("dominio.finding.no_data") if long else "⏳"
     counts = rule.get("por_severidad") or {"Violation": rule["fallas"]}
-    parts = [f"⚠️ {money(counts['Violation'])}" + (" no cumplen" if long else "") if counts.get("Violation") else "",
-             f"🟡 {money(counts['Warning'])}" + (" para revisar (aviso)" if long else "") if counts.get("Warning") else "",
-             f"ℹ️ {money(counts['Info'])}" + (" pendientes (informativo)" if long else "") if counts.get("Info") else ""]
-    return " · ".join(p for p in parts if p) or ("✅ se cumple" if long else "✅")
+    words = {kind: idioma.t(f"dominio.finding.{kind.lower()}") if long else "" for kind in ("Violation", "Warning", "Info")}
+    parts = [f"⚠️ {money(counts['Violation'])}" + words["Violation"] if counts.get("Violation") else "",
+             f"🟡 {money(counts['Warning'])}" + words["Warning"] if counts.get("Warning") else "",
+             f"ℹ️ {money(counts['Info'])}" + words["Info"] if counts.get("Info") else ""]
+    return " · ".join(p for p in parts if p) or (idioma.t("dominio.finding.holds") if long else "✅")
 
 
 def show_quality(quality):
@@ -526,15 +520,16 @@ def show_quality(quality):
     result = quality_result(quality)
     if not result:
         return
-    st.markdown("### Reglas de calidad", help=ayuda("calidad"))
+    st.markdown(idioma.t("dominio.show_quality.title"), help=ayuda("calidad"))
     st.caption(md(quality["intro"]))
-    tabla(pd.DataFrame([{"Regla": r["nombre"], "Por qué importa": r["porque"], "Datos revisados": money(r["revisados"]),
-                         "Resultado": finding(r),
-                         "Predicciones que los usan": len(r.get("predicciones_afectadas", [])) or ""}
+    rule, why = idioma.t("dominio.show_quality.col_rule"), idioma.t("dominio.show_quality.col_why")
+    tabla(pd.DataFrame([{rule: r["nombre"], why: r["porque"], idioma.t("dominio.show_quality.col_checked"): money(r["revisados"]),
+                         idioma.t("dominio.show_quality.col_result"): finding(r),
+                         idioma.t("dominio.show_quality.col_predictions"): len(r.get("predicciones_afectadas", [])) or ""}
                         for r in result["reglas"]]),
-          column_config={"Regla": st.column_config.TextColumn(width="medium"),
-                         "Por qué importa": st.column_config.TextColumn(width="large")})
-    st.caption(f"Comprobadas el {result['fecha'][8:10]}/{result['fecha'][5:7]}/{result['fecha'][:4]}, sobre los datos de Rastro.")
+          column_config={rule: st.column_config.TextColumn(width="medium"), why: st.column_config.TextColumn(width="large")})
+    date = result["fecha"]
+    st.caption(idioma.t("dominio.show_quality.checked_on", day=date[8:10], month=date[5:7], year=date[:4]))
 
 
 def show_quality_shacl(quality):
@@ -687,20 +682,20 @@ def render(cfg_path, tech):
     changes = read_json(cfg["cambio"]) if cfg.get("cambio") else {}
     questions = validated_questions(cfg)
     if not questions:
-        st.info("Las preguntas de este dominio están pendientes de aprobación o validación.")
+        st.info(idioma.t("dominio.render.no_questions"))
         return
     if answer.DOMAINS[domain].get("method", {}).get("lifecycle") and cfg.get("tarjetas"):
         from method import publication_errors
         if publication_errors(answer.DOMAINS[domain], answer.ROOT):
             cfg = {**cfg, "tarjetas": None, "demo": None}
-            st.caption("Los resultados de evaluación están pendientes de revisión independiente.")
+            st.caption(idioma.t("dominio.render.pending_review"))
 
     with st.sidebar:
         if tech:
             available, status = llm_status()
             st.subheader("LLM", help=ayuda("llm"))
             st.markdown(("🟢 " if available else "⚪ ") + status)
-            st.subheader("Fuentes", help=ayuda("fuentes_barra"))
+            st.subheader(idioma.t("dominio.render.sources"), help=ayuda("fuentes_barra"))
             for info in sources(domain).values():
                 st.markdown(f"🐘 **{info['name']}**  \n<small>{info['license']}</small>", unsafe_allow_html=True)
         else:
@@ -709,20 +704,22 @@ def render(cfg_path, tech):
     # «Por qué confiar» needs a measured evaluation or quality rules; a domain with neither does not show the tab
     # Few tabs: the demo, asking, why trust and frequent questions; in the technical view, everything
     # inside (console, dictionary, links and mappings) together in «Bajo el capó»
-    names = (["Demo"] if cfg.get("demo") else []) + ["Preguntar"] \
-        + (["Por qué confiar"] if cfg.get("tarjetas") or cfg.get("calidad") else []) + (["Rastro Lab"] if cfg.get("lab") else []) \
-        + ([cfg["ejemplo_integracion"]["titulo"]] if cfg.get("ejemplo_integracion") else []) \
-        + ["Preguntas frecuentes"] + (["Bajo el capó"] if tech else [])
-    tabs = dict(zip(names, st.tabs(names)))
-    ask_tab, trust_tab, faq_tab = tabs["Preguntar"], tabs.get("Por qué confiar"), tabs["Preguntas frecuentes"]
+    # Each tab has a fixed internal name; only its label is translated
+    names = (["demo"] if cfg.get("demo") else []) + ["ask"] \
+        + (["trust"] if cfg.get("tarjetas") or cfg.get("calidad") else []) + (["lab"] if cfg.get("lab") else []) \
+        + (["example"] if cfg.get("ejemplo_integracion") else []) + ["faq"] + (["hood"] if tech else [])
+    labels = [cfg["ejemplo_integracion"]["titulo"] if name == "example" else idioma.t(f"dominio.render.tab_{name}")
+              for name in names]
+    tabs = dict(zip(names, st.tabs(labels)))
+    ask_tab, trust_tab, faq_tab = tabs["ask"], tabs.get("trust"), tabs["faq"]
     if cfg.get("demo"):
-        with tabs["Demo"]:
+        with tabs["demo"]:
             show_demo(cfg, tech)
     if cfg.get("ejemplo_integracion"):
-        with tabs[cfg["ejemplo_integracion"]["titulo"]]:
+        with tabs["example"]:
             show_integration_example(cfg["ejemplo_integracion"], domain, tech)
     if cfg.get("lab"):
-        with tabs["Rastro Lab"]:
+        with tabs["lab"]:
             import lab
             import lab_alternative
             # The experimental alternative models are a technical detail: the business view keeps the regression
@@ -738,33 +735,37 @@ def render(cfg_path, tech):
                                                  run_id=run_status["run_id"])
                 lab.show_lab(tech, pozo=pozo)
     if tech:
-        with tabs["Bajo el capó"]:
+        with tabs["hood"]:
             under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"), cfg.get("calidad"))
 
     with ask_tab:
-        modes = ["Una pregunta de ejemplo"] + (["Una pregunta sobre textos"] if cfg.get("texto") else []) \
-            + ([cfg["afirmaciones"]["titulo"]] if cfg.get("afirmaciones") else []) \
-            + ([cfg["externo"]["titulo"]] if cfg.get("externo") else [])
-        mode = st.radio("Tipo de pregunta", modes + ["Mi propia pregunta"], help=ayuda("modo"),
-                        horizontal=True, label_visibility="visible", key=f"{domain}_mode")
-        if mode == "Una pregunta sobre textos":
+        # Fixed internal names for the modes; the radio shows (and returns) their labels
+        mode_labels = {"example": idioma.t("dominio.render.mode_example"), "text": idioma.t("dominio.render.mode_text"),
+                       "claims": (cfg.get("afirmaciones") or {}).get("titulo"), "external": (cfg.get("externo") or {}).get("titulo"),
+                       "free": idioma.t("dominio.render.mode_free")}
+        modes = ["example"] + (["text"] if cfg.get("texto") else []) + (["claims"] if cfg.get("afirmaciones") else []) \
+            + (["external"] if cfg.get("externo") else [])
+        by_label = {mode_labels[m]: m for m in modes + ["free"]}
+        mode = by_label.get(st.radio(idioma.t("dominio.render.mode_label"), list(by_label), help=ayuda("modo"),
+                                     horizontal=True, label_visibility="visible", key=f"{domain}_mode"))
+        if mode == "text":
             show_text_question(cfg, tech)
-        elif cfg.get("externo") and mode == cfg["externo"]["titulo"]:
+        elif mode == "external":
             show_external(cfg, tech)
-        elif cfg.get("afirmaciones") and mode == cfg["afirmaciones"]["titulo"]:
+        elif mode == "claims":
             show_claims(cfg, tech)
-        elif mode == "Una pregunta de ejemplo":
+        elif mode == "example":
             # The same question in both views; the technical one adds its precise wording below
             options = {q["simple"]: q for q in questions}
-            chosen = st.selectbox("Pregunta", list(options), key=f"{domain}_question", help=ayuda("pregunta"))
+            chosen = st.selectbox(idioma.t("dominio.render.question"), list(options), key=f"{domain}_question", help=ayuda("pregunta"))
             item = options[chosen]
             if tech:
-                st.caption("Formulación técnica: " + md(item["tecnica"]))
+                st.caption(idioma.t("dominio.render.tech_wording") + md(item["tecnica"]))
             if item.get("terminos"):
-                with st.expander("¿Qué significa " + ", ".join(item["terminos"]) + "?"):
+                with st.expander(idioma.t("dominio.render.terms", terms=", ".join(item["terminos"]))):
                     st.markdown("\n".join(f"- **{md(t)}:** {md(m)}" for t, m in item["terminos"].items()))
             query = Path(item["query"]).read_text()
-            if st.button("Responder", type="primary", key=f"{domain}_answer"):
+            if st.button(idioma.t("dominio.render.answer"), type="primary", key=f"{domain}_answer"):
                 st.session_state[f"{domain}_shown"] = (chosen, query, *run(query, domain))
             shown = st.session_state.get(f"{domain}_shown", (None,))
             if shown[0] == chosen:
@@ -772,23 +773,24 @@ def render(cfg_path, tech):
                 if item.get("antes_despues") and not item.get("porque", {}).get("recorrido"):
                     before_after(item["antes_despues"])
                 show_answer(cfg, tech, query, columns, rows, item,
-                            note="Se ejecuta ahora, en vivo, sobre los datos.")
+                            note=idioma.t("dominio.render.live_note"))
         else:
             available, _ = llm_status()
-            question = st.text_area("Pregunta", placeholder=cfg.get("ejemplo_libre", ""), key=f"{domain}_free", help=ayuda("propia"))
-            if st.button("Responder", type="primary", disabled=not available or not question.strip(),
+            question = st.text_area(idioma.t("dominio.render.question"), placeholder=cfg.get("ejemplo_libre", ""),
+                                    key=f"{domain}_free", help=ayuda("propia"))
+            if st.button(idioma.t("dominio.render.answer"), type="primary", disabled=not available or not question.strip(),
                          key=f"{domain}_free_answer"):
-                with st.spinner("El LLM está escribiendo la query..."):
-                    result = answer.ask_rastro(question, domain)
+                with st.spinner(idioma.t("dominio.render.writing")):
+                    result = answer.ask_rastro(question, domain, idioma.lang())
                 if result.get("sin_datos"):
-                    st.warning(f"Rastro no tiene ese dato: {result['sin_datos']}")
+                    st.warning(idioma.t("dominio.render.no_data", missing=result["sin_datos"]))
                 elif result["query"] is None:
-                    st.error("El LLM no logró una query que funcione en tres intentos.")
+                    st.error(idioma.t("dominio.render.failed"))
                 else:
                     show_answer(cfg, tech, result["query"], result["columns"], result["rows"],
-                                note=f"Intentos: {len(result['attempts'])}.")
+                                note=idioma.t("dominio.render.attempts", n=len(result["attempts"])))
             if not available:
-                st.info("Para preguntas libres hace falta un LLM. Mientras tanto, pueden usarse las preguntas de ejemplo.")
+                st.info(idioma.t("dominio.render.need_llm"))
 
     if trust_tab:
         with trust_tab:
@@ -797,41 +799,40 @@ def render(cfg_path, tech):
     with faq_tab:
         diagram = cfg.get("diagrama", {})
         show_faq(domain, [(i["pregunta"], md(i["respuesta"]), i.get("tecnico", False)) for i in cfg.get("faq", [])], tech,
-                 [(f"arquitectura-{domain}", "De las fuentes del dominio a una capa semántica."),
-                  (diagram.get("archivo"), f"El {diagram.get('titulo')}: lo que lee el LLM.")],
-                 diagram.get("titulo", "diccionario"))
+                 [(f"arquitectura-{domain}", idioma.t("dominio.render.architecture_caption")),
+                  (diagram.get("archivo"), idioma.t("dominio.render.dictionary_caption", title=diagram.get("titulo")))],
+                 diagram.get("titulo", idioma.t("dominio.render.dictionary")))
 
 
-@st.cache_data
-def general_faq(mtime):
-    return yaml.safe_load(Path("/app/faq-general.yaml").read_text())
+def general_faq():
+    return idioma.localized("/app/faq-general.yaml")
 
 
 def domain_name(domain):
-    return next((d["name"] for d in yaml.safe_load(Path("/app/dominios.yaml").read_text()) if d["id"] == domain), domain)
+    return next((d["name"] for d in idioma.localized("/app/dominios.yaml") if d["id"] == domain), domain)
 
 
 def show_faq(domain, specific, tech, diagrams, diagram_title="diccionario"):
     """The frequent questions: first those that apply to every case, then this case's.
     specific is a list of (question, answer, technical)."""
-    general = general_faq(Path("/app/faq-general.yaml").stat().st_mtime)
+    general = general_faq()
 
     def block(items):
         for question, answer_text in items:
             with st.expander(question):
                 st.markdown(answer_text)
 
-    st.markdown("##### Para todos los casos")
+    st.markdown(idioma.t("dominio.show_faq.all_cases"))
     block([(i["pregunta"], md(i["respuesta"])) for i in general if not i.get("tecnico")])
-    st.markdown(f"##### De este caso: {domain_name(domain)}")
+    st.markdown(idioma.t("dominio.show_faq.this_case", name=domain_name(domain)))
     block([(q, a) for q, a, t in specific if not t])
     if not tech:
-        st.caption("Hay más preguntas para perfiles técnicos: active «Ver detalles técnicos» en la barra lateral.")
+        st.caption(idioma.t("dominio.show_faq.more_technical"))
         return
-    st.markdown("##### Para técnicos, en todos los casos")
+    st.markdown(idioma.t("dominio.show_faq.technical_all"))
     block([(i["pregunta"], md(i["respuesta"])) for i in general if i.get("tecnico")])
-    st.markdown(f"##### Para técnicos, de este caso: {domain_name(domain)}")
-    with st.expander(f"Cómo está armado Rastro: arquitectura y {diagram_title}"):
+    st.markdown(idioma.t("dominio.show_faq.technical_case", name=domain_name(domain)))
+    with st.expander(idioma.t("dominio.show_faq.architecture", title=diagram_title)):
         for name, caption in diagrams:
             if not name or not Path(f"/app/{name}.svg").exists():
                 continue
@@ -854,13 +855,13 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
         return
     values = list(dict.fromkeys(r[columns.index(why["columna"])] for r in rows if r[columns.index(why["columna"])]))
     with st.container(border=True):
-        st.markdown("**¿Por qué este número?**", help="Elija una fila de la respuesta: se ve de dónde sale, enlace por "
-                    "enlace, con la fuente y la regla de cada uno.")
-        value = st.selectbox("Fila", values, key=f"{domain}_{where}_porque_{why['columna']}", label_visibility="collapsed")
+        st.markdown(idioma.t("dominio.show_why.title"), help=idioma.t("dominio.show_why.help"))
+        value = st.selectbox(idioma.t("dominio.show_why.row"), values, key=f"{domain}_{where}_porque_{why['columna']}",
+                             label_visibility="collapsed")
         st.markdown(f"**{md(why['titulo'].format(valor=value))}.** {md(why.get('explica', ''))}")
         cols, found = run(prefixed(why["query"].replace("{valor}", str(value).replace('"', '\\"')), domain), domain)
         if not found:
-            st.info("No hay evidencia guardada para esta fila.")
+            st.info(idioma.t("dominio.show_why.no_evidence"))
             return
         records = [dict(zip(cols, r)) for r in found]
 
@@ -872,8 +873,8 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
         shown = records[:8]
         nodes = [("entidad", fmt(r, why["nodo"]), fmt(r, why["detalle"]), why["flecha"]) for r in shown]
         if len(records) > len(shown):
-            nodes.append(("dato", f"y {len(records) - len(shown)} más", "", why["flecha"]))
-        drawing = grafo.svg((str(value), "la fila de la respuesta"), nodes, width=1500,
+            nodes.append(("dato", idioma.t("dominio.show_why.more", n=len(records) - len(shown)), "", why["flecha"]))
+        drawing = grafo.svg((str(value), idioma.t("dominio.show_why.answer_row")), nodes, width=1500,
                             height=620 + 55 * max(0, len(nodes) - 8), scale=0.95, font="Helvetica, Arial, sans-serif")
         st.markdown(f'<img src="data:image/svg+xml;base64,{base64.b64encode(drawing.encode()).decode()}" '
                     'style="width:100%;border-radius:12px">', unsafe_allow_html=True)
@@ -884,13 +885,14 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
 def before_after(card):
     """The same card at every moment of the demo: without Rastro on the left, with Rastro on the right."""
     left, right = st.columns(2)
-    for col, key, title in [(left, "sin", card.get("titulo_sin", "Sin Rastro")), (right, "con", "Con Rastro")]:
+    for col, key, title in [(left, "sin", card.get("titulo_sin", idioma.t("dominio.before_after.without"))),
+                           (right, "con", idioma.t("dominio.before_after.with"))]:
         with col.container(border=True):
             st.caption(title, help=ayuda("sin_rastro" if key == "sin" else "con_rastro"))
             st.markdown(f"### {'⚪' if key == 'sin' else '🟢'} {md(card[key]['valor'])}")
             st.markdown(md(card[key]["detalle"]))
     if card.get("impacto"):
-        st.warning("**Lo que cuesta no integrar:** " + md(card["impacto"]))
+        st.warning(idioma.t("dominio.before_after.cost") + md(card["impacto"]))
 
 
 def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=None):
@@ -901,8 +903,8 @@ def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=
         st.markdown(f"### {md(example['encabezado'])}")
     if example.get("para_que"):
         with st.container(border=True):
-            st.markdown(f"**Para qué sirve.** {md(example['para_que'])}")
-            st.markdown("**Qué parte de Rastro muestra cada paso:**\n"
+            st.markdown(idioma.t("dominio.show_integration_example.purpose", text=md(example["para_que"])))
+            st.markdown(idioma.t("dominio.show_integration_example.parts")
                         + "\n".join(f"- **{s['titulo']}**: {md(s['parte'])}" for s in steps if s.get("parte")))
     st.caption(md(example["aviso"]))
     selected = st.radio(example["selector"], range(len(steps)),
@@ -910,7 +912,7 @@ def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=
                         key=f"{key or domain}_integration_example", horizontal=True)
     step = steps[selected]
     if step.get("parte"):
-        st.info(f"**Parte de Rastro:** {md(step['parte'])}")
+        st.info(idioma.t("dominio.show_integration_example.part", part=md(step["parte"])))
     st.markdown(step["contenido"])
     missing_run_shown = False
     for n, query in enumerate(step.get("consultas", [])):
@@ -961,14 +963,14 @@ def show_demo(cfg, tech):
     key = f"{domain}_demo_step"
     i = min(st.session_state.get(key, 0), len(steps) - 1)
     if cfg.get("demo_porque"):
-        with st.expander(f"¿Por qué estos {len(steps)} momentos?"):
+        with st.expander(idioma.t("dominio.show_demo.why_moments", n=len(steps))):
             st.markdown(md(cfg["demo_porque"]))
     st.markdown(" → ".join(f"**{n + 1} · {s['paso']}**" if n == i else f"{n + 1} · {s['paso']}"
                            for n, s in enumerate(steps)))
     step = steps[i]
     st.subheader(step["titulo"], help=ayuda("paso"))
     if step.get("que_es"):   # the other use cases still explain what each step is
-        st.markdown(f"**¿Qué es {md(step['paso']).lower()}?** {md(step['que_es'])}")
+        st.markdown(idioma.t("dominio.show_demo.what_is", step=md(step["paso"]).lower(), text=md(step["que_es"])))
     if step.get("muestra"):
         st.markdown(md(step["muestra"]))
     tipo = step.get("tipo", "pregunta")
@@ -985,17 +987,17 @@ def show_demo(cfg, tech):
         item = next(q for q in cfg["preguntas"] if q["id"] == step["pregunta"])
         st.info(f"**{md(item['simple'])}**")
         if tech:
-            st.caption("Formulación técnica: " + md(item["tecnica"]))
+            st.caption(idioma.t("dominio.show_demo.tech_wording") + md(item["tecnica"]))
         query = Path(item["query"]).read_text()
         columns, rows = run(query, domain)
         if item.get("antes_despues") and not item.get("porque", {}).get("recorrido"):
             before_after(item["antes_despues"])
-        show_answer(cfg, tech, query, columns, rows, item, note="Se ejecuta ahora, en vivo, sobre los datos.", where="demo")
+        show_answer(cfg, tech, query, columns, rows, item, note=idioma.t("dominio.show_demo.live_note"), where="demo")
     back, _, forward = st.columns([2, 3, 2])
-    if i > 0 and back.button("← Anterior", key=f"{key}_back"):
+    if i > 0 and back.button(idioma.t("dominio.show_demo.back"), key=f"{key}_back"):
         st.session_state[key] = i - 1
         st.rerun()
-    if i < len(steps) - 1 and forward.button("Siguiente →", type="primary", key=f"{key}_next"):
+    if i < len(steps) - 1 and forward.button(idioma.t("dominio.show_demo.next"), type="primary", key=f"{key}_next"):
         st.session_state[key] = i + 1
         st.rerun()
 
@@ -1005,7 +1007,7 @@ def show_change_short(cfg, changes, escenario, tech):
     change = next((c for c in cfg["cambios"] if c["antes"] == escenario), cfg["cambios"][0])
     before, after = changes.get(change["antes"]), changes.get(change["despues"])
     if not (before and after):
-        st.info("Falta registrar la prueba de cambio.")
+        st.info(idioma.t("dominio.show_change_short.missing"))
         return
     n = len(before["cells"])
     rotas = before["totals"]["B"].get("❌", 0) + before["totals"]["B"].get("🟡", 0)
@@ -1013,15 +1015,15 @@ def show_change_short(cfg, changes, escenario, tech):
     st.markdown(md(change["que"]))
     antes, despues = st.columns(2)
     with antes.container(border=True):
-        st.markdown("**Recién cambiada la base**")
-        st.markdown(f"Sin Rastro: **{rotas} consultas rotas**, que hay que encontrar")
-        st.markdown(f"Con Rastro: **las {n} preguntas fallan juntas**")
-        st.caption("Rastro no arranca hasta arreglarlo: falla en voz alta, todo junto.")
+        st.markdown(idioma.t("dominio.show_change_short.just_changed"))
+        st.markdown(idioma.t("dominio.show_change_short.without_broken", broken=rotas))
+        st.markdown(idioma.t("dominio.show_change_short.with_fail", n=n))
+        st.caption(idioma.t("dominio.show_change_short.fails_loud"))
     with despues.container(border=True):
-        st.markdown("**Para arreglarlo**")
-        st.markdown(f"Sin Rastro: **reescribir las {rotas} consultas** a mano")
-        st.markdown(f"Con Rastro: **una línea**, y responden las {after['totals']['C'].get('✅', 0)} de {n}")
-        st.caption(f"De las {n} preguntas, sin Rastro {sin_query} nunca tuvieron una consulta que funcionara.")
+        st.markdown(idioma.t("dominio.show_change_short.to_fix"))
+        st.markdown(idioma.t("dominio.show_change_short.without_fix", broken=rotas))
+        st.markdown(idioma.t("dominio.show_change_short.with_fix", ok=after["totals"]["C"].get("✅", 0), n=n))
+        st.caption(idioma.t("dominio.show_change_short.never", n=n, never=sin_query))
     if tech:
         st.code(f"- {change['arreglo'][0]}\n+ {change['arreglo'][1]}", language="diff")
 
@@ -1031,33 +1033,32 @@ def show_correction(result, tech):
     share is set, without touching anything else."""
     con, sin = result.get("con"), result.get("sin")
     if not (con and sin):
-        st.info("Falta registrar la prueba de la corrección (layer/energia/cambio/correccion.sh registrar).")
+        st.info(idioma.t("dominio.show_correction.missing"))
         return
 
     def m3(v):
-        return f"{v / 1e6:,.2f} M m³".replace(",", "X").replace(".", ",").replace("X", ".")
+        return f"{idioma.number(v / 1e6, 2)} M m³"
 
     def pct(v):
-        return f"{v:g} %".replace(".", ",")
+        return f"{v:g} %" if idioma.lang() == "en" else f"{v:g} %".replace(".", ",")
 
     filas = [   # (where, without the correction, with the correction)
-        ("Respuesta de Rastro", m3(sin["layer_C"]), m3(con["layer_C"])),
-        ("Respuesta con SQL sobre Rastro", m3(sin["layer_D"]), m3(con["layer_D"])),
-        ("Respuesta sin Rastro", m3(sin["layer_B"]), m3(con["layer_B"])),
-        ("Entrada del modelo, con Rastro", pct(sin["lab_B_pct"]), pct(con["lab_B_pct"])),
-        ("Entrada del modelo, sin Rastro", pct(sin["lab_A_pct"]), pct(con["lab_A_pct"])),
-        ("Explicación, con Rastro", "sin marca", "marcada" if con["lab_B_marca"] else "sin marca"),
+        (idioma.t("dominio.show_correction.row_rastro"), m3(sin["layer_C"]), m3(con["layer_C"])),
+        (idioma.t("dominio.show_correction.row_sql_rastro"), m3(sin["layer_D"]), m3(con["layer_D"])),
+        (idioma.t("dominio.show_correction.row_without"), m3(sin["layer_B"]), m3(con["layer_B"])),
+        (idioma.t("dominio.show_correction.row_input_with"), pct(sin["lab_B_pct"]), pct(con["lab_B_pct"])),
+        (idioma.t("dominio.show_correction.row_input_without"), pct(sin["lab_A_pct"]), pct(con["lab_A_pct"])),
+        (idioma.t("dominio.show_correction.row_explanation"), idioma.t("dominio.show_correction.unmarked"),
+         idioma.t("dominio.show_correction.marked") if con["lab_B_marca"] else idioma.t("dominio.show_correction.unmarked")),
     ]
-    df = pd.DataFrame([{"Dónde": a, "Antes": b, "Después": c, "¿Cambió solo?": "sí" if b != c else "no"}
-                       for a, b, c in filas])
-    st.caption("La respuesta es el petróleo de 2025 que le corresponde a YPF según su participación; la entrada del "
-               "modelo, la participación de Total en Aguada Pichana Este.")
+    yes, no = idioma.t("dominio.show_correction.yes"), idioma.t("dominio.show_correction.no")
+    headers = [idioma.t(f"dominio.show_correction.col_{c}") for c in ("where", "before", "after", "changed")]
+    df = pd.DataFrame([dict(zip(headers, (a, b, c, yes if b != c else no))) for a, b, c in filas])
+    st.caption(idioma.t("dominio.show_correction.what"))
     tabla(df, key="demo_correccion")
-    st.markdown(md(f"**Dónde se corrigió:** en un solo lugar, el archivo de participaciones revisadas (con el documento). "
-                   f"Sin Rastro, el mismo dato se lee del texto del mapa en {result['lugares_sin_rastro']} lugares "
-                   f"(cada consulta y el código del modelo), y hay que encontrarlos y corregirlos uno por uno."))
+    st.markdown(md(idioma.t("dominio.show_correction.where_fixed", places=result["lugares_sin_rastro"])))
     if tech:
-        st.caption("Se mide con layer/energia/cambio/correccion.sh: saca la corrección, rearma Rastro, mide y la vuelve a poner.")
+        st.caption(idioma.t("dominio.show_correction.measured"))
 
 
 GRAPHDB = "http://graphdb:7200/repositories/rastro"
@@ -1066,28 +1067,30 @@ GRAPHDB = "http://graphdb:7200/repositories/rastro"
 def claim_verdict(reading, rows):
     """The verdict on one reading of the claim, computed from what Rastro returned."""
     if reading["tipo"] == "sin_datos":
-        return "🔍", "Rastro no tiene el dato", reading["falta"]
+        return "🔍", idioma.t("dominio.claim_verdict.no_data"), reading["falta"]
     def fmt(v):
-        return f"{float(v) / reading['divisor']:,.1f} {reading['unidad']}".replace(",", "X").replace(".", ",").replace("X", ".")
+        return f"{idioma.number(float(v) / reading['divisor'], 1)} {reading['unidad']}"
     if reading["tipo"] == "numero":
         value = float(rows[0][0]) / reading["divisor"]
         holds = abs(value - reading["valor"]) <= 0.05 * reading["valor"]
-        return ("✅", "Se sostiene", f"Rastro dice {fmt(rows[0][0])}.") if holds else \
-            ("❌", "No se sostiene", f"Rastro dice {fmt(rows[0][0])}.")
+        says = idioma.t("dominio.claim_verdict.says", value=fmt(rows[0][0]))
+        return ("✅", idioma.t("dominio.claim_verdict.holds"), says) if holds else \
+            ("❌", idioma.t("dominio.claim_verdict.does_not_hold"), says)
     names = [r[0] for r in rows]
     place = next((i for i, n in enumerate(names) if reading["empresa"] in n.upper()), None)
     ranking = " · ".join(f"{i + 1}. {r[0]} ({fmt(r[1])})" for i, r in enumerate(rows[:3]))
     if place == 0:
-        return "✅", "Se sostiene", ranking
-    where = f"es la {place + 1}.ª" if place is not None else f"no está entre las {len(rows)} primeras"
-    return "❌", f"No se sostiene: {where}", ranking
+        return "✅", idioma.t("dominio.claim_verdict.holds"), ranking
+    where = idioma.t("dominio.claim_verdict.place", place=place + 1) if place is not None \
+        else idioma.t("dominio.claim_verdict.not_in_top", n=len(rows))
+    return "❌", idioma.t("dominio.claim_verdict.does_not_hold_where", where=where), ranking
 
 
 def show_claims(cfg, tech):
     """Check a claim: each example is compared live with Rastro, reading by reading."""
     claims, domain = cfg["afirmaciones"], cfg["domain"]
     st.markdown(md(claims["intro"]))
-    chosen = st.radio("Afirmación", [c["texto"] for c in claims["ejemplos"]], key=f"{domain}_afirmacion")
+    chosen = st.radio(idioma.t("dominio.show_claims.claim"), [c["texto"] for c in claims["ejemplos"]], key=f"{domain}_afirmacion")
     claim = next(c for c in claims["ejemplos"] if c["texto"] == chosen)
     st.markdown(f"> {claim['texto']}")
     for reading in claim["lecturas"]:
@@ -1109,26 +1112,27 @@ def show_external(cfg, tech):
     ext, domain = cfg["externo"], cfg["domain"]
     st.markdown(f"**{ext['titulo']}**", help=ayuda("externo"))
     st.markdown(md(ext["intro"]))
-    st.graphviz_chart("""digraph { rankdir=LR; bgcolor="transparent";
+    graph = {name: idioma.t(f"dominio.show_external.graph_{name}") for name in ("rastro", "wikidata", "query", "lei")}
+    st.graphviz_chart(f"""digraph {{ rankdir=LR; bgcolor="transparent";
         node [fontname="Helvetica", fontsize=14, style=filled, penwidth=0];
-        r [label="Rastro\\nempresa · LEI · petróleo 2025", shape=ellipse, fillcolor="#2F6FB5", fontcolor="white"];
-        w [label="Wikidata (internet)\\nsede · bolsa · dueño · sitio web", shape=ellipse, fillcolor="#FFF3E6", color="#FF8C42", penwidth=2];
-        q [label="una consulta\\n(GraphDB)", shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#B8C2CF", penwidth=1];
-        r -> q [label="  el mismo LEI  ", dir=both, color="#7A8699", fontcolor="#7A8699", fontname="Helvetica"];
-        q -> w [dir=both, color="#7A8699"]; }""", use_container_width=True)
+        r [label="{graph['rastro']}", shape=ellipse, fillcolor="#2F6FB5", fontcolor="white"];
+        w [label="{graph['wikidata']}", shape=ellipse, fillcolor="#FFF3E6", color="#FF8C42", penwidth=2];
+        q [label="{graph['query']}", shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#B8C2CF", penwidth=1];
+        r -> q [label="{graph['lei']}", dir=both, color="#7A8699", fontcolor="#7A8699", fontname="Helvetica"];
+        q -> w [dir=both, color="#7A8699"]; }}""", use_container_width=True)
     key = f"{domain}_externo"
-    if st.button("Consultar en vivo", type="primary", key=f"{key}_boton",
-                 help="Une Rastro y Wikidata ahora mismo. Tarda unos 15 segundos y necesita internet."):
+    if st.button(idioma.t("dominio.show_external.live"), type="primary", key=f"{key}_boton",
+                 help=idioma.t("dominio.show_external.live_help")):
         try:
             r = requests.post(GRAPHDB, data={"query": Path(ext["consulta"]).read_text()},
                               headers={"Accept": "text/csv"}, timeout=90)
             r.raise_for_status()
-            st.session_state[key] = (pd.read_csv(io.StringIO(r.text)), "en vivo, ahora")
+            st.session_state[key] = (pd.read_csv(io.StringIO(r.text)), idioma.t("dominio.show_external.live_now"))
         except Exception as e:
             st.session_state[key] = None
-            st.warning(f"Wikidata no respondió ({str(e)[:120]}). Se muestra el resultado guardado; Wikidata a veces "
-                       "limita las consultas: probar de nuevo en un par de minutos.")
-    table, when = st.session_state.get(key) or (pd.read_csv(ext["guardado"]), f"guardado el {ext['fecha_guardado']}")
+            st.warning(idioma.t("dominio.show_external.no_answer", error=str(e)[:120]))
+    table, when = st.session_state.get(key) or (pd.read_csv(ext["guardado"]),
+                                                idioma.t("dominio.show_external.saved_on", date=ext["fecha_guardado"]))
     columns = [c for c in ext["columnas"] if c in table.columns and (tech or c not in ("lei", "wikidata"))]
     shown = table[columns].copy()
     for c in ("su_parte_m3", "declara_m3"):
@@ -1137,9 +1141,9 @@ def show_external(cfg, tech):
     shown = shown.fillna("—").rename(columns=ext["columnas"])
     shown, config = logos.with_logos(shown, columns)
     tabla(shown, hide_index=True, use_container_width=True, column_config=config)
-    st.caption(f"Resultado {when}. Fuentes: Rastro (Capítulo IV, mapas de la Secretaría de Energía y GLEIF) y Wikidata.")
+    st.caption(idioma.t("dominio.show_external.result", when=when))
     st.info(md(ext["conclusion"]))
-    with st.expander("La consulta: dos grafos en una"):
+    with st.expander(idioma.t("dominio.show_external.query")):
         st.code(Path(ext["consulta"]).read_text(), language="sparql")
     if ext.get("materializado"):
         show_enrichment_saved(ext, domain, tech)
@@ -1148,19 +1152,17 @@ def show_external(cfg, tech):
 def show_enrichment_saved(ext, domain, tech):
     """The same enrichment, saved in Rastro: what the outside source answered stays as one more source,
     with its date, and is queried like any other data."""
-    st.markdown("**Guardado en Rastro**", help=ayuda("externo"))
+    st.markdown(idioma.t("dominio.show_enrichment_saved.title"), help=ayuda("externo"))
     query = Path(ext["materializado"]).read_text()
     columns, rows = run(query, domain)
     if not rows:
-        st.info("Todavía no se guardó: `docker compose run --rm wikidata-energia-loader` y después el enlazador.")
+        st.info(idioma.t("dominio.show_enrichment_saved.not_saved"))
         return
-    tabla(pd.DataFrame(rows, columns=columns).rename(columns={
-        "empresa": "Empresa", "bolsa": "Cotiza en", "sede": "Sede", "consultado": "Consultado el", "wikidata": "Wikidata"}),
-        hide_index=True, use_container_width=True)
-    st.caption(md(
-        "Lo mismo, guardado: lo que respondió Wikidata queda en Rastro como una fuente más, con el día de la consulta "
-        "y la huella del archivo, unido por el LEI. No depende de internet, se puede repetir y lo usan las preguntas, el "
-        "asistente de IA y el modelo de Rastro Lab. En vivo está siempre al día; guardado, queda como estaba ese día."))
+    headers = {c: idioma.t(f"dominio.show_enrichment_saved.col_{name}")
+               for c, name in [("empresa", "company"), ("bolsa", "exchange"), ("sede", "headquarters"), ("consultado", "queried")]}
+    tabla(pd.DataFrame(rows, columns=columns).rename(columns=headers | {"wikidata": "Wikidata"}),
+          hide_index=True, use_container_width=True)
+    st.caption(md(idioma.t("dominio.show_enrichment_saved.explain")))
     if tech:
         st.code(query, language="sparql")
 
@@ -1176,14 +1178,13 @@ def show_text_question(cfg, tech, demo=False):
     live."""
     domain = cfg["domain"]
     item = read_json(cfg["texto"])
-    st.markdown("**1 · La pregunta → 2 · El grafo elige → 3 · La IA lee solo eso → 4 · El resumen, con citas "
-                "→ 5 · Comprobar**", help=ayuda("texto"))
-    text_step(1, "La pregunta")
+    st.markdown(idioma.t("dominio.show_text_question.steps"), help=ayuda("texto"))
+    text_step(1, idioma.t("dominio.show_text_question.question"))
     st.info(f"**{md(item['simple'])}**")
     if tech:
-        st.caption("Formulación técnica: " + md(item["pregunta"]))
+        st.caption(idioma.t("dominio.show_text_question.tech_wording") + md(item["pregunta"]))
     if not demo:
-        if st.button("Responder", type="primary", key=f"{domain}_text_answer"):
+        if st.button(idioma.t("dominio.show_text_question.answer"), type="primary", key=f"{domain}_text_answer"):
             st.session_state[f"{domain}_text_shown"] = True
         if not st.session_state.get(f"{domain}_text_shown"):
             return
@@ -1200,43 +1201,39 @@ def show_text_question(cfg, tech, demo=False):
         themes = [(th["tema"], [r for r in th["registros"] if r in records], th["detalle"], "") for th in item["temas"]]
     else:
         records = {c: (float(m), a, e, d) for c, m, a, e, d in rows}
-        unit = ["contrato", "contratos"]
-        table = pd.DataFrame([{"Contrato": c, "Millones de US$": round(m / 1e6, 1), "Agencia": a.title(),
-                               "Empresa": e.title(), "Descripción": d.capitalize()} for c, (m, a, e, d) in records.items()])
+        unit = [idioma.t("dominio.show_text_question.contract"), idioma.t("dominio.show_text_question.contracts")]
+        headers = [idioma.t(f"dominio.show_text_question.col_{c}") for c in ("contract", "millions", "agency", "company", "description")]
+        table = pd.DataFrame([dict(zip(headers, (c, round(m / 1e6, 1), a.title(), e.title(), d.capitalize())))
+                              for c, (m, a, e, d) in records.items()])
         themes = []
         for th in item["temas"]:
             found = [c for c in th["contratos"] if c in records]
             themes.append((th["tema"], found, th["detalle"],
-                           f", US\\$ {money(sum(records[c][0] for c in found) / 1e6)} millones"))
+                           idioma.t("dominio.show_text_question.amount", amount=money(sum(records[c][0] for c in found) / 1e6))))
     n = len(records)
 
-    text_step(2, "El grafo elige, con una consulta exacta",
-              "No es una búsqueda por palabras: la consulta usa los conceptos y los enlaces del diccionario, así que "
-              "trae exactamente lo que pide la pregunta, siempre lo mismo.")
+    text_step(2, idioma.t("dominio.show_text_question.graph_picks"), idioma.t("dominio.show_text_question.graph_picks_help"))
     st.markdown(md(graph_part.strip()))
-    st.metric(f"{unit[1].capitalize()} elegidos por el grafo", n)
-    with st.expander("La consulta SPARQL que elige los registros", expanded=tech):
-        st.caption("Pide conceptos del diccionario, no palabras: por eso trae exactamente estos registros, siempre los mismos.")
+    st.metric(idioma.t("dominio.show_text_question.picked", units=unit[1].capitalize()), n)
+    with st.expander(idioma.t("dominio.show_text_question.query"), expanded=tech):
+        st.caption(idioma.t("dominio.show_text_question.query_caption"))
         st.code(query, language="sparql")
     if demo and item.get("busqueda_texto"):
         compare_text_search(item, records, domain, tech, always=True)
 
-    text_step(3, "La IA lee solo esos textos",
-              "El asistente de IA no busca nada por su cuenta: recibe estos textos y ninguno más.")
-    st.markdown(md(ai_part.strip()) or f"Un asistente de IA leyó solo los textos de esos {n} {unit[1]}.")
-    with st.expander(f"Los {n} textos que leyó, tal como están en la fuente"):
+    text_step(3, idioma.t("dominio.show_text_question.ai_reads"), idioma.t("dominio.show_text_question.ai_reads_help"))
+    st.markdown(md(ai_part.strip()) or idioma.t("dominio.show_text_question.ai_read", n=n, units=unit[1]))
+    with st.expander(idioma.t("dominio.show_text_question.texts_read", n=n)):
         tabla(table, hide_index=True, use_container_width=True)
 
-    text_step(4, "El resumen, con citas")
+    text_step(4, idioma.t("dominio.show_text_question.summary"))
     for theme, found, detail, extra in themes:
-        st.markdown(f"- **{md(theme)}** · {len(found)} {unit[0] if len(found) == 1 else unit[1]}{extra}. "
-                    f"{md(detail)}  \n<small>Cita: {', '.join(found)}</small>", unsafe_allow_html=True)
+        st.markdown(idioma.t("dominio.show_text_question.theme", theme=md(theme), n=len(found),
+                             unit=unit[0] if len(found) == 1 else unit[1], extra=extra, detail=md(detail),
+                             cited=", ".join(found)), unsafe_allow_html=True)
 
-    text_step(5, "Comprobar",
-              "Cada tema cita sus registros por número: se abren en la tabla del paso 3 y se lee el texto original.")
-    st.markdown(f"Cada tema cita sus {unit[1]}: en el paso 3 está el texto original de cada uno. "
-                f"Resumen guardado el {item['fecha']}; los {unit[1]} se leen en vivo, y si cambian los datos el "
-                "resumen se vuelve a generar.")
+    text_step(5, idioma.t("dominio.show_text_question.check"), idioma.t("dominio.show_text_question.check_help"))
+    st.markdown(idioma.t("dominio.show_text_question.check_text", units=unit[1], date=item["fecha"]))
     if item.get("busqueda_texto") and not demo:
         compare_text_search(item, records, domain, tech)
 
@@ -1249,7 +1246,7 @@ def company(name):
 
 def compare_text_search(item, contracts, domain, tech, always=False):
     """The same, searching for «Leidos» in the texts instead of using the graph (what a common RAG would do)."""
-    if not always and not st.toggle("Comparar con una búsqueda por texto", key=f"{domain}_text_search"):
+    if not always and not st.toggle(idioma.t("dominio.compare_text_search.toggle"), key=f"{domain}_text_search"):
         return
     query = Path(item["busqueda_texto"]).read_text()
     _, rows = run(query, domain)
@@ -1258,16 +1255,14 @@ def compare_text_search(item, contracts, domain, tech, always=False):
     lost = [t["tema"] for t in item["temas"] if t["contratos"] and all(c in missing for c in t["contratos"])]
     companies = sorted({company(e) for _, _, e, _ in missing.values()})
     before_after({
-        "titulo_sin": "Sin Rastro: búsqueda de «Leidos» en los textos",
-        "sin": {"valor": f"{len(contracts) - len(missing)} de {len(contracts)}",
-                "detalle": (f"Omite {len(missing)} contratos (US$ {money(sum(m for m, *_ in missing.values()) / 1e6)} M) "
-                            f"de empresas del grupo con otra razón social: {', '.join(companies)}."
-                            + (f" Se pierden temas completos: {', '.join(lost).lower()}." if lost else ""))},
-        "con": {"valor": f"{len(contracts)} de {len(contracts)}",
-                "detalle": "Los 40 contratos más grandes del grupo, seleccionados con una consulta exacta."}})
-    st.caption("La búsqueda considera la descripción del contrato y el nombre de la empresa, como lo haría una "
-               "consulta SQL o un buscador. Rastro identifica esas empresas como parte del grupo porque el grupo "
-               "se definió una sola vez, con la evidencia de cada vínculo.")
+        "titulo_sin": idioma.t("dominio.compare_text_search.without_title"),
+        "sin": {"valor": idioma.t("dominio.compare_text_search.of", found=len(contracts) - len(missing), total=len(contracts)),
+                "detalle": (idioma.t("dominio.compare_text_search.misses", n=len(missing),
+                                     amount=money(sum(m for m, *_ in missing.values()) / 1e6), companies=", ".join(companies))
+                            + (idioma.t("dominio.compare_text_search.lost", themes=", ".join(lost).lower()) if lost else ""))},
+        "con": {"valor": idioma.t("dominio.compare_text_search.of", found=len(contracts), total=len(contracts)),
+                "detalle": idioma.t("dominio.compare_text_search.with_detail")}})
+    st.caption(idioma.t("dominio.compare_text_search.caption"))
     if tech:
         st.code(query, language="sparql")
 
@@ -1286,7 +1281,7 @@ def llm_status():
 
 def trust(cfg, tech, evaluation, changes):
     if not cfg.get("tarjetas"):   # not measured yet: say so, and show only what has been checked
-        st.markdown("### Por qué confiar", help=ayuda("confiar"))
+        st.markdown(idioma.t("dominio.trust.title"), help=ayuda("confiar"))
         if cfg.get("sin_medir"):
             st.info(md(cfg["sin_medir"]))
         show_quality(cfg.get("calidad"))
@@ -1306,9 +1301,10 @@ def trust(cfg, tech, evaluation, changes):
         numbers.update(pct_evidencia=f"{100 * evidence['enlaces_con_evidencia'] / evidence['enlaces']:.0f} %",
                        n_enlaces=money(evidence["enlaces"]), cols=evidence["columnas"], cols_ok=evidence["columnas_con_fuente"])
     else:
-        numbers.update(pct_evidencia="Sí", n_enlaces="todos los", cols="las", cols_ok="todas")
-    st.markdown("### Por qué confiar", help=ayuda("confiar"))
-    st.caption("El mismo asistente de IA, sin Rastro (escribe SQL sobre las bases tal como vienen) y con Rastro.")
+        numbers.update(pct_evidencia=idioma.t("dominio.trust.yes"), n_enlaces=idioma.t("dominio.trust.all_links"),
+                       cols=idioma.t("dominio.trust.the_columns"), cols_ok=idioma.t("dominio.trust.all_columns"))
+    st.markdown(idioma.t("dominio.trust.title"), help=ayuda("confiar"))
+    st.caption(idioma.t("dominio.trust.same_assistant"))
     card_help = ["tarjeta_correctas", "tarjeta_consistencia", "tarjeta_cambio", "tarjeta_auditar"]
     for k, (col, card) in enumerate(zip(st.columns(len(cfg["tarjetas"])), cfg["tarjetas"])):
         with col.container(border=True):
@@ -1318,90 +1314,91 @@ def trust(cfg, tech, evaluation, changes):
             st.caption(md(card["compara"].format(**numbers)))
 
     # In technical mode the fair baseline is added: SQL with Rastro's link tables
-    names = ({"B": "Sin Rastro", "D": "SQL + enlaces", "C": "Con Rastro"} if tech
-             else {"B": "Sin Rastro", "C": "Con Rastro"})
+    without, with_rastro = idioma.t("dominio.trust.without"), idioma.t("dominio.trust.with")
+    names = ({"B": without, "D": idioma.t("dominio.trust.sql_links"), "C": with_rastro} if tech
+             else {"B": without, "C": with_rastro})
     names = {k: v for k, v in names.items() if all(k in r for r in consistency.values())}
-    change_names = {"B": "Sin Rastro", "C": "Con Rastro"}
+    change_names = {"B": without, "C": with_rastro}
+    question_col, asked_col = idioma.t("dominio.trust.col_question"), idioma.t("dominio.trust.col_asked")
     simple = {q["id"]: q["simple"] for q in cfg["preguntas"]}
     n = len(evaluation.get("questions", {}))
     # The three tests, kept apart: in the technical view, one tab each, so that picking a question
     # in one test does not seem to change the others
     if tech:
-        tab_correct, tab_same, tab_change = st.tabs([f"1 · Correctas ({n} preguntas)",
-                                                     f"2 · Misma respuesta de 4 formas ({len(consistency)} preguntas)",
-                                                     f"3 · Cuando una base cambia (las {n} preguntas)"])
+        tab_correct, tab_same, tab_change = st.tabs([idioma.t("dominio.trust.tab_correct", n=n),
+                                                     idioma.t("dominio.trust.tab_same", n=len(consistency)),
+                                                     idioma.t("dominio.trust.tab_change", n=n)])
         with tab_correct:
             if evaluation.get("questions"):
                 evaluation_detail(evaluation, totals, cfg["domain"])
-    with tab_same if tech else st.expander(f"Ver las {4 * len(consistency)} respuestas"):
-        st.caption(f"{len(consistency)} preguntas, cada una hecha de 4 formas con el mismo significado.")
+    with tab_same if tech else st.expander(idioma.t("dominio.trust.see_answers", n=4 * len(consistency))):
+        st.caption(idioma.t("dominio.trust.four_ways", n=len(consistency)))
         table = []
         for qid, row in consistency.items():
-            line = {"Pregunta": row["texts"][0] if tech else simple.get(qid, row["texts"][0])}
+            line = {question_col: row["texts"][0] if tech else simple.get(qid, row["texts"][0])}
             for k, title in names.items():
                 line[title] = ("✅ " if row[k]["same"] else "❌ ") + " · ".join(short(a) for a in row[k]["answers"])
             table.append(line)
         tabla(pd.DataFrame(table), hide_index=True, use_container_width=True,
-                     column_config={"Pregunta": st.column_config.TextColumn(width="medium")})
-        st.caption("✅ la misma respuesta las 4 veces · ❌ cambió según cómo se preguntó. En las preguntas que "
-                   "piden una lista, el número es cuántos nombres devolvió.")
+                     column_config={question_col: st.column_config.TextColumn(width="medium")})
+        st.caption(idioma.t("dominio.trust.same_legend"))
         if consistency:
             labels = {qid: simple.get(qid, row["texts"][0]) for qid, row in consistency.items()}
-            picked = st.selectbox("Ver las 4 formas de una pregunta", list(labels.values()),
+            picked = st.selectbox(idioma.t("dominio.trust.see_four"), list(labels.values()),
                                   key=f"{cfg['domain']}_consistency")
             qid = next(k for k, v in labels.items() if v == picked)
             row = consistency[qid]
-            tabla(pd.DataFrame([{"Cómo se preguntó": t, **{names[k]: short(row[k]["answers"][i])
+            tabla(pd.DataFrame([{asked_col: t, **{names[k]: short(row[k]["answers"][i])
                                                                     for k in names}}
                                        for i, t in enumerate(row["texts"])]),
                          hide_index=True, use_container_width=True,
-                         column_config={"Cómo se preguntó": st.column_config.TextColumn(width="large")})
+                         column_config={asked_col: st.column_config.TextColumn(width="large")})
 
-    with tab_change if tech else st.expander("Ver los escenarios de cambio"):
+    with tab_change if tech else st.expander(idioma.t("dominio.trust.see_scenarios")):
         scenarios = {c["titulo"]: c for c in cfg.get("cambios", [])}
-        st.caption("Qué pasa con las preguntas de la prueba de cambio, todas juntas, cuando una base cambia.")
-        picked = st.radio("Escenario", list(scenarios), horizontal=True, label_visibility="visible", help=ayuda("escenario"),
-                          key=f"{cfg['domain']}_scenario")
+        st.caption(idioma.t("dominio.trust.scenarios_caption"))
+        picked = st.radio(idioma.t("dominio.trust.scenario"), list(scenarios), horizontal=True, label_visibility="visible",
+                          help=ayuda("escenario"), key=f"{cfg['domain']}_scenario")
         change = scenarios[picked]
         before, after = changes.get(change["antes"]), changes.get(change["despues"])
         st.markdown(md(change["que"]))
         if tech:
             st.code(change["sql"], language="sql")
         if before and after:
-            status = {"✅": "igual", "🟡": "distintas, sin aviso", "❌": "con error"}
+            status = {"✅": idioma.t("dominio.trust.status_same"), "🟡": idioma.t("dominio.trust.status_different"),
+                      "❌": idioma.t("dominio.trust.status_error")}
 
             def summary(t):
                 return " · ".join(f"{v} {status.get(s, s)}" for s, v in sorted(t.items(), key=lambda x: x[0] != "✅"))
 
-            st.markdown("**Antes de arreglar nada:**")
+            st.markdown(idioma.t("dominio.trust.before_fix"))
             for col, k in zip(st.columns(2), change_names):
                 col.metric(change_names[k], f"{before['totals'][k].get('✅', 0)}/{len(before['cells'])}")
                 col.caption(summary(before["totals"][k]))
             if before["totals"]["C"].get("❌", 0) > before["totals"]["B"].get("❌", 0):
-                st.caption("Rastro falla más, y todo junto: el mapeo lee la columna que cambió y Rastro no arranca hasta "
-                           "arreglarla. Falla en voz alta y se arregla en un lugar; sin Rastro, cada consulta rota hay que "
-                           "encontrarla y reescribirla.")
+                st.caption(idioma.t("dominio.trust.fails_more"))
             if "🟡" in before.get("vocabulary", ""):
-                st.warning("Rastro avisa: " + md(before["vocabulary"].split(": ", 1)[-1]))
+                st.warning(idioma.t("dominio.trust.warns") + md(before["vocabulary"].split(": ", 1)[-1]))
             if tech:
-                st.markdown(f"**El arreglo en Rastro: una línea {change.get('donde', 'del mapeo')}**")
+                st.markdown(idioma.t("dominio.trust.fix_tech", where=change.get("donde", idioma.t("dominio.trust.of_mapping"))))
                 st.code(f"- {change['arreglo'][0]}\n+ {change['arreglo'][1]}", language="diff")
             else:
-                st.markdown("**El arreglo en Rastro:** una línea, en la traducción de esa base al diccionario de negocio.")
-            st.markdown("**Después del arreglo:**")
+                st.markdown(idioma.t("dominio.trust.fix"))
+            st.markdown(idioma.t("dominio.trust.after_fix"))
             for col, k in zip(st.columns(2), change_names):
                 col.metric(change_names[k], f"{after['totals'][k].get('✅', 0)}/{len(after['cells'])}")
-                col.caption(summary(after["totals"][k]) + ("" if k == "C" else ". Hay que encontrar y reescribir cada consulta."))
+                col.caption(summary(after["totals"][k]) + ("" if k == "C" else idioma.t("dominio.trust.rewrite_each")))
             if tech:
-                st.markdown("**Pregunta por pregunta**")
-                tabla(pd.DataFrame([{"Pregunta": simple.get(qid, qid),
-                                            **{f"{change_names[k]}, antes": before["cells"][qid][k] for k in change_names},
-                                            **{f"{change_names[k]}, después": after["cells"][qid][k] for k in change_names}}
+                st.markdown(idioma.t("dominio.trust.by_question"))
+                tabla(pd.DataFrame([{question_col: simple.get(qid, qid),
+                                            **{idioma.t("dominio.trust.col_before", name=change_names[k]): before["cells"][qid][k]
+                                               for k in change_names},
+                                            **{idioma.t("dominio.trust.col_after", name=change_names[k]): after["cells"][qid][k]
+                                               for k in change_names}}
                                            for qid in before["cells"]]),
                              hide_index=True, use_container_width=True,
-                             column_config={"Pregunta": st.column_config.TextColumn(width="medium")})
-        st.info("Sin Rastro, cada consulta sabe cómo se llaman las columnas y en qué unidad están los valores: si la "
-                "base cambia, hay que encontrar y arreglar cada una. Con Rastro, eso está en un solo lugar.")
+                             column_config={question_col: st.column_config.TextColumn(width="medium")})
+        st.info(idioma.t("dominio.trust.one_place"))
     show_quality(cfg.get("calidad"))
     show_no_data(cfg.get("fuera"), tech)
 
@@ -1412,17 +1409,20 @@ def show_no_data(fuera, tech):
     if not path or not Path(path).exists():
         return
     result = read_json(path)
-    st.markdown("### Cuando no tiene el dato", help=ayuda("fuera"))
+    st.markdown(idioma.t("dominio.show_no_data.title"), help=ayuda("fuera"))
     st.caption(md(fuera["intro"]))
-    names = {k: v for k, v in result["caminos"].items() if tech or k != "D"}
+    # The approaches' names come from the measurement file, in Spanish; in English they are mapped by their code
+    names = {k: v if idioma.lang() == "es" else idioma.t(f"dominio.paths.{k}")
+             for k, v in result["caminos"].items() if tech or k != "D"}
     n = len(result["preguntas"])
     for col, (k, name) in zip(st.columns(len(names)), names.items()):
-        col.metric(name, f"{result['totales'][k]} de {n}")
-    tabla(pd.DataFrame([{"Pregunta": row["pregunta"], "Qué falta": row["falta"],
+        col.metric(name, idioma.t("dominio.show_no_data.of", found=result["totales"][k], n=n))
+    question_col = idioma.t("dominio.show_no_data.col_question")
+    tabla(pd.DataFrame([{question_col: row["pregunta"], idioma.t("dominio.show_no_data.col_missing"): row["falta"],
                          **{name: f"{row[k]['marca']} {row[k]['respuesta']}" for k, name in names.items()}}
                         for row in result["preguntas"].values()]),
-          column_config={"Pregunta": st.column_config.TextColumn(width="medium")})
-    st.caption("✅ dijo qué falta (o respondió la de control) · ❌ respondió lo que no sabe (o no respondió la de control).")
+          column_config={question_col: st.column_config.TextColumn(width="medium")})
+    st.caption(idioma.t("dominio.show_no_data.legend"))
 
 
 def evaluation_detail(evaluation, totals, domain):

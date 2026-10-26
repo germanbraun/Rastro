@@ -1,0 +1,9 @@
+# English names of the domains (overlay of app/dominios.yaml, by id).
+- id: energia
+  name: Oil and gas in Argentina
+- id: proveedores
+  name: US federal suppliers
+- id: afiliaciones
+  name: Research affiliations in Argentina
+- id: oncologia
+  name: Oncology

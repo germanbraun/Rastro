@@ -1,0 +1,375 @@
+# Texts of a domain's screen (app/dominio.py), in Spanish and English. Read with idioma.t("<key>", **values).
+# Keys are dominio.<function>.<name>; {…} are values the code fills in.
+
+dominio.tabla.long_text:
+  es: "Hay textos que no entran en la celda: elija una fila (la casilla de la izquierda) para leerla completa."
+  en: "Some texts do not fit in the cell: pick a row (the box on the left) to read it in full."
+
+dominio.show_answer.sources_used: {es: "**Fuentes que usó esta respuesta:** ", en: "**Sources this answer used:** "}
+dominio.show_answer.rastro_links: {es: "enlaces de Rastro", en: "Rastro's links"}
+dominio.show_answer.sources: {es: "**Fuentes:** ", en: "**Sources:** "}
+dominio.show_answer.no_results: {es: "La consulta no devolvió resultados.", en: "The query returned no results."}
+dominio.show_answer.rows_one: {es: "{n} fila.", en: "{n} row."}
+dominio.show_answer.rows_many: {es: "{n} filas.", en: "{n} rows."}
+dominio.show_answer.evidence_hint:
+  es: " La evidencia está en «¿De dónde sale la respuesta?»."
+  en: " The evidence is in «Where does the answer come from?»."
+dominio.show_answer.where_from: {es: "¿De dónde sale la respuesta?", en: "Where does the answer come from?"}
+dominio.show_answer.where_looked: {es: "**Dónde buscó Rastro:**", en: "**Where Rastro looked:**"}
+dominio.show_answer.rastro_links_default: {es: "Los enlaces de Rastro", en: "Rastro's links"}
+dominio.show_answer.source_line: {es: "- **{name}** · licencia: {license}", en: "- **{name}** · license: {license}"}
+dominio.show_answer.contributed: {es: "**Qué aportó Rastro:** ", en: "**What Rastro added:** "}
+dominio.show_answer.rule_once:
+  es: "La regla está escrita una sola vez, en el **diccionario de negocio**, y vale para todas las preguntas que la usan."
+  en: "The rule is written only once, in the **business dictionary**, and holds for every question that uses it."
+dominio.show_answer.auditable:
+  es: "Cada respuesta se puede auditar: la evidencia dice qué dice cada fuente y con qué regla se unieron."
+  en: "Every answer can be audited: the evidence says what each source says and which rule joined them."
+dominio.show_answer.tech_hint:
+  es: "Para ver la consulta y el SQL, active «Ver detalles técnicos» en la barra lateral."
+  en: "To see the query and the SQL, turn on «Show technical details» in the sidebar."
+dominio.show_answer.step_query:
+  es: "**1. La consulta**, sobre los conceptos de Rastro (SPARQL):"
+  en: "**1. The query**, over Rastro's concepts (SPARQL):"
+dominio.show_answer.step_sql:
+  es: "**2. El SQL que Rastro generó y ejecutó en Postgres** (lo traduce Rastro con los mapeos):"
+  en: "**2. The SQL Rastro generated and ran in Postgres** (Rastro translates it with the mappings):"
+dominio.show_answer.no_sql: {es: "No se pudo obtener el SQL de esta consulta.", en: "The SQL of this query could not be obtained."}
+dominio.show_answer.step_sources: {es: "**3. Las fuentes:**", en: "**3. The sources:**"}
+dominio.show_answer.tech_rastro_line: {es: "- 🐘 **Enlaces de Rastro**: {note}", en: "- 🐘 **Rastro's links**: {note}"}
+dominio.show_answer.tech_source_line: {es: "- 🐘 **{name}** · licencia: {license}", en: "- 🐘 **{name}** · license: {license}"}
+dominio.show_answer.step_rule:
+  es: "**4. La regla de negocio, en la ontología.** Ningún mapeo la asigna: Rastro la deduce."
+  en: "**4. The business rule, in the ontology.** No mapping assigns it: Rastro infers it."
+dominio.show_answer.step_evidence: {es: "**4. La evidencia**, pedida al grafo", en: "**4. The evidence**, asked of the graph"}
+dominio.show_answer.step_evidence_prov:
+  es: " (cada enlace es una entidad PROV-O, con la fuente de la que se derivó):"
+  en: " (each link is a PROV-O entity, with the source it was derived from):"
+
+dominio.render.no_questions:
+  es: "Las preguntas de este dominio están pendientes de aprobación o validación."
+  en: "This domain's questions are awaiting approval or validation."
+dominio.render.pending_review:
+  es: "Los resultados de evaluación están pendientes de revisión independiente."
+  en: "The evaluation results are awaiting an independent review."
+dominio.render.sources: {es: "Fuentes", en: "Sources"}
+dominio.render.tab_demo: {es: "Demo", en: "Demo"}
+dominio.render.tab_ask: {es: "Preguntar", en: "Ask"}
+dominio.render.tab_trust: {es: "Por qué confiar", en: "Why trust it"}
+dominio.render.tab_lab: {es: "Rastro Lab", en: "Rastro Lab"}
+dominio.render.tab_faq: {es: "Preguntas frecuentes", en: "FAQ"}
+dominio.render.tab_hood: {es: "Bajo el capó", en: "Under the hood"}
+dominio.render.mode_example: {es: "Una pregunta de ejemplo", en: "An example question"}
+dominio.render.mode_text: {es: "Una pregunta sobre textos", en: "A question about texts"}
+dominio.render.mode_free: {es: "Mi propia pregunta", en: "My own question"}
+dominio.render.mode_label: {es: "Tipo de pregunta", en: "Kind of question"}
+dominio.render.question: {es: "Pregunta", en: "Question"}
+dominio.render.tech_wording: {es: "Formulación técnica: ", en: "Technical wording: "}
+dominio.render.terms: {es: "¿Qué significa {terms}?", en: "What does {terms} mean?"}
+dominio.render.answer: {es: "Responder", en: "Answer"}
+dominio.render.live_note: {es: "Se ejecuta ahora, en vivo, sobre los datos.", en: "It runs now, live, over the data."}
+dominio.render.writing: {es: "El LLM está escribiendo la query...", en: "The LLM is writing the query..."}
+dominio.render.no_data: {es: "Rastro no tiene ese dato: {missing}", en: "Rastro does not have that data: {missing}"}
+dominio.render.failed:
+  es: "El LLM no logró una query que funcione en tres intentos."
+  en: "The LLM did not manage a working query in three attempts."
+dominio.render.attempts: {es: "Intentos: {n}.", en: "Attempts: {n}."}
+dominio.render.need_llm:
+  es: "Para preguntas libres hace falta un LLM. Mientras tanto, pueden usarse las preguntas de ejemplo."
+  en: "Free questions need an LLM. Meanwhile, the example questions can be used."
+dominio.render.architecture_caption:
+  es: "De las fuentes del dominio a una capa semántica."
+  en: "From the domain's sources to a semantic layer."
+dominio.render.dictionary_caption: {es: "El {title}: lo que lee el LLM.", en: "The {title}: what the LLM reads."}
+dominio.render.dictionary: {es: "diccionario", en: "dictionary"}
+
+dominio.show_faq.all_cases: {es: "##### Para todos los casos", en: "##### For every case"}
+dominio.show_faq.this_case: {es: "##### De este caso: {name}", en: "##### For this case: {name}"}
+dominio.show_faq.more_technical:
+  es: "Hay más preguntas para perfiles técnicos: active «Ver detalles técnicos» en la barra lateral."
+  en: "There are more questions for technical profiles: turn on «Show technical details» in the sidebar."
+dominio.show_faq.technical_all: {es: "##### Para técnicos, en todos los casos", en: "##### For technical readers, every case"}
+dominio.show_faq.technical_case: {es: "##### Para técnicos, de este caso: {name}", en: "##### For technical readers, this case: {name}"}
+dominio.show_faq.architecture:
+  es: "Cómo está armado Rastro: arquitectura y {title}"
+  en: "How Rastro is built: architecture and {title}"
+
+dominio.show_why.title: {es: "**¿Por qué este número?**", en: "**Why this number?**"}
+dominio.show_why.help:
+  es: "Elija una fila de la respuesta: se ve de dónde sale, enlace por enlace, con la fuente y la regla de cada uno."
+  en: "Pick a row of the answer: you see where it comes from, link by link, with the source and the rule of each."
+dominio.show_why.row: {es: "Fila", en: "Row"}
+dominio.show_why.no_evidence: {es: "No hay evidencia guardada para esta fila.", en: "There is no saved evidence for this row."}
+dominio.show_why.more: {es: "y {n} más", en: "and {n} more"}
+dominio.show_why.answer_row: {es: "la fila de la respuesta", en: "the answer's row"}
+
+dominio.before_after.without: {es: "Sin Rastro", en: "Without Rastro"}
+dominio.before_after.with: {es: "Con Rastro", en: "With Rastro"}
+dominio.before_after.cost: {es: "**Lo que cuesta no integrar:** ", en: "**What not integrating costs:** "}
+
+dominio.show_integration_example.purpose: {es: "**Para qué sirve.** {text}", en: "**What it is for.** {text}"}
+dominio.show_integration_example.parts:
+  es: "**Qué parte de Rastro muestra cada paso:**\n"
+  en: "**Which part of Rastro each step shows:**\n"
+dominio.show_integration_example.part: {es: "**Parte de Rastro:** {part}", en: "**Part of Rastro:** {part}"}
+
+dominio.show_demo.why_moments: {es: "¿Por qué estos {n} momentos?", en: "Why these {n} moments?"}
+dominio.show_demo.what_is: {es: "**¿Qué es {step}?** {text}", en: "**What is {step}?** {text}"}
+dominio.show_demo.tech_wording: {es: "Formulación técnica: ", en: "Technical wording: "}
+dominio.show_demo.live_note: {es: "Se ejecuta ahora, en vivo, sobre los datos.", en: "It runs now, live, over the data."}
+dominio.show_demo.back: {es: "← Anterior", en: "← Previous"}
+dominio.show_demo.next: {es: "Siguiente →", en: "Next →"}
+
+dominio.show_change_short.missing: {es: "Falta registrar la prueba de cambio.", en: "The change test has not been recorded yet."}
+dominio.show_change_short.just_changed: {es: "**Recién cambiada la base**", en: "**Right after the database changed**"}
+dominio.show_change_short.without_broken:
+  es: "Sin Rastro: **{broken} consultas rotas**, que hay que encontrar"
+  en: "Without Rastro: **{broken} broken queries**, which have to be found"
+dominio.show_change_short.with_fail:
+  es: "Con Rastro: **las {n} preguntas fallan juntas**"
+  en: "With Rastro: **the {n} questions fail together**"
+dominio.show_change_short.fails_loud:
+  es: "Rastro no arranca hasta arreglarlo: falla en voz alta, todo junto."
+  en: "Rastro does not start until it is fixed: it fails loudly, all at once."
+dominio.show_change_short.to_fix: {es: "**Para arreglarlo**", en: "**To fix it**"}
+dominio.show_change_short.without_fix:
+  es: "Sin Rastro: **reescribir las {broken} consultas** a mano"
+  en: "Without Rastro: **rewrite the {broken} queries** by hand"
+dominio.show_change_short.with_fix:
+  es: "Con Rastro: **una línea**, y responden las {ok} de {n}"
+  en: "With Rastro: **one line**, and {ok} of {n} answer"
+dominio.show_change_short.never:
+  es: "De las {n} preguntas, sin Rastro {never} nunca tuvieron una consulta que funcionara."
+  en: "Of the {n} questions, without Rastro {never} never had a query that worked."
+
+dominio.show_correction.missing:
+  es: "Falta registrar la prueba de la corrección (layer/energia/cambio/correccion.sh registrar)."
+  en: "The correction test has not been recorded yet (layer/energia/cambio/correccion.sh registrar)."
+dominio.show_correction.row_rastro: {es: "Respuesta de Rastro", en: "Rastro's answer"}
+dominio.show_correction.row_sql_rastro: {es: "Respuesta con SQL sobre Rastro", en: "Answer with SQL over Rastro"}
+dominio.show_correction.row_without: {es: "Respuesta sin Rastro", en: "Answer without Rastro"}
+dominio.show_correction.row_input_with: {es: "Entrada del modelo, con Rastro", en: "Model input, with Rastro"}
+dominio.show_correction.row_input_without: {es: "Entrada del modelo, sin Rastro", en: "Model input, without Rastro"}
+dominio.show_correction.row_explanation: {es: "Explicación, con Rastro", en: "Explanation, with Rastro"}
+dominio.show_correction.unmarked: {es: "sin marca", en: "not flagged"}
+dominio.show_correction.marked: {es: "marcada", en: "flagged"}
+dominio.show_correction.yes: {es: "sí", en: "yes"}
+dominio.show_correction.no: {es: "no", en: "no"}
+dominio.show_correction.col_where: {es: "Dónde", en: "Where"}
+dominio.show_correction.col_before: {es: "Antes", en: "Before"}
+dominio.show_correction.col_after: {es: "Después", en: "After"}
+dominio.show_correction.col_changed: {es: "¿Cambió solo?", en: "Changed on its own?"}
+dominio.show_correction.what:
+  es: "La respuesta es el petróleo de 2025 que le corresponde a YPF según su participación; la entrada del modelo, la participación de
+    Total en Aguada Pichana Este."
+  en: "The answer is the 2025 oil that belongs to YPF by its share; the model input, Total's share in Aguada Pichana Este."
+dominio.show_correction.where_fixed:
+  es: "**Dónde se corrigió:** en un solo lugar, el archivo de participaciones revisadas (con el documento). Sin Rastro, el mismo dato se
+    lee del texto del mapa en {places} lugares (cada consulta y el código del modelo), y hay que encontrarlos y corregirlos uno por uno."
+  en: "**Where it was corrected:** in a single place, the file of reviewed shares (with the document). Without Rastro, the same value is
+    read from the map's text in {places} places (each query and the model's code), and they have to be found and corrected one by one."
+dominio.show_correction.measured:
+  es: "Se mide con layer/energia/cambio/correccion.sh: saca la corrección, rearma Rastro, mide y la vuelve a poner."
+  en: "Measured with layer/energia/cambio/correccion.sh: it removes the correction, rebuilds Rastro, measures and puts it back."
+
+dominio.claim_verdict.no_data: {es: "Rastro no tiene el dato", en: "Rastro does not have the data"}
+dominio.claim_verdict.holds: {es: "Se sostiene", en: "It holds"}
+dominio.claim_verdict.does_not_hold: {es: "No se sostiene", en: "It does not hold"}
+dominio.claim_verdict.says: {es: "Rastro dice {value}.", en: "Rastro says {value}."}
+dominio.claim_verdict.place: {es: "es la {place}.ª", en: "it is number {place}"}
+dominio.claim_verdict.not_in_top: {es: "no está entre las {n} primeras", en: "it is not among the top {n}"}
+dominio.claim_verdict.does_not_hold_where: {es: "No se sostiene: {where}", en: "It does not hold: {where}"}
+
+dominio.show_claims.claim: {es: "Afirmación", en: "Claim"}
+
+dominio.show_external.graph_rastro: {es: "Rastro\\nempresa · LEI · petróleo 2025", en: "Rastro\\ncompany · LEI · oil 2025"}
+dominio.show_external.graph_wikidata:
+  es: "Wikidata (internet)\\nsede · bolsa · dueño · sitio web"
+  en: "Wikidata (internet)\\nheadquarters · stock exchange · owner · website"
+dominio.show_external.graph_query: {es: "una consulta\\n(GraphDB)", en: "one query\\n(GraphDB)"}
+dominio.show_external.graph_lei: {es: "  el mismo LEI  ", en: "  the same LEI  "}
+dominio.show_external.live: {es: "Consultar en vivo", en: "Query live"}
+dominio.show_external.live_help:
+  es: "Une Rastro y Wikidata ahora mismo. Tarda unos 15 segundos y necesita internet."
+  en: "Joins Rastro and Wikidata right now. It takes about 15 seconds and needs internet."
+dominio.show_external.live_now: {es: "en vivo, ahora", en: "live, now"}
+dominio.show_external.no_answer:
+  es: "Wikidata no respondió ({error}). Se muestra el resultado guardado; Wikidata a veces limita las consultas: probar de nuevo en un par
+    de minutos."
+  en: "Wikidata did not answer ({error}). The saved result is shown; Wikidata sometimes limits queries: try again in a couple of minutes."
+dominio.show_external.saved_on: {es: "guardado el {date}", en: "saved on {date}"}
+dominio.show_external.result:
+  es: "Resultado {when}. Fuentes: Rastro (Capítulo IV, mapas de la Secretaría de Energía y GLEIF) y Wikidata."
+  en: "Result {when}. Sources: Rastro (Capítulo IV, Secretaría de Energía maps and GLEIF) and Wikidata."
+dominio.show_external.query: {es: "La consulta: dos grafos en una", en: "The query: two graphs in one"}
+
+dominio.show_enrichment_saved.title: {es: "**Guardado en Rastro**", en: "**Saved in Rastro**"}
+dominio.show_enrichment_saved.not_saved:
+  es: "Todavía no se guardó: `docker compose run --rm wikidata-energia-loader` y después el enlazador."
+  en: "Not saved yet: `docker compose run --rm wikidata-energia-loader` and then the linker."
+dominio.show_enrichment_saved.col_company: {es: "Empresa", en: "Company"}
+dominio.show_enrichment_saved.col_exchange: {es: "Cotiza en", en: "Listed on"}
+dominio.show_enrichment_saved.col_headquarters: {es: "Sede", en: "Headquarters"}
+dominio.show_enrichment_saved.col_queried: {es: "Consultado el", en: "Queried on"}
+dominio.show_enrichment_saved.explain:
+  es: "Lo mismo, guardado: lo que respondió Wikidata queda en Rastro como una fuente más, con el día de la consulta y la huella del
+    archivo, unido por el LEI. No depende de internet, se puede repetir y lo usan las preguntas, el asistente de IA y el modelo de Rastro
+    Lab. En vivo está siempre al día; guardado, queda como estaba ese día."
+  en: "The same, saved: what Wikidata answered stays in Rastro as one more source, with the day of the query and the file's fingerprint,
+    joined by the LEI. It does not depend on internet, it can be repeated and it is used by the questions, the AI assistant and the Rastro
+    Lab model. Live is always up to date; saved, it stays as it was that day."
+
+dominio.show_text_question.steps:
+  es: "**1 · La pregunta → 2 · El grafo elige → 3 · La IA lee solo eso → 4 · El resumen, con citas → 5 · Comprobar**"
+  en: "**1 · The question → 2 · The graph picks → 3 · The AI reads only that → 4 · The summary, with citations → 5 · Check**"
+dominio.show_text_question.question: {es: "La pregunta", en: "The question"}
+dominio.show_text_question.tech_wording: {es: "Formulación técnica: ", en: "Technical wording: "}
+dominio.show_text_question.answer: {es: "Responder", en: "Answer"}
+dominio.show_text_question.contract: {es: "contrato", en: "contract"}
+dominio.show_text_question.contracts: {es: "contratos", en: "contracts"}
+dominio.show_text_question.col_contract: {es: "Contrato", en: "Contract"}
+dominio.show_text_question.col_millions: {es: "Millones de US$", en: "Millions of US$"}
+dominio.show_text_question.col_agency: {es: "Agencia", en: "Agency"}
+dominio.show_text_question.col_company: {es: "Empresa", en: "Company"}
+dominio.show_text_question.col_description: {es: "Descripción", en: "Description"}
+dominio.show_text_question.amount: {es: ", US\\$ {amount} millones", en: ", US\\$ {amount} million"}
+dominio.show_text_question.graph_picks: {es: "El grafo elige, con una consulta exacta", en: "The graph picks, with an exact query"}
+dominio.show_text_question.graph_picks_help:
+  es: "No es una búsqueda por palabras: la consulta usa los conceptos y los enlaces del diccionario, así que trae exactamente lo que pide
+    la pregunta, siempre lo mismo."
+  en: "It is not a keyword search: the query uses the dictionary's concepts and links, so it brings exactly what the question asks for,
+    always the same."
+dominio.show_text_question.picked: {es: "{units} elegidos por el grafo", en: "{units} picked by the graph"}
+dominio.show_text_question.query: {es: "La consulta SPARQL que elige los registros", en: "The SPARQL query that picks the records"}
+dominio.show_text_question.query_caption:
+  es: "Pide conceptos del diccionario, no palabras: por eso trae exactamente estos registros, siempre los mismos."
+  en: "It asks for dictionary concepts, not words: that is why it brings exactly these records, always the same ones."
+dominio.show_text_question.ai_reads: {es: "La IA lee solo esos textos", en: "The AI reads only those texts"}
+dominio.show_text_question.ai_reads_help:
+  es: "El asistente de IA no busca nada por su cuenta: recibe estos textos y ninguno más."
+  en: "The AI assistant does not search anything on its own: it receives these texts and no others."
+dominio.show_text_question.ai_read:
+  es: "Un asistente de IA leyó solo los textos de esos {n} {units}."
+  en: "An AI assistant read only the texts of those {n} {units}."
+dominio.show_text_question.texts_read:
+  es: "Los {n} textos que leyó, tal como están en la fuente"
+  en: "The {n} texts it read, as they are in the source"
+dominio.show_text_question.summary: {es: "El resumen, con citas", en: "The summary, with citations"}
+dominio.show_text_question.theme:
+  es: "- **{theme}** · {n} {unit}{extra}. {detail}  \n<small>Cita: {cited}</small>"
+  en: "- **{theme}** · {n} {unit}{extra}. {detail}  \n<small>Cites: {cited}</small>"
+dominio.show_text_question.check: {es: "Comprobar", en: "Check"}
+dominio.show_text_question.check_help:
+  es: "Cada tema cita sus registros por número: se abren en la tabla del paso 3 y se lee el texto original."
+  en: "Each theme cites its records by number: open them in the table of step 3 and read the original text."
+dominio.show_text_question.check_text:
+  es: "Cada tema cita sus {units}: en el paso 3 está el texto original de cada uno. Resumen guardado el {date}; los {units} se leen en
+    vivo, y si cambian los datos el resumen se vuelve a generar."
+  en: "Each theme cites its {units}: step 3 has the original text of each one. Summary saved on {date}; the {units} are read live, and if
+    the data changes the summary is generated again."
+
+dominio.compare_text_search.toggle: {es: "Comparar con una búsqueda por texto", en: "Compare with a text search"}
+dominio.compare_text_search.without_title:
+  es: "Sin Rastro: búsqueda de «Leidos» en los textos"
+  en: "Without Rastro: search for «Leidos» in the texts"
+dominio.compare_text_search.of: {es: "{found} de {total}", en: "{found} of {total}"}
+dominio.compare_text_search.misses:
+  es: "Omite {n} contratos (US$ {amount} M) de empresas del grupo con otra razón social: {companies}."
+  en: "It misses {n} contracts (US$ {amount} M) from group companies with another legal name: {companies}."
+dominio.compare_text_search.lost: {es: " Se pierden temas completos: {themes}.", en: " Whole themes are lost: {themes}."}
+dominio.compare_text_search.with_detail:
+  es: "Los 40 contratos más grandes del grupo, seleccionados con una consulta exacta."
+  en: "The group's 40 largest contracts, selected with an exact query."
+dominio.compare_text_search.caption:
+  es: "La búsqueda considera la descripción del contrato y el nombre de la empresa, como lo haría una consulta SQL o un buscador. Rastro
+    identifica esas empresas como parte del grupo porque el grupo se definió una sola vez, con la evidencia de cada vínculo."
+  en: "The search looks at the contract's description and the company's name, as an SQL query or a search engine would. Rastro identifies
+    those companies as part of the group because the group was defined only once, with the evidence of each link."
+
+dominio.trust.title: {es: "### Por qué confiar", en: "### Why trust it"}
+dominio.trust.yes: {es: "Sí", en: "Yes"}
+dominio.trust.all_links: {es: "todos los", en: "all the"}
+dominio.trust.the_columns: {es: "las", en: "the"}
+dominio.trust.all_columns: {es: "todas", en: "all"}
+dominio.trust.same_assistant:
+  es: "El mismo asistente de IA, sin Rastro (escribe SQL sobre las bases tal como vienen) y con Rastro."
+  en: "The same AI assistant, without Rastro (it writes SQL over the databases as they come) and with Rastro."
+dominio.trust.without: {es: "Sin Rastro", en: "Without Rastro"}
+dominio.trust.with: {es: "Con Rastro", en: "With Rastro"}
+dominio.trust.sql_links: {es: "SQL + enlaces", en: "SQL + links"}
+dominio.trust.col_question: {es: "Pregunta", en: "Question"}
+dominio.trust.col_asked: {es: "Cómo se preguntó", en: "How it was asked"}
+dominio.trust.tab_correct: {es: "1 · Correctas ({n} preguntas)", en: "1 · Correct ({n} questions)"}
+dominio.trust.tab_same:
+  es: "2 · Misma respuesta de 4 formas ({n} preguntas)"
+  en: "2 · Same answer in 4 wordings ({n} questions)"
+dominio.trust.tab_change: {es: "3 · Cuando una base cambia (las {n} preguntas)", en: "3 · When a database changes (the {n} questions)"}
+dominio.trust.see_answers: {es: "Ver las {n} respuestas", en: "See the {n} answers"}
+dominio.trust.four_ways:
+  es: "{n} preguntas, cada una hecha de 4 formas con el mismo significado."
+  en: "{n} questions, each asked in 4 wordings with the same meaning."
+dominio.trust.same_legend:
+  es: "✅ la misma respuesta las 4 veces · ❌ cambió según cómo se preguntó. En las preguntas que piden una lista, el número es cuántos
+    nombres devolvió."
+  en: "✅ the same answer all 4 times · ❌ it changed with the wording. In questions that ask for a list, the number is how many names it
+    returned."
+dominio.trust.see_four: {es: "Ver las 4 formas de una pregunta", en: "See the 4 wordings of a question"}
+dominio.trust.see_scenarios: {es: "Ver los escenarios de cambio", en: "See the change scenarios"}
+dominio.trust.scenarios_caption:
+  es: "Qué pasa con las preguntas de la prueba de cambio, todas juntas, cuando una base cambia."
+  en: "What happens to the change test's questions, all together, when a database changes."
+dominio.trust.scenario: {es: "Escenario", en: "Scenario"}
+dominio.trust.status_same: {es: "igual", en: "same"}
+dominio.trust.status_different: {es: "distintas, sin aviso", en: "different, without warning"}
+dominio.trust.status_error: {es: "con error", en: "with an error"}
+dominio.trust.before_fix: {es: "**Antes de arreglar nada:**", en: "**Before fixing anything:**"}
+dominio.trust.fails_more:
+  es: "Rastro falla más, y todo junto: el mapeo lee la columna que cambió y Rastro no arranca hasta arreglarla. Falla en voz alta y se
+    arregla en un lugar; sin Rastro, cada consulta rota hay que encontrarla y reescribirla."
+  en: "Rastro fails more, and all at once: the mapping reads the column that changed and Rastro does not start until it is fixed. It fails
+    loudly and is fixed in one place; without Rastro, each broken query has to be found and rewritten."
+dominio.trust.warns: {es: "Rastro avisa: ", en: "Rastro warns: "}
+dominio.trust.fix_tech: {es: "**El arreglo en Rastro: una línea {where}**", en: "**The fix in Rastro: one line {where}**"}
+dominio.trust.of_mapping: {es: "del mapeo", en: "of the mapping"}
+dominio.trust.fix:
+  es: "**El arreglo en Rastro:** una línea, en la traducción de esa base al diccionario de negocio."
+  en: "**The fix in Rastro:** one line, in the translation of that database to the business dictionary."
+dominio.trust.after_fix: {es: "**Después del arreglo:**", en: "**After the fix:**"}
+dominio.trust.rewrite_each: {es: ". Hay que encontrar y reescribir cada consulta.", en: ". Each query has to be found and rewritten."}
+dominio.trust.by_question: {es: "**Pregunta por pregunta**", en: "**Question by question**"}
+dominio.trust.col_before: {es: "{name}, antes", en: "{name}, before"}
+dominio.trust.col_after: {es: "{name}, después", en: "{name}, after"}
+dominio.trust.one_place:
+  es: "Sin Rastro, cada consulta sabe cómo se llaman las columnas y en qué unidad están los valores: si la base cambia, hay que encontrar y
+    arreglar cada una. Con Rastro, eso está en un solo lugar."
+  en: "Without Rastro, each query knows what the columns are called and which unit the values are in: if the database changes, each one has
+    to be found and fixed. With Rastro, that is in a single place."
+
+dominio.show_no_data.title: {es: "### Cuando no tiene el dato", en: "### When it lacks the data"}
+dominio.show_no_data.of: {es: "{found} de {n}", en: "{found} of {n}"}
+dominio.show_no_data.col_question: {es: "Pregunta", en: "Question"}
+dominio.show_no_data.col_missing: {es: "Qué falta", en: "What is missing"}
+dominio.show_no_data.legend:
+  es: "✅ dijo qué falta (o respondió la de control) · ❌ respondió lo que no sabe (o no respondió la de control)."
+  en: "✅ said what is missing (or answered the control question) · ❌ answered what it does not know (or did not answer the control
+    question)."
+
+dominio.finding.no_data: {es: "⏳ sin datos revisados", en: "⏳ no data checked"}
+dominio.finding.violation: {es: " no cumplen", en: " do not comply"}
+dominio.finding.warning: {es: " para revisar (aviso)", en: " to review (warning)"}
+dominio.finding.info: {es: " pendientes (informativo)", en: " pending (informational)"}
+dominio.finding.holds: {es: "✅ se cumple", en: "✅ holds"}
+
+dominio.show_quality.title: {es: "### Reglas de calidad", en: "### Quality rules"}
+dominio.show_quality.col_rule: {es: "Regla", en: "Rule"}
+dominio.show_quality.col_why: {es: "Por qué importa", en: "Why it matters"}
+dominio.show_quality.col_checked: {es: "Datos revisados", en: "Data checked"}
+dominio.show_quality.col_result: {es: "Resultado", en: "Result"}
+dominio.show_quality.col_predictions: {es: "Predicciones que los usan", en: "Predictions that use them"}
+dominio.show_quality.checked_on:
+  es: "Comprobadas el {day}/{month}/{year}, sobre los datos de Rastro."
+  en: "Checked on {year}-{month}-{day}, over Rastro's data."
+dominio.paths.A: {es: "LLM solo", en: "LLM alone"}
+dominio.paths.B: {es: "Sin Rastro (SQL)", en: "Without Rastro (SQL)"}
+dominio.paths.C: {es: "Con Rastro", en: "With Rastro"}
+dominio.paths.D: {es: "SQL + enlaces de Rastro", en: "SQL + Rastro's links"}

@@ -10,16 +10,21 @@ import pandas as pd
 import streamlit as st
 
 import answer
+import idioma
 from lab_walkthrough import GROUPS, compare_run, value_status
 from dominio import ayuda, data_version, md, tabla
 
 sys.path.insert(0, "/lab/gas")
 import modelo  # noqa: E402
 
-num = modelo.num
+def num(value, dec=1):
+    """A number in the interface's format; in Spanish, the same as modelo.num."""
+    return idioma.number(value, dec)
 
 
-aporte = modelo.signo
+def aporte(value):
+    """A contribution with its sign: «+3,9» or «−4,9» (modelo.signo, in the interface's format)."""
+    return ("+" if value >= 0 else "−") + num(abs(value))
 
 
 def sparql_df(query):
@@ -27,7 +32,7 @@ def sparql_df(query):
     return pd.DataFrame(rows, columns=columns)
 
 
-@st.cache_data(persist="disk", show_spinner="Entrenando el modelo dos veces…")
+@st.cache_data(persist="disk", show_spinner=False)
 def _datos(version, model_version):
     import psycopg
     with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
@@ -51,101 +56,69 @@ def rango_y_dentro(r, b):
 
 def datos():
     """The data and the two models. They are saved to disk and rebuilt if the data or the mappings change."""
-    return _datos(data_version("energia", modelo.SQL_GAS + modelo.SQL_A), modelo.version())   # Lab also reads raw tables directly
+    with st.spinner(idioma.t("lab.datos.spinner")):   # Lab also reads raw tables directly
+        return _datos(data_version("energia", modelo.SQL_GAS + modelo.SQL_A), modelo.version())
 
 
 def show_lab(tech, pozo=None):
-    st.markdown("#### ¿Cuánto gas va a dar un pozo nuevo?")
-    st.markdown(
-        "Un modelo predice el gas de los meses 2 a 7 de un pozo nuevo de shale gas de Vaca Muerta. "
-        "Es **el mismo modelo, entrenado dos veces**: una con las tablas tal como vienen y otra con Rastro. "
-        "Rastro no lo hace más preciso: hace que **cada predicción se explique en conceptos de negocio, "
-        "con los hechos que la respaldan, y que se pueda comprobar**.")
+    st.markdown(idioma.t("lab.show_lab.title"))
+    st.markdown(idioma.t("lab.show_lab.intro"))
     (a, b, ctx, r, ref, (n_dudosos, n_prueba), tabla_aprendido, pesos, version, (entrada_a, entrada_b, origen),
      _rango) = datos()
 
     c1, c2, c3 = st.columns(3)
-    c1.metric("Error sin Rastro", f"{num(r['A']['error'])} M m³", help=ayuda("lab_error"))
-    c2.metric("Error con Rastro", f"{num(r['B']['error'])} M m³", help=ayuda("lab_error"))
-    c3.metric("Con un dato corregido", f"{n_dudosos} de {n_prueba}", help=ayuda("lab_dudosos"))
-    st.caption(f"Entrenado con {ref['entreno']} pozos que empezaron de {a.inicio.min():%Y} a 2024; probado con {ref['prueba']} de 2025. "
-               f"Error medio por pozo, en millones de m³. Sin modelo, usar la mediana de cada concesión da "
-               f"{num(ref['concesion'])}, y la de cada operadora, {num(ref['operadora'])}.")
+    c1.metric(idioma.t("lab.show_lab.error_without"), f"{num(r['A']['error'])} M m³", help=ayuda("lab_error"))
+    c2.metric(idioma.t("lab.show_lab.error_with"), f"{num(r['B']['error'])} M m³", help=ayuda("lab_error"))
+    c3.metric(idioma.t("lab.show_lab.corrected"), idioma.t("lab.show_lab.corrected_value", n=n_dudosos, total=n_prueba),
+              help=ayuda("lab_dudosos"))
+    st.caption(idioma.t("lab.show_lab.trained", train=ref["entreno"], start=f"{a.inicio.min():%Y}", test=ref["prueba"],
+                        concession=num(ref["concesion"]), operator=num(ref["operadora"])))
 
-    with st.expander("Lo que entra al modelo", expanded=False):
-        st.markdown(f"Los mismos {len(entrada_b)} pozos y las mismas ideas de variables, de dos formas. "
-                    "Sin Rastro, las columnas de las tablas tal como vienen; con Rastro, conceptos del diccionario, "
-                    "cada uno con su fuente.")
-        sin_tab, con_tab = st.tabs(["Sin Rastro", "Con Rastro"])
+    with st.expander(idioma.t("lab.show_lab.inputs_title"), expanded=False):
+        st.markdown(idioma.t("lab.show_lab.inputs_text", n=len(entrada_b)))
+        sin_tab, con_tab = st.tabs([idioma.t("lab.show_lab.without_rastro"), idioma.t("lab.show_lab.with_rastro")])
         with sin_tab:
             tabla(entrada_a, key="lab_entrada_a")
-            st.caption("El porcentaje sale de buscar el nombre de la empresa en el texto de socios del mapa: si el nombre "
-                       "no coincide, queda vacío; si el mapa está mal, nada lo dice.")
+            st.caption(idioma.t("lab.show_lab.inputs_raw_note"))
         with con_tab:
             tabla(entrada_b, key="lab_entrada_b")
-            st.markdown("**De dónde sale cada columna:**")
+            st.markdown(idioma.t("lab.show_lab.inputs_origin"))
             tabla(origen, key="lab_origen")
 
-    with st.expander("Qué aprendió el modelo", expanded=False):
-        st.markdown(md(
-            f"El modelo explica el {round(100 * r['B']['r2'])} % de la diferencia entre los pozos de 2025; la mediana de "
-            f"cada concesión, sola, el {round(100 * ref['r2_concesion'])} %. Casi todo lo que sabe es dónde está el pozo: "
-            "la fractura y la profundidad agregan poco, y eso también es una conclusión. "
-            "Pesa dos cosas, en millones de m³ por pozo, en promedio: "
-            + "; ".join(f"**{k.lower()}**, {num(v)}" for k, v in pesos.items()) + ". "
-            "La operadora y los socios no se pueden separar de la concesión: Rastro muestra que dentro de una "
-            "concesión son siempre los mismos."))
+    with st.expander(idioma.t("lab.show_lab.learned_title"), expanded=False):
+        weights = "; ".join(f"**{k.lower()}**, {num(v)}" for k, v in pesos.items())   # concept names come from modelo
+        st.markdown(md(idioma.t("lab.show_lab.learned_text", r2=round(100 * r["B"]["r2"]),
+                                r2_concession=round(100 * ref["r2_concesion"]), weights=weights)))
         tabla(tabla_aprendido, key="lab_aprendido")
-        st.caption("Operadora y socios, de Rastro (con sus correcciones). Efecto: cuánto suma o resta, en millones de m³, "
-                   "estar en esa concesión, respecto de un pozo promedio.")
+        st.caption(idioma.t("lab.show_lab.learned_note"))
 
-    with st.expander("Cuando la fuente cambia", expanded=False):
+    with st.expander(idioma.t("lab.show_lab.change_title"), expanded=False):
         v = version
-        st.markdown(md(
-            f"Los datos de fractura llegan tarde: de los {v['con_fractura']} pozos de 2025 que los tienen, en **{v['tarde']}** se "
-            f"cargaron después de que el pozo empezó a producir (a la mitad, {num(v['meses_mediana'], 0)} meses o más). "
-            f"Si la predicción se hace cuando el pozo arranca, esos pozos todavía no tenían fractura: **su predicción cambia "
-            f"{num(v['cambio_medio'])} millones de m³ en promedio** (hasta {num(v['cambio_max'])}) cuando la fractura llega.\n\n"
-            "Sin Rastro, el número cambia y nada dice por qué. Con Rastro, cada predicción dice qué datos usó y cuándo se "
-            "cargó cada uno (en «¿De dónde sale?» de la fractura), y marca los que llegaron después de que el pozo arrancó."))
+        st.markdown(md(idioma.t("lab.show_lab.change_text", with_fracturing=v["con_fractura"], late=v["tarde"],
+                                months=num(v["meses_mediana"], 0), mean_change=num(v["cambio_medio"]),
+                                max_change=num(v["cambio_max"]))))
         impacto = Path("/layer/energia/cambio/impacto.json")
         if impacto.exists():
             i = json.loads(impacto.read_text())
             pozos = ", ".join(e["pozo"] for e in i["esperado"])
             cambio = i["cambiaron"][0] if i["cambiaron"] else None
-            st.markdown(md(
-                f"**Rastro sabe qué cambia.** Si la fuente corrige la fractura informada n.º {i['registro']}, Rastro dice de "
-                f"antemano qué predicciones dependen de ella (pozo {pozos}), recorriendo de qué registros sale cada una. "
-                "Se probó: se corrigió el registro, se rehízo todo y cambiaron exactamente esas"
-                + (f" (de {num(cambio['antes'])} a {num(cambio['despues'])} millones de m³)" if cambio else "")
-                + ", ninguna otra. Sin Rastro, para saberlo hay que rehacer todas y comparar."))
+            change = (idioma.t("lab.show_lab.impact_change", before=num(cambio["antes"]), after=num(cambio["despues"]))
+                      if cambio else "")
+            st.markdown(md(idioma.t("lab.show_lab.impact_text", record=i["registro"], wells=pozos, change=change)))
 
     show_well(key="lab_pozo", pozo=pozo)
 
-    with st.expander("Las predicciones, en Rastro", expanded=False):
+    with st.expander(idioma.t("lab.show_lab.published_title"), expanded=False):
         show_published(tech)
 
-    with st.expander("¿Cómo se calcula?"):
-        st.markdown(md(
-            "Es una regresión lineal: la predicción es el gas de un pozo promedio más el aporte de cada variable, "
-            "en millones de m³. Las dos versiones usan las mismas ideas de variables (operadora, concesión, "
-            "participación y fractura); cambia de dónde salen. Sin Rastro: la empresa como se declara, el código de la concesión y "
-            "el porcentaje del texto de socios del mapa. Con Rastro: la operadora unida entre fuentes, la concesión y la "
-            "participación corregida, cada una con su regla y su evidencia. La operadora es la del primer mes del pozo, "
-            "no la de hoy: usar la de hoy sería usar el futuro. La fractura (rama horizontal, etapas, arena, agua y "
-            "presión) es la informada hasta el mes en que arrancó el pozo. El gas que se predice también sale de Rastro "
-            "(el gas de los meses 2 a 7 de cada pozo), y coincide con el que calcula el SQL.\n\n"
-            "Ojo: la explicación dice cómo llegó el modelo a su número, no la causa física. Que un factor sume no "
-            "prueba que produzca más gas; es lo que el modelo aprendió de los pozos anteriores."))
+    with st.expander(idioma.t("lab.show_lab.how_title")):
+        st.markdown(md(idioma.t("lab.show_lab.how_text")))
         if tech:
-            st.markdown("**Sin Rastro (SQL sobre las tablas tal como vienen):** la consulta que arma la entrada del modelo A. "
-                        "Cada cruce está en la consulta: el mes en que arrancó cada pozo, la empresa como se declaró, el texto "
-                        "de socios del mapa (el porcentaje se busca después por nombre) y la fractura sumada de la tabla cruda.")
+            st.markdown(idioma.t("lab.show_lab.how_sql"))
             st.code(modelo.SQL_A.strip(), language="sql")
-            st.markdown("**Con Rastro (SPARQL):** la misma entrada, pedida en conceptos del diccionario. Los cruces y las reglas "
-                        "están definidos una vez en Rastro; la consulta trae además la regla y la evidencia de cada dato.")
+            st.markdown(idioma.t("lab.show_lab.how_sparql"))
             st.code(modelo.SPARQL_B.strip(), language="sparql")
-            st.caption("Código del modelo: lab/gas/modelo.py.")
+            st.caption(idioma.t("lab.show_lab.how_code"))
 
 
 def registros(pozo):
@@ -157,13 +130,12 @@ def registros(pozo):
     return pd.DataFrame(rows, columns=columns)
 
 
-ETIQUETAS = {"grupo": ("Operadora", ""), "area": ("Concesión", ""), "pct": ("Participación de la operadora", "%"),
-             "profundidad": ("Profundidad vertical", "m"),
-             **{k: (v[0][0].upper() + v[0][1:], v[1]) for k, v in modelo.FRACTURA.items()}}
+UNITS = {"grupo": "", "area": "", "pct": "%", "profundidad": "m", **{k: v[1] for k, v in modelo.FRACTURA.items()}}
 
 
 def variable_label(variable):
-    label, unit = ETIQUETAS[variable]
+    """A model variable in words; the Spanish fracturing labels are modelo.FRACTURA's, capitalized."""
+    label, unit = idioma.t(f"lab.variable_label.{variable}"), UNITS[variable]
     return f"{label} ({unit})" if unit else label
 
 
@@ -354,52 +326,55 @@ def show_well(key, pozo=None):
     """A 2025 well: the prediction without Rastro and with Rastro, side by side. With a well, no selector (for the demo)."""
     a, b, ctx, r, *_, (desde_hasta, dentro) = datos()
     prueba = b[b.inicio >= modelo.PRUEBA]
-    etiquetas = {f"{modelo.concesion(x.areaNombre if isinstance(x.areaNombre, str) else x.area)} · {modelo.nombre(x.grupo)} · "
-                 f"empezó en {x.inicio:%m/%Y} · pozo {x.idpozo}": x.idpozo for x in prueba.itertuples()}
+    etiquetas = {idioma.t("lab.show_well.option",
+                          concession=modelo.concesion(x.areaNombre if isinstance(x.areaNombre, str) else x.area),
+                          operator=modelo.nombre(x.grupo), start=f"{x.inicio:%m/%Y}", well=x.idpozo): x.idpozo
+                 for x in prueba.itertuples()}
     ejemplo = modelo.pozo_ejemplo(b)
     inicial = next((i for i, p in enumerate(etiquetas.values()) if p == ejemplo), 0)
     if pozo is None:
-        pozo = etiquetas[st.selectbox("Pozo de 2025", list(etiquetas), index=inicial, key=key, help=ayuda("lab_pozo"))]
+        pozo = etiquetas[st.selectbox(idioma.t("lab.show_well.selector"), list(etiquetas), index=inicial, key=key, help=ayuda("lab_pozo"))]
     ea, eb = modelo.explicacion_a(r, a, pozo), modelo.explicacion_b(r, b, ctx, pozo)
     origen = registros(pozo)
     meses = origen[origen.registro.str.startswith("Gas")].fecha.sort_values()
     fracturas = origen[origen.registro.str.startswith("Fractura")]
-    st.markdown(f"Dio **{num(eb['real'])} millones de m³** en sus meses 2 a 7"
-                + (f" (declaraciones juradas de {meses.iloc[0][5:7]}/{meses.iloc[0][:4]} a {meses.iloc[-1][5:7]}/{meses.iloc[-1][:4]})"
-                   if len(meses) else "") + ".")
+    months = (idioma.t("lab.show_well.months", first=f"{meses.iloc[0][5:7]}/{meses.iloc[0][:4]}",
+                       last=f"{meses.iloc[-1][5:7]}/{meses.iloc[-1][:4]}") if len(meses) else "")
+    st.markdown(idioma.t("lab.show_well.actual", gas=num(eb["real"]), months=months))
 
     sin, con = st.columns(2, gap="large")
     with sin:
-        st.markdown("##### Sin Rastro")
-        st.metric("Predicción", f"{num(ea['pred'])} M m³")
-        st.caption(f"Un pozo promedio da {num(r['A']['base'])}; cada columna suma o resta:")
+        st.markdown(idioma.t("lab.show_well.without_title"))
+        st.metric(idioma.t("lab.show_well.prediction"), f"{num(ea['pred'])} M m³")
+        st.caption(idioma.t("lab.show_well.base", base=num(r["A"]["base"])))
         for f in ea["filas"]:
             izq, der = st.columns([4, 1])
             izq.markdown(f"`{f['columna']} = {f['valor']}`")
             der.markdown(f"**{aporte(f['aporte'])}**")
-        st.caption("Tres números para un mismo efecto: las tres columnas cambian juntas, pero nada en las tablas lo "
-                   "dice. Y si un dato está mal (como el porcentaje del mapa), nada lo marca.")
+        st.caption(idioma.t("lab.show_well.without_note"))
     with con:
-        st.markdown("##### Con Rastro")
-        st.metric("Predicción", f"{num(eb['pred'])} M m³")
-        st.caption(f"Rango: de {num(max(eb['pred'] + desde_hasta[0], 0))} a {num(eb['pred'] + desde_hasta[1])} millones de m³. "
-                   f"En {round(100 * dentro)} de cada 100 pozos de prueba, el gas real cayó dentro de su rango.")
+        st.markdown(idioma.t("lab.show_well.with_title"))
+        st.metric(idioma.t("lab.show_well.prediction"), f"{num(eb['pred'])} M m³")
+        st.caption(idioma.t("lab.show_well.range", low=num(max(eb["pred"] + desde_hasta[0], 0)),
+                            high=num(eb["pred"] + desde_hasta[1]), inside=round(100 * dentro)))
         st.markdown(eb["resumen"])
         for x in eb["factores"]:
             st.markdown(f"**{x['factor']}: {aporte(x['aporte'])}.** {x['por_que']}")
             if x["nota"]:
                 st.caption(x["nota"])
-        st.markdown("**Lo que respalda la predicción:**")
+        st.markdown(idioma.t("lab.show_well.facts"))
         for h in eb["hechos"]:
             st.markdown(f"**{h['hecho']}:** {h['valor']}" + (f"  \n:orange[● {h['marca']}]" if h["marca"] else ""))
-            with st.popover("¿De dónde sale?"):
-                st.markdown(f"**Regla:** {h['regla']}.  \n**Evidencia:** {h['evidencia']}"
-                            + (f"  \n**Nombre:** {h['nombre']}" if h.get("nombre") else "")
-                            + f"  \n**Fuentes:** {h['fuentes']}.")
-                if h["hecho"] == "Fractura" and len(fracturas):
-                    st.markdown("**Registros de origen:** " + "; ".join(
-                        f"fractura informada n.º {x.cual}, del {x.fecha[8:10]}/{x.fecha[5:7]}/{x.fecha[:4]}, cargada el "
-                        f"{x.cargado[8:10]}/{x.cargado[5:7]}/{x.cargado[:4]}" for x in fracturas.itertuples()) + ".")
+            with st.popover(idioma.t("lab.show_well.where_from")):
+                st.markdown(idioma.t("lab.show_well.rule_evidence", rule=h["regla"], evidence=h["evidencia"])
+                            + (idioma.t("lab.show_well.name", name=h["nombre"]) if h.get("nombre") else "")
+                            + idioma.t("lab.show_well.sources", sources=h["fuentes"]))
+                if h["hecho"] == "Fractura" and len(fracturas):   # «Fractura» is modelo's fact name, not a visible text
+                    st.markdown(idioma.t("lab.show_well.origin_records", records="; ".join(
+                        idioma.t("lab.show_well.origin_record", id=x.cual,
+                                 date=f"{x.fecha[8:10]}/{x.fecha[5:7]}/{x.fecha[:4]}",
+                                 loaded=f"{x.cargado[8:10]}/{x.cargado[5:7]}/{x.cargado[:4]}")
+                        for x in fracturas.itertuples())))
 
 
 
@@ -412,21 +387,17 @@ SELECT ?version ?fecha (COUNT(?p) AS ?predicciones) WHERE {
   ?c a energia:ModelRun ; energia:current true ; energia:modelVersion ?version ; prov:startedAtTime ?fecha .
   ?p prov:wasGeneratedBy ?c } GROUP BY ?version ?fecha""", "energia")
     if not rows:
-        st.info("Todavía no hay una corrida publicada: `python3 lab/gas/modelo.py --publicar`.")
+        st.info(idioma.t("lab.show_published.missing"))
         return
     version_modelo, fecha, n = rows[0]
-    st.markdown(md(
-        f"Cada predicción queda en Rastro como un dato más: con su rango, el aporte de cada factor, la corrida que la "
-        f"hizo (versión {version_modelo}, del {str(fecha)[:10]}, {n} predicciones) y los datos de Rastro que usó. Así se le "
-        "puede preguntar a Rastro por las predicciones, con una consulta o en palabras en «Preguntar → Mi propia pregunta»."))
-    for archivo, titulo in (("cq11", "¿Qué predicciones de 2025 se apoyan en un dato corregido?"),
-                            ("cq12", "¿Qué pozos de 2025 se esperan con más gas, y qué los explica?")):
+    st.markdown(md(idioma.t("lab.show_published.intro", version=version_modelo, date=str(fecha)[:10], n=n)))
+    titulos = {name: idioma.t(f"lab.show_published.column_{name}") for name in
+               ("pozo", "concesion", "gasEsperado", "dato", "regla", "desde", "hasta", "concesionYOperadora",
+                "fractura", "profundidad")}
+    for archivo in ("cq11", "cq12"):
         query = (Path("/ontology/energia/queries") / f"{archivo}.rq").read_text()
         columns, rows = run(query, "energia")
-        st.markdown(f"**{titulo}**")
-        titulos = {"pozo": "Pozo", "concesion": "Concesión", "gasEsperado": "Gas esperado (M m³)", "dato": "Dato corregido",
-                   "regla": "Regla", "desde": "Desde", "hasta": "Hasta", "concesionYOperadora": "Concesión con su operadora",
-                   "fractura": "Cómo se fracturó", "profundidad": "Su profundidad"}
+        st.markdown(idioma.t(f"lab.show_published.{archivo}"))
         tabla(pd.DataFrame(rows, columns=columns).rename(columns=titulos), key=f"lab_{archivo}")
         if tech:
             st.code(query.strip(), language="sparql")

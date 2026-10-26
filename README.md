@@ -166,6 +166,8 @@ docker compose up -d
 | Ontop, one per domain | oncology http://localhost:8080, suppliers :8081, oil and gas :8082, research affiliations :8083 (`/sparql`; the last one with `docker compose --profile afiliaciones up -d`) | Virtual SPARQL endpoint over Postgres, with its domain's ontology and mappings; reloads when they are edited |
 | GraphDB Free | http://localhost:7210 | Triplestore with the `rastro` repository: MeSH 2026 in the graph `<http://id.nlm.nih.gov/mesh/2026>` and the Lucene connector `mesh` |
 
+The app opens in Spanish; the sidebar's «Idioma» switch, or `http://localhost:8501/?lang=en`, shows it in English.
+
 Ports are changed by copying `.env.example` to `.env`. By default they avoid 5432 and 7200, to coexist with a local Postgres and GraphDB.
 
 Count per source (Phase 0 checkpoint):

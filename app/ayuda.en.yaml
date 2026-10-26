@@ -1,0 +1,100 @@
+# English overlay for app/ayuda.yaml: the text shown when hovering over the «?» icon of each part of the app.
+# Same keys as the Spanish file; anything missing here falls back to Spanish.
+
+dominio: >-
+  The same Rastro with other public sources: oil and gas in Argentina (the demo), US federal contracts or
+  oncology. Choose one and the whole app changes.
+fuentes_barra: >-
+  The public databases this domain integrates, as they were loaded, with their license. Rastro does not
+  modify them: it translates them into a business dictionary.
+llm: >-
+  The AI assistant that translates your own question into a query. The example questions do not need it:
+  their queries are already written and run live.
+modo: >-
+  An example question: choose one of the prepared questions. A question about texts: the AI summarizes only
+  the texts the graph chose. Enrich with outside data: Rastro joined with Wikidata, live or saved. My own
+  question: write a free-form question (requires a configured AI assistant). The guided tour is in the
+  «Demo» tab.
+pregunta: >-
+  Example questions for this domain. Each one is answered live over the data, with a query over the
+  business dictionary.
+paso: >-
+  Each step shows a real integration problem: on the left, what a hand-written query over the databases as
+  they come returns; on the right, what Rastro returns.
+sin_rastro: >-
+  A SQL query written over the databases as they come, without Rastro's links: each query resolves the
+  joins on its own.
+con_rastro: >-
+  The same question, answered over Rastro's business dictionary, which already has the sources joined, with
+  their evidence.
+fuentes_respuesta: >-
+  The sources the data in this answer comes from. «Rastro links» are the joins between sources that Rastro
+  computed once, with their evidence (for example, that two names are the same company).
+explicar: >-
+  Explains in business terms what the query does and the SQL that Rastro generated.
+texto: >-
+  The graph chooses which records to read with an exact query; then an AI assistant summarizes only those
+  texts, citing each record. The AI does not choose what to read.
+propia: >-
+  Write a question in business terms. An AI assistant translates it into a query over the dictionary; the
+  query and the SQL stay visible so you can review them.
+confiar: >-
+  Three tests measured on real data, with the same AI assistant: with Rastro and without Rastro.
+tarjeta_correctas: >-
+  Of the evaluation questions, how many the AI assistant answered correctly. The references were reviewed by
+  an AI assistant; a person's confirmation is still pending.
+tarjeta_consistencia: >-
+  Each question was asked in 4 ways with the same meaning. It counts how many got the same answer all 4
+  times.
+tarjeta_cambio: >-
+  We simulated a source publishing a new version (a renamed column, a different unit) and counted what had
+  to be fixed.
+tarjeta_auditar: >-
+  Each link between sources keeps what each source said, the rule that was applied and where it came from
+  (PROV-O).
+fuera: >-
+  An AI assistant that does not have the data may make it up. Here it is asked questions the data cannot
+  answer, with the rule of saying what is missing, and we count what each approach did. It is measured by
+  layer/fuera.py.
+calidad: >-
+  Each rule states what the integrated data must look like (for example, that the shares in a concession do
+  not add up to more than 100 %) and is checked against all of Rastro's data. A ⚠️ shows how many records do
+  not meet it.
+calidad_shacl: >-
+  Each block is a rule in SHACL, exactly as it is in the repository. Open it to see which records do not
+  meet it.
+escenario: >-
+  What happens to all the evaluation questions when a database changes, before and after fixing it.
+consola: >-
+  SPARQL is like SQL, but over the dictionary's concepts instead of tables. Rastro translates each query
+  into SQL and runs it live on Postgres; the SQL it generated is shown below.
+instancia: >-
+  An instance is a concrete piece of data in the graph (a concession, a company, a link) with all its
+  properties. You can follow a link to see the entity on the other side.
+ontologia: >-
+  The ontology is the business dictionary: which concepts exist (classes), how they relate (relations) and
+  what data they have (attributes). It is what the AI assistant reads instead of the tables.
+enlaces: >-
+  Entity linking creates the missing key between sources: it decides, with a written rule, that two records
+  refer to the same thing, and keeps the evidence.
+mapeos: >-
+  An R2RML mapping states which column of which table is each concept in the dictionary. It is like a view
+  definition: if a source changes, it is fixed here.
+mapa: >-
+  Concession outlines (in red, those to review), possible venting seen by satellite and ENARGAS transmission
+  pipelines. The geometries are in the graph using the GeoSPARQL standard.
+externo: >-
+  Enrich with an outside source, in two ways: live (a query joins Rastro and Wikidata at that moment,
+  without copying anything) or saved in Rastro (what Wikidata answered stays as one more source, with its
+  date, and the questions, the assistant and the model can use it). Both are joined by the LEI, which they
+  share.
+lab_error: >-
+  How far off the model is, on average, for the 2025 wells it did not see during training, in millions of
+  m³ of gas per well. It is the same with and without Rastro: Rastro does not seek more accuracy, but
+  explanations that can be checked.
+lab_dudosos: >-
+  Predictions that rely on a value that does not come from the source as is: a share corrected with a
+  document, or a name match reviewed by an AI that is awaiting a person's confirmation. Rastro flags them;
+  without Rastro they are not visible.
+lab_pozo: >-
+  Shale gas wells that started producing in 2025. The model did not see them during training.

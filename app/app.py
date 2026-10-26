@@ -34,6 +34,8 @@ import answer  # noqa: E402
 from run import NAMES, normalize, score  # noqa: E402
 import dominio  # noqa: E402  (the screens of the other domains and what they share with oncology)
 from dominio import ayuda, tabla, warm_up  # noqa: E402  (the «?» icons, the tables with long text and the warm-up)
+import idioma  # noqa: E402  (the interface language: Spanish by default, English on request)
+from idioma import t  # noqa: E402
 
 EVAL = Path("/layer/eval")
 SOURCE_LABEL = {"aact": "AACT", "chembl": "ChEMBL", "openfda": "openFDA", "mesh": "MeSH",
@@ -518,21 +520,23 @@ def show_answer(query, columns, rows, note=None):
 
 # --- Screen --------------------------------------------------------
 
+idioma.init()   # before any text, so the first lines are already in the chosen language
+
 st.markdown('<img src="data:image/svg+xml;base64,' + base64.b64encode(Path("/app/logo-horizontal.svg").read_bytes()).decode()
             + '" style="height:56px;margin:8px 0 4px 0" alt="Rastro">', unsafe_allow_html=True)
-st.markdown("**Los datos cambian. Las preguntas, no.**")
+st.markdown(f"**{t('app.tagline')}**")
 
 # Domains: oncology has its screen in this file; the others are drawn with dominio.py
 # from their configuration (app/dominios.yaml)
-DOMAINS = yaml.safe_load(Path("/app/dominios.yaml").read_text())
+DOMAINS = idioma.localized("/app/dominios.yaml")
 available, status = llm_status()
 warm_up()   # the domains' example questions, in the background
 with st.sidebar:
     # The demo is oil and gas; the other two cases show with «Ver detalles técnicos», as proof that the
     # same Rastro works for other data
-    TECH = st.toggle("Ver detalles técnicos", value=False,
-                     help="Muestra las consultas, el SQL, la evidencia en PROV-O, la comparación completa y los otros casos de uso.")
-    DOMAIN = (st.radio("Caso de uso", DOMAINS, format_func=lambda d: d["name"], key="domain", help=ayuda("dominio"))
+    idioma.selector()
+    TECH = st.toggle(t("app.technical"), value=False, help=t("app.technical_help"))
+    DOMAIN = (st.radio(t("app.domain"), DOMAINS, format_func=lambda d: d["name"], key="domain", help=ayuda("dominio"))
               if TECH else DOMAINS[0])
 if DOMAIN.get("config"):
     dominio.render(DOMAIN["config"], TECH)

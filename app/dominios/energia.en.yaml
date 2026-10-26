@@ -1,0 +1,813 @@
+# English overlay of energia.yaml: only the visible texts, laid over the Spanish file by app/idioma.py.
+# Same nesting as the Spanish file; lists without «id» line up by position ({} keeps an item as it is).
+
+resumen: >-
+  Public data from Argentina: 2025 production well by well (Capítulo IV, with 2023 and 2024
+  to see who operated each concession), the maps of
+  concessions, partners and gas venting and the environmental studies of the Secretaría de Energía, the pipelines of ENARGAS, the
+  towns and protected areas of the IGN, and the global company identifier (GLEIF).
+ejemplo_libre: "For example: which companies produce the most gas in the Neuquén basin?"
+diagrama: {titulo: oil and gas dictionary}
+
+demo_porque: >-
+  Four moments, each one sentence on what Rastro does: it answers with evidence, it is fixed in one place
+  when a database changes, it explains a model's predictions with that same evidence, and a correction made
+  once reaches every result. Everything runs live on public oil and gas data. The other
+  questions (who operates each well, venting on the map) are in «Ask».
+demo:
+  - paso: Ask
+    titulo: "How much oil belongs to each company?"
+    muestra: >-
+      The answer first. With «Why this number?», choose a company and a concession to follow
+      the calculation, the connections between sources and the original records. Operated production and share are different measures.
+  - paso: The database changes
+    titulo: "The source publishes a new version"
+    muestra: >-
+      Without Rastro, queries break one by one and have to be found. With Rastro, it is fixed in one place.
+  - paso: Predict
+    titulo: "How much gas will a new well produce?"
+    muestra: >-
+      The same model with and without Rastro: they predict equally well, but with Rastro the prediction says what it
+      relies on, where each value comes from and which values are corrected.
+  - paso: A correction
+    titulo: "A value is corrected once, and everything changes"
+    muestra: >-
+      A document says that in Aguada Pichana Este Total holds 55%, not the 27.27% on the map. It is corrected once
+      in Rastro, and the answer, what goes into the model and its explanation all change on their own.
+
+fuentes:
+  sig_energia: Maps (WFS)
+  rastro: Rastro link
+nota_rastro: >-
+  The companies with their names in each source, the partners of each concession, who operates each well
+  and which concession each venting event falls in, and who operated each concession month by month, which Rastro resolves
+  once and keeps with its evidence
+
+columnas:
+  company: Company
+  share: Oil that belongs to it (m³)
+  gasShare: Gas that belongs to it (thousand m³)
+  operated: Oil it declares as operator (m³)
+  rule: Rule
+  type: Well type
+  wells: Wells
+  disagree: The registry names another company
+  concession: Concession
+  operator: Operator
+  detected: Possible venting (satellite)
+  declared: Declared venting points
+  unconventionalOil: Unconventional oil (m³)
+  shaleGas: Shale gas (thousand m³)
+  shaleOil: Shale oil (m³)
+  distanceKm: Nearest pipeline (km)
+  pipeline: Pipeline
+  place: Where
+  why: Why review it
+  since: Since
+  previous: Previous operator
+  new: New operator
+  oilBefore: Oil per month before (m³)
+  oilAfter: Oil per month after (m³)
+  gasBefore: Gas per month before (thousand m³)
+  gasAfter: Gas per month after (thousand m³)
+
+preguntas:
+  - id: e01
+    porque:
+      titulo: "The share of {valor}, concession by concession"
+      explica: "Its share is the sum, in each concession, of production times its percentage. Each percentage comes from the partners text on the map, with its source."
+      detalle: "{porcentaje} % · {parte} m³ of oil"
+      flecha: partner in
+      columnas: {concesion: Concession, porcentaje: "Percentage", parte: "Its share of oil (m³)", gas: "Its share of gas (thousand m³)", texto: "Evidence: the map text", fuente: Source}
+      recorrido:
+        title: Why this number?
+        company: Company to check
+        concession: See a concession
+        definition: 'The operator declares the production of the wells. This answer calculates how much belongs to each partner according to its registered share.'
+        total: '**{company}: its shares in {count} concessions are added up.**'
+        comparison_title: Compare operated production and share
+        operated_label: Oil declared as operator
+        share_label: Oil according to its share
+        comparison_note: >-
+          These are different 2025 measures: the operator declares the production of its wells, including its partners' part.
+          The share is calculated with the percentages registered in each concession.
+          This comparison does not measure the accuracy of SQL against Rastro.
+        unavailable: No data
+        breakdown_title: See all the concessions of this company
+        breakdown_note: The total in the answer adds up these shares. The volumes in each row are shown rounded.
+        calculation_title: How it was obtained
+        calculation: 'In {concesion}: {production} m³ of oil × {percent} % = {share} m³ that belong to {company}.'
+        rounding: Volumes are shown rounded to whole cubic metres; the calculation uses the original precision.
+        connections_title: What Rastro connected
+        sources:
+          - title: Production declarations
+            text: 'Production of the wells in {concesion}: {production} m³.'
+          - title: Concession map
+            text: 'Partner in the map text: {map_name}. Registered share: {percent} %.'
+        connection: '{concesion} → Share → {company}'
+        connection_detail: Production and partners are connected through the same concession.
+        pending_link: >-
+          On the map, the partner appears as «{map_name}». Rastro links it to {company} through a correction reviewed by an
+          AI assistant, which is still awaiting a person's confirmation: this part of the number depends on that link.
+        contribution: >-
+          The mappings translate the sources into Well, Concession, Company and Share.
+          The links gather a company's names under a single identifier, with their rule and evidence.
+          Those definitions are reused across questions; they can also be queried with SQL over the same links.
+        records_title: See the original records
+        original_text: '**Original map text:** {text}'
+        records_note: >-
+          The row shows the calculated share and the original partners text that supports it.
+          It is a current query over the loaded sources, not a historical copy of the portal.
+        production_columns: {pozo: Well, mes: Month of 2025, petroleo: Declared oil (m³)}
+        production_note: Up to 12 declarations with the most oil in the concession, from the 2025 Capítulo IV. The sum uses all its declarations.
+        linking_title: See how the names were connected
+        linking_note: >-
+          Each name in a source points to the same company. The rule and its evidence explain the link;
+          if a correction says it is awaiting human confirmation, that review is still pending.
+        identity: '**A shared identifier for this company:**'
+        linking_columns: {nombre: Name in the source, fuente: Source, regla: Rule, evidencia: Evidence and review}
+        technical_title: Identifiers and query for this walkthrough
+        missing: No evidence is available for this selection.
+    explicacion: |
+      - **What it looks for:** the 2025 oil production of each well, the concession it is in and the partners of that concession with their percentage.
+      - **What it calculates:** for each company, production multiplied by its percentage, added up over all its concessions; next to it, what it operates (the production it declares).
+      - **What SQL would have to do by hand:** split the partners text on the map («YPF S.A.: 50 %») and match company names across sources. Here they are already concepts: «Share» and «Company».
+      - **The SQL below:** Rastro translates each concept into Rastro's link tables and joins everything in a single query.
+    simple: How much 2025 oil belongs to each company, according to its share?
+    tecnica: How much 2025 oil belongs to each company, multiplying the production of each concession by its percentage?
+    ventaja: "The partners are in a text on the concession map; Rastro splits them once, with their percentage, and matches each company's names across sources. Chevron takes part under two legal names; a reviewed correction groups them."
+    terminos:
+      Participación: the percentage of a concession that belongs to each partner (share). The operator runs the wells, but the oil is divided among the partners.
+      m³: cubic metres of oil. One cubic metre is about 6.3 barrels.
+    antes_despues:
+      sin: {valor: "YPF: 21.4 M m³", detalle: "Adding up production by the company that declares it, YPF is assigned everything it operates, and half of La Amarga Chica, which is in the name of Petronas E&P Argentina (Vista's since 2025), does not appear."}
+      con: {valor: "YPF: 12.6 M m³", detalle: "Its share in each concession, according to the partners on the map. Vista: 7.0 M m³, with half of La Amarga Chica (2.1), which it bought from Petronas E&P Argentina in 2025; Chevron, with its two legal names: 3.5 M m³."}
+      impacto: >-
+        Without integration, YPF is assigned 8.8 million m³ too much (55 million barrels): about US$ 3.6
+        billion, at an assumed price of US$ 65 per barrel. It is its partners' production.
+    evidencia:
+      texto: "The partners of each concession, as the map reports them (some examples):"
+
+  - id: e02
+    porque:
+      titulo: "YPF's «{valor}» wells: who operates them and why"
+      explica: "For each well, Rastro keeps what each source says and which rule decided who operates it. Some examples:"
+      detalle: "{regla}"
+      nodo: "Well {pozo}"
+      flecha: operates it
+      columnas: {pozo: Well, regla: Rule, texto: "Evidence: what each source says"}
+    explicacion: |
+      - **What it looks for:** the «operator of a well» links that name YPF, grouped by well type (oil, gas, injection…).
+      - **What it returns:** how many wells of each type YPF operates and in how many the sworn production declaration prevails because the registry names another company. These are all the wells YPF declares in 2025, whether they produce or not.
+      - **What SQL would have to do by hand:** decide in each query which source prevails (registry or declarations). Here the rule is written once, and each well keeps its evidence.
+    simple: How many wells does YPF operate today, and of what type?
+    tecnica: How many wells with a sworn production declaration in 2025 does YPF operate today, by well type (energia:wellType), and in how many do the sources disagree?
+    ventaja: "The well registry and the sworn production declarations do not always name the same operator. Rastro applies a rule written once (whoever declares the production of the last month prevails) and keeps in view what the registry says for each well."
+    terminos:
+      Declaración jurada: what each company reports every month to the Secretaría de Energía about the production of each well (sworn production declaration).
+      Padrón de pozos: the register of all wells, with their location and their company (well registry).
+    antes_despues:
+      sin: {valor: "12,006 or 15,809", detalle: "Two answers: the well registry says 12,006 and the sworn production declarations, 15,809. In 3,796 wells the registry names another company (Pecom, Velitec, Copesa)."}
+      con: {valor: "15,809 wells", detalle: "One written rule: whoever declares the production of the last month prevails. What the registry says stays in view for each well. They are wells of every type: 5,391 oil, 1,394 gas, 1,318 injection and 7,579 of other types; 5,689 produced oil or gas in 2025."}
+    evidencia:
+      texto: "Wells where the sources disagree (some examples):"
+      formato: "**Well {pozo}**: {evidencia}"
+
+  - id: e03
+    porque:
+      titulo: "The possible venting events in {valor}, and why they fall there"
+      explica: "Each satellite point has coordinates; Rastro placed it inside the outline of the concession and kept the evidence."
+      flecha: possible venting
+      columnas: {fecha: Date, satelite: Satellite, texto: "Evidence: where the point falls", fuente: Source}
+    explicacion: |
+      - **What it looks for:** the possible venting events seen by satellite and the concession each one falls in, with its operator on the map and its declared venting points.
+      - **What it returns:** the 10 concessions with the most detections.
+      - **What SQL would have to do by hand:** place each point inside the outline of each concession (point in polygon). Rastro calculated it once; the query only says «in the concession».
+    simple: In which concessions did the satellite see the most possible gas venting since 2024, and who operates them?
+    tecnica: Which concessions have the most thermal anomalies detected by satellite since 2024, with their operator and their declared venting points?
+    ventaja: "The satellite layer only gives date and province. Rastro places each point inside the outline of its concession, once, and so reaches the operator and the declared venting."
+    terminos:
+      Venteo: releasing or flaring gas at the field instead of using it (venting).
+      Posible venteo: a thermal anomaly seen by a satellite. It is a sign to review, not a confirmation.
+    antes_despues:
+      sin: {valor: "Neuquén: 6,256", detalle: "The satellite layer only gives date and province: it does not say which concession or which company. It also spells Tierra del Fuego in two ways."}
+      con: {valor: "La Calera: 482", detalle: "6,636 possible venting events placed in their concession, with their operator. La Calera (Pluspetrol): 482, with no declared venting point on the map."}
+    evidencia:
+      texto: "Why each detection is in La Calera (some examples):"
+
+  - id: e04
+    porque:
+      titulo: "The unconventional oil of {valor}, by formation"
+      explica: "No table says «unconventional»: Rastro infers it from the resource type (shale or tight) of each sworn production declaration."
+      flecha: declares in
+      columnas: {formacion: Formation, petroleo: "Unconventional oil 2025 (m³)"}
+    explicacion: |
+      - **What it looks for:** the production of each well that is «unconventional» and the company that declares it.
+      - **What it returns:** the 10 companies with the most unconventional oil.
+      - **What is special:** «unconventional» is not a column. The dictionary says that shale and tight are types of unconventional, and Rastro infers it. If another type is added tomorrow, one line of the dictionary changes, not every query.
+    simple: Who produces the most unconventional oil (shale and tight)?
+    tecnica: Which companies declare the most unconventional oil in 2025 (the inferred class, with no mapping of its own)?
+    ventaja: "«Unconventional» is defined once, in the business dictionary: shale or tight. No mapping assigns it; it holds for every question."
+    terminos:
+      No convencional: oil from low-permeability rock (shale, such as Vaca Muerta, or tight), extracted with hydraulic fracturing (unconventional).
+
+  - id: e05
+    porque:
+      titulo: "The pipeline nearest to {valor}"
+      explica: "Rastro measured once the distance from the outline of each concession to each ENARGAS pipeline section and kept the nearest one, with its evidence."
+      detalle: "{distancia} km away"
+      flecha: nearest pipeline
+      columnas: {gasoducto: Pipeline, distancia: "Distance (km)", texto: Evidence, fuente: Sources}
+    explicacion: |
+      - **What it looks for:** the concessions with possible venting and, for each one, the nearest ENARGAS transmission pipeline and how many km away it is.
+      - **What it filters:** only those whose pipeline is 10 km or more away.
+      - **What SQL would have to do by hand:** measure distances between outlines and pipes from two different agencies. Rastro calculated them once and keeps them with their evidence.
+    simple: Which concessions with possible venting have no transmission pipeline nearby?
+    tecnica: Which concessions with possible venting detected by satellite have the nearest ENARGAS transmission pipeline 10 km or more away?
+    ventaja: "The pipelines belong to another agency (ENARGAS). Rastro calculates once the distance from each concession to the nearest pipeline and joins it with the venting: a clue to where the gas has no outlet."
+    terminos:
+      Gasoducto de transporte: the trunk pipes that carry gas to consumption centres (transmission pipeline). It does not include the internal pipes of each field.
+    evidencia:
+      texto: "Why Rastro gives the distance (some examples):"
+
+  - id: e06
+    porque:
+      titulo: "The possible venting events in {valor} in a protected area or near a town"
+      explica: "For each satellite point, Rastro kept the nearest town, the distance and whether it falls in an IGN protected area."
+      flecha: possible venting
+      columnas: {fecha: Date, lugar: Where, texto: Evidence}
+    explicacion: |
+      - **What it looks for:** the possible venting events with their surroundings according to the IGN: the nearest town and the protected area, if it falls in one.
+      - **What it filters:** those in a protected area or less than 3 km from a town, and counts them by concession and operator.
+      - **What is special:** the surroundings come from another source (IGN) and were joined once by location; the query uses them like any other data.
+    simple: Which possible venting events are inside a protected area or near a town?
+    tecnica: Which possible venting events detected by satellite fall inside a protected area or less than 3 km from a town, according to the IGN?
+    ventaja: "The towns and protected areas come from the Instituto Geográfico Nacional. Rastro places each possible venting event relative to them once, with the evidence, and reaches the concession and its operator."
+    terminos:
+      Área protegida: a reserve or park with legal protection, national or provincial (protected area).
+    evidencia:
+      texto: "The surroundings of some possible venting events:"
+
+  - id: e07
+    porque:
+      titulo: "The LEI of {valor}"
+      explica: "Rastro looked up the company in GLEIF and kept the LEI only if the legal name is the company's, with the evidence."
+      flecha: global identifier
+      columnas: {lei: LEI, texto: Evidence, fuente: Sources}
+    explicacion: |
+      - **What it looks for:** the companies that have an LEI (the global identifier from GLEIF) and the production they declare.
+      - **What it returns:** each company with its LEI and what it operates, from highest to lowest.
+      - **What is special:** the LEI was accepted only if the legal name matches; the discarded candidates remain in the evidence.
+    simple: Which companies have a global identifier (LEI)?
+    tecnica: Which companies producing in Argentina have an LEI in GLEIF, and how much oil do they operate?
+    ventaja: "The LEI links each company to the global GLEIF register, the same one banks and regulators use. Rastro accepts it only if the legal name matches, and keeps in view what it discarded."
+    terminos:
+      LEI: the global company identifier (GLEIF), the same all over the world.
+    evidencia:
+      texto: "How each LEI was chosen (some examples):"
+
+  - id: e08
+    porque:
+      titulo: "Why {valor} should be reviewed"
+      explica: "«To review» is not in any table: Rastro infers it from two rules in the dictionary. Below, each reason and the evidence it relies on."
+      flecha: reviewed because of
+      columnas: {que: What, texto: Evidence, fuente: Where from}
+    explicacion: |
+      - **What it looks for:** the «concessions to review», with their operator and the reason.
+      - **What is special:** «concession to review» is not a column and has no mapping. The dictionary says these are the ones with possible venting that also have no pipeline nearby, or have not filed gas venting reports. Rastro infers it from those two rules.
+      - **What SQL would have to do by hand:** repeat both rules, with the distances and the studies, in every query that uses them. Here they are written once and hold for all of them.
+    simple: Which concessions should be reviewed for venting, and why?
+    tecnica: Which concessions are «to review» (inferred class, with no mapping of its own), with their operator and their reason?
+    ventaja: "The rule is written once in the business dictionary: possible venting and, in addition, no transmission pipeline nearby or no venting report filed. Rastro infers it; it holds for this question, for the map and for any other that uses it."
+    terminos:
+      Concesión para revisar: a concession worth looking at because of its possible venting (concession to review). It is a sign, not a conclusion.
+
+  - id: e09
+    porque:
+      titulo: "The change of operator in {valor}"
+      explica: "Rastro decides month by month who declares most of the production of each concession and marks a change when another company does so for 3 months in a row. It keeps the evidence."
+      detalle: "since {desde}, previously {anterior}"
+      flecha: takes over operating it
+      columnas: {desde: Since, anterior: "Previous operator", nueva: "New operator", texto: Evidence}
+    explicacion: |
+      - **What it looks for:** the «changes of operator»: each concession where another company began to declare most of the production, with the month, the previous operator and the new one.
+      - **What it returns:** what the concession produced per month, on average, with the previous operator and with the new one; from most to least oil.
+      - **What SQL would have to do by hand:** join three years of sworn production declarations (three files), match company names across years, decide month by month who declares most of it and discard isolated months. Rastro does it once and each change keeps its evidence.
+    simple: Which areas changed operator between 2023 and 2025, and how much did they produce before and after?
+    tecnica: In which concessions did another company begin to declare most of the production between 2023 and 2025 (at least 3 months in a row), and how much oil and gas did they produce per month with each operator?
+    ventaja: "The sworn production declarations are one file per year. Rastro joins them, decides month by month who declares most of each concession and marks each change with its evidence: this shows the mature areas YPF sold (Pecom, Petróleos Sudamericanos, Bentia, Quintana) and how much they produced."
+    terminos:
+      Cambio de operadora: from that month on, another company declares most of the production of the concession, for at least 3 months in a row (change of operator).
+      Áreas maduras: conventional fields with many years of production, which often pass to smaller companies (mature areas).
+    evidencia:
+      texto: "Why Rastro says the operator changed (some examples):"
+
+  - id: e10
+    porque:
+      titulo: "The shale gas of {valor}, by concession"
+      explica: "«Shale» comes from the resource type of each sworn production declaration; the concession, from each well's link to the map."
+      detalle: "{gas} thousand m³"
+      flecha: declares in
+      columnas: {concesion: Concession, gas: "Shale gas 2025 (thousand m³)"}
+    explicacion: |
+      - **What it looks for:** the production of each well that is shale and the company that declares it.
+      - **What it returns:** the 10 companies with the most shale gas in 2025, with their shale oil next to it.
+      - **What is special:** it is the same inferred class as unconventional (shale is one type), seen through gas. Gas and oil come from the same sworn production declarations, well by well.
+    simple: Who produces the most shale gas (Vaca Muerta)?
+    tecnica: Which companies declare the most shale gas in 2025 (energia:ShaleProduction, with its gas in thousand m³)?
+    ventaja: "Gas and oil are in the same dictionary and come from the same sworn production declarations: asking about gas means changing one word in the query."
+    terminos:
+      Gas de shale: gas from low-permeability rock (such as Vaca Muerta), extracted with hydraulic fracturing (shale gas). It is measured in thousands of cubic metres.
+
+afirmaciones:
+  titulo: Check a claim
+  intro: >-
+    A sentence from a report or the press, checked against the data. Rastro says whether it **holds**, whether it **does not
+    hold** (with the correct value) or whether it **does not have the data**, without making it up. When the sentence can be read in two
+    ways, it shows both.
+  ejemplos:
+    - texto: Total Austral was the largest gas producer in Argentina in 2025.
+      nota: Both readings are correct and the sentence does not say which one it uses. Published rankings use the first.
+      lecturas:
+        - nombre: If «producing» is the gas each company operates
+          unidad: billion m³
+        - nombre: If «producing» is the gas that belongs to it by its share
+          unidad: billion m³
+    - texto: Tecpetrol declared about 6,900 million m³ of gas in 2025.
+      lecturas:
+        - nombre: The gas Tecpetrol declared in 2025
+          unidad: million m³
+    - texto: YPF had proven gas reserves of 150 billion m³ at the end of 2024.
+      lecturas:
+        - nombre: YPF's proven reserves
+          falta: Rastro has no reserves. It has the declared production, the concessions with their partners, the venting and the environmental studies.
+
+externo:
+  titulo: Enrich with outside data (Wikidata)
+  fecha_guardado: Oct 20, 2026
+  intro: >-
+    **Enriching** means adding to your own data what another source knows, without losing where each value came from.
+    A single query joins, live, **Rastro** and **Wikidata**: the companies with a global identifier (LEI)
+    and the 2025 oil that belongs to them according to their partners (the same number as in step 1), with what Wikidata knows about each one (headquarters, the stock exchange it is listed on,
+    owner or parent and website). Nothing is loaded: Rastro and Wikidata use the same LEI.
+  conclusion: >-
+    That YPF and Pampa Energía are listed on the New York Stock Exchange is not in any of Rastro's six
+    sources: it comes from Wikidata in the same query. Only 3 of the 12 companies with an LEI have it recorded in
+    Wikidata; others appear by name, but that match would need review and the LEI does not.
+  columnas:
+    empresa: Company
+    su_parte_m3: Its share of 2025 oil (m³)
+    declara_m3: Declares as operator (m³)
+    sede_segun_wikidata: Headquarters (Wikidata)
+    cotiza_en: Listed on (Wikidata)
+    duenio_o_matriz: Owner or parent (Wikidata)
+    sitio: Website (Wikidata)
+
+tarjetas:
+  - titulo: Correct answers
+    valor: "{c_correct} of {n_questions}"
+    compara: "Without Rastro: {b_correct} of {n_questions}"
+  - titulo: The same question, the same answer
+    valor: "{c_consistent} of {n_consistency}"
+    compara: "Without Rastro: {b_consistent} of {n_consistency}"
+  - titulo: If a source changes, it is fixed with
+    valor: 1 line
+    compara: "Without Rastro: rewrite {b_broken} queries"
+  - titulo: Every answer can be audited
+    compara: "of the {n_enlaces} links between sources keep their source, their rule and their text; and {cols_ok} of {cols} answer columns say which source they come from."
+
+cambios:
+  - titulo: The way a value is written changes
+    que: The Secretaría de Energía publishes a new version of Capítulo IV and oil is now in barrels.
+    donde: "in the mapping (mappings/energia.r2rml.ttl)"
+  - titulo: The name of a column changes
+    que: The Secretaría de Energía publishes a new version of Capítulo IV and the oil column is renamed.
+    donde: "in the mapping (mappings/energia.r2rml.ttl)"
+
+fuera:
+  intro: >-
+    Industry questions that Rastro's data cannot answer (prices, reserves, investments, 2026, employment) and one
+    control question that it can. With the same rule for everyone («if the data is not enough, say what is missing»), none made anything up: all
+    of them said what was missing. The difference is in the control question: without the data it cannot be answered; with the data it can,
+    and with its source.
+calidad:
+  intro: >-
+    Rules over the integrated data, written once in the words of the dictionary and checked after every
+    load, like the quality checks of a database. They look at all the sources together and also at the evidence.
+    They fix nothing: they show what is not met, where, and which Rastro Lab predictions use that value (the ones that inherit
+    the error). The first time they found 5 well trajectories without evidence; it was fixed in one place, the rule that
+    builds the evidence. The rules on impossible values flag source data for review, without changing it.
+  tecnico: >-
+    The quality rules are written in SHACL, the W3C standard for validating a graph. Rastro fetches with CONSTRUCT only what
+    they look at and validates it with pySHACL. Each rule has a target (`sh:targetClass`, `sh:targetSubjectsOf`), its
+    conditions (`sh:minCount`, `sh:maxInclusive`, `sh:pattern`, `sh:lessThanOrEquals`) and, if needed, a SPARQL
+    query (`sh:sparql`). The same rules work in other knowledge-graph platforms or tools.
+
+faq:
+  - pregunta: Where does the data come from?
+    respuesta: >-
+      From six public sources of four agencies. From the Secretaría de Energía: the monthly sworn production declarations
+      of each well in 2025 and the well registry (Capítulo IV, datos.energia.gob.ar), the
+      map service (WFS) with the concessions, their partners and gas venting, and the list of environmental
+      studies filed for each concession. From the same service,
+      the ENARGAS transmission pipelines. From the Instituto Geográfico Nacional (listed in IDERA), the
+      towns and protected areas. And from GLEIF, the global identifier of the companies. 2025 is used
+      because the 2026 file does not yet include all operators. The 2023 and 2024 files are used only
+      to see who operated each concession over time (the changes of operator).
+  - pregunta: Why are the groups (Chevron, Pluspetrol, CGC) reviewed corrections rather than coming from a register?
+    respuesta: >-
+      Because no public register has them: GLEIF does not record the parent of any of these Argentine
+      companies, and Chevron's companies have no LEI; Wikidata does not record those relationships either.
+      That is why they are reviewed corrections, with their reason in view, and the LEI is used as the identifier of
+      each company.
+  - pregunta: Is a possible venting event detected by satellite a breach?
+    respuesta: >-
+      No. It is a thermal anomaly seen by a satellite: a sign to review. Moreover, the layer of declared venting
+      points may be out of date. Rastro shows which concession each point falls in and who operates it,
+      not that there is a violation.
+  - pregunta: Why is the operator rule «the sworn production declaration prevails»?
+    respuesta: >-
+      Because it is what the company reports every month. It is a business decision, written once and in
+      view: if another one is preferred, it is changed in a single place and holds for every question. In each
+      well where the sources disagree, the evidence shows what the registry says.
+  - pregunta: Who reviewed the name corrections?
+    respuesta: >-
+      An AI assistant drafted them (for example, that YPF's partner in Loma Campana is Chevron's
+      company); a person still has to confirm them. They are in linking/energia/correcciones.csv, with their reason.
+  - pregunta: Can it be joined with data from other organizations, such as Wikidata?
+    respuesta: >-
+      Yes, through the LEI, which Rastro and Wikidata use in the same way. A single query in GraphDB joins, live and without
+      loading anything, Rastro's companies with what Wikidata knows about them: headquarters, the stock exchange they are listed on
+      and website. This shows that YPF and Pampa Energía are listed on the New York Stock Exchange, a fact that is not
+      in any of the six sources. Only 3 of the 12 companies with an LEI have it recorded in
+      Wikidata (YPF, Pan American Energy and Pampa Energía). Details in layer/energia/externo/.
+  - pregunta: What does Rastro Lab's linear regression do?
+    respuesta: >-
+      It learns a coefficient for each characteristic of the well. The prediction can be written as the average gas
+      plus what each characteristic adds or subtracts. The ridge variant limits the coefficients to reduce
+      overfitting. Its contributions explain the model's arithmetic; they do not prove physical causes.
+  - pregunta: What is Random Forest?
+    respuesta: >-
+      It is a forest of decision trees. Each tree asks questions about the well's data and reaches an
+      estimate; the forest averages the estimates. Each tree uses a random sample of the wells and
+      considers different variables at each decision, to reduce reliance on a single tree. The drawing in the app follows a real tree
+      of the forest for the selected well.
+  - pregunta: What is XGBoost?
+    respuesta: >-
+      It builds trees one after another: each new tree helps correct the errors of the previous ones.
+      It combines those corrections to estimate the gas and limits complexity to reduce overfitting.
+      It can learn relationships between variables that a linear sum does not represent directly.
+  - pregunta: What is LightGBM?
+    respuesta: >-
+      It also builds trees that correct the previous errors. It chooses which leaf to split by how much it can
+      reduce the error, aiming for efficient training. In Rastro Lab the depth and the size
+      of the leaves are limited. Using this algorithm does not guarantee better predictions: it is checked on the same wells.
+  - pregunta: How was the alternative model chosen?
+    respuesta: >-
+      Random Forest, XGBoost and LightGBM were compared, trained on the gas directly and on its logarithm.
+      The combination with the lowest mean error on the 2023 and 2024 wells was chosen; the 2025 wells are shown
+      separately as the evaluation. All of them predict the gas of months 2 to 7 with the same variables. The Rastro Lab
+      table keeps the results of every option and of the regression. It is an experimental evaluation.
+  - pregunta: Does the drawn tree explain the whole prediction?
+    respuesta: >-
+      The drawing shows the well's real path through the first tree. In Random Forest many trees are averaged;
+      in XGBoost and LightGBM the corrections of many trees are combined. A single tree shows part of the calculation.
+      Rastro lets you open the values used and their sources. The model's decisions do not prove physical causes.
+  - pregunta: References
+    respuesta: |-
+      A published study joins these same public sources (production per well, registry, fracturing data and
+      trajectories) to predict the first-year gas of 642 shale gas wells in Vaca Muerta. Rastro Lab uses it
+      to validate that its model gives reasonable numbers with the same data: with that study's design, the
+      median by area gives practically the same result (R² 0.45 against 0.47). Rastro Lab makes the same prediction with
+      another goal: that each prediction is explained in business concepts, with the source of each value.
+
+      - Fernández Gazzaniga, A. (2025). «Predicción de productividad inicial en pozos de shale gas de Vaca Muerta
+        mediante machine learning». [Master's thesis. Universidad Torcuato Di Tella]. Repositorio Digital
+        Universidad Torcuato Di Tella. https://repositorio.utdt.edu/handle/20.500.13098/14415
+
+      The references on knowledge graphs are in «References», in the questions for all the cases.
+  - pregunta: Where is each piece?
+    respuesta: >-
+      Data in Postgres, one schema per source (`capitulo4`, `sig_energia`, `enargas`, `ign`, `gleif_energia`);
+      companies, partners, operators, located venting, nearby pipelines and surroundings in the `energia` schema
+      (`linking/energia/`); a third Ontop on port 8082 with its
+      ontology (`ontology/energia/`) and its mappings (`mappings/energia.r2rml.ttl`). Each link is exposed with PROV-O.
+
+technical:
+  pieces:
+    enlaces:
+    - - Step 1 · The partners of each concession, split from the map text
+    - - Step 1 · The same company, written differently in each source
+    - - Step 2 · Who operates each well (wells where the registry says something else)
+    - - Step 3 · Which concession each possible venting event falls in (La Calera)
+    mapas:
+    - - Step 1 · Share, company names and production
+    - - Step 2 · The operator of each well
+    - - Step 3 · The venting event and its concession
+  map:
+    tooltip: <b>{nombre}</b><br>{operadora}<br>{venteos} possible venting events<br>{revisar}
+    caption: 'Red dots: possible venting seen by satellite since 2024. Amber
+      lines: transmission pipelines (ENARGAS). Concessions in red: to review,
+      according to the dictionary rule; in blue, with possible venting. Everything comes from
+      Rastro, with geometries in the OGC standard (GeoSPARQL).'
+
+ejemplo_integracion:
+  titulo: Step by step
+  encabezado: How Rastro joins the data, with a real well and a real company
+  para_que: >-
+    Show with a real case how Rastro turns tables that do not talk to each other into an answer that can be audited:
+    the same well in two tables, the same company with two names, and an answer that leads back to its records.
+    This is what SQL would have to solve by hand in every query.
+  aviso: >-
+    Real data, queried now: well 164166 of Compañía General de Combustibles (CGC), in Cañadón Seco,
+    Santa Cruz. Each number comes from the query shown in the step.
+  selector: Choose a step
+  pasos:
+    - titulo: 1 · One well, two tables
+      parte: >-
+        Dictionary and mappings: each source is translated into the same business concepts (Well, Company, Production),
+        without changing the original data.
+      contenido: |
+        The sworn production declarations and the well registry describe the same well with different columns
+        and name the company differently. Rastro joins them by the **official well identifier** (`idpozo`),
+        the one the Secretaría de Energía uses in both tables: not by similarity of names.
+      consultas:
+        - titulo: What the well registry says (as it comes)
+        - titulo: What the sworn production declarations say (the first two months of 2025, as they come)
+        - titulo: What Rastro knows about that well (a single Well, with its operator)
+    - titulo: 2 · One company, two names
+      parte: >-
+        Links with evidence: each link states its rule, its evidence and which source it comes from (PROV-O). Those reviewed by
+        an AI assistant are awaiting a person's confirmation, and the app says so.
+      contenido: |
+        The declarations name the company **CGC ENERGIA SAU**; the registry and the concession map,
+        **COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.** No common code joins them. A **reviewed correction** says they are
+        the same company and why. It was reviewed by an AI assistant and is awaiting a person's confirmation.
+      consultas:
+        - titulo: Each name, in each source, with its rule and its evidence
+    - titulo: 3 · The answer and its origin
+      parte: >-
+        The answer: a query over the dictionary. From each number you go back to its records and to the links
+        that support it (what «Why trust it» measures).
+      contenido: |
+        **How much gas did Compañía General de Combustibles declare in 2025?**
+
+        In the sworn production declarations, the company appears under **both names**. An SQL query that looks for only one
+        finds part of it. With Rastro, the production under both names belongs to a single company, and the reason is the
+        link from step 2.
+      consultas:
+        - titulo: "Without Rastro: what each name finds in the declarations"
+        - titulo: "With Rastro: a single company"
+
+alternative_lab:
+  selector: Model to explore
+  ridge: Linear regression · explanation by contributions
+  alternative: '{model} · alternative model'
+  unavailable_name: Trees
+  title: Another model, the same question
+  scope: >-
+    Gas of months 2 to 7, the same wells and the same variables. Three algorithms used in the thesis are compared;
+    this evaluation does not attempt to reproduce its 12-month results.
+  experimental: >-
+    Experimental model. Chosen for its lowest mean error in 2023 and 2024; 2025 is shown separately.
+    This data has already been explored: the evaluation is not an independent validation.
+  selected: '**⭐ Chosen alternative: {model} · lowest error in 2023–2024.**'
+  distinction: Highlight
+  chosen_badge: ⭐ Chosen in 2023–2024
+  best_badge: 🏆 Lowest error in 2025
+  ranking_note: 'The green row is the alternative chosen with 2023–2024. The trophy marks the tree with the lowest mean error in 2025.'
+  well_comparison:
+    better: '✅ For this well, the alternative model is more accurate than the regression: error of {error} versus {ridge} M m³.'
+    worse: 'For this well, the alternative model is less accurate than the regression: error of {error} versus {ridge} M m³.'
+    tie: 'For this well, both models have the same error: {error} M m³.'
+  accuracy_note: 'Error = distance between the prediction and the observed gas. A lower error means higher accuracy for this well; it can vary from one well to another.'
+  sample: 'Training: {train} wells before 2025 · Evaluation: {test} wells from 2025.'
+  validation: Comparison for choosing · 2023 and 2024
+  evaluation: Results in 2025 · lower error is better
+  model: Model
+  transformation: Training scale
+  transforms:
+    direct: Gas directly
+    log: Logarithmic scale
+  training_scale: 'Training scale of the chosen alternative: {scale}.'
+  selection_error: Mean error in 2023 and 2024 (M m³)
+  error: Mean error in 2025 (M m³)
+  r2: R² in 2025
+  ridge_label: Linear regression
+  actual: Observed gas · evaluation
+  prediction: 'Prediction · {model}'
+  well: '**Well {well} · same target and same inputs**'
+  source_comparison: 'With the original tables: error {raw} M m³. With Rastro: {semantic} M m³. It is the same algorithm in both cases.'
+  inputs: Inputs and sources of this prediction
+  input_note: >-
+    The model receives the same integrated values and fills in missing ones with the training averages.
+    Load dates and pending corrections stay in view. This walkthrough is retrospective.
+  source_selector: See the source of a variable
+  tree: See the decisions of a tree
+  tree_heading: 'First tree · well {well}'
+  tree_subtitle: The prediction combines many trees
+  download_tree: Download path (SVG)
+  tree_scope: >-
+    The well's real path through the model's first tree. The prediction combines many trees: this drawing shows
+    part of the calculation.
+  tree_value: 'Value used: {value}'
+  'yes': 'Yes'
+  'no': 'No'
+  leaf: Combined with the other trees
+  forest_leaf: 'This tree: {gas} million m³'
+  forest_prediction: 'Forest average: {gas} million m³'
+  forest_average: 'This tree estimates {single} M m³. Random Forest averages all its trees and obtains {prediction} M m³.'
+  feature_labels:
+    grupo: Operator
+    area: Concession
+    pct: Share (%)
+    rama: Lateral (m)
+    etapas: Stages
+    arena: Sand (t)
+    agua: Water (m³)
+    presion: Pressure (psi)
+    profundidad: Depth (m)
+  missing: The alternative model does not yet have results calculated for these inputs.
+  stale: The inputs or the code changed. The alternative model must be updated to show this prediction.
+  technical: Details of the alternative model
+  identity: 'Calculated: {date} (Argentina) · version {version} · input fingerprint {inputs}.'
+  publication: >-
+    This saved evaluation is independent of the regression run published in Rastro. The source records
+    are queried now; the alternative model keeps the identifiers it used.
+  command: 'To update: python lab/gas/alternative.py, with the optional dependencies in requirements-thesis.txt.'
+
+ejemplo_lab:
+  titulo: Step by step · From the data to the explanation
+  encabezado: How Rastro Lab predicts a well's gas and explains the number
+  para_que: >-
+    Show what the model receives, how it calculates and where each part of the explanation comes from, with the same real well
+    selected above. It answers the most common question: the model does not read the ontology; it receives a table built with
+    Rastro's concepts, and each number in the explanation leads back to its records.
+  aviso: >-
+    Real data: the well selected above, shared by all of Rastro Lab. The calculation in step 3 comes from the
+    current model, live; the published run is identified and compared separately.
+  selector: Choose a step
+  ui:
+    well_selector: Well we follow throughout Rastro Lab
+    run_missing: There is no published run. The live calculation and its current evidence are still available.
+    run_identity: 'Published run: {run} · {date} · published version {published} · current code {current}.'
+    run_different: 'The published run and the current calculation differ in: {checks}. They are shown separately; it is not
+      claimed that they are the same explanation.'
+    run_matched: The version, all the saved inputs and the result, the contributions and the records of the
+      selected well match.
+    run_scope: 'Comparison of the captured run, with the precision in which its values were saved. The evidence
+      is queried in the current sources; it is not an immutable historical copy. It may take up to a minute
+      to reflect changes in the sources.'
+    checks:
+      version: code version
+      inputs: full input table
+      prediction: well prediction
+      contributions: well contributions
+      records: identifiers of the records used
+    statuses:
+      observed: Observed
+      imputed: Imputed
+      late: Arrived late
+      pending: Awaiting a person's confirmation
+    columns:
+      variable: Variable
+      field: Source field
+      raw: Value calculated from the original sources
+      concept: Rastro concept
+      model: Model column
+      original: Integrated value before imputation
+      effective: Value used by the model
+      status: Status
+    not_reported: Not reported
+    input_title: '**The row of well {well}: from the fields to the model**'
+    input_scope: 'The original comparison comes from the SQL that prepares the sources: it may add up several records.
+      The integrated value keeps what was there before filling in missing values. «Observed» means a value available
+      today, not an independent confirmation of its links.'
+    availability_scope: 'A load after the start month is marked «Arrived late». Not every source keeps
+      a historical publication date: this walkthrough is retrospective and does not guarantee availability when the
+      well started.'
+    target: 'Start: {date} · Observed gas of months 2 to 7: {gas} million m³. It is the evaluation target,
+      not a predictor variable.'
+    summary_part: Part of the calculation
+    summary_amount: Million m³
+    base: Training average
+    prediction: Predicted gas for months 2 to 7
+    groups:
+      location: Concession, operator and partners
+      fracture: Fracturing
+      depth: Depth
+    calculation_title: '**The calculation for well {well}, with its actual contributions**'
+    group_selector: Explore a contribution
+    variable_selector: Open a variable of that contribution
+    current_evidence_title: "**Current evidence for the selected well (not a historical copy of the run)**"
+    source_expander: See source records and evidence for the variable
+    source_title: '**Origin of {variable}**'
+    training_mean: Training average
+    category: Grouped effect of 0/1 columns
+    coefficient: Coefficient
+    contribution: Contribution (million m³)
+    formula_scope: Numeric contributions are (value used − training average) × coefficient; categories
+      add up their centred 0/1 columns. Missing values are replaced by the training average, with a contribution of
+      zero. It is calculated without rounding; the screen rounds. This explains the arithmetic, not physical causes.
+    evidence_columns:
+      dato: Rastro entity (URI)
+      regla: Rule
+      evidencia: Evidence
+      origen: Source record or source (URI)
+      identificador: Original identifier
+      mes: Production month
+      cargado: Load date
+  inputs:
+    - {}
+    - {}
+    - field: participacion (map text)
+  sources:
+    inicio:
+      note: Original production records of the well. The linked evidence indicates the first month selected;
+        later months are used to calculate the observed target, not as predictors.
+    fractura:
+      note: Original reports of the well, including those the rule might exclude by date. Rastro's evidence
+        shows the selection and aggregation used; the load dates reveal late arrivals.
+    socios:
+      note: Original map text for the well's concession. The linked evidence shows whether Rastro applies a
+        reviewed correction; keeping that difference is part of the comparison.
+    trayectoria:
+      note: Original trajectories of the well. The linked rule indicates which one was selected; it is not claimed that all
+        these rows go into the model.
+  pasos:
+    - titulo: 1 · Give meaning to the sources
+      parte: >-
+        Dictionary, mappings and links: the model's variables come from Rastro concepts (Well start,
+        Fracturing, Trajectory, Share), with the concession and the company already linked.
+      contenido: |
+        The sources are loaded as they come. The links identify the well, the concession and the companies, with their
+        rule and their evidence, and the mappings expose those records with the dictionary. No row is labelled by hand.
+
+        **Source tables → links with evidence → mappings to the dictionary → query → table for the model.**
+
+        | Source data | Meaning in Rastro | Use in the model |
+        |---|---|---|
+        | Production declaration | Well start and observed gas | Cohort, cut-off date and target |
+        | Fracturing report | Lateral length, stages, sand, water and pressure | Numeric variables |
+        | Well trajectory | Vertical depth | Numeric variable |
+        | Concession and partners | Concession, company and share | Context variables |
+    - titulo: 2 · Prepare and train
+      parte: >-
+        Rastro Lab: the same model, trained twice, with a chronological cut-off and late arrivals in view.
+        The walkthrough is retrospective; it does not guarantee that all the data was available when the well started.
+      contenido: |
+        Each row is an eligible well, with its identifier and its start date. **Target:** the cumulative gas of
+        months 2 to 7 since it started, in million m³. That gas is used to train and to check; it does not enter as a variable.
+
+        The model is trained on the wells that started before 2025 and tested on those of 2025. Categories become
+        numeric columns, missing values are filled in with the training average, and a regularized linear regression
+        is fitted. Fracturing is taken according to the well's start, and the load date is kept, to flag what
+        arrived later.
+    - titulo: 3 · Explain the number
+      parte: >-
+        The explanation: a base and what each dictionary concept adds or subtracts, calculated by the model, not
+        written by an AI.
+      contenido: |
+        **The general formula of linear regression:**
+
+        $$\hat y = \beta_0 + \sum_i \beta_i x_i$$
+
+        Here, **ŷ** is the estimated gas; **xᵢ**, each characteristic of the well; **βᵢ**, its learned coefficient;
+        and **β₀**, the intercept. Rastro Lab uses this regression with regularization (*ridge*).
+
+        **The same calculation, starting from the average:**
+
+        $$\hat y = \bar y + \sum_i \beta_i (x_i - \bar x_i)$$
+
+        **ȳ** is the training average gas and **x̄ᵢ**, the average of each input.
+        Each term of the sum is a **contribution**. «Fracturing» adds up the contributions of lateral, stages, sand, water and pressure;
+        the other groups gather those of location and depth. The calculation for the selected well is shown below.
+
+        The **coefficients** are learned from the wells before 2025: they are the ones that bring that sum as close as possible to the
+        gas those wells actually produced, with a small penalty (*ridge*) so that none of them runs away. Then
+        they are applied to the 2025 wells. Categories are converted into 0/1 columns. If a numeric value is missing, the
+        training average is used.
+
+        Below you can open each group and see its variables, coefficients and sources. **A single coefficient can look
+        odd**, for example a negative one for lateral length: the fracturing variables change together and the model
+        spreads their effect among them. That is why the explanation adds them up in «How the well was fractured».
+        The contributions explain the model's arithmetic; **they do not prove physical causes**.
+    - titulo: 4 · Open the evidence
+      parte: >-
+        Traceability (PROV-O): each published prediction keeps the run, what each factor added and the records
+        it used, and is queried like any other Rastro data.
+      contenido: |
+        When a run of the model is published, Rastro keeps each prediction as one more piece of data: the run that
+        generated it, what each factor added and **the source records it used** (`prov:used`). Below, the published
+        prediction for the selected well, queried now:
+
+        1. the number and its range;
+        2. its factors, as they were saved; the comparison status shows whether they match step 3;
+        3. each record it used, with the rule that chose it, its evidence and its source.
+
+        So from the predicted gas you reach the well's gas declarations, the fracturing the operator reported (and
+        when it was loaded), the trajectory and the share in the concession.
+      consultas:
+        - titulo: The published prediction (compared run, million m³)
+        - titulo: What each factor added, saved with the prediction
+        - titulo: The records it used, with their rule, their evidence and their source

@@ -1,0 +1,129 @@
+# English overlay for app/faq-general.yaml. The Spanish file is a list without ids, so items are matched by
+# position: keep the same order. «tecnico» is not repeated here; it comes from the Spanish file.
+
+# --- For everyone ----------------------------------------------------
+
+- pregunta: What is Rastro?
+  respuesta: |-
+    A way to ask several databases questions in business language, without knowing how they are built.
+
+    Rastro brings together databases that do not talk to each other and describes them with a **business dictionary** (for example: well, concession and company; contract, supplier and group; trial, drug and disease). Whoever asks uses those words, and Rastro takes care of searching each database. Every answer says where it comes from and can be audited.
+
+- pregunta: Do I need to know how to program?
+  respuesta: |-
+    No. The example questions work on their own. To ask your own questions, Rastro uses an AI assistant that translates the question; it has to be configured once.
+
+- pregunta: Why can I trust the answers?
+  respuesta: |-
+    Because of three tests we measure in each case:
+    - **Correct answers:** the same AI assistant answers with Rastro and without Rastro, and the result is compared with the correct answer.
+    - **Same question, same answer:** each question is asked in 4 different ways; with Rastro the answer does not change.
+    - **Changes are fixed in one place:** if a database changes, Rastro is fixed with one line; without Rastro, every query has to be rewritten.
+
+    And every answer can be audited. The numbers for this case are in the «Why trust it» tab.
+
+- pregunta: What happens if a database changes?
+  respuesta: |-
+    It is fixed in a single place. We tested it in each case: when a database renames a column, hand-written queries stop working and have to be rewritten one by one; with Rastro, it is one line in that database's translation. And if the way a value is written changes (for example, the unit), hand-written queries return a different number without warning; Rastro warns you.
+
+- pregunta: How do I know where each answer comes from?
+  respuesta: |-
+    Every answer says which sources it used, and «Where does the answer come from?» shows the evidence: what each source said and why Rastro joined two pieces of data (for example, that two names are the same company, or that a text names a drug). That evidence is stored with the W3C standard for provenance (PROV-O), so any tool can read it.
+
+- pregunta: Does Rastro also answer questions about texts?
+  respuesta: |-
+    Yes, carefully. In «A question about texts», Rastro first chooses the records that matter with an exact query; then an AI assistant reads only those texts and groups them into topics, citing each record. «Where does the answer come from?» lists every text it read. The graph decides what is read; the AI only summarizes.
+
+- pregunta: What does enriching the data mean?
+  respuesta: |-
+    Adding to your own data what another source knows, through a key both share, without losing where each value came from. For example, Wikidata knows which stock exchange a company is listed on; no source in the demo has that, and both use the same global company identifier (LEI).
+
+    It can be done in two ways: **live**, with a query that joins the two sources at that moment (always up to date, without copying anything), or **saved in Rastro**, as one more source, with the date it was queried (it does not depend on the internet and can be repeated). Rastro does both.
+
+- pregunta: Does it work for other data?
+  respuesta: |-
+    Yes. The same Rastro works with US federal contracts (suppliers and their groups) and with oncology (clinical trials and drugs), with the same tests. You can see them by turning on «Show technical details» in the sidebar.
+
+- pregunta: References
+  respuesta: |-
+    Rastro applies well-known ideas to public data. These works explain them:
+
+    - **Knowledge graphs over existing databases, without copying the data:** Xiao, G., Ding, L., Cogrel, B. and Calvanese, D. (2019). «Virtual Knowledge Graphs: An Overview of Systems and Use Cases». *Data Intelligence*, 1(3), 201–223.
+    - **Knowledge graphs to explain machine learning models** (the idea behind Rastro Lab): Tiddi, I. and Schlobach, S. (2022). «Knowledge graphs as tools for explainable machine learning: A survey». *Artificial Intelligence*, 302, 103627.
+    - Lécué, F. (2020). «On the role of knowledge graphs in explainable AI». *Semantic Web*, 11(1), 41–51.
+
+    The references for each case are in its FAQ.
+
+# --- For technical readers (shown with «Show technical details») ----------------
+
+- pregunta: What is Rastro, technically?
+  respuesta: |-
+    A **semantic layer** over public sources. It describes them with business concepts, an LLM asks questions over those concepts, and every answer says which source it comes from.
+
+    Technically it is a **Virtual Knowledge Graph**: ontology, R2RML mappings and SPARQL, all W3C standards. It is pragmatic: the sources are loaded into Postgres as they come, and the links between sources are precomputed in tables, with their evidence.
+
+- pregunta: I know SQL. What is each piece, in SQL terms?
+  respuesta: |-
+    | Semantic technology | In SQL terms |
+    |---|---|
+    | **Ontology** | The documented business schema: the tables you would like to have |
+    | **Mapping (R2RML)** | A view definition: «this column of this table is this concept» |
+    | **SPARQL** | A query language over concepts instead of tables |
+    | **Ontop** | A compiler: it translates the query into plain SQL over the real tables |
+    | **Entity linking** | The missing join key, computed once |
+
+    The data does not move: it stays in Postgres, and every question runs as SQL. The three pieces for this case are in the «Under the hood» tab.
+
+- pregunta: What happens when you ask a question?
+  respuesta: |-
+    1. The LLM receives the **ontology** as context: the concepts, how they relate and what each one means. With that it writes a SPARQL query. It does not see tables, so it does not have to guess how they join.
+    2. Rastro translates it into SQL and runs it live on Postgres.
+    3. The answer is shown with the source of each column. «Where does the answer come from?» shows the exact query and SQL, so you can review them: the LLM can still choose the wrong concept or filter.
+
+- pregunta: Do I need an LLM or an API key?
+  respuesta: >-
+    For the example questions, no: they use queries already written by the LLM, which run live. For your
+    own questions you need an LLM: the Claude API (pay per use) or Ollama, free on your own computer. See
+    layer/README.md.
+
+- pregunta: If SQL can do it too, what does the semantic layer add?
+  respuesta: |-
+    We measured it in each case with three ways of giving the data to the same LLM: SQL over the databases as they come, SQL over the databases plus Rastro's link tables, and Rastro.
+
+    **Accuracy and consistency come from integrating once** (the link tables): with them, SQL gets it right just as often. **The semantic layer adds the rest:** each source's knowledge lives in the mappings instead of being spread across every query, a change in the source is fixed in one place, every value carries its source, business definitions (such as «unconventional» or «targeted therapy») are inferred by Rastro, and the data can be queried together with data from other organizations, using open standards. The numbers for this case are in «Why trust it».
+
+- pregunta: Why not SQL views over the link tables?
+  respuesta: |-
+    For a small case they may be enough: good views give business names, a single definition of each thing and one place to absorb a change in the source.
+
+    The semantic layer adds:
+    - **Provenance:** the source of each column in the answer, without programming it.
+    - **Outside data:** shared identifiers that make it possible to join, in one query, data from other organizations.
+    - **Hierarchies and composition:** a class includes its subtypes, and any combination of concepts works without a view per question.
+    - **Open standards** (W3C): other knowledge-graph platforms or tools can read the same layer; it is not tied to one database.
+
+- pregunta: What does «the knowledge lives in the model» mean?
+  respuesta: |-
+    That a business definition is written once, in the ontology, and every question uses it. For example, «unconventional production» or «concession to review» are not in any table: the ontology says what counts as such, and Rastro infers it when answering. If the business changes the definition, it is one line, and it changes in every question at once. With SQL, that definition lives in each query, or in a view that has to be maintained.
+
+- pregunta: Which integration problems does it solve?
+  respuesta: |-
+    According to the Virtual Knowledge Graphs tutorial by Calvanese, Cogrel and Lanti (Ontobras 2022), there are four kinds of heterogeneity. The two that matter:
+
+    - **Schema:** the same concept in different columns in each source. The **ontology and the mappings** solve it.
+    - **Data:** the same entity written differently in each source (a company with two legal names, a drug with its brand name). **Entity linking** solves it: it **creates** the missing key, once and with its evidence.
+
+    The other two (data model and system) are solved by the loaders. Examples for this case are in «Under the hood».
+
+- pregunta: How was it measured? Doesn't it favor Rastro?
+  respuesta: |-
+    - The same LLM answered each question without seeing the correct answer, with the same instructions and the same retries.
+    - A number is correct if it is within 5 % of the real value; a list, if it matches at least 80 %.
+    - The real values come from Rastro, so every difference with the SQL was checked against the sources' data (each case's adjudication). That review found and fixed errors in Rastro, and it is stated when a fix was made after measuring.
+    - The questions, the references and that review were done by an AI assistant (Claude Code), not by the evaluated LLM. A person still has to confirm them: docs/verificacion-humana.md.
+
+- pregunta: Is this GraphRAG?
+  respuesta: |-
+    Partly, and on the side that matters most for trust. GraphRAG, in its popular version, uses an LLM to build a graph from documents and then retrieves pieces of that graph to answer: it works for free text, but extraction errors are hard to trace. Rastro solves the other half: structured data, with a graph that comes from reviewed mappings and links, and an LLM that writes an exact query. That is why the numbers are exact and auditable.
+
+    For questions about text, Rastro combines both: the graph chooses which records matter with an exact query, and the LLM summarizes only those texts, citing each record. It is GraphRAG anchored in the semantic layer.

@@ -22,7 +22,8 @@ def test_los_yaml_de_la_app_se_leen():
 
 
 def test_las_preguntas_de_la_app_tienen_su_consulta():
-    for f in (RAIZ / "app" / "dominios").glob("*.yaml"):
+    # English overlays (*.en.yaml) hold only texts; tests/test_idioma.py checks that they fit their Spanish file
+    for f in (p for p in (RAIZ / "app" / "dominios").glob("*.yaml") if not p.name.endswith(".en.yaml")):
         cfg = yaml.safe_load(f.read_text())
         for q in cfg.get("preguntas", []):
             assert ruta_local(q["query"]).exists(), (f.name, q["query"])

@@ -1,0 +1,8 @@
+# Texts of the app's frame (app/app.py), in Spanish and English. Read with idioma.t("<key>").
+app.language: {es: "Idioma", en: "Language"}
+app.tagline: {es: "Los datos cambian. Las preguntas, no.", en: "Data changes. The questions don't."}
+app.technical: {es: "Ver detalles técnicos", en: "Show technical details"}
+app.technical_help:
+  es: "Muestra las consultas, el SQL, la evidencia en PROV-O, la comparación completa y los otros casos de uso."
+  en: "Shows the queries, the SQL, the evidence in PROV-O, the full comparison and the other use cases."
+app.domain: {es: "Caso de uso", en: "Use case"}
