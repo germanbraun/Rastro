@@ -60,7 +60,10 @@ its whole schema (`DROP`): anything that cannot be rebuilt goes in its own schem
    disagree, **a written rule wins and the other version stays visible** (both values are kept, each with its source).
 3. **Doubtful cases go to a reviewed CSV,** never to a hidden rule: `nombre, grupo, motivo` (or the document that
    backs it). If an AI assistant reviewed it, the reason says so: «Revisado por un asistente de IA, a confirmar por una
-   persona» (reviewed by an AI assistant, to be confirmed by a person), and the app flags it.
+   persona» (reviewed by an AI assistant, to be confirmed by a person), and the app marks it 🟠. `app/enlaces.py` reads
+   each link's status from its rule and evidence: that phrase, or a reviewed rule («… revisada») without a document,
+   is AI-reviewed; a reviewed correction that cites its document is ✅ confirmed by a person; anything else is an
+   automatic rule. Keep that wording so the mark stays right.
 4. **Map the link** (skill `map-source`): a link class with `prov:wasDerivedFrom` (the source),
    `prov:wasGeneratedBy` (the rule's activity), and the domain's rule and evidence-text properties
    (`<prefix>:rule` / `<prefix>:sourceText` or the names the domain already uses; see `term_sources`). Add the class to

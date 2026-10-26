@@ -58,7 +58,8 @@ the semantic layer, one step per part of Rastro, and every number on screen come
    Add `para_que` above it. A person reviews it.
 2. **Write the configuration** in `app/dominios/<domain>.yaml`, under `ejemplo_integracion` (and `ejemplo_lab` for
    a model):
-   - for the walkthrough: `titulo` (the tab), `encabezado`, `para_que`, `aviso` (which real case, read live) and
+   - for the walkthrough: `titulo` (its tab in the technical view; in the business view it opens inside «Por qué
+     confiar», labeled with `titulo` and `encabezado`), `encabezado`, `para_que`, `aviso` (which real case, read live) and
      `selector`;
    - for each step in `pasos`: `titulo`, `parte`, `contenido`, `consultas` (each with `titulo` and `sql` or
      `sparql`; `{pozo_ejemplo}` in a query is replaced by the model's example record), and optionally `tecnico` with

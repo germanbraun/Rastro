@@ -30,19 +30,22 @@ described in its configuration file, not programmed.
 
 ## What the app shows, and where it comes from
 
-**Business view** (the default; plain words, no jargon, in the users' language):
+**Business view** (the default; plain words, no jargon, in the users' language). At most four tabs: Demo, Preguntar,
+Por qué confiar and the model's tab; the walkthrough opens inside «Por qué confiar» and the FAQ from a sidebar button.
+The first screen says what Rastro is and how to read each screen (question → answer → «¿Por qué este número?»).
 
 | Piece | What the user sees | Key in the domain's YAML |
 |---|---|---|
 | Summary and sources | What the domain is about; each source with its license | `resumen`, `fuentes`, `nota_rastro` |
-| Example questions | The question in plain words; the answer as a table with readable columns | `preguntas[].simple`, `query`, `columnas`, `formatos` |
-| Why this number | For a row of the answer, the records and evidence behind it | `preguntas[].porque` (a query with `{valor}`) |
+| Example questions | The question in plain words; the answer as a table with readable columns; volumes in one unit (for example millions of m³), the exact figure in the technical view | `preguntas[].simple`, `query`, `columnas`, `formatos` (`m3` or `miles_m3` for volumes, `numero`, `dinero`, `porcentaje`) |
+| Why this number | For a row of the answer, the records and evidence behind it | `preguntas[].porque` (a query with `{valor}`; `numeros` lists its numbers, or maps each volume to its unit) |
+| Link status | One mark per link in every table with a `regla` column: 🔹 automatic rule, 🟠 reviewed by AI and a person must confirm, ✅ confirmed by a person with a document | derived from the rule and evidence (`app/enlaces.py`); nothing to configure |
 | Where the answer comes from | The sources used, what Rastro added, a sample of the evidence | `preguntas[].ventaja`, `evidencia`, `definicion` |
 | Glossary | The business terms of the question | `preguntas[].terminos` |
-| Before and after | The same question without and with Rastro | `preguntas[].antes_despues` |
+| Before and after | The same question without and with Rastro, its numbers read now, with each source's latest load date | `preguntas[].antes_despues`: `valores` (one-row `sql` over the sources as they come, or `sparql`), `calculos`, `decimales`, `fuentes`; texts name the values in braces (`app/contraste.py`, which also exports them for the slides) |
 | What can be trusted | Cards with the measured numbers; the change test; quality rules; what happens when data is missing | `tarjetas` (filled from `evaluacion`, `cambio`, `evidencia`), `cambios`, `calidad`, `fuera` |
 | Guided demo | A few moments, one sentence each | `demo`, `demo_porque` |
-| Frequent questions | Domain FAQ next to the general one | `faq` |
+| Frequent questions | Domain FAQ next to the general one, from a sidebar button (a tab in the technical view) | `faq` |
 
 **Technical view** (behind «Ver detalles técnicos»; the same answers, opened up):
 
@@ -61,8 +64,8 @@ described in its configuration file, not programmed.
 | Module | When | Key |
 |---|---|---|
 | Questions over texts (graph-grounded RAG) | The domain has free-text records (reports, studies, descriptions) and a question that needs to read them | `texto` |
-| Check a claim | There are claims worth checking against the data (holds, does not hold, no data) | `afirmaciones` |
-| Enrichment from an outside source | A shared key with an outside source (live and saved) | `externo` |
+| Check a claim (technical view only) | There are claims worth checking against the data (holds, does not hold, no data) | `afirmaciones` |
+| Enrichment from an outside source (technical view only) | A shared key with an outside source (live and saved) | `externo` |
 | Map | The domain has geometries (points, outlines, lines) | `mapa` in a question |
 | Predictions | The domain has a model whose predictions are stored in Rastro | `lab` |
 
@@ -100,9 +103,10 @@ described in its configuration file, not programmed.
 - **The app loads the domain** after `docker compose restart app` (the app does not reload imported modules), in both
   views, with no error on screen or in `docker compose logs app`.
 - **Every example question runs** and returns rows (the app precomputes them at start; a failing one shows an error).
-- **Every number on screen comes from its file or its query.** Search the domain's YAML for digits in prose
-  (`muestra`, `ventaja`, `antes_despues`, `faq`): each one must match its source today, or be replaced by a
-  placeholder. After any re-measurement, check them again.
+- **Every number on screen comes from its file or its query.** A contrast card reads its numbers with `valores`;
+  `tests/test_enlaces.py` fails if such a card types one. Search the rest of the domain's YAML for digits in prose
+  (`muestra`, `ventaja`, `faq`): each one must match its source today, or be replaced by a placeholder. After any
+  re-measurement, check them again.
 - **Questions over texts:** the selected records' count matches the query today; every cited id exists among them.
 - **A look in the browser,** at desktop and phone width: the business view has no jargon; the technical view shows
   query, SQL, sources and evidence for each answer.
