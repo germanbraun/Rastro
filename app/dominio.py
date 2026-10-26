@@ -830,12 +830,14 @@ def render(cfg_path, tech):
             if choice == "alternative":
                 lab_alternative.show_alternative(tech, pozo, cfg["alternative_lab"], cfg["ejemplo_lab"])
             else:
+                # Business view: the three numbers, the well, then «Paso a paso» and how it is calculated
+                run_status = lab.show_run_status(pozo, cfg["ejemplo_lab"], tech) if cfg.get("ejemplo_lab") else {}
+                lab.show_lab(tech, pozo=pozo, note=run_status.get("note", ""))
                 if cfg.get("ejemplo_lab"):
-                    run_status = lab.show_run_status(pozo, cfg["ejemplo_lab"])
                     with st.expander(cfg["ejemplo_lab"]["titulo"]):
                         show_integration_example(cfg["ejemplo_lab"], domain, tech, key=f"{domain}_lab", pozo=pozo,
                                                  run_id=run_status["run_id"])
-                lab.show_lab(tech, pozo=pozo)
+                lab.show_how(tech)
 
 
 @contextmanager

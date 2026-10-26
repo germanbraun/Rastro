@@ -99,7 +99,7 @@ Sin Rastro, la explicación usa el 27,27 % del mapa y nadie lo nota. Con Rastro,
 
 La fuente de fractura se actualiza todos los días, pero cambia de a poco (entre 15 y 190 registros por mes; la versión del 21 de octubre era igual a la del 20). Lo que sí pesa: **en 36 de los 43 pozos de 2025 con fractura, el dato se cargó después de que el pozo empezó a producir** (a la mitad, 3 meses o más). Si la predicción se hace cuando arranca el pozo, esos pozos todavía no tenían fractura; cuando llega, **su predicción cambia 4,8 millones de m³ en promedio (hasta 11,6)**. Sin Rastro el número cambia y nada dice por qué. Con Rastro, la fractura guarda cuándo se cargó (`energia:loadedOn`) y la explicación marca la que llegó después de que el pozo arrancó.
 
-**Lo que entra al modelo,** en la app: los mismos 559 pozos dos veces, con las columnas de las tablas (sin Rastro) y con los conceptos del diccionario y su fuente (con Rastro). Ahí se ve, por ejemplo, el 27,27 % del mapa contra el 55 % corregido.
+**Lo que entra al modelo,** en la app con «Ver detalles técnicos»: los mismos 559 pozos dos veces, con las columnas de las tablas (sin Rastro) y con los conceptos del diccionario y su fuente (con Rastro). Ahí se ve, por ejemplo, el 27,27 % del mapa contra el 55 % corregido.
 
 ## Las predicciones, en Rastro (21 de octubre de 2026)
 

@@ -66,7 +66,9 @@ def datos():
         return _datos(data_version("energia", modelo.SQL_GAS + modelo.SQL_A), modelo.version())
 
 
-def show_lab(tech, pozo=None):
+def show_lab(tech, pozo=None, note=""):
+    """The tab: what Lab is, its three numbers, one well without and with Rastro, and when the source changes. The
+    inputs, what the model learned and the published run are technical detail. note is show_run_status's line."""
     st.markdown(idioma.t("lab.show_lab.title"))
     st.markdown(idioma.t("lab.show_lab.intro"))
     (a, b, ctx, r, ref, (n_dudosos, n_prueba), tabla_aprendido, pesos, version, (entrada_a, entrada_b, origen),
@@ -80,6 +82,26 @@ def show_lab(tech, pozo=None):
     st.caption(idioma.t("lab.show_lab.trained", train=ref["entreno"], start=f"{a.inicio.min():%Y}", test=ref["prueba"],
                         concession=num(ref["concesion"]), operator=num(ref["operadora"])))
 
+    show_well(key="lab_pozo", pozo=pozo)
+    if note and not tech:
+        st.caption(note)
+
+    with st.expander(idioma.t("lab.show_lab.change_title"), expanded=False):
+        v = version
+        st.markdown(md(idioma.t("lab.show_lab.change_text", with_fracturing=v["con_fractura"], late=v["tarde"],
+                                months=num(v["meses_mediana"], 0), mean_change=num(v["cambio_medio"]),
+                                max_change=num(v["cambio_max"]))))
+        impacto = Path("/layer/energia/cambio/impacto.json")
+        if impacto.exists():
+            i = json.loads(impacto.read_text())
+            pozos = ", ".join(e["pozo"] for e in i["esperado"])
+            cambio = i["cambiaron"][0] if i["cambiaron"] else None
+            change = (idioma.t("lab.show_lab.impact_change", before=num(cambio["antes"]), after=num(cambio["despues"]))
+                      if cambio else "")
+            st.markdown(md(idioma.t("lab.show_lab.impact_text", record=i["registro"], wells=pozos, change=change)))
+
+    if not tech:
+        return
     with st.expander(idioma.t("lab.show_lab.inputs_title"), expanded=False):
         st.markdown(idioma.t("lab.show_lab.inputs_text", n=len(entrada_b)))
         sin_tab, con_tab = st.tabs([idioma.t("lab.show_lab.without_rastro"), idioma.t("lab.show_lab.with_rastro")])
@@ -98,25 +120,12 @@ def show_lab(tech, pozo=None):
         tabla(tabla_aprendido, key="lab_aprendido")
         st.caption(idioma.t("lab.show_lab.learned_note"))
 
-    with st.expander(idioma.t("lab.show_lab.change_title"), expanded=False):
-        v = version
-        st.markdown(md(idioma.t("lab.show_lab.change_text", with_fracturing=v["con_fractura"], late=v["tarde"],
-                                months=num(v["meses_mediana"], 0), mean_change=num(v["cambio_medio"]),
-                                max_change=num(v["cambio_max"]))))
-        impacto = Path("/layer/energia/cambio/impacto.json")
-        if impacto.exists():
-            i = json.loads(impacto.read_text())
-            pozos = ", ".join(e["pozo"] for e in i["esperado"])
-            cambio = i["cambiaron"][0] if i["cambiaron"] else None
-            change = (idioma.t("lab.show_lab.impact_change", before=num(cambio["antes"]), after=num(cambio["despues"]))
-                      if cambio else "")
-            st.markdown(md(idioma.t("lab.show_lab.impact_text", record=i["registro"], wells=pozos, change=change)))
-
-    show_well(key="lab_pozo", pozo=pozo)
-
     with st.expander(idioma.t("lab.show_lab.published_title"), expanded=False):
         show_published(tech)
 
+
+def show_how(tech):
+    """«¿Cómo se calcula?», last in the tab; the queries only in the technical view."""
     with st.expander(idioma.t("lab.show_lab.how_title")):
         st.markdown(md(idioma.t("lab.show_lab.how_text")))
         if tech:
@@ -200,25 +209,29 @@ def published_snapshot():
                 "contributions": frame("SELECT * FROM lab_gas.aporte WHERE corrida = %s", (run["id"],))}
 
 
-def show_run_status(pozo, config):
+def show_run_status(pozo, config, tech=True):
+    """Whether the published run is the one computed now. The technical view shows it in full; the business view
+    shows nothing here and keeps, in result["note"], one line to show under the well when they differ."""
     _, b, _, r, *_ = datos()
     ui = config["ui"]
     snapshot = published_snapshot()
     result = compare_run(b, r["B"], pozo, snapshot, modelo.version())
     if snapshot is None:
-        result["run_id"] = ""
-        st.info(ui["run_missing"])
+        result.update(run_id="", note=ui["run_missing"])
+        if tech:
+            st.info(ui["run_missing"])
         return result
     run = snapshot["run"]
-    result["run_id"] = run["id"]
-    st.caption(ui["run_identity"].format(run=run["id"], date=run["fecha"],
-                                         published=run["version"], current=modelo.version()))
     failed = [ui["checks"][name] for name, passed in result["checks"].items() if not passed]
-    if failed:
-        st.warning(ui["run_different"].format(checks=", ".join(failed)))
-    else:
-        st.success(ui["run_matched"])
-    st.caption(ui["run_scope"])
+    result.update(run_id=run["id"], note=ui["run_different"].format(checks=", ".join(failed)) if failed else "")
+    if tech:
+        st.caption(ui["run_identity"].format(run=run["id"], date=run["fecha"],
+                                             published=run["version"], current=modelo.version()))
+        if failed:
+            st.warning(result["note"])
+        else:
+            st.success(ui["run_matched"])
+        st.caption(ui["run_scope"])
     return result
 
 
