@@ -1,4 +1,4 @@
-"""La configuración de la app y del repo: que se lea y que lo que nombra exista."""
+"""The app and repo configuration: that it is read and that what it names exists."""
 import re
 from pathlib import Path
 
@@ -12,7 +12,7 @@ def cargar(ruta):
 
 
 def ruta_local(ruta):
-    """Las rutas de la configuración son las del contenedor (/layer/..., /app/...): se buscan en el repo."""
+    """Configuration paths are the container's (/layer/..., /app/...): they are looked up in the repo."""
     return RAIZ / str(ruta).lstrip("/")
 
 

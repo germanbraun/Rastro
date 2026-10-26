@@ -1,11 +1,11 @@
-"""Prueba de consistencia: responder las paráfrasis sin API, con subagentes o a mano.
+"""Consistency test: answer the paraphrases without an API, with subagents or by hand.
 
-    prompt <q> <n> <B|C>   imprime el prompt (el mismo de la evaluación, con la paráfrasis n)
-    try <q> <n> <B|C>      ejecuta una query (por stdin), guarda el intento y muestra el
-                           resultado o el error
-    puntaje                compara todas las respuestas con la referencia de la original
+    prompt <q> <n> <B|C>   prints the prompt (the same as the evaluation, with paraphrase n)
+    try <q> <n> <B|C>      runs a query (from stdin), saves the attempt and shows the
+                           result or the error
+    puntaje                compares every answer with the reference of the original
 
-Cada respuesta se guarda en respuestas/<q>-<n>-<B|C>.json.
+Each answer is saved in respuestas/<q>-<n>-<B|C>.json.
 
     docker compose run --rm -T layer-eval python /layer/consistencia/manual.py prompt q01 1 C
 """
@@ -58,7 +58,7 @@ def attempt(qid, n, approach):
 
 
 def score_all():
-    from run import admin, score  # el mismo criterio de la evaluación
+    from run import admin, score  # the same criterion as the evaluation
     rows, totals = [], {k: {"ok": 0, "n": 0, "consistent": 0} for k in NAMES}
     with admin() as conn:
         for qid, paraphrases in PARAPHRASES.items():

@@ -1,13 +1,13 @@
-"""Responder la evaluación sin API: a mano, con claude.ai o con otro asistente.
+"""Answer the evaluation without an API: by hand, with claude.ai or with another assistant.
 
-    prompt <q> <A|B|C>    imprime el prompt exacto (el mismo que usa run.py)
-    set <q> A             guarda la respuesta de A (JSON {"answer": ...} por stdin)
-    try <q> <B|C>         ejecuta una query (por stdin), guarda el intento y muestra
-                          el resultado o el error; si falló, imprime el mensaje para
-                          devolverle al LLM
-    reset <q> <A|B|C>     borra la respuesta guardada
+    prompt <q> <A|B|C>    prints the exact prompt (the same one run.py uses)
+    set <q> A             saves A's answer (JSON {"answer": ...} from stdin)
+    try <q> <B|C>         runs a query (from stdin), saves the attempt and shows
+                          the result or the error; if it failed, prints the message to
+                          give back to the LLM
+    reset <q> <A|B|C>     deletes the saved answer
 
-Ejemplo:
+Example:
     docker compose run --rm -T layer-eval python /layer/eval/manual.py prompt q01 C
 """
 
@@ -34,7 +34,7 @@ def load():
 
 
 def grant_reader():
-    """Los cargadores recrean sus esquemas: se vuelven a dar los permisos de solo lectura."""
+    """The loaders recreate their schemas: the read-only permissions are granted again."""
     with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
                          f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:
         conn.execute((HERE.parent / "reader.sql").read_text())

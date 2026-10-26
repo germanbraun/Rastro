@@ -1,4 +1,4 @@
-"""Las pruebas corren en la máquina, sin Docker ni base de datos (`python3 -m pytest`)."""
+"""The tests run on the machine, without Docker or a database (`python3 -m pytest`)."""
 import sys
 from pathlib import Path
 

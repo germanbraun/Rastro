@@ -1,15 +1,15 @@
-"""Rastro Layer: la demo.
+"""Rastro Layer: the demo.
 
-Un selector de dominio (app/dominios.yaml): oncología se dibuja acá; los demás dominios,
-con dominio.py y su archivo de configuración.
+A domain selector (app/dominios.yaml): oncology is drawn here; the other domains,
+with dominio.py and their configuration file.
 
-Pestañas de oncología:
-  Preguntar          una pregunta en lenguaje natural; la respuesta trae la fuente de
-                     cada columna y un "¿cómo lo supe?" con la query
-  Con y sin Rastro   las 20 preguntas de la evaluación, respondidas por el LLM solo,
-                     con SQL directo y con Rastro
+Oncology tabs:
+  Preguntar          a question in natural language; the answer brings the source of
+                     each column and a "¿cómo lo supe?" with the query
+  Con y sin Rastro   the 20 evaluation questions, answered by the LLM alone,
+                     with direct SQL and with Rastro
 
-Se levanta con docker compose up y se abre en http://localhost:8501
+It starts with docker compose up and opens at http://localhost:8501
 """
 
 import json
@@ -32,14 +32,14 @@ sys.path.insert(0, "/layer/eval")
 
 import answer  # noqa: E402
 from run import NAMES, normalize, score  # noqa: E402
-import dominio  # noqa: E402  (las pantallas de los demás dominios y lo que comparten con oncología)
-from dominio import ayuda, tabla, warm_up  # noqa: E402  (los íconos «?», las tablas con texto largo y el precalentamiento)
+import dominio  # noqa: E402  (the screens of the other domains and what they share with oncology)
+from dominio import ayuda, tabla, warm_up  # noqa: E402  (the «?» icons, the tables with long text and the warm-up)
 
 EVAL = Path("/layer/eval")
 SOURCE_LABEL = {"aact": "AACT", "chembl": "ChEMBL", "openfda": "openFDA", "mesh": "MeSH",
                 "rastro": "enlace Rastro"}
-# Dónde vive cada fuente: 🐘 Postgres (SQL) y 🕸️ GraphDB. MeSH completo está en GraphDB;
-# Ontop usa una copia de su jerarquía en Postgres.
+# Where each source lives: 🐘 Postgres (SQL) and 🕸️ GraphDB. The full MeSH is in GraphDB;
+# Ontop uses a copy of its hierarchy in Postgres.
 STORAGE = {"aact": "🐘", "chembl": "🐘", "openfda": "🐘", "mesh": "🕸️🐘", "rastro": "🐘"}
 STORAGE_NOTE = {
     "aact": "en Postgres",
@@ -56,7 +56,7 @@ def label(source):
 st.set_page_config(page_title="Rastro", page_icon="/app/logo.svg", layout="wide")
 
 
-# --- Datos ---------------------------------------------------------
+# --- Data ----------------------------------------------------------
 
 @st.cache_data
 def questions():
@@ -70,7 +70,7 @@ def saved():
 
 @st.cache_data
 def unified_columns():
-    """Desde los mapeos R2RML: qué columnas distintas terminan en el mismo concepto."""
+    """From the R2RML mappings: which different columns end up in the same concept."""
     import collections
 
     import rdflib
@@ -123,8 +123,8 @@ def plain():
 
 
 def show_plain(question_id, simple=True):
-    """La pregunta en palabras simples y qué significa cada término, para quien no es del dominio.
-    En modo negocio el selector ya muestra la versión simple: solo van los términos."""
+    """The question in simple words and what each term means, for someone outside the domain.
+    In business mode the selector already shows the simple version: only the terms go here."""
     entry = plain().get(question_id)
     if not entry:
         return
@@ -147,7 +147,7 @@ def sources():
         PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
         SELECT ?id ?name ?license WHERE { ?s a oncologia:DataSource ; oncologia:name ?name ; oncologia:license ?license .
           BIND (STRAFTER(STR(?s), "/source/") AS ?id) }""")
-    # rastro_meta.source tiene las fuentes de todos los dominios: acá van las de oncología
+    # rastro_meta.source has the sources of every domain: here go the oncology ones
     return {r[0]: {"name": r[1], "license": r[2]} for r in rows if r[0] in STORAGE}
 
 
@@ -172,7 +172,7 @@ def scores():
 
 
 def llm_status():
-    """¿Hay un LLM para preguntas libres?"""
+    """Is there an LLM for free-form questions?"""
     if answer.PROVIDER == "ollama":
         try:
             requests.get(f"{answer.OLLAMA}/api/tags", timeout=3).raise_for_status()
@@ -193,7 +193,7 @@ LINK_METHODS = {
 
 
 def link_method(query):
-    """Cómo una query de SQL directo identifica un fármaco, o None si no lo hace."""
+    """How a direct SQL query identifies a drug, or None if it does not."""
     if re.search(r"regexp_replace|~ \(|\\m", query):
         return "regex"
     if re.search(r"position\(|strpos|LIKE '%' \|\|", query, re.I):
@@ -206,7 +206,7 @@ def link_method(query):
 
 
 def friendly_error(error):
-    """El error de la base, con una explicación simple si es uno conocido."""
+    """The database error, with a simple explanation if it is a known one."""
     if "statement timeout" in error:
         return ("La consulta superó el límite de 60 segundos y la base la canceló. "
                 f"Error original: {error.strip()}")
@@ -224,7 +224,7 @@ def last_ok_query(entry, approach):
     return ok[-1]["query"] if ok else None
 
 
-# --- Mostrar una respuesta ----------------------------------------
+# --- Show an answer -----------------------------------------------
 
 RULES = {
     "nombre": "por su nombre o un sinónimo de ChEMBL",
@@ -263,7 +263,7 @@ NAMES_OF = {
 
 
 def evidence_of(nct, name):
-    """La evidencia de un enlace, pedida con PROV-O. Una fila por cada fuente de la que deriva."""
+    """A link's evidence, requested with PROV-O. One row per source it derives from."""
     query = EVIDENCE_ONE.format(nct=nct, name=name)
     _, rows = answer.run_sparql_table(query)
     if not rows:
@@ -289,7 +289,7 @@ def drug_names():
 
 
 def answer_drugs(rows):
-    """Los fármacos que nombra una respuesta, en el orden en que aparecen."""
+    """The drugs an answer names, in the order they appear."""
     names = []
     for row in rows:
         for v in row:
@@ -300,7 +300,7 @@ def answer_drugs(rows):
 
 @st.cache_data
 def evidence_summary(names):
-    """Por fármaco: en cuántos ensayos se lo reconoció y qué parte por su nombre (PROV-O)."""
+    """Per drug: in how many trials it was recognized and what share by its name (PROV-O)."""
     values = " ".join(json.dumps(n) for n in names)
     _, rows = answer.run_sparql_table(EVIDENCE_SUMMARY.format(names=values))
     totals, by_name = {}, {}
@@ -314,16 +314,16 @@ def evidence_summary(names):
 
 @st.cache_data
 def evidence_examples(names, limit=5):
-    """Ejemplos de enlaces no obvios: el texto del sponsor no es el nombre del fármaco."""
+    """Examples of non-obvious links: the sponsor text is not the drug name."""
     values = " ".join(json.dumps(n) for n in names)
     _, rows = answer.run_sparql_table(EVIDENCE_EXAMPLES.format(names=values))
     picked, seen_rules, seen_drugs = [], set(), set()
-    for name, nct, text, matched, rule in rows:   # primero, una regla y un fármaco distintos cada vez
+    for name, nct, text, matched, rule in rows:   # first, a different rule and drug each time
         if text.strip().lower() != matched.lower() and rule not in seen_rules and name not in seen_drugs:
             picked.append((name, nct, text, rule))
             seen_rules.add(rule)
             seen_drugs.add(name)
-    for name, nct, text, matched, rule in rows:   # después, completar
+    for name, nct, text, matched, rule in rows:   # then, fill up
         if len(picked) >= limit:
             break
         if text.strip().lower() != matched.lower() and (name, nct, text, rule) not in picked:
@@ -335,9 +335,9 @@ TEXT_QUESTION = Path("/layer/textos/detenidos-pulmon.json")
 
 
 def show_text_question():
-    """Una pregunta sobre textos, paso a paso (GraphRAG anclado en el grafo): el grafo elige los ensayos
-    con una consulta exacta, un asistente de IA resume solo sus motivos citando cada ensayo, se puede
-    comprobar, y el motivo pasa a ser un dato del grafo. El resumen está guardado; los textos se leen en vivo."""
+    """A question over texts, step by step (GraphRAG grounded in the graph): the graph picks the trials
+    with an exact query, an AI assistant summarizes only their reasons citing each trial, it can be
+    checked, and the reason becomes a fact in the graph. The summary is saved; the texts are read live."""
     from dominio import text_step
     item = json.loads(TEXT_QUESTION.read_text())
     st.markdown("**1 · La pregunta → 2 · El grafo elige → 3 · La IA lee solo eso → 4 · El resumen, con citas "
@@ -397,7 +397,7 @@ def show_text_question():
             st.code(facts_query, language="sparql")
 
 
-# «¿Por qué este número?» en oncología: cómo se reconoció el fármaco de una fila en los ensayos
+# «¿Por qué este número?» in oncology: how a row's drug was recognized in the trials
 DRUG_WHY = {
     "titulo": "Cómo reconoció Rastro {valor} en los ensayos",
     "explica": "Cada ensayo escribe el fármaco a su manera (una marca, un código, una combinación). Rastro lo reconoció "
@@ -433,10 +433,10 @@ def show_answer(query, columns, rows, note=None):
             names = [next((v for v in row if v in summary), None) for row in rows]
             column = "Cómo lo reconoce Rastro, en todos sus ensayos" if TECH else "Cómo lo reconoció Rastro"
             table[column] = [summary.get(n, "") for n in names]
-        import logos  # el favicon de cada empresa (sponsor)
+        import logos  # each company's (sponsor's) favicon
         table, logo_config = logos.with_logos(table, list(columns))
         tabla(table, hide_index=True, use_container_width=True, column_config=logo_config)
-        if drugs:   # «¿Por qué este número?»: cómo reconoció Rastro ese fármaco en los ensayos
+        if drugs:   # «¿Por qué este número?»: how Rastro recognized that drug in the trials
             drug_column = next(c for i, c in enumerate(columns) if any(r[i] in drugs for r in rows))
             dominio.show_why("oncologia", DRUG_WHY | {"columna": drug_column}, list(columns), [list(r) for r in rows])
         if TECH:
@@ -478,7 +478,7 @@ def show_answer(query, columns, rows, note=None):
             st.code(sql, language="sql")
         except requests.RequestException:
             st.caption("No se pudo obtener el SQL de esta consulta.")
-        # el botón «Explicame la consulta» es el mismo en todos los dominios
+        # the «Explicame la consulta» button is the same in every domain
         dominio.explain(query, sql, "oncologia")
         st.markdown("**3. Las fuentes:**")
         info = sources()
@@ -516,20 +516,20 @@ def show_answer(query, columns, rows, note=None):
                            "puede auditarlo abriendo el ensayo.")
 
 
-# --- Pantalla ------------------------------------------------------
+# --- Screen --------------------------------------------------------
 
 st.markdown('<img src="data:image/svg+xml;base64,' + base64.b64encode(Path("/app/logo-horizontal.svg").read_bytes()).decode()
             + '" style="height:56px;margin:8px 0 4px 0" alt="Rastro">', unsafe_allow_html=True)
 st.markdown("**Los datos cambian. Las preguntas, no.**")
 
-# Dominios: oncología tiene su pantalla en este archivo; los demás se dibujan con dominio.py
-# a partir de su configuración (app/dominios.yaml)
+# Domains: oncology has its screen in this file; the others are drawn with dominio.py
+# from their configuration (app/dominios.yaml)
 DOMAINS = yaml.safe_load(Path("/app/dominios.yaml").read_text())
 available, status = llm_status()
-warm_up()   # las preguntas de ejemplo de los dominios, en segundo plano
+warm_up()   # the domains' example questions, in the background
 with st.sidebar:
-    # La demo es petróleo y gas; los otros dos casos se ven con «Ver detalles técnicos», como prueba de que el
-    # mismo Rastro sirve para otros datos
+    # The demo is oil and gas; the other two cases show with «Ver detalles técnicos», as proof that the
+    # same Rastro works for other data
     TECH = st.toggle("Ver detalles técnicos", value=False,
                      help="Muestra las consultas, el SQL, la evidencia en PROV-O, la comparación completa y los otros casos de uso.")
     DOMAIN = (st.radio("Caso de uso", DOMAINS, format_func=lambda d: d["name"], key="domain", help=ayuda("dominio"))
@@ -556,7 +556,7 @@ with st.sidebar:
 ask_tab, trust_tab, faq_tab, *hood_tab = st.tabs(["Preguntar", "Por qué confiar", "Preguntas frecuentes"]
                                                 + (["Bajo el capó"] if TECH else []))
 if hood_tab:
-    # «Bajo el capó» es el mismo en los tres dominios
+    # «Bajo el capó» is the same in the three domains
     with hood_tab[0]:
         dominio.under_the_hood("oncologia", "ontologia")
 FAQ_HINT = "Para dudas, consulte la pestaña **Preguntas frecuentes**."
@@ -568,10 +568,10 @@ with ask_tab:
     if mode == "Una pregunta sobre textos":
         show_text_question()
     elif mode == "Una pregunta de ejemplo":
-        # 🧾 marca las preguntas cuya respuesta trae la evidencia de cada enlace (PROV-O)
+        # 🧾 marks the questions whose answer brings the evidence of each link (PROV-O)
         def ask_label(q):
             linked = "oncologia:testsDrug" in (last_ok_query(saved()["questions"][q["id"]], "C") or "")
-            text = plain().get(q["id"], {}).get("simple", q["question"])   # la misma pregunta en las dos vistas
+            text = plain().get(q["id"], {}).get("simple", q["question"])   # the same question in both views
             return ("🧾 " if linked else "") + text
 
         options = {ask_label(q): q for q in questions()}
@@ -581,7 +581,7 @@ with ask_tab:
             st.caption("Formulación técnica: " + options[chosen]["question"])
         show_plain(options[chosen]["id"], simple=False)
         query = last_ok_query(saved()["questions"][options[chosen]["id"]], "C")
-        # La respuesta queda guardada para que «¿Por qué?» pueda elegir un fármaco sin perderla
+        # The answer is kept so «¿Por qué?» can pick a drug without losing it
         if st.button("Responder", type="primary"):
             st.session_state["shown"] = (chosen, query, *answer.run_sparql_table(query))
         if st.session_state.get("shown", (None,))[0] == chosen:
@@ -608,8 +608,8 @@ with ask_tab:
 
 @st.cache_data
 def consistency():
-    """Las 10 preguntas de la prueba de consistencia: las 4 formas de preguntar y las respuestas de
-    cada enfoque (layer/consistencia/). La versión 0 es la pregunta original de la evaluación."""
+    """The 10 questions of the consistency test: the 4 ways of asking and the answers of
+    each approach (layer/consistencia/). Version 0 is the original evaluation question."""
     folder = Path("/layer/consistencia")
     paraphrases = yaml.safe_load((folder / "parafrasis.yaml").read_text())
     data = saved()["questions"]
@@ -640,7 +640,7 @@ def same_answers(values):
 
 
 def audit_card():
-    """La tarjeta «Cada respuesta se puede auditar», con la cobertura medida (layer/evidencia.py)."""
+    """The «Cada respuesta se puede auditar» card, with the measured coverage (layer/evidencia.py)."""
     p = Path("/layer/eval/evidencia.json")
     if not p.exists():
         return "Sí", "Con la evidencia de cada fármaco"
@@ -664,8 +664,8 @@ with trust_tab:
             st.markdown(f'<p style="font-size:2.4rem;line-height:1.1;margin:0">{value}</p>',
                         unsafe_allow_html=True)
             st.caption(compare)
-    # Las tres pruebas, separadas: en la vista técnica, una pestaña cada una, para que elegir una pregunta
-    # en una prueba no parezca cambiar las otras
+    # The three tests, kept apart: in the technical view, one tab each, so that picking a question
+    # in one test does not seem to change the others
     if TECH:
         trust_correct, trust_same, trust_change = st.tabs(["1 · Correctas (20 preguntas)",
                                                            "2 · Misma respuesta de 4 formas (10 preguntas)",
@@ -807,7 +807,7 @@ with trust_tab:
                                     except requests.RequestException:
                                         st.caption("No se pudo obtener el SQL de esta consulta.")
 
-# Escenarios de cambio: resultados medidos con layer/cambio/cambio.sh registrar
+# Change scenarios: results measured with layer/cambio/cambio.sh registrar
 CHANGES = {
     "Cambia cómo se escribe un valor": {
         "what": "AACT publica una versión nueva y los estados pasan de TERMINATED a Terminated.",
@@ -944,7 +944,7 @@ with faq_tab:
         "retries_c": sum(len(e["C"]["attempts"]) > 1 for e in data.values()),
         "unified_columns": unified_columns(),
     }
-    # las preguntas que valen para todos los casos, y después las de oncología
+    # the questions that apply to every case, and then the oncology ones
     dominio.show_faq("oncologia", [(i["question"], i["answer"].format(**numbers), i.get("tecnico", False)) for i in faq()],
                      TECH, [("arquitectura-oncologia", "De las fuentes del dominio a una capa semántica."),
                             ("ontologia", "Los conceptos de negocio que lee el LLM, en lugar de las tablas.")], "ontología")

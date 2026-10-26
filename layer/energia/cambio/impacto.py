@@ -1,10 +1,10 @@
-"""Impacto de un cambio en la fuente: Rastro dice de antemano qué predicciones dependen de un registro de
-origen, y se comprueba que son exactamente las que cambian cuando la fuente lo corrige.
+"""Impact of a change in the source: Rastro says in advance which predictions depend on a source
+record, and it is checked that they are exactly the ones that change when the source corrects it.
 
-Lo corre impacto.sh (en esta carpeta), que corrige la fractura informada en la base, rearma Rastro, publica una
-corrida, compara y la vuelve a dejar como estaba.
+Run by impacto.sh (in this folder), which corrects the reported fracturing in the database, rebuilds Rastro, publishes a
+run, compares and puts it back as it was.
     python3 layer/energia/cambio/impacto.py antes|despues|restaurado
-Guarda en impacto.json (en esta carpeta), que muestra la app.
+Saves to impacto.json (in this folder), which the app shows.
 """
 import json
 import sys
@@ -16,12 +16,12 @@ import modelo  # noqa: E402
 
 HERE = Path(__file__).parent
 RESULT = HERE / "impacto.json"
-REGISTRO = "4703"     # una fractura informada de un pozo de 2025 (166133)
-CORRECCION = 12       # la fuente corrige las etapas: de 18 a 30
+REGISTRO = "4703"     # a reported fracturing of a 2025 well (166133)
+CORRECCION = 12       # the source corrects the stages: from 18 to 30
 
 
 def preguntar_a_rastro():
-    """La pregunta 14: qué predicciones de la corrida vigente usaron este registro."""
+    """Question 14: which predictions of the current run used this record."""
     query = (ROOT / "ontology/energia/queries/cq14.rq").read_text().replace('"4703"', f'"{REGISTRO}"')
     return modelo.sparql_local(query).astype({"pozo": str})
 
@@ -36,7 +36,7 @@ def publicar():
 def main(paso):
     guardado = json.loads(RESULT.read_text()) if RESULT.exists() else {}
     if paso == "antes":
-        corrida = publicar()   # la corrida de base, con los datos como están
+        corrida = publicar()   # the baseline run, with the data as it is
         esperado = preguntar_a_rastro()
         guardado = {"registro": REGISTRO, "correccion": f"etapas +{CORRECCION}", "corrida_antes": corrida,
                     "esperado": esperado.to_dict("records")}

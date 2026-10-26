@@ -1,20 +1,20 @@
-"""Descarga de openFDA los eventos adversos agregados de los fármacos del recorte.
+"""Downloads from openFDA the aggregated adverse events of the drugs in scope.
 
-Fármacos = familias de ChEMBL (esquema `chembl`, cargado antes) que tienen UNII.
-Cada familia se busca por sus UNII (patient.drug.openfda.unii) o por el nombre de su
-principio activo (patient.drug.activesubstance.activesubstancename), en una sola
-búsqueda con OR: openFDA deja vacío el UNII de algunos fármacos (por ejemplo, el
-osimertinib de Tagrisso), que solo se encuentran por nombre. Se consultan:
-reportes por día (todos, serios y con muerte), agregados luego por año, y las
-100 reacciones más reportadas. El UNII matchea el fármaco en cualquier rol del reporte
-(sospechoso o concomitante): openFDA no permite exigir ambas condiciones sobre el
-mismo fármaco del reporte.
+Drugs = ChEMBL families (schema `chembl`, loaded before) that have a UNII.
+Each family is searched by its UNIIs (patient.drug.openfda.unii) or by the name of its
+active ingredient (patient.drug.activesubstance.activesubstancename), in a single
+search with OR: openFDA leaves the UNII empty for some drugs (for example, the
+osimertinib of Tagrisso), which can only be found by name. It queries:
+reports per day (all, serious and with death), then aggregated by year, and the
+100 most reported reactions. The UNII matches the drug in any role in the report
+(suspect or concomitant): openFDA does not allow requiring both conditions on the
+same drug of the report.
 
-Cada respuesta se guarda en data/raw/openfda/<familia>.json y no se vuelve a pedir
-mientras la búsqueda sea la misma, así que la descarga es reanudable. Sin OPENFDA_API_KEY el límite es 1000 requests
-por día: el script se detiene al llegar, carga lo que haya y sigue en la próxima corrida.
+Each response is saved in data/raw/openfda/<family>.json and is not requested again
+while the search stays the same, so the download can be resumed. Without OPENFDA_API_KEY the limit is 1000 requests
+per day: the script stops when it reaches it, loads what it has and continues on the next run.
 
-Se corre con: docker compose run --rm openfda-loader
+Run with: docker compose run --rm openfda-loader
 """
 
 import json
@@ -31,8 +31,8 @@ from requests.adapters import HTTPAdapter, Retry
 API = "https://api.fda.gov/drug/event.json"
 CACHE = Path("/data/raw/openfda")
 API_KEY = os.environ.get("OPENFDA_API_KEY") or None
-PAUSE = 0.3  # 240 requests/minuto como máximo, con o sin key
-TOP_REACTIONS = 100  # máximo sin key; fijo para que el caché sea homogéneo con o sin key
+PAUSE = 0.3  # at most 240 requests/minute, with or without a key
+TOP_REACTIONS = 100  # maximum without a key; fixed so the cache is the same with or without a key
 
 http = requests.Session()
 http.mount("https://", HTTPAdapter(max_retries=Retry(total=5, backoff_factor=2,
@@ -44,7 +44,7 @@ class DailyLimit(Exception):
 
 
 def query(search, **params):
-    """Devuelve (results, meta), o (None, None) si no hay reportes que coincidan."""
+    """Returns (results, meta), or (None, None) if no reports match."""
     if API_KEY:
         params["api_key"] = API_KEY
     time.sleep(PAUSE)
@@ -59,8 +59,8 @@ def query(search, **params):
 
 
 def search_for(uniis, names):
-    """Búsqueda de openFDA para una familia: por UNII o por nombre del principio activo."""
-    # Espacios y no "+": requests codifica "+" como %2B y openFDA lo toma literal
+    """openFDA search for a family: by UNII or by the name of the active ingredient."""
+    # Spaces and not "+": requests encodes "+" as %2B and openFDA takes it literally
     def quoted(values):
         return " ".join(f'"{v}"' for v in values)
     parts = [f"patient.drug.openfda.unii:({quoted(uniis)})"]
@@ -117,7 +117,7 @@ def main():
 
     CACHE.mkdir(parents=True, exist_ok=True)
     pending = [(f, u, n or []) for f, u, n in families if cached_search(f) != search_for(u, n or [])]
-    only = os.environ.get("OPENFDA_ONLY")  # para pruebas: familias separadas por coma
+    only = os.environ.get("OPENFDA_ONLY")  # for tests: families separated by commas
     if only:
         pending = [p for p in pending if p[0] in only.split(",")]
     print(f"Familias con UNII: {len(families)}, por descargar: {len(pending)}"

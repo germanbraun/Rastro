@@ -1,12 +1,12 @@
-"""Enriquece las empresas de petróleo y gas con lo que sabe Wikidata, y lo guarda en la base (materializado).
+"""Enriches the oil and gas companies with what Wikidata knows, and saves it in the database (materialized).
 
-Lo mismo que la consulta en vivo de la app (layer/energia/externo/wikidata.rq), pero guardado: busca en Wikidata las
-empresas por su LEI (P1278), con su sede (P159), la bolsa en la que cotizan (P414), su dueño o matriz (P749 o P127) y
-su sitio web (P856). La respuesta completa se guarda en data/raw/wikidata-energia/<fecha>.json y su huella queda en
-rastro_meta.load_run: así se sabe qué dijo Wikidata y cuándo. Necesita los LEI de Rastro (energia.empresa_lei), así
-que corre después del enlazador.
+The same as the app's live query (layer/energia/externo/wikidata.rq), but saved: it looks up in Wikidata the
+companies by their LEI (P1278), with their headquarters (P159), the stock exchange they are listed on (P414), their
+owner or parent (P749 or P127) and their website (P856). The full response is saved in
+data/raw/wikidata-energia/<date>.json and its fingerprint stays in rastro_meta.load_run: so we know what Wikidata
+said and when. It needs Rastro's LEIs (energia.empresa_lei), so it runs after the linker.
 
-Se corre con: docker compose run --rm wikidata-energia-loader   (y después energia-linker, para enlazarlo)
+Run with: docker compose run --rm wikidata-energia-loader   (and then energia-linker, to link it)
 """
 
 import json
@@ -47,7 +47,7 @@ def main():
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
         leis = [lei for (lei,) in conn.execute("SELECT DISTINCT lei FROM energia.empresa_lei ORDER BY 1")]
         archivo = CACHE / f"{hoy.isoformat()}.json"
-        if not archivo.exists():   # una consulta por día: la respuesta de ese día queda guardada
+        if not archivo.exists():   # one query per day: that day's response stays saved
             time.sleep(1)
             r = http.post(API, data={"query": QUERY % " ".join(f'"{lei}"' for lei in leis)}, timeout=120,
                           headers={"Accept": "application/sparql-results+json",

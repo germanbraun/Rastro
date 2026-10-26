@@ -1,11 +1,11 @@
-"""Arma las tablas del dominio de proveedores que leen los mapeos, y los enlaces.
+"""Builds the suppliers domain tables that the mappings read, and the links.
 
-entities.sql: una fila por proveedor, grupo y agencia, y proveedor → grupo con su evidencia.
-links.sql: proveedor o grupo → LEI, → lista de control, y grupo → Wikidata, con su evidencia;
-y las correcciones revisadas de correcciones.csv.
-Todo está en SQL legible; este script los corre y muestra cuánto enlazó.
+entities.sql: one row per supplier, group and agency, and supplier → group with its evidence.
+links.sql: supplier or group → LEI, → screening list, and group → Wikidata, with their evidence;
+and the reviewed corrections from correcciones.csv.
+It is all in readable SQL; this script runs them and shows how much it linked.
 
-Se corre con: docker compose run --rm proveedores-linker
+Run with: docker compose run --rm proveedores-linker
 """
 
 import csv
@@ -29,7 +29,7 @@ def main():
         if not conn.execute("SELECT to_regclass('gleif.lei_record')").fetchone()[0]:
             print("GLEIF todavía no está cargado: no se arman los enlaces.")
             return
-        # Correcciones revisadas, con su motivo (correcciones.csv)
+        # Reviewed corrections, with their reason (correcciones.csv)
         conn.execute("DROP TABLE IF EXISTS proveedores.correction")
         conn.execute("CREATE TABLE proveedores.correction (uei text PRIMARY KEY, group_lei text, group_name text, reason text)")
         with conn.cursor().copy("COPY proveedores.correction FROM STDIN") as copy:

@@ -1,11 +1,11 @@
-"""Carga la jerarquía de sectores NAICS 2022 del Census (2 a 6 dígitos).
+"""Loads the Census NAICS 2022 sector hierarchy (2 to 6 digits).
 
-El Census la publica solo como planilla Excel; se lee con la biblioteca estándar
-(un .xlsx es un zip con XML) para no sumar dependencias. El padre de un código es
-el mismo código con un dígito menos; los de 3 dígitos que empiezan con 31, 32 o 33
-cuelgan del sector agrupado "31-33" (igual 44-45 y 48-49).
+The Census publishes it only as an Excel spreadsheet; it is read with the standard library
+(an .xlsx is a zip with XML) so as not to add dependencies. A code's parent is
+the same code with one digit less; the 3-digit codes that start with 31, 32 or 33
+hang from the grouped sector "31-33" (likewise 44-45 and 48-49).
 
-Se corre con: docker compose run --rm naics-loader
+Run with: docker compose run --rm naics-loader
 """
 
 import os
@@ -23,7 +23,7 @@ NS = {"x": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
 
 
 def read_xlsx(path):
-    """Filas de la primera hoja, como listas de textos."""
+    """Rows of the first sheet, as lists of texts."""
     with zipfile.ZipFile(path) as z:
         shared = [("".join(t.text or "" for t in si.iter(f"{{{NS['x']}}}t")))
                   for si in ET.fromstring(z.read("xl/sharedStrings.xml")).findall("x:si", NS)]
@@ -51,7 +51,7 @@ def main():
         code, title = values[1].strip(), values[2].strip()
         sectors[code] = title
 
-    # Sector de 2 dígitos al que pertenece cada prefijo: "31" -> "31-33"
+    # 2-digit sector each prefix belongs to: "31" -> "31-33"
     two = {}
     for code in sectors:
         if "-" in code:
@@ -71,7 +71,7 @@ def main():
     with psycopg.connect(conninfo) as conn:
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
         with conn.cursor().copy("COPY naics.sector (code, title, level, parent_code) FROM STDIN") as copy:
-            for row in sorted(rows, key=lambda r: r[2]):  # padres antes que hijos
+            for row in sorted(rows, key=lambda r: r[2]):  # parents before children
                 copy.write_row(row)
         n = conn.execute("""
             INSERT INTO naics.ancestor

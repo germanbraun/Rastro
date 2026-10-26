@@ -1,23 +1,23 @@
-"""Tres formas de que un LLM responda una pregunta de negocio.
+"""Three ways for an LLM to answer a business question.
 
-  A. solo:   el LLM responde con lo que sabe, sin acceso a datos
-  B. sql:    el LLM escribe SQL sobre las tablas de las fuentes tal como se cargaron
-  C. rastro: el LLM escribe SPARQL sobre la ontología de Rastro (Ontop)
-  D. sql + enlaces: el LLM escribe SQL sobre las mismas tablas, más las tablas de enlaces
-             de Rastro, documentadas. Es la línea de base justa: los mismos datos que C,
-             sin la capa semántica
+  A. solo:   the LLM answers with what it knows, without access to data
+  B. sql:    the LLM writes SQL over the source tables as they were loaded
+  C. rastro: the LLM writes SPARQL over Rastro's ontology (Ontop)
+  D. sql + enlaces: the LLM writes SQL over the same tables, plus Rastro's link tables,
+             documented. It is the fair baseline: the same data as C,
+             without the semantic layer
 
-Las tres usan el mismo modelo, las mismas instrucciones de base y, para B y C, los
-mismos reintentos: si la query falla, el LLM ve el error y tiene dos intentos más.
+All of them use the same model, the same base instructions and, for B and C, the
+same retries: if the query fails, the LLM sees the error and gets two more attempts.
 
-Lo propio de cada dominio (oncología, proveedores) está en dominios.yaml; cada función
-recibe el dominio y, si no se dice, usa oncología.
+What is specific to each domain (oncology, suppliers) is in dominios.yaml; each function
+receives the domain and, if none is given, uses oncology.
 
-El LLM se elige con RASTRO_PROVIDER:
-  anthropic  Claude API (necesita ANTHROPIC_API_KEY). Modelo por defecto: claude-opus-5-5
-  ollama     un modelo local en la Mac (necesita Ollama corriendo). Modelo por defecto:
-             qwen2.5-coder:7b. Ver layer/README.md
-Sin ninguno de los dos, eval/manual.py imprime los prompts para responderlos a mano.
+The LLM is chosen with RASTRO_PROVIDER:
+  anthropic  Claude API (needs ANTHROPIC_API_KEY). Default model: claude-opus-5-5
+  ollama     a local model on the Mac (needs Ollama running). Default model:
+             qwen2.5-coder:7b. See layer/README.md
+Without either, eval/manual.py prints the prompts to answer them by hand.
 """
 
 import json
@@ -37,7 +37,7 @@ ROOT = Path(__file__).resolve().parent.parent
 HERE = Path(__file__).parent
 DOMAINS = yaml.safe_load((HERE / "dominios.yaml").read_text())
 
-# Cuando los datos no alcanzan, el LLM lo dice en lugar de inventar una query
+# When the data is not enough, the LLM says so instead of making up a query
 SIN_DATOS = "SIN DATOS:"
 NO_DATA_RULE = """Si los datos no alcanzan para responder (falta el período, la medida o el tema), no \
 inventes una query: devolvé en su lugar una sola línea que empiece con «SIN DATOS:» y diga qué falta."""
@@ -47,7 +47,7 @@ es una lista, o una sola fila con el número si la respuesta es un número. No e
 nada: devolvé solo la query. """ + NO_DATA_RULE
 
 
-# --- Qué recibe el LLM en cada enfoque ----------------------------
+# --- What the LLM receives in each approach ----------------------
 
 def system_prompt(approach, domain="oncologia"):
     d = DOMAINS[domain]
@@ -73,10 +73,10 @@ def output_schema(approach, kind):
     return {"type": "object", "properties": props, "required": list(props), "additionalProperties": False}
 
 
-# --- El LLM -------------------------------------------------------
+# --- The LLM ------------------------------------------------------
 
 def ask(system, messages, schema):
-    """Una llamada al LLM con salida JSON. Devuelve (mensaje del asistente, datos)."""
+    """One call to the LLM with JSON output. Returns (assistant message, data)."""
     return ask_ollama(system, messages, schema) if PROVIDER == "ollama" else ask_claude(system, messages, schema)
 
 
@@ -86,13 +86,13 @@ def ask_claude(system, messages, schema):
     response = anthropic.Anthropic().beta.messages.create(
         model=MODEL,
         max_tokens=16000,
-        # El contexto grande (esquema u ontología) va en el system y se cachea: después de
-        # la primera pregunta se cobra a un 10 %
+        # The large context (schema or ontology) goes in the system prompt and is cached: after
+        # the first question it is billed at 10 %
         system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
         messages=messages,
         output_config={"effort": "high", "format": {"type": "json_schema", "schema": schema}},
-        # Si un clasificador de seguridad rechaza el pedido, la API lo reintenta en el
-        # modelo recomendado en lugar de devolver el rechazo
+        # If a safety classifier rejects the request, the API retries it on the
+        # recommended model instead of returning the rejection
         betas=["server-side-fallback-2026-07-01"],
         extra_body={"fallbacks": "default"},
     )
@@ -106,7 +106,7 @@ def ask_ollama(system, messages, schema):
     r = requests.post(f"{OLLAMA}/api/chat", timeout=600, json={
         "model": MODEL,
         "messages": [{"role": "system", "content": system}, *messages],
-        "format": schema,          # Ollama restringe la salida a este esquema JSON
+        "format": schema,          # Ollama restricts the output to this JSON schema
         "stream": False,
         "options": {"temperature": 0, "num_ctx": 32768},
     })
@@ -115,7 +115,7 @@ def ask_ollama(system, messages, schema):
     return text, json.loads(text)
 
 
-# --- Responder ----------------------------------------------------
+# --- Answer -------------------------------------------------------
 
 def answer(approach, question, kind, domain="oncologia"):
     system = system_prompt(approach, domain)
@@ -138,8 +138,8 @@ def answer(approach, question, kind, domain="oncologia"):
 
 
 def explain_query(query, sql, domain="oncologia"):
-    """Explica en palabras simples una consulta SPARQL y el SQL que generó Ontop, para alguien que
-    sabe SQL pero no tecnologías semánticas. Devuelve viñetas en Markdown."""
+    """Explains in simple words a SPARQL query and the SQL that Ontop generated, for someone who
+    knows SQL but not semantic technologies. Returns Markdown bullets."""
     system = ("Explicás consultas a una persona de negocio que sabe SQL pero no conoce tecnologías "
               "semánticas. En español, en 3 a 5 viñetas cortas: qué busca, qué une o filtra, qué "
               "devuelve, y qué habría que hacer a mano en SQL que acá ya resuelve el diccionario de "
@@ -156,18 +156,18 @@ def retry_message(error):
 
 
 def try_query(approach, query, kind, domain="oncologia"):
-    """Ejecuta la query de B (SQL) o C (SPARQL) y devuelve la respuesta o el error."""
+    """Runs the query of B (SQL) or C (SPARQL) and returns the answer or the error."""
     if sin_datos(query):
         return {"answer": None, "attempt": {"query": query, "error": None}}
     try:
         column = run_sparql(query, domain) if approach == "C" else run_sql(query, approach, domain)
-    except Exception as e:  # noqa: BLE001 - el error se le devuelve al modelo tal cual
+    except Exception as e:  # noqa: BLE001 - the error is returned to the model as is
         return {"answer": None, "attempt": {"query": query, "error": str(e).strip()[:2000]}}
     return {"answer": to_answer(column, kind), "attempt": {"query": query, "error": None}}
 
 
 def sin_datos(query):
-    """El LLM dijo que los datos no alcanzan (devuelve el motivo) o escribió una query (None)."""
+    """The LLM said the data is not enough (returns the reason) or wrote a query (None)."""
     text = (query or "").strip()
     return text[len(SIN_DATOS):].strip() or "los datos no alcanzan" if text.upper().startswith(SIN_DATOS) else None
 
@@ -178,10 +178,10 @@ def to_answer(column, kind):
     return [str(v) for v in column if v is not None]
 
 
-# --- Dónde corren las queries --------------------------------------
+# --- Where the queries run ----------------------------------------
 
-# B ve las fuentes tal como se cargaron; D, además, las tablas de enlaces de Rastro
-# (los usuarios de cada dominio están en dominios.yaml)
+# B sees the sources as they were loaded; D also sees Rastro's link tables
+# (each domain's users are in dominios.yaml)
 READER = "host=postgres port=5432 dbname=%s user={0} password={0}"
 
 
@@ -192,7 +192,7 @@ def run_sql(query, approach="B", domain="oncologia"):
 
 
 def sql_schema(approach="B", domain="oncologia"):
-    """El esquema de las tablas que ve el usuario de solo lectura, con su documentación."""
+    """The schema of the tables the read-only user sees, with their documentation."""
     d = DOMAINS[domain]
     user = d["readers"][approach]
     with psycopg.connect(READER.format(user) % os.environ["PG_DB"]) as conn:
@@ -224,20 +224,20 @@ def run_sparql(query, domain="oncologia"):
 APPROACHES = {k: (lambda q, kind, k=k: answer(k, q, kind)) for k in "ABC"}
 
 
-# --- Preguntas libres para la interfaz -----------------------------
+# --- Free questions for the interface ------------------------------
 
 FREE_RULES = """La query puede devolver varias columnas, con nombres de variable claros en \
 español (por ejemplo ?farmaco, ?ensayos). Limitá el resultado a 50 filas. No expliques \
 nada: devolvé solo la query. """ + NO_DATA_RULE
 
-# De qué fuente viene cada término de la ontología (dominios.yaml)
+# Which source each ontology term comes from (dominios.yaml)
 def term_sources(domain="oncologia"):
     return {term: source for source, terms in DOMAINS[domain]["term_sources"].items() for term in terms}
 
 
 
 def ask_rastro(question, domain="oncologia"):
-    """Responde una pregunta libre con SPARQL sobre Rastro. Necesita un LLM configurado."""
+    """Answers a free question with SPARQL over Rastro. Needs a configured LLM."""
     system = system_prompt("C", domain).replace(QUERY_RULES, FREE_RULES)
     schema = output_schema("C", "lista")
     messages = [{"role": "user", "content": question}]
@@ -248,7 +248,7 @@ def ask_rastro(question, domain="oncologia"):
             return {"query": None, "columns": [], "rows": [], "attempts": attempts, "sin_datos": sin_datos(data["query"])}
         try:
             columns, rows = run_sparql_table(data["query"], domain)
-        except Exception as e:  # noqa: BLE001 - el error se le devuelve al modelo tal cual
+        except Exception as e:  # noqa: BLE001 - the error is returned to the model as is
             attempts.append({"query": data["query"], "error": str(e).strip()[:2000]})
             messages += [{"role": "assistant", "content": assistant},
                          {"role": "user", "content": retry_message(attempts[-1]["error"])}]
@@ -259,7 +259,7 @@ def ask_rastro(question, domain="oncologia"):
 
 
 def run_sparql_table(query, domain="oncologia"):
-    """Ejecuta SPARQL en Ontop y devuelve (columnas, filas)."""
+    """Runs SPARQL on Ontop and returns (columns, rows)."""
     r = requests.post(DOMAINS[domain]["ontop"], data={"query": query}, timeout=120,
                       headers={"Accept": "application/sparql-results+json"})
     if not r.ok:
@@ -271,7 +271,7 @@ def run_sparql_table(query, domain="oncologia"):
 
 
 def ontop_sql(query, domain="oncologia"):
-    """El SQL que Ontop genera y ejecuta en Postgres para una query SPARQL."""
+    """The SQL that Ontop generates and runs on Postgres for a SPARQL query."""
     r = requests.get(DOMAINS[domain]["ontop"].replace("/sparql", "/ontop/reformulate"),
                      params={"query": query}, timeout=60)
     r.raise_for_status()
@@ -281,11 +281,11 @@ def ontop_sql(query, domain="oncologia"):
 
 
 def column_sources(query, domain="oncologia"):
-    """Fuentes de una query: (todas las que usa, las de cada columna del resultado).
+    """Sources of a query: (all the ones it uses, the ones of each result column).
 
-    Una columna que es el objeto de un término (?farmaco en ?d :name ?farmaco) toma la
-    fuente de ese término, o la de la clase del sujeto si el término es compartido
-    (:name). Una columna calculada (COUNT, SUM) toma todas las fuentes de la query.
+    A column that is the object of a term (?farmaco in ?d :name ?farmaco) takes the
+    source of that term, or that of the subject's class if the term is shared
+    (:name). A computed column (COUNT, SUM) takes all the sources of the query.
     """
     from rdflib import URIRef
     from rdflib.plugins.sparql import prepareQuery
@@ -308,7 +308,7 @@ def column_sources(query, domain="oncologia"):
 
     walk(algebra)
     ns, sources_of_term = DOMAINS[domain]["namespace"], term_sources(domain)
-    link_from = {}   # término de un enlace de Rastro → las fuentes de las que sale
+    link_from = {}   # term of a Rastro link → the sources it comes from
     for source, terms in DOMAINS[domain].get("link_sources", {}).items():
         for term in terms:
             link_from.setdefault(term, set()).add(source)
@@ -320,8 +320,8 @@ def column_sources(query, domain="oncologia"):
         return sources_of_term.get(str(predicate).replace(ns, ""))
 
     def source_of(subject, predicate):
-        """Fuente del término; si es compartido (:name), la de la clase del sujeto
-        o, si la query no la declara, la de los otros términos del mismo sujeto."""
+        """Source of the term; if it is shared (:name), that of the subject's class
+        or, if the query does not declare it, that of the other terms of the same subject."""
         found = direct_source(predicate)
         if found:
             return found
@@ -332,11 +332,11 @@ def column_sources(query, domain="oncologia"):
         return others.pop() if len(others) == 1 else None
 
     def steps(predicate):
-        """Los términos de un camino (:supplier/:group) o el término solo."""
+        """The terms of a path (:supplier/:group) or the term alone."""
         return [x for a in predicate.args for x in steps(a)] if hasattr(predicate, "args") else [predicate]
 
     def sources_for(subject, predicate):
-        """La fuente del término y, si es un enlace de Rastro, también las fuentes de las que sale el enlace."""
+        """The source of the term and, if it is a Rastro link, also the sources the link comes from."""
         found = source_of(subject, predicate)
         if found != "rastro":
             return {found} - {None}

@@ -1,5 +1,5 @@
-"""Pestaña «Rastro Lab» de petróleo y gas: el mismo modelo de gas, con y sin Rastro, y la explicación de
-cada predicción lado a lado. El modelo está en lab/gas/modelo.py; acá solo se cargan los datos y se muestra.
+"""Oil and gas «Rastro Lab» tab: the same gas model, with and without Rastro, and the explanation of
+each prediction side by side. The model is in lab/gas/modelo.py; here the data is only loaded and shown.
 """
 import json
 import os
@@ -50,7 +50,7 @@ def rango_y_dentro(r, b):
 
 
 def datos():
-    """Los datos y los dos modelos. Se guardan en disco y se rehacen si cambian los datos o los mapeos."""
+    """The data and the two models. They are saved to disk and rebuilt if the data or the mappings change."""
     return _datos(data_version("energia", modelo.SQL_GAS + modelo.SQL_A), modelo.version())   # Lab also reads raw tables directly
 
 
@@ -149,8 +149,8 @@ def show_lab(tech, pozo=None):
 
 
 def registros(pozo):
-    """Los registros de origen de la predicción de un pozo, leídos de Rastro (pregunta 13): las fracturas informadas
-    y los meses de gas, cada uno con su identificador o su mes."""
+    """The source records of a well's prediction, read from Rastro (question 13): the reported fracturings
+    and the gas months, each one with its identifier or its month."""
     from dominio import run
     query = (Path("/ontology/energia/queries") / "cq13.rq").read_text().replace('"166133"', f'"{pozo}"')
     columns, rows = run(query, "energia")
@@ -351,7 +351,7 @@ def show_calculation(pozo=None, config=None, tech=False):
 
 
 def show_well(key, pozo=None):
-    """Un pozo de 2025: la predicción sin Rastro y con Rastro, lado a lado. Con pozo, sin selector (para la demo)."""
+    """A 2025 well: the prediction without Rastro and with Rastro, side by side. With a well, no selector (for the demo)."""
     a, b, ctx, r, *_, (desde_hasta, dentro) = datos()
     prueba = b[b.inicio >= modelo.PRUEBA]
     etiquetas = {f"{modelo.concesion(x.areaNombre if isinstance(x.areaNombre, str) else x.area)} · {modelo.nombre(x.grupo)} · "
@@ -404,7 +404,7 @@ def show_well(key, pozo=None):
 
 
 def show_published(tech):
-    """La última corrida publicada en Rastro y dos preguntas sobre sus predicciones, en vivo."""
+    """The last run published in Rastro and two questions about its predictions, live."""
     from dominio import run
     columns, rows = run("""PREFIX energia: <https://w3id.org/rastro/energia#>
 PREFIX prov: <http://www.w3.org/ns/prov#>

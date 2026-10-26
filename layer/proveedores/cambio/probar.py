@@ -1,7 +1,7 @@
-"""Demo de cambio del dominio de proveedores: vuelve a ejecutar las 9 queries guardadas de
-la evaluación y dice cuáles siguen dando lo mismo, sin Rastro (SQL) y con Rastro.
+"""Change demo for the suppliers domain: runs the 9 saved evaluation queries again
+and says which ones still give the same result, without Rastro (SQL) and with Rastro.
 
-Con --guardar <paso>, guarda el resultado en resultado.json (en esta carpeta), que muestra la app.
+With --guardar <paso>, saves the result to resultado.json (in this folder), which the app shows.
 
     docker compose run --rm layer-eval python /layer/proveedores/cambio/probar.py [--guardar <paso>]
 """
@@ -19,7 +19,7 @@ ANSWERS = HERE.parent / "respuestas"
 RESULT = HERE / "resultado.json"
 NAMES = {"B": "Sin Rastro (SQL)", "C": "Con Rastro"}
 LABELS = {"✅": "igual", "🟡": "distinto, sin avisar", "❌": "con error", "—": "sin query"}
-MIN_AMOUNT = 10_000_000  # el recorte: todos los contratos superan US$10 millones
+MIN_AMOUNT = 10_000_000  # the cutoff: every contract is above US$10 million
 
 
 def same(a, b):
@@ -49,11 +49,11 @@ def check(entry, key, kind):
 
 
 def control():
-    """Control del recorte: ¿hay contratos de menos de US$10 millones?"""
+    """Cutoff check: are there contracts below US$10 million?"""
     try:
         values = run_sparql("PREFIX proveedores: <https://w3id.org/rastro/proveedores#> "
                             "SELECT (MIN(?a) AS ?m) WHERE { ?c proveedores:amount ?a }", "proveedores")
-    except Exception as e:  # noqa: BLE001 - Rastro caído también es un resultado de la demo
+    except Exception as e:  # noqa: BLE001 - Rastro being down is also a demo result
         return f"Control del recorte: Rastro no responde ({str(e).splitlines()[0][:120]})"
     if values and values[0] is not None and float(values[0]) < MIN_AMOUNT:
         amount = f"{float(values[0]):,.0f}".replace(",", ".")

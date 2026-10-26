@@ -1,9 +1,9 @@
-"""Prueba de composición: 5 preguntas que cruzan 3 o 4 conceptos, para SQL + enlaces (D)
-y Rastro (C). Mismo prompt, reintentos y puntaje que la evaluación.
+"""Composition test: 5 questions that combine 3 or 4 concepts, for SQL + links (D)
+and Rastro (C). Same prompt, retries and score as the evaluation.
 
-    prompt <q> <D|C>    imprime el prompt
-    try <q> <D|C>       ejecuta una query (por stdin), guarda el intento y muestra el resultado
-    puntaje             compara cada respuesta con la referencia
+    prompt <q> <D|C>    prints the prompt
+    try <q> <D|C>       runs a query (from stdin), saves the attempt and shows the result
+    puntaje             compares each answer with the reference
 
     docker compose run --rm -T layer-eval python /layer/composicion/manual.py prompt m1 C
 """

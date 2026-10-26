@@ -1,17 +1,17 @@
-"""Descarga de USAspending los contratos del recorte y el perfil de cada proveedor.
+"""Downloads from USAspending the contracts in scope and the profile of each supplier.
 
-Recorte: contratos (award_type_codes A, B, C, D) con actividad en el año fiscal 2025
-(oct 2024 a sep 2025) y monto de más de US$10 millones; son unos 36.000.
+Scope: contracts (award_type_codes A, B, C, D) with activity in fiscal year 2025
+(Oct 2024 to Sep 2025) and an amount of more than US$10 million; about 36,000 of them.
 
-1. Contratos: POST /api/v2/search/spending_by_award/ de a 100, ordenados por monto.
-   Cada página se guarda en data/raw/usaspending/awards/.
-2. Proveedores: GET /api/v2/recipient/{recipient_id}/ para cada proveedor distinto;
-   trae la matriz actual y la lista "parents" con las matrices que tuvo. Cada respuesta
-   se guarda en data/raw/usaspending/recipient/ y no se vuelve a pedir.
+1. Contracts: POST /api/v2/search/spending_by_award/ 100 at a time, sorted by amount.
+   Each page is saved in data/raw/usaspending/awards/.
+2. Suppliers: GET /api/v2/recipient/{recipient_id}/ for each distinct supplier;
+   it brings the current parent and the "parents" list with the parents it had. Each response
+   is saved in data/raw/usaspending/recipient/ and is not requested again.
 
-Las dos descargas son reanudables. Para bajar de nuevo los contratos, borrá la carpeta awards/.
+Both downloads can be resumed. To download the contracts again, delete the awards/ folder.
 
-Se corre con: docker compose run --rm usaspending-loader
+Run with: docker compose run --rm usaspending-loader
 """
 
 import json
@@ -53,7 +53,7 @@ def download_page(page):
 
 
 def download_awards():
-    """Las páginas se piden de a 4 en paralelo: cada una tarda varios segundos."""
+    """Pages are requested 4 at a time in parallel: each one takes several seconds."""
     (CACHE / "awards").mkdir(parents=True, exist_ok=True)
     r = http.post(f"{API}/search/spending_by_award_count/", json={"filters": FILTERS}, timeout=120)
     r.raise_for_status()
@@ -68,7 +68,7 @@ def download_awards():
 
 
 def download_recipient(recipient_id):
-    """El perfil del proveedor, o None si la API sigue fallando (se reintenta en la próxima corrida)."""
+    """The supplier's profile, or None if the API keeps failing (retried on the next run)."""
     f = CACHE / "recipient" / f"{recipient_id}.json"
     if not f.exists():
         time.sleep(PAUSE)
@@ -100,7 +100,7 @@ def main():
     (CACHE / "recipient").mkdir(parents=True, exist_ok=True)
     pending = [i for i in ids if not (CACHE / "recipient" / f"{i}.json").exists()]
     print(f"Proveedores: {len(ids)}, por descargar: {len(pending)}")
-    with ThreadPoolExecutor(2) as pool:  # con más hilos la API corta conexiones
+    with ThreadPoolExecutor(2) as pool:  # with more threads the API cuts connections
         for n, _ in enumerate(pool.map(download_recipient, pending), 1):
             if n % 500 == 0:
                 print(f"  perfiles: {n}/{len(pending)}")

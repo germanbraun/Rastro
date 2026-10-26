@@ -1,4 +1,4 @@
-"""Lo que comparten los cargadores: la huella de un archivo cambia si cambia su contenido."""
+"""What the loaders share: a file's fingerprint changes if its content changes."""
 import sys
 from pathlib import Path
 

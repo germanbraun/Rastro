@@ -1,9 +1,9 @@
-"""Arma app/sitios.yaml: el sitio web de cada empresa, para mostrar su favicon junto al nombre.
+"""Builds app/sitios.yaml: each company's website, to show its favicon next to the name.
 
-Proveedores: el sitio oficial de Wikidata (propiedad P856) de cada grupo que tiene Wikidata.
-Petróleo y gas y oncología: sitios.manual.yaml, una lista corta revisada por un asistente de IA
-(a confirmar por una persona). Las claves son el nombre normalizado (mayúsculas, sin acentos,
-puntuación ni forma societaria), el mismo que usa app/logos.py.
+Suppliers: the official website from Wikidata (property P856) of each group that has Wikidata.
+Oil and gas and oncology: sitios.manual.yaml, a short list reviewed by an AI assistant
+(to be confirmed by a person). The keys are the normalized name (uppercase, without accents,
+punctuation or legal form), the same one app/logos.py uses.
 
     docker compose run --rm -T layer-eval python /layer/sitios.py
 """
@@ -19,7 +19,7 @@ import requests
 import yaml
 
 HERE = Path(__file__).parent
-OUT = Path("/layer/sitios.yaml")   # se copia a app/sitios.yaml (la app no ve /layer como escritura)
+OUT = Path("/layer/sitios.yaml")   # copied to app/sitios.yaml (the app cannot write to /layer)
 FORMS = (r"\b(THE|INC|INCORPORATED|LLC|L L C|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC"
          r"|SA|SAU|SRL|SL|AG|SE|GMBH|NV|BV|HOLDINGS?|GROUP)\b")
 

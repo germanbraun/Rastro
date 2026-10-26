@@ -1,6 +1,6 @@
-"""Cobertura de la evidencia en cada dominio: cuántos enlaces de Rastro guardan su fuente, su regla y su
-texto (PROV-O), y cuántas columnas de las respuestas a las preguntas de competencia dicen de qué fuente salen. Lo muestra la
-tarjeta «Cada respuesta se puede auditar» de «Por qué confiar».
+"""Evidence coverage in each domain: how many Rastro links keep their source, their rule and their
+text (PROV-O), and how many columns of the competency-question answers say which source they come from. Shown by the
+card «Cada respuesta se puede auditar» in «Por qué confiar».
 
     docker compose run --rm -T layer-eval python /layer/evidencia.py [<domain> ...]   # every domain by default
 """
@@ -44,7 +44,7 @@ def columns(domain, spec):
     for path in sorted((ROOT / spec["queries"]).glob("*.rq")):
         try:
             per_column = answer.column_sources(path.read_text(), domain)[1]
-        except ValueError:   # una consulta que el análisis de fuentes no sabe leer: no se cuenta
+        except ValueError:   # a query the source analysis cannot read: not counted
             print(f"  {domain}: {path.name} no se pudo analizar; queda afuera del conteo de columnas")
             continue
         for sources in per_column.values():

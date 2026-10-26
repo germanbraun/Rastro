@@ -1,5 +1,5 @@
-"""Arma un HTML por mazo (proveedores.html, energia.html, oncologia.html) con las diapositivas de
-slides/, en el orden de cada mazos/<nombre>.json. Los tres comparten las diapositivas genéricas."""
+"""Builds one HTML per deck (proveedores.html, energia.html, oncologia.html) with the slides in
+slides/, in the order of each mazos/<nombre>.json. The three share the generic slides."""
 import json
 from pathlib import Path
 

@@ -1,7 +1,7 @@
-"""Revisa que la ontología cargue y que cada query use solo términos declarados.
+"""Checks that the ontology loads and that each query uses only declared terms.
 
-Se corre con: docker compose run --rm ontology-check (los tres dominios)
-Un dominio: docker compose run --rm ontology-check python /ontology/check.py /ontology/proveedores
+Run with: docker compose run --rm ontology-check (all three domains)
+One domain: docker compose run --rm ontology-check python /ontology/check.py /ontology/proveedores
 """
 
 import sys
@@ -13,14 +13,14 @@ from rdflib.namespace import OWL, RDF, RDFS
 import yaml
 from rdflib.plugins.sparql import prepareQuery
 
-# Carpetas de los dominios: cada una con su ontología (*.ttl) y sus queries/
+# Domain folders: each one with its ontology (*.ttl) and its queries/
 AQUI = Path(__file__).parent
 ROOT = AQUI.parent
 NS = "https://w3id.org/rastro/oncologia#"
 
 
 def terms_in(node, found, seen):
-    """Recorre el álgebra de una query y junta las IRIs de la ontología."""
+    """Walks the algebra of a query and collects the ontology IRIs."""
     if id(node) in seen:
         return
     seen.add(id(node))
@@ -87,7 +87,7 @@ def revisar(carpeta, mapping=None, queries=None):
         try:
             used = set()
             terms_in(prepareQuery(f.read_text()).algebra, used, set())
-        except Exception as e:  # noqa: BLE001 - se informa el error de sintaxis tal cual
+        except Exception as e:  # noqa: BLE001 - the syntax error is reported as is
             print(f"{f.name}: ERROR de sintaxis: {e}")
             ok = False
             continue

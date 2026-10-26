@@ -1,9 +1,9 @@
-"""Carga la Lista Consolidada de Control de trade.gov (un CSV de ~16 MB).
+"""Loads trade.gov's Consolidated Screening List (a ~16 MB CSV).
 
-Se guarda el archivo del día en data/raw/csl/ y se carga entero: son unas 26.000
-entradas, y los proveedores se comparan contra todas en la Fase P2.
+The day's file is saved in data/raw/csl/ and loaded whole: there are about 26,000
+entries, and the suppliers are compared against all of them in Phase P2.
 
-Se corre con: docker compose run --rm csl-loader
+Run with: docker compose run --rm csl-loader
 """
 
 import csv
@@ -34,7 +34,7 @@ def main():
 
     rows = {}
     for d in csv.DictReader(io.StringIO(path.read_bytes().decode("utf-8-sig"))):
-        # El país es el último elemento de cada dirección: "Havana, CU"
+        # The country is the last element of each address: "Havana, CU"
         last = (a.rsplit(",", 1)[-1].strip() for a in split(d["addresses"]))
         countries = sorted({c for c in last if re.fullmatch(r"[A-Z]{2}", c)})
         rows[d["_id"], d["source"]] = (d["_id"], d["source"], d["type"] or None, d["name"], split(d["alt_names"]),

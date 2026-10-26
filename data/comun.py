@@ -1,5 +1,5 @@
-"""Lo que comparten los cargadores de datos.gob.ar (petróleo y gas, y Rastro Lab): descargar con caché y
-reintentos, pedir un recurso al portal (CKAN) y cargar una tabla con COPY dejando su registro en
+"""What the datos.gob.ar loaders share (oil and gas, and Rastro Lab): download with cache and
+retries, request a resource from the portal (CKAN) and load a table with COPY, recording it in
 rastro_meta.load_run."""
 
 import hashlib
@@ -15,7 +15,7 @@ http.headers["User-Agent"] = "RastroMVP/0.1"
 
 
 def descargar(carpeta: Path, nombre, url, verify=True, intentos=4):
-    """Baja url a carpeta/nombre, una sola vez: si el archivo ya está, no se vuelve a pedir."""
+    """Downloads url to carpeta/nombre, only once: if the file is already there, it is not requested again."""
     f = carpeta / nombre
     for intento in range(intentos):
         if f.exists():
@@ -29,7 +29,7 @@ def descargar(carpeta: Path, nombre, url, verify=True, intentos=4):
                     for chunk in r.iter_content(1 << 20):
                         out.write(chunk)
                 tmp.rename(f)
-        except requests.RequestException as e:   # el servidor corta descargas largas: se reintenta
+        except requests.RequestException as e:   # the server cuts long downloads: retry
             print(f"  falló ({e.__class__.__name__}), intento {intento + 1} de {intentos}")
     if not f.exists():
         raise RuntimeError(f"No se pudo descargar {nombre}")
@@ -37,13 +37,13 @@ def descargar(carpeta: Path, nombre, url, verify=True, intentos=4):
 
 
 def ckan(carpeta: Path, recurso, nombre):
-    """Un recurso del portal datos.energia.gob.ar, por su identificador."""
+    """A resource of the datos.energia.gob.ar portal, by its identifier."""
     url = http.get(CKAN + recurso, timeout=60).json()["result"]["url"]
     return descargar(carpeta, nombre, url)
 
 
 def huella(archivo: Path):
-    """La huella SHA-256 de un archivo: si la fuente publica otra versión, cambia."""
+    """The SHA-256 fingerprint of a file: if the source publishes another version, it changes."""
     h = hashlib.sha256()
     with archivo.open("rb") as f:
         for bloque in iter(lambda: f.read(1 << 20), b""):
@@ -52,8 +52,8 @@ def huella(archivo: Path):
 
 
 def copiar(conn, tabla, filas, fuente, version, ancho=30, archivo: Path = None):
-    """Carga filas en tabla con COPY y registra la carga en rastro_meta.load_run. Con archivo, registra también su
-    nombre, su huella y el día en que se descargó, para saber qué versión de la fuente se cargó."""
+    """Loads filas into tabla with COPY and records the load in rastro_meta.load_run. With archivo, it also records its
+    name, its fingerprint and the day it was downloaded, to know which version of the source was loaded."""
     conn.execute("ALTER TABLE rastro_meta.load_run ADD COLUMN IF NOT EXISTS archivo text, "
                  "ADD COLUMN IF NOT EXISTS sha256 text, ADD COLUMN IF NOT EXISTS descargado date")
     n = 0

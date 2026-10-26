@@ -1,10 +1,10 @@
-"""Enlaza ensayos de AACT con MeSH (condiciones) y con ChEMBL (fármacos).
+"""Links AACT trials with MeSH (conditions) and with ChEMBL (drugs).
 
-Todo el enlace está en SQL legible: conditions.sql, drugs.sql, entities.sql y stop_reasons.sql (una
-fila por fármaco, sponsor y target, que leen los mapeos). Este script los corre y
-muestra cuánto enlazó.
+All the linking is in readable SQL: conditions.sql, drugs.sql, entities.sql and stop_reasons.sql (one
+row per drug, sponsor and target, which the mappings read). This script runs them and
+shows how much it linked.
 
-Se corre con: docker compose run --rm linker
+Run with: docker compose run --rm linker
 """
 
 import csv

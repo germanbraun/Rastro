@@ -1,5 +1,5 @@
-"""El diccionario de petróleo y gas: cada término que usan los mapeos y las consultas está declarado en la
-ontología. Un término sin declarar hace que Ontop no arranque o que una consulta no devuelva nada."""
+"""The oil and gas dictionary: every term the mappings and the queries use is declared in the
+ontology. An undeclared term makes Ontop fail to start or a query return nothing."""
 import re
 from pathlib import Path
 

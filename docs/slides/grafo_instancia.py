@@ -1,7 +1,7 @@
-"""Dibuja como grafo la instancia de las diapositivas «Así se ve un dato del grafo» (instancia-*.html):
-burbujas para las entidades, burbujas naranjas para las clases, rectángulos para los datos simples y
-flechas con el nombre de negocio de cada propiedad. Lee la tabla de la diapositiva y los nombres de
-las entidades enlazadas en el Ontop de cada dominio.
+"""Draws as a graph the instance on the «Así se ve un dato del grafo» slides (instancia-*.html):
+bubbles for entities, orange bubbles for classes, rectangles for plain values and
+arrows with each property's business name. Reads the slide's table and the names of
+the linked entities from each domain's Ontop.
 
     python3 docs/slides/grafo_instancia.py
 """
@@ -16,7 +16,7 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE.parent.parent / "app"))
-import grafo  # noqa: E402  (el mismo dibujo que la app)
+import grafo  # noqa: E402  (the same drawing as the app)
 DOMAINS = {"energia": ("https://w3id.org/rastro/energia#", 8082),
            "proveedores": ("https://w3id.org/rastro/proveedores#", 8081),
            "oncologia": ("https://w3id.org/rastro/oncologia#", 8080)}
@@ -35,7 +35,7 @@ def name_of(iri, ns, port):
 
 
 def nodes_of(rows, ns, port):
-    """Las filas de la tabla (término, en el diccionario, valor) como nodos del dibujo."""
+    """The table rows (term, in the dictionary, value) as nodes of the drawing."""
     out = []
     for term, meaning, value in rows:
         prop = re.sub(r"\s*\(.*", "", meaning or term)
@@ -60,7 +60,7 @@ for domain, (ns, port) in DOMAINS.items():
     block = re.search(r'<div style="background:#FFFFFF;border-radius:20px;padding:(?:28px 32px|12px 0);width:1664px">.*?</div>\n'
                       r'(?:<p style="font-size:24px;color:#4A5568">Burbuja.*?</p>\n)?', text, re.S)
     rows = re.findall(r"<tr><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td></tr>", block.group(0))
-    if not rows:   # ya dibujada: las filas están guardadas en el comentario
+    if not rows:   # already drawn: the rows are saved in the comment
         rows = [tuple(html.unescape(c) for c in r.split("\t")) for r in
                 re.search(r"<!-- filas\n(.*?)\n-->", block.group(0), re.S).group(1).split("\n")]
     rows = [tuple(html.unescape(c) for c in r) for r in rows]

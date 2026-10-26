@@ -1,24 +1,24 @@
-"""Carga las dos fuentes de la Secretaría de Energía para el dominio de petróleo y gas.
+"""Loads the two Secretaría de Energía sources for the oil and gas domain.
 
-Capítulo IV (datos.energia.gob.ar, CC-BY 4.0): la producción declarada de 2025, pozo por pozo y
-mes por mes, y el padrón de pozos con su ubicación. Se usa 2025 porque es el último año completo:
-el archivo de 2026 todavía no trae a todas las operadoras. Aparte, 2023 y 2024, en su propia tabla,
-solo para ver quién operó cada concesión a lo largo del tiempo (por ejemplo, las áreas maduras
-que YPF vendió).
+Capítulo IV (datos.energia.gob.ar, CC-BY 4.0): the declared production of 2025, well by well and
+month by month, and the well register with each well's location. 2025 is used because it is the last
+full year: the 2026 file does not yet include every operator. Separately, 2023 and 2024, in their own
+table, only to see who operated each concession over time (for example, the mature areas
+that YPF sold).
 
-Servicio de mapas (WFS de sig.energia.gob.ar): las concesiones de explotación con su contorno,
-operadora y socios; los puntos de venteo declarados; y los posibles venteos detectados por
-satélite. El certificado del servidor viene sin la cadena completa, así que se descarga sin
-verificarlo: son datos públicos de solo lectura.
+Map service (WFS of sig.energia.gob.ar): the production concessions with their outline,
+operator and partners; the declared venting points; and the possible venting detected by
+satellite. The server's certificate comes without the full chain, so it is downloaded without
+verifying it: it is public, read-only data.
 
-Del mismo WFS salen también los gasoductos de transporte de ENARGAS. Del WFS del Instituto
-Geográfico Nacional (listado en IDERA), las localidades y las áreas protegidas. De GLEIF, el
-identificador global (LEI) de las empresas que más producen, buscado por nombre en Argentina. Y
-el listado de estudios ambientales que presentan las empresas, con sus observaciones.
+The same WFS also provides the ENARGAS transport gas pipelines. From the WFS of the Instituto
+Geográfico Nacional (listed in IDERA), the towns and the protected areas. From GLEIF, the
+global identifier (LEI) of the companies that produce the most, searched by name in Argentina. And
+the list of environmental studies that companies submit, with their observations.
 
-Cada descarga se guarda en data/raw/energia/ y no se vuelve a pedir.
+Each download is saved in data/raw/energia/ and is not requested again.
 
-Se corre con: docker compose run --rm energia-loader
+Run with: docker compose run --rm energia-loader
 """
 
 import csv
@@ -39,15 +39,15 @@ from comun import copiar, descargar, http  # noqa: E402
 
 CACHE = Path("/data/raw/energia")
 PRODUCCION_2025 = "d774b5d7-0756-48fe-88f2-8729b57b22da"
-PRODUCCION_ANTERIOR = {2023: "231c39b3-e81e-4398-af8d-b115807f2c25",   # los archivos completos, no los de
-                       2024: "43a09dce-1742-44d0-bc13-f193deaab563"}   # «DDJJ abiertas y cerradas»
+PRODUCCION_ANTERIOR = {2023: "231c39b3-e81e-4398-af8d-b115807f2c25",   # the complete files, not the
+                       2024: "43a09dce-1742-44d0-bc13-f193deaab563"}   # «DDJJ abiertas y cerradas» ones
 PADRON_POZOS = "cb5c0f04-7835-45cd-b982-3e25ca7d7751"
 ESTUDIOS_AMBIENTALES = "7b8583fe-8994-4efa-9fbf-79c4a3f2f467"   # «Actividad ambiental de petróleo y gas»
 WFS = "https://sig.energia.gob.ar/mapserv?map=/etc/mapserver/mapase.map"
 PAGE = 10_000
 IGN = "https://wms.ign.gob.ar/geoserver/ows?service=wfs&version=2.0.0&request=GetFeature&outputFormat=application/json"
 GLEIF = "https://api.gleif.org/api/v1/lei-records"
-GLEIF_TOP = 40   # las empresas que más producen o más participación tienen
+GLEIF_TOP = 40   # the companies that produce the most or have the largest stakes
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -67,7 +67,7 @@ def ckan(resource_id, name):
 
 
 def wfs_features(layer):
-    """Todas las entidades de una capa del WFS, en páginas de PAGE, como texto GML de cada una."""
+    """All the features of a WFS layer, in pages of PAGE, as the GML text of each one."""
     feats, start = [], 0
     while True:
         f = download(f"{layer}-{start}.gml", f"{WFS}&SERVICE=WFS&VERSION=2.0.0&REQUEST=GetFeature"
@@ -89,18 +89,18 @@ def prop(feat, key):
 
 def point(feat):
     lat, lon = map(float, re.search(r"<gml:pos[^>]*>([^<]+)</gml:pos>", feat).group(1).split()[:2])
-    return lon, lat  # el WFS 2.0 da EPSG:4326 como «latitud longitud»
+    return lon, lat  # WFS 2.0 gives EPSG:4326 as «latitude longitude»
 
 
 def ring(feat):
-    """El contorno exterior más largo, como [[lon, lat], ...]."""
+    """The longest outer ring, as [[lon, lat], ...]."""
     rings = re.findall(r"<gml:exterior>.*?<gml:posList[^>]*>([^<]+)</gml:posList>", feat, re.S)
     best = max(rings, key=len).split()
     return json.dumps([[float(best[i + 1]), float(best[i])] for i in range(0, len(best) - 1, 2)])
 
 
 def lines(feat):
-    """Todos los tramos de una línea, como [[[lon, lat], ...], ...]."""
+    """All the parts of a line, as [[[lon, lat], ...], ...]."""
     out = []
     for pl in re.findall(r"<gml:posList[^>]*>([^<]+)</gml:posList>", feat):
         v = pl.split()
@@ -119,7 +119,7 @@ def exteriors(geometry):
 
 
 def gleif(names):
-    """Los candidatos de GLEIF para cada nombre, en Argentina. Se guardan y no se vuelven a pedir."""
+    """GLEIF's candidates for each name, in Argentina. They are saved and not requested again."""
     rows = []
     for name in names:
         f = CACHE / "gleif" / (re.sub(r"[^A-Za-z0-9]+", "_", name)[:80] + ".json")
@@ -129,7 +129,7 @@ def gleif(names):
                                                      "page[size]": 5})
             r.raise_for_status()
             f.write_text(r.text)
-            time.sleep(1.05)   # GLEIF pide no pasar de 60 consultas por minuto
+            time.sleep(1.05)   # GLEIF asks not to exceed 60 queries per minute
         for x in json.loads(f.read_text())["data"]:
             e = x["attributes"]["entity"]
             rows.append((name, x["attributes"]["lei"], e["legalName"]["name"],
@@ -223,8 +223,8 @@ def main():
                    (r["observaciones"] or "").strip() or None] for r in csv.DictReader(fh)),
                  "ambiental", "listado de estudios ambientales", archivo=estudios)
 
-        # Las empresas que más producen u operan, con su nombre de las declaraciones juradas
-        # Se busca sin forma societaria («YPF S.A.» → «YPF»): GLEIF busca por palabras
+        # The companies that produce or operate the most, with their name from the sworn statements
+        # Searched without the legal form («YPF S.A.» → «YPF»): GLEIF searches by words
         names = [re.sub(r"\b(S\.?\s?A\.?\s?U?\.?|S\.?\s?R\.?\s?L\.?|S\.?\s?L\.?|SAU|LTD\.?)(\s|$)", " ", r[0]).strip(" .,")
                  for r in conn.execute(f"""
             SELECT trim(empresa) FROM capitulo4.produccion GROUP BY 1

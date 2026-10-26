@@ -1,4 +1,4 @@
-"""Rastro Lab: el modelo y los textos de sus explicaciones, con datos inventados."""
+"""Rastro Lab: the model and the texts of its explanations, with made-up data."""
 import numpy as np
 import pandas as pd
 
@@ -6,7 +6,7 @@ import modelo
 
 
 def pozos():
-    """Seis pozos de dos concesiones: los de 2024 entrenan, los de 2025 se prueban."""
+    """Six wells in two concessions: the 2024 ones train, the 2025 ones are tested."""
     return pd.DataFrame({
         "idpozo": ["1", "2", "3", "4", "5", "6"],
         "inicio": pd.to_datetime(["2024-01-01", "2024-02-01", "2024-03-01", "2024-04-01", "2025-01-01", "2025-02-01"]),
@@ -27,12 +27,12 @@ def test_los_aportes_suman_la_prediccion():
 def test_un_dato_que_falta_no_suma_ni_resta():
     df = pozos()
     r = modelo.entrenar(df, ["grupo", "area"], ["pct"])
-    assert abs(r["aportes"].loc[5, "pct"]) < 1e-9   # el pozo 6 no tiene participación: se usa el promedio
+    assert abs(r["aportes"].loc[5, "pct"]) < 1e-9   # well 6 has no stake: the average is used
 
 
 def test_el_modelo_aprende_la_concesion():
     r = modelo.entrenar(pozos(), ["grupo", "area"], ["pct"])
-    assert r["pred"][5] > r["pred"][4]               # B dio más gas que A al entrenar
+    assert r["pred"][5] > r["pred"][4]               # B gave more gas than A in training
     assert r["error"] < 10
 
 

@@ -1,24 +1,24 @@
-"""Evaluación de un dominio: sin Rastro (SQL) y con Rastro (SPARQL). The results title and the optional SQL
+"""Evaluation of a domain: without Rastro (SQL) and with Rastro (SPARQL). The results title and the optional SQL
 function that normalizes company names come from the domain's method.evaluation entry in layer/dominios.yaml.
 
-Las respuestas las escribe un LLM que solo ve el prompt (subagentes, a mano o con otro
-asistente): este script le da el prompt, ejecuta cada query que propone y puntúa.
+The answers are written by an LLM that sees only the prompt (subagents, by hand or with another
+assistant): this script gives it the prompt, runs each query it proposes and scores.
 
-    El primer argumento es el dominio; sus archivos están en layer/<dominio>/.
+    The first argument is the domain; its files are in layer/<dominio>/.
 
-    prompt <q> <n> <B|D|C> el prompt de la pregunta q; n = 0 es la pregunta de la evaluación
-                           y n = 1, 2, 3 son sus otras formas (consistencia/parafrasis.yaml)
-    try <q> <n> <B|D|C>    ejecuta una query (por stdin), guarda el intento y muestra el
-                           resultado o el error, con el mensaje para devolverle al LLM
-    rerun                  vuelve a ejecutar las queries guardadas (si cambiaron los datos), sin
-                           pedirle nada nuevo al LLM
-    puntaje                calcula las referencias, puntúa todo y escribe resultados.json
-                           (lo lee la app) y resultados.md
+    prompt <q> <n> <B|D|C> the prompt of question q; n = 0 is the evaluation question
+                           and n = 1, 2, 3 are its other wordings (consistencia/parafrasis.yaml)
+    try <q> <n> <B|D|C>    runs a query (from stdin), saves the attempt and shows the
+                           result or the error, with the message to give back to the LLM
+    rerun                  runs the saved queries again (if the data changed), without
+                           asking the LLM for anything new
+    puntaje                computes the references, scores everything and writes resultados.json
+                           (read by the app) and resultados.md
 
-B es sin Rastro: SQL sobre las tablas de las fuentes tal como se cargaron.
-D es la línea de base justa: SQL sobre las mismas tablas más las tablas de Rastro
-(esquema del dominio), documentadas con lo mismo que dice el diccionario.
-C es con Rastro: SPARQL sobre el Ontop del dominio. Cada respuesta queda en
+B is without Rastro: SQL over the source tables as they were loaded.
+D is the fair baseline: SQL over the same tables plus Rastro's tables
+(the domain's schema), documented with the same text as the dictionary.
+C is with Rastro: SPARQL over the domain's Ontop. Each answer is saved in
 layer/<dominio>/respuestas/<q>-<n>-<B|D|C>.json.
 
     docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores prompt p01 0 C
@@ -47,8 +47,8 @@ SPEC = yaml.safe_load((HERE / "eval" / "questions.yaml").read_text())
 QUESTIONS = {q["id"]: q for q in SPEC["questions"]}
 PARAPHRASES = yaml.safe_load((HERE / "consistencia" / "parafrasis.yaml").read_text()) or {}
 NAMES = {"B": "Sin Rastro (SQL)", "D": "SQL + enlaces de Rastro", "C": "Con Rastro"}
-TOLERANCE = 0.05    # números: correcto si está a menos del 5 % de la referencia
-MIN_F1 = 0.8        # listas: correcto si coincide en al menos un 80 % (F1)
+TOLERANCE = 0.05    # numbers: correct if within 5 % of the reference
+MIN_F1 = 0.8        # lists: correct if they match at least 80 % (F1)
 
 
 def admin():
@@ -100,8 +100,8 @@ def rerun():
 
 
 def normalize(values, items, conn):
-    """Lleva una lista de nombres a un conjunto comparable: las empresas, por su nombre
-    normalizado (la misma función que usa Rastro para enlazar)."""
+    """Turns a list of names into a comparable set: companies, by their normalized
+    name (the same function Rastro uses for linking)."""
     out = set()
     for v in values or []:
         if items == "empresas" and NORMALIZE:
@@ -138,7 +138,7 @@ def load(qid, n, k):
 
 
 def same(values):
-    """¿Las respuestas son la misma? Los números, salvo redondeo (una parte en un millón)."""
+    """Are the answers the same? Numbers, except for rounding (one part in a million)."""
     if all(isinstance(v, (int, float)) for v in values):
         return max(values) - min(values) <= 1e-6 * max(1, abs(max(values)))
     keys = {json.dumps(sorted(v), ensure_ascii=False) if isinstance(v, list) else json.dumps(v) for v in values}
@@ -146,7 +146,7 @@ def same(values):
 
 
 def score_all():
-    names = {k: v for k, v in NAMES.items() if any(ANSWERS.glob(f"*-{k}.json"))}  # los que ya tienen respuestas
+    names = {k: v for k, v in NAMES.items() if any(ANSWERS.glob(f"*-{k}.json"))}  # the ones that already have answers
     results = {"date": date.today().isoformat(), "questions": {}, "totals": {}, "consistency": {}}
     with admin() as conn:
         for qid, q in QUESTIONS.items():
@@ -208,11 +208,11 @@ def fmt(a):
 
 
 if __name__ == "__main__":
-    try:   # los cargadores recrean los esquemas: se vuelven a dar los permisos
+    try:   # the loaders recreate the schemas: the permissions are granted again
         with admin() as c:
             c.execute((HERE / "reader.sql").read_text())
     except psycopg.Error:
-        pass   # otro proceso los está dando al mismo tiempo ("tuple concurrently updated")
+        pass   # another process is granting them at the same time ("tuple concurrently updated")
     command = sys.argv[2]
     if command == "prompt":
         prompt(sys.argv[3], int(sys.argv[4]), sys.argv[5])

@@ -1,10 +1,10 @@
-"""Busca en Wikidata las empresas con los LEI cargados de GLEIF, su sede y si cotizan en bolsa.
+"""Looks up in Wikidata the companies with the LEIs loaded from GLEIF, their headquarters and whether they are listed.
 
-Lee los LEI de gleif.lei_record (cargado antes) y consulta el SPARQL público de
-Wikidata de a 200 LEI: P1278 (LEI), P414 (bolsa de valores) y P159 (sede). Cada respuesta se
-guarda en data/raw/wikidata/.
+Reads the LEIs from gleif.lei_record (loaded before) and queries Wikidata's public SPARQL
+endpoint 200 LEIs at a time: P1278 (LEI), P414 (stock exchange) and P159 (headquarters). Each response is
+saved in data/raw/wikidata/.
 
-Se corre con: docker compose run --rm wikidata-loader
+Run with: docker compose run --rm wikidata-loader
 """
 
 import hashlib
@@ -34,7 +34,7 @@ GROUP BY ?item ?lei ?label
 """
 
 http = requests.Session()
-# Wikidata exige identificarse
+# Wikidata requires identifying yourself
 http.headers["User-Agent"] = "RastroMVP/0.1 (https://github.com/germanbraun/Rastro)"
 http.mount("https://", HTTPAdapter(max_retries=Retry(total=6, backoff_factor=5, allowed_methods=None,
                                                      status_forcelist=[429, 500, 502, 503, 504])))

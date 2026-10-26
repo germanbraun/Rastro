@@ -1,8 +1,8 @@
-"""Pantalla de un dominio a partir de su archivo de configuración (app/dominios/<dominio>.yaml).
+"""A domain's screen from its configuration file (app/dominios/<dominio>.yaml).
 
-Las mismas tres pestañas que oncología: Preguntar, Por qué confiar y Preguntas frecuentes,
-con los dos modos (negocio por defecto, técnico con el interruptor). Todo lo propio del
-dominio (preguntas, columnas, evidencia, tarjetas, escenarios de cambio) está en el YAML.
+The same three tabs as oncology: Preguntar, Por qué confiar and Preguntas frecuentes,
+with the two modes (business by default, technical with the switch). Everything specific to the
+domain (questions, columns, evidence, cards, change scenarios) is in the YAML.
 """
 
 import base64
@@ -36,7 +36,7 @@ def read_json(path):
 
 
 @st.cache_data
-def _load_yaml(path, mtime):   # la fecha del archivo es parte de la clave: si cambia, se relee
+def _load_yaml(path, mtime):   # the file's date is part of the key: if it changes, it is read again
     return yaml.safe_load(Path(path).read_text())
 
 
@@ -46,7 +46,7 @@ def _ayuda(mtime):
 
 
 def ayuda(key):
-    """El texto del ícono «?» de cada parte de la app (app/ayuda.yaml)."""
+    """The text of the «?» icon for each part of the app (app/ayuda.yaml)."""
     p = Path("/app/ayuda.yaml")
     return _ayuda(p.stat().st_mtime).get(key) if p.exists() else None
 
@@ -67,8 +67,8 @@ def sources(domain):
 
 @st.cache_data(ttl=60, show_spinner=False)
 def data_version(domain, reads=""):
-    """Cambia cuando cambian los datos (cargas y enlaces) o el diccionario y los mapeos: con ella, las
-    respuestas guardadas en disco se vuelven a calcular solo si hace falta."""
+    """Changes when the data (loads and links) or the dictionary and the mappings change: with it, the
+    answers saved on disk are recalculated only when needed."""
     import psycopg
     cfg = answer.DOMAINS[domain]
     files = [answer.ROOT / path for path in (cfg["method"]["mapping"], cfg["ontology"], cfg["method"]["app"])]
@@ -93,15 +93,15 @@ def _run_saved(query, domain, version):
 
 
 def run(query, domain):
-    """Una consulta sobre Rastro. La respuesta se guarda en disco: sobrevive a que la app se reinicie, y se
-    vuelve a calcular si cambian los datos o los mapeos (data_version)."""
+    """A query over Rastro. The answer is saved on disk: it survives an app restart, and it is
+    recalculated if the data or the mappings change (data_version)."""
     return _run_saved(query, domain, data_version(domain))
 
 
 @st.cache_resource
 def warm_up():
-    """Precalentamiento: la primera vez que alguien abre la app, se calculan en segundo plano todas las
-    preguntas de ejemplo de los dominios, para que la demo no espere."""
+    """Warm-up: the first time someone opens the app, all the domains' example questions are computed
+    in the background, so the demo does not wait."""
     import threading
 
     def work():
@@ -111,12 +111,12 @@ def warm_up():
                 try:
                     columns, rows = run(Path(q["query"]).read_text(), cfg["domain"])
                     why = q.get("porque")
-                    if why and rows and why["columna"] in columns:   # la primera fila de «¿Por qué este número?»
+                    if why and rows and why["columna"] in columns:   # the first row of «¿Por qué este número?»
                         value = str(rows[0][columns.index(why["columna"])]).replace('"', '\\"')
                         run(prefixed(why["query"].replace("{valor}", value), cfg["domain"]), cfg["domain"])
-                except Exception:   # noqa: BLE001 - un dominio apagado no frena a los otros
+                except Exception:   # noqa: BLE001 - a domain that is down does not stop the others
                     continue
-        try:   # y los dos modelos de Rastro Lab
+        try:   # and the two Rastro Lab models
             import lab
             lab.datos()
         except Exception:   # noqa: BLE001
@@ -127,14 +127,14 @@ def warm_up():
 
 
 def prefixed(query, domain):
-    """Agrega los prefijos que la consulta usa: el del dominio siempre, el de PROV-O solo si hace falta."""
+    """Adds the prefixes the query uses: the domain's always, PROV-O's only when needed."""
     ns = answer.DOMAINS[domain]["namespace"]
     return f"PREFIX {domain}: <{ns}>\n" + (PROV if "prov:" in query else "") + query
 
 
 def tabla(data, hide_index=True, use_container_width=True, column_config=None, key=None, **kwargs):
-    """Una tabla. Las celdas cortan el texto largo y no tienen scroll: si hay textos largos, al elegir
-    una fila se muestra completa debajo."""
+    """A table. Cells cut long text and do not scroll: if there are long texts, picking
+    a row shows it in full below."""
     df = data if isinstance(data, pd.DataFrame) else pd.DataFrame(data)
     text = [c for c in df.columns if df[c].dtype == object
             and not df[c].astype(str).str.startswith("data:image").any()]
@@ -157,7 +157,7 @@ def tabla(data, hide_index=True, use_container_width=True, column_config=None, k
 
 
 def md(text):
-    """Texto para st.markdown: «$» es fórmula en Streamlit, y los montos dicen «US$»."""
+    """Text for st.markdown: «$» is a formula in Streamlit, and amounts say «US$»."""
     return str(text).replace("$", "\\$")
 
 
@@ -166,7 +166,7 @@ def money(value):
 
 
 def as_table(columns, rows, cfg, tech, col_sources):
-    """La respuesta como tabla: columnas con nombre de negocio y números legibles."""
+    """The answer as a table: columns with business names and readable numbers."""
     formats, names = cfg.get("formatos", {}), cfg.get("columnas", {})
     data = []
     for row in rows:
@@ -269,8 +269,8 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None, where="pr
 
 
 def explain(query, sql, domain, item=None, where="preguntar"):
-    """«Explicame la consulta»: las preguntas de ejemplo traen su explicación guardada; las propias
-    se explican en vivo si hay un LLM configurado."""
+    """«Explicame la consulta»: example questions bring their saved explanation; the user's own
+    are explained live if an LLM is configured."""
     key = f"explain_{where}_{abs(hash(query))}"
     stored = (item or {}).get("explicacion")
     available, _ = llm_status()
@@ -284,11 +284,11 @@ def explain(query, sql, domain, item=None, where="preguntar"):
         st.info(md(st.session_state[key]))
 
 
-# La consola SPARQL de la vista técnica: dónde están las consultas de ejemplo y el puerto que se
-# abre en la computadora para otras herramientas
+# The technical view's SPARQL console: where the example queries are and the port that is
+# opened on the computer for other tools
 
 
-# Instancias de ejemplo para «Así se ve un dato del grafo»: una por clase importante de cada dominio
+# Example instances for «Así se ve un dato del grafo»: one per important class of each domain
 PROV_NS, RDF_TYPE = "http://www.w3.org/ns/prov#", "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
 
 
@@ -308,7 +308,7 @@ def ontology_file(domain):
 
 @st.cache_data
 def labels(domain):
-    """Las etiquetas en español del diccionario: término → «palabras de negocio»."""
+    """The dictionary's Spanish labels: term → «business words»."""
     import rdflib
     g = rdflib.Graph().parse(ontology_file(domain))
     return {str(s): str(o) for s, o in g.subject_objects(rdflib.RDFS.label)}
@@ -320,13 +320,13 @@ def short_iri(iri, domain):
             .replace("https://w3id.org/rastro/", "rastro:"))
 
 
-# «Diccionario, enlaces y mapeos» (vista técnica): las piezas de Rastro que usa la demo en 3 pasos.
-# Los enlaces se leen en vivo de las tablas de Rastro; los mapeos, del archivo R2RML del dominio.
+# «Diccionario, enlaces y mapeos» (technical view): the parts of Rastro the demo uses, in 3 steps.
+# The links are read live from Rastro's tables; the mappings, from the domain's R2RML file.
 
 
 def sql_table(query, domain, approach="D", params=None):
-    """Una consulta de solo lectura: con approach «D», sobre las tablas de enlaces de Rastro; con «B», solo sobre las
-    fuentes tal como vienen."""
+    """A read-only query: with approach «D», over Rastro's link tables; with «B», only over the
+    sources as they come."""
     import psycopg
     user = answer.DOMAINS[domain]["readers"][approach]
     with psycopg.connect(answer.READER.format(user) % os.environ["PG_DB"]) as conn:
@@ -335,7 +335,7 @@ def sql_table(query, domain, approach="D", params=None):
 
 
 def mapping_blocks(path, names):
-    """Los TriplesMap pedidos, tal como están en el archivo R2RML."""
+    """The requested TriplesMaps, as they are in the R2RML file."""
     text = Path(path).read_text()
     blocks = {}
     for m in re.finditer(r"^<#(\w+)> a rr:TriplesMap ;.*?(?=^<#|\Z)", text, re.S | re.M):
@@ -344,8 +344,8 @@ def mapping_blocks(path, names):
 
 
 def ontology_doc(domain):
-    """El diccionario como documentación (al estilo de WIDOCO): clases, relaciones y atributos, con su
-    etiqueta, su descripción y entre qué clases van."""
+    """The dictionary as documentation (in the style of WIDOCO): classes, relations and attributes, with their
+    label, their description and which classes they connect."""
     import rdflib
     from rdflib.namespace import OWL, RDF, RDFS
     g = rdflib.Graph().parse(ontology_file(domain))
@@ -376,7 +376,7 @@ def ontology_doc(domain):
 
 
 def show_pieces(domain, diagram=None):
-    """La pestaña técnica «Diccionario, enlaces y mapeos»."""
+    """The technical tab «Diccionario, enlaces y mapeos»."""
     pieces = technical(domain).get("pieces", {})
     st.markdown("### El diccionario (la ontología)", help=ayuda("ontologia"))
     st.caption(f"Documentación generada del archivo de la ontología (`{ontology_file(domain).replace('/ontology/', 'ontology/')}`), "
@@ -415,9 +415,9 @@ PROV_NAMES = {PROV_NS + "wasDerivedFrom": "se derivó de", PROV_NS + "wasGenerat
 
 
 def instance_graph(iri, rows, domain, title=None):
-    """La instancia como grafo (app/grafo.py): burbujas para las entidades, burbujas naranjas para las
-    clases, rectángulos para los datos simples y flechas con el nombre de negocio de cada propiedad.
-    Devuelve el SVG y las entidades enlazadas, para seguirlas."""
+    """The instance as a graph (app/grafo.py): bubbles for entities, orange bubbles for
+    classes, rectangles for plain values and arrows with each property's business name.
+    Returns the SVG and the linked entities, to follow them."""
     import grafo
     ns, names = answer.DOMAINS[domain]["namespace"], {**labels(domain), **PROV_NAMES}
     linked = [o for p, o in rows if o.startswith("http") and p != RDF_TYPE]
@@ -437,13 +437,13 @@ def instance_graph(iri, rows, domain, title=None):
             nodes.append(("dato", o, "", prop))
     drawing = grafo.svg((own or title or iri.rstrip("/").split("/")[-1], short_iri(iri, domain)), nodes,
                         width=1500, height=620 + 55 * max(0, len(nodes) - 8), scale=0.95,
-                        font="Helvetica, Arial, sans-serif")   # más propiedades, más alto: no se pisan
+                        font="Helvetica, Arial, sans-serif")   # more properties, taller: they do not overlap
     return drawing, [o for o in dict.fromkeys(linked) if o not in names]
 
 
 def show_instances(domain):
-    """Una instancia real del grafo, dibujada como grafo: se puede seguir cada enlace a otra entidad,
-    dentro de la app. Debajo, sus propiedades en una tabla y en Turtle."""
+    """A real instance of the graph, drawn as a graph: each link to another entity can be followed,
+    inside the app. Below, its properties in a table and in Turtle."""
     examples = technical(domain).get("instances")
     if not examples:
         return
@@ -453,7 +453,7 @@ def show_instances(domain):
                "negocio. Los enlaces traen su evidencia y su fuente (PROV-O).")
     key = f"{domain}_instancia"
     chosen = st.selectbox("Empezar por", list(examples), key=key)
-    if st.session_state.get(f"{key}_desde") != chosen:      # un ejemplo nuevo vuelve a empezar el recorrido
+    if st.session_state.get(f"{key}_desde") != chosen:      # a new example restarts the path
         st.session_state[f"{key}_desde"], st.session_state[f"{key}_actual"] = chosen, examples[chosen]
     iri = st.session_state[f"{key}_actual"]
     _, rows = run(f"SELECT ?p ?o WHERE {{ <{iri}> ?p ?o }} ORDER BY ?p", domain)
@@ -492,8 +492,8 @@ def show_instances(domain):
 
 
 def under_the_hood(domain, diagram=None, quality=None):
-    """«Bajo el capó» (vista técnica): la consola SPARQL, una instancia del grafo y el diccionario, los
-    enlaces y los mapeos, en una sola pestaña."""
+    """«Bajo el capó» (technical view): the SPARQL console, a graph instance and the dictionary, the
+    links and the mappings, in a single tab."""
     names = ["Consola SPARQL y una instancia", "Diccionario, enlaces y mapeos"] + (["Reglas de calidad (SHACL)"] if quality else [])
     console, pieces, *rules = st.tabs(names)
     with console:
@@ -522,7 +522,7 @@ def finding(rule, long=True):
 
 
 def show_quality(quality):
-    """Las reglas de calidad, en palabras de negocio: qué se comprueba y si se cumple."""
+    """The quality rules, in business words: what is checked and whether it holds."""
     result = quality_result(quality)
     if not result:
         return
@@ -538,7 +538,7 @@ def show_quality(quality):
 
 
 def show_quality_shacl(quality):
-    """Las mismas reglas, en SHACL, con lo que no cumple."""
+    """The same rules, in SHACL, with what fails them."""
     result = quality_result(quality)
     if not result:
         st.caption("Todavía no se comprobaron: `docker compose run --rm calidad`.")
@@ -571,7 +571,7 @@ def show_quality_shacl(quality):
 
 
 def sparql_console(domain):
-    """Una consola para escribir y ejecutar SPARQL sobre el Ontop del dominio, con el SQL que genera."""
+    """A console to write and run SPARQL over the domain's Ontop, with the SQL it generates."""
     method = answer.DOMAINS[domain]["method"]
     folder, port = str(answer.ROOT / method["queries"]), method["ontop"]["port"]
     show_instances(domain)
@@ -586,7 +586,7 @@ def sparql_console(domain):
     key = f"{domain}_console"
     chosen = st.selectbox("Empezar desde una consulta de ejemplo", ["(en blanco)"] + list(examples),
                           key=f"{key}_ejemplo")
-    if st.session_state.get(f"{key}_cargada") != chosen:   # al cambiar de ejemplo, se carga en el editor
+    if st.session_state.get(f"{key}_cargada") != chosen:   # when the example changes, it is loaded into the editor
         st.session_state[f"{key}_cargada"] = chosen
         st.session_state[f"{key}_texto"] = examples.get(
             chosen, f"PREFIX {domain}: <{answer.DOMAINS[domain]['namespace']}>\nSELECT * WHERE {{ ?s ?p ?o }} LIMIT 10")
@@ -595,7 +595,7 @@ def sparql_console(domain):
         started = time.time()
         try:
             columns, rows = run(query, domain)
-        except Exception as e:  # noqa: BLE001 - el error de Ontop se muestra tal cual
+        except Exception as e:  # noqa: BLE001 - Ontop's error is shown as is
             st.error(str(e).strip()[:2000])
             return
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''} en {time.time() - started:.1f} s.")
@@ -612,7 +612,7 @@ GEO = "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\n"
 
 
 def wkt_coords(wkt):
-    """Las coordenadas de un WKT simple: POINT → [x, y]; POLYGON → [[x, y], ...]; MULTILINESTRING → [[[x, y], ...], ...]."""
+    """The coordinates of a simple WKT: POINT → [x, y]; POLYGON → [[x, y], ...]; MULTILINESTRING → [[[x, y], ...], ...]."""
     groups = [[[float(v) for v in pair.split()] for pair in part.split(",")]
               for part in re.findall(r"\(([^()]+)\)", wkt)]
     if wkt.startswith("POINT"):
@@ -631,7 +631,7 @@ def map_data(domain):
 
 
 def show_map(domain):
-    """Concesiones, posibles venteos vistos por satélite y gasoductos de transporte, todo leído de Rastro."""
+    """Concessions, possible venting seen by satellite and transport gas pipelines, all read from Rastro."""
     import pydeck as pdk
     concessions, points, pipes = map_data(domain)
     polys = [{"contorno": wkt_coords(w), "nombre": n, "operadora": o or "—", "venteos": int(v or 0),
@@ -707,8 +707,8 @@ def render(cfg_path, tech):
             st.caption(md(cfg["resumen"]))
 
     # «Por qué confiar» needs a measured evaluation or quality rules; a domain with neither does not show the tab
-    # Pocas pestañas: la demo, preguntar, por qué confiar y preguntas frecuentes; en la vista técnica, todo
-    # lo de adentro (consola, diccionario, enlaces y mapeos) junto en «Bajo el capó»
+    # Few tabs: the demo, asking, why trust and frequent questions; in the technical view, everything
+    # inside (console, dictionary, links and mappings) together in «Bajo el capó»
     names = (["Demo"] if cfg.get("demo") else []) + ["Preguntar"] \
         + (["Por qué confiar"] if cfg.get("tarjetas") or cfg.get("calidad") else []) + (["Rastro Lab"] if cfg.get("lab") else []) \
         + ([cfg["ejemplo_integracion"]["titulo"]] if cfg.get("ejemplo_integracion") else []) \
@@ -754,7 +754,7 @@ def render(cfg_path, tech):
         elif cfg.get("afirmaciones") and mode == cfg["afirmaciones"]["titulo"]:
             show_claims(cfg, tech)
         elif mode == "Una pregunta de ejemplo":
-            # La misma pregunta en las dos vistas; la técnica suma su formulación precisa debajo
+            # The same question in both views; the technical one adds its precise wording below
             options = {q["simple"]: q for q in questions}
             chosen = st.selectbox("Pregunta", list(options), key=f"{domain}_question", help=ayuda("pregunta"))
             item = options[chosen]
@@ -812,8 +812,8 @@ def domain_name(domain):
 
 
 def show_faq(domain, specific, tech, diagrams, diagram_title="diccionario"):
-    """Las preguntas frecuentes: primero las que valen para todos los casos, después las de este caso.
-    specific es una lista de (pregunta, respuesta, técnica)."""
+    """The frequent questions: first those that apply to every case, then this case's.
+    specific is a list of (question, answer, technical)."""
     general = general_faq(Path("/app/faq-general.yaml").stat().st_mtime)
 
     def block(items):
@@ -843,8 +843,8 @@ def show_faq(domain, specific, tech, diagrams, diagram_title="diccionario"):
 
 
 def show_why(domain, why, columns, rows, where="preguntar", tech=False):
-    """«¿Por qué este número?»: se elige una fila de la respuesta y se ve la evidencia que hay detrás,
-    dibujada como grafo (la fila al centro, cada enlace alrededor) y en una tabla."""
+    """«¿Por qué este número?»: pick a row of the answer and see the evidence behind it,
+    drawn as a graph (the row in the center, each link around it) and in a table."""
     import grafo
     if why["columna"] not in columns:
         return
@@ -882,7 +882,7 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
 
 
 def before_after(card):
-    """La misma tarjeta en cada momento de la demo: sin Rastro a la izquierda, con Rastro a la derecha."""
+    """The same card at every moment of the demo: without Rastro on the left, with Rastro on the right."""
     left, right = st.columns(2)
     for col, key, title in [(left, "sin", card.get("titulo_sin", "Sin Rastro")), (right, "con", "Con Rastro")]:
         with col.container(border=True):
@@ -955,8 +955,8 @@ def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=
 
 
 def show_demo(cfg, tech):
-    """La demo: pocos momentos, cada uno con un título, una frase y algo que corre en vivo. Cada momento es una
-    pregunta de ejemplo, el cambio de una base, una predicción de Rastro Lab o una corrección."""
+    """The demo: a few moments, each with a title, a sentence and something that runs live. Each moment is an
+    example question, a change to a database, a Rastro Lab prediction or a correction."""
     domain, steps = cfg["domain"], cfg["demo"]
     key = f"{domain}_demo_step"
     i = min(st.session_state.get(key, 0), len(steps) - 1)
@@ -967,7 +967,7 @@ def show_demo(cfg, tech):
                            for n, s in enumerate(steps)))
     step = steps[i]
     st.subheader(step["titulo"], help=ayuda("paso"))
-    if step.get("que_es"):   # los demás casos de uso todavía explican qué es cada paso
+    if step.get("que_es"):   # the other use cases still explain what each step is
         st.markdown(f"**¿Qué es {md(step['paso']).lower()}?** {md(step['que_es'])}")
     if step.get("muestra"):
         st.markdown(md(step["muestra"]))
@@ -1001,7 +1001,7 @@ def show_demo(cfg, tech):
 
 
 def show_change_short(cfg, changes, escenario, tech):
-    """Un escenario de la prueba de cambio, corto: cuántas preguntas siguen bien antes y después del arreglo."""
+    """A change-test scenario, short: how many questions are still right before and after the fix."""
     change = next((c for c in cfg["cambios"] if c["antes"] == escenario), cfg["cambios"][0])
     before, after = changes.get(change["antes"]), changes.get(change["despues"])
     if not (before and after):
@@ -1027,8 +1027,8 @@ def show_change_short(cfg, changes, escenario, tech):
 
 
 def show_correction(result, tech):
-    """Una corrección, todos los resultados: qué cambia en Rastro Layer y en Rastro Lab al poner la participación
-    corregida de una concesión, sin tocar nada más."""
+    """One correction, every result: what changes in Rastro Layer and in Rastro Lab when a concession's corrected
+    share is set, without touching anything else."""
     con, sin = result.get("con"), result.get("sin")
     if not (con and sin):
         st.info("Falta registrar la prueba de la corrección (layer/energia/cambio/correccion.sh registrar).")
@@ -1040,7 +1040,7 @@ def show_correction(result, tech):
     def pct(v):
         return f"{v:g} %".replace(".", ",")
 
-    filas = [   # (dónde, sin la corrección, con la corrección)
+    filas = [   # (where, without the correction, with the correction)
         ("Respuesta de Rastro", m3(sin["layer_C"]), m3(con["layer_C"])),
         ("Respuesta con SQL sobre Rastro", m3(sin["layer_D"]), m3(con["layer_D"])),
         ("Respuesta sin Rastro", m3(sin["layer_B"]), m3(con["layer_B"])),
@@ -1064,7 +1064,7 @@ GRAPHDB = "http://graphdb:7200/repositories/rastro"
 
 
 def claim_verdict(reading, rows):
-    """El veredicto de una lectura de la afirmación, calculado con lo que devolvió Rastro."""
+    """The verdict on one reading of the claim, computed from what Rastro returned."""
     if reading["tipo"] == "sin_datos":
         return "🔍", "Rastro no tiene el dato", reading["falta"]
     def fmt(v):
@@ -1084,7 +1084,7 @@ def claim_verdict(reading, rows):
 
 
 def show_claims(cfg, tech):
-    """Comprobar una afirmación: cada ejemplo se compara en vivo con Rastro, lectura por lectura."""
+    """Check a claim: each example is compared live with Rastro, reading by reading."""
     claims, domain = cfg["afirmaciones"], cfg["domain"]
     st.markdown(md(claims["intro"]))
     chosen = st.radio("Afirmación", [c["texto"] for c in claims["ejemplos"]], key=f"{domain}_afirmacion")
@@ -1103,9 +1103,9 @@ def show_claims(cfg, tech):
 
 
 def show_external(cfg, tech):
-    """Enriquecer con datos de afuera: una consulta federada en GraphDB une Rastro con Wikidata por un
-    identificador compartido. Corre en vivo si se pide; si no, se muestra el resultado guardado. Debajo, el mismo
-    enriquecimiento guardado en Rastro (show_enrichment_saved)."""
+    """Enrich with outside data: a federated query in GraphDB joins Rastro with Wikidata through a
+    shared identifier. It runs live if asked; otherwise, the saved result is shown. Below, the same
+    enrichment saved in Rastro (show_enrichment_saved)."""
     ext, domain = cfg["externo"], cfg["domain"]
     st.markdown(f"**{ext['titulo']}**", help=ayuda("externo"))
     st.markdown(md(ext["intro"]))
@@ -1146,8 +1146,8 @@ def show_external(cfg, tech):
 
 
 def show_enrichment_saved(ext, domain, tech):
-    """El mismo enriquecimiento, guardado en Rastro: lo que respondió la fuente de afuera queda como una fuente más,
-    con su fecha, y se consulta como cualquier dato."""
+    """The same enrichment, saved in Rastro: what the outside source answered stays as one more source,
+    with its date, and is queried like any other data."""
     st.markdown("**Guardado en Rastro**", help=ayuda("externo"))
     query = Path(ext["materializado"]).read_text()
     columns, rows = run(query, domain)
@@ -1170,10 +1170,10 @@ def text_step(n, title, help_text=None):
 
 
 def show_text_question(cfg, tech, demo=False):
-    """Una pregunta sobre textos, paso a paso (GraphRAG anclado en el grafo): el grafo elige los
-    registros con una consulta exacta, un asistente de IA lee solo esos textos y los resume en temas que
-    citan cada registro, y cualquiera puede comprobarlo. El resumen está guardado; los registros se leen
-    en vivo."""
+    """A question over texts, step by step (GraphRAG grounded in the graph): the graph picks the
+    records with an exact query, an AI assistant reads only those texts and summarizes them in themes that
+    cite each record, and anyone can check it. The summary is saved; the records are read
+    live."""
     domain = cfg["domain"]
     item = read_json(cfg["texto"])
     st.markdown("**1 · La pregunta → 2 · El grafo elige → 3 · La IA lee solo eso → 4 · El resumen, con citas "
@@ -1192,7 +1192,7 @@ def show_text_question(cfg, tech, demo=False):
     graph_part, _, ai_part = item["como"].partition("Un asistente de IA")
     ai_part = ("Un asistente de IA" + ai_part) if ai_part else ""
 
-    # Los registros, con sus textos y lo que cita cada tema: contratos (con montos) o registros cualesquiera
+    # The records, with their texts and what each theme cites: contracts (with amounts) or any records
     if "columnas" in item:
         records = {r[0]: r for r in rows}
         unit = item["unidad"]
@@ -1242,13 +1242,13 @@ def show_text_question(cfg, tech, demo=False):
 
 
 def company(name):
-    """«DYNETICS, INC.» → «Dynetics»: el nombre sin la forma legal, para leer en una frase."""
+    """«DYNETICS, INC.» → «Dynetics»: the name without the legal form, to read in a sentence."""
     name = re.sub(r",?\s+(INC|LLC|CORP|CORPORATION|CO|LTD)\.?$", "", name.strip(), flags=re.I)
     return " ".join(w if len(w) <= 3 and w.isupper() else w.capitalize() for w in name.split())
 
 
 def compare_text_search(item, contracts, domain, tech, always=False):
-    """Lo mismo, buscando «Leidos» en los textos en vez de usar el grafo (lo que haría un RAG común)."""
+    """The same, searching for «Leidos» in the texts instead of using the graph (what a common RAG would do)."""
     if not always and not st.toggle("Comparar con una búsqueda por texto", key=f"{domain}_text_search"):
         return
     query = Path(item["busqueda_texto"]).read_text()
@@ -1317,15 +1317,15 @@ def trust(cfg, tech, evaluation, changes):
                         unsafe_allow_html=True)
             st.caption(md(card["compara"].format(**numbers)))
 
-    # En modo técnico se suma la línea de base justa: SQL con las tablas de enlaces de Rastro
+    # In technical mode the fair baseline is added: SQL with Rastro's link tables
     names = ({"B": "Sin Rastro", "D": "SQL + enlaces", "C": "Con Rastro"} if tech
              else {"B": "Sin Rastro", "C": "Con Rastro"})
     names = {k: v for k, v in names.items() if all(k in r for r in consistency.values())}
     change_names = {"B": "Sin Rastro", "C": "Con Rastro"}
     simple = {q["id"]: q["simple"] for q in cfg["preguntas"]}
     n = len(evaluation.get("questions", {}))
-    # Las tres pruebas, separadas: en la vista técnica, una pestaña cada una, para que elegir una pregunta
-    # en una prueba no parezca cambiar las otras
+    # The three tests, kept apart: in the technical view, one tab each, so that picking a question
+    # in one test does not seem to change the others
     if tech:
         tab_correct, tab_same, tab_change = st.tabs([f"1 · Correctas ({n} preguntas)",
                                                      f"2 · Misma respuesta de 4 formas ({len(consistency)} preguntas)",
@@ -1407,7 +1407,7 @@ def trust(cfg, tech, evaluation, changes):
 
 
 def show_no_data(fuera, tech):
-    """¿Dice cuándo no tiene el dato? Las preguntas fuera de los datos, camino por camino."""
+    """Does it say when it lacks the data? The questions outside the data, approach by approach."""
     path = fuera.get("archivo") if fuera else None
     if not path or not Path(path).exists():
         return

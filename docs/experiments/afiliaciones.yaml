@@ -487,4 +487,9 @@ method_changes:
   reason: >-
     the user asked to rebuild GPT's walkthroughs on real data with an explicit purpose, and to make them a skill of
     the semantic-layer workflow; made outside this domain's steps, recorded here because it changes the method
+- change: >-
+    comments and docstrings of 46 Python files translated to English, including method files (app/dominio.py,
+    layer/*); no behaviour change, verified by comparing each file's syntax tree with the previous commit
+  scope: generic
+  reason: the user asked for the source code in English, as the project's language rule says
 result: null

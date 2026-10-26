@@ -1,8 +1,8 @@
-"""Demo de cambio: vuelve a ejecutar las 20 queries guardadas y dice cuáles siguen igual.
+"""Change demo: runs the 20 saved queries again and says which ones stay the same.
 
-Compara cada respuesta con la guardada en layer/eval/results.json, para el SQL directo,
-el SQL con las tablas de enlaces y Rastro. Con --guardar <paso>, además guarda el resultado
-en layer/cambio/resultado.json, que muestra la app.
+Compares each answer with the one saved in layer/eval/results.json, for direct SQL,
+SQL with the link tables and Rastro. With --guardar <paso>, it also saves the result
+to layer/cambio/resultado.json, which the app shows.
 
     docker compose run --rm layer-eval python /layer/cambio/probar.py [--guardar <paso>]
 """
@@ -20,7 +20,7 @@ RESULT = Path(__file__).parent / "resultado.json"
 NAMES = {"B": "SQL directo", "D": "SQL + enlaces", "C": "Rastro"}
 LABELS = {"✅": "igual", "🟡": "distinto, sin avisar", "❌": "con error", "—": "sin query"}
 
-# Los estados que documenta la ontología (oncologia:status), tal como los publica ClinicalTrials.gov
+# The statuses the ontology documents (oncologia:status), as ClinicalTrials.gov publishes them
 ESTADOS = {"COMPLETED", "UNKNOWN", "RECRUITING", "TERMINATED", "ACTIVE_NOT_RECRUITING",
            "NOT_YET_RECRUITING", "WITHDRAWN", "ENROLLING_BY_INVITATION", "SUSPENDED",
            "NO_LONGER_AVAILABLE", "AVAILABLE", "APPROVED_FOR_MARKETING", "TEMPORARILY_NOT_AVAILABLE"}
@@ -55,11 +55,11 @@ def short(value):
 
 
 def vocabulary():
-    """Control del vocabulario: ¿hay estados que la ontología no documenta?"""
+    """Vocabulary check: are there statuses the ontology does not document?"""
     try:
         values = run_sparql("PREFIX oncologia: <https://w3id.org/rastro/oncologia#> "
                             "SELECT DISTINCT ?s WHERE { ?t oncologia:status ?s }")
-    except Exception as e:  # noqa: BLE001 - Rastro caído también es un resultado de la demo
+    except Exception as e:  # noqa: BLE001 - Rastro being down is also a demo result
         return f"Control de vocabulario: Rastro no responde ({str(e).splitlines()[0][:120]})"
     unknown = sorted(set(values) - ESTADOS)
     if unknown:

@@ -1,17 +1,17 @@
-"""¿El asistente dice cuándo no tiene el dato, o lo inventa? Preguntas fuera de los datos de Rastro.
+"""Does the assistant say when it lacks the data, or does it make it up? Questions outside Rastro's data.
 
-Las preguntas están en layer/<dominio>/fuera/preguntas.yaml: las que los datos no responden y una de
-control que sí. Como en la evaluación, las respuestas las escribe un LLM que solo ve el prompt
-(un subagente por camino, con todas las preguntas juntas) y este script las ejecuta y cuenta.
+The questions are in layer/<dominio>/fuera/preguntas.yaml: the ones the data does not answer and one
+control question that it does. As in the evaluation, the answers are written by an LLM that sees only the prompt
+(one subagent per path, with all the questions together) and this script runs and counts them.
 
-    prompt <A|B|D|C>     el prompt de un camino: el sistema, las preguntas y el formato de respuesta
-    guardar <A|B|D|C>    lee por stdin el JSON del LLM ({"f1": "...", ...}), ejecuta cada query y guarda;
-                         si una query falla, muestra el error para devolvérselo (hasta 3 intentos)
-    puntaje              escribe resultados.json (lo lee la app) y resultados.md
+    prompt <A|B|D|C>     the prompt of a path: the system prompt, the questions and the answer format
+    guardar <A|B|D|C>    reads the LLM's JSON from stdin ({"f1": "...", ...}), runs each query and saves;
+                         if a query fails, shows the error to give back (up to 3 attempts)
+    puntaje              writes resultados.json (read by the app) and resultados.md
 
-A es el LLM solo, sin datos (respondé lo que sabés; si no lo sabés, decilo). B, D y C, como en la
-evaluación: SQL sobre las fuentes, SQL con los enlaces de Rastro y SPARQL sobre Rastro. Los cuatro
-tienen la misma regla: si no alcanza, «SIN DATOS:» y qué falta.
+A is the LLM alone, without data (answer what you know; if you do not know, say so). B, D and C, as in the
+evaluation: SQL over the sources, SQL with Rastro's links and SPARQL over Rastro. All four
+have the same rule: if it is not enough, «SIN DATOS:» and what is missing.
 
     docker compose run --rm -T layer-eval python /layer/fuera.py energia prompt C
 """
@@ -75,8 +75,8 @@ def save(approach):
 
 
 def verdict(question, entry):
-    """✅ dijo que no tiene el dato (o respondió la de control), ❌ respondió lo que no sabe (o se negó en la
-    de control), ⚠️ ni una cosa ni la otra (la query falló tres veces)."""
+    """✅ said it lacks the data (or answered the control one), ❌ answered what it does not know (or refused the
+    control one), ⚠️ neither (the query failed three times)."""
     last = entry["intentos"][-1] if entry and entry["intentos"] else None
     if last is None or last.get("error"):
         return "⚠️", "sin respuesta"

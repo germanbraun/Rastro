@@ -1,19 +1,19 @@
-"""Busca en GLEIF el LEI de las matrices y de los proveedores que más facturan.
+"""Looks up in GLEIF the LEI of the parent companies and of the suppliers that bill the most.
 
-Lee los nombres de USAspending (cargado antes): las matrices actuales con contratos por
-MIN_GROUP_AMOUNT o más y los proveedores que más facturan (TOP_PROVIDERS). Cada nombre se busca con
-filter[fulltext], que también mira nombres anteriores (Leidos aparece al buscar
-SCIENCE APPLICATIONS INTERNATIONAL CORPORATION), y se guardan los primeros 5
-candidatos con su matriz final (include=ultimate-parent). Si ningún candidato coincide
-con el nombre, se busca otra vez con el nombre normalizado (candidatos 6 a 10) y, para los
-grupos de BIG_GROUP_AMOUNT o más, por nombre legal (candidatos 11 a 20). Los nombres que ninguna
-búsqueda encuentra pueden ir, revisados, en lei-revisados.csv: su LEI se pide directo. No se decide el enlace:
-eso es la Fase P2.
+Reads the names from USAspending (loaded before): the current parent companies with contracts of
+MIN_GROUP_AMOUNT or more and the suppliers that bill the most (TOP_PROVIDERS). Each name is searched with
+filter[fulltext], which also looks at former names (Leidos shows up when searching
+SCIENCE APPLICATIONS INTERNATIONAL CORPORATION), and the first 5 candidates are saved
+with their ultimate parent (include=ultimate-parent). If no candidate matches
+the name, it searches again with the normalized name (candidates 6 to 10) and, for the
+groups of BIG_GROUP_AMOUNT or more, by legal name (candidates 11 to 20). Names that no
+search finds can go, reviewed, in lei-revisados.csv: their LEI is requested directly. The link is not decided here:
+that is Phase P2.
 
-La API pide no pasar de 60 consultas por minuto. Cada respuesta se guarda en
-data/raw/gleif/ y no se vuelve a pedir, así que la descarga es reanudable.
+The API asks not to exceed 60 queries per minute. Each response is saved in
+data/raw/gleif/ and is not requested again, so the download can be resumed.
 
-Se corre con: docker compose run --rm gleif-loader
+Run with: docker compose run --rm gleif-loader
 """
 
 import csv
@@ -32,10 +32,10 @@ from requests.adapters import HTTPAdapter, Retry
 API = "https://api.gleif.org/api/v1/lei-records"
 CACHE = Path("/data/raw/gleif")
 TOP_PROVIDERS = 1000
-MIN_GROUP_AMOUNT = 50_000_000  # grupos con contratos por US$50 millones o más: el 98 % del monto
-BIG_GROUP_AMOUNT = 250_000_000  # tercera búsqueda, por nombre legal: grupos de US$250 millones o más (92 %)
+MIN_GROUP_AMOUNT = 50_000_000  # groups with contracts of US$50 million or more: 98 % of the amount
+BIG_GROUP_AMOUNT = 250_000_000  # third search, by legal name: groups of US$250 million or more (92 %)
 CANDIDATES = 5
-PAUSE = 1.05  # 60 consultas por minuto como máximo
+PAUSE = 1.05  # at most 60 queries per minute
 
 http = requests.Session()
 http.headers["User-Agent"] = "RastroMVP/0.1"
@@ -44,8 +44,8 @@ http.mount("https://", HTTPAdapter(max_retries=Retry(total=4, backoff_factor=5, 
 
 
 def search(name, by="fulltext", size=CANDIDATES):
-    """La respuesta de GLEIF para un nombre, o None si sigue fallando (se reintenta en la próxima corrida).
-    by: "fulltext" (también mira nombres anteriores) o "entity.legalName" (por nombre legal)."""
+    """GLEIF's response for a name, or None if it keeps failing (retried on the next run).
+    by: "fulltext" (also looks at former names) or "entity.legalName" (by legal name)."""
     key = name if by == "fulltext" else f"{by}:{name}"
     f = CACHE / f"{hashlib.sha1(key.encode()).hexdigest()}.json"
     if not f.exists():
@@ -62,19 +62,19 @@ def search(name, by="fulltext", size=CANDIDATES):
     return json.loads(f.read_text())
 
 
-# Formas societarias que no distinguen a una empresa (las mismas que proveedores.normalize)
+# Company legal forms that do not tell one company from another (the same as proveedores.normalize)
 LEGAL_FORMS = (r"\b(THE|INC|INCORPORATED|LLC|CORP|CORPORATION|CO|COMPANY|LTD|LIMITED|LP|LLP|PLC|PLLC|PC"
                r"|GMBH|AG|SA|NV|BV|SPA|SRL|SAS|PTY|SE)\b")
 
 
 def normalize(name):
-    """Mayúsculas, sin puntuación y sin formas societarias: «Leonardo S.p.A.» → «LEONARDO»."""
+    """Upper case, no punctuation and no company legal forms: «Leonardo S.p.A.» → «LEONARDO»."""
     text = re.sub(r"[^A-Z0-9 ]", " ", (name or "").upper().replace(".", "").replace("&", " AND "))
     return " ".join(re.sub(LEGAL_FORMS, " ", text).split())
 
 
 def matches(name, x):
-    """¿El nombre legal o un nombre anterior del registro coincide con el nombre buscado?"""
+    """Does the record's legal name or a former name match the searched name?"""
     e = x["attributes"]["entity"]
     names = [e["legalName"]["name"]] + [o["name"] for o in e.get("otherNames") or []]
     return any(normalize(n) == normalize(name) for n in names)
@@ -124,14 +124,14 @@ def main():
         for x in resp.get("included") or []:
             if x["type"] == "lei-records" and "attributes" in x:
                 records.setdefault(x["id"], record(x))
-        # Si ningún candidato coincide, segunda búsqueda con el nombre normalizado: la forma
-        # societaria pesa en la búsqueda y tapa a la empresa («LEONARDO S.P.A.» trae otras S.P.A.)
+        # If no candidate matches, a second search with the normalized name: the legal
+        # form weighs in the search and hides the company («LEONARDO S.P.A.» brings other S.P.A.)
         found = list(resp["data"])
         extra = []
         if not any(matches(name, x) for x in found) and normalize(name) and normalize(name) != name:
             extra.append((search(normalize(name)), CANDIDATES + 1))
-        # Tercera búsqueda, por nombre legal, solo para los grupos grandes que siguen sin
-        # coincidencia: el texto completo no encuentra, por ejemplo, a LEONARDO S.P.A. ni a BOMBARDIER INC
+        # Third search, by legal name, only for the big groups that still have no
+        # match: the full-text search does not find, for example, LEONARDO S.P.A. or BOMBARDIER INC
         so_far = found + [x for d2, _ in extra if d2 for x in d2["response"]["data"]]
         if totals.get(name, 0) >= BIG_GROUP_AMOUNT and not any(matches(name, x) for x in so_far):
             extra.append((search(name, by="entity.legalName", size=10), 2 * CANDIDATES + 1))
@@ -148,7 +148,7 @@ def main():
             print(f"  {n}/{len(names)}")
     if failed:
         print(f"{failed} nombres sin respuesta de GLEIF: corré de nuevo el cargador para completarlos.")
-    # LEI revisados: se piden directo a GLEIF por su LEI
+    # Reviewed LEIs: requested from GLEIF directly by their LEI
     reviewed = list(csv.DictReader(Path(__file__).with_name("lei-revisados.csv").open()))
     for row in reviewed:
         f = CACHE / f"lei-{row['lei']}.json"
@@ -158,7 +158,7 @@ def main():
             r.raise_for_status()
             f.write_text(r.text)
         records[row["lei"]] = record(json.loads(f.read_text())["data"])
-    # Matrices finales que no vinieron completas en la respuesta
+    # Ultimate parents that did not come complete in the response
     for lei in sorted({r[10] for r in records.values() if r[10]} - records.keys()):
         f = CACHE / f"lei-{lei}.json"
         if not f.exists():

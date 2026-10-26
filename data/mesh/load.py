@@ -1,18 +1,18 @@
-"""Carga MeSH (RDF de NLM) en el repositorio `rastro` de GraphDB.
+"""Loads MeSH (NLM's RDF) into the GraphDB repository `rastro`.
 
-Se descarga mesh<año>.nt.gz a data/raw/mesh/ (una sola vez), se parte en trozos de
-CHUNK triples y GraphDB los importa uno por uno desde su carpeta de importación,
-montada sobre esa misma ruta, al grafo http://id.nlm.nih.gov/mesh/<año>. Importar
-los 15 M de triples en una sola transacción agota la memoria de una laptop.
-Reimportar reemplaza ese grafo.
+mesh<year>.nt.gz is downloaded to data/raw/mesh/ (only once), split into chunks of
+CHUNK triples, and GraphDB imports them one by one from its import folder,
+mounted on that same path, into the graph http://id.nlm.nih.gov/mesh/<year>. Importing
+the 15 M triples in a single transaction runs a laptop out of memory.
+Re-importing replaces that graph.
 
-Al final (re)crea el conector Lucene `mesh` (lucene-connector.json): búsqueda de texto
-sobre descriptores por etiqueta, sinónimos y número de árbol. Y copia a Postgres
-(esquema `mesh`) los descriptores y su jerarquía, para que Ontop responda sin federar.
+At the end it (re)creates the Lucene connector `mesh` (lucene-connector.json): text search
+over descriptors by label, synonyms and tree number. And it copies to Postgres
+(schema `mesh`) the descriptors and their hierarchy, so that Ontop answers without federating.
 
-Se corre con: docker compose run --rm mesh-loader
-Solo el conector, sin reimportar: docker compose run --rm mesh-loader python /data/mesh/load.py --connector-only
-Solo la copia a Postgres:         docker compose run --rm mesh-loader python /data/mesh/load.py --postgres-only
+Run with: docker compose run --rm mesh-loader
+Only the connector, without re-importing: docker compose run --rm mesh-loader python /data/mesh/load.py --connector-only
+Only the copy to Postgres:                docker compose run --rm mesh-loader python /data/mesh/load.py --postgres-only
 """
 
 import gzip
@@ -31,7 +31,7 @@ GRAPH = f"http://id.nlm.nih.gov/mesh/{YEAR}"
 GDB = "http://graphdb:7200"
 REPO = f"{GDB}/rest/repositories/rastro"
 RAW = Path("/data/raw/mesh")
-CHUNK = 500_000  # triples por transacción de importación
+CHUNK = 500_000  # triples per import transaction
 
 
 def download():
@@ -43,8 +43,8 @@ def download():
     tmp = target.with_suffix(".part")
     with requests.get(URL, stream=True, timeout=600) as r:
         r.raise_for_status()
-        # NLM responde con Content-Encoding: x-gzip; se guardan los bytes tal cual
-        # para que requests no lo descomprima y el .gz sea realmente gzip
+        # NLM answers with Content-Encoding: x-gzip; the bytes are saved as they come
+        # so that requests does not decompress them and the .gz really is gzip
         with tmp.open("wb") as f:
             while chunk := r.raw.read(1 << 20, decode_content=False):
                 f.write(chunk)
@@ -52,7 +52,7 @@ def download():
 
 
 def split():
-    """Parte el archivo en trozos de CHUNK líneas (N-Triples: una triple por línea)."""
+    """Splits the file into chunks of CHUNK lines (N-Triples: one triple per line)."""
     for old in RAW.glob(f"mesh{YEAR}.part-*.nt.gz"):
         old.unlink()
     parts, out = [], None
@@ -101,8 +101,8 @@ def import_into_graphdb():
     parts = split()
     print(f"Importando en GraphDB al grafo <{GRAPH}>...")
     for i, name in enumerate(parts):
-        # Si GraphDB se cae a mitad de un trozo (se reinicia solo), se espera y se
-        # reintenta ese trozo: reimportar triples ya cargadas no las duplica.
+        # If GraphDB goes down in the middle of a chunk (it restarts on its own), wait and
+        # retry that chunk: re-importing triples already loaded does not duplicate them.
         for attempt in range(1, 4):
             try:
                 wait_for_graphdb()
@@ -140,7 +140,7 @@ PREFIX inst: <http://www.ontotext.com/connectors/lucene/instance#>
 
 
 def create_lucene_connector():
-    """Recrea el conector Lucene `mesh`; indexa lo que ya está en el repositorio."""
+    """Recreates the Lucene connector `mesh`; it indexes what is already in the repository."""
     if sparql(LUCENE + "SELECT ?c WHERE { inst:mesh con:listConnectors ?c }"):
         update(LUCENE + "INSERT DATA { inst:mesh con:dropConnector [] }")
     definition = Path(__file__).with_name("lucene-connector.json").read_text()
@@ -149,7 +149,7 @@ def create_lucene_connector():
 
 
 def copy_to_postgres(conninfo):
-    """Copia descriptores (id y etiqueta) y la relación 'más amplio' a Postgres."""
+    """Copies descriptors (id and label) and the 'broader' relation to Postgres."""
     def rows(query):
         r = requests.post(f"{GDB}/repositories/rastro", data={"query": query},
                           headers={"Accept": "text/tab-separated-values"}, timeout=600)
@@ -160,12 +160,12 @@ def copy_to_postgres(conninfo):
         return iri.strip("<>").rsplit("/", 1)[-1]
 
     prefix = "PREFIX meshv: <http://id.nlm.nih.gov/mesh/vocab#> PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> "
-    # Algunos descriptores traen etiquetas en varios idiomas: se guarda la inglesa, que usa AACT
+    # Some descriptors have labels in several languages: the English one is kept, which AACT uses
     descriptors = [(mesh_id(d), en.rsplit("@", 1)[0].strip('"')) for d, en in rows(prefix + f"""
         SELECT ?d ?en WHERE {{ GRAPH <{GRAPH}> {{
             ?d a meshv:TopicalDescriptor ; rdfs:label ?en . FILTER (LANG(?en) = "en")
         }} }}""")]
-    # Solo la jerarquía entre descriptores temáticos (quedan afuera tipos de publicación y similares)
+    # Only the hierarchy between topical descriptors (publication types and the like are left out)
     known = {d for d, *_ in descriptors}
     broader = [(mesh_id(d), mesh_id(b)) for d, b in rows(
         prefix + f"SELECT ?d ?b WHERE {{ GRAPH <{GRAPH}> {{ ?d meshv:broaderDescriptor ?b }} }}")

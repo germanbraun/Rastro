@@ -1,9 +1,9 @@
-"""Demo de cambio del dominio de petróleo y gas: vuelve a ejecutar las queries guardadas de
-la evaluación y dice cuáles siguen dando lo mismo, sin Rastro (SQL) y con Rastro.
+"""Change demo for the oil and gas domain: runs the saved evaluation queries again
+and says which ones still give the same result, without Rastro (SQL) and with Rastro.
 
-Con --guardar <paso>, guarda el resultado en resultado.json (en esta carpeta), que muestra la app.
-Además controla que el petróleo de 2025 siga rondando los 46,6 millones de m³ (si cambia la
-unidad, Rastro avisa).
+With --guardar <paso>, saves the result to resultado.json (in this folder), which the app shows.
+It also checks that 2025 oil is still around 46.6 million m³ (if the
+unit changes, Rastro warns).
 
     docker compose run --rm layer-eval python /layer/energia/cambio/probar.py [--guardar <paso>]
 """
@@ -21,7 +21,7 @@ ANSWERS = HERE.parent / "respuestas"
 RESULT = HERE / "resultado.json"
 NAMES = {"B": "Sin Rastro (SQL)", "C": "Con Rastro"}
 LABELS = {"✅": "igual", "🟡": "distinto, sin avisar", "❌": "con error", "—": "sin query"}
-NATIONAL_OIL = 46.6e6  # la producción de petróleo de 2025 ronda 46,6 millones de m³ (unos 800.000 barriles por día)
+NATIONAL_OIL = 46.6e6  # 2025 oil production is around 46.6 million m³ (about 800,000 barrels per day)
 
 
 def same(a, b):
@@ -51,11 +51,11 @@ def check(entry, key, kind):
 
 
 def control():
-    """Control de unidades: ¿la producción de petróleo de 2025 sigue rondando los 46,6 millones de m³?"""
+    """Unit check: is 2025 oil production still around 46.6 million m³?"""
     try:
         values = run_sparql("PREFIX energia: <https://w3id.org/rastro/energia#> "
                             "SELECT (SUM(?o) AS ?t) WHERE { ?p energia:oil ?o }", "energia")
-    except Exception as e:  # noqa: BLE001 - Rastro caído también es un resultado de la demo
+    except Exception as e:  # noqa: BLE001 - Rastro being down is also a demo result
         return f"Control de unidades: Rastro no responde ({str(e).splitlines()[0][:120]})"
     total = float(values[0]) if values and values[0] is not None else 0
     shown = f"{total / 1e6:,.1f}".replace(",", "X").replace(".", ",").replace("X", ".")

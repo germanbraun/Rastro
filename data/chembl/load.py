@@ -1,11 +1,11 @@
-"""Carga en el esquema local `chembl` el subconjunto de ChEMBL de oncología.
+"""Loads the oncology subset of ChEMBL into the local schema `chembl`.
 
-Oncología = familias de moléculas (padre y sales) con alguna indicación bajo
-"Neoplasms" (MeSH C04), el mismo criterio que el recorte de AACT. Se cargan sinónimos, ATC,
-indicaciones (todas, no solo las oncológicas), mecanismos, targets y el UNII de
-UniChem para enlazar con openFDA.
+Oncology = families of molecules (parent and salts) with some indication under
+"Neoplasms" (MeSH C04), the same criterion as the AACT scope. It loads synonyms, ATC,
+indications (all of them, not only the oncology ones), mechanisms, targets and the UNII from
+UniChem to link with openFDA.
 
-Se corre con: docker compose run --rm chembl-loader
+Run with: docker compose run --rm chembl-loader
 """
 
 import gzip
@@ -23,7 +23,7 @@ UNICHEM_CHEMBL_TO_UNII = (
     "wholeSourceMapping/src_id1/src1src14.txt.gz"
 )
 NEOPLASMS_TREE = "C04"
-BATCH = 50  # IDs por request en los filtros __in
+BATCH = 50  # IDs per request in the __in filters
 
 http = requests.Session()
 http.mount("https://", HTTPAdapter(max_retries=Retry(total=5, backoff_factor=2,
@@ -37,7 +37,7 @@ def get_json(url, **params):
 
 
 def paginate(resource, **params):
-    """Recorre todas las páginas de un recurso de la API de ChEMBL."""
+    """Walks through all the pages of a ChEMBL API resource."""
     data = get_json(f"{CHEMBL}/{resource}.json", limit=1000, **params)
     key = next(k for k in data if k != "page_meta")
     while True:
@@ -79,8 +79,8 @@ def main():
     print(f"Descriptores MeSH bajo Neoplasms: {len(mesh_c04)}")
 
     all_indications = list(paginate("drug_indication"))
-    # Se trabaja por familia (molécula padre y sus sales): ChEMBL registra indicaciones
-    # y mecanismos sobre cualquiera de las dos, y la resolución de entidades usa la padre.
+    # Work by family (parent molecule and its salts): ChEMBL records indications
+    # and mechanisms on either of them, and entity resolution uses the parent.
     oncology = [i for i in all_indications if i["mesh_id"] in mesh_c04]
     parent_ids = {i["parent_molecule_chembl_id"] for i in oncology}
     print(f"Familias con indicación oncológica: {len(parent_ids)}")
@@ -119,7 +119,7 @@ def main():
             (i["drugind_id"], i["molecule_chembl_id"], i["parent_molecule_chembl_id"],
              num(i["max_phase_for_ind"]), i["mesh_id"], i["mesh_heading"], i["efo_id"], i["efo_term"])
             for i in indications],
-        # Una referencia ClinicalTrials puede listar varios NCT separados por coma
+        # A ClinicalTrials reference can list several NCTs separated by commas
         "indication_refs": [
             (i["drugind_id"], r["ref_type"], ref_id.strip(), r["ref_url"])
             for i in indications for r in i["indication_refs"]
@@ -145,7 +145,7 @@ def main():
                 f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}")
     with psycopg.connect(conninfo) as conn:
         conn.execute(Path(__file__).with_name("schema.sql").read_text())
-        for table, data in rows.items():  # orden de inserción respeta las claves foráneas
+        for table, data in rows.items():  # insertion order respects the foreign keys
             with conn.cursor().copy(f"COPY chembl.{table} FROM STDIN") as copy:
                 for row in data:
                     copy.write_row(row)

@@ -1,8 +1,9 @@
-"""Arma la prueba a ciegas de las explicaciones de Rastro Lab: 10 pozos de 2025, cada uno con su explicación
-sin Rastro y con Rastro, mezcladas y sin decir cuál es cuál. Una persona del sector que no armó Rastro responde
-tres preguntas por explicación. La clave (qué explicación es de qué modelo) queda en un archivo aparte.
+"""Builds the blind test of the Rastro Lab explanations: 10 wells from 2025, each one with its explanation
+without Rastro and with Rastro, shuffled and without saying which is which. A person from the industry who did not
+build Rastro answers three questions per explanation. The key (which explanation comes from which model) is kept in a
+separate file.
 
-    python3 lab/gas/a_ciegas.py   # escribe docs/lab-explicaciones-a-ciegas.md y lab/gas/a-ciegas-clave.json
+    python3 lab/gas/a_ciegas.py   # writes docs/lab-explicaciones-a-ciegas.md and lab/gas/a-ciegas-clave.json
 """
 import json
 import random

@@ -1,9 +1,9 @@
-"""Dibuja una instancia del grafo como SVG: la entidad al centro y cada propiedad alrededor.
-Burbuja azul: una entidad; burbuja naranja punteada: su clase; rectángulo: un dato simple
-(texto, número o fecha). Cada flecha lleva el nombre de negocio de la propiedad.
+"""Draws an instance of the graph as SVG: the entity in the center and each property around it.
+Blue bubble: an entity; dotted orange bubble: its class; rectangle: a simple value
+(text, number or date). Each arrow carries the business name of the property.
 
-Lo usan la app («Así se ve un dato del grafo») y las diapositivas (docs/slides/grafo_instancia.py).
-El dibujo va sobre un fondo claro propio, así se lee igual con tema claro u oscuro.
+Used by the app («Así se ve un dato del grafo») and the slides (docs/slides/grafo_instancia.py).
+The drawing goes on its own light background, so it reads the same with a light or dark theme.
 """
 import html
 import math
@@ -17,8 +17,8 @@ def cut(text, n):
 
 
 def svg(center, nodes, width=1664, height=640, scale=1.0, font="'Times New Roman', Times, serif"):
-    """center = (título, subtítulo). nodes = [(tipo, etiqueta, subtítulo, propiedad)], tipo:
-    "entidad", "clase" o "dato"."""
+    """center = (title, subtitle). nodes = [(type, label, subtitle, property)], type:
+    "entidad", "clase" or "dato"."""
     s = scale
     cx, cy = width / 2, height / 2
     rx, ry = width / 2 - 250 * s, height / 2 - 70 * s
@@ -32,7 +32,7 @@ def svg(center, nodes, width=1664, height=640, scale=1.0, font="'Times New Roman
     for k, (kind, label, sub, prop) in enumerate(nodes):
         a = -math.pi / 2 + 2 * math.pi * k / n
         placed.append((cx + rx * math.cos(a), cy + ry * math.sin(a), kind, cut(label, 22), cut(sub, 30), cut(prop, 22)))
-    for x, y, _kind, _label, _sub, prop in placed:       # flechas debajo de los nodos
+    for x, y, _kind, _label, _sub, prop in placed:       # arrows below the nodes
         dx, dy = x - cx, y - cy
         d = math.hypot(dx, dy) or 1
         x1, y1 = cx + dx / d * 175 * s, cy + dy / d * 60 * s

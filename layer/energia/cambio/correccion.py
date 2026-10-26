@@ -1,9 +1,9 @@
-"""Una corrección, todos los resultados: mide qué cambia cuando se saca o se pone la participación corregida
-de Aguada Pichana Este (linking/energia/participaciones-revisadas.csv), en Rastro Layer y en Rastro Lab.
+"""One correction, every result: measures what changes when the corrected stake of Aguada Pichana Este
+(linking/energia/participaciones-revisadas.csv) is removed or put back, in Rastro Layer and in Rastro Lab.
 
-Lo corre correccion.sh (en esta carpeta), que saca la corrección, rearma Rastro, mide y la vuelve a poner.
+Run by correccion.sh (in this folder), which removes the correction, rebuilds Rastro, measures and puts it back.
     python3 layer/energia/cambio/correccion.py <paso>     # paso: con | sin
-Guarda en correccion.json (en esta carpeta), que muestra la app.
+Saves to correccion.json (in this folder), which the app shows.
 """
 import json
 import subprocess
@@ -26,13 +26,13 @@ def compose(*args):
 
 
 def main(paso):
-    # Rastro Layer: las respuestas guardadas de la pregunta de participación, ejecutadas de nuevo
+    # Rastro Layer: the saved answers of the stake question, run again
     compose("run", "--rm", "-T", "layer-eval", "python", "/layer/evaluar.py", "energia", "rerun")
     layer = {k: json.loads((ANSWERS / f"e01-0-{k}.json").read_text())["answer"] for k in ("B", "D", "C")}
     total = sparql("""PREFIX energia: <https://w3id.org/rastro/energia#>
         SELECT ?pct WHERE { ?s a energia:Stake ; energia:inConcession/energia:concessionId "APE" ;
                                 energia:partner/energia:name "TOTAL AUSTRAL S.A." ; energia:percent ?pct }""").pct.iloc[0]
-    # Rastro Lab: la entrada y la predicción de los pozos de Aguada Pichana Este de 2025
+    # Rastro Lab: the input and the prediction of the 2025 Aguada Pichana Este wells
     a, b = modelo.preparar(sql(modelo.SQL_GAS), sql(modelo.SQL_A), sparql(modelo.SPARQL_B))
     r = modelo.modelos(a, b)
     ape = b[(b.area == "APE") & (b.inicio >= modelo.PRUEBA)]
@@ -46,7 +46,7 @@ def main(paso):
     }
     saved = json.loads(RESULT.read_text()) if RESULT.exists() else {}
     saved[paso] = resultado
-    # Sin Rastro, el mismo dato se lee del texto del mapa en cada consulta y en el código del modelo
+    # Without Rastro, the same value is read from the map text in every query and in the model code
     saved["lugares_sin_rastro"] = sum("participacion" in p.read_text() for p in ANSWERS.glob("*-B.json")) + 1
     RESULT.write_text(json.dumps(saved, ensure_ascii=False, indent=1))
     print(paso, json.dumps(resultado, ensure_ascii=False))

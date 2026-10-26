@@ -1,6 +1,6 @@
-"""Dibuja los diagramas de Rastro como SVG: la arquitectura y el diccionario de cada dominio.
+"""Draws Rastro's diagrams as SVG: the architecture and each domain's dictionary.
 
-Los usan las diapositivas (docs/slides) y la app. Para cambiarlos, editar acá y correr:
+The slides (docs/slides) and the app use them. To change them, edit here and run:
     python3 docs/diagramas/build.py
 """
 
@@ -47,7 +47,7 @@ def svg(w, h, body):
 '''
 
 
-# Lo propio de cada dominio en el diagrama de arquitectura
+# What is specific to each domain in the architecture diagram
 ARCH = {
     "proveedores": {
         "fuente": ("Proveedores", ["(EE. UU.)", "", "USAspending", "NAICS", "GLEIF", "listas de control", "Wikidata"]),
@@ -75,9 +75,9 @@ def architecture(domain):
     b = []
     for x, t in [(140, "FUENTES PÚBLICAS"), (440, "ALMACENAMIENTO"), (900, "CAPA SEMÁNTICA"), (1440, "QUIÉN LA USA")]:
         b.append(f'<text x="{x}" y="34" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="{BLUE}">{t}</text>')
-    # Fuentes del dominio
+    # The domain's sources
     b.append(box(20, 60, 240, 400 if a["graphdb"] else 530, a["fuente"][0], a["fuente"][1]))
-    # Almacenamiento
+    # Storage
     b.append(box(320, 60, 240, 400, "Postgres", ["un esquema", "por fuente", "", "+ los enlaces", "de Rastro,", "con su evidencia"]))
     b.append(arrow(262, 260, 318, 260))
     if a["graphdb"]:
@@ -85,7 +85,7 @@ def architecture(domain):
         b.append(box(320, 490, 240, 100, "GraphDB", ["MeSH completo"]))
         b.append(arrow(262, 540, 318, 540))
     b.append(f'<text x="140" y="628" text-anchor="middle" font-size="20" fill="{GRAY}">un cargador por fuente</text>')
-    # Capa semántica
+    # Semantic layer
     b.append(f'<rect x="620" y="50" width="560" height="590" rx="20" fill="{BLUE}"/>')
     b.append(box(650, 72, 500, 136, "Entity linking", a["enlaces"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4", sub=20))
     b.append(box(650, 220, 240, 130, "Ontología", ["el diccionario", "de negocio"], fill="#4A84C4", color="#FFFFFF", stroke="#4A84C4"))
@@ -94,7 +94,7 @@ def architecture(domain):
     b.append('<text x="900" y="600" text-anchor="middle" font-size="22" fill="#FFFFFF">Grafo virtual: los datos no se mueven</text>')
     b.append(arrow(562, 270, 618, 270))
     b.append(arrow(900, 352, 900, 396, color="#FFFFFF", head="white"))
-    # Quién la usa
+    # Who uses it
     b.append(box(1250, 50, 380, 130, "App Rastro", ["el LLM lee el diccionario", "y escribe la consulta SPARQL"]))
     b.append(box(1250, 196, 380, 150, "GraphRAG anclado", a["graphrag"], fill="#E8F0FA", stroke=BLUE))
     b.append(box(1250, 362, 380, 76, "Otras herramientas", ["cualquier cliente SPARQL"], sub=20))
@@ -112,7 +112,7 @@ def architecture(domain):
 
 def ontology():
     b = []
-    # Clases de fármaco
+    # Drug classes
     b.append(box(700, 10, 250, 70, "Inhibidor de quinasa", [], size=24))
     b.append(box(970, 10, 270, 70, "Anticuerpo monoclonal", [], size=24))
     b.append(box(840, 130, 250, 80, "Terapia dirigida", ["deducida, sin mapeo"], dash=True, size=24, sub=19))
@@ -124,7 +124,7 @@ def ontology():
     b.append(arrow(1220, 207, 1150, 298, head="sub"))
     b.append(arrow(1455, 207, 1210, 298, head="sub"))
     b.append(f'<text x="1600" y="60" text-anchor="end" font-size="20" fill="{GRAY}">▷ es un tipo de (subclase)</text>')
-    # Centro
+    # Center
     b.append(box(540, 300, 300, 160, "Ensayo", ["fase · estado · título", "motivo (clasificado)"], fill=LIGHT, stroke=INK))
     b.append(box(1010, 300, 280, 160, "Fármaco", ["nombre · ChEMBL ID", "aprobado"], fill=LIGHT, stroke=INK))
     b.append(box(1400, 300, 240, 160, "Target", ["nombre · gen"], fill=LIGHT, stroke=INK))
@@ -143,14 +143,14 @@ def ontology():
     b.append(arrow(1060, 558, 1100, 464, "fármaco", lx=1112, ly=520))
     b.append(arrow(1290, 578, 1200, 464))
     b.append(arrow(1540, 578, 1285, 450))
-    # Procedencia
+    # Provenance
     b.append(box(40, 560, 380, 130, "Fuente", ["cada dato apunta a su fuente", "y su licencia (proviene de)"], size=24, sub=20))
     return svg(1680, 740, "\n".join(b))
 
 
 def ontology_suppliers():
     b = []
-    # Clases de proveedor
+    # Supplier classes
     b.append(box(560, 10, 300, 70, "Con matriz extranjera", [], size=24))
     b.append(box(900, 10, 300, 70, "Coincide con una lista", [], size=24))
     b.append(box(720, 130, 320, 80, "Proveedor para revisar", ["deducida, sin mapeo"], dash=True, size=24, sub=19))
@@ -158,7 +158,7 @@ def ontology_suppliers():
     b.append(arrow(1050, 80, 930, 128, head="sub"))
     b.append(arrow(880, 212, 880, 298, head="sub"))
     b.append(f'<text x="1640" y="40" text-anchor="end" font-size="20" fill="{GRAY}">▷ es un tipo de (subclase)</text>')
-    # Centro
+    # Center
     b.append(box(40, 320, 240, 120, "Agencia", ["nombre"], fill=LIGHT, stroke=INK))
     b.append(box(380, 300, 300, 160, "Contrato", ["monto · fechas", "descripción"], fill=LIGHT, stroke=INK))
     b.append(box(760, 300, 240, 160, "Proveedor", ["nombre · UEI", "estado"], fill=LIGHT, stroke=INK))
@@ -176,7 +176,7 @@ def ontology_suppliers():
     b.append(arrow(1260, 462, 1260, 556, "entidad legal", lx=1340, ly=515))
     b.append(f'<path d="M 1402 600 C 1465 600 1465 660 1402 660" fill="none" stroke="{GRAY}" stroke-width="2.5" marker-end="url(#arrow)"/>')
     b.append(f'<text x="1260" y="725" text-anchor="middle" font-size="22" fill="{BLUE}" font-style="italic">matriz final</text>')
-    # Evidencia y fuente
+    # Evidence and source
     b.append(box(1450, 300, 210, 160, "Enlaces", ["evidencia de", "cada unión", "(PROV-O)"], size=24, sub=19, dash=True))
     b.append(box(40, 560, 260, 130, "Fuente", ["cada dato apunta", "a su fuente"], size=24, sub=20))
     return svg(1680, 740, "\n".join(b))
@@ -184,7 +184,7 @@ def ontology_suppliers():
 
 def ontology_energy():
     b = []
-    # Clases de producción y de venteo
+    # Production and venting classes
     b.append(box(40, 10, 200, 70, "Shale", [], size=24))
     b.append(box(280, 10, 200, 70, "Tight", [], size=24))
     b.append(box(110, 130, 300, 80, "No convencional", ["deducida, sin mapeo"], dash=True, size=24, sub=19))
@@ -196,7 +196,7 @@ def ontology_energy():
     b.append(arrow(1310, 80, 1360, 298, head="sub"))
     b.append(arrow(1560, 80, 1440, 298, head="sub"))
     b.append(f'<text x="1660" y="728" text-anchor="end" font-size="20" fill="{GRAY}">▷ es un tipo de (subclase)</text>')
-    # Centro
+    # Center
     b.append(box(40, 300, 240, 160, "Pozo", ["identificador"], fill=LIGHT, stroke=INK))
     b.append(box(380, 300, 320, 160, "Producción de un pozo", ["petróleo · gas (2025)", "formación · cuenca"], fill=LIGHT, stroke=INK, size=24))
     b.append(box(800, 300, 280, 160, "Concesión", ["nombre · código", "gasoducto más cercano", "(ENARGAS)"], fill=LIGHT, stroke=INK))
@@ -211,13 +211,13 @@ def ontology_energy():
     b.append(arrow(820, 462, 704, 570, "operadora en el mapa", lx=690, ly=482))
     b.append(arrow(940, 556, 940, 466, "en la concesión", lx=1030, ly=515))
     b.append(arrow(798, 650, 704, 650, "socia", lx=750, ly=640))
-    # Evidencia y fuente
+    # Evidence and source
     b.append(box(1260, 560, 280, 130, "Enlaces", ["evidencia de cada unión,", "ubicación y distancia", "(PROV-O)"], size=24, sub=19, dash=True))
     b.append(box(40, 560, 240, 130, "Fuente", ["cada dato apunta", "a su fuente"], size=24, sub=20))
     return svg(1680, 740, "\n".join(b))
 
 
-# Las mismas imágenes van a la app y, dentro de una diapositiva cada una, al mazo
+# The same images go to the app and, each inside a slide, to the deck
 ROOT = HERE.parent.parent
 SLIDE = """<section id="{id}" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">{label}</p>

@@ -1059,3 +1059,14 @@ The user approved three compatibility adjustments after comparing the new journe
   - restoring the without/with Rastro contrast of the first moment;
   - the framing of the tree results;
   - the company logos.
+
+## 2026-10-26 — Python comments and docstrings in English
+
+- **What:** the Spanish comments and docstrings of 46 Python files are now in English (about 400), following the
+  project's language rule. Identifiers, queries, prompts given to the AI evaluator, stored rule and evidence texts,
+  and every text a user sees stay as they were.
+- **Checked:** each file's syntax tree, with docstrings blanked, is identical to the previous commit, so no code
+  changed. Tests, lint and both app views pass.
+- **Left for later:** `lab/gas/modelo.py`, `alternative.py`, `thesis_pipeline.py`, `compare_trees.py` and
+  `reproduce_thesis.py`. Their source is fingerprinted: the model's version and the alternative's and the thesis
+  experiment's receipts would change. They will be translated together with a new published run.

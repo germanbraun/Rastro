@@ -1,14 +1,14 @@
-"""Carga los datos que solo usa Rastro Lab (gas de Vaca Muerta), sin tocar lo que usa Rastro Layer:
+"""Loads the data that only Rastro Lab uses (Vaca Muerta gas), without touching what Rastro Layer uses:
 
-1. Capítulo IV, años 2018 a 2022: las declaraciones juradas de producción por pozo y mes, para tener más
-   pozos nuevos con su gas (en capitulo4_anterior.produccion; Layer sigue con 2023 a 2025).
-2. Datos de fractura de pozos (Adjunto IV): largo de la rama horizontal, etapas, arena, agua y presión de
-   cada fractura, por pozo (en fractura.fractura). Es una fuente nueva.
-3. Trayectorias de pozo de Vaca Muerta: profundidad vertical, largo de la rama y fechas de perforación, por pozo
-   (en trayectoria.trayectoria). Otra fuente nueva.
+1. Capítulo IV, years 2018 to 2022: the sworn production statements by well and month, to have more
+   new wells with their gas (in capitulo4_anterior.produccion; Layer stays with 2023 to 2025).
+2. Well fracturing data (Adjunto IV): length of the horizontal section, stages, sand, water and pressure of
+   each fracturing, by well (in fractura.fractura). It is a new source.
+3. Vaca Muerta well trajectories: vertical depth, section length and drilling dates, by well
+   (in trayectoria.trayectoria). Another new source.
 
-Descarga a data/raw/lab-gas/ (con caché) y carga con COPY. Cada tabla queda en rastro_meta.load_run.
-Se corre con: docker compose run --rm lab-gas-loader
+Downloads to data/raw/lab-gas/ (with cache) and loads with COPY. Each table is recorded in rastro_meta.load_run.
+Run with: docker compose run --rm lab-gas-loader
 """
 
 import csv

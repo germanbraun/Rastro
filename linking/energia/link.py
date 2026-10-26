@@ -1,18 +1,18 @@
-"""Arma las tablas del dominio de petróleo y gas que leen los mapeos, y los enlaces entre fuentes.
+"""Builds the oil and gas domain tables that the mappings read, and the links between sources.
 
-1. Ubica cada venteo (detectado por satélite desde 2024, o declarado) dentro de su concesión:
-   punto dentro de polígono, con los contornos del mapa. Postgres no tiene PostGIS acá y son
-   pocos polígonos, así que se hace en Python.
-2. Calcula, para cada concesión, el gasoducto de transporte de ENARGAS más cercano, y para cada
-   posible venteo, la localidad más cercana y si cae en un área protegida (IGN). Distancias en km
-   con una aproximación plana, suficiente a esta escala.
-3. Carga las correcciones revisadas (correcciones.csv, participaciones-revisadas.csv) y corre links.sql: empresas con sus
-   nombres en cada fuente y su LEI, producción por pozo, participaciones, quién opera cada pozo,
-   cada venteo en su concesión, gasoductos y entorno, y quién operó cada concesión mes a mes
-   (2023 a 2025) con sus cambios de operadora, todo con su evidencia. Para Rastro Lab, cómo arrancó cada
-   pozo nuevo (desde 2018, si se cargaron los años anteriores) y su fractura.
+1. Places each venting (detected by satellite since 2024, or declared) inside its concession:
+   point in polygon, with the map outlines. Postgres has no PostGIS here and there are
+   few polygons, so it is done in Python.
+2. Computes, for each concession, the nearest ENARGAS transport gas pipeline, and for each
+   possible venting, the nearest town and whether it falls in a protected area (IGN). Distances in km
+   with a flat approximation, good enough at this scale.
+3. Loads the reviewed corrections (correcciones.csv, participaciones-revisadas.csv) and runs links.sql: companies with their
+   names in each source and their LEI, production by well, stakes, who operates each well,
+   each venting in its concession, gas pipelines and surroundings, and who operated each concession month by month
+   (2023 to 2025) with its operator changes, all with their evidence. For Rastro Lab, how each new
+   well started (since 2018, if the earlier years were loaded) and its fracturing.
 
-Se corre con: docker compose run --rm energia-linker
+Run with: docker compose run --rm energia-linker
 """
 
 import csv
@@ -24,11 +24,11 @@ from pathlib import Path
 import psycopg
 
 HERE = Path(__file__).parent
-DESDE = "2024-01-01"   # detecciones por satélite: los últimos dos años y medio
+DESDE = "2024-01-01"   # satellite detections: the last two and a half years
 
 
 def inside(lon, lat, ring):
-    """Punto dentro de polígono, por cruce de rayos."""
+    """Point in polygon, by ray casting."""
     hit = False
     for (x1, y1), (x2, y2) in zip(ring, ring[1:] + ring[:1]):
         if (y1 > lat) != (y2 > lat) and lon < x1 + (lat - y1) * (x2 - x1) / (y2 - y1):
@@ -37,13 +37,13 @@ def inside(lon, lat, ring):
 
 
 def km(lon1, lat1, lon2, lat2):
-    """Distancia aproximada en km (plana, con la escala de la latitud)."""
+    """Approximate distance in km (flat, with the latitude scale)."""
     dx = (lon2 - lon1) * 111.32 * math.cos(math.radians((lat1 + lat2) / 2))
     return math.hypot(dx, (lat2 - lat1) * 110.57)
 
 
 def to_segment(px, py, ax, ay, bx, by):
-    """Distancia en km de un punto a un segmento, proyectando en coordenadas planas."""
+    """Distance in km from a point to a segment, projecting onto flat coordinates."""
     c = math.cos(math.radians(py))
     ux, uy, vx, vy = (bx - ax) * c, by - ay, (px - ax) * c, py - ay
     t = max(0.0, min(1.0, (ux * vx + uy * vy) / (ux * ux + uy * uy))) if ux or uy else 0.0
@@ -54,7 +54,7 @@ def main():
     conninfo = (f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
                 f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}")
     with psycopg.connect(conninfo) as conn:
-        conn.execute("DROP TABLE IF EXISTS energia.venteo_ubicado")   # se recrea en links.sql (DROP SCHEMA)
+        conn.execute("DROP TABLE IF EXISTS energia.venteo_ubicado")   # recreated in links.sql (DROP SCHEMA)
         polys = []
         for cid, anillo in conn.execute("SELECT id_concesion, anillo FROM sig_energia.concesion"):
             ring = [tuple(p) for p in json.loads(anillo)]
@@ -73,7 +73,7 @@ def main():
             "SELECT gml_id, nombre, lon, lat FROM sig_energia.venteo_declarado")]
         ubicados = [(*p[:5], where(p[5], p[6]), p[5], p[6]) for p in puntos]
 
-        # Gasoducto de transporte más cercano a cada concesión (0 si uno cruza el contorno)
+        # Nearest transport gas pipeline to each concession (0 if one crosses the outline)
         segs = []
         for name, lic, lineas in conn.execute("SELECT coalesce(nombregaso, nombretram), licenciata, lineas FROM enargas.gasoducto"):
             for line in json.loads(lineas):
@@ -90,7 +90,7 @@ def main():
                 d = min(to_segment(px, py, ax, ay, bx, by) for px, py in ring[::max(1, len(ring) // 60)])
                 if d < best[0]:
                     best = (d, name, lic)
-            if not best[1]:   # ningún gasoducto en la ventana de 1°: se mide contra todos
+            if not best[1]:   # no gas pipeline within the 1° window: measure against all of them
                 for name, lic, (ax, ay), (bx, by) in segs:
                     d = min(to_segment(px, py, ax, ay, bx, by) for px, py in ring[::max(1, len(ring) // 20)])
                     if d < best[0]:
@@ -98,7 +98,7 @@ def main():
             if best[1]:
                 gasoducto.append((cid, best[1], best[2], best[0]))
 
-        # Entorno de cada posible venteo: localidad más cercana y área protegida (IGN)
+        # Surroundings of each possible venting: nearest town and protected area (IGN)
         towns = list(conn.execute("SELECT fna, nom_pcia, lon, lat FROM ign.localidad"))
         areas = []
         for name, anillos in conn.execute("SELECT fna, anillos FROM ign.area_protegida"):
@@ -144,14 +144,14 @@ def main():
             for row in entorno:
                 cp.write_row(row)
 
-        # Las tablas de Rastro Lab (Capítulo IV de 2018 a 2022 y fractura): vacías si todavía no se cargaron
+        # The Rastro Lab tables (Capítulo IV from 2018 to 2022 and fracturing): empty if not loaded yet
         conn.execute(Path("/data/lab-gas/schema.sql").read_text())
-        # El enriquecimiento con Wikidata materializado: vacío si todavía no se cargó
+        # The materialized Wikidata enrichment: empty if not loaded yet
         conn.execute(Path("/data/wikidata-energia/schema.sql").read_text())
         sql = (HERE / "links.sql").read_text()
-        sql = sql.split("CREATE SCHEMA energia;", 1)[1]          # el esquema ya está creado, con sus tablas de entrada
+        sql = sql.split("CREATE SCHEMA energia;", 1)[1]          # the schema is already created, with its input tables
         conn.execute(sql)
-        # Rearmar el esquema borra los permisos de los usuarios de la evaluación (sin Rastro y SQL + enlaces)
+        # Rebuilding the schema drops the permissions of the evaluation users (without Rastro and SQL + links)
         conn.execute(Path("/layer/energia/reader.sql").read_text())
         # Lab's source drill-down uses its existing raw-source reader, including historical years.
         conn.execute(Path("/layer/energia_lab/reader.sql").read_text())

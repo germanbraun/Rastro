@@ -1,5 +1,5 @@
-"""Dibuja el logo de Rastro: una huella digital hecha de datos (las crestas son puntos, como un
-rastro), con el centro naranja y el borde azul. Escribe app/logo.svg y app/logo-horizontal.svg.
+"""Draws the Rastro logo: a fingerprint made of data (the ridges are dots, like a
+trace), with an orange center and a blue edge. Writes app/logo.svg and app/logo-horizontal.svg.
 
     python3 app/logo_build.py
 """
@@ -7,11 +7,11 @@ from pathlib import Path
 
 HERE = Path(__file__).parent
 NAVY = "#14213D"
-BLUE = "#2F6FB5"   # se lee sobre fondo claro y oscuro (la app usa tema oscuro)
+BLUE = "#2F6FB5"   # readable on light and dark backgrounds (the app uses a dark theme)
 
 
 def color(i, n):
-    """Naranja en el centro y azul hacia afuera, sin pasar por gris."""
+    """Orange in the center and blue outward, without going through gray."""
     oranges = ["#FF7A2F", "#FF8C42", "#FFA05A", "#FFB577"]
     if i < len(oranges):
         return oranges[i]
@@ -21,14 +21,14 @@ def color(i, n):
 
 
 def ridges(cx, cy):
-    """Crestas de una huella: lazos concéntricos abiertos abajo, cortados por el contorno de la yema
-    del dedo. Los de adentro, enteros; los de afuera, punteados, como datos."""
+    """Ridges of a fingerprint: concentric loops open at the bottom, cut by the outline of the
+    fingertip. The inner ones whole; the outer ones dotted, like data."""
     import math
     out, n = [], 11
     for i in range(n):
         rx, ry = 2.0 + i * 2.55, (2.0 + i * 2.55) * 1.35
         y0 = cy - 2 + i * 0.4
-        gap = math.radians(max(18, 50 - i * 4))          # la abertura de abajo se cierra hacia afuera
+        gap = math.radians(max(18, 50 - i * 4))          # the bottom opening closes outward
         a1, a2 = math.pi / 2 + gap / 2, math.pi / 2 - gap / 2 + 2 * math.pi
         x1, y1 = cx + rx * math.cos(a1), y0 + ry * math.sin(a1)
         x2, y2 = cx + rx * math.cos(a2), y0 + ry * math.sin(a2)
