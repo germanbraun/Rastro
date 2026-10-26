@@ -106,6 +106,9 @@ steps:
     - afiliaciones.identificacion 539 (R0 2, R1 329, R2 201, accepted corrections 7); afiliaciones.dudosa 91 (84 rejected,
       7 accepted, all AI-reviewed and pending GPT validation); afiliaciones.sin_identificar 42
     - no identification without evidence; 316 of 358 Argentina-text mentions have one
+    - linking/afiliaciones/link.py, correcciones.csv (6 changed, 13 added; AI-reviewed, pending a person)
+    - 'layer/afiliaciones/resultados.json after rerun; adjudicacion.md, section Re-measurement (fixes guided by the same
+      reference: optimistic)'
     sessions:
     - started_on: '2026-10-22T19:13:48Z'
       ended_on: '2026-10-22T19:15:13Z'
@@ -134,7 +137,17 @@ steps:
         notes for both link-aware approaches; quality proposal (6 rules, IDEHU found); cq1-cq3 written, two Ontop limitations
         worked around (NOT EXISTS inside UNION, nondeterministic SAMPLE); query checks from invariants; verify gate passed;
         lifecycle implement and validate (from a clean environment).'
-    agent_hours: 0.53
+    - started_on: '2026-10-26T20:56:00Z'
+      ended_on: '2026-10-26T21:24:52Z'
+      pauses: []
+      work: 'Start time approximate. Fixed in linking/afiliaciones/link.py: a glued footnote letter is dropped, mention
+        segments are boundaries, a name followed by de/del/of and no place is a candidate, the generic acronym CCT names
+        a centre only with that centre''s own ROR acronym in the same segment; six shared-acronym CIC acceptances became
+        rejections (approved definition) and 13 new candidates were rejected, all pending a person. A first version regressed
+        two correct identifications and a second matched an address (CONICET Rosario); both corrected before measuring.
+        Disagreements with the blind reference: 30 -> 5 mentions. Re-ran the saved queries and scored: C and D 4/5 -> 5/5
+        (e3 69 -> 70, e5 42 -> 37), B 3/5 unchanged; only e3 and e5 of C and D changed.'
+    agent_hours: 1.01
     human_hours: null
   quality:
     status: implemented_review_findings_awaiting_person
@@ -316,6 +329,11 @@ interventions:
   decision: The user approved the dictionary as shown (5 classes, 11 properties) after asking to see the Turtle draft
   reason: New terms are business-facing definitions; the user asked to see the actual dictionary before approving
   kind: planned approval
+  minutes: null
+- step: links
+  decision: Fix the five linking defects the blind reference found, in one place, and re-measure e3 and e5, saying so
+  reason: Fixing after measuring belongs to the user; the measured result stays recorded
+  kind: unplanned approval
   minutes: null
 errors_caught:
 - step: initialize

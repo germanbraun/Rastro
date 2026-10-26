@@ -48,6 +48,25 @@ the score does not depend on these readings.
 - D equals C on every question: with Rastro's link tables, plain SQL is as good. What Rastro adds here is building and
   keeping those links once, with their evidence, not a better query language.
 
+## Re-measurement after fixing the five defects (2026-10-26)
+
+The user asked to fix the five defects in one place and re-measure e3 and e5. The fixes are in
+`linking/afiliaciones/link.py` (footnote letter, segment boundaries, a name that continues into a longer one, the
+generic acronym «CCT» only with the centre's own ROR acronym) and in `correcciones.csv` (the six «CIC» acceptances
+become rejections under the approved definition; 13 new candidates rejected; all AI-reviewed, pending a person).
+
+- **Agreement with the blind reference:** 30 → 5 mentions differ. The 5 left are «Hospital Italiano» inside the
+  name of its university, the debatable reading above.
+- **Score, re-running the same saved queries** (no new model answers): with Rastro and SQL with Rastro's links
+  4/5 → **5/5** (e3 69 → 70; e5 42 → 37, within 5 % of 38); without Rastro 3/5, unchanged, because raw SQL does not
+  use the links. Only e3 and e5 of C and D changed; e1, e2, e4 and consistency are as before.
+- **Read it as optimistic.** The defects were found by comparing with this same reference, so the fixes fit it by
+  construction. The first measurement (4/5, 4/5, 3/5) is the one taken blind. A fair test of the fixes needs
+  affiliations the fixes were not tuned on.
+- The first version of the fixes lost two correct identifications («… de Buenos Aires», «… de la Provincia de …») and
+  the second matched an address («UNR-CONICET Rosario»); both were caught by comparing the links before and after,
+  and corrected before measuring.
+
 ## Limits
 
 - The reference is AI work. The three reviewers took about three minutes each for ~320 strings; their receipt says

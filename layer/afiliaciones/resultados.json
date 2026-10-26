@@ -127,7 +127,7 @@
       "error": null
      }
     ],
-    "answer": 69.0,
+    "answer": 70.0,
     "ok": true
    },
    "C": {
@@ -138,7 +138,7 @@
       "error": null
      }
     ],
-    "answer": 69.0,
+    "answer": 70.0,
     "ok": true
    }
   },
@@ -299,8 +299,8 @@
       "error": null
      }
     ],
-    "answer": 42.0,
-    "ok": false
+    "answer": 37.0,
+    "ok": true
    },
    "C": {
     "question": "De las afiliaciones de las 100 publicaciones cuyo texto menciona Argentina (contiene «argentin», sin importar mayúsculas: Argentina, Argentine, argentino…), ¿cuántas no nombran ninguna organización argentina registrada en ROR? Cuente cada afiliación de cada autor por separado. Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
@@ -310,8 +310,8 @@
       "error": null
      }
     ],
-    "answer": 42.0,
-    "ok": false
+    "answer": 37.0,
+    "ok": true
    }
   }
  },
@@ -323,13 +323,13 @@
    "retries": 2
   },
   "D": {
-   "correct": 4,
+   "correct": 5,
    "consistent": 2,
    "consistent_correct": 8,
    "retries": 0
   },
   "C": {
-   "correct": 4,
+   "correct": 5,
    "consistent": 2,
    "consistent_correct": 8,
    "retries": 0

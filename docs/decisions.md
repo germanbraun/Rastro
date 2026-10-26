@@ -1208,3 +1208,16 @@ experiment's log as method changes made after it; they do not change its measure
   and assert the reported severity. Oil and gas got 7 more broken cases, affiliations 6 and two declared severities
   (Warning, Info); no rule of either domain turned out wrong. The oil and gas correction got a checker with exact
   expectations (`correccion.py verificar`, run by `correccion.sh`) and a broken-fixture test; the recorded run passes.
+
+## 2026-10-26 — Affiliations: the five linking defects fixed, e3 and e5 re-measured
+
+- **Blind score first** (GPT's source-blind reference, AI-reviewed, pending a person): with Rastro 4/5, SQL with
+  Rastro's links 4/5, without Rastro 3/5. All three missed e5; 30 of 1,456 mentions differed.
+- **Fixed in one place** (`linking/afiliaciones/link.py`): a glued footnote letter, matching across segments, a short
+  name inside a longer one, and the generic acronym «CCT» (it names a centre only with that centre's own ROR acronym
+  in the same segment). The six «CIC» acceptances became rejections under the approved definition (a shared acronym
+  does not name); 13 new candidates were rejected; all pending a person.
+- **Re-measured, re-running the same saved queries:** C and D 5/5 (e3 70, e5 37 for a reference of 38), B 3/5.
+  Disagreement with the reference 30 → 5 mentions (the debatable «Hospital Italiano»). The re-measured score is
+  optimistic: the fixes were guided by the same reference. The blind number is the first one.
+- **Why:** the user asked to fix the defects and re-measure e3 and e5, saying so.
