@@ -1,4 +1,4 @@
-# Generado por layer/sitios.py: nombre normalizado de la empresa → su sitio web.
+# Generated company name → official website; additions documented in docs/company-icons.md.
 A P MLLER A S: apmoller.com
 A P MLLER OG HUSTRU CHASTINE MC KINNEY MLLERS FOND TIL ALMENE FORMAAL: apmollerfonde.dk
 ABBVIE: abbvie.com
@@ -11,6 +11,7 @@ AEROVIRONMENT: avinc.com
 AIR PRODUCTS AND CHEMICALS: airproducts.com
 AIR TRANSPORT SERVICES: airbornemx.com
 AIRGAS USA: airgas.com
+ALIANZA PETROLERA ARGENTINA S A: alianzapetrolera.com.ar
 ALLIANCE FOR CLINICAL TRIALS IN ONCOLOGY: allianceforclinicaltrialsinoncology.org
 ALLIANCE FOUNDATION TRIALS: allianceforclinicaltrialsinoncology.org
 ALLIANZ: allianz.com
@@ -42,6 +43,7 @@ BAYER: bayer.com
 BAYLOR COLLEGE OF MEDICINE: bcm.edu
 BECHTEL: bechtel.com
 BEIGENE: beigene.com
+BENTIA ENERGY S A: bentiaenergy.com
 BERKSHIRE HATHAWAY: berkshirehathaway.com
 BIOCAD: biocad.ru
 BIOCRYST PHARMACEUTICALS: biocryst.com
@@ -108,6 +110,7 @@ DRS: leonardodrs.com
 DUKE ENERGY: duke-energy.com
 DUKE UNIVERSITY: duke.edu
 E M E S A: emesa.com.ar
+EDHIPSA: edhipsa.com.ar
 EIRGENIX: eirgenix.com
 EISAI: eisai.com
 ELBIT SYSTEMS: elbitsystems.com
@@ -157,6 +160,7 @@ INMAR: inmar.com
 INSIGHT ENTERPRISES: insight.com
 INSTITUTE OF CANCER RESEARCH UNITED KINGDOM: icr.ac.uk
 INTERNATIONAL BUSINESS MACHINES: ibm.com
+INTEROIL ARGENTINA S A: interoil.no
 INTERPUBLIC OF COMPANIES: interpublic.com
 IPSEN: ipsen.com
 IRON MOUNTAIN: ironmountain.com
@@ -265,9 +269,11 @@ PUBLIC INVESTMENT FUND: pif.gov.sa
 PUMA BIOTECHNOLOGY: pumabiotechnology.com
 QINETIQ: QinetiQ.com
 QUEST DIAGNOSTICS: questdiagnostics.com
+QUINTANA E AND P ARGENTINA S R L: quintanaep.com
 R PHARM: r-pharm.com
 RAND: rand.org
 RAYTHEON: raytheon.com
+RECURSOS Y ENERGIA FORMOSA S A: recursosyenergia.com.ar
 REGENERON PHARMACEUTICALS: regeneron.com
 REGENTS OF UNIVERSITY OF CALIFORNIA: regents.universityofcalifornia.edu
 REGENTS OF UNIVERSITY OF MICHIGAN: umich.edu
@@ -309,6 +315,7 @@ SWOG CANCER RESEARCH NETWORK: swog.org
 SYNNEX: tdsynnex.com
 T MOBILE: t-mobile.com
 TAKEDA: takeda.com
+TANGO ENERGY ARGENTINA S A: tangoenergia.com
 TECPETROL S A: tecpetrol.com
 TELEDYNE TECHNOLOGIES: teledyne.com
 TELEPERFORMANCE: teleperformance.com
@@ -340,6 +347,7 @@ UNIVERSITY OF WASHINGTON: washington.edu
 US FOODS: usfoods.com
 VALERO ENERGY: valero.com
 VARIAN MEDICAL SYSTEMS: varian.com
+VENOIL S A: venoil-energia.com
 VERITAS CAPITAL FUND MANAGEMENT: veritascapital.com
 VERIZON COMMUNICATIONS: verizon.com
 VIASAT: viasat.com

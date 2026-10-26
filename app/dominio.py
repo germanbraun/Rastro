@@ -201,13 +201,16 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None, where="pr
     if not rows:
         st.info("La consulta no devolvió resultados.")
     else:
-        table, config = logos.with_logos(as_table(columns, rows, cfg, tech, col_sources), columns)
+        visible = item.get("columnas_respuesta") if item and not tech else None
+        shown_columns = [c for c in columns if not visible or c in visible]
+        shown_rows = [[row[columns.index(c)] for c in shown_columns] for row in rows]
+        table, config = logos.with_logos(as_table(shown_columns, shown_rows, cfg, tech, col_sources), shown_columns)
         tabla(table, hide_index=True, use_container_width=True, column_config=config,
               key=f"{where}_{item['id']}" if item and item.get("id") else None)
         if item and item.get("mapa"):
             show_map(domain)
         if item and item.get("porque"):
-            show_why(domain, item["porque"], columns, rows, where)
+            show_why(domain, item["porque"], columns, rows, where, tech)
         st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''}."
                    + (" La evidencia está en «¿De dónde sale la respuesta?»." if item and item.get("evidencia") else ""))
 
@@ -765,7 +768,7 @@ def render(cfg_path, tech):
             shown = st.session_state.get(f"{domain}_shown", (None,))
             if shown[0] == chosen:
                 _, query, columns, rows = shown
-                if item.get("antes_despues"):
+                if item.get("antes_despues") and not item.get("porque", {}).get("recorrido"):
                     before_after(item["antes_despues"])
                 show_answer(cfg, tech, query, columns, rows, item,
                             note="Se ejecuta ahora, en vivo, sobre los datos.")
@@ -838,11 +841,15 @@ def show_faq(domain, specific, tech, diagrams, diagram_title="diccionario"):
     block([(q, a) for q, a, t in specific if t])
 
 
-def show_why(domain, why, columns, rows, where="preguntar"):
+def show_why(domain, why, columns, rows, where="preguntar", tech=False):
     """«¿Por qué este número?»: se elige una fila de la respuesta y se ve la evidencia que hay detrás,
     dibujada como grafo (la fila al centro, cada enlace alrededor) y en una tabla."""
     import grafo
     if why["columna"] not in columns:
+        return
+    if why.get("recorrido"):
+        from layer_story import show_story
+        show_story(domain, why, columns, rows, where, tech)
         return
     values = list(dict.fromkeys(r[columns.index(why["columna"])] for r in rows if r[columns.index(why["columna"])]))
     with st.container(border=True):
@@ -980,7 +987,7 @@ def show_demo(cfg, tech):
             st.caption("Formulación técnica: " + md(item["tecnica"]))
         query = Path(item["query"]).read_text()
         columns, rows = run(query, domain)
-        if item.get("antes_despues"):
+        if item.get("antes_despues") and not item.get("porque", {}).get("recorrido"):
             before_after(item["antes_despues"])
         show_answer(cfg, tech, query, columns, rows, item, note="Se ejecuta ahora, en vivo, sobre los datos.", where="demo")
     back, _, forward = st.columns([2, 3, 2])

@@ -27,8 +27,8 @@ demo:
     titulo: "¿Cuánto petróleo le corresponde a cada empresa?"
     pregunta: e01
     muestra: >-
-      Integrar cambia el número: sumando por quien declara, YPF tiene 21,4 millones de m³; repartiendo entre
-      los socios, su parte es 12,6. Con «¿Por qué este número?» se ve de dónde sale.
+      La respuesta primero. Con «¿Por qué este número?», elegir una empresa y una concesión para seguir
+      el cálculo, las conexiones entre fuentes y los registros originales. Producción operada y participación son medidas distintas.
   - paso: La base cambia
     titulo: "La fuente publica una versión nueva"
     tipo: cambio
@@ -107,18 +107,25 @@ formatos:
 preguntas:
   - id: e01
     query: /ontology/energia/queries/cq1.rq
+    columnas_respuesta: [company, share, gasShare]
     porque:     # «¿Por qué este número?»: la evidencia detrás de una fila de la respuesta
       columna: company
       titulo: "La parte de {valor}, concesión por concesión"
       explica: "Su parte es la suma, en cada concesión, de la producción por su porcentaje. Cada porcentaje sale del texto de socios del mapa, con su fuente."
       query: |
-        SELECT ?concesion ?porcentaje ?parte ?gas ?texto ?fuente WHERE {
+        SELECT ?concesion ?porcentaje ?produccion ?parte ?gas ?texto ?fuente ?empresa ?concesionIri ?participacion ?origen ?actividad ?regla WHERE {
           { SELECT ?c (SUM(?oil) AS ?prod) (SUM(?g) AS ?prodgas) WHERE {
-              ?s0 a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "{valor}" .
-              ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil ; energia:gas ?g } GROUP BY ?c }
-          ?s a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "{valor}" ; energia:percent ?porcentaje ;
-             energia:sourceText ?texto ; prov:wasDerivedFrom/energia:name ?fuente .
+              ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil ; energia:gas ?g .
+              FILTER EXISTS { ?s0 a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "{valor}" }
+            } GROUP BY ?c }
+          ?s a energia:Stake ; energia:inConcession ?c ; energia:partner ?empresa ; energia:percent ?porcentaje ;
+             energia:sourceText ?texto ; energia:rule ?regla ; prov:wasDerivedFrom ?origen ; prov:wasGeneratedBy ?actividad .
+          ?empresa energia:name "{valor}" .
+          ?origen energia:name ?fuente .
           ?c energia:name ?concesion .
+          BIND (?c AS ?concesionIri)
+          BIND (?s AS ?participacion)
+          BIND (?prod AS ?produccion)
           BIND (ROUND(?prod * ?porcentaje / 100) AS ?parte)
           BIND (ROUND(?prodgas * ?porcentaje / 100) AS ?gas)
         } ORDER BY DESC(?parte)
@@ -127,6 +134,69 @@ preguntas:
       detalle: "{porcentaje} % · {parte} m³ de petróleo"
       flecha: socia en
       columnas: {concesion: Concesión, porcentaje: "Porcentaje", parte: "Su parte de petróleo (m³)", gas: "Su parte de gas (miles de m³)", texto: "Evidencia: el texto del mapa", fuente: Fuente}
+      recorrido:
+        title: ¿Por qué este número?
+        company: Empresa que quiere comprobar
+        concession: Ver una concesión
+        example: CHEVRON
+        example_concession: LOMA CAMPANA
+        definition: 'La operadora declara la producción de los pozos. Esta respuesta calcula cuánto le corresponde a cada socio según su participación registrada.'
+        total: '**{company}: se suman sus partes en {count} concesiones.**'
+        comparison_title: Comparar producción operada y participación
+        operated_label: Petróleo declarado como operadora
+        share_label: Petróleo según su participación
+        comparison_note: >-
+          Son medidas distintas de 2025: la operadora declara la producción de sus pozos, incluida la parte de sus socios.
+          La participación se calcula con los porcentajes registrados en cada concesión.
+          Esta comparación no mide la exactitud de SQL frente a Rastro.
+        unavailable: Sin dato
+        breakdown_title: Ver todas las concesiones de esta empresa
+        breakdown_note: El total de la respuesta suma estas partes. Los volúmenes de cada fila se muestran redondeados.
+        calculation_title: Cómo se obtuvo
+        calculation: 'En {concesion}: {production} m³ de petróleo × {percent} % = {share} m³ que le corresponden a {company}.'
+        rounding: Los volúmenes se muestran redondeados a metros cúbicos enteros; el cálculo usa la precisión original.
+        connections_title: Qué conectó Rastro
+        sources:
+          - title: Declaraciones de producción
+            text: 'Producción de los pozos de {concesion}: {production} m³.'
+          - title: Mapa de concesiones
+            text: 'Socio: {company}. Participación registrada: {percent} %.'
+        connection: '{concesion} → Participación → {company}'
+        connection_detail: La producción y los socios se conectan por la misma concesión.
+        contribution: >-
+          Los mapeos traducen las fuentes a Pozo, Concesión, Empresa y Participación.
+          Los enlaces reúnen los nombres de una empresa bajo un mismo identificador, con su regla y evidencia.
+          Esas definiciones se reutilizan en las preguntas; también pueden consultarse con SQL sobre los mismos enlaces.
+        records_title: Ver los registros originales
+        original_text: '**Texto original del mapa:** {text}'
+        records_note: >-
+          La fila muestra la parte calculada y el texto original de socios que la respalda.
+          Es una consulta actual a las fuentes cargadas, no una copia histórica del portal.
+        production_query: |
+          SELECT ?registro ?pozo ?mes ?petroleo ?fuente WHERE {
+            ?concesion energia:name "{concesion}" .
+            ?registro a energia:WellProduction ; energia:inConcession ?concesion ;
+              energia:well/energia:wellId ?pozo ; energia:oil ?petroleo ;
+              energia:fromSource/energia:name ?fuente .
+            BIND (STRAFTER(STR(?registro), "/production/") AS ?clave)
+            BIND (STRBEFORE(STRAFTER(?clave, "/"), "/") AS ?mes)
+          } ORDER BY DESC(?petroleo) ?registro LIMIT 12
+        production_columns: {pozo: Pozo, mes: Mes de 2025, petroleo: Petróleo declarado (m³)}
+        production_note: Hasta 12 declaraciones con mayor petróleo de la concesión, del Capítulo IV de 2025. La suma usa todas sus declaraciones.
+        linking_title: Ver cómo se conectaron los nombres
+        linking_note: >-
+          Cada nombre de origen apunta a la misma empresa. La regla y su evidencia explican la unión;
+          si una corrección dice que espera confirmación humana, esa revisión sigue pendiente.
+        identity: '**Un identificador compartido para esta empresa:**'
+        linking_query: |
+          SELECT ?nombre ?fuente ?regla ?evidencia ?empresa WHERE {
+            ?empresa energia:name "{valor}" .
+            ?enlace a energia:CompanyName ; energia:company ?empresa ; energia:nameInSource ?nombre ;
+              energia:rule ?regla ; energia:sourceText ?evidencia ; prov:wasDerivedFrom/energia:name ?fuente .
+          } ORDER BY ?fuente ?nombre
+        linking_columns: {nombre: Nombre en la fuente, fuente: Fuente, regla: Regla, evidencia: Evidencia y revisión}
+        technical_title: Identificadores y consulta de este recorrido
+        missing: No hay evidencia disponible para esta selección.
     explicacion: |
       - **Qué busca:** la producción de petróleo de 2025 de cada pozo, la concesión donde está y los socios de esa concesión con su porcentaje.
       - **Qué calcula:** por cada empresa, la producción multiplicada por su porcentaje, sumada en todas sus concesiones; al lado, lo que opera (la producción que declara).

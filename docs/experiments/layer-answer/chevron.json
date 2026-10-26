@@ -1,0 +1,229 @@
+{
+  "created_utc": "2026-10-26T02:36:20.128691+00:00",
+  "company": "CHEVRON",
+  "concession": "LOMA CAMPANA",
+  "queries": {
+    "answer": "# 1. ¿Cuánto petróleo y cuánto gas de 2025 le corresponde a cada empresa según su participación en cada concesión?\nPREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT ?company (SUM(?oil * ?percent / 100) AS ?share) (SUM(?gas * ?percent / 100) AS ?gasShare) (SAMPLE(?operatedOil) AS ?operated)\nWHERE {\n  ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil ; energia:gas ?gas .\n  ?s a energia:Stake ; energia:inConcession ?c ; energia:partner ?e ; energia:percent ?percent .\n  ?e energia:name ?company .\n  OPTIONAL { SELECT ?e (SUM(?o) AS ?operatedOil) WHERE { ?q energia:declaredBy ?e ; energia:oil ?o } GROUP BY ?e }\n}\nGROUP BY ?company\nORDER BY DESC(?share)\nLIMIT 10\n",
+    "explanation": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT ?concesion ?porcentaje ?produccion ?parte ?gas ?texto ?fuente ?empresa ?concesionIri ?participacion ?origen ?actividad ?regla WHERE {\n  { SELECT ?c (SUM(?oil) AS ?prod) (SUM(?g) AS ?prodgas) WHERE {\n      ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil ; energia:gas ?g .\n      FILTER EXISTS { ?s0 a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name \"CHEVRON\" }\n    } GROUP BY ?c }\n  ?s a energia:Stake ; energia:inConcession ?c ; energia:partner ?empresa ; energia:percent ?porcentaje ;\n     energia:sourceText ?texto ; energia:rule ?regla ; prov:wasDerivedFrom ?origen ; prov:wasGeneratedBy ?actividad .\n  ?empresa energia:name \"CHEVRON\" .\n  ?origen energia:name ?fuente .\n  ?c energia:name ?concesion .\n  BIND (?c AS ?concesionIri)\n  BIND (?s AS ?participacion)\n  BIND (?prod AS ?produccion)\n  BIND (ROUND(?prod * ?porcentaje / 100) AS ?parte)\n  BIND (ROUND(?prodgas * ?porcentaje / 100) AS ?gas)\n} ORDER BY DESC(?parte)\n",
+    "links": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT ?nombre ?fuente ?regla ?evidencia ?empresa WHERE {\n  ?empresa energia:name \"CHEVRON\" .\n  ?enlace a energia:CompanyName ; energia:company ?empresa ; energia:nameInSource ?nombre ;\n    energia:rule ?regla ; energia:sourceText ?evidencia ; prov:wasDerivedFrom/energia:name ?fuente .\n} ORDER BY ?fuente ?nombre\n",
+    "production_sample": "PREFIX energia: <https://w3id.org/rastro/energia#>\nPREFIX prov: <http://www.w3.org/ns/prov#>\nSELECT ?registro ?pozo ?mes ?petroleo ?fuente WHERE {\n  ?concesion energia:name \"LOMA CAMPANA\" .\n  ?registro a energia:WellProduction ; energia:inConcession ?concesion ;\n    energia:well/energia:wellId ?pozo ; energia:oil ?petroleo ;\n    energia:fromSource/energia:name ?fuente .\n  BIND (STRAFTER(STR(?registro), \"/production/\") AS ?clave)\n  BIND (STRBEFORE(STRAFTER(?clave, \"/\"), \"/\") AS ?mes)\n} ORDER BY DESC(?petroleo) ?registro LIMIT 12\n"
+  },
+  "answer": [
+    {
+      "company": "YPF S.A.",
+      "share": "12570093.3524603625",
+      "gasShare": "12301226.2086566235",
+      "operated": "21389759.35"
+    },
+    {
+      "company": "VISTA ENERGY ARGENTINA SAU",
+      "share": "6987384.920573",
+      "gasShare": "886936.9197128",
+      "operated": "3996722.333"
+    },
+    {
+      "company": "PAN AMERICAN ENERGY SL",
+      "share": "5611756.0053359105",
+      "gasShare": "4617927.9383008975",
+      "operated": "6198696.609569"
+    },
+    {
+      "company": "CHEVRON",
+      "share": "3453743.73199999999998415",
+      "gasShare": "919212.7211050000025692715",
+      "operated": "880344.03699999999998415"
+    },
+    {
+      "company": "SHELL ARGENTINA S.A.",
+      "share": "2719673.9693196",
+      "gasShare": "560794.054137250699955",
+      "operated": "1746691.56"
+    },
+    {
+      "company": "PLUSPETROL",
+      "share": "1928920.2182931",
+      "gasShare": "2158138.3671987",
+      "operated": "3245098.3523"
+    },
+    {
+      "company": "COMPAÑIA GENERAL DE COMBUSTIBLES",
+      "share": "1466514.8170489",
+      "gasShare": "2003735.03776852",
+      "operated": "1085807.062422"
+    },
+    {
+      "company": "PECOM SERVICIOS ENERGIA SAU",
+      "share": "1172142.404245",
+      "gasShare": "107790.058072215",
+      "operated": "487760.284859"
+    },
+    {
+      "company": "TECPETROL S.A.",
+      "share": "1018636.1097394",
+      "gasShare": "6411540.54624696",
+      "operated": "1338447.897349"
+    },
+    {
+      "company": "PHOENIX GLOBAL RESOURCES S.A.",
+      "share": "831653.342612",
+      "gasShare": "56106.759569",
+      "operated": ""
+    }
+  ],
+  "explanation": [
+    {
+      "concesion": "LOMA CAMPANA",
+      "porcentaje": "50.0",
+      "produccion": "5146799.39",
+      "parte": "2573400.0",
+      "gas": "550470.0",
+      "texto": "COMPAÑIA DE HIDROCARBURO NO CONVENCIONAL S.R.L.: 50 %",
+      "fuente": "Mapas de la Secretaría de Energía: concesiones, socios y venteos por satélite (WFS)",
+      "empresa": "https://w3id.org/rastro/energia/company/CHEVRON",
+      "concesionIri": "https://w3id.org/rastro/energia/concession/LCAM",
+      "participacion": "https://w3id.org/rastro/energia/stake/LCAM/CHEVRON",
+      "origen": "https://w3id.org/rastro/source/sig_energia",
+      "actividad": "https://w3id.org/rastro/activity/energia-stake-parsing",
+      "regla": "texto de socios del mapa"
+    },
+    {
+      "concesion": "EL TRAPIAL ESTE",
+      "porcentaje": "100.0",
+      "produccion": "880344.03699999999998415",
+      "parte": "880344.0",
+      "gas": "368742.0",
+      "texto": "CHEVRON ARGENTINA S.R.L.: 100 %",
+      "fuente": "Mapas de la Secretaría de Energía: concesiones, socios y venteos por satélite (WFS)",
+      "empresa": "https://w3id.org/rastro/energia/company/CHEVRON",
+      "concesionIri": "https://w3id.org/rastro/energia/concession/ETE",
+      "participacion": "https://w3id.org/rastro/energia/stake/ETE/CHEVRON",
+      "origen": "https://w3id.org/rastro/source/sig_energia",
+      "actividad": "https://w3id.org/rastro/activity/energia-stake-parsing",
+      "regla": "texto de socios del mapa"
+    },
+    {
+      "concesion": "EL TRAPIAL - CURAMCHED",
+      "porcentaje": "100.0",
+      "produccion": "0.0",
+      "parte": "0.0",
+      "gas": "0.0",
+      "texto": "CHEVRON ARGENTINA S.R.L.: 100 %",
+      "fuente": "Mapas de la Secretaría de Energía: concesiones, socios y venteos por satélite (WFS)",
+      "empresa": "https://w3id.org/rastro/energia/company/CHEVRON",
+      "concesionIri": "https://w3id.org/rastro/energia/concession/HUA",
+      "participacion": "https://w3id.org/rastro/energia/stake/HUA/CHEVRON",
+      "origen": "https://w3id.org/rastro/source/sig_energia",
+      "actividad": "https://w3id.org/rastro/activity/energia-stake-parsing",
+      "regla": "texto de socios del mapa"
+    }
+  ],
+  "links": [
+    {
+      "nombre": "CHEVRON ARGENTINA S.R.L.",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)",
+      "regla": "corrección revisada",
+      "evidencia": "La filial argentina de Chevron. Revisado por un asistente de IA, a confirmar por una persona.",
+      "empresa": "https://w3id.org/rastro/energia/company/CHEVRON"
+    },
+    {
+      "nombre": "CHEVRON ARGENTINA S.R.L.",
+      "fuente": "Mapas de la Secretaría de Energía: concesiones, socios y venteos por satélite (WFS)",
+      "regla": "corrección revisada",
+      "evidencia": "La filial argentina de Chevron. Revisado por un asistente de IA, a confirmar por una persona.",
+      "empresa": "https://w3id.org/rastro/energia/company/CHEVRON"
+    },
+    {
+      "nombre": "COMPAÑIA DE HIDROCARBURO NO CONVENCIONAL S.R.L.",
+      "fuente": "Mapas de la Secretaría de Energía: concesiones, socios y venteos por satélite (WFS)",
+      "regla": "corrección revisada",
+      "evidencia": "Socia de YPF en Loma Campana: la sociedad con la que Chevron invierte en Vaca Muerta. Revisado por un asistente de IA, a confirmar por una persona.",
+      "empresa": "https://w3id.org/rastro/energia/company/CHEVRON"
+    }
+  ],
+  "production_sample": [
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166825/12/LCAM/YPF",
+      "pozo": "166825",
+      "mes": "12",
+      "petroleo": "11115.22",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166783/12/LCAM/YPF",
+      "pozo": "166783",
+      "mes": "12",
+      "petroleo": "10973.28",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166937/12/LCAM/YPF",
+      "pozo": "166937",
+      "mes": "12",
+      "petroleo": "10700.94",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166616/9/LCAM/YPF",
+      "pozo": "166616",
+      "mes": "9",
+      "petroleo": "10582.15",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166620/9/LCAM/YPF",
+      "pozo": "166620",
+      "mes": "9",
+      "petroleo": "10423.5",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166618/9/LCAM/YPF",
+      "pozo": "166618",
+      "mes": "9",
+      "petroleo": "10087.47",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166784/12/LCAM/YPF",
+      "pozo": "166784",
+      "mes": "12",
+      "petroleo": "9968.24",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166896/12/LCAM/YPF",
+      "pozo": "166896",
+      "mes": "12",
+      "petroleo": "9732.64",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166832/12/LCAM/YPF",
+      "pozo": "166832",
+      "mes": "12",
+      "petroleo": "9449.82",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166205/3/LCAM/YPF",
+      "pozo": "166205",
+      "mes": "3",
+      "petroleo": "9160.07",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166890/12/LCAM/YPF",
+      "pozo": "166890",
+      "mes": "12",
+      "petroleo": "9147.58",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    },
+    {
+      "registro": "https://w3id.org/rastro/energia/production/166833/12/LCAM/YPF",
+      "pozo": "166833",
+      "mes": "12",
+      "petroleo": "9052.96",
+      "fuente": "Capítulo IV: producción y padrón de pozos (Secretaría de Energía)"
+    }
+  ]
+}

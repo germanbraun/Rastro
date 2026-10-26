@@ -1,8 +1,7 @@
-"""El favicon de cada empresa junto a su nombre, en las tablas de respuestas de los tres dominios.
+"""Company icons beside names: retained official assets first, remote favicons as fallback.
 
-app/sitios.yaml (lo arma layer/sitios.py) dice el sitio web de cada empresa por su nombre
-normalizado. La app pide cada ícono una vez al servicio público de favicons de Google y lo guarda
-en memoria (la tabla no puede dibujar imágenes de otro sitio). Sin internet, la columna queda vacía.
+app/sitios.yaml maps normalized company names to websites. Retained assets and their
+source receipts live under app/company-icons; unknown icons remain blank.
 """
 
 import base64
@@ -21,6 +20,18 @@ COMPANY_COLUMNS = {"group", "supplier", "finalParent", "company", "operator", "s
                    "empresa", "operadora", "grupo", "proveedor", "previous", "new", "partner"}
 ICON = "https://www.google.com/s2/favicons?sz=64&domain="
 ICON_ALT = "https://icons.duckduckgo.com/ip3/{}.ico"
+LOCAL_ICONS = Path(__file__).with_name('company-icons')
+
+
+def icon(domain):
+    """Prefer a retained official icon so the demo also works offline."""
+    if re.fullmatch(r'[a-zA-Z0-9.-]+', domain):
+        for ext, mime in [('png', 'image/png'), ('svg', 'image/svg+xml'), ('ico', 'image/x-icon'),
+                          ('jpg', 'image/jpeg'), ('gif', 'image/gif')]:
+            path = LOCAL_ICONS / f'{domain}.{ext}'
+            if path.is_file():
+                return f'data:{mime};base64,' + base64.b64encode(path.read_bytes()).decode()
+    return remote_icon(domain)
 
 
 def normalize(name):
@@ -35,7 +46,7 @@ def _sites(mtime):
 
 
 @st.cache_data(show_spinner=False, persist="disk")   # en disco: los íconos no se piden de nuevo al reiniciar
-def icon(domain):
+def remote_icon(domain):
     """El favicon como imagen incrustada (data URI), o None si no se pudo traer. Si Google no lo
     tiene, se prueba el servicio de íconos de DuckDuckGo."""
     for url in (ICON + domain, ICON_ALT.format(domain)):
