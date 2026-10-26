@@ -2,8 +2,8 @@
 queries (SQL over the sources as they come, or SPARQL over Rastro), «calculos» simple arithmetic over them, and the
 card's texts name them in braces. The app and the slides read the same numbers through this module.
 
-From the command line, the Spanish numbers of every card of a domain and of «Por qué confiar», as JSON
-(docs/slides/build.py reads them):
+From the command line, the Spanish numbers of every card of a domain, of «Por qué confiar» and of the other demo
+slides (story_numbers), as JSON (docs/slides/build.py reads them; Rastro Lab trains its two models, ~1 min):
 docker compose exec -T app python /app/contraste.py energia > docs/slides/numeros/energia.json
 """
 import json
@@ -55,6 +55,65 @@ def trust_numbers(cfg, evaluation, changes, evidence, number):
     return numbers
 
 
+def key(name):
+    """A company's token key: the first word of its name, in lower case («TOTAL AUSTRAL S.A.» → total)."""
+    return name.split()[0].lower()
+
+
+def story_numbers(cfg, sparql, number, lab=None):
+    """The other numbers the demo slides show, each from where the app reads it: the two readings of the first
+    «Comprobar una afirmación», the «sin dato» test, the quality rules, the saved Wikidata enrichment and, when
+    lab() is given, Rastro Lab. number(value, decimals) formats; values by company are keyed by key()."""
+    out = {}
+    claims = (cfg.get("afirmaciones") or {}).get("ejemplos") or []
+    if claims:
+        first, share = claims[0]["lecturas"][:2]
+        for prefix, reading in (("opera", first), ("parte", share)):
+            out.update({f"{prefix}_{key(n)}": number(float(v) / reading["divisor"], 1)
+                        for n, v in sparql(reading["consulta"])[1][:3]})
+        gas = "?p a energia:WellProduction ; energia:inConcession ?c ; energia:gas ?gas ."
+        (total,), = sparql(f"SELECT (SUM(?gas) AS ?n) WHERE {{ {gas} }}")[1]
+        (with_stake,), = sparql(f"SELECT (SUM(?gas) AS ?n) WHERE {{ {gas} "
+                                "FILTER EXISTS { ?s a energia:Stake ; energia:inConcession ?c } }")[1]
+        out["pct_participaciones"] = number(100 * float(with_stake) / float(total), 1)
+    fuera = json.load(open(cfg["fuera"]["archivo"])) if cfg.get("fuera") else {}
+    if fuera:
+        asked = fuera["preguntas"].values()
+        out["sin_dato"] = number(sum(q["sin_datos"] for q in asked), 0)
+        control = next(q for q in asked if not q["sin_datos"])
+        out["control"] = number(float(control["C"]["respuesta"]), 0)
+    quality = json.load(open(cfg["calidad"]["archivo"])) if cfg.get("calidad") else {}
+    if quality:
+        out["reglas"] = number(len(quality["reglas"]), 0)
+        for rule in quality["reglas"]:
+            out[f"{rule['id']}_revisados"] = number(rule["revisados"], 0)
+            out[f"{rule['id']}_fallas"] = number(rule["fallas"], 0)
+        failing = {e["dato"] for r in quality["reglas"] for e in r["ejemplos"] if e["predicciones"]}
+        out["predicciones_afectadas"] = number(len({p for r in quality["reglas"] for e in r["ejemplos"]
+                                                    for p in e["predicciones"]}), 0)
+        if failing:
+            values = " ".join(f"<{d}>" for d in sorted(failing))
+            _, ((water, psi),) = sparql(f"""SELECT (MAX(?w) AS ?agua) (MAX(?p) AS ?psi) WHERE {{ VALUES ?f {{ {values} }}
+              OPTIONAL {{ ?f energia:waterM3 ?w }} OPTIONAL {{ ?f energia:maxPressurePsi ?p }} }}""")
+            out.update(agua_afectada=number(float(water), 0), psi_afectada=number(float(psi), 0))
+        (deepest,), = sparql("SELECT (MAX(?d) AS ?n) WHERE { ?t energia:verticalDepthM ?d }")[1]
+        out["profundidad_max"] = number(float(deepest), 0)
+    saved = (cfg.get("externo") or {}).get("guardado")
+    if saved and os.path.exists(saved):
+        import csv
+        from idioma import millions
+        rows = list(csv.DictReader(open(saved)))
+        out.update({f"externo_{key(r['empresa'])}": millions(r["su_parte_m3"], "m3", "es") for r in rows})
+        out["externo_con_lei"] = number(len(rows), 0)
+    if lab:
+        result = lab()
+        r, (doubtful, tested), start = result[3], result[5], result[8]
+        out.update(error_a=number(r["A"]["error"], 1), error_b=number(r["B"]["error"], 1),
+                   dudosos=number(doubtful, 0), probados=number(tested, 0),
+                   con_fractura=number(start["con_fractura"], 0), tarde=number(start["tarde"], 0))
+    return out
+
+
 def main(domain):
     sys.path[:0] = ["/app", "/layer"]
     import psycopg
@@ -86,6 +145,11 @@ def main(domain):
         if card.get("valores"):
             numbers[item["id"]] = shown(card, values(card, sql, sparql),
                                         lambda value, decimals: format_number(value, decimals, "es"))
+    lab = None
+    if cfg.get("lab"):
+        import lab as lab_tab
+        lab = lab_tab.calcular
+    numbers["demo"] = story_numbers(cfg, sparql, lambda value, decimals: format_number(value, decimals, "es"), lab)
     print(json.dumps(numbers, ensure_ascii=False, indent=1))
 
 

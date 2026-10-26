@@ -35,6 +35,11 @@ def sparql_df(query):
 
 @st.cache_data(persist="disk", show_spinner=False)
 def _datos(version, model_version):
+    return calcular()
+
+
+def calcular():
+    """The data and the two models, without the cache (docs/slides reads its numbers through app/contraste.py)."""
     import psycopg
     with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
                          f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:

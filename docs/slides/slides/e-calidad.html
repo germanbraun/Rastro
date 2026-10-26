@@ -3,21 +3,21 @@
 <h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Rastro comprueba sus datos con reglas escritas una vez</h2>
 <div style="display:flex;gap:32px">
 <div style="flex:1.3;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:8px">
-<p style="font-size:28px;line-height:1.35">✅ Cada enlace dice de qué fuente sale y por qué <span style="color:#7A8699">· 113.913</span></p>
-<p style="font-size:28px;line-height:1.35">✅ Cada participación, entre 0 y 100 % <span style="color:#7A8699">· 474</span></p>
-<p style="font-size:28px;line-height:1.35">✅ Las de una concesión suman 100 % o menos <span style="color:#7A8699">· 293</span></p>
-<p style="font-size:28px;line-height:1.35">✅ Cada predicción sale de un inicio de pozo y cae en su rango <span style="color:#7A8699">· 5.590</span></p>
-<p style="font-size:28px;line-height:1.35">✅ Cada empresa, a lo sumo un LEI <span style="color:#7A8699">· 12</span></p>
-<p style="font-size:28px;line-height:1.35">⚠️ Profundidad y rama posibles <span style="color:#7A8699">· 2 de 1.903</span></p>
-<p style="font-size:28px;line-height:1.35">⚠️ Presión y agua posibles <span style="color:#7A8699">· 17 de 4.733</span></p>
+<p style="font-size:28px;line-height:1.35">✅ Cada enlace dice de qué fuente sale y por qué <span style="color:#7A8699">· {{energia.demo.EnlaceConEvidencia_revisados}}</span></p>
+<p style="font-size:28px;line-height:1.35">✅ Cada participación, entre 0 y 100 % <span style="color:#7A8699">· {{energia.demo.Participacion_revisados}}</span></p>
+<p style="font-size:28px;line-height:1.35">✅ Las de una concesión suman 100 % o menos <span style="color:#7A8699">· {{energia.demo.ConcesionHasta100_revisados}}</span></p>
+<p style="font-size:28px;line-height:1.35">✅ Cada predicción sale de un inicio de pozo y cae en su rango <span style="color:#7A8699">· {{energia.demo.Prediccion_revisados}}</span></p>
+<p style="font-size:28px;line-height:1.35">✅ Cada empresa, a lo sumo un LEI <span style="color:#7A8699">· {{energia.demo.EmpresaUnLei_revisados}}</span></p>
+<p style="font-size:28px;line-height:1.35">⚠️ Profundidad y rama posibles <span style="color:#7A8699">· {{energia.demo.TrayectoriaPosible_fallas}} de {{energia.demo.TrayectoriaPosible_revisados}}</span></p>
+<p style="font-size:28px;line-height:1.35">⚠️ Presión y agua posibles <span style="color:#7A8699">· {{energia.demo.FracturaPosible_fallas}} de {{energia.demo.FracturaPosible_revisados}}</span></p>
 </div>
 <div style="flex:1;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:16px">
 <p style="font-size:28px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Lo que encontraron</p>
 <p style="font-size:28px;line-height:1.4"><b>5 trayectorias sin evidencia:</b> arreglado en un lugar.</p>
-<p style="font-size:28px;line-height:1.4"><b>4 predicciones</b> usan un dato imposible de la fuente: 537.184 m³ de agua, 111.515 psi. Rastro sabe cuáles, porque cada predicción dice qué datos usó.</p>
+<p style="font-size:28px;line-height:1.4"><b>{{energia.demo.predicciones_afectadas}} predicciones</b> usan un dato imposible de la fuente: {{energia.demo.agua_afectada}} m³ de agua, {{energia.demo.psi_afectada}} psi. Rastro sabe cuáles, porque cada predicción dice qué datos usó.</p>
 </div>
 </div>
 <p style="font-size:28px;color:#4A5568">Como los controles de calidad de una base, pero sobre todas las fuentes juntas, su evidencia y lo que las usa.</p>
 <div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>19</p></div>
-<aside>Rastro no solo integra: comprueba lo que integró. Siete reglas, escritas una vez con las palabras del diccionario, se comprueban sobre todos los datos después de cada carga. Para alguien de SQL son como los controles de calidad de una tabla, pero miran las fuentes integradas, la evidencia de cada enlace y lo que usa cada dato. La primera vez encontraron 5 trayectorias de pozo sin evidencia: un dato vacío borraba el texto; se arregló en un lugar. Las dos últimas marcan valores imposibles de la fuente: 2 trayectorias (una a 276.939 m de profundidad) y 17 fracturas (presiones de más de 100.000 psi, 537.184 m³ de agua en tres pozos). Y como cada predicción de Rastro Lab dice qué datos usó, Rastro sabe que 4 predicciones de la corrida vigente heredan uno de esos errores. Las reglas no cambian el dato: lo marcan para revisar. Están en SHACL, el estándar del W3C, así que sirven en otras plataformas o herramientas de grafos de conocimiento.</aside>
+<aside>Rastro no solo integra: comprueba lo que integró. {{energia.demo.reglas}} reglas, escritas una vez con las palabras del diccionario, se comprueban sobre todos los datos después de cada carga. Para alguien de SQL son como los controles de calidad de una tabla, pero miran las fuentes integradas, la evidencia de cada enlace y lo que usa cada dato. La primera vez encontraron 5 trayectorias de pozo sin evidencia: un dato vacío borraba el texto; se arregló en un lugar. Las dos últimas marcan valores imposibles de la fuente: {{energia.demo.TrayectoriaPosible_fallas}} trayectorias (una a {{energia.demo.profundidad_max}} m de profundidad) y {{energia.demo.FracturaPosible_fallas}} fracturas (presiones de más de 100.000 psi, {{energia.demo.agua_afectada}} m³ de agua en tres pozos). Y como cada predicción de Rastro Lab dice qué datos usó, Rastro sabe que {{energia.demo.predicciones_afectadas}} predicciones de la corrida vigente heredan uno de esos errores. Las reglas no cambian el dato: lo marcan para revisar. Están en SHACL, el estándar del W3C, así que sirven en otras plataformas o herramientas de grafos de conocimiento.</aside>
 </section>
