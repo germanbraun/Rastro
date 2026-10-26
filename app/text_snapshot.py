@@ -27,9 +27,33 @@ def texts(app):
     return found
 
 
+def oncology(lang):
+    """Oncology has its own screen in app/app.py, reached with «Ver detalles técnicos» and the domain selector."""
+    app = AppTest.from_file("/app/app.py", default_timeout=600)
+    app.session_state["lang"] = lang
+    app.run()
+    next(t for t in app.toggle if not t.key).set_value(True).run()
+    radio = next(r for r in app.radio if r.key == "domain")
+    import yaml
+
+    import idioma
+    domains = yaml.safe_load(open("/app/dominios.yaml"))
+    if lang == "en":   # the selector shows the English names: pick the same entry the app builds
+        domains = idioma.overlay(domains, yaml.safe_load(open("/app/dominios.en.yaml")))
+    entry = next(d for d in domains if d["id"] == "oncologia")
+    radio.set_value(entry).run()
+    return {"technical": {"exceptions": [e.message for e in app.exception], "texts": texts(app)}}
+
+
 def main(domain, lang, out):
     config = f"/app/dominios/{domain}.yaml"
     result = {}
+    if domain == "oncologia":
+        result = oncology(lang)
+        with open(out, "w", encoding="utf-8") as f:
+            json.dump(result, f, ensure_ascii=False, indent=1)
+        print({view: (len(v["texts"]), len(v["exceptions"])) for view, v in result.items()})
+        return
     for tech in (False, True):
         script = (f"import sys\nsys.path.insert(0, '/layer')\nimport streamlit as st\n"
                   f"st.session_state.setdefault('lang', {lang!r})\n"

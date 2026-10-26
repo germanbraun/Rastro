@@ -1,0 +1,299 @@
+# English overlay of proveedores.yaml: only the visible texts, laid over the Spanish file by app/idioma.py.
+# Same nesting as the Spanish file; lists without «id» line up by position ({} keeps an item as it is).
+
+resumen: >-
+  Public data from the US: federal contracts (USAspending), sectors (NAICS),
+  the global company identifier (GLEIF), screening lists (trade.gov) and Wikidata.
+ejemplo_libre: "For example: which corporate groups have the most contracts with NASA?"
+diagrama: {titulo: suppliers dictionary}
+
+demo_porque: >-
+  Three steps, one for each thing Rastro does that a query written by hand over the databases does not do
+  on its own, all with the same example: the Leidos corporate group. Each step compares the answer without Rastro
+  and with Rastro, and runs live on the data.
+demo:
+  - paso: Integration
+    titulo: "One corporate group consolidated from 13 parent companies"
+    que_es: >-
+      Joining sources that do not share keys. The contracts say which company is paid; who belongs to which group
+      is spread across the parent companies in USAspending, the global company register (GLEIF) and reviewed
+      corrections. Rastro builds the group once, with the evidence for each company.
+    muestra: >-
+      That integrating changes the number: searching for «Leidos» in the names misses companies of the group with
+      another legal name; with the group built, the amount is that of the whole group.
+  - paso: Traceability
+    titulo: "The SAIC case: a justified assignment"
+    que_es: >-
+      Being able to follow each value back to its origin: which source it comes from, which rule was applied and what
+      each source said. When the sources contradict each other, Rastro decides with a written rule and keeps the
+      evidence (with the PROV-O standard).
+    muestra: >-
+      That each assignment can be audited: because of the 2013 name change, USAspending records Leidos as a former
+      parent company of today's SAIC, and a query written by hand adds SAIC contracts to Leidos. Rastro keeps
+      SAIC in its own group and shows what was discarded and why.
+  - paso: Text analysis
+    titulo: "The group's activities, from its contracts"
+    que_es: >-
+      Answering about free text with AI, but anchored in the graph: first an exact query picks the
+      group's contracts, and the AI summarizes only those descriptions, citing each contract (GraphRAG).
+    muestra: >-
+      That the AI reads what it should: searching for «Leidos» in the texts misses almost everything; the graph brings
+      the contracts of every company in the group.
+
+fuentes:
+  csl: Consolidated Screening List
+  rastro: Rastro link
+nota_rastro: >-
+  The corporate groups and the links between sources, which Rastro resolves once and keeps with their evidence
+
+columnas:
+  group: Corporate group
+  companies: Companies
+  contracts: Contracts
+  total: Total amount (US$)
+  agency: Agency
+  groupTotal: With the group (US$)
+  agencyTotal: Agency total (US$)
+  share: Share of the group
+  supplier: Supplier
+  finalParent: Ultimate parent company
+  country: Country
+  who: Who
+  name: Name
+  entry: List entry
+  list: List
+  matched: Matched
+  rule: Rule
+  suppliers: Suppliers
+  stockExchange: Stock exchange
+  headquarters: Headquarters
+  sourceText: Evidence
+  source: Source
+
+preguntas:
+  - id: p01
+    porque:
+      titulo: "The companies of {valor}, and why they belong to the group"
+      explica: "Each company joins the group through a link with its rule and its evidence: what each source says."
+      flecha: belongs to the group
+      columnas: {empresa: Company, regla: Rule, texto: "Evidence", fuente: Source}
+    explicacion: |
+      - **What it looks for:** the corporate groups whose name includes «Leidos», all their companies and the contracts of each one.
+      - **What it calculates:** for each group, how many companies, how many contracts and the total amount.
+      - **What SQL would have to do by hand:** build the list of the group's companies (with different names in each source). Here «corporate group» is already resolved, with the evidence for each company.
+    simple: How much does the government contract with the Leidos corporate group, counting all its companies?
+    tecnica: What is the total of the contracts of the Leidos corporate group, counting all its companies?
+    ventaja: "The group builds itself. USAspending splits Leidos across 13 different parent companies; Rastro joins them with the ultimate parent company recorded by GLEIF and, for the acquisitions no source records (Dynetics, QTC, Gibbs & Cox), with a reviewed correction."
+    terminos:
+      Grupo: the parent company and all its subsidiaries (corporate group).
+    antes_despues:
+      sin: {valor: "US$ 56.4 billion", detalle: "A search by the name «Leidos» leaves out companies of the group with another legal name (QTC, Dynetics, Gibbs & Cox and 1901 Group: US$ 7.7 billion) and includes a joint venture outside the group."}
+      con: {valor: "US$ 63.4 billion", detalle: "30 companies: the 13 «parent companies» in the contracts database, consolidated into one group, with the evidence for each link."}
+    evidencia:
+      texto: "Why each company is part of the Leidos corporate group (some examples):"
+
+  - id: p08
+    porque:
+      titulo: "The links of {valor}"
+      explica: "Which corporate group it belongs to and with which LEI, each link with its evidence: what each source says and what was discarded."
+      flecha: link
+      columnas: {que: What, hacia: With whom, texto: Evidence, fuente: Source}
+    explicacion: |
+      - **What it looks for:** the suppliers named «Science Applications International Corporation» and the link that says which corporate group each one belongs to.
+      - **What it returns:** the group, the evidence (what each source says), the rule and the source the link was derived from (PROV-O).
+      - **What is special:** the answer is not just the value: it is the reason why, which can be audited.
+    simple: "«Science Applications International Corporation»: does it belong to Leidos or to SAIC?"
+    tecnica: Which corporate group does «Science Applications International Corporation» belong to, and why?
+    ventaja: The confusing name is resolved once. In 2013 the old SAIC was renamed Leidos and a new company took the name SAIC. Rastro does not add today's SAIC contracts to Leidos, and the evidence says why.
+    terminos:
+      UEI: the number with which each company registers to sell to the US government.
+      LEI: the global company identifier (GLEIF), the same all over the world.
+    antes_despues:
+      sin: {valor: "Leidos: US$ 97.8 billion", detalle: "With another wording of the question, the SQL query followed historical parent companies and attributed US$ 41.4 billion of today's SAIC to Leidos."}
+      con: {valor: "Leidos: US$ 63.4 billion", detalle: "SAIC is assigned to its own group by its current legal name. Leidos matches only its former name and is explicitly discarded."}
+    evidencia:
+      texto: "Why today's SAIC (UEI MMLKPW9JLX64) belongs to the SAIC corporate group and not to Leidos:"
+
+  - id: p02
+    porque:
+      titulo: "The companies of {valor}, and why they belong to the group"
+      explica: "The amount is that of the whole group: each company joins the group through a link with its rule and its evidence."
+      flecha: belongs to the group
+      columnas: {empresa: Company, regla: Rule, texto: "Evidence", fuente: Source}
+    explicacion: |
+      - **What it looks for:** the contracts of sector 5415 (IT services) and all its subsectors, with each supplier's corporate group.
+      - **What it returns:** the 5 corporate groups with the highest amount.
+      - **What is special:** «is within» includes the subsectors on its own; in SQL the NAICS hierarchy would have to be walked in every query.
+    simple: Which five corporate groups sell the most IT services to the government?
+    tecnica: Which are the 5 corporate groups with the most contracts in IT services, including their subsectors?
+    ventaja: «IT services» includes all its subsectors on its own, and each contract is added to its corporate group.
+    terminos:
+      Servicios informáticos: sector 5415 of the NAICS classification (systems design, custom programming, computer facilities management…) (IT services).
+    evidencia:
+      texto: "«IT services» includes these sectors:"
+
+  - id: p03
+    porque:
+      titulo: "The companies of {valor}, and why they belong to the group"
+      explica: "The agency's share is calculated on the whole group: each company joins through a link with its rule and its evidence."
+      flecha: belongs to the group
+      columnas: {empresa: Company, regla: Rule, texto: "Evidence", fuente: Source}
+    explicacion: |
+      - **What it calculates:** for each agency, its total spending and what it spends with each corporate group; each group's share is the ratio of the two.
+      - **What it filters:** the cases where a single group has more than a third of the agency's spending.
+      - **What is special:** concentration is measured by corporate group, not by individual company.
+    simple: Which agencies give more than a third of their spending to a single corporate group?
+    tecnica: Which agencies concentrate more than a third of their spending in a single corporate group?
+    ventaja: "Concentration is measured by corporate group, not by each individual company: otherwise it stays hidden."
+
+  - id: p04
+    porque:
+      titulo: "Why {valor} has a parent company outside the US"
+      explica: "The ultimate parent company comes from GLEIF, through the LEI of the supplier or of its group. Below, the links with their evidence."
+      flecha: link
+      columnas: {que: What, hacia: With whom, texto: Evidence, fuente: Source}
+    explicacion: |
+      - **What it looks for:** the «suppliers with a foreign parent company», a class defined once in the dictionary, with their ultimate parent company according to GLEIF.
+      - **What it returns:** each supplier, its ultimate parent company, the country and what it is contracted for.
+      - **What is special:** the «foreign parent company» rule is in a single place and several questions use it.
+    simple: Which suppliers belong to corporate groups with their parent company outside the US?
+    tecnica: Which suppliers have their ultimate parent company outside the US?
+    ventaja: «Foreign parent company» is defined once and several questions use it; the LEI joins USAspending with GLEIF.
+    terminos:
+      Matriz final: the company at the very top of the corporate group, according to GLEIF (ultimate parent company).
+    evidencia:
+      texto: "How Rastro knows where the ultimate parent company is (some examples):"
+
+  - id: p05
+    porque:
+      titulo: "Why {valor} matches a screening list"
+      explica: "Rastro compares the name (and the list's aliases) ignoring capitals, punctuation and legal form. A match is a sign to review, not a sanction."
+      flecha: matches
+      columnas: {entrada: List entry, lista: List, coincidio: Matched text, regla: Rule}
+    explicacion: |
+      - **What it looks for:** suppliers or corporate groups with a link to an entry of the Consolidated Screening List.
+      - **What it returns:** who, which entry, which list, what matched and with which rule.
+      - **What is special:** a name match is not a confirmation; that is why the evidence is shown.
+    simple: Does any supplier, or its corporate group, appear on a government screening list?
+    tecnica: Does any supplier, or its corporate group, appear on a government screening list?
+    ventaja: Each match says which name matched and with which rule, so that compliance can review it in a minute.
+    terminos:
+      Lista de control: the US government's sanctions and restrictions lists (OFAC, Commerce, State) (screening list).
+    evidencia:
+      texto: "What each source says, side by side:"
+
+  - id: p06
+    explicacion: |
+      - **What it looks for:** the Department of Defense contracts in construction (sector 23 and all its subsectors).
+      - **What it returns:** how many distinct suppliers, how many contracts and the amount.
+    simple: With how many companies does the Department of Defense contract construction work?
+    tecnica: How many distinct suppliers does the Department of Defense have in construction?
+    ventaja: «Construction» includes all its subsectors on its own (buildings, roadworks, installations…).
+    evidencia:
+      texto: "«Construction» includes, among others, these sectors:"
+
+  - id: p07
+    porque:
+      titulo: "Where the fact that {valor} is listed on a stock exchange comes from"
+      explica: "The corporate group has a LEI (GLEIF), and Wikidata uses the same LEI: that is where the stock exchange and the headquarters come from, without loading or linking anything by hand."
+      flecha: listed on
+      columnas: {lei: LEI (GLEIF), wikidata: Wikidata, bolsa: Stock exchange}
+    explicacion: |
+      - **What it looks for:** the corporate groups listed on a stock exchange according to Wikidata (joined by their LEI) and their contracts.
+      - **What it filters:** those with more than US$1 billion in total, with their stock exchange and their headquarters.
+      - **What is special:** the Wikidata data is joined through a shared identifier, without loading it by hand.
+    simple: Which listed corporate groups bill the government more than a billion dollars?
+    tecnica: Which listed corporate groups have contracts for more than US$1 billion, and where are they headquartered?
+    ventaja: A shared identifier (the LEI) brings in data from another organization, Wikidata, without integrating it by hand.
+    evidencia:
+      texto: "Each corporate group is joined with Wikidata through its LEI (some examples):"
+
+  - id: p09
+    porque:
+      titulo: "The suppliers to review at {valor}, and why"
+      explica: "«To review» is not in any table: Rastro infers it from two dictionary rules (foreign parent company or a match with a screening list)."
+      flecha: to review
+      columnas: {proveedor: Supplier, motivo: Reason, millones: "US$ millions"}
+    explicacion: |
+      - **What it looks for:** the «suppliers to review», a class with no mapping of its own: Rastro infers it from two rules (foreign parent company or a match with a list).
+      - **What it returns:** for each agency, how many of those suppliers, how many contracts and the amount.
+    simple: How much does each agency contract with suppliers that compliance should look at?
+    tecnica: How much does each agency contract with suppliers to review?
+    ventaja: «Supplier to review» is a business rule written once in the dictionary; Rastro applies it on its own.
+    terminos:
+      Proveedor para revisar: its parent company is outside the US or its name matches a screening list (supplier to review).
+
+tarjetas:
+  - titulo: The same question, the same answer
+    valor: "{c_consistent} of {n_consistency}"
+    compara: "Without Rastro: {b_consistent} of {n_consistency}"
+  - titulo: If a database changes, it is fixed with
+    valor: 1 line
+    compara: "Without Rastro: rewrite {b_broken} queries"
+  - titulo: Every answer can be audited
+    compara: "of the {n_enlaces} links between sources keep their source, their rule and their text; and {cols_ok} of {cols} answer columns say which source they come from."
+
+cambios:
+  - titulo: The way a value is written changes
+    que: USAspending publishes a new version and the amounts are now in thousands of dollars.
+  - titulo: The name of a column changes
+    que: USAspending publishes a new version and the agency column is renamed.
+
+faq:
+  - pregunta: What does this second domain show?
+    respuesta: >-
+      That Rastro works for any domain. It is the same Rastro, with other data: the US federal contracts
+      of more than US$10 million in fiscal year 2025 (36,145), the companies that receive them, their
+      corporate groups and the government's screening lists. A case of procurement, risk and compliance.
+  - pregunta: What is a corporate group, and why is it hard to build?
+    respuesta: >-
+      A corporate group is a parent company with all its subsidiaries. USAspending records the parent company of each
+      supplier, but splits the same group across several parent companies: Leidos appears in 13. Rastro joins them
+      with the global company identifier (LEI) and the ultimate parent company recorded by GLEIF, and keeps
+      why. Without Rastro, each query has to resolve it again.
+  - pregunta: Why are SAIC's contracts not counted in Leidos?
+    respuesta: >-
+      In 2013 the old SAIC was renamed Leidos and a new company took the name SAIC. USAspending
+      still records Leidos as a former parent company of today's SAIC, and GLEIF, when searching by name,
+      returns Leidos first (it is its former name). Rastro uses the current legal name and keeps SAIC in
+      its own group; the evidence shows what was discarded and why.
+  - pregunta: Which texts does it read in this case?
+    respuesta: >-
+      Those in «A question about texts». Rastro first picks, with an exact query, the contracts of the
+      Leidos corporate group (all its companies, including Dynetics and QTC). Then an AI assistant reads only the
+      description of those contracts and groups them into topics, citing each contract. Searching for «Leidos» in the
+      texts is not enough: of those 40 contracts, only one mentions Leidos in its description.
+  - pregunta: Does a match with a screening list mean the company is sanctioned?
+    respuesta: >-
+      No. It is an identical name after removing capitals, punctuation and «Inc.» or «LLC». Rastro shows what
+      each source says, with the country on each side, so that someone can review it. In this data, all
+      the matches are namesakes from other countries.
+  - pregunta: How reliable are the links with GLEIF?
+    respuesta: >-
+      In a random sample of 50 supplier → LEI links, 46 are certain, 3 probable (the same company
+      with another legal form) and 1 doubtful: between 92 % and 98 %. It was reviewed by an AI assistant; it is still
+      awaiting a person's confirmation.
+  - pregunta: What is «amount»?
+    respuesta: >-
+      The total amount of each contract over its whole life, as USAspending publishes it, not only what was
+      paid in 2025.
+  - pregunta: What did the comparison with and without Rastro give in this case?
+    respuesta: >-
+      The same LLM (Claude Code subagents, Claude Opus 5.5, which saw only the prompt) answered the 9
+      questions in three ways: SQL over the source tables as they were loaded (4 of 9 correct),
+      SQL over those tables plus Rastro's link tables (8 of 9) and SPARQL over Rastro
+      (8 of 9). With the link tables, SQL is just as accurate: the precision comes from integrating once. The references come from Rastro and were written by an AI assistant, so where the
+      two approaches differ they were checked against the data (`layer/proveedores/adjudicacion.md`).
+  - pregunta: Where is each piece?
+    respuesta: >-
+      Data in Postgres, one schema per source (`usaspending`, `naics`, `csl`, `gleif`, `wikidata`); corporate groups
+      and links in the `proveedores` schema (`linking/proveedores/`); a second Ontop on port 8081 with
+      its ontology (`ontology/proveedores/`) and its mappings (`mappings/proveedores.r2rml.ttl`). Each link
+      is exposed with PROV-O.
+
+technical:
+  pieces:
+    enlaces:
+    - - Steps 1 and 2 · The companies of the Leidos corporate group, with the evidence for each one
+    mapas:
+    - - Steps 1 and 2 · Supplier, corporate group and the link with its evidence

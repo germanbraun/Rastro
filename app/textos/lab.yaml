@@ -186,3 +186,5 @@ lab.show_published.column_hasta: {es: "Hasta", en: "To"}
 lab.show_published.column_concesionYOperadora: {es: "Concesión con su operadora", en: "Concession with its operator"}
 lab.show_published.column_fractura: {es: "Cómo se fracturó", en: "How it was fractured"}
 lab.show_published.column_profundidad: {es: "Su profundidad", en: "Its depth"}
+
+lab.alternative.tree_question: {es: "¿{question}?", en: "{question}?"}

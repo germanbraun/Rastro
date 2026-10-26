@@ -267,11 +267,11 @@ def explain(query, sql, domain, item=None, where="preguntar"):
     key = f"explain_{where}_{abs(hash(query))}"
     stored = (item or {}).get("explicacion")
     available, _ = llm_status()
-    if st.button("💬 Explicame la consulta", key=f"{key}_boton", disabled=not stored and not available,
-                 help=None if stored or available else "Para explicar preguntas propias hace falta un LLM."):
+    if st.button(idioma.t("dominio.explain.button"), key=f"{key}_boton", disabled=not stored and not available,
+                 help=None if stored or available else idioma.t("dominio.explain.need_llm")):
         st.session_state[key] = stored
         if not stored:
-            with st.spinner("El LLM está leyendo la consulta..."):
+            with st.spinner(idioma.t("dominio.explain.reading")):
                 st.session_state[key] = answer.explain_query(query, sql, domain, idioma.lang())
     if st.session_state.get(key):
         st.info(md(st.session_state[key]))
@@ -350,61 +350,64 @@ def ontology_doc(domain):
     def text(x, prop):
         return " ".join(str(o) for o in g.objects(x, prop))
 
-    sections = []
-    for title, kind in [("Clases", OWL.Class), ("Relaciones (entre entidades)", OWL.ObjectProperty),
-                        ("Atributos (datos simples)", OWL.DatatypeProperty)]:
+    def col(key):
+        return idioma.t(f"dominio.ontology_doc.col_{key}")
+
+    sections = []   # (fixed internal name, visible title, rows)
+    for section, kind in [("classes", OWL.Class), ("relations", OWL.ObjectProperty), ("attributes", OWL.DatatypeProperty)]:
         rows = []
         for s in sorted(set(g.subjects(RDF.type, kind)), key=str):
             if not str(s).startswith(ns):
                 continue
-            row = {"Término": name(s), "En el diccionario": text(s, RDFS.label), "Descripción": text(s, RDFS.comment)}
+            row = {col("term"): name(s), col("label"): text(s, RDFS.label), col("description"): text(s, RDFS.comment)}
             if kind == OWL.Class:
-                row["Es un tipo de"] = ", ".join(name(o) for o in g.objects(s, RDFS.subClassOf) if isinstance(o, rdflib.URIRef))
+                row[col("subclass_of")] = ", ".join(name(o) for o in g.objects(s, RDFS.subClassOf)
+                                                    if isinstance(o, rdflib.URIRef))
             else:
-                row["De"] = ", ".join(name(o) for o in g.objects(s, RDFS.domain))
-                row["A"] = ", ".join(name(o) for o in g.objects(s, RDFS.range))
+                row[col("from")] = ", ".join(name(o) for o in g.objects(s, RDFS.domain))
+                row[col("to")] = ", ".join(name(o) for o in g.objects(s, RDFS.range))
             rows.append(row)
-        sections.append((title, rows))
+        sections.append((section, idioma.t(f"dominio.ontology_doc.{section}"), rows))
     return sections
 
 
 def show_pieces(domain, diagram=None):
     """The technical tab «Diccionario, enlaces y mapeos»."""
     pieces = technical(domain).get("pieces", {})
-    st.markdown("### El diccionario (la ontología)", help=ayuda("ontologia"))
-    st.caption(f"Documentación generada del archivo de la ontología (`{ontology_file(domain).replace('/ontology/', 'ontology/')}`), "
-               "como la que arman herramientas de documentación de ontologías (por ejemplo, WIDOCO).")
+    st.markdown(idioma.t("dominio.show_pieces.dictionary_title"), help=ayuda("ontologia"))
+    st.caption(idioma.t("dominio.show_pieces.dictionary_caption", file=ontology_file(domain).replace('/ontology/', 'ontology/')))
     if diagram and Path(f"/app/{diagram}.svg").exists():
-        with st.expander("El diccionario dibujado", expanded=False):
+        with st.expander(idioma.t("dominio.show_pieces.drawn"), expanded=False):
             svg = base64.b64encode(Path(f"/app/{diagram}.svg").read_bytes()).decode()
             st.markdown(f'<img src="data:image/svg+xml;base64,{svg}" style="width:100%">', unsafe_allow_html=True)
-    for title, rows in ontology_doc(domain):
-        with st.expander(f"{title} ({len(rows)})", expanded=title == "Clases"):
+    description = idioma.t("dominio.ontology_doc.col_description")
+    for section, title, rows in ontology_doc(domain):
+        with st.expander(f"{title} ({len(rows)})", expanded=section == "classes"):
             tabla(pd.DataFrame(rows), hide_index=True, use_container_width=True,
-                         column_config={"Descripción": st.column_config.TextColumn(width="large")})
+                         column_config={description: st.column_config.TextColumn(width="large")})
     if pieces.get("enlaces"):
-        st.markdown("### Entity linking: algunos enlaces que usa la demo", help=ayuda("enlaces"))
-        st.caption("Registros reales de las tablas de enlaces de Rastro: qué decía cada fuente, qué decidió Rastro y con qué regla.")
+        st.markdown(idioma.t("dominio.show_pieces.links_title"), help=ayuda("enlaces"))
+        st.caption(idioma.t("dominio.show_pieces.links_caption"))
         for title, query in pieces["enlaces"]:
             st.markdown(f"**{title}**")
             try:
                 cols, rows = sql_table(query, domain)
                 tabla(pd.DataFrame(rows, columns=cols), hide_index=True, use_container_width=True)
             except Exception as e:
-                st.warning(f"No se pudo leer: {str(e)[:200]}")
-            with st.expander("La consulta"):
+                st.warning(idioma.t("dominio.show_pieces.unreadable", error=str(e)[:200]))
+            with st.expander(idioma.t("dominio.show_pieces.query")):
                 st.code(sqlparse.format(query, reindent=True, keyword_case="upper"), language="sql")
     if pieces.get("mapas"):
-        st.markdown("### Mapeos (R2RML): los que usa la demo", help=ayuda("mapeos"))
-        st.caption(f"Cómo se traduce cada tabla al diccionario, tal como está en `{pieces['mapeos'].lstrip('/')}`. "
-                   "Si una fuente cambia, se arregla acá.")
+        st.markdown(idioma.t("dominio.show_pieces.mappings_title"), help=ayuda("mapeos"))
+        st.caption(idioma.t("dominio.show_pieces.mappings_caption", file=pieces['mapeos'].lstrip('/')))
         for title, names in pieces["mapas"]:
             with st.expander(title):
                 st.code("\n\n".join(mapping_blocks(pieces["mapeos"], names)), language="turtle")
 
 
-PROV_NAMES = {PROV_NS + "wasDerivedFrom": "se derivó de", PROV_NS + "wasGeneratedBy": "lo generó",
-              PROV_NS + "Entity": "Dato con procedencia"}
+def prov_names():
+    """PROV-O terms in business words, in the interface's language."""
+    return {PROV_NS + term: idioma.t(f"dominio.prov.{term}") for term in ("wasDerivedFrom", "wasGeneratedBy", "Entity")}
 
 
 def instance_graph(iri, rows, domain, title=None):
@@ -412,7 +415,7 @@ def instance_graph(iri, rows, domain, title=None):
     classes, rectangles for plain values and arrows with each property's business name.
     Returns the SVG and the linked entities, to follow them."""
     import grafo
-    ns, names = answer.DOMAINS[domain]["namespace"], {**labels(domain), **PROV_NAMES}
+    ns, names = answer.DOMAINS[domain]["namespace"], {**labels(domain), **prov_names()}
     linked = [o for p, o in rows if o.startswith("http") and p != RDF_TYPE]
     named = {}
     if linked:
@@ -421,7 +424,7 @@ def instance_graph(iri, rows, domain, title=None):
     own = next((o for p, o in rows if p == f"{ns}name"), None)
     nodes = []
     for p, o in rows:
-        prop = "es un/a" if p == RDF_TYPE else names.get(p) or short_iri(p, domain)
+        prop = idioma.t("dominio.instance_graph.is_a") if p == RDF_TYPE else names.get(p) or short_iri(p, domain)
         if p == RDF_TYPE:
             nodes.append(("clase", names.get(o) or short_iri(o, domain), short_iri(o, domain), prop))
         elif o.startswith("http"):
@@ -440,38 +443,37 @@ def show_instances(domain):
     examples = technical(domain).get("instances")
     if not examples:
         return
-    st.markdown("### Así se ve un dato del grafo", help=ayuda("instancia"))
-    st.caption("Una entidad real del grafo. Burbuja azul: una entidad; burbuja naranja: su clase en el diccionario; "
-               "rectángulo: un dato simple (texto, número o fecha). Cada flecha es una propiedad, con su nombre de "
-               "negocio. Los enlaces traen su evidencia y su fuente (PROV-O).")
+    st.markdown(idioma.t("dominio.show_instances.title"), help=ayuda("instancia"))
+    st.caption(idioma.t("dominio.show_instances.caption"))
     key = f"{domain}_instancia"
-    chosen = st.selectbox("Empezar por", list(examples), key=key)
+    chosen = st.selectbox(idioma.t("dominio.show_instances.start"), list(examples), key=key)
     if st.session_state.get(f"{key}_desde") != chosen:      # a new example restarts the path
         st.session_state[f"{key}_desde"], st.session_state[f"{key}_actual"] = chosen, examples[chosen]
     iri = st.session_state[f"{key}_actual"]
     _, rows = run(f"SELECT ?p ?o WHERE {{ <{iri}> ?p ?o }} ORDER BY ?p", domain)
     if not rows:
-        st.info("Esta entidad no tiene más datos en el grafo.")
+        st.info(idioma.t("dominio.show_instances.no_more"))
     title = chosen.split(": ", 1)[-1] if iri == examples[chosen] else None
     graph, neighbours = instance_graph(iri, rows, domain, title)
     st.markdown(f'<img src="data:image/svg+xml;base64,{base64.b64encode(graph.encode()).decode()}" '
                 'style="width:100%;border-radius:12px">', unsafe_allow_html=True)
     nav, back = st.columns([4, 1])
     if neighbours:
-        go = nav.selectbox("Seguir un enlace (ver esa entidad)", ["—"] + neighbours,
+        go = nav.selectbox(idioma.t("dominio.show_instances.follow"), ["—"] + neighbours,
                            format_func=lambda o: o if o == "—" else short_iri(o, domain), key=f"{key}_ir_{iri}")
         if go != "—":
             st.session_state[f"{key}_actual"] = go
             st.rerun()
-    if iri != examples[chosen] and back.button("Volver al ejemplo", key=f"{key}_volver"):
+    if iri != examples[chosen] and back.button(idioma.t("dominio.show_instances.back"), key=f"{key}_volver"):
         st.session_state[f"{key}_actual"] = examples[chosen]
         st.rerun()
     st.caption(f"IRI: `{iri}`")
     names = labels(domain)
-    with st.expander("Las mismas propiedades en una tabla"):
-        table = [{"Propiedad": short_iri(p, domain),
-                  "En el diccionario": "es un/a" if p == RDF_TYPE else names.get(p, ""),
-                  "Valor": (f"{short_iri(o, domain)}" + (f" ({names[o]})" if o in names else "")) if o.startswith("http") else o}
+    with st.expander(idioma.t("dominio.show_instances.as_table")):
+        prop, label, value = (idioma.t(f"dominio.show_instances.col_{c}") for c in ("property", "label", "value"))
+        table = [{prop: short_iri(p, domain),
+                  label: idioma.t("dominio.instance_graph.is_a") if p == RDF_TYPE else names.get(p, ""),
+                  value: (f"{short_iri(o, domain)}" + (f" ({names[o]})" if o in names else "")) if o.startswith("http") else o}
                  for p, o in rows]
         tabla(pd.DataFrame(table), hide_index=True, use_container_width=True)
     lines = [f"<{short_iri(iri, domain)}>"]
@@ -479,7 +481,7 @@ def show_instances(domain):
         value = short_iri(o, domain) if o.startswith("http") else '"' + o.replace('"', '\\"') + '"'
         value = f"<{value}>" if value.startswith("rastro:") else value
         lines.append(f"    {short_iri(p, domain)} {value}" + (" ." if k == len(rows) - 1 else " ;"))
-    with st.expander("La misma instancia en Turtle (el formato estándar de RDF)"):
+    with st.expander(idioma.t("dominio.show_instances.turtle")):
         st.code("\n".join(lines), language="turtle")
     st.divider()
 
@@ -487,8 +489,8 @@ def show_instances(domain):
 def under_the_hood(domain, diagram=None, quality=None):
     """«Bajo el capó» (technical view): the SPARQL console, a graph instance and the dictionary, the
     links and the mappings, in a single tab."""
-    names = ["Consola SPARQL y una instancia", "Diccionario, enlaces y mapeos"] + (["Reglas de calidad (SHACL)"] if quality else [])
-    console, pieces, *rules = st.tabs(names)
+    names = ["console", "pieces"] + (["quality"] if quality else [])
+    console, pieces, *rules = st.tabs([idioma.t(f"dominio.under_the_hood.tab_{name}") for name in names])
     with console:
         sparql_console(domain)
     with pieces:
@@ -536,33 +538,37 @@ def show_quality_shacl(quality):
     """The same rules, in SHACL, with what fails them."""
     result = quality_result(quality)
     if not result:
-        st.caption("Todavía no se comprobaron: `docker compose run --rm calidad`.")
+        st.caption(idioma.t("dominio.show_quality_shacl.not_checked"))
         return
-    st.markdown("### Reglas de calidad en SHACL", help=ayuda("calidad_shacl"))
+    st.markdown(idioma.t("dominio.show_quality_shacl.title"), help=ayuda("calidad_shacl"))
     st.caption(md(quality["tecnico"]))
+
+    def col(key):
+        return idioma.t(f"dominio.show_quality_shacl.col_{key}")
+
     for r in result["reglas"]:
         mark = finding(r, long=False)
-        with st.expander(f"{mark} · {r['nombre']} · {money(r['revisados'])} datos revisados"):
-            st.markdown("**La regla, en SHACL**")
+        with st.expander(idioma.t("dominio.show_quality_shacl.rule", mark=mark, name=r['nombre'], n=money(r['revisados']))):
+            st.markdown(idioma.t("dominio.show_quality_shacl.in_shacl"))
             st.code(r["shacl"], language="turtle")
             if r.get("un_dato"):
                 good, bad = st.columns(2)
                 with good:
-                    st.markdown("**Un dato de Rastro, en RDF** ✅ la cumple")
+                    st.markdown(idioma.t("dominio.show_quality_shacl.good"))
                     st.code(r["un_dato"], language="turtle")
                 with bad:
-                    st.markdown("**Un dato roto, de ejemplo** ❌")
+                    st.markdown(idioma.t("dominio.show_quality_shacl.broken"))
                     st.code(r["roto"], language="turtle")
-                    st.caption("SHACL dice: " + " ".join(r["roto_dice"]))
+                    st.caption(idioma.t("dominio.show_quality_shacl.says") + " ".join(r["roto_dice"]))
             if r["ejemplos"]:
-                st.markdown("**Lo que no cumple**" + (" (los primeros 10)" if r["fallas"] > 10 else ""))
-                tabla(pd.DataFrame([{"Dato": e["dato"], "Qué falla": e["mensaje"],
-                                     **({"Severidad": e["severidad"]} if e.get("severidad") else {}),
-                                     "Predicciones que lo usan (prov:used)":
+                st.markdown(idioma.t("dominio.show_quality_shacl.fails")
+                            + (idioma.t("dominio.show_quality_shacl.first_10") if r["fallas"] > 10 else ""))
+                tabla(pd.DataFrame([{col("data"): e["dato"], col("what_fails"): e["mensaje"],
+                                     **({col("severity"): e["severidad"]} if e.get("severidad") else {}),
+                                     col("predictions"):
                                          ", ".join(p.rsplit("/", 1)[-1] for p in e.get("predicciones", []))}
                                     for e in r["ejemplos"]]))
-    st.caption(f"{money(result['triples'])} triples traídos de Rastro con CONSTRUCT. Las reglas están en "
-               "el archivo de reglas del dominio; se comprueban con el comando registrado para ese dominio.")
+    st.caption(idioma.t("dominio.show_quality_shacl.triples", n=money(result['triples'])))
 
 
 def sparql_console(domain):
@@ -570,37 +576,37 @@ def sparql_console(domain):
     method = answer.DOMAINS[domain]["method"]
     folder, port = str(answer.ROOT / method["queries"]), method["ontop"]["port"]
     show_instances(domain)
-    st.markdown("### Consola SPARQL", help=ayuda("consola"))
-    st.caption(f"Corre sobre Rastro, en el endpoint SPARQL de este dominio. Otras herramientas pueden usar el mismo endpoint: "
-               f"`http://localhost:{port}/sparql`.")
+    st.markdown(idioma.t("dominio.sparql_console.title"), help=ayuda("consola"))
+    st.caption(idioma.t("dominio.sparql_console.caption", port=port))
     examples = {}
     for f in sorted(Path(folder).glob("*.rq")):
         text = f.read_text()
         title = next((line.lstrip("# ").strip() for line in text.splitlines() if line.startswith("#")), f.stem)
         examples[title] = text
     key = f"{domain}_console"
-    chosen = st.selectbox("Empezar desde una consulta de ejemplo", ["(en blanco)"] + list(examples),
+    chosen = st.selectbox(idioma.t("dominio.sparql_console.start"), [idioma.t("dominio.sparql_console.blank")] + list(examples),
                           key=f"{key}_ejemplo")
     if st.session_state.get(f"{key}_cargada") != chosen:   # when the example changes, it is loaded into the editor
         st.session_state[f"{key}_cargada"] = chosen
         st.session_state[f"{key}_texto"] = examples.get(
             chosen, f"PREFIX {domain}: <{answer.DOMAINS[domain]['namespace']}>\nSELECT * WHERE {{ ?s ?p ?o }} LIMIT 10")
-    query = st.text_area("Consulta", key=f"{key}_texto", height=280)
-    if st.button("Ejecutar", type="primary", key=f"{key}_ejecutar"):
+    query = st.text_area(idioma.t("dominio.sparql_console.query"), key=f"{key}_texto", height=280)
+    if st.button(idioma.t("dominio.sparql_console.run"), type="primary", key=f"{key}_ejecutar"):
         started = time.time()
         try:
             columns, rows = run(query, domain)
         except Exception as e:  # noqa: BLE001 - Ontop's error is shown as is
             st.error(str(e).strip()[:2000])
             return
-        st.caption(f"{len(rows)} fila{'s' if len(rows) != 1 else ''} en {time.time() - started:.1f} s.")
+        st.caption(idioma.t("dominio.sparql_console.rows_one" if len(rows) == 1 else "dominio.sparql_console.rows_many",
+                            n=len(rows), seconds=f"{time.time() - started:.1f}"))
         tabla(pd.DataFrame(rows, columns=columns), hide_index=True, use_container_width=True)
-        with st.expander("El SQL que Rastro generó y ejecutó en Postgres"):
+        with st.expander(idioma.t("dominio.sparql_console.sql")):
             try:
                 st.code(sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper",
                                         indent_width=2), language="sql")
             except requests.RequestException:
-                st.caption("No se pudo obtener el SQL de esta consulta.")
+                st.caption(idioma.t("dominio.show_answer.no_sql"))
 
 
 GEO = "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\n"
@@ -615,8 +621,13 @@ def wkt_coords(wkt):
     return groups[0] if wkt.startswith("POLYGON") else groups
 
 
-@st.cache_data(show_spinner="Armando el mapa…")
 def map_data(domain):
+    with st.spinner(idioma.t("dominio.map_data.spinner")):
+        return _map_data(domain)
+
+
+@st.cache_data(show_spinner=False)
+def _map_data(domain):
     config = technical(domain).get("map")
     if not config:
         raise ValueError("This domain has no map configuration")
@@ -629,8 +640,9 @@ def show_map(domain):
     """Concessions, possible venting seen by satellite and transport gas pipelines, all read from Rastro."""
     import pydeck as pdk
     concessions, points, pipes = map_data(domain)
+    review = idioma.t("dominio.show_map.review")
     polys = [{"contorno": wkt_coords(w), "nombre": n, "operadora": o or "—", "venteos": int(v or 0),
-              "revisar": "Para revisar: " + r if r else "",
+              "revisar": review + r if r else "",
               "color": [214, 96, 77, 120] if r else ([47, 111, 181, 90] if int(v or 0) else [143, 184, 232, 40])}
              for n, o, w, v, r in concessions]
     dots = [{"pos": wkt_coords(w)} for (w,) in points]
@@ -1273,10 +1285,10 @@ def llm_status():
             requests.get(f"{answer.OLLAMA}/api/tags", timeout=3).raise_for_status()
             return True, f"Ollama · {answer.MODEL}"
         except requests.RequestException:
-            return False, f"Ollama no responde en {answer.OLLAMA}"
+            return False, idioma.t("dominio.llm_status.no_answer", url=answer.OLLAMA)
     if os.environ.get("ANTHROPIC_API_KEY"):
         return True, f"Claude API · {answer.MODEL}"
-    return False, "Sin LLM configurado"
+    return False, idioma.t("dominio.llm_status.none")
 
 
 def trust(cfg, tech, evaluation, changes):
@@ -1427,27 +1439,25 @@ def show_no_data(fuera, tech):
 
 def evaluation_detail(evaluation, totals, domain):
     data = evaluation["questions"]
-    names = {k: v for k, v in {"B": "Sin Rastro (SQL)", "D": "SQL + enlaces de Rastro", "C": "Con Rastro"}.items()
-             if k in totals}
-    st.markdown("##### Detalle técnico: las preguntas de la evaluación")
+    names = {k: idioma.t(f"dominio.paths.{k}") for k in "BDC" if k in totals}
+    st.markdown(idioma.t("dominio.evaluation_detail.title"))
     cols = st.columns(len(names))
     for col, k in zip(cols, names):
         col.metric(names[k], f"{totals.get(k, {}).get('correct', 0)}/{len(data)}")
     if "D" in names:
-        st.info("Con las tablas de enlaces de Rastro, el SQL acierta igual: la precisión viene de la integración "
-                "hecha una vez. La capa semántica suma que esa integración se mantiene en un solo lugar, la "
-                "evidencia de cada enlace y los datos de afuera.")
-    chosen = st.selectbox("Pregunta", [e["question"] for e in data.values()], key=f"{domain}_eval_question")
+        st.info(idioma.t("dominio.evaluation_detail.links_note"))
+    chosen = st.selectbox(idioma.t("dominio.evaluation_detail.question"), [e["question"] for e in data.values()],
+                          key=f"{domain}_eval_question")
     entry = next(e for e in data.values() if e["question"] == chosen)
 
     def fmt(v):
         if v is None:
-            return "sin respuesta"
+            return idioma.t("dominio.evaluation_detail.no_answer")
         if isinstance(v, list):
-            return ", ".join(v[:10]) + (f" y {len(v) - 10} más" if len(v) > 10 else "")
+            return ", ".join(v[:10]) + (" " + idioma.t("dominio.show_why.more", n=len(v) - 10) if len(v) > 10 else "")
         return money(v)
 
-    st.markdown(f"**Respuesta correcta:** {md(fmt(entry['reference']))}")
+    st.markdown(idioma.t("dominio.evaluation_detail.correct", answer=md(fmt(entry['reference']))))
     for col, k in zip(st.columns(len(names)), names):
         with col:
             e = entry.get(k)
@@ -1459,6 +1469,7 @@ def evaluation_detail(evaluation, totals, domain):
             if ok:
                 q = ok[-1]["query"]
                 shown = sqlparse.format(q, reindent=True, keyword_case="upper", indent_width=2) if k in "BD" else q
-                st.caption(f"{len(shown.splitlines())} líneas · {len(e['attempts'])} intento"
-                           f"{'s' if len(e['attempts']) != 1 else ''}")
+                attempts = "dominio.evaluation_detail.attempts_one" if len(e['attempts']) == 1 \
+                    else "dominio.evaluation_detail.attempts_many"
+                st.caption(idioma.t(attempts, lines=len(shown.splitlines()), n=len(e['attempts'])))
                 st.code(shown, language="sql" if k in "BD" else "sparql")

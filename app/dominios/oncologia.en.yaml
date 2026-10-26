@@ -1,0 +1,8 @@
+# English overlay for app/dominios/oncologia.yaml: only the visible texts. Lists are matched by position.
+# The example instances («Así se ve un dato del grafo») are keyed by their Spanish label, so they stay as they are.
+technical:
+  pieces:
+    enlaces:
+    - - What each trial wrote and which drug Rastro recognized (trastuzumab)
+    mapas:
+    - - The trial tests a drug, with its evidence

@@ -9,6 +9,7 @@ import pandas as pd
 import streamlit as st
 
 import alternative
+import idioma
 import lab
 from dominio import tabla
 
@@ -42,11 +43,11 @@ def tree_svg(path, ui, well="", leaf_label=None, ensemble_label=None):
         feature = step['feature']
         if '=' in feature:
             field, category = feature.split('=', 1)
-            question = f"¿{ui['feature_labels'].get(field, field)} = {category}?"
+            question = idioma.t("lab.alternative.tree_question", question=f"{ui['feature_labels'].get(field, field)} = {category}")
             outcome = step['value'] > .5
         else:
             field = ui['feature_labels'].get(feature, feature)
-            question = f"¿{field} {step['operator']} {lab.num(step['threshold'], 2)}?"
+            question = idioma.t("lab.alternative.tree_question", question=f"{field} {step['operator']} {lab.num(step['threshold'], 2)}")
             outcome = step['yes']
         labels.append((question, ui['tree_value'].format(value=lab.num(step['value'], 2)),
                        ui['yes'] if outcome else ui['no']))

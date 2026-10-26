@@ -1,0 +1,113 @@
+# English overlay for app/preguntas-simples.yaml: the 20 example questions in simple words, matched by question id.
+# Terms keep their Spanish key (the overlay only fills texts, not keys); when the English term is different, the
+# meaning starts with it in parentheses.
+
+q01:
+  simple: Which drugs against HER2 are being tested in large (phase 3) breast cancer studies?
+  terms:
+    HER2: "a protein that makes some breast tumours grow fast, about one in five. There are drugs that block it."
+    Fase 3: "(phase 3) the large study that compares the new treatment with the existing one; it decides whether it is approved."
+
+q02:
+  simple: How many large (phase 3) studies test a drug that blocks EGFR?
+  terms:
+    EGFR: "a protein that drives some lung, colon and head and neck cancers."
+
+q03:
+  simple: Which three drug companies have the most lung cancer studies stopped early?
+  terms:
+    Sponsor: "who organizes and pays for the study. Only the main one is counted."
+    Detenido: "(stopped) the study ended earlier than planned or was cancelled before it started."
+
+q04:
+  simple: Which problem do doctors and patients who use imatinib report most?
+  terms:
+    Imatinib: "a pill for a type of leukaemia and some digestive tumours. It was one of the first targeted drugs."
+    FAERS: "the FDA system where problems with medicines are reported. They are notices, not risk percentages."
+
+q05:
+  simple: Which already approved drugs block BRAF?
+  terms:
+    BRAF: "a gene that is altered in about half of melanomas and in other tumours."
+    Aprobado: "(approved) authorized for sale in some country."
+
+q06:
+  simple: How many breast cancer studies are registered?
+  terms:
+    Cáncer de mama: "(breast cancer) includes all its subtypes, according to the MeSH medical vocabulary."
+
+q07:
+  simple: How many problem reports did the FDA receive about lenalidomide up to 2014?
+  terms:
+    Lenalidomida: "(lenalidomide) a pill for multiple myeloma, a cancer of the bone marrow."
+
+q08:
+  simple: Of the phase 2 studies that Pfizer organized and that have already closed, what percentage was stopped early?
+  terms:
+    Fase 2: "(phase 2) the mid-sized study that looks at whether the treatment works."
+    Cerrado: "(closed) completed, ended early or cancelled."
+
+q09:
+  simple: How many ongoing studies test pembrolizumab?
+  terms:
+    Pembrolizumab: "an immunotherapy (brand name Keytruda) that helps the body's defences attack the tumour. It is used in many cancers."
+    Activo: "(active) the study is recruiting patients or under way."
+
+q10:
+  simple: How many leukaemia studies test drugs that block BTK?
+  terms:
+    BTK: "a protein of type B white blood cells. Blocking it slows down some leukaemias and lymphomas."
+    Leucemia: "(leukaemia) cancer of the blood."
+
+q11:
+  simple: Which drug company organizes the most large (phase 3) colon and rectal cancer studies?
+  terms:
+    Colorrectal: "(colorectal) cancer of the colon or the rectum."
+
+q12:
+  simple: How many melanoma studies test nivolumab?
+  terms:
+    Nivolumab: "an immunotherapy (brand name Opdivo) that releases a brake on the body's defences so they attack the tumour."
+    Melanoma: "the most aggressive skin cancer."
+
+q13:
+  simple: How many prostate cancer studies test an approved drug that blocks the action of testosterone?
+  terms:
+    Receptor de andrógenos (AR): "(androgen receptor, AR) the protein that receives testosterone and makes prostate cancer grow. Drugs such as enzalutamide or bicalutamide block it."
+
+q14:
+  simple: How many pancreatic cancer studies were stopped early?
+  terms:
+    Detenido: "(stopped) the study ended earlier than planned or was cancelled before it started."
+
+q15:
+  simple: How many reports of serious problems did the FDA receive about osimertinib?
+  terms:
+    Osimertinib: "a pill (brand name Tagrisso) for lung cancer with altered EGFR."
+    Serio: "(serious) the problem caused death, hospitalization, disability or a risk to life."
+
+q16:
+  simple: How many different drugs are tested in multiple myeloma studies?
+  terms:
+    Mieloma múltiple: "(multiple myeloma) a cancer of the bone marrow cells that produce antibodies."
+
+q17:
+  simple: How many ongoing studies test drugs against TIGIT?
+  terms:
+    TIGIT: "another brake on the body's defences. It is a new immunotherapy target, still under research."
+
+q18:
+  simple: Which anti-PD-1 or anti-PD-L1 immunotherapies are tested in large (phase 3) lung cancer studies?
+  terms:
+    PD-1 y PD-L1: "(PD-1 and PD-L1) a brake the tumour uses to hide from the body's defences. The drugs that block it, such as pembrolizumab or nivolumab, are the best-known immunotherapy."
+
+q19:
+  simple: How many lymphoma studies that started from 2020 on test rituximab?
+  terms:
+    Rituximab: "an antibody against type B white blood cells. It is the basis of the treatment of many lymphomas."
+    Linfoma: "(lymphoma) a cancer of the white blood cells that usually appears in the lymph nodes."
+
+q20:
+  simple: Which drugs act on any of the same proteins as imatinib?
+  terms:
+    Target: "the protein in the body a drug acts on. Imatinib acts on BCR-ABL, KIT and PDGFR."

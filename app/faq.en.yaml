@@ -1,0 +1,128 @@
+# English overlay for app/faq.yaml. The Spanish file is a list without ids, so items are matched by position:
+# keep the same order. «tecnico» comes from the Spanish file. The values in braces ({secs_b}, {reinvented}...)
+# are filled in by the app; keep them exactly.
+
+# --- For everyone ----------------------------------------------------
+
+- question: Where does the data come from?
+  answer: |-
+    From four public databases:
+    - **AACT**: the registry of clinical trials, the studies in people that test treatments.
+    - **ChEMBL**: drugs and which protein in the body they act on.
+    - **openFDA**: the adverse event reports sent to the FDA.
+    - **MeSH**: the medical vocabulary that knows which disease is a subtype of which.
+
+    It is a snapshot from October 2026.
+
+- question: An example of evidence in oncology
+  answer: |-
+    In every answer with drugs, «Where does the answer come from?» shows how Rastro recognized each drug in the trials: what the person who registered the trial wrote, and which drug it is. For example, «Adjuvant Systemic Therapy» is trastuzumab emtansine because the sponsor declared it so. Each trial can be opened and checked.
+
+- question: Which texts does it read in oncology?
+  answer: |-
+    Yes, carefully. In «A question about texts», Rastro first picks the trials that matter with an exact query (for example, the phase 3 lung cancer trials with kinase inhibitors that were stopped: 26). Then an AI assistant reads only the reasons each sponsor wrote and groups them: not enough patients, a company decision, the treatment did not work… Each group cites its trials, and «Where does the answer come from?» has every text it read.
+
+    Besides, the reason of each of the 12,611 stopped trials became data in the graph, classified with rules and with its evidence. So «how many trials were stopped for lack of patients?» is answered with an exact query. The rules are right 9 times out of 10 in a reviewed sample.
+
+- question: Are the adverse events real frequencies?
+  answer: >-
+    No. They are counts of spontaneous FAERS reports (openFDA): they have no denominator,
+    they may have duplicates and the drug may not be the suspect of the event. They are
+    useful to compare and to detect signals, not as clinical truth.
+
+# --- For technical readers (shown with «Show technical details») ------
+
+- question: What does each source have, and where is it?
+  answer: |-
+    - 🐘 **AACT**, in Postgres: the public registry of **clinical trials**. Phase, status, sponsor and what is tested, as free text.
+    - 🐘 **ChEMBL**, in Postgres: **drugs**, whether they are approved and which **protein** they act on (the target, with the name of its gene, such as HER2).
+    - 🐘 **openFDA**, in Postgres: **adverse event reports** sent to the FDA. They are notices, not risk percentages.
+    - 🕸️ **MeSH**, in GraphDB, with a copy of its hierarchy in Postgres: the **medical vocabulary** that knows which disease is a subtype of which.
+
+    More detail, examples and a glossary in docs/fuentes.md.
+
+# --- Compared with SQL -------------------------------------------------
+
+- question: In oncology, what did the comparison with SQL show?
+  answer: |-
+    We measured it with three ways of giving the data to the same LLM:
+
+    | | Direct SQL | SQL + Rastro's links | Rastro |
+    |---|---|---|---|
+    | Correct, out of 20 | 18 | 20 | 20 |
+    | Same answer, asking in 4 ways | 1 of 10 | 10 of 10 | 10 of 10 |
+    | A source column is renamed | 5 broken queries | 5 broken queries | 1 line of the mapping |
+    | The business changes a definition | every query | every query | 1 line of the ontology |
+    | Where each value comes from | no | no | per column |
+    | Joins Wikidata data in the same query | no | no | yes |
+
+    **Precision and consistency come from integrating once** (the link tables): with them, SQL gets it right just as well, even in questions with 3 or 4 joins (layer/composicion/). **The semantic layer adds the rest:** the knowledge of each source stays in the mappings instead of being spread over every query, every value carries its source, and it can be queried together with other organizations' data, with open standards.
+
+- question: Does it give the same answer if I ask the same thing another way?
+  answer: |-
+    With the integration done, yes. We wrote 10 of the questions in 4 different ways:
+    - **Direct SQL:** the answer changes with how it is asked in 9 of the 10 (the anti-EGFR trials give 488, 488, 409 or 488). In {reinvented} of the 20 original questions it had to invent how to recognize a drug, in {n_methods} different ways.
+    - **SQL + links and Rastro:** the same answer in the 4 versions of the 10 questions.
+
+    Detail in layer/consistencia/.
+
+- question: Where did the complexity of the SQL go?
+  answer: |-
+    Into the integration, done once. In the HER2 question, the LLM wrote 1,543 characters of SQL without integration, 571 of SQL over the link tables and 435 of SPARQL over Rastro. Integrating makes the big difference; SPARQL makes it a bit shorter and in business words, and Rastro generates the SQL.
+
+- question: In oncology, what happened when a source changed?
+  answer: |-
+    We tested it with the 20 saved queries, simulating a new version of AACT:
+    - **A column is renamed:** 5 SQL queries fail, with or without the link tables, because they still read the source's columns. In Rastro, **one line of the mapping**.
+    - **The way a value is written changes** (`TERMINATED` → `Terminated`): SQL does not fail, but 5 answers drop to 0 without warning. Rastro too, until it is fixed, but its vocabulary check warns. And it is fixed with one line.
+
+    A layer of SQL views would also centralize the change. Detail in docs/demo-cambio.md.
+
+- question: How do I know why Rastro says a trial tests a drug?
+  answer: |-
+    In every answer with drugs, a column says how Rastro recognizes it (for example, trastuzumab: 854 trials, 81 % by its name), and step 4 of **«Where does the answer come from?»** shows non-obvious examples that can be opened in ClinicalTrials.gov: «Bevacizumab (drug), Herceptin (drug)» is trastuzumab as part of a combination; «Adjuvant Systemic Therapy» is trastuzumab emtansine by an alias the sponsor declared.
+
+    That evidence is in the graph, described with **PROV-O**, the W3C standard for provenance: each trial → drug link keeps the text the sponsor wrote, the text that matched, the rule, and which sources it derives from. Any query can ask for it. It also shows what is debatable: «[89Zr]-Df-Trastuzumab» is an imaging tracer, not the treatment, and anyone can see it and correct the rule.
+
+    With SQL it can also be kept, but it has to be programmed in every query and no other tool understands it.
+
+- question: In oncology, which definition does Rastro infer?
+  answer: |-
+    That a business definition is written once, in the ontology, and every question uses it. Example: «targeted therapy» is in no table and in no mapping. The ontology says, in two lines, that kinase inhibitors and monoclonal antibodies are targeted therapies, and Rastro infers it when answering: 156 drugs.
+
+    If the business decides that hormone therapy also counts, it is one more line: 188 drugs, and the phase 3 breast cancer trials with targeted therapy go from 336 to 547, in every question at once. With SQL, that definition lives in every query, or in a view that has to be maintained.
+
+    We tested it: with the definition documented, SQL with links also gets it right (3 of 3, layer/composicion/). The difference is not precision, it is where the definition lives.
+
+- question: Can it query data that is not in Rastro?
+  answer: |-
+    Yes, if they share identifiers. A single query in GraphDB combines Rastro, MeSH and **Wikidata**, live and without loading anything: for example, for each anti-HER2 drug, which diseases it treats according to Wikidata. The join is the ChEMBL ID, which Rastro and Wikidata use alike. That is how it shows that afatinib (approved for lung cancer) and vandetanib (thyroid) are tested in breast cancer.
+
+    Detail in layer/externo/.
+
+# --- How it integrates -------------------------------------------------
+
+- question: In oncology, which columns do the mappings unify and what does entity linking create?
+  answer: |-
+    According to the Virtual Knowledge Graphs tutorial by Calvanese, Cogrel and Lanti (Ontobras 2022), there are four kinds of heterogeneity. The two that matter:
+
+    - **Schema:** the same concept in different columns. openFDA says `query_id`, ChEMBL `chembl_id`, and both are «Drug». The **ontology and the mappings** resolve it. This table comes from the mappings:
+
+    {unified_columns}
+
+    - **Data:** the same entity written differently. «Pembrolizumab 200 mg», «MK-3475» and «Keytruda» are the same drug. **Entity linking** resolves it.
+
+    The mappings only join equal values. Between AACT and ChEMBL there is none: AACT says «Pembrolizumab 200 mg» and ChEMBL `CHEMBL3137343`. That is why entity linking is needed: it **creates** that key. The other two (data model and system) are resolved by the loaders. More in docs/integracion.md.
+
+- question: How does Rastro know which drug each trial tests?
+  answer: |-
+    With **dictionary-based entity linking**, computed once for the 130,000 interventions: it compares the trial's text with ChEMBL's names and synonyms.
+
+    | What the trial says | Result |
+    |---|---|
+    | «MK-3475» | pembrolizumab (ChEMBL synonym) |
+    | «Carboplatin + Paclitaxel» | carboplatin and paclitaxel (combination) |
+    | «FOLFOX» | fluorouracil, leucovorin and oxaliplatin (regimen) |
+    | «Pembrolizumab 200 mg» | pembrolizumab (name as a whole word) |
+
+    Precision: 98-99 % in random samples, reviewed by an AI assistant; a person's confirmation is still pending (docs/verificacion-humana.md). There are more sophisticated ways (approximate matching, biomedical language models, an LLM), but the dictionary is already enough, it is explainable and always gives the same result. The others serve as a complement for what the dictionary does not resolve.

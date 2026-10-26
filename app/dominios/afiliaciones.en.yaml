@@ -1,0 +1,159 @@
+# English overlay of afiliaciones.yaml: only the visible texts, laid over the Spanish file by app/idioma.py.
+# Same nesting as the Spanish file; lists without «id» line up by position ({} keeps an item as it is).
+
+resumen: >-
+  Which Argentine organizations the authors of 100 scientific publications from 2025 name: the affiliation
+  texts published by Crossref, joined with the global registry of research organizations (ROR).
+ejemplo_libre: "For example: in which publications does the Universidad Nacional de La Plata appear?"
+calidad:
+  intro: >-
+    Rastro checks these rules over all its data after each load. They change nothing: they show what is not
+    met so that a person can decide. A warning or a pending item is not an error in the data.
+  tecnico: >-
+    The same rules, written in SHACL (the W3C standard for validating a graph), with a real Rastro value that
+    meets them and a broken example. Each finding keeps its severity: violation, warning or informational.
+sin_medir: >-
+  These answers have not yet been compared with an independent reference: a person who does not see Rastro's
+  links will review the affiliations at the end. Until then, what has been checked is technical: the first question
+  shows every one of the affiliations of the 100 publications, and each identification has its rule, its evidence and
+  its two sources. The third question is a search for candidates: it can leave cases out.
+
+demo_porque: >-
+  Three moments, one per question: which organizations an affiliation names and why, how many publications an
+  organization has without adding those of its institutes, and what might be missing from the registry.
+demo:
+  - paso: Identify
+    titulo: "One affiliation, three organizations"
+    que_es: >-
+      Reading the text of an affiliation and recognizing the Argentine organizations it names, with the rule that was used
+      and the evidence: what the text said and what the registry says.
+    muestra: >-
+      «Institute of Biological Chemistry and Biophysics (IQUIFIB), CONICET/University of Buenos Aires, Buenos Aires,
+      Argentina» names three organizations: the institute (IQUIFIB), CONICET and the Universidad de Buenos Aires. Each
+      one is identified separately, with its evidence.
+  - paso: Count
+    titulo: "CONICET's publications, without adding those of its institutes"
+    que_es: >-
+      Counting each publication only once per organization, even if several authors name it, and only when the text
+      names it: an institute does not add publications to the organization it depends on.
+    muestra: >-
+      CONICET counts the publications where the text names it. Those of its institutes are counted for each
+      institute, and the registry shows whom they depend on without adding them.
+  - paso: What is missing
+    titulo: "Instituto Sabato: a candidate to review"
+    que_es: >-
+      Finding the stretches of text that name an institution the registry does not have under that name. They are
+      candidates for a person to review, not conclusions.
+    muestra: >-
+      Instituto Sabato appears in an affiliation and no name in the registry covers it. Rastro leaves it as a
+      candidate, with its evidence, and does not make up an organization.
+
+fuentes:
+  rastro: Rastro link
+nota_rastro: >-
+  The identifications between the text of each affiliation and the registry, which Rastro makes once with a written rule
+  and keeps with their evidence
+
+columnas:
+  doi: Publication (DOI)
+  authorPosition: Author (order, from 0)
+  affiliationPosition: Affiliation (order, from 0)
+  affiliation: Affiliation text
+  organization: Organization (ROR)
+  organizationName: Organization
+  rule: Rule
+  evidence: Evidence
+  disposition: Outcome
+  publications: Publications
+  candidate: Candidate
+  kind: Kind of case
+
+preguntas:
+  - id: cq1
+    porque:
+      titulo: "Where {valor} appears, and why"
+      explica: "Each affiliation is joined to the organization by a written rule; the evidence says what the text said and what the registry says."
+      flecha: names it
+      columnas: {afiliacion: Affiliation text, regla: Rule, evidencia: Evidence, doi: Publication (DOI)}
+    explicacion: |
+      - **What it looks for:** all the affiliations of the 100 publications and, for each one, the Argentine organizations identified.
+      - **What it returns:** one row per affiliation and organization, with the rule and the evidence; if none was identified, the affiliation still appears and says why.
+      - **What SQL would have to do by hand:** compare each text with every name, acronym and city in the registry, every time. Here the identification is already done, with its rule and its evidence.
+    simple: Which Argentine organizations does each affiliation of the 100 publications name?
+    tecnica: Which Argentine ROR organizations does Rastro identify in each Crossref affiliation, with its rule and evidence?
+    ventaja: "The free text is joined to the registry with a written rule: the full name or a unique acronym, always with a second piece of evidence (Argentina or the organization's city). Doubtful candidates are not counted."
+    terminos:
+      Afiliación: the text where an author says which institution they belong to, as the journal publishes it (affiliation).
+      Organización argentina: an organization with at least one location in Argentina in the ROR registry (Argentine organization).
+      Identificación: that an affiliation names an organization, with the rule that was used and the evidence (identification).
+
+  - id: cq2
+    porque:
+      titulo: "The affiliations of {valor}"
+      explica: "Each publication counts once, even if several authors name it; only accepted identifications count."
+      flecha: names it
+      columnas: {doi: Publication (DOI), afiliacion: Affiliation text, evidencia: Evidence}
+    explicacion: |
+      - **What it counts:** for each Argentine organization, the distinct publications where some affiliation names it.
+      - **What it does not count:** doubtful candidates or parent organizations: an institute does not add to the organization it depends on.
+      - **What is special:** the count is per publication, not per author or per affiliation.
+    simple: In how many of the 100 publications does each Argentine organization appear?
+    tecnica: How many distinct publications name each Argentine organization, without adding to the parent organizations?
+    ventaja: "Each publication counts once per organization, and only if the text names it. What the registry says about whom each institute depends on is shown, but it does not add up."
+    terminos:
+      Publicación: a scientific article from 2025, identified by its DOI (publication).
+      Organización madre: the organization an institute depends on in the registry; it does not receive the institute's publications (parent organization).
+
+  - id: cq3
+    porque:
+      titulo: "Why «{valor}» is a candidate"
+      explica: "What Rastro found in that affiliation: the stretch that no name in the registry covers and the organizations it did identify."
+      flecha: in the affiliation
+      columnas: {que: What, texto: Evidence, doi: Publication (DOI)}
+    explicacion: |
+      - **What it looks for:** two kinds of candidates: stretches of an affiliation that name an institution no Argentine name in the registry covers, and affiliations that mention Argentina with no organization identified.
+      - **What it returns:** the text, the candidate, the kind of case and the evidence.
+      - **What is special:** it is a heuristic search; a person decides whether it is an organization missing from the registry, another name of one already there, or neither.
+    simple: Which Argentine organizations might be missing from the registry, or appear under another name?
+    tecnica: Which affiliations name an Argentine organization that ROR might not have registered, or name it in a way ROR does not record?
+    ventaja: "What does not fit stays in view, with its evidence, for a person to review; Rastro does not make up organizations."
+    terminos:
+      Candidato: something a person has to review; it is not a conclusion (candidate).
+      Búsqueda heurística: a simple rule for finding candidates, which can leave cases out (heuristic search).
+
+faq:
+  - pregunta: What does this domain show?
+    respuesta: >-
+      That the same Rastro works for other data: the authors of 100 scientific publications from 2025 with at least
+      one Argentine affiliation, and the organizations they name, joined with the global ROR registry. It is a test of
+      how much of the method can be repeated in a new domain.
+  - pregunta: Are the answers already verified?
+    respuesta: >-
+      Not yet against an independent reference: a person who does not see Rastro's links will review the
+      affiliations at the end. What has been checked is technical: the first question shows every one of the affiliations,
+      and each identification has its rule, its evidence and its two sources. Whether an organization is correctly identified,
+      or whether none is missing, will be known with that review.
+  - pregunta: What happens with doubtful candidates?
+    respuesta: >-
+      A name without a second piece of evidence, or an acronym shared by several organizations, is not counted. Each
+      doubtful candidate has a decision and its reason; an AI assistant decided them, another validated them, and they are
+      still awaiting a person's confirmation. The app shows it in «Why trust it».
+  - pregunta: Why does IDEHU appear with a warning?
+    respuesta: >-
+      Because its record is marked as withdrawn in the version of the registry Rastro uses, which names CONICET as
+      its successor. The publication names it, so the identification does not change: a person decides whether it is kept.
+  - pregunta: Where is each piece?
+    respuesta: >-
+      Data in Postgres, one schema per source (`crossref`, `ror`); identifications, doubtful candidates and possible
+      gaps in the `afiliaciones` schema (`linking/afiliaciones/`); an Ontop on port 8083 with its ontology
+      (`ontology/afiliaciones/`) and its mapping (`mappings/afiliaciones.r2rml.ttl`). Each identification is exposed with
+      PROV-O.
+
+technical:
+  pieces:
+    enlaces:
+    - - Identifications, with their rule and their evidence
+    - - Doubtful candidates, with the decision and its reason
+    - - Possible gaps in the registry (candidates)
+    mapas:
+    - - Identification, doubtful candidate and possible gap
