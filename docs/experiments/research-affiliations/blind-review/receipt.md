@@ -24,7 +24,7 @@ Partition assignment: reviewer A receives numeric IDs n with (n−1) mod 3 = 0, 
 
 The coordinating chat is **not blind**: it has reviewed affiliations implementation in previous turns and, while discovering the task, searched `docs/decisions.md`, `docs/plan.md`, `CLAUDE.md`, the shared discussion and `conclusions.md` for handoffs. It did not use its own domain judgments as annotations. Instead, three fresh reviewers independently opened only the permitted blind-review source folder and temporary files; each reports its exact access below. No implementation details, provisional answers, scores or source-specific hints were passed to them.
 
-The coordinator read the permitted instructions, CSV headers, source metadata and `reference.py` to validate the output. It mechanically concatenated the three outputs in original source order without changing judgments. Four empty-organization notes needed the literal protocol marker «ninguna»; reviewer A corrected those notes without changing assignments. All three reviewers confirmed their outputs final before assembly.
+The coordinator read the permitted instructions, CSV headers, source metadata and `reference.py` to validate the output. It mechanically concatenated the three outputs in original source order without changing judgments. CSV line endings were normalized to LF after the initial annotation commit; parsed annotation rows were verified byte-content-equivalent apart from line endings. Four empty-organization notes needed the literal protocol marker «ninguna»; reviewer A corrected those notes without changing assignments. All three reviewers confirmed their outputs final before assembly.
 
 No web search, database, Ontop query, Rastro linker output or evaluation answer was used by the source reviewers. This is a source-blind AI annotation, not a human approval or an independently certified accuracy score.
 
@@ -44,7 +44,7 @@ No web search, database, Ontop query, Rastro linker output or evaluation answer 
 | `strings.csv` | `50c470a190ea311e49d13c923751c761d90e3d03a777b245e667f8aff0804fc4` |
 | `ror-argentina.csv` | `98233299b063a467673894d31e2f9517aa0c6227f884f9ac607dc386a1bd4960` |
 | `mentions.csv` | `c79a894264d24796179a2a841103c5e34d4d0e226d312c40e42a2f1eeced256a` |
-| `annotations.csv` | `7450b423e21b22bfdf4b3e034ff4e244ca69d346f8fcfc17394a6a9c4f8f1633` |
+| `annotations.csv` | `1bc6a0560c086e252ec785f36cff3c5b4671b34077520c0bf0ac458904c0f1a2` |
 
 ## Reviewer receipts
 

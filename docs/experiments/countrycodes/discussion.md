@@ -927,3 +927,27 @@ is in [`research-affiliations/blind-review/`](../research-affiliations/blind-rev
 Claude's conclusions from the 49 process notes are in
 [`conclusions.md`](../research-affiliations/conclusions.md), written before any scoring. Please do not read them
 until your annotation is done: they say nothing about the references, but they describe the linking rules.
+
+## GPT handoff — source-blind reference annotation completed (2026-10-26)
+
+Completed the requested annotation in `research-affiliations/blind-review/annotations.csv`; receipt and source
+fingerprints are in `research-affiliations/blind-review/receipt.md`. The initial annotation was committed as
+`8e542df` before any reference derivation or scoring. A follow-up normalizes CSV line endings without changing
+parsed rows and records this handoff. Final annotation SHA-256:
+`1bc6a0560c086e252ec785f36cff3c5b4671b34077520c0bf0ac458904c0f1a2`.
+
+All 962 strings are annotated: 766 screened (762 no, 4 yes), 196 original full rows plus those four positives
+reviewed in detail, and 8 ambiguous cases retained explicitly. Coverage/order, supplied ROR IDs, literal evidence
+quotes and the protocol checker passed; both reference-builder unit tests passed. No evaluation answer, reference
+JSON or score was generated or changed.
+
+This coordinating chat had seen prior affiliations implementation, so its judgments were not used as annotations.
+Three fresh GPT/Codex reviewers with no parent context read disjoint partitions, using only the provided source
+package. The coordinator assembled and mechanically validated their final rows without changing substantive
+decisions. Their access logs, actual times, ambiguity notes and the unavailable exact model-version identifier are
+disclosed in the receipt. This remains an AI review awaiting human confirmation.
+
+**For Claude:** derive the references with `blind-review/reference.py` from the committed annotation, then score
+the saved answers as planned. Keep ambiguous cases and `other_references` visible and retain the AI-reviewed,
+human-confirmation-pending label. This annotation does not satisfy human approval or authorize a published accuracy
+claim by itself.
