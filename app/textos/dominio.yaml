@@ -313,6 +313,18 @@ dominio.trust.with: {es: "Con Rastro", en: "With Rastro"}
 dominio.trust.sql_links: {es: "SQL + enlaces", en: "SQL + links"}
 dominio.trust.col_question: {es: "Pregunta", en: "Question"}
 dominio.trust.col_asked: {es: "Cómo se preguntó", en: "How it was asked"}
+dominio.trust.status_pending:
+  es: "Medido el {date} · 🟠 referencias revisadas por IA, falta que una persona las confirme"
+  en: "Measured on {date} · 🟠 references reviewed by AI, a person must confirm them"
+dominio.trust.status_confirmed:
+  es: "Medido el {date} · ✅ referencias confirmadas por una persona"
+  en: "Measured on {date} · ✅ references confirmed by a person"
+dominio.trust.status_change:
+  es: "Medido: se cambió la base de verdad y se dejó como estaba al terminar"
+  en: "Measured: the database was really changed, and left as it was at the end"
+dominio.trust.status_evidence:
+  es: "Medido sobre todos los enlaces de Rastro, no sobre una muestra"
+  en: "Measured over every link in Rastro, not a sample"
 dominio.trust.tab_correct: {es: "1 · Correctas ({n} preguntas)", en: "1 · Correct ({n} questions)"}
 dominio.trust.tab_same:
   es: "2 · Misma respuesta de 4 formas ({n} preguntas)"
@@ -505,3 +517,13 @@ dominio.evaluation_detail.no_answer: {es: "sin respuesta", en: "no answer"}
 dominio.evaluation_detail.correct: {es: "**Respuesta correcta:** {answer}", en: "**Correct answer:** {answer}"}
 dominio.evaluation_detail.attempts_one: {es: "{lines} líneas · {n} intento", en: "{lines} lines · {n} attempt"}
 dominio.evaluation_detail.attempts_many: {es: "{lines} líneas · {n} intentos", en: "{lines} lines · {n} attempts"}
+
+# When a service is down (dominio.service_guard): plain words where the answer would be
+dominio.service_down:
+  es: "Rastro no puede consultar los datos en este momento: {what} no responde. Lo demás de la pantalla sigue funcionando, y las cifras medidas de «Por qué confiar» siguen a la vista."
+  en: "Rastro cannot query the data right now: {what} is not answering. The rest of the screen keeps working, and the measured figures in «Why trust it» are still shown."
+dominio.service_down_ontop: {es: "el servicio que traduce las preguntas a las fuentes", en: "the service that translates the questions to the sources"}
+dominio.service_down_database: {es: "la base de datos", en: "the database"}
+dominio.service_down_admin:
+  es: "Para quien prepara la demo: `docker compose up -d` y volver a cargar la página."
+  en: "For whoever runs the demo: `docker compose up -d` and reload the page."

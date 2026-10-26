@@ -1156,3 +1156,20 @@ The user approved three compatibility adjustments after comparing the new journe
   `{{energia.e01.ypf_sin}}` and fails if one is missing. The three contrast slides (integration, traceability,
   maps) use them, notes included. Rebuilt today, the deck shows the same numbers as before.
 - **Why:** the user approved improvements 3 and 4 of the clarity review and slides that read the app's numbers.
+
+## 2026-10-26 — Oil and gas query gate, trust cards that state their status, plain messages when a service is down
+
+- **Query gate** (`layer/energia/query-checks.yaml`): one entry per competency query (15), with its fingerprint and
+  columns. The expectations come from SQL over the raw tables, never from Rastro's output: cq2 (YPF's wells by type
+  and how many the registry assigns to another company), cq13 (the fracture report and gas months of well 166133)
+  and cq15 (2 companies listed on an exchange in the saved Wikidata answer) are full checks; the rest are row bounds
+  with their basis (LIMIT 10 with more candidates in the raw tables, or a ceiling such as the 300 concessions of the
+  map). `python layer/method.py verify energia --expectations layer/energia/query-checks.yaml`: 15 of 15 passed.
+- **«Por qué confiar»:** under each card, one line on how its number was measured. The evaluation cards say their
+  date and, while the publication gate is pending, «🟠 referencias revisadas por IA, falta que una persona las
+  confirme»; the change card, that the database was really changed and left as it was; the audit card, that it
+  covers every link, not a sample.
+- **A service down:** if Ontop or Postgres does not answer, each tab says so in plain words where the answer would be,
+  with the command for whoever runs the demo, and the rest of the screen keeps working (answers already saved on
+  disk still show). Checked by stopping the oil and gas Ontop.
+- **Why:** the user approved these three items after the clarity review.

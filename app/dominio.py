@@ -12,6 +12,7 @@ import json
 import os
 import re
 import time
+from contextlib import contextmanager
 from pathlib import Path
 
 import pandas as pd
@@ -712,8 +713,9 @@ def render(cfg_path, tech):
             st.subheader("LLM", help=ayuda("llm"))
             st.markdown(("🟢 " if available else "⚪ ") + status)
             st.subheader(idioma.t("dominio.render.sources"), help=ayuda("fuentes_barra"))
-            for info in sources(domain).values():
-                st.markdown(f"🐘 **{info['name']}**  \n<small>{info['license']}</small>", unsafe_allow_html=True)
+            with service_guard():
+                for info in sources(domain).values():
+                    st.markdown(f"🐘 **{info['name']}**  \n<small>{info['license']}</small>", unsafe_allow_html=True)
         else:
             st.caption(md(cfg["resumen"]))
             # In the business view the frequent questions open from here, not from a tab of their own
@@ -734,13 +736,13 @@ def render(cfg_path, tech):
     tabs = dict(zip(names, st.tabs(labels)))
     ask_tab, trust_tab = tabs["ask"], tabs.get("trust")
     if cfg.get("demo"):
-        with tabs["demo"]:
+        with tabs["demo"], service_guard():
             show_demo(cfg, tech)
     if example_tab:
-        with tabs["example"]:
+        with tabs["example"], service_guard():
             show_integration_example(cfg["ejemplo_integracion"], domain, tech)
     if cfg.get("lab"):
-        with tabs["lab"]:
+        with tabs["lab"], service_guard():
             import lab
             import lab_alternative
             # The experimental alternative models are a technical detail: the business view keeps the regression
@@ -756,10 +758,10 @@ def render(cfg_path, tech):
                                                  run_id=run_status["run_id"])
                 lab.show_lab(tech, pozo=pozo)
     if tech:
-        with tabs["hood"]:
+        with tabs["hood"], service_guard():
             under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"), cfg.get("calidad"))
 
-    with ask_tab:
+    with ask_tab, service_guard():
         # Fixed internal names for the modes; the radio shows (and returns) their labels
         mode_labels = {"example": idioma.t("dominio.render.mode_example"), "text": idioma.t("dominio.render.mode_text"),
                        "claims": (cfg.get("afirmaciones") or {}).get("titulo"), "external": (cfg.get("externo") or {}).get("titulo"),
@@ -818,13 +820,26 @@ def render(cfg_path, tech):
         with trust_tab:
             if cfg.get("ejemplo_integracion") and not example_tab:
                 with st.expander(idioma.t("dominio.render.walkthrough", title=cfg["ejemplo_integracion"]["titulo"],
-                                                header=cfg["ejemplo_integracion"].get("encabezado", ""))):
+                                                header=cfg["ejemplo_integracion"].get("encabezado", ""))), service_guard():
                     show_integration_example(cfg["ejemplo_integracion"], domain, tech)
             trust(cfg, tech, evaluation, changes)
 
     if tech:
         with tabs["faq"]:
             domain_faq(cfg, tech)
+
+
+@contextmanager
+def service_guard():
+    """If the service that answers over the data (Ontop) or the database is down, say so in plain words where the
+    answer would be, instead of an error trace; the rest of the screen keeps working."""
+    import psycopg
+    try:
+        yield
+    except (requests.ConnectionError, requests.Timeout, psycopg.OperationalError) as error:
+        what = "database" if isinstance(error, psycopg.OperationalError) else "ontop"
+        st.warning(idioma.t("dominio.service_down", what=idioma.t(f"dominio.service_down_{what}")))
+        st.caption(idioma.t("dominio.service_down_admin"))
 
 
 def domain_faq(cfg, tech):
@@ -1349,6 +1364,21 @@ def llm_status():
     return False, idioma.t("dominio.llm_status.none")
 
 
+def card_status(cfg, evaluation):
+    """What each trust card's number is, in one line: when the evaluation was measured and whether its references are
+    confirmed by a person (the publication gate decides), and how the change test and the evidence were measured."""
+    from method import publication_errors
+    try:
+        pending = bool(publication_errors(answer.DOMAINS[cfg["domain"]], answer.ROOT))
+    except Exception:   # noqa: BLE001 - a domain without the gate's files has no independent references either
+        pending = True
+    date = evaluation.get("date", "")
+    date = f"{date[8:10]}/{date[5:7]}/{date[:4]}" if len(date) == 10 else date
+    measured = (idioma.t("dominio.trust.status_pending", date=date) if pending
+                else idioma.t("dominio.trust.status_confirmed", date=date))
+    return [measured, measured, idioma.t("dominio.trust.status_change"), idioma.t("dominio.trust.status_evidence")]
+
+
 def trust(cfg, tech, evaluation, changes):
     if not cfg.get("tarjetas"):   # not measured yet: say so, and show only what has been checked
         st.markdown(idioma.t("dominio.trust.title"), help=ayuda("confiar"))
@@ -1376,12 +1406,15 @@ def trust(cfg, tech, evaluation, changes):
     st.markdown(idioma.t("dominio.trust.title"), help=ayuda("confiar"))
     st.caption(idioma.t("dominio.trust.same_assistant"))
     card_help = ["tarjeta_correctas", "tarjeta_consistencia", "tarjeta_cambio", "tarjeta_auditar"]
+    statuses = card_status(cfg, evaluation)
     for k, (col, card) in enumerate(zip(st.columns(len(cfg["tarjetas"])), cfg["tarjetas"])):
         with col.container(border=True):
             st.markdown(f"**{md(card['titulo'])}**", help=ayuda(card_help[k]) if k < len(card_help) else None)
             st.markdown(f'<p style="font-size:2.4rem;line-height:1.1;margin:0">{card["valor"].format(**numbers)}</p>',
                         unsafe_allow_html=True)
             st.caption(md(card["compara"].format(**numbers)))
+            if k < len(statuses):
+                st.caption(statuses[k])
 
     # In technical mode the fair baseline is added: SQL with Rastro's link tables
     without, with_rastro = idioma.t("dominio.trust.without"), idioma.t("dominio.trust.with")

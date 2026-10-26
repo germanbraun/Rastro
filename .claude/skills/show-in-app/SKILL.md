@@ -43,7 +43,7 @@ The first screen says what Rastro is and how to read each screen (question → a
 | Where the answer comes from | The sources used, what Rastro added, a sample of the evidence | `preguntas[].ventaja`, `evidencia`, `definicion` |
 | Glossary | The business terms of the question | `preguntas[].terminos` |
 | Before and after | The same question without and with Rastro, its numbers read now, with each source's latest load date | `preguntas[].antes_despues`: `valores` (one-row `sql` over the sources as they come, or `sparql`), `calculos`, `decimales`, `fuentes`; texts name the values in braces (`app/contraste.py`, which also exports them for the slides) |
-| What can be trusted | Cards with the measured numbers; the change test; quality rules; what happens when data is missing | `tarjetas` (filled from `evaluacion`, `cambio`, `evidencia`), `cambios`, `calidad`, `fuera` |
+| What can be trusted | Cards with the measured numbers, each with one status line (when it was measured; references confirmed by a person or not, decided by the publication gate); the change test; quality rules; what happens when data is missing | `tarjetas` (filled from `evaluacion`, `cambio`, `evidencia`), `cambios`, `calidad`, `fuera` |
 | Guided demo | A few moments, one sentence each | `demo`, `demo_porque` |
 | Frequent questions | Domain FAQ next to the general one, from a sidebar button (a tab in the technical view) | `faq` |
 
