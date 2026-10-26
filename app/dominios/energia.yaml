@@ -160,9 +160,12 @@ preguntas:
           - title: Declaraciones de producción
             text: 'Producción de los pozos de {concesion}: {production} m³.'
           - title: Mapa de concesiones
-            text: 'Socio: {company}. Participación registrada: {percent} %.'
+            text: 'Socio en el texto del mapa: {map_name}. Participación registrada: {percent} %.'
         connection: '{concesion} → Participación → {company}'
         connection_detail: La producción y los socios se conectan por la misma concesión.
+        pending_link: >-
+          En el mapa, el socio figura como «{map_name}». Rastro lo une a {company} por una corrección revisada por un
+          asistente de IA, que todavía espera la confirmación de una persona: esta parte del número depende de esa unión.
         contribution: >-
           Los mapeos traducen las fuentes a Pozo, Concesión, Empresa y Participación.
           Los enlaces reúnen los nombres de una empresa bajo un mismo identificador, con su regla y evidencia.
@@ -1197,10 +1200,14 @@ ejemplo_lab:
         Cada término de la suma es un **aporte**. «Fractura» suma los aportes de rama, etapas, arena, agua y presión;
         los otros grupos reúnen los de ubicación y profundidad. Abajo se muestra la cuenta del pozo seleccionado.
 
-        Los **coeficientes** se aprenden con los pozos anteriores a 2025 y se aplican a los de 2025.
-        Las categorías se convierten en columnas 0/1. Si falta un valor numérico, se usa el promedio del entrenamiento.
+        Los **coeficientes** se aprenden con los pozos anteriores a 2025: son los que acercan esa suma lo más posible al
+        gas que esos pozos dieron de verdad, con una pequeña penalización (*ridge*) para que ninguno se dispare. Después
+        se aplican a los de 2025. Las categorías se convierten en columnas 0/1. Si falta un valor numérico, se usa el
+        promedio del entrenamiento.
 
-        Abajo se puede abrir cada grupo y ver sus variables, coeficientes y fuentes.
+        Abajo se puede abrir cada grupo y ver sus variables, coeficientes y fuentes. **Un coeficiente solo puede parecer
+        raro**, por ejemplo uno negativo en el largo de la rama: las variables de la fractura cambian juntas y el modelo
+        reparte su efecto entre ellas. Por eso la explicación las suma en «Cómo se fracturó el pozo».
         Los aportes explican la cuenta del modelo; **no prueban causas físicas**.
       calculo_pozo: true
       lenguaje: python

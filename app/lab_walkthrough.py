@@ -15,6 +15,7 @@ GROUPS = {
     "fracture": ["rama", "etapas", "arena", "agua", "presion"],
     "depth": ["profundidad"],
 }
+PENDING_RULE = "corrección revisada"   # linking/energia/links.sql: a company-name correction reviewed by an AI assistant
 FACTORS = {
     "location": "La concesión con su operadora y socios",
     "fracture": "Cómo se fracturó el pozo",
@@ -29,11 +30,10 @@ def value_status(row, variable):
         loaded = row.get("fracCargada")
         if pd.notna(loaded) and pd.Timestamp(loaded).to_period("M") > pd.Timestamp(row.inicio).to_period("M"):
             flags.append("late")
-    rule_field = {"grupo": "reglaNombre", "pct": "reglaSocio"}.get(variable)
-    if variable in GROUPS["fracture"]:
-        rule_field = "fracRegla"
-    rule = row.get(rule_field) if rule_field else None
-    if isinstance(rule, str) and "revisad" in rule.lower():
+    # Only company-name corrections wait for a person: they come from linking/energia/correcciones.csv, reviewed by an
+    # AI assistant. Stake corrections («… con documento») were verified by a person with a document, and the
+    # fracturing report's company-name rule says who reported it, not whether its values are right.
+    if variable == "grupo" and row.get("reglaNombre") == PENDING_RULE:
         flags.append("pending")
     return flags
 

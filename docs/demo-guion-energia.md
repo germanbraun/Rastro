@@ -99,7 +99,7 @@ Las diapositivas 21 a 25 muestran la instantánea del pozo 165404 verificada el 
    Si algo difiere, la app lo indica sin sobrescribir la corrida. La evidencia consultada es actual, no una copia
    histórica inmutable de sus textos. Una predicción aislada no alcanza para reconstruir todo.
 
-**Alternativa opcional:** en Rastro Lab, cambiar «Modelo para explorar» a Random Forest. Mostrar el mismo pozo,
+**Alternativa opcional (con «Ver detalles técnicos» activado):** en Rastro Lab, cambiar «Modelo para explorar» a Random Forest. Mostrar el mismo pozo,
 comparar la predicción con la regresión y abrir «Ver decisiones de un árbol». El recorrido corresponde al primer
 árbol; su estimación y el promedio del bosque se muestran por separado. Se puede descargar el SVG y abrir las
 fuentes. En «Preguntas frecuentes» están las descripciones de los algoritmos y cómo se eligió la alternativa.

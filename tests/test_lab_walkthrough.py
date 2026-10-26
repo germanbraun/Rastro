@@ -23,7 +23,8 @@ def example():
         "agua": [10000., 20000., 15000., 25000.], "presion": [8000., 9000., 8500., 9500.],
         "profundidad": [2000., 2100., 2050., np.nan], "gas": [40., 60., 50., 70.],
         "fracCargada": pd.to_datetime(["2024-01-01", "2024-01-01", "2025-04-01", "2025-05-01"]),
-        "reglaNombre": ["normalizado"] * 4, "reglaSocio": ["texto"] * 3 + ["corrección revisada"],
+        "reglaNombre": ["normalizado"] * 3 + ["corrección revisada"],
+        "reglaSocio": ["texto"] * 3 + ["corrección revisada con documento"],
         "fracRegla": ["normalizado"] * 4,
         **{key: [f"https://example.org/{key}/{i}" for i in range(4)] for key in ("s", "fr", "st", "tr")},
     })
@@ -93,7 +94,10 @@ def test_missing_run_or_selected_prediction_is_not_a_match(example):
 def test_status_keeps_imputation_late_arrival_and_human_review_separate(example):
     frame, _, _ = example
     assert value_status(frame.iloc[2], "rama") == ["observed", "late"]
-    assert value_status(frame.iloc[3], "pct") == ["imputed", "pending"]
+    # A stake corrected with a document was verified by a person; an AI-reviewed company-name correction is pending.
+    assert value_status(frame.iloc[3], "pct") == ["imputed"]
+    assert value_status(frame.iloc[3], "grupo") == ["observed", "pending"]
+    assert "pending" not in value_status(frame.iloc[3], "rama")
     assert value_status(frame.iloc[3], "profundidad") == ["imputed"]
     assert pd.isna(frame.iloc[3].pct), "Status must not replace the original missing value"
 

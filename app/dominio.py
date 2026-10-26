@@ -725,7 +725,8 @@ def render(cfg_path, tech):
         with tabs["Rastro Lab"]:
             import lab
             import lab_alternative
-            choice = lab_alternative.select_model(cfg["alternative_lab"]) if cfg.get("alternative_lab") else "ridge"
+            # The experimental alternative models are a technical detail: the business view keeps the regression
+            choice = lab_alternative.select_model(cfg["alternative_lab"]) if cfg.get("alternative_lab") and tech else "ridge"
             pozo = lab.select_well(cfg["ejemplo_lab"]) if cfg.get("ejemplo_lab") else None
             if choice == "alternative":
                 lab_alternative.show_alternative(tech, pozo, cfg["alternative_lab"], cfg["ejemplo_lab"])

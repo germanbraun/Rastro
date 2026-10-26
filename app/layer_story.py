@@ -1,6 +1,17 @@
 """A configured Layer answer followed by its calculation, connections and evidence."""
 from html import escape
 
+PENDING = "a confirmar por una persona"   # how an AI-reviewed correction says it still waits for a person
+
+
+def map_link(text, links):
+    """The company name used in the map's partner text, and whether its link to the company still waits for a
+    person (its evidence says so). links: rows with «nombre» and «evidencia»."""
+    for link in sorted(links, key=lambda row: -len(row["nombre"])):
+        if link["nombre"] and link["nombre"].upper() in str(text).upper():
+            return link["nombre"], PENDING in str(link["evidencia"])
+    return None, False
+
 import pandas as pd
 import streamlit as st
 
@@ -44,7 +55,10 @@ def show_story(domain, why, columns, rows, where, tech):
                                   index=names.index(ui['example_concession']) if ui['example_concession'] in names else 0,
                                   key=f'{domain}_{where}_story_concession_{company}')
         record = records[names.index(concession)]
-        values = {**record, 'company': company, 'production': money(record['produccion']),
+        link_query = prefixed(ui['linking_query'].replace('{valor}', str(company).replace('\\', '\\\\').replace('"', '\\"')), domain)
+        link_cols, link_rows = run(link_query, domain)
+        map_name, pending = map_link(record['texto'], [dict(zip(link_cols, row)) for row in link_rows])
+        values = {**record, 'company': company, 'map_name': map_name or company, 'production': money(record['produccion']),
                   'share': money(record['parte']), 'percent': str(record['porcentaje']).rstrip('0').rstrip('.')
                   if '.' in str(record['porcentaje']) else str(record['porcentaje'])}
         st.markdown('##### ' + ui['calculation_title'])
@@ -61,6 +75,8 @@ def show_story(domain, why, columns, rows, where, tech):
                     '<div style="border:2px solid #2F6FB5;border-radius:12px;padding:16px;text-align:center">'
                     f'<strong>{escape(ui["connection"].format(**values))}</strong><br>'
                     f'{escape(ui["connection_detail"].format(**values))}</div>', unsafe_allow_html=True)
+        if pending:   # the number rests on a name link a person has not confirmed yet: say it where the number is
+            st.warning(ui['pending_link'].format(**values))
         st.caption(ui['contribution'])
         with st.expander(ui['records_title']):
             st.markdown(ui['original_text'].format(text=md(record['texto'])))
@@ -79,8 +95,6 @@ def show_story(domain, why, columns, rows, where, tech):
                 st.dataframe(frame, hide_index=True, use_container_width=True)
                 st.code(production_query, language='sparql')
         with st.expander(ui['linking_title']):
-            link_query = prefixed(ui['linking_query'].replace('{valor}', str(company).replace('\\', '\\\\').replace('"', '\\"')), domain)
-            link_cols, link_rows = run(link_query, domain)
             if link_rows:
                 frame = pd.DataFrame(link_rows, columns=link_cols)
                 tabla(frame[list(ui['linking_columns'])].rename(columns=ui['linking_columns']),

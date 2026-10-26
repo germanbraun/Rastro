@@ -1038,3 +1038,24 @@ The user additionally requested missing company logos. Verified eight more offic
 ## 2026-10-26 · Preserve Layer's earlier comparison and result detail
 
 The user approved three compatibility adjustments after comparing the new journey with the previous app. Restore attributable gas in the business answer table; provide the complete concession breakdown in an optional panel; and show a live optional comparison of operated oil versus ownership share for the selected company. Use the existing answer and explanation queries, retain their units, label the two measures explicitly, and avoid restoring static company-specific figures as if they applied to every selection. The compact answer-first journey remains. Verification: 94 tests passed, 5 skipped; lint and whitespace checks passed; live checks confirmed gas, the complete breakdown and comparison in both app views; desktop/mobile interaction and company switching passed.
+
+## 2026-10-26 — Fixes after reviewing the Lab and Layer walkthrough commits
+
+- **Lab, pending marker:** only an AI-reviewed company-name correction (rule «corrección revisada», from
+  `linking/energia/correcciones.csv`) is shown as waiting for a person. A stake corrected with a document («… con
+  documento», verified by a person) is no longer marked pending, and the fracturing values are not marked by the
+  rule of the reporting company's name. The test now checks both cases.
+- **Layer, Chevron's pending link:** most of Chevron's Loma Campana share rests on «COMPAÑIA DE HIDROCARBURO NO
+  CONVENCIONAL S.R.L.» counting as Chevron, an AI-reviewed link still waiting for a person. The app warns about it
+  next to the calculation, and the three slides say it in visible text. In both cases the status is read from the
+  link's evidence, not typed.
+- **Lab step 3:** restored why a single coefficient can look odd (correlated fracturing variables) and how the
+  coefficients are learned.
+- **Model selector:** the experimental tree alternatives are shown only with «Ver detalles técnicos»; the business
+  view keeps the regression.
+- **Slide notes:** the three Layer slides' notes are in Spanish, and percentages use the Spanish format.
+- **Not decided here:**
+  - which walkthrough belongs in the timed demo;
+  - restoring the without/with Rastro contrast of the first moment;
+  - the framing of the tree results;
+  - the company logos.
