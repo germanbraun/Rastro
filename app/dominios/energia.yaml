@@ -138,7 +138,7 @@ preguntas:
         title: ¿Por qué este número?
         company: Empresa que quiere comprobar
         concession: Ver una concesión
-        example: CHEVRON
+        example: YPF S.A.
         example_concession: LOMA CAMPANA
         definition: 'La operadora declara la producción de los pozos. Esta respuesta calcula cuánto le corresponde a cada socio según su participación registrada.'
         total: '**{company}: se suman sus partes en {count} concesiones.**'
@@ -153,14 +153,14 @@ preguntas:
         breakdown_title: Ver todas las concesiones de esta empresa
         breakdown_note: El total de la respuesta suma estas partes. Los volúmenes de cada fila se muestran redondeados.
         calculation_title: Cómo se obtuvo
-        calculation: 'En {concesion}: {production} m³ de petróleo × {percent} % = {share} m³ que le corresponden a {company}.'
+        calculation: 'En {concesion}, a {company} le corresponden {production} m³ de petróleo × {percent} % = {share} m³.'
         rounding: Los volúmenes se muestran redondeados a metros cúbicos enteros; el cálculo usa la precisión original.
         connections_title: Qué conectó Rastro
         sources:
           - title: Declaraciones de producción
             text: 'Producción de los pozos de {concesion}: {production} m³.'
           - title: Mapa de concesiones
-            text: 'Socio en el texto del mapa: {map_name}. Participación registrada: {percent} %.'
+            text: 'Participación registrada de {map_name} en el texto del mapa: {percent} %.'
         connection: '{concesion} → Participación → {company}'
         connection_detail: La producción y los socios se conectan por la misma concesión.
         pending_link: >-
@@ -213,7 +213,7 @@ preguntas:
       m³: metros cúbicos de petróleo. Un metro cúbico son unos 6,3 barriles.
     antes_despues:              # layer/energia/sin-rastro.sql, consulta 1
       sin: {valor: "YPF: 21,4 M m³", detalle: "Sumando la producción por la empresa que la declara, a YPF se le asigna todo lo que opera, y la mitad de La Amarga Chica, que figura a nombre de Petronas E&P Argentina (de Vista desde 2025), no aparece."}
-      con: {valor: "YPF: 12,6 M m³", detalle: "Su parte en cada concesión, según los socios del mapa. Vista: 7,0 M m³, con la mitad de La Amarga Chica (2,1), que compró con Petronas E&P Argentina en 2025; Chevron, con sus dos razones sociales: 3,5 M m³."}
+      con: {valor: "YPF: 12,6 M m³", detalle: "Su parte en cada concesión, según los socios del mapa. Vista: 7,0 M m³, con la mitad de La Amarga Chica (2,1), que compró con Petronas E&P Argentina en 2025; Chevron: 3,5 M m³, con sus dos razones sociales. Esas dos uniones son correcciones revisadas por IA que esperan la confirmación de una persona; el 12,6 de YPF no depende de ellas."}
       impacto: >-
         Sin integrar, a YPF se le asignan 8,8 millones de m³ de más (55 millones de barriles): unos US$ 3.600
         millones, con un precio supuesto de US$ 65 por barril. Es producción de sus socios.
@@ -916,14 +916,15 @@ alternative_lab:
     esta evaluación no intenta reproducir sus resultados de 12 meses.
   experimental: >-
     Modelo experimental. Elegido por su menor error medio en 2023 y 2024; 2025 se muestra por separado.
-    Estos datos ya se exploraron: la evaluación no es una validación independiente.
-  selected: '**⭐ Alternativa elegida: {model} · menor error en 2023–2024.**'
+    Estos datos ya se exploraron: la evaluación no es una validación independiente. Rastro mantiene la regresión: la
+    diferencia promedio con ella es pequeña y no se midió su incertidumbre.
+  selected: '**Alternativa experimental: {model} · menor error en 2023–2024.**'
   distinction: Destacado
-  chosen_badge: ⭐ Elegido en 2023–2024
-  best_badge: 🏆 Menor error en 2025
-  ranking_note: 'La fila verde es la alternativa elegida con 2023–2024. El trofeo señala el árbol con menor error medio en 2025.'
+  chosen_badge: Elegido en 2023–2024
+  best_badge: Menor error en 2025
+  ranking_note: 'La fila verde es la alternativa elegida con 2023–2024. «Menor error en 2025» señala el árbol con menor error medio en 2025.'
   well_comparison:
-    better: '✅ En este pozo, el modelo alternativo es más preciso que la regresión: error de {error} frente a {ridge} M m³.'
+    better: 'En este pozo, el error del modelo alternativo es menor que el de la regresión: {error} frente a {ridge} M m³. Un pozo no alcanza para preferir un modelo.'
     worse: 'En este pozo, el modelo alternativo es menos preciso que la regresión: error de {error} frente a {ridge} M m³.'
     tie: 'En este pozo, ambos modelos tienen el mismo error: {error} M m³.'
   accuracy_note: 'Error = distancia entre la predicción y el gas observado. Menor error significa mayor precisión para este pozo; puede variar de un pozo a otro.'

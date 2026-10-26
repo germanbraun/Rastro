@@ -96,14 +96,14 @@ preguntas:
         breakdown_title: See all the concessions of this company
         breakdown_note: The total in the answer adds up these shares. The volumes in each row are shown rounded.
         calculation_title: How it was obtained
-        calculation: 'In {concesion}: {production} m³ of oil × {percent} % = {share} m³ that belong to {company}.'
+        calculation: 'In {concesion}, {company} is entitled to {production} m³ of oil × {percent} % = {share} m³.'
         rounding: Volumes are shown rounded to whole cubic metres; the calculation uses the original precision.
         connections_title: What Rastro connected
         sources:
           - title: Production declarations
             text: 'Production of the wells in {concesion}: {production} m³.'
           - title: Concession map
-            text: 'Partner in the map text: {map_name}. Registered share: {percent} %.'
+            text: 'Registered share of {map_name} in the map text: {percent} %.'
         connection: '{concesion} → Share → {company}'
         connection_detail: Production and partners are connected through the same concession.
         pending_link: >-
@@ -141,7 +141,7 @@ preguntas:
       m³: cubic metres of oil. One cubic metre is about 6.3 barrels.
     antes_despues:
       sin: {valor: "YPF: 21.4 M m³", detalle: "Adding up production by the company that declares it, YPF is assigned everything it operates, and half of La Amarga Chica, which is in the name of Petronas E&P Argentina (Vista's since 2025), does not appear."}
-      con: {valor: "YPF: 12.6 M m³", detalle: "Its share in each concession, according to the partners on the map. Vista: 7.0 M m³, with half of La Amarga Chica (2.1), which it bought from Petronas E&P Argentina in 2025; Chevron, with its two legal names: 3.5 M m³."}
+      con: {valor: "YPF: 12.6 M m³", detalle: "Its share in each concession, according to the partners on the map. Vista: 7.0 M m³, with half of La Amarga Chica (2.1), which it bought from Petronas E&P Argentina in 2025; Chevron: 3.5 M m³, with its two legal names. Those two joins are AI-reviewed corrections awaiting a person's confirmation; YPF's 12.6 does not depend on them."}
       impacto: >-
         Without integration, YPF is assigned 8.8 million m³ too much (55 million barrels): about US$ 3.6
         billion, at an assumed price of US$ 65 per barrel. It is its partners' production.
@@ -570,14 +570,15 @@ alternative_lab:
     this evaluation does not attempt to reproduce its 12-month results.
   experimental: >-
     Experimental model. Chosen for its lowest mean error in 2023 and 2024; 2025 is shown separately.
-    This data has already been explored: the evaluation is not an independent validation.
-  selected: '**⭐ Chosen alternative: {model} · lowest error in 2023–2024.**'
+    This data has already been explored: the evaluation is not an independent validation. Rastro keeps the
+    regression: the average difference from it is small and its uncertainty was not measured.
+  selected: '**Experimental alternative: {model} · lowest error in 2023–2024.**'
   distinction: Highlight
-  chosen_badge: ⭐ Chosen in 2023–2024
-  best_badge: 🏆 Lowest error in 2025
-  ranking_note: 'The green row is the alternative chosen with 2023–2024. The trophy marks the tree with the lowest mean error in 2025.'
+  chosen_badge: Chosen in 2023–2024
+  best_badge: Lowest error in 2025
+  ranking_note: 'The green row is the alternative chosen with 2023–2024. «Lowest error in 2025» marks the tree with the lowest mean error in 2025.'
   well_comparison:
-    better: '✅ For this well, the alternative model is more accurate than the regression: error of {error} versus {ridge} M m³.'
+    better: 'For this well, the alternative model has a lower error than the regression: {error} versus {ridge} M m³. One well is not enough to prefer a model.'
     worse: 'For this well, the alternative model is less accurate than the regression: error of {error} versus {ridge} M m³.'
     tie: 'For this well, both models have the same error: {error} M m³.'
   accuracy_note: 'Error = distance between the prediction and the observed gas. A lower error means higher accuracy for this well; it can vary from one well to another.'

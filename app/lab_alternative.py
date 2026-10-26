@@ -105,7 +105,7 @@ def show_alternative(tech, pozo, ui, walkthrough):
     actual.metric(ui['actual'], f"{lab.num(prediction['actual'])} M m³")
     status, error, baseline = compare_errors(prediction['prediction'], prediction['ridge_prediction'], prediction['actual'])
     message = ui['well_comparison'][status].format(error=lab.num(error, 2), ridge=lab.num(baseline, 2))
-    {'better': st.success, 'worse': st.warning, 'tie': st.info}[status](message)
+    st.info(message)   # one well's comparison is information, not a verdict on the model
     st.caption(ui['accuracy_note'])
     st.markdown('##### ' + ui['evaluation'])
     best = min(item['mae'] for item in result['test_2025'])

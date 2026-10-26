@@ -65,7 +65,7 @@ def build():
         <p><b>En la app:</b> «Ver los registros originales» y «Ver cómo se conectaron los nombres».</p>
         <p>Rastro reutiliza las definiciones en cada pregunta. SQL sobre los mismos enlaces también puede obtener la respuesta.</p>'''
     ]
-    for step, (name, title, body) in enumerate(zip(['e-integracion', 'e-layer-conexiones', 'e-layer-evidencia'], titles, bodies), 1):
+    for step, (name, title, body) in enumerate(zip(['e-layer-respuesta', 'e-layer-conexiones', 'e-layer-evidencia'], titles, bodies), 1):
         html = f'''<section id="{name}" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;
 padding:90px 128px 180px;
 display:flex;flex-direction:column;gap:24px">
@@ -75,7 +75,7 @@ display:flex;flex-direction:column;gap:24px">
 #{name} .cards{{display:flex;gap:28px}}
 #{name} .value{{font-size:72px;color:#2F6FB5}}
 #{name} .arrow{{text-align:center;color:#2F6FB5}}</style>
-<p style="color:#2F6FB5">Rastro Layer · {step} · Pregunta → Conexiones → Evidencia</p>
+<p style="color:#2F6FB5">Anexo · Del número a la evidencia · {step} de 3</p>
 <h2 style="font-size:56px;line-height:1.1">{title}</h2>
 {body}
 <aside>Cifras de docs/experiments/layer-answer/chevron.json, tomadas el {escape(snapshot['created_utc'][:10])};

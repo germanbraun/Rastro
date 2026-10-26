@@ -427,9 +427,7 @@ def show_answer(query, columns, rows, note=None):
             names = [next((v for v in row if v in summary), None) for row in rows]
             column = t("app.answer.col_recognized_tech") if TECH else t("app.answer.col_recognized")
             table[column] = [summary.get(n, "") for n in names]
-        import logos  # each company's (sponsor's) favicon
-        table, logo_config = logos.with_logos(table, list(columns))
-        tabla(table, hide_index=True, use_container_width=True, column_config=logo_config)
+        tabla(table, hide_index=True, use_container_width=True)
         if drugs:   # «¿Por qué este número?»: how Rastro recognized that drug in the trials
             drug_column = next(c for i, c in enumerate(columns) if any(r[i] in drugs for r in rows))
             dominio.show_why("oncologia", drug_why() | {"columna": drug_column}, list(columns), [list(r) for r in rows])

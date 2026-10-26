@@ -22,7 +22,6 @@ import yaml
 
 import answer
 import idioma
-import logos
 
 PROV = "PREFIX prov: <http://www.w3.org/ns/prov#>\n"
 
@@ -200,8 +199,8 @@ def show_answer(cfg, tech, query, columns, rows, item=None, note=None, where="pr
         visible = item.get("columnas_respuesta") if item and not tech else None
         shown_columns = [c for c in columns if not visible or c in visible]
         shown_rows = [[row[columns.index(c)] for c in shown_columns] for row in rows]
-        table, config = logos.with_logos(as_table(shown_columns, shown_rows, cfg, tech, col_sources), shown_columns)
-        tabla(table, hide_index=True, use_container_width=True, column_config=config,
+        table = as_table(shown_columns, shown_rows, cfg, tech, col_sources)
+        tabla(table, hide_index=True, use_container_width=True,
               key=f"{where}_{item['id']}" if item and item.get("id") else None)
         if item and item.get("mapa"):
             show_map(domain)
@@ -782,7 +781,7 @@ def render(cfg_path, tech):
             shown = st.session_state.get(f"{domain}_shown", (None,))
             if shown[0] == chosen:
                 _, query, columns, rows = shown
-                if item.get("antes_despues") and not item.get("porque", {}).get("recorrido"):
+                if item.get("antes_despues"):
                     before_after(item["antes_despues"])
                 show_answer(cfg, tech, query, columns, rows, item,
                             note=idioma.t("dominio.render.live_note"))
@@ -1002,7 +1001,7 @@ def show_demo(cfg, tech):
             st.caption(idioma.t("dominio.show_demo.tech_wording") + md(item["tecnica"]))
         query = Path(item["query"]).read_text()
         columns, rows = run(query, domain)
-        if item.get("antes_despues") and not item.get("porque", {}).get("recorrido"):
+        if item.get("antes_despues"):
             before_after(item["antes_despues"])
         show_answer(cfg, tech, query, columns, rows, item, note=idioma.t("dominio.show_demo.live_note"), where="demo")
     back, _, forward = st.columns([2, 3, 2])
@@ -1151,8 +1150,7 @@ def show_external(cfg, tech):
         if c in shown:
             shown[c] = shown[c].map(lambda v: money(v) if pd.notna(v) else "—")
     shown = shown.fillna("—").rename(columns=ext["columnas"])
-    shown, config = logos.with_logos(shown, columns)
-    tabla(shown, hide_index=True, use_container_width=True, column_config=config)
+    tabla(shown, hide_index=True, use_container_width=True)
     st.caption(idioma.t("dominio.show_external.result", when=when))
     st.info(md(ext["conclusion"]))
     with st.expander(idioma.t("dominio.show_external.query")):

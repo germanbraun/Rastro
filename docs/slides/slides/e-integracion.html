@@ -1,24 +1,11 @@
-<section id="e-integracion" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;
-padding:90px 128px 180px;
-display:flex;flex-direction:column;gap:24px">
-<style>#e-integracion p{font-size:32px;line-height:1.35}
-#e-integracion h3{font-size:40px}
-#e-integracion .card{background:#fff;border:1px solid #E1E4E8;border-radius:16px;padding:26px;flex:1}
-#e-integracion .cards{display:flex;gap:28px}
-#e-integracion .value{font-size:72px;color:#2F6FB5}
-#e-integracion .arrow{text-align:center;color:#2F6FB5}</style>
-<p style="color:#2F6FB5">Rastro Layer · 1 · Pregunta → Conexiones → Evidencia</p>
-<h2 style="font-size:56px;line-height:1.1">La respuesta</h2>
-<p>¿Cuánto petróleo de 2025 le corresponde a cada empresa?</p>
-        <div class="card"><h3>CHEVRON</h3><p class="value">3.453.744 m³</p>
-        <p>Su parte, sumada en 3 concesiones.</p></div>
-        <p><b>¿Por qué este número?</b> Elegimos una concesión y seguimos el cálculo hasta su fuente.</p>
-        <p>Producción operada y participación son medidas distintas. Aquí calculamos la participación registrada.</p>
-        <p>Parte de este número depende de una unión de nombres que todavía espera la confirmación de una persona (siguiente diapositiva).</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>5</span></div>
-<aside>Cifras de docs/experiments/layer-answer/chevron.json, tomadas el 2026-10-26;
-la app consulta los datos cargados hoy, así que conviene mostrarlas en vivo. Los metros cúbicos se redondean al
-mostrarlos. Decir que la unión de nombres que sostiene la parte de CHEVRON la revisó un asistente de IA
-y que todavía falta que una persona la confirme. Es un ejemplo trabajado, no una medición de exactitud revisada
-por una persona.</aside>
+<section id="e-integracion" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">1 · Preguntar</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.12;width:1664px">«¿Cuánto petróleo de 2025 le corresponde a cada empresa?»</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">YPF: 21,4 M m³</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Sumando por la empresa que declara: a YPF se le asigna todo lo que opera, también lo que es de sus socios.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">YPF: 12,6 M m³</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Su parte en cada concesión, según sus socios. Cada empresa, unida entre fuentes: Vista suma la mitad de La Amarga Chica, que compró a Petronas (una corrección con su fuente, revisada por IA: falta que una persona la confirme).</p></div>
+</div>
+<p style="font-size:32px;line-height:1.35;width:1400px"><b>8,8 millones de m³ asignados de más: unos US$ 3.600 millones</b> <span style="color:#4A5568">a US$ 65 el barril (un supuesto). Los socios se separan una vez y valen para todas las preguntas.</span></p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>5</p></div>
+<aside>Primer momento: integración. La operadora maneja los pozos, pero el petróleo se reparte entre los socios. Sumar por quien declara la producción le da a YPF 21,4 millones de metros cúbicos; su parte es 12,6. La mitad de La Amarga Chica figura en el mapa a nombre de Petronas E&P Argentina, que Vista compró en 2025: con Rastro, Vista suma esos 2,1 (una corrección con su fuente, revisada por un asistente de IA; falta que una persona la confirme; el 12,6 de YPF no depende de ella). Los socios están en un texto del mapa de concesiones: Rastro los separa una vez, con su porcentaje, y une los nombres de cada empresa entre fuentes. En la app, abrir «¿Por qué este número?» con YPF y Loma Campana: 50 % de la producción de la concesión, con el texto original del mapa. El recorrido completo, con Chevron, está en el anexo.</aside>
 </section>

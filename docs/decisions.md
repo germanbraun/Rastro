@@ -1108,3 +1108,19 @@ The user approved three compatibility adjustments after comparing the new journe
   - query titles read from the ontology folders;
   - dictionary keys an overlay cannot rename: glossary term names and example-instance labels;
   - the per-well explanation from `lab/gas/modelo.py`, which waits for the step with a new run.
+
+## 2026-10-26 — The first demo moment goes back to YPF; Chevron to the appendix; trees as an experiment; no logos
+
+- **First moment:**
+  - One slide again, «Sin Rastro YPF: 21,4 M m³ / Con Rastro: 12,6». Today's data gives 21,39 and 12,57.
+  - In the app, «¿Por qué este número?» opens on YPF and Loma Campana: 50 % of 5,146,799 m³. YPF's names are joined
+    by the same name, so nothing in it waits for a person.
+  - The contrast card and the slide say that Vista's and Chevron's shares rest on AI-reviewed corrections awaiting
+    a person.
+  - The three Chevron slides move to the appendix (15–17) as «Del número a la evidencia».
+- **Tree models:** shown only in the technical view, with neutral wording: no star, trophy or «más preciso que la
+  regresión»; a single well is not enough to prefer a model. Rastro keeps the regression. They are out of the demo
+  script.
+- **Company logos removed:** the icon module, the website list, the 19 stored official icons and the calls to icon
+  services. Tables show company names only: no trademark question in a commercial demo, and the app works offline.
+- **Why:** the user approved the four recommendations made after reviewing the Lab and Layer walkthrough commits.
