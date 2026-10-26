@@ -46,6 +46,9 @@ ANSWERS = HERE / "respuestas"
 SPEC = yaml.safe_load((HERE / "eval" / "questions.yaml").read_text())
 QUESTIONS = {q["id"]: q for q in SPEC["questions"]}
 PARAPHRASES = yaml.safe_load((HERE / "consistencia" / "parafrasis.yaml").read_text()) or {}
+# An independent reference, when it exists, replaces the provisional SPARQL one: {"nota": who wrote it and its
+# status, "answers": {qid: answer}}. Without it, every reference comes from Rastro and is provisional.
+REFERENCES = json.loads((HERE / "eval" / "referencias.json").read_text()) if (HERE / "eval" / "referencias.json").exists() else None
 NAMES = {"B": "Sin Rastro (SQL)", "D": "SQL + enlaces de Rastro", "C": "Con Rastro"}
 TOLERANCE = 0.05    # numbers: correct if within 5 % of the reference
 MIN_F1 = 0.8        # lists: correct if they match at least 80 % (F1)
@@ -147,10 +150,12 @@ def same(values):
 
 def score_all():
     names = {k: v for k, v in NAMES.items() if any(ANSWERS.glob(f"*-{k}.json"))}  # the ones that already have answers
-    results = {"date": date.today().isoformat(), "questions": {}, "totals": {}, "consistency": {}}
+    results = {"date": date.today().isoformat(), "questions": {}, "totals": {}, "consistency": {},
+               "references": REFERENCES["nota"] if REFERENCES else "provisional: SPARQL over Rastro"}
     with admin() as conn:
         for qid, q in QUESTIONS.items():
-            reference = to_answer(run_sparql(SPEC["prefixes"] + q["reference"], DOMAIN), q["kind"])
+            reference = (REFERENCES["answers"][qid] if REFERENCES
+                         else to_answer(run_sparql(SPEC["prefixes"] + q["reference"], DOMAIN), q["kind"]))
             entry = {"question": q["question"], "kind": q["kind"], "reference": reference}
             for k in names:
                 saved = load(qid, 0, k)
@@ -177,8 +182,9 @@ def score_all():
     n, m = len(QUESTIONS), len(PARAPHRASES)
     lines = [f"# Resultados: {TITLE}, sin Rastro y con Rastro", "",
              f"Fecha: {results['date']}. Respuestas escritas por subagentes de Claude Code (Claude Opus 5.5) "
-             "que solo vieron el prompt. Las referencias las escribió un asistente de IA; falta que las "
-             "confirme una persona.", "",
+             "que solo vieron el prompt. " + (REFERENCES["nota"] if REFERENCES else
+                                               "Las referencias las escribió un asistente de IA; falta que las "
+                                               "confirme una persona."), "",
              "| | " + " | ".join(names.values()) + " |", "|---|" + "---|" * len(names),
              f"| Correctas (de {n}) | " + " | ".join(str(results["totals"][k]["correct"]) for k in names) + " |",
              f"| Misma respuesta en las 4 formas (de {m} preguntas) | "

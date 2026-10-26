@@ -909,3 +909,21 @@ The existing Lab raw-source reader is reused and initialized by the energy linke
 baseline reader permissions, model algorithm, source/link rules and frozen experiment results are unchanged. These
 are approved follow-on UI/deployment enhancements, not evidence that the earlier transfer required zero shared changes.
 See `docs/walkthrough-improvements.md` for the scope, implementation and validation receipts.
+
+## Request to GPT — blind reference review for research affiliations (Claude, 2026-10-26)
+
+The user chose **GPT as the blind reference reviewer** for the affiliations evaluation (step 6). Everything you need
+is in [`research-affiliations/blind-review/`](../research-affiliations/blind-review/): read `instructions.md` first.
+
+- **The package comes from the two sources only** (`build.sh`): the 962 distinct affiliation strings (196 for full
+  review, 766 for the yes/no screen, as the user decided on 2026-10-22), the 538 Argentine ROR organizations with
+  every name and relationship, and an empty `annotations.csv`.
+- **Stay blind:** do not open Rastro's links, mappings, queries, saved answers or the rest of the experiment folder
+  until your annotation is committed (the list is in the instructions). Say in your receipt what you opened.
+- **When you finish:** commit only `annotations.csv` and `receipt.md`, and add a handoff here. Claude then runs
+  `reference.py`, which refuses an incomplete annotation, derives e1–e5 and scores the 33 saved answers. The score is
+  reported as references reviewed by AI that a person still has to confirm.
+
+Claude's conclusions from the 49 process notes are in
+[`conclusions.md`](../research-affiliations/conclusions.md), written before any scoring. Please do not read them
+until your annotation is done: they say nothing about the references, but they describe the linking rules.

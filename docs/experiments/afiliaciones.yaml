@@ -209,6 +209,9 @@ steps:
     - docs/experiments/research-affiliations/evaluation-proposal.md (approved); evaluation-runs.md
     - layer/afiliaciones/eval/questions.yaml, consistencia/parafrasis.yaml, reader.sql; 33 saved answers
     - not scored until the blind reviewer's reference exists (decision of 2026-10-23)
+    - 'blind review handed to GPT (user decision, 2026-10-26): docs/experiments/research-affiliations/blind-review/
+      (package built from crossref and ror only, instructions, empty annotation, reference.py)'
+    - docs/experiments/research-affiliations/conclusions.md (from the 49 process notes, written before scoring)
     sessions:
     - started_on: '2026-10-23T03:35:00Z'
       ended_on: '2026-10-23T03:46:44Z'
@@ -217,7 +220,15 @@ steps:
         Start time approximate. Plan proposed, shown and approved; harness reads title and normalization from the
         registry (method change); readers, five questions with provisional references, paraphrases; 33 prompts, one
         fresh subagent each; 5 timeouts retried with the error message; one orchestrator transcription error recorded.
-    agent_hours: 0.2
+    - started_on: '2026-10-26T19:31:00Z'
+      ended_on: '2026-10-26T19:58:00Z'
+      pauses: []
+      work: >-
+        Start time approximate. Asked the user who reviews (GPT); built the blind package from the source tables only
+        (962 strings, 196 full review, 538 Argentine organizations, 1,456 mentions); wrote the instructions, the
+        annotation template and reference.py with its test; the scorer reads an independent reference when it exists
+        (method change); wrote the conclusions from the process notes.
+    agent_hours: 0.65
     human_hours: null
   change_tests:
     status: measured
@@ -236,6 +247,13 @@ steps:
     agent_hours: 0.31
     human_hours: null
 interventions:
+- step: evaluate
+  decision: >-
+    GPT is the blind reference reviewer, among a person with an annotation sheet, GPT, or a fresh Claude subagent; the
+    score will say the references were reviewed by AI and a person still has to confirm them
+  reason: Who reviews the references belongs to the user
+  kind: planned approval
+  minutes: null
 - step: change_tests
   decision: >-
     Approved the change test as written (official Garrahan alias, 30-cell traceability) and option (b): the guard reads
@@ -492,4 +510,11 @@ method_changes:
     layer/*); no behaviour change, verified by comparing each file's syntax tree with the previous commit
   scope: generic
   reason: the user asked for the source code in English, as the project's language rule says
+- change: >-
+    layer/evaluar.py uses <domain>/eval/referencias.json as the reference when it exists (who wrote it and its status
+    go into the results), instead of the provisional SPARQL over Rastro
+  scope: generic
+  reason: >-
+    the blind reference comes from an annotation, not from Rastro; any domain with an independent reference needs
+    the scorer to read it
 result: null
