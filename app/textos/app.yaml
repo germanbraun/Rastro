@@ -1,6 +1,12 @@
 # Texts of the app's frame (app/app.py), in Spanish and English. Read with idioma.t("<key>").
 app.language: {es: "Idioma", en: "Language"}
 app.tagline: {es: "Los datos cambian. Las preguntas, no.", en: "Data changes. The questions don't."}
+app.what:
+  es: "**Rastro es una capa semántica:** responde preguntas de negocio sobre datos de varias fuentes públicas, ya integrados, y muestra de dónde sale cada número."
+  en: "**Rastro is a semantic layer:** it answers business questions over data from several public sources, already integrated, and shows where every number comes from."
+app.how_to_read:
+  es: "Cómo leer cada pantalla: **1 · la pregunta**, en palabras de negocio → **2 · la respuesta**, calculada en vivo sobre las fuentes → **3 · «¿Por qué este número?»**: las fuentes, las reglas y las uniones que la respaldan. Cada unión dice su estado: {marks}."
+  en: "How to read each screen: **1 · the question**, in business words → **2 · the answer**, computed live over the sources → **3 · «Why this number?»**: the sources, rules and joins behind it. Every join states its status: {marks}."
 app.technical: {es: "Ver detalles técnicos", en: "Show technical details"}
 app.technical_help:
   es: "Muestra las consultas, el SQL, la evidencia en PROV-O, la comparación completa y los otros casos de uso."

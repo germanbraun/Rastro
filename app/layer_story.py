@@ -1,15 +1,15 @@
 """A configured Layer answer followed by its calculation, connections and evidence."""
 from html import escape
 
-PENDING = "a confirmar por una persona"   # how an AI-reviewed correction says it still waits for a person
+import enlaces
 
 
 def map_link(text, links):
     """The company name used in the map's partner text, and whether its link to the company still waits for a
-    person (its evidence says so). links: rows with «nombre» and «evidencia»."""
+    person. links: rows with «nombre», «regla» and «evidencia»."""
     for link in sorted(links, key=lambda row: -len(row["nombre"])):
         if link["nombre"] and link["nombre"].upper() in str(text).upper():
-            return link["nombre"], PENDING in str(link["evidencia"])
+            return link["nombre"], enlaces.status(link.get("regla"), link["evidencia"]) == "ia"
     return None, False
 
 import pandas as pd
@@ -47,8 +47,8 @@ def show_story(domain, why, columns, rows, where, tech):
                 st.caption(ui['comparison_note'])
         with st.expander(ui['breakdown_title']):
             visible = why['columnas']
-            tabla(pd.DataFrame(records)[list(visible)].rename(columns=visible),
-                  key=f'{domain}_{where}_story_breakdown')
+            tabla(enlaces.add_status(pd.DataFrame(records))[[enlaces.label('column'), *visible]].rename(columns=visible),
+                  column_config=enlaces.column_help(), key=f'{domain}_{where}_story_breakdown')
             st.caption(ui['breakdown_note'])
         names = [r['concesion'] for r in records]
         concession = st.selectbox(ui['concession'], names,
@@ -76,7 +76,7 @@ def show_story(domain, why, columns, rows, where, tech):
                     f'<strong>{escape(ui["connection"].format(**values))}</strong><br>'
                     f'{escape(ui["connection_detail"].format(**values))}</div>', unsafe_allow_html=True)
         if pending:   # the number rests on a name link a person has not confirmed yet: say it where the number is
-            st.warning(ui['pending_link'].format(**values))
+            st.warning(f"**{enlaces.label('ia')}.** " + ui['pending_link'].format(**values))
         st.caption(ui['contribution'])
         with st.expander(ui['records_title']):
             st.markdown(ui['original_text'].format(text=md(record['texto'])))
@@ -96,9 +96,9 @@ def show_story(domain, why, columns, rows, where, tech):
                 st.code(production_query, language='sparql')
         with st.expander(ui['linking_title']):
             if link_rows:
-                frame = pd.DataFrame(link_rows, columns=link_cols)
-                tabla(frame[list(ui['linking_columns'])].rename(columns=ui['linking_columns']),
-                      key=f'{domain}_{where}_story_links')
+                frame = enlaces.add_status(pd.DataFrame(link_rows, columns=link_cols))
+                tabla(frame[[enlaces.label('column'), *ui['linking_columns']]].rename(columns=ui['linking_columns']),
+                      column_config=enlaces.column_help(), key=f'{domain}_{where}_story_links')
             else:
                 st.info(ui['missing'])
             st.caption(ui['linking_note'])

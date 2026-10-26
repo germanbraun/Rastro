@@ -1124,3 +1124,19 @@ The user approved three compatibility adjustments after comparing the new journe
 - **Company logos removed:** the icon module, the website list, the 19 stored official icons and the calls to icon
   services. Tables show company names only: no trademark question in a commercial demo, and the app works offline.
 - **Why:** the user approved the four recommendations made after reviewing the Lab and Layer walkthrough commits.
+
+## 2026-10-26 — Clarity: what Rastro is, one link status, live contrast numbers
+
+- **First screen:** under the slogan, one sentence on what Rastro is and how to read each screen (question → answer →
+  «¿Por qué este número?»), with the three link marks.
+- **One status mark for every link** (`app/enlaces.py`), read from the link's rule and evidence: 🔹 Regla automática,
+  🟠 Revisada por IA, falta una persona, ✅ Confirmada por una persona (a correction with its document). It is the
+  «Estado» column of every link table (the «¿Por qué?» tables and the technical link tables), the pending note of the
+  Layer story and the Lab's marks and input statuses. Before, the same status was said in five different ways.
+- **The demo's contrast cards read their numbers live:** each oil and gas card (questions 1–3) has its queries, SQL
+  over the sources as they come for «Sin Rastro» and SPARQL for «Con Rastro», and its texts name the values in braces.
+  Under the card, the date of each source's latest load. A test fails if a card with queries types a number. Today
+  the values equal the ones that were typed: 21,4 / 12,6 M m³ (8,8 too many, 55 million barrels, US$ 3.600 million at
+  an assumed US$ 65), 12.006 or 15.809 wells (3.796 disagree), Neuquén 6.256 / La Calera 482 of 6.636.
+- **Why:** the user approved improvements 1, 2 and 5 of the clarity review. The slides still carry their own typed
+  copy of these numbers.

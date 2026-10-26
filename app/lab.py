@@ -10,6 +10,7 @@ import pandas as pd
 import streamlit as st
 
 import answer
+import enlaces
 import idioma
 from lab_walkthrough import GROUPS, compare_run, value_status
 from dominio import ayuda, data_version, md, tabla
@@ -133,6 +134,23 @@ def registros(pozo):
 UNITS = {"grupo": "", "area": "", "pct": "%", "profundidad": "m", **{k: v[1] for k, v in modelo.FRACTURA.items()}}
 
 
+# The model writes these marks (modelo.marca); the app shows them with the same status mark as every link
+MODEL_MARKS = {"unión revisada por IA, a confirmar por una persona": "ia", "dato corregido con documento": "persona"}
+
+
+def mark(text):
+    """A fact's mark: a link's review status with the app's one mark, any other note after an orange dot."""
+    for model_text, key in MODEL_MARKS.items():
+        text = text.replace(model_text, enlaces.label(key))
+    return text if text[:1] in "🟠✅" else f"● {text}"
+
+
+def flags_text(row, variable, ui):
+    """A model input's status: observed, imputed or late, and the link mark when its name join waits for a person."""
+    return " · ".join(enlaces.label("ia") if flag == "pending" else ui["statuses"][flag]
+                      for flag in value_status(row, variable))
+
+
 def variable_label(variable):
     """A model variable in words; the Spanish fracturing labels are modelo.FRACTURA's, capitalized."""
     label, unit = idioma.t(f"lab.variable_label.{variable}"), UNITS[variable]
@@ -226,8 +244,7 @@ def input_rows(pozo, config):
                         ui["columns"]["model"]: variable,
                         ui["columns"]["original"]: display(original),
                         ui["columns"]["effective"]: display(effective),
-                        ui["columns"]["status"]: " · ".join(ui["statuses"][flag]
-                                                                  for flag in value_status(row, variable))})
+                        ui["columns"]["status"]: flags_text(row, variable, ui)})
     return records
 
 
@@ -311,7 +328,7 @@ def show_calculation(pozo=None, config=None, tech=False):
                       ui["training_mean"]: ui["category"] if item["promedio"] is None else num(item["promedio"], 3),
                       ui["coefficient"]: ui["category"] if item["coeficiente"] is None else f"{item['coeficiente']:.6g}",
                       ui["contribution"]: round(item["aporte"], 6),
-                      ui["columns"]["status"]: " · ".join(ui["statuses"][flag] for flag in value_status(row, variable))})
+                      ui["columns"]["status"]: flags_text(row, variable, ui)})
     tabla(pd.DataFrame(table), key="lab_variable_calculation")
     variable = st.selectbox(ui["variable_selector"], GROUPS[group], format_func=variable_label,
                             key=f"lab_explore_variable_{group}")
@@ -364,7 +381,7 @@ def show_well(key, pozo=None):
                 st.caption(x["nota"])
         st.markdown(idioma.t("lab.show_well.facts"))
         for h in eb["hechos"]:
-            st.markdown(f"**{h['hecho']}:** {h['valor']}" + (f"  \n:orange[● {h['marca']}]" if h["marca"] else ""))
+            st.markdown(f"**{h['hecho']}:** {h['valor']}" + (f"  \n:orange[{mark(h['marca'])}]" if h["marca"] else ""))
             with st.popover(idioma.t("lab.show_well.where_from")):
                 st.markdown(idioma.t("lab.show_well.rule_evidence", rule=h["regla"], evidence=h["evidencia"])
                             + (idioma.t("lab.show_well.name", name=h["nombre"]) if h.get("nombre") else "")

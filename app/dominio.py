@@ -21,6 +21,7 @@ import streamlit as st
 import yaml
 
 import answer
+import enlaces
 import idioma
 
 PROV = "PREFIX prov: <http://www.w3.org/ns/prov#>\n"
@@ -391,7 +392,8 @@ def show_pieces(domain, diagram=None):
             st.markdown(f"**{title}**")
             try:
                 cols, rows = sql_table(query, domain)
-                tabla(pd.DataFrame(rows, columns=cols), hide_index=True, use_container_width=True)
+                tabla(enlaces.add_status(pd.DataFrame(rows, columns=cols)), hide_index=True,
+                      use_container_width=True, column_config=enlaces.column_help())
             except Exception as e:
                 st.warning(idioma.t("dominio.show_pieces.unreadable", error=str(e)[:200]))
             with st.expander(idioma.t("dominio.show_pieces.query")):
@@ -782,7 +784,7 @@ def render(cfg_path, tech):
             if shown[0] == chosen:
                 _, query, columns, rows = shown
                 if item.get("antes_despues"):
-                    before_after(item["antes_despues"])
+                    before_after(item["antes_despues"], domain)
                 show_answer(cfg, tech, query, columns, rows, item,
                             note=idioma.t("dominio.render.live_note"))
         else:
@@ -889,12 +891,30 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
                             height=620 + 55 * max(0, len(nodes) - 8), scale=0.95, font="Helvetica, Arial, sans-serif")
         st.markdown(f'<img src="data:image/svg+xml;base64,{base64.b64encode(drawing.encode()).decode()}" '
                     'style="width:100%;border-radius:12px">', unsafe_allow_html=True)
-        table = pd.DataFrame(records).rename(columns=why.get("columnas", {}))
-        tabla(table, hide_index=True, use_container_width=True, key=f"{domain}_{where}_porque_tabla")
+        table = enlaces.add_status(pd.DataFrame(records)).rename(columns=why.get("columnas", {}))
+        tabla(table, hide_index=True, use_container_width=True, column_config=enlaces.column_help(),
+              key=f"{domain}_{where}_porque_tabla")
 
 
-def before_after(card):
-    """The same card at every moment of the demo: without Rastro on the left, with Rastro on the right."""
+def before_after(card, domain):
+    """The same card at every moment of the demo: without Rastro on the left, with Rastro on the right. Its numbers are
+    read now: «valores» are one-row queries (SQL over the sources as they come, or SPARQL over Rastro), «calculos»
+    simple arithmetic over them, and the texts name them in braces."""
+    values = {}
+    for query in card.get("valores", []):
+        if query.get("sql"):
+            columns, rows = _sql_saved(query["sql"], domain, data_version(domain, reads=query["sql"]))
+        else:
+            columns, rows = run(prefixed(query["sparql"], domain), domain)
+        values.update({c: float(v) for c, v in zip(columns, rows[0])})
+    for name, formula in card.get("calculos", {}).items():
+        values[name] = eval(str(formula), {"__builtins__": {}, "round": round}, dict(values))   # noqa: S307 - arithmetic from our own YAML
+    shown = {name: idioma.number(v, card.get("decimales", {}).get(name, 0 if float(v).is_integer() else 1))
+             for name, v in values.items()}
+    card = {key: ({k: v.format(**shown) for k, v in part.items()} if key in ("sin", "con") else part)
+            for key, part in card.items()}
+    if "impacto" in card:
+        card["impacto"] = card["impacto"].format(**shown)
     left, right = st.columns(2)
     for col, key, title in [(left, "sin", card.get("titulo_sin", idioma.t("dominio.before_after.without"))),
                            (right, "con", idioma.t("dominio.before_after.with"))]:
@@ -904,6 +924,28 @@ def before_after(card):
             st.markdown(md(card[key]["detalle"]))
     if card.get("impacto"):
         st.warning(idioma.t("dominio.before_after.cost") + md(card["impacto"]))
+    if card.get("fuentes"):
+        st.caption(idioma.t("dominio.before_after.data", sources="; ".join(
+            idioma.t("dominio.before_after.source", name=name, date=date) for name, date in loaded(tuple(card["fuentes"])))))
+
+
+@st.cache_data(persist="disk", show_spinner=False)
+def _sql_saved(query, domain, version):   # SQL over the sources as they come, recalculated when they change
+    return sql_table(query, domain, approach="B")
+
+
+@st.cache_data(ttl=60, show_spinner=False)
+def loaded(source_ids):
+    """Each source's name and the date of its latest load, from rastro_meta.load_run."""
+    import psycopg
+    with psycopg.connect(f"host=postgres port=5432 dbname={os.environ['PG_DB']} "
+                         f"user={os.environ['PG_USER']} password={os.environ['PG_PASSWORD']}") as conn:
+        rows = conn.execute("""
+            SELECT s.name, to_char(max(r.loaded_at), 'DD/MM/YYYY')
+            FROM rastro_meta.source s JOIN rastro_meta.load_run r ON r.source_id = s.id
+            WHERE s.id = ANY(%s) GROUP BY s.id, s.name ORDER BY array_position(%s, s.id)""",
+                            (list(source_ids), list(source_ids))).fetchall()
+    return rows
 
 
 def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=None):
@@ -1002,7 +1044,7 @@ def show_demo(cfg, tech):
         query = Path(item["query"]).read_text()
         columns, rows = run(query, domain)
         if item.get("antes_despues"):
-            before_after(item["antes_despues"])
+            before_after(item["antes_despues"], domain)
         show_answer(cfg, tech, query, columns, rows, item, note=idioma.t("dominio.show_demo.live_note"), where="demo")
     back, _, forward = st.columns([2, 3, 2])
     if i > 0 and back.button(idioma.t("dominio.show_demo.back"), key=f"{key}_back"):

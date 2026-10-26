@@ -123,7 +123,8 @@ preguntas:
         linking_title: See how the names were connected
         linking_note: >-
           Each name in a source points to the same company. The rule and its evidence explain the link;
-          if a correction says it is awaiting human confirmation, that review is still pending.
+          «Status» says what backs it: an automatic rule, a correction reviewed by AI that a person still has
+          to confirm, or one a person confirmed with a document.
         identity: '**A shared identifier for this company:**'
         linking_columns: {nombre: Name in the source, fuente: Source, regla: Rule, evidencia: Evidence and review}
         technical_title: Identifiers and query for this walkthrough
@@ -140,11 +141,11 @@ preguntas:
       Participación: the percentage of a concession that belongs to each partner (share). The operator runs the wells, but the oil is divided among the partners.
       m³: cubic metres of oil. One cubic metre is about 6.3 barrels.
     antes_despues:
-      sin: {valor: "YPF: 21.4 M m³", detalle: "Adding up production by the company that declares it, YPF is assigned everything it operates, and half of La Amarga Chica, which is in the name of Petronas E&P Argentina (Vista's since 2025), does not appear."}
-      con: {valor: "YPF: 12.6 M m³", detalle: "Its share in each concession, according to the partners on the map. Vista: 7.0 M m³, with half of La Amarga Chica (2.1), which it bought from Petronas E&P Argentina in 2025; Chevron: 3.5 M m³, with its two legal names. Those two joins are AI-reviewed corrections awaiting a person's confirmation; YPF's 12.6 does not depend on them."}
+      sin: {valor: "YPF: {ypf_sin} M m³", detalle: "Adding up production by the company that declares it, YPF is assigned everything it operates, and half of La Amarga Chica, which is in the name of Petronas E&P Argentina (Vista's since 2025), does not appear."}
+      con: {valor: "YPF: {ypf_con} M m³", detalle: "Its share in each concession, according to the partners on the map. Vista: {vista} M m³, with half of La Amarga Chica ({vista_lac}), which it bought from Petronas E&P Argentina in 2025; Chevron: {chevron} M m³, with its two legal names. Those two joins are 🟠 reviewed by AI, a person must confirm; YPF's {ypf_con} does not depend on them."}
       impacto: >-
-        Without integration, YPF is assigned 8.8 million m³ too much (55 million barrels): about US$ 3.6
-        billion, at an assumed price of US$ 65 per barrel. It is its partners' production.
+        Without integration, YPF is assigned {exceso} million m³ too much ({barriles} million barrels): about
+        US$ {dolares} million, at an assumed price of US$ {precio} per barrel. It is its partners' production.
     evidencia:
       texto: "The partners of each concession, as the map reports them (some examples):"
 
@@ -167,8 +168,8 @@ preguntas:
       Declaración jurada: what each company reports every month to the Secretaría de Energía about the production of each well (sworn production declaration).
       Padrón de pozos: the register of all wells, with their location and their company (well registry).
     antes_despues:
-      sin: {valor: "12,006 or 15,809", detalle: "Two answers: the well registry says 12,006 and the sworn production declarations, 15,809. In 3,796 wells the registry names another company (Pecom, Velitec, Copesa)."}
-      con: {valor: "15,809 wells", detalle: "One written rule: whoever declares the production of the last month prevails. What the registry says stays in view for each well. They are wells of every type: 5,391 oil, 1,394 gas, 1,318 injection and 7,579 of other types; 5,689 produced oil or gas in 2025."}
+      sin: {valor: "{padron} or {declaraciones}", detalle: "Two answers: the well registry says {padron} and the sworn production declarations, {declaraciones}. In {otra} wells the registry names another company (Pecom, Velitec, Copesa)."}
+      con: {valor: "{pozos} wells", detalle: "One written rule: whoever declares the production of the last month prevails. What the registry says stays in view for each well. They are wells of every type: {petroliferos} oil, {gasiferos} gas, {inyeccion} injection and {otro} of other types; {produjeron} produced oil or gas in 2025."}
     evidencia:
       texto: "Wells where the sources disagree (some examples):"
       formato: "**Well {pozo}**: {evidencia}"
@@ -190,8 +191,8 @@ preguntas:
       Venteo: releasing or flaring gas at the field instead of using it (venting).
       Posible venteo: a thermal anomaly seen by a satellite. It is a sign to review, not a confirmation.
     antes_despues:
-      sin: {valor: "Neuquén: 6,256", detalle: "The satellite layer only gives date and province: it does not say which concession or which company. It also spells Tierra del Fuego in two ways."}
-      con: {valor: "La Calera: 482", detalle: "6,636 possible venting events placed in their concession, with their operator. La Calera (Pluspetrol): 482, with no declared venting point on the map."}
+      sin: {valor: "Neuquén: {neuquen}", detalle: "The satellite layer only gives date and province: it does not say which concession or which company. It also spells Tierra del Fuego in two ways."}
+      con: {valor: "La Calera: {la_calera}", detalle: "{ubicados} possible venting events placed in their concession, with their operator. La Calera (Pluspetrol): {la_calera}, with no declared venting point on the map."}
     evidencia:
       texto: "Why each detection is in La Calera (some examples):"
 
@@ -669,7 +670,6 @@ ejemplo_lab:
       observed: Observed
       imputed: Imputed
       late: Arrived late
-      pending: Awaiting a person's confirmation
     columns:
       variable: Variable
       field: Source field

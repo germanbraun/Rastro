@@ -106,6 +106,19 @@ dominio.show_why.answer_row: {es: "la fila de la respuesta", en: "the answer's r
 dominio.before_after.without: {es: "Sin Rastro", en: "Without Rastro"}
 dominio.before_after.with: {es: "Con Rastro", en: "With Rastro"}
 dominio.before_after.cost: {es: "**Lo que cuesta no integrar:** ", en: "**What not integrating costs:** "}
+dominio.before_after.data:
+  es: "Calculado ahora, con la última carga de cada fuente: {sources}."
+  en: "Computed now, with each source's latest load: {sources}."
+dominio.before_after.source: {es: "{name} ({date})", en: "{name} ({date})"}
+
+# One mark for a link's review status (app/enlaces.py), the same in every table and note
+enlaces.column: {es: "Estado", en: "Status"}
+enlaces.regla: {es: "🔹 Regla automática", en: "🔹 Automatic rule"}
+enlaces.ia: {es: "🟠 Revisada por IA, falta una persona", en: "🟠 Reviewed by AI, a person must confirm"}
+enlaces.persona: {es: "✅ Confirmada por una persona", en: "✅ Confirmed by a person"}
+enlaces.legend:
+  es: "🔹 Regla automática: una regla escrita unió los datos y guardó su evidencia. 🟠 Revisada por IA, falta una persona: una corrección que revisó un asistente de IA; la usa Rastro, pero una persona todavía tiene que confirmarla. ✅ Confirmada por una persona: una corrección verificada con un documento, que se cita."
+  en: "🔹 Automatic rule: a written rule joined the data and kept its evidence. 🟠 Reviewed by AI, a person must confirm: a correction an AI assistant reviewed; Rastro uses it, but a person still has to confirm it. ✅ Confirmed by a person: a correction verified against a document, which is cited."
 
 dominio.show_integration_example.purpose: {es: "**Para qué sirve.** {text}", en: "**What it is for.** {text}"}
 dominio.show_integration_example.parts:

@@ -32,6 +32,7 @@ sys.path.insert(0, "/layer/eval")
 
 import answer  # noqa: E402
 from run import NAMES, normalize, score  # noqa: E402
+import enlaces  # noqa: E402  (one mark for a link's review status)
 import dominio  # noqa: E402  (the screens of the other domains and what they share with oncology)
 from dominio import ayuda, tabla, warm_up  # noqa: E402  (the «?» icons, the tables with long text and the warm-up)
 import idioma  # noqa: E402  (the interface language: Spanish by default, English on request)
@@ -502,6 +503,8 @@ idioma.init()   # before any text, so the first lines are already in the chosen 
 st.markdown('<img src="data:image/svg+xml;base64,' + base64.b64encode(Path("/app/logo-horizontal.svg").read_bytes()).decode()
             + '" style="height:56px;margin:8px 0 4px 0" alt="Rastro">', unsafe_allow_html=True)
 st.markdown(f"**{t('app.tagline')}**")
+st.markdown(t("app.what"))
+st.caption(t("app.how_to_read", marks=" · ".join(enlaces.label(k) for k in ("regla", "ia", "persona"))))
 
 # Domains: oncology has its screen in this file; the others are drawn with dominio.py
 # from their configuration (app/dominios.yaml)
