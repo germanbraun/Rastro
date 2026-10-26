@@ -45,9 +45,9 @@ nota_rastro: >-
 
 columnas:
   company: Company
-  share: Oil that belongs to it (m³)
-  gasShare: Gas that belongs to it (thousand m³)
-  operated: Oil it declares as operator (m³)
+  share: Oil that belongs to it (million m³)
+  gasShare: Gas that belongs to it (million m³)
+  operated: Oil it declares as operator (million m³)
   rule: Rule
   type: Well type
   wells: Wells
@@ -56,9 +56,9 @@ columnas:
   operator: Operator
   detected: Possible venting (satellite)
   declared: Declared venting points
-  unconventionalOil: Unconventional oil (m³)
-  shaleGas: Shale gas (thousand m³)
-  shaleOil: Shale oil (m³)
+  unconventionalOil: Unconventional oil (million m³)
+  shaleGas: Shale gas (million m³)
+  shaleOil: Shale oil (million m³)
   distanceKm: Nearest pipeline (km)
   pipeline: Pipeline
   place: Where
@@ -66,19 +66,19 @@ columnas:
   since: Since
   previous: Previous operator
   new: New operator
-  oilBefore: Oil per month before (m³)
-  oilAfter: Oil per month after (m³)
-  gasBefore: Gas per month before (thousand m³)
-  gasAfter: Gas per month after (thousand m³)
+  oilBefore: Oil per month before (million m³)
+  oilAfter: Oil per month after (million m³)
+  gasBefore: Gas per month before (million m³)
+  gasAfter: Gas per month after (million m³)
 
 preguntas:
   - id: e01
     porque:
       titulo: "The share of {valor}, concession by concession"
       explica: "Its share is the sum, in each concession, of production times its percentage. Each percentage comes from the partners text on the map, with its source."
-      detalle: "{porcentaje} % · {parte} m³ of oil"
+      detalle: "{porcentaje} % · {parte} million m³ of oil"
       flecha: partner in
-      columnas: {concesion: Concession, porcentaje: "Percentage", parte: "Its share of oil (m³)", gas: "Its share of gas (thousand m³)", texto: "Evidence: the map text", fuente: Source}
+      columnas: {concesion: Concession, porcentaje: "Percentage", parte: "Its share of oil (million m³)", gas: "Its share of gas (million m³)", texto: "Evidence: the map text", fuente: Source}
       recorrido:
         title: Why this number?
         company: Company to check
@@ -96,12 +96,12 @@ preguntas:
         breakdown_title: See all the concessions of this company
         breakdown_note: The total in the answer adds up these shares. The volumes in each row are shown rounded.
         calculation_title: How it was obtained
-        calculation: 'In {concesion}, {company} is entitled to {production} m³ of oil × {percent} % = {share} m³.'
-        rounding: Volumes are shown rounded to whole cubic metres; the calculation uses the original precision.
+        calculation: 'In {concesion}, {company} is entitled to {production} million m³ of oil × {percent} % = {share} million m³.'
+        rounding: Volumes are shown in million m³, rounded; the calculation uses the original precision.
         connections_title: What Rastro connected
         sources:
           - title: Production declarations
-            text: 'Production of the wells in {concesion}: {production} m³.'
+            text: 'Production of the wells in {concesion}: {production} million m³.'
           - title: Concession map
             text: 'Registered share of {map_name} in the map text: {percent} %.'
         connection: '{concesion} → Share → {company}'
@@ -201,7 +201,8 @@ preguntas:
       titulo: "The unconventional oil of {valor}, by formation"
       explica: "No table says «unconventional»: Rastro infers it from the resource type (shale or tight) of each sworn production declaration."
       flecha: declares in
-      columnas: {formacion: Formation, petroleo: "Unconventional oil 2025 (m³)"}
+      detalle: "{petroleo} million m³"
+      columnas: {formacion: Formation, petroleo: "Unconventional oil 2025 (million m³)"}
     explicacion: |
       - **What it looks for:** the production of each well that is «unconventional» and the company that declares it.
       - **What it returns:** the 10 companies with the most unconventional oil.
@@ -307,9 +308,9 @@ preguntas:
     porque:
       titulo: "The shale gas of {valor}, by concession"
       explica: "«Shale» comes from the resource type of each sworn production declaration; the concession, from each well's link to the map."
-      detalle: "{gas} thousand m³"
+      detalle: "{gas} million m³"
       flecha: declares in
-      columnas: {concesion: Concession, gas: "Shale gas 2025 (thousand m³)"}
+      columnas: {concesion: Concession, gas: "Shale gas 2025 (million m³)"}
     explicacion: |
       - **What it looks for:** the production of each well that is shale and the company that declares it.
       - **What it returns:** the 10 companies with the most shale gas in 2025, with their shale oil next to it.

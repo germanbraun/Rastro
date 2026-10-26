@@ -59,6 +59,7 @@ dominio.render.tab_trust: {es: "Por qué confiar", en: "Why trust it"}
 dominio.render.tab_lab: {es: "Rastro Lab", en: "Rastro Lab"}
 dominio.render.tab_faq: {es: "Preguntas frecuentes", en: "FAQ"}
 dominio.render.tab_hood: {es: "Bajo el capó", en: "Under the hood"}
+dominio.render.walkthrough: {es: "**{title}** · {header}", en: "**{title}** · {header}"}
 dominio.render.mode_example: {es: "Una pregunta de ejemplo", en: "An example question"}
 dominio.render.mode_text: {es: "Una pregunta sobre textos", en: "A question about texts"}
 dominio.render.mode_free: {es: "Mi propia pregunta", en: "My own question"}

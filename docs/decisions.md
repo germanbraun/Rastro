@@ -1140,3 +1140,19 @@ The user approved three compatibility adjustments after comparing the new journe
   an assumed US$ 65), 12.006 or 15.809 wells (3.796 disagree), Neuquén 6.256 / La Calera 482 of 6.636.
 - **Why:** the user approved improvements 1, 2 and 5 of the clarity review. The slides still carry their own typed
   copy of these numbers.
+
+## 2026-10-26 — Four tabs in the business view, one volume unit, slides with the app's numbers
+
+- **Tabs:** the business view has Demo, Preguntar, Por qué confiar and Rastro Lab. «Paso a paso» opens inside «Por
+  qué confiar»; the frequent questions open from a button in the sidebar. The technical view keeps both as tabs. In
+  «Preguntar», «Comprobar una afirmación» and «Enriquecer con datos de afuera» appear only with «Ver detalles
+  técnicos». Before: six tabs and five question modes.
+- **Units:** every computed volume in the business view is in millions of m³ (answer tables, «¿Por qué este
+  número?», the calculation trail and the appendix slides): `formatos` says whether a column is in m³ (`m3`) or in
+  thousands of m³ (`miles_m3`, gas as declared). The technical view keeps the exact figure; the original records
+  stay in their source's unit, labeled. Before, oil came in m³ and gas in thousands of m³, next to cards in M m³.
+- **Slides read the app's numbers:** `app/contraste.py` computes each contrast card's numbers for the app and, from
+  the command line, writes them to `docs/slides/numeros/energia.json`; `build.py` fills tokens such as
+  `{{energia.e01.ypf_sin}}` and fails if one is missing. The three contrast slides (integration, traceability,
+  maps) use them, notes included. Rebuilt today, the deck shows the same numbers as before.
+- **Why:** the user approved improvements 3 and 4 of the clarity review and slides that read the app's numbers.

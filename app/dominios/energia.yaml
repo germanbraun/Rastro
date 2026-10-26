@@ -64,9 +64,9 @@ nota_rastro: >-
 # Cómo se muestran las columnas de las respuestas
 columnas:
   company: Empresa
-  share: Petróleo que le corresponde (m³)
-  gasShare: Gas que le corresponde (miles de m³)
-  operated: Petróleo que declara como operadora (m³)
+  share: Petróleo que le corresponde (millones de m³)
+  gasShare: Gas que le corresponde (millones de m³)
+  operated: Petróleo que declara como operadora (millones de m³)
   rule: Regla
   type: Tipo de pozo
   wells: Pozos
@@ -75,9 +75,9 @@ columnas:
   operator: Operadora
   detected: Posibles venteos (satélite)
   declared: Puntos de venteo declarados
-  unconventionalOil: Petróleo no convencional (m³)
-  shaleGas: Gas de shale (miles de m³)
-  shaleOil: Petróleo de shale (m³)
+  unconventionalOil: Petróleo no convencional (millones de m³)
+  shaleGas: Gas de shale (millones de m³)
+  shaleOil: Petróleo de shale (millones de m³)
   distanceKm: Gasoducto más cercano (km)
   pipeline: Gasoducto
   place: Dónde
@@ -86,21 +86,21 @@ columnas:
   since: Desde
   previous: Operadora anterior
   new: Operadora nueva
-  oilBefore: Petróleo por mes antes (m³)
-  oilAfter: Petróleo por mes después (m³)
-  gasBefore: Gas por mes antes (miles de m³)
-  gasAfter: Gas por mes después (miles de m³)
-formatos:
-  share: numero
-  gasShare: numero
-  shaleGas: numero
-  shaleOil: numero
-  operated: numero
-  unconventionalOil: numero
-  oilBefore: numero
-  oilAfter: numero
-  gasBefore: numero
-  gasAfter: numero
+  oilBefore: Petróleo por mes antes (millones de m³)
+  oilAfter: Petróleo por mes después (millones de m³)
+  gasBefore: Gas por mes antes (millones de m³)
+  gasAfter: Gas por mes después (millones de m³)
+formatos:                      # volumes in m³ (m3) or in thousands of m³ (miles_m3): shown in millions of m³
+  share: m3
+  gasShare: miles_m3
+  shaleGas: miles_m3
+  shaleOil: m3
+  operated: m3
+  unconventionalOil: m3
+  oilBefore: m3
+  oilAfter: m3
+  gasBefore: miles_m3
+  gasAfter: miles_m3
 
 # Las preguntas de ejemplo: la consulta de ontology/energia/queries/, la pregunta en palabras
 # simples (modo negocio) y la evidencia de «¿De dónde sale la respuesta?»
@@ -129,11 +129,11 @@ preguntas:
           BIND (ROUND(?prod * ?porcentaje / 100) AS ?parte)
           BIND (ROUND(?prodgas * ?porcentaje / 100) AS ?gas)
         } ORDER BY DESC(?parte)
-      numeros: [parte, gas]
+      numeros: {parte: m3, gas: miles_m3}
       nodo: "{concesion}"
-      detalle: "{porcentaje} % · {parte} m³ de petróleo"
+      detalle: "{porcentaje} % · {parte} millones de m³ de petróleo"
       flecha: socia en
-      columnas: {concesion: Concesión, porcentaje: "Porcentaje", parte: "Su parte de petróleo (m³)", gas: "Su parte de gas (miles de m³)", texto: "Evidencia: el texto del mapa", fuente: Fuente}
+      columnas: {concesion: Concesión, porcentaje: "Porcentaje", parte: "Su parte de petróleo (millones de m³)", gas: "Su parte de gas (millones de m³)", texto: "Evidencia: el texto del mapa", fuente: Fuente}
       recorrido:
         title: ¿Por qué este número?
         company: Empresa que quiere comprobar
@@ -153,12 +153,12 @@ preguntas:
         breakdown_title: Ver todas las concesiones de esta empresa
         breakdown_note: El total de la respuesta suma estas partes. Los volúmenes de cada fila se muestran redondeados.
         calculation_title: Cómo se obtuvo
-        calculation: 'En {concesion}, a {company} le corresponden {production} m³ de petróleo × {percent} % = {share} m³.'
-        rounding: Los volúmenes se muestran redondeados a metros cúbicos enteros; el cálculo usa la precisión original.
+        calculation: 'En {concesion}, a {company} le corresponden {production} millones de m³ de petróleo × {percent} % = {share} millones de m³.'
+        rounding: Los volúmenes se muestran en millones de m³, redondeados; el cálculo usa la precisión original.
         connections_title: Qué conectó Rastro
         sources:
           - title: Declaraciones de producción
-            text: 'Producción de los pozos de {concesion}: {production} m³.'
+            text: 'Producción de los pozos de {concesion}: {production} millones de m³.'
           - title: Mapa de concesiones
             text: 'Participación registrada de {map_name} en el texto del mapa: {percent} %.'
         connection: '{concesion} → Participación → {company}'
@@ -291,6 +291,8 @@ preguntas:
                 ?p a energia:WellProduction ; energia:well ?w ; energia:oil ?o ; energia:gas ?g . FILTER (?o > 0 || ?g > 0)
               } GROUP BY ?w }
             }
+        - sparql: |                # all wells where the registry and the declarations disagree (the slide's notes)
+            SELECT (COUNT(?l) AS ?distintos_pais) WHERE { ?l a energia:OperatorLink ; energia:rule "rige la declaración jurada" }
       fuentes: [capitulo4]
       sin: {valor: "{padron} o {declaraciones}", detalle: "Dos respuestas: el padrón de pozos dice {padron} y las declaraciones juradas, {declaraciones}. En {otra} pozos el padrón nombra a otra empresa (Pecom, Velitec, Copesa)."}
       con: {valor: "{pozos} pozos", detalle: "Una regla escrita: rige quien declara la producción del último mes. Lo que dice el padrón queda a la vista en cada pozo. Son pozos de todo tipo: {petroliferos} petrolíferos, {gasiferos} gasíferos, {inyeccion} de inyección y {otro} de otro tipo; {produjeron} produjeron petróleo o gas en 2025."}
@@ -361,11 +363,11 @@ preguntas:
         SELECT ?formacion (ROUND(SUM(?o)) AS ?petroleo) WHERE {
           ?p a energia:UnconventionalProduction ; energia:declaredBy/energia:name "{valor}" ; energia:formation ?formacion ; energia:oil ?o .
         } GROUP BY ?formacion ORDER BY DESC(?petroleo)
-      numeros: [petroleo]
+      numeros: {petroleo: m3}
       nodo: "{formacion}"
-      detalle: "{petroleo} m³"
+      detalle: "{petroleo} millones de m³"
       flecha: declara en
-      columnas: {formacion: Formación, petroleo: "Petróleo no convencional 2025 (m³)"}
+      columnas: {formacion: Formación, petroleo: "Petróleo no convencional 2025 (millones de m³)"}
     explicacion: |
       - **Qué busca:** la producción de cada pozo que es «no convencional» y la empresa que la declara.
       - **Qué devuelve:** las 10 empresas con más petróleo no convencional.
@@ -561,11 +563,11 @@ preguntas:
         SELECT ?concesion (ROUND(SUM(?g)) AS ?gas) WHERE {
           ?p a energia:ShaleProduction ; energia:declaredBy/energia:name "{valor}" ; energia:inConcession/energia:name ?concesion ; energia:gas ?g .
         } GROUP BY ?concesion ORDER BY DESC(?gas)
-      numeros: [gas]
+      numeros: {gas: miles_m3}
       nodo: "{concesion}"
-      detalle: "{gas} miles de m³"
+      detalle: "{gas} millones de m³"
       flecha: declara en
-      columnas: {concesion: Concesión, gas: "Gas de shale 2025 (miles de m³)"}
+      columnas: {concesion: Concesión, gas: "Gas de shale 2025 (millones de m³)"}
     explicacion: |
       - **Qué busca:** la producción de cada pozo que es de shale y la empresa que la declara.
       - **Qué devuelve:** las 10 empresas con más gas de shale en 2025, con su petróleo de shale al lado.

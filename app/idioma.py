@@ -62,8 +62,19 @@ def overlay(base, extra):
 
 def number(value, decimals=0):
     """A number in the interface's format: 12.345,6 in Spanish, 12,345.6 in English."""
+    return format_number(value, decimals, lang())
+
+
+def format_number(value, decimals, language):
     text = f"{float(value):,.{decimals}f}"
-    return text if lang() == "en" else text.replace(",", "X").replace(".", ",").replace("X", ".")
+    return text if language == "en" else text.replace(",", "X").replace(".", ",").replace("X", ".")
+
+
+def millions(value, unit="m3", language=None):
+    """A volume in millions of m³, the one unit of the business view: «m3» values are in m³, «miles_m3» in
+    thousands of m³ (gas as the sources declare it). Two decimals under 10, one above; three when it is tiny."""
+    v = float(value) / (1e6 if unit == "m3" else 1e3)
+    return format_number(v, 1 if abs(v) >= 10 else 2 if abs(v) >= 0.1 or v == 0 else 3, language or lang())
 
 
 def english_path(path):

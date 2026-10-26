@@ -2,6 +2,7 @@
 from html import escape
 
 import enlaces
+import idioma
 
 
 def map_link(text, links):
@@ -17,7 +18,7 @@ import streamlit as st
 
 
 def show_story(domain, why, columns, rows, where, tech):
-    from dominio import md, money, prefixed, run, tabla
+    from dominio import md, prefixed, run, tabla
 
     ui = why['recorrido']
     values = list(dict.fromkeys(row[columns.index(why['columna'])] for row in rows))
@@ -43,11 +44,14 @@ def show_story(domain, why, columns, rows, where, tech):
                 for col, variable, label in zip(st.columns(2), ['operated', 'share'],
                                                 [ui['operated_label'], ui['share_label']]):
                     value = answer[columns.index(variable)]
-                    col.metric(label, f'{money(value)} m³' if value not in (None, '') else ui['unavailable'])
+                    col.metric(label, f'{idioma.millions(value)} M m³' if value not in (None, '') else ui['unavailable'])
                 st.caption(ui['comparison_note'])
         with st.expander(ui['breakdown_title']):
             visible = why['columnas']
-            tabla(enlaces.add_status(pd.DataFrame(records))[[enlaces.label('column'), *visible]].rename(columns=visible),
+            units = why['numeros'] if isinstance(why.get('numeros'), dict) else {}
+            shown = [{k: idioma.millions(v, units[k]) if k in units and v not in (None, '') else v for k, v in r.items()}
+                     for r in records]
+            tabla(enlaces.add_status(pd.DataFrame(shown))[[enlaces.label('column'), *visible]].rename(columns=visible),
                   column_config=enlaces.column_help(), key=f'{domain}_{where}_story_breakdown')
             st.caption(ui['breakdown_note'])
         names = [r['concesion'] for r in records]
@@ -58,8 +62,9 @@ def show_story(domain, why, columns, rows, where, tech):
         link_query = prefixed(ui['linking_query'].replace('{valor}', str(company).replace('\\', '\\\\').replace('"', '\\"')), domain)
         link_cols, link_rows = run(link_query, domain)
         map_name, pending = map_link(record['texto'], [dict(zip(link_cols, row)) for row in link_rows])
-        values = {**record, 'company': company, 'map_name': map_name or company, 'production': money(record['produccion']),
-                  'share': money(record['parte']), 'percent': str(record['porcentaje']).rstrip('0').rstrip('.')
+        values = {**record, 'company': company, 'map_name': map_name or company,
+                  'production': idioma.millions(record['produccion']), 'share': idioma.millions(record['parte']),
+                  'percent': str(record['porcentaje']).rstrip('0').rstrip('.')
                   if '.' in str(record['porcentaje']) else str(record['porcentaje'])}
         st.markdown('##### ' + ui['calculation_title'])
         st.info(ui['calculation'].format(**{k: md(str(v)) for k, v in values.items()}))

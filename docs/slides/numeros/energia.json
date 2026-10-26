@@ -1,0 +1,30 @@
+{
+ "e01": {
+  "ypf_sin": "21,4",
+  "ypf_con": "12,6",
+  "vista": "7,0",
+  "vista_lac": "2,1",
+  "chevron": "3,5",
+  "exceso": "8,8",
+  "barriles": "55",
+  "precio": "65",
+  "dolares": "3.600"
+ },
+ "e02": {
+  "padron": "12.006",
+  "declaraciones": "15.809",
+  "otra": "3.796",
+  "pozos": "15.809",
+  "petroliferos": "5.391",
+  "gasiferos": "1.394",
+  "inyeccion": "1.318",
+  "otro": "7.579",
+  "produjeron": "5.689",
+  "distintos_pais": "7.453"
+ },
+ "e03": {
+  "neuquen": "6.256",
+  "ubicados": "6.636",
+  "la_calera": "482"
+ }
+}

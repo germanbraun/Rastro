@@ -12,5 +12,6 @@ El mazo de petróleo y gas, el de la demo, es más corto: la historia va en las 
 
 - **Ver:** abrir el `.html` del mazo en el navegador.
 - **Editar:** cada diapositiva está en `slides/`; el orden de cada mazo, en `mazos/<nombre>.json`. Las diapositivas genéricas (qué es Rastro, beneficios, arquitectura, anexo) se comparten. Las notas del orador están en el `<aside>` de cada una. Después de editar, correr `python3 docs/slides/build.py`.
+- **Números del contraste:** no se escriben a mano. Una diapositiva escribe `{{energia.e01.ypf_sin}}` y `build.py` lo completa con `numeros/energia.json`, los mismos números que muestra la app (`app/contraste.py`). Antes de construir, actualizarlos con `docker compose exec -T app python /app/contraste.py energia > docs/slides/numeros/energia.json`; si falta un número, `build.py` falla.
 
 El mazo de petróleo y gas tiene un estilo parejo que aplica `estilo.py` (tipografías, escala de tamaños, tarjetas, pie con el número de diapositiva); después de cambiar una diapositiva, corré `python3 estilo.py` y `python3 build.py`.

@@ -24,9 +24,9 @@ def story_graph():
 :other energia:name "OTRA" .
 :source energia:name "Fuente original" .
 :w energia:wellId "1" .
-:p1 a energia:WellProduction; energia:inConcession :c; energia:oil 100; energia:gas 20;
+:p1 a energia:WellProduction; energia:inConcession :c; energia:oil 1000000; energia:gas 20;
  energia:well :w; energia:fromSource :source .
-:p2 a energia:WellProduction; energia:inConcession :c; energia:oil 200; energia:gas 40;
+:p2 a energia:WellProduction; energia:inConcession :c; energia:oil 2000000; energia:gas 40;
  energia:well :w; energia:fromSource :source .
 :s a energia:Stake; energia:inConcession :c; energia:partner :company; energia:percent 50;
  energia:sourceText "Nombre original: 50 %"; energia:rule "texto de socios";
@@ -45,8 +45,8 @@ def test_explanation_reconciles_without_counting_other_partners(story_graph):
     why = yaml.safe_load((ROOT / 'app/dominios/energia.yaml').read_text())['preguntas'][0]['porque']
     rows = list(story_graph.query(PREFIX + why['query'].replace('{valor}', 'CHEVRON')))
     assert len(rows) == 1
-    assert float(rows[0].produccion) == 300
-    assert float(rows[0].parte) == 150
+    assert float(rows[0].produccion) == 3000000
+    assert float(rows[0].parte) == 1500000
     assert str(rows[0].empresa) == 'https://example.org/company'
     assert str(rows[0].texto) == 'Nombre original: 50 %'
     assert str(rows[0].origen) == 'https://example.org/source'
@@ -57,7 +57,7 @@ def test_story_renders_and_selection_updates(story_graph, tech):
     story_graph.parse(data=PREFIX + '''
 PREFIX : <https://example.org/>
 :c2 energia:name "OTRA CONCESIÓN" .
-:p3 a energia:WellProduction; energia:inConcession :c2; energia:oil 200; energia:gas 40 .
+:p3 a energia:WellProduction; energia:inConcession :c2; energia:oil 2000000; energia:gas 40 .
 :s3 a energia:Stake; energia:inConcession :c2; energia:partner :company; energia:percent 25;
  energia:sourceText "Nombre original: 25 %"; energia:rule "texto de socios";
  prov:wasDerivedFrom :source; prov:wasGeneratedBy :activity .
@@ -78,18 +78,19 @@ def query(text, domain):
     return [str(v) for v in result.vars], [[str(v) if v is not None else None for v in row] for row in result]
 with patch.object(dominio, 'run', query):
     show_story('energia', why, ['company', 'share', 'operated'],
-               [['CHEVRON', 200, 300], ['OTRA', 150, 250]], 'test', {tech!r})
+               [['CHEVRON', 2000000, 3000000], ['OTRA', 1500000, 2500000]], 'test', {tech!r})
 '''
     app = AppTest.from_string(script).run(timeout=20)
     app.toggle[0].set_value(True).run()
     assert not app.exception, [e.message for e in app.exception]
-    assert any('300 m³' in item.value and '150 m³' in item.value for item in app.info)
-    assert [m.value for m in app.metric] == ['300 m³', '200 m³']
+    # Volumes in the business view are in millions of m³
+    assert any('3,00 millones de m³' in item.value and '1,50 millones de m³' in item.value for item in app.info)
+    assert [m.value for m in app.metric] == ['3,00 M m³', '2,00 M m³']
     breakdown = next(frame.value for frame in app.dataframe if len(frame.value) == 2)
     assert set(breakdown['Concesión']) == {'LOMA CAMPANA', 'OTRA CONCESIÓN'}
-    assert sum(float(value) for value in breakdown['Su parte de petróleo (m³)']) == 200
+    assert sum(float(value.replace(',', '.')) for value in breakdown['Su parte de petróleo (millones de m³)']) == 2
     assert any('pendiente de confirmación humana' in frame.value.to_string() for frame in app.dataframe)
     app.selectbox[0].set_value('OTRA').run()
     assert not app.exception, [e.message for e in app.exception]
     assert any('OTRA' in item.value for item in app.info)
-    assert [m.value for m in app.metric] == ['250 m³', '150 m³']
+    assert [m.value for m in app.metric] == ['2,50 M m³', '1,50 M m³']

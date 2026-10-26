@@ -21,6 +21,7 @@ import streamlit as st
 import yaml
 
 import answer
+import contraste
 import enlaces
 import idioma
 
@@ -168,7 +169,9 @@ def as_table(columns, rows, cfg, tech, col_sources):
     for row in rows:
         line = []
         for c, v in zip(columns, row):
-            if v is not None and formats.get(c) in ("dinero", "numero"):
+            if v is not None and formats.get(c) in ("m3", "miles_m3"):   # volumes: millions of m³, exact if technical
+                v = money(v) if tech else idioma.millions(v, formats[c])
+            elif v is not None and formats.get(c) in ("dinero", "numero"):
                 v = money(v)
             elif v is not None and formats.get(c) == "porcentaje":
                 v = f"{float(v) * 100:.0f} %"
@@ -713,22 +716,27 @@ def render(cfg_path, tech):
                 st.markdown(f"🐘 **{info['name']}**  \n<small>{info['license']}</small>", unsafe_allow_html=True)
         else:
             st.caption(md(cfg["resumen"]))
+            # In the business view the frequent questions open from here, not from a tab of their own
+            if st.button(idioma.t("dominio.render.tab_faq"), key=f"{domain}_faq_open", use_container_width=True):
+                faq_dialog(cfg)
 
     # «Por qué confiar» needs a measured evaluation or quality rules; a domain with neither does not show the tab
-    # Few tabs: the demo, asking, why trust and frequent questions; in the technical view, everything
-    # inside (console, dictionary, links and mappings) together in «Bajo el capó»
-    # Each tab has a fixed internal name; only its label is translated
-    names = (["demo"] if cfg.get("demo") else []) + ["ask"] \
-        + (["trust"] if cfg.get("tarjetas") or cfg.get("calidad") else []) + (["lab"] if cfg.get("lab") else []) \
-        + (["example"] if cfg.get("ejemplo_integracion") else []) + ["faq"] + (["hood"] if tech else [])
+    # The business view has four tabs at most: the demo, asking, why trust and Rastro Lab; «Paso a paso» goes inside
+    # «Por qué confiar». The technical view adds it and the frequent questions as tabs, and «Bajo el capó»
+    # (console, dictionary, links and mappings). Each tab has a fixed internal name; only its label is translated
+    has_trust = bool(cfg.get("tarjetas") or cfg.get("calidad"))
+    example_tab = bool(cfg.get("ejemplo_integracion")) and (tech or not has_trust)
+    names = (["demo"] if cfg.get("demo") else []) + ["ask"] + (["trust"] if has_trust else []) \
+        + (["lab"] if cfg.get("lab") else []) + (["example"] if example_tab else []) \
+        + (["faq", "hood"] if tech else [])
     labels = [cfg["ejemplo_integracion"]["titulo"] if name == "example" else idioma.t(f"dominio.render.tab_{name}")
               for name in names]
     tabs = dict(zip(names, st.tabs(labels)))
-    ask_tab, trust_tab, faq_tab = tabs["ask"], tabs.get("trust"), tabs["faq"]
+    ask_tab, trust_tab = tabs["ask"], tabs.get("trust")
     if cfg.get("demo"):
         with tabs["demo"]:
             show_demo(cfg, tech)
-    if cfg.get("ejemplo_integracion"):
+    if example_tab:
         with tabs["example"]:
             show_integration_example(cfg["ejemplo_integracion"], domain, tech)
     if cfg.get("lab"):
@@ -756,8 +764,9 @@ def render(cfg_path, tech):
         mode_labels = {"example": idioma.t("dominio.render.mode_example"), "text": idioma.t("dominio.render.mode_text"),
                        "claims": (cfg.get("afirmaciones") or {}).get("titulo"), "external": (cfg.get("externo") or {}).get("titulo"),
                        "free": idioma.t("dominio.render.mode_free")}
-        modes = ["example"] + (["text"] if cfg.get("texto") else []) + (["claims"] if cfg.get("afirmaciones") else []) \
-            + (["external"] if cfg.get("externo") else [])
+        # Checking a claim and outside data are rarer: only in the technical view
+        modes = ["example"] + (["text"] if cfg.get("texto") else []) \
+            + (["claims"] if cfg.get("afirmaciones") and tech else []) + (["external"] if cfg.get("externo") and tech else [])
         by_label = {mode_labels[m]: m for m in modes + ["free"]}
         mode = by_label.get(st.radio(idioma.t("dominio.render.mode_label"), list(by_label), help=ayuda("modo"),
                                      horizontal=True, label_visibility="visible", key=f"{domain}_mode"))
@@ -807,14 +816,29 @@ def render(cfg_path, tech):
 
     if trust_tab:
         with trust_tab:
+            if cfg.get("ejemplo_integracion") and not example_tab:
+                with st.expander(idioma.t("dominio.render.walkthrough", title=cfg["ejemplo_integracion"]["titulo"],
+                                                header=cfg["ejemplo_integracion"].get("encabezado", ""))):
+                    show_integration_example(cfg["ejemplo_integracion"], domain, tech)
             trust(cfg, tech, evaluation, changes)
 
-    with faq_tab:
-        diagram = cfg.get("diagrama", {})
-        show_faq(domain, [(i["pregunta"], md(i["respuesta"]), i.get("tecnico", False)) for i in cfg.get("faq", [])], tech,
-                 [(f"arquitectura-{domain}", idioma.t("dominio.render.architecture_caption")),
-                  (diagram.get("archivo"), idioma.t("dominio.render.dictionary_caption", title=diagram.get("titulo")))],
-                 diagram.get("titulo", idioma.t("dominio.render.dictionary")))
+    if tech:
+        with tabs["faq"]:
+            domain_faq(cfg, tech)
+
+
+def domain_faq(cfg, tech):
+    diagram = cfg.get("diagrama", {})
+    show_faq(cfg["domain"], [(i["pregunta"], md(i["respuesta"]), i.get("tecnico", False)) for i in cfg.get("faq", [])],
+             tech, [(f"arquitectura-{cfg['domain']}", idioma.t("dominio.render.architecture_caption")),
+                    (diagram.get("archivo"), idioma.t("dominio.render.dictionary_caption", title=diagram.get("titulo")))],
+             diagram.get("titulo", idioma.t("dominio.render.dictionary")))
+
+
+@st.dialog(" ", width="large")
+def faq_dialog(cfg):
+    st.subheader(idioma.t("dominio.render.tab_faq"))
+    domain_faq(cfg, False)
 
 
 def general_faq():
@@ -877,10 +901,15 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
             st.info(idioma.t("dominio.show_why.no_evidence"))
             return
         records = [dict(zip(cols, r)) for r in found]
+        # «numeros» lists the numbers, or maps each volume to its unit (m3, miles_m3) to show it in millions of m³
+        numbers = why.get("numeros", ["parte"])
+        units = numbers if isinstance(numbers, dict) else {}
+
+        def display(k, v):
+            return idioma.millions(v, units[k]) if k in units else money(v)
 
         def fmt(record, template):
-            numbers = why.get("numeros", ["parte"])
-            return template.format(**{k: (money(v) if k in numbers and v not in (None, "") else (v or "—"))
+            return template.format(**{k: (display(k, v) if k in numbers and v not in (None, "") else (v or "—"))
                                       for k, v in record.items()})
 
         shown = records[:8]
@@ -891,30 +920,19 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
                             height=620 + 55 * max(0, len(nodes) - 8), scale=0.95, font="Helvetica, Arial, sans-serif")
         st.markdown(f'<img src="data:image/svg+xml;base64,{base64.b64encode(drawing.encode()).decode()}" '
                     'style="width:100%;border-radius:12px">', unsafe_allow_html=True)
-        table = enlaces.add_status(pd.DataFrame(records)).rename(columns=why.get("columnas", {}))
+        table = enlaces.add_status(pd.DataFrame([{k: display(k, v) if k in units and v not in (None, "") else v
+                                                  for k, v in r.items()} for r in records]))
+        table = table.rename(columns=why.get("columnas", {}))
         tabla(table, hide_index=True, use_container_width=True, column_config=enlaces.column_help(),
               key=f"{domain}_{where}_porque_tabla")
 
 
 def before_after(card, domain):
     """The same card at every moment of the demo: without Rastro on the left, with Rastro on the right. Its numbers are
-    read now: «valores» are one-row queries (SQL over the sources as they come, or SPARQL over Rastro), «calculos»
-    simple arithmetic over them, and the texts name them in braces."""
-    values = {}
-    for query in card.get("valores", []):
-        if query.get("sql"):
-            columns, rows = _sql_saved(query["sql"], domain, data_version(domain, reads=query["sql"]))
-        else:
-            columns, rows = run(prefixed(query["sparql"], domain), domain)
-        values.update({c: float(v) for c, v in zip(columns, rows[0])})
-    for name, formula in card.get("calculos", {}).items():
-        values[name] = eval(str(formula), {"__builtins__": {}, "round": round}, dict(values))   # noqa: S307 - arithmetic from our own YAML
-    shown = {name: idioma.number(v, card.get("decimales", {}).get(name, 0 if float(v).is_integer() else 1))
-             for name, v in values.items()}
-    card = {key: ({k: v.format(**shown) for k, v in part.items()} if key in ("sin", "con") else part)
-            for key, part in card.items()}
-    if "impacto" in card:
-        card["impacto"] = card["impacto"].format(**shown)
+    read now, the same way the slides read them (contraste.py)."""
+    found = contraste.values(card, lambda q: _sql_saved(q, domain, data_version(domain, reads=q)),
+                             lambda q: run(prefixed(q, domain), domain))
+    card = contraste.fill(card, contraste.shown(card, found, idioma.number))
     left, right = st.columns(2)
     for col, key, title in [(left, "sin", card.get("titulo_sin", idioma.t("dominio.before_after.without"))),
                            (right, "con", idioma.t("dominio.before_after.with"))]:

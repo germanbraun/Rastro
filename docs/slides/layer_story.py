@@ -8,8 +8,10 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 
 
-def number(value):
-    return f'{Decimal(value):,.0f}'.replace(',', '.')
+def millions(value):
+    """A volume in m³ as millions of m³, the app's unit (app/idioma.millions)."""
+    v = Decimal(value) / Decimal(1_000_000)
+    return f'{v:,.{1 if abs(v) >= 10 else 2}f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
 
 
 def percent(value):
@@ -33,7 +35,8 @@ def build():
     escaped = {key: escape(str(value)) for key, value in record.items()}
     map_name, pending = map_link(record['texto'], snapshot['links'])
     pct = percent(record['porcentaje'])
-    pending_note = (f'<p><b>Pendiente:</b> en el mapa figura «{escape(map_name)}». Rastro la une a {escape(company)} por una '
+    pending_note = (f'<p><b>🟠 Revisada por IA, falta una persona.</b> En el mapa figura «{escape(map_name)}». '
+                    f'Rastro la une a {escape(company)} por una '
                     'corrección revisada por un asistente de IA, que espera la confirmación de una persona.</p>'
                     if pending else '')
     answer_note = ('<p>Parte de este número depende de una unión de nombres que todavía espera la confirmación '
@@ -43,19 +46,19 @@ def build():
     titles = ['La respuesta', 'Lo que Rastro conectó', 'La evidencia de este número']
     bodies = [
         f'''<p>¿Cuánto petróleo de 2025 le corresponde a cada empresa?</p>
-        <div class="card"><h3>{escape(company)}</h3><p class="value">{number(answer['share'])} m³</p>
+        <div class="card"><h3>{escape(company)}</h3><p class="value">{millions(answer['share'])} M m³</p>
         <p>Su parte, sumada en {len(snapshot['explanation'])} concesiones.</p></div>
         <p><b>¿Por qué este número?</b> Elegimos una concesión y seguimos el cálculo hasta su fuente.</p>
         <p>Producción operada y participación son medidas distintas. Aquí calculamos la participación registrada.</p>
         {answer_note}''',
         f'''<div class="cards"><div class="card"><h3>Declaraciones de producción</h3>
 <p>Los pozos de {escaped['concesion']}</p>
-<p>{number(record['produccion'])} m³ de petróleo</p></div>
+<p>{millions(record['produccion'])} millones de m³ de petróleo</p></div>
         <div class="card"><h3>Mapa de concesiones</h3>
 <p>«{escape(map_name or company)}» · {pct} %</p>
 <p>Socios y porcentajes en el texto original.</p></div></div>
         <p class="arrow">↓</p><div class="card"><h3>{escaped['concesion']} → Participación → {escape(company)}</h3>
-        <p>{number(record['produccion'])} m³ × {pct} % = {number(record['parte'])} m³</p></div>
+        <p>{millions(record['produccion'])} millones de m³ × {pct} % = {millions(record['parte'])} millones de m³</p></div>
         {pending_note}
         <p>Los mapeos traducen las fuentes al mismo vocabulario. Los enlaces conectan las entidades.</p>''',
         f'''<div class="card"><h3>El texto original del mapa</h3>

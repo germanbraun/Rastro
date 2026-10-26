@@ -9,7 +9,7 @@ Loma Campana (su unión de nombres no depende de una corrección); este recorrid
 
 El mensaje: **las fuentes se traducen al mismo vocabulario y las entidades se conectan una vez; las preguntas reutilizan esas definiciones**. SQL sobre los mismos enlaces también puede obtener el resultado. No prometer mayor precisión por usar RDF.
 
-Opcional: abrir **Comparar producción operada y participación** y **Ver todas las concesiones de esta empresa**. La tabla de respuesta también muestra el gas que le corresponde, en miles de m³; no hace falta activar la vista técnica.
+Opcional: abrir **Comparar producción operada y participación** y **Ver todas las concesiones de esta empresa**. La tabla de respuesta también muestra el gas que le corresponde, en millones de m³ como todos los volúmenes de la vista de negocio; no hace falta activar la vista técnica.
 
 Para un perfil técnico: activar **Ver detalles técnicos** y abrir los identificadores y consultas. Para una persona de negocio: mantenerlos cerrados.
 
