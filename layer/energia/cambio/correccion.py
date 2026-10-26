@@ -3,6 +3,7 @@
 
 Run by correccion.sh (in this folder), which removes the correction, rebuilds Rastro, measures and puts it back.
     python3 layer/energia/cambio/correccion.py <paso>     # paso: con | sin
+    python3 layer/energia/cambio/correccion.py verificar  # exact expectations; fails on any miss or error
 Saves to correccion.json (in this folder), which the app shows.
 """
 import json
@@ -52,5 +53,44 @@ def main(paso):
     print(paso, json.dumps(resultado, ensure_ascii=False))
 
 
+def documented_percent():
+    """The corrected stake as the reviewed CSV declares it (the document's value, not Rastro's)."""
+    import csv
+    with (ROOT / "linking/energia/participaciones-revisadas.csv").open(encoding="utf-8") as source:
+        return next(float(r["porcentaje"]) for r in csv.DictReader(source)
+                    if r["concesion"] == "AGUADA PICHANA ESTE" and r["empresa"] == "TOTAL AUSTRAL S.A.")
+
+
+def check(saved, documented):
+    """Exact expectations of the correction, declared before measuring: it reaches Rastro (C), the links (D) and
+    Rastro Lab's input and prediction; it does not reach SQL over the sources (B) or the model on raw tables (A).
+    Returns the failures; a missing or non-numeric measurement is a failure, never a pass."""
+    failures = []
+    numbers = ("layer_C", "layer_D", "layer_B", "rastro_total", "lab_B_pct", "lab_A_pct", "lab_B_pred", "lab_A_pred")
+    for paso in ("con", "sin"):
+        run = saved.get(paso) or {}
+        failures += [f"{paso}.{k}: missing or not a number" for k in numbers
+                     if not isinstance(run.get(k), (int, float)) or run[k] != run[k]]
+    if failures:
+        return failures
+    con, sin = saved["con"], saved["sin"]
+    expect = [
+        (con["rastro_total"] == documented, "with the correction, Rastro's stake is the document's"),
+        (sin["rastro_total"] == sin["lab_A_pct"] != documented, "without it, Rastro's stake is the map's"),
+        (con["layer_C"] != sin["layer_C"] and con["layer_D"] != sin["layer_D"], "the answer changes with and via links"),
+        (con["layer_B"] == sin["layer_B"], "SQL over the sources as they come does not change"),
+        (con["lab_B_pct"] == documented and sin["lab_B_pct"] == sin["lab_A_pct"], "Lab's input follows Rastro"),
+        (con["lab_A_pct"] == sin["lab_A_pct"] and con["lab_A_pred"] == sin["lab_A_pred"], "the raw-table model does not"),
+        (con["lab_B_pred"] != sin["lab_B_pred"], "Lab's prediction changes"),
+        (con["lab_B_marca"] == "dato corregido con documento" and sin["lab_B_marca"] == "", "the correction is marked"),
+        (con["lab_pozo"] == sin["lab_pozo"] and con["lab_pozos_ape"] == sin["lab_pozos_ape"], "the same well is compared"),
+    ]
+    return [f"expected: {what}" for ok, what in expect if not ok]
+
+
 if __name__ == "__main__":
+    if sys.argv[1] == "verificar":
+        problems = check(json.loads(RESULT.read_text()), documented_percent())
+        print("\n".join(problems) or "correction behaved as expected")
+        sys.exit(1 if problems else 0)
     main(sys.argv[1])

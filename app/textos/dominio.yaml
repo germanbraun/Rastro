@@ -53,6 +53,12 @@ dominio.render.pending_review:
   es: "Los resultados de evaluación están pendientes de revisión independiente."
   en: "The evaluation results are awaiting an independent review."
 dominio.render.sources: {es: "Fuentes", en: "Sources"}
+dominio.render.level_technical:
+  es: "Validada técnicamente: la consulta cumple invariantes de las definiciones aprobadas. Todavía no se comparó con referencias independientes."
+  en: "Technically validated: the query meets invariants of the approved definitions. It has not been compared with independent references yet."
+dominio.render.level_independent:
+  es: "Validada con referencias independientes, derivadas de las fuentes sin pasar por Rastro."
+  en: "Validated with independent references, derived from the sources without going through Rastro."
 dominio.render.tab_demo: {es: "Demo", en: "Demo"}
 dominio.render.tab_ask: {es: "Preguntar", en: "Ask"}
 dominio.render.tab_trust: {es: "Por qué confiar", en: "Why trust it"}

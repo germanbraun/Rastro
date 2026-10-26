@@ -34,8 +34,11 @@ applicable separately. Record evidence in the experiment log while working; neve
    ```bash
    python layer/method.py verify <domain> --expectations layer/<domain>/query-checks.yaml
    ```
-   Cover every competency query. Empty answers must be explicitly expected. The contracts document the expectation
-   format. HTTP error pages, CSV headers, stale query hashes and missing expectations cannot pass.
+   Cover every competency query. Empty answers must be explicitly expected. Each entry declares its `evidence`:
+   `invariant` (technical validation) or `independent` (expected values from the sources without Rastro, for
+   example SQL over the raw tables). Prefer real coverage over row counts: `keys` against a key list exported from the
+   source, `bounds` per row. The contracts document the format. HTTP error pages, CSV headers, stale query hashes and
+   missing expectations cannot pass. Report the level of each query; «validated» alone does not mean «correct».
 5. Run quality rules and their good/bad-example tests. Distinguish runner failure from successfully detected data
    defects. Record each relevant defect's human disposition and affected claims; do not demand defect-free sources.
    Missing quality coverage is pending or explicitly not applicable with a reason.

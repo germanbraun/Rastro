@@ -70,6 +70,10 @@ Remove one reviewed correction (a row of a file in `method.linker.corrections`),
 - Save the result in `correccion.json`.
 - When done, the corrections file and the saved answers must be as before (byte-for-byte comparison to the starting snapshot, including untracked files).
 - What is claimed must match what was measured: if a downstream result barely moves, do not say it changes.
+- **Declare exact expectations before measuring and check them with code** (`correccion.py verificar`, run by
+  `correccion.sh`): which paths change and which do not, the named records, unchanged coverage. A missing or failed
+  measurement fails; it is never read as «no change». The checker has a test with broken copies of the result
+  (`tests/test_energia_correccion.py`, `tests/test_afiliaciones_cambio.py`). Report «behaved as expected».
 
 ## 3. Which predictions change (`impacto.sh`)
 

@@ -69,6 +69,26 @@ def test_quality_example_that_never_targets_data_cannot_pass(unknown_quality):
         calidad.check_examples(unknown_quality)
 
 
+def test_every_constraint_needs_a_broken_case_with_its_severity(unknown_quality):
+    rules = unknown_quality.rules.read_text().replace(
+        "sh:minInclusive 1 ] .", "sh:minInclusive 1 ];\n  sh:property [ sh:path library:title; sh:minCount 1; sh:severity sh:Warning ] .")
+    unknown_quality.rules.write_text(rules)
+    good = 'library:a a library:Book; library:pages 10; library:title "T" .'
+    negative = 'library:a a library:Book; library:pages -1; library:title "T" .'
+    unknown_quality.examples.write_text(yaml.safe_dump({"Pages": {"bueno": good, "malo": negative}}))
+    with pytest.raises(ValueError, match="1 of its constraints have no broken example"):
+        calidad.check_examples(unknown_quality)
+    missing_title = 'library:a a library:Book; library:pages 10 .'
+    unknown_quality.examples.write_text(yaml.safe_dump({"Pages": {
+        "bueno": good, "malo": 'library:a a library:Book; library:pages -1; library:title "T" .', "malos": [missing_title]}}))
+    with pytest.raises(ValueError, match="expected Violation"):
+        calidad.check_examples(unknown_quality)
+    unknown_quality.examples.write_text(yaml.safe_dump({"Pages": {
+        "bueno": good, "malo": 'library:a a library:Book; library:pages -1; library:title "T" .',
+        "malos": [{"caso": missing_title, "severidad": "Warning"}]}}))
+    assert calidad.check_examples(unknown_quality) == 1
+
+
 def test_shared_property_domains_are_checked_from_explicit_mapping_classes():
     ontology = Graph().parse(data='''@prefix l: <urn:library:> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> . l:name rdfs:domain l:Book .''', format="turtle")
@@ -164,7 +184,7 @@ def test_lifecycle_validation_executes_http_and_invalidates_stale_expectations(r
     query = root / "ontology/queries/cq1.rq"
     query.write_text("SELECT (1 AS ?answer) WHERE {}")
     lifecycle.transition("implement", cfg, "q1", "ontology/queries/cq1.rq", root)
-    expectations = {"cq1.rq": {"query_sha256": lifecycle.digest(query), "columns": ["answer"],
+    expectations = {"cq1.rq": {"query_sha256": lifecycle.digest(query), "columns": ["answer"], "evidence": "invariant",
                                "number": {"column": "answer", "value": 1}}}
     (root / "expectations.yaml").write_text(yaml.safe_dump(expectations))
     requests_seen = []
@@ -193,6 +213,10 @@ def test_lifecycle_validation_executes_http_and_invalidates_stale_expectations(r
         assert lifecycle.validation_errors(cfg, root) == []
         data = json.loads((root / "state.json").read_text())
         assert len(data["events"]) == 4
+        assert lifecycle.validation_level(data["questions"]["q1"]) == "technical"
+        # Another query's entry changes: this question keeps its validation (per-question binding)
+        (root / "expectations.yaml").write_text(yaml.safe_dump({**expectations, "cq9.rq": {"rows": 1}}))
+        assert lifecycle.transition("status", cfg, "q1", root=root) == "validated"
         (root / "expectations.yaml").write_text("changed expected answer")
         assert lifecycle.transition("status", cfg, "q1", root=root) == "implemented"
         assert lifecycle.validation_errors(cfg, root)

@@ -1,24 +1,36 @@
 # Por regla de calidad (reglas.ttl), un dato que la cumple y uno roto, en Turtle (prefijos energia:, prov: y e:).
 # Los usan las pruebas (tests/test_calidad.py) y la app («Bajo el capó»), que muestra qué dice SHACL del roto.
+# «malos» suma casos rotos hasta romper cada restricción de la regla al menos una vez (calidad.py --examples-only).
 EnlaceConEvidencia:
   bueno: 'e:enlace energia:rule "punto dentro del contorno" ; prov:wasDerivedFrom e:fuente ; energia:sourceText "El punto cae dentro de la concesión X." .'
   malo: 'e:enlace energia:rule "punto dentro del contorno" ; prov:wasDerivedFrom e:fuente .'
+  malos:
+    - 'e:enlace energia:rule "punto dentro del contorno" ; energia:sourceText "El punto cae dentro de la concesión X." .'
 Participacion:
   bueno: "e:socio a energia:Stake ; energia:percent 55 ; energia:partner e:ypf ; energia:inConcession e:concesion ."
   malo: "e:socio a energia:Stake ; energia:percent 120 ; energia:partner e:ypf ; energia:inConcession e:concesion ."
+  malos:
+    - "e:socio a energia:Stake ; energia:percent 50 ; energia:partner e:ypf, e:vista ; energia:inConcession e:concesion ."
+    - "e:socio a energia:Stake ; energia:percent 50 ; energia:partner e:ypf ."
 ConcesionHasta100:
   bueno: "e:socio1 energia:inConcession e:concesion ; energia:percent 60 .\ne:socio2 energia:inConcession e:concesion ; energia:percent 40 ."
   malo: "e:socio1 energia:inConcession e:concesion ; energia:percent 70 .\ne:socio2 energia:inConcession e:concesion ; energia:percent 40 ."
 Prediccion:
   bueno: "e:prediccion a energia:Prediction ; prov:used e:inicio ; energia:predictedLow 10 ; energia:predictedGas 20 ; energia:predictedHigh 30 .\ne:inicio a energia:WellStart ."
   malo: "e:prediccion a energia:Prediction ; energia:predictedLow 25 ; energia:predictedGas 20 ; energia:predictedHigh 30 ."
+  malos:
+    - "e:prediccion a energia:Prediction ; prov:used e:inicio ; energia:predictedLow 10 ; energia:predictedGas 35 ; energia:predictedHigh 30 .\ne:inicio a energia:WellStart ."
 EmpresaUnLei:
   bueno: 'e:ypf a energia:Company ; energia:lei "549300BS2ZHDWDKUGX28" .'
   malo: 'e:ypf a energia:Company ; energia:lei "549300BS2ZHDWDKUGX28", "ABC" .'
 TrayectoriaPosible:
   bueno: "e:trayectoria a energia:WellTrajectory ; energia:verticalDepthM 2900 ; energia:lateralLengthM 2500 ."
   malo: "e:trayectoria a energia:WellTrajectory ; energia:verticalDepthM 276939 ; energia:lateralLengthM 2555 ."
+  malos:
+    - "e:trayectoria a energia:WellTrajectory ; energia:verticalDepthM 2900 ; energia:lateralLengthM 7000 ."
 FracturaPosible:
   bueno: "e:fractura a energia:Fracturing ; energia:maxPressurePsi 11150 ; energia:waterM3 28000 ."
   malo: "e:fractura a energia:Fracturing ; energia:maxPressurePsi 111515 ; energia:waterM3 109996 ."
+  malos:
+    - "e:fractura a energia:Fracturing ; energia:maxPressurePsi 11150 ; energia:waterM3 537184 ."
 

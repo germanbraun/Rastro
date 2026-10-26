@@ -31,9 +31,14 @@
       "validation": {
         "expectations": {
           "path": "layer/afiliaciones/query-checks.yaml",
-          "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
+          "sha256": "8832c09f3fa2cae5add93a60206fde173e6433de6a91055d38c9c33b362371a9"
         },
-        "date": "2026-10-23"
+        "entry": {
+          "name": "cq1.rq",
+          "sha256": "d859fd548ed967c9aeb985cfeac174c013a04d5cd59414449bd666e2f1e8f669"
+        },
+        "level": "technical",
+        "date": "2026-10-26"
       }
     },
     "cq2": {
@@ -67,9 +72,14 @@
       "validation": {
         "expectations": {
           "path": "layer/afiliaciones/query-checks.yaml",
-          "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
+          "sha256": "8832c09f3fa2cae5add93a60206fde173e6433de6a91055d38c9c33b362371a9"
         },
-        "date": "2026-10-23"
+        "entry": {
+          "name": "cq2.rq",
+          "sha256": "ad0a09fd2409d153b2e41f2ac00e49327455890359f469f9bdc7521820873743"
+        },
+        "level": "technical",
+        "date": "2026-10-26"
       }
     },
     "cq3": {
@@ -103,9 +113,14 @@
       "validation": {
         "expectations": {
           "path": "layer/afiliaciones/query-checks.yaml",
-          "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
+          "sha256": "8832c09f3fa2cae5add93a60206fde173e6433de6a91055d38c9c33b362371a9"
         },
-        "date": "2026-10-23"
+        "entry": {
+          "name": "cq3.rq",
+          "sha256": "0ce17b4cba98068ad76dc6f1ca0608a35a48d7429e095f5918f4949a3606ef93"
+        },
+        "level": "technical",
+        "date": "2026-10-26"
       }
     }
   },
@@ -468,6 +483,36 @@
       "artifact": {
         "path": "layer/afiliaciones/query-checks.yaml",
         "sha256": "c2962abbb0ee77fa3274c73a45ca39f87331a48b1ab3779a9764176284ddc77e"
+      }
+    },
+    {
+      "question": "cq1",
+      "from": "implemented",
+      "to": "validated",
+      "date": "2026-10-26",
+      "artifact": {
+        "path": "layer/afiliaciones/query-checks.yaml",
+        "sha256": "8832c09f3fa2cae5add93a60206fde173e6433de6a91055d38c9c33b362371a9"
+      }
+    },
+    {
+      "question": "cq2",
+      "from": "implemented",
+      "to": "validated",
+      "date": "2026-10-26",
+      "artifact": {
+        "path": "layer/afiliaciones/query-checks.yaml",
+        "sha256": "8832c09f3fa2cae5add93a60206fde173e6433de6a91055d38c9c33b362371a9"
+      }
+    },
+    {
+      "question": "cq3",
+      "from": "implemented",
+      "to": "validated",
+      "date": "2026-10-26",
+      "artifact": {
+        "path": "layer/afiliaciones/query-checks.yaml",
+        "sha256": "8832c09f3fa2cae5add93a60206fde173e6433de6a91055d38c9c33b362371a9"
       }
     }
   ]

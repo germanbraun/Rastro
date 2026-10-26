@@ -39,6 +39,7 @@ case "${1:-}" in
     head -1 "$CSV" > "$CSV.tmp"
     mv "$CSV.tmp" "$CSV"
     rearmar
-    python3 "$ROOT/layer/energia/cambio/correccion.py" sin ;;
+    python3 "$ROOT/layer/energia/cambio/correccion.py" sin
+    python3 "$ROOT/layer/energia/cambio/correccion.py" verificar ;;
   *) echo "Uso: correccion.sh registrar"; exit 1 ;;
 esac

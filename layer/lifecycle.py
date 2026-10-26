@@ -6,13 +6,15 @@ Changing a bound artifact invalidates the dependent state instead of silently ke
 """
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 from datetime import date
+from pathlib import Path
 
 import yaml
 
-from method import ROOT, digest, local, verify_queries
+from method import EVIDENCE, ROOT, digest, local, verify_queries
 
 STATES = ("proposed", "approved", "implemented", "validated")
 
@@ -49,9 +51,29 @@ def question_status(entry, cfg, root=ROOT):
         return state
     if not unchanged(entry["query"], root) or entry["context"] != context(cfg, root):
         return "approved"
-    if state == "validated" and not unchanged(entry["validation"]["expectations"], root):
+    if state == "validated" and not expectations_unchanged(entry["validation"], root):
         return "implemented"
     return state
+
+
+def expectation_entry(path, name, root):
+    """A question's own entry of the expectations file, and its fingerprint: editing another query's entry does not
+    invalidate this question."""
+    data = yaml.safe_load(local(path, root).read_text())
+    spec = data.get(name) if isinstance(data, dict) else None
+    return spec, hashlib.sha256(json.dumps(spec, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+
+
+def expectations_unchanged(validation, root):
+    if "entry" not in validation:   # receipts from before per-question binding bind the whole file
+        return unchanged(validation["expectations"], root)
+    path = local(validation["expectations"]["path"], root)
+    return path.is_file() and expectation_entry(path, validation["entry"]["name"], root)[1] == validation["entry"]["sha256"]
+
+
+def validation_level(entry):
+    """«technical» (invariants) or «independent» (independent references); None if not validated or unknown."""
+    return (entry.get("validation") or {}).get("level")
 
 
 def state_path(cfg, root):
@@ -116,7 +138,11 @@ def transition(command, cfg, qid, artifact=None, root=ROOT):
                 raise ValueError("Ontology/mapping check failed")
             expectations = yaml.safe_load(local(artifact, root).read_text())
             verify_queries(cfg, expectations, root)
-            entry.update(state="validated", validation={"expectations": bound(artifact, root), "date": date.today().isoformat()})
+            name = Path(entry["query"]["path"]).name
+            spec, fingerprint = expectation_entry(artifact, name, root)
+            entry.update(state="validated", validation={
+                "expectations": bound(artifact, root), "entry": {"name": name, "sha256": fingerprint},
+                "level": EVIDENCE[spec["evidence"]], "date": date.today().isoformat()})
         else:
             raise ValueError(f"Unknown transition: {command}")
         data["questions"][qid] = entry

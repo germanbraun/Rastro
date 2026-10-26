@@ -3,15 +3,13 @@ method_commit: 05428c51454e90eb6324956cfea9c659db96b31f
 sources:
 - crossref (2025 journal articles with "Argentina" in an affiliation; capture 9d328bbe…e526)
 - ror (data dump v2.15, Zenodo record 23500708)
-question_author: >-
-  Proposed by Claude and reviewed by GPT from the source inspection; scope and questions approved by the user on
-  2026-10-22 (docs/experiments/countrycodes/discussion.md). The named business reviewer is still pending.
+question_author: Proposed by Claude and reviewed by GPT from the source inspection; scope and questions approved by the
+  user on 2026-10-22 (docs/experiments/countrycodes/discussion.md). The named business reviewer is still pending.
 started_on: '2026-10-22T18:41:34Z'
 ended_on: null
 budget_agent_hours: 16
-time_basis: >-
-  Measured agent session intervals (start, stop, pauses), including tool execution. Not model compute. Human time is
-  logged by the person; missing human time stays null.
+time_basis: Measured agent session intervals (start, stop, pauses), including tool execution. Not model compute. Human time
+  is logged by the person; missing human time stays null.
 steps:
   initialize:
     status: completed
@@ -22,18 +20,21 @@ steps:
     - layer/afiliaciones/ (notes stubs, sources.yaml manifest)
     - infra/docker-compose.yml (ontop-afiliaciones, profile afiliaciones, port 8083)
     - docs/experiments/research-affiliations/draw.py, sample.json, sample-dois.txt
-    runtime: >-
-      pending: Ontop fails to start with an empty mapping (R2RML parser error, Spring context does not start).
-      Readiness is checked again after map-source adds the first mapped term.
-    not_built_yet: [readers and reader.sql (need the source schemas), evaluation, quality, app, change tests]
+    runtime: 'pending: Ontop fails to start with an empty mapping (R2RML parser error, Spring context does not start). Readiness
+      is checked again after map-source adds the first mapped term.'
+    not_built_yet:
+    - readers and reader.sql (need the source schemas)
+    - evaluation
+    - quality
+    - app
+    - change tests
     sessions:
     - started_on: '2026-10-22T18:41:34Z'
       ended_on: '2026-10-22T18:44:10Z'
       pauses: []
-      work: >-
-        Record the approval and frozen method; read start-domain and the contracts; scaffold, registry entry and Ontop
-        service; initialize this log; test Ontop (pending); ontology-check over all domains (passed); seeded draw of
-        the bounded set (reproduced twice).
+      work: Record the approval and frozen method; read start-domain and the contracts; scaffold, registry entry and Ontop
+        service; initialize this log; test Ontop (pending); ontology-check over all domains (passed); seeded draw of the
+        bounded set (reproduced twice).
     agent_hours: 0.04
     human_hours: null
   questions:
@@ -50,10 +51,9 @@ steps:
     - started_on: '2026-10-22T18:49:33Z'
       ended_on: '2026-10-22T18:50:37Z'
       pauses: []
-      work: >-
-        Record the reference plan; read add-question and the lifecycle; write the three proposals with definitions,
-        ambiguous words and verification plans; register them as proposed, then wait for the user's approval of the
-        exact files. (Approval arrived afterwards and was recorded at 18:54; see interventions.)
+      work: Record the reference plan; read add-question and the lifecycle; write the three proposals with definitions,
+        ambiguous words and verification plans; register them as proposed, then wait for the user's approval of the exact
+        files. (Approval arrived afterwards and was recorded at 18:54; see interventions.)
     agent_hours: 0.02
     human_hours: null
   sources:
@@ -67,16 +67,14 @@ steps:
     - started_on: '2026-10-22T18:54:06Z'
       ended_on: '2026-10-22T18:56:05Z'
       pauses: []
-      work: >-
-        Record the question approvals; read add-source; write the schema and the snapshot loader; add the service;
-        load; verify counts, fingerprints, a known case and the cut; start the process notes.
+      work: Record the question approvals; read add-source; write the schema and the snapshot loader; add the service; load;
+        verify counts, fingerprints, a known case and the cut; start the process notes.
     - started_on: '2026-10-22T19:01:26Z'
       ended_on: '2026-10-22T19:02:39Z'
       pauses: []
-      work: >-
-        After GPT's loader review: the loader writes the source manifest only after a committed load (with the DOI-list
-        hash); every ROR location kept in ror.location (142 organizations have several; 538 Argentine by any
-        location, as by the first); credentials as connection keyword parameters. Reloaded and verified.
+      work: 'After GPT''s loader review: the loader writes the source manifest only after a committed load (with the DOI-list
+        hash); every ROR location kept in ror.location (142 organizations have several; 538 Argentine by any location, as
+        by the first); credentials as connection keyword parameters. Reloaded and verified.'
     agent_hours: 0.05
     human_hours: null
   mapping:
@@ -90,16 +88,14 @@ steps:
     - started_on: '2026-10-22T19:04:13Z'
       ended_on: '2026-10-22T19:05:07Z'
       pauses: []
-      work: >-
-        Read map-source and the semantic-layer proposal; inspect loaded fields and sample values; write the term
-        proposal (4 classes plus ArgentineOrganization, 12 properties, IRIs) for the user's approval.
+      work: Read map-source and the semantic-layer proposal; inspect loaded fields and sample values; write the term proposal
+        (4 classes plus ArgentineOrganization, 12 properties, IRIs) for the user's approval.
     - started_on: '2026-10-22T19:11:18Z'
       ended_on: '2026-10-22T19:13:48Z'
       pauses: []
-      work: >-
-        Record the approval; write the ontology and the R2RML mapping; Ontop failed twice (string concatenation
-        parse, then the reserved table name WORK) and started after quoting it; counts in Rastro equal the tables;
-        ontology-check passes in all domains; notes for the three approaches and term_sources.
+      work: Record the approval; write the ontology and the R2RML mapping; Ontop failed twice (string concatenation parse,
+        then the reserved table name WORK) and started after quoting it; counts in Rastro equal the tables; ontology-check
+        passes in all domains; notes for the three approaches and term_sources.
     agent_hours: 0.06
     human_hours: null
   links:
@@ -107,81 +103,73 @@ steps:
     evidence:
     - docs/experiments/research-affiliations/link-proposal.md (approved)
     - linking/afiliaciones/links.sql, link.py, correcciones.csv; infra/docker-compose.yml (afiliaciones-linker)
-    - afiliaciones.identificacion 539 (R0 2, R1 329, R2 201, accepted corrections 7); afiliaciones.dudosa 91
-      (84 rejected, 7 accepted, all AI-reviewed and pending GPT validation); afiliaciones.sin_identificar 42
+    - afiliaciones.identificacion 539 (R0 2, R1 329, R2 201, accepted corrections 7); afiliaciones.dudosa 91 (84 rejected,
+      7 accepted, all AI-reviewed and pending GPT validation); afiliaciones.sin_identificar 42
     - no identification without evidence; 316 of 358 Argentina-text mentions have one
     sessions:
     - started_on: '2026-10-22T19:13:48Z'
       ended_on: '2026-10-22T19:15:13Z'
       pauses: []
-      work: >-
-        Read link-entities; measure candidate rules on the loaded mentions (key, full name, unique acronym, each with a
-        second piece of evidence); find the doubtful cases (Brazilian homonym, UK acronym); write the link proposal
-        with an open question on cq2's reviewer wording.
+      work: Read link-entities; measure candidate rules on the loaded mentions (key, full name, unique acronym, each with
+        a second piece of evidence); find the doubtful cases (Brazilian homonym, UK acronym); write the link proposal with
+        an open question on cq2's reviewer wording.
     - started_on: '2026-10-22T19:19:25Z'
       ended_on: '2026-10-22T19:22:22Z'
       pauses: []
-      work: >-
-        Record the approval; write the linker (schema, rules, doubtful cases, unidentified mentions); run it; read the
-        unidentified list by hand and find a normalization bug (non-ASCII dashes glued words); fix and rerun (466 to
-        532 rule identifications, 66 to 42 unidentified); review the 91 doubtful cases into the corrections CSV;
-        rerun. Stopped here for GPT to validate the corrections, at the user's request.
+      work: Record the approval; write the linker (schema, rules, doubtful cases, unidentified mentions); run it; read the
+        unidentified list by hand and find a normalization bug (non-ASCII dashes glued words); fix and rerun (466 to 532
+        rule identifications, 66 to 42 unidentified); review the 91 doubtful cases into the corrections CSV; rerun. Stopped
+        here for GPT to validate the corrections, at the user's request.
     - started_on: '2026-10-22T19:27:46Z'
       ended_on: '2026-10-22T19:51:20Z'
       pauses: []
-      work: >-
-        After GPT's review (6f22ed0): cq2 requirement revised and re-approved with the user's recorded approval;
-        source URLs and GPT's validation added to the 91 corrections; possible registry gaps (cq3) now include
-        segments inside mentions that already have identifications (83 candidates, 74 in identified mentions); HTML
-        entities decoded in the normalization (33 mentions); linker rerun.
+      work: 'After GPT''s review (6f22ed0): cq2 requirement revised and re-approved with the user''s recorded approval;
+        source URLs and GPT''s validation added to the 91 corrections; possible registry gaps (cq3) now include segments
+        inside mentions that already have identifications (83 candidates, 74 in identified mentions); HTML entities decoded
+        in the normalization (33 mentions); linker rerun.'
     - started_on: '2026-10-22T19:53:27Z'
       ended_on: '2026-10-22T19:57:06Z'
       pauses: []
-      work: >-
-        Approved identification terms written and mapped (counts equal the tables: 539, 91, 83); link_sources fixed;
-        notes for both link-aware approaches; quality proposal (6 rules, IDEHU found); cq1-cq3 written, two Ontop
-        limitations worked around (NOT EXISTS inside UNION, nondeterministic SAMPLE); query checks from invariants;
-        verify gate passed; lifecycle implement and validate (from a clean environment).
+      work: 'Approved identification terms written and mapped (counts equal the tables: 539, 91, 83); link_sources fixed;
+        notes for both link-aware approaches; quality proposal (6 rules, IDEHU found); cq1-cq3 written, two Ontop limitations
+        worked around (NOT EXISTS inside UNION, nondeterministic SAMPLE); query checks from invariants; verify gate passed;
+        lifecycle implement and validate (from a clean environment).'
     agent_hours: 0.53
     human_hours: null
   quality:
     status: implemented_review_findings_awaiting_person
     evidence:
-    - 'ontology/afiliaciones/calidad/{reglas.ttl, ejemplos.yaml, datos.yaml}; layer/afiliaciones/calidad.json'
-    - >-
-      7 rules checked 539 identifications, 69 identified organizations (two rules), 91 doubtful candidates (two rules),
-      1,456 mentions and 100 publications, equal to the tables; findings: IDEHU withdrawn (warning), 91 pending human
-      confirmation (info); 7 good/bad pairs pass; tests/test_calidad.py covers afiliaciones
+    - ontology/afiliaciones/calidad/{reglas.ttl, ejemplos.yaml, datos.yaml}; layer/afiliaciones/calidad.json
+    - '7 rules checked 539 identifications, 69 identified organizations (two rules), 91 doubtful candidates (two rules),
+      1,456 mentions and 100 publications, equal to the tables; findings: IDEHU withdrawn (warning), 91 pending human confirmation
+      (info); 7 good/bad pairs pass; tests/test_calidad.py covers afiliaciones'
     - 'docs/experiments/research-affiliations/quality-proposal.md (revised after GPT: 7 rules, 3 new dictionary terms)'
     - 'findings today: IDEHU withdrawn in ROR v2.15 (warning), 91 AI decisions without human confirmation (info)'
     sessions:
     - started_on: '2026-10-23T02:16:00Z'
       ended_on: '2026-10-23T02:23:18Z'
       pauses: []
-      work: >-
-        Start time approximate (after GPT's commit at 02:15:27; end is commit 0ea4258). After GPT's review (9b69da4): structural
-        checks from the pinned records (cq1 exact key coverage, cq2 1-100 once per organization, cq3 returns the
-        independently established Instituto Sabato candidate), receipt structural-checks.json, all 8 pass; cq3
-        returns evidence and labels its rows as heuristic candidates; gap reason softened in the linker (counts
-        unchanged); cq1-cq3 revalidated; quality proposal revised (both sources, registry-status warning, human
-        confirmation apart from AI decisions, three terms for approval).
+      work: 'Start time approximate (after GPT''s commit at 02:15:27; end is commit 0ea4258). After GPT''s review (9b69da4):
+        structural checks from the pinned records (cq1 exact key coverage, cq2 1-100 once per organization, cq3 returns
+        the independently established Instituto Sabato candidate), receipt structural-checks.json, all 8 pass; cq3 returns
+        evidence and labels its rows as heuristic candidates; gap reason softened in the linker (counts unchanged); cq1-cq3
+        revalidated; quality proposal revised (both sources, registry-status warning, human confirmation apart from AI decisions,
+        three terms for approval).'
     - started_on: '2026-10-23T02:24:30Z'
       ended_on: '2026-10-23T02:30:12Z'
       pauses: []
-      work: >-
-        Start time approximate (the user's approval). Recorded the approval and pushed; added decisionReason, humanConfirmation and
-        successor (ontology, mapping, linker column, registry, notes; counts 91, 91, 2,320 equal the tables); wrote
-        the seven rules, examples and data queries; registered quality; ran it; cq1-cq3 re-implemented and
-        revalidated after the ontology change; structural checks still pass.
+      work: Start time approximate (the user's approval). Recorded the approval and pushed; added decisionReason, humanConfirmation
+        and successor (ontology, mapping, linker column, registry, notes; counts 91, 91, 2,320 equal the tables); wrote
+        the seven rules, examples and data queries; registered quality; ran it; cq1-cq3 re-implemented and revalidated after
+        the ontology change; structural checks still pass.
     - started_on: '2026-10-23T02:43:00Z'
       ended_on: '2026-10-23T02:58:27Z'
       pauses: []
-      work: >-
-        Start time approximate (after GPT's commit at 02:42:46Z). After GPT's rule review: warning severity moved to
-        the shape; status completeness; free-text confirmation rejected (pending is the only valid state until a
-        confirmation record is approved); non-blank rule, evidence, reason and text; 16 extra cases with severities
-        (quality-cases.py); rules rerun, same findings; dates reconciled (the user's local date is 2026-10-22, UTC-3).
-        Then, with the user's approval, the runner keeps severities (method change); both domains rerun.
+      work: 'Start time approximate (after GPT''s commit at 02:42:46Z). After GPT''s rule review: warning severity moved
+        to the shape; status completeness; free-text confirmation rejected (pending is the only valid state until a confirmation
+        record is approved); non-blank rule, evidence, reason and text; 16 extra cases with severities (quality-cases.py);
+        rules rerun, same findings; dates reconciled (the user''s local date is 2026-10-22, UTC-3). Then, with the user''s
+        approval, the runner keeps severities (method change); both domains rerun.'
     agent_hours: 0.47
     human_hours: null
   app:
@@ -195,12 +183,11 @@ steps:
     - started_on: '2026-10-23T02:58:27Z'
       ended_on: '2026-10-23T03:10:51Z'
       pauses: []
-      work: >-
-        Start time approximate. Recorded the deferral and the approval; wrote the domain's app configuration (three
-        questions, why-this-number queries, three-moment demo, quality and an unmeasured notice, technical view);
-        generic app changes: the trust tab shows quality without measured cards, findings show their severity, and
-        widget keys include the tab (the demo and «Preguntar» drew the same question and collided); checked
-        afiliaciones, energia and proveedores with check_domain.py; fixed a shortened quotation in the demo.
+      work: 'Start time approximate. Recorded the deferral and the approval; wrote the domain''s app configuration (three
+        questions, why-this-number queries, three-moment demo, quality and an unmeasured notice, technical view); generic
+        app changes: the trust tab shows quality without measured cards, findings show their severity, and widget keys include
+        the tab (the demo and «Preguntar» drew the same question and collided); checked afiliaciones, energia and proveedores
+        with check_domain.py; fixed a shortened quotation in the demo.'
     agent_hours: 0.21
     human_hours: null
   evaluate:
@@ -209,25 +196,23 @@ steps:
     - docs/experiments/research-affiliations/evaluation-proposal.md (approved); evaluation-runs.md
     - layer/afiliaciones/eval/questions.yaml, consistencia/parafrasis.yaml, reader.sql; 33 saved answers
     - not scored until the blind reviewer's reference exists (decision of 2026-10-23)
-    - 'blind review handed to GPT (user decision, 2026-10-26): docs/experiments/research-affiliations/blind-review/
-      (package built from crossref and ror only, instructions, empty annotation, reference.py)'
+    - 'blind review handed to GPT (user decision, 2026-10-26): docs/experiments/research-affiliations/blind-review/ (package
+      built from crossref and ror only, instructions, empty annotation, reference.py)'
     - docs/experiments/research-affiliations/conclusions.md (from the 49 process notes, written before scoring)
     sessions:
     - started_on: '2026-10-23T03:35:00Z'
       ended_on: '2026-10-23T03:46:44Z'
       pauses: []
-      work: >-
-        Start time approximate. Plan proposed, shown and approved; harness reads title and normalization from the
-        registry (method change); readers, five questions with provisional references, paraphrases; 33 prompts, one
-        fresh subagent each; 5 timeouts retried with the error message; one orchestrator transcription error recorded.
+      work: Start time approximate. Plan proposed, shown and approved; harness reads title and normalization from the registry
+        (method change); readers, five questions with provisional references, paraphrases; 33 prompts, one fresh subagent
+        each; 5 timeouts retried with the error message; one orchestrator transcription error recorded.
     - started_on: '2026-10-26T19:31:00Z'
       ended_on: '2026-10-26T19:58:00Z'
       pauses: []
-      work: >-
-        Start time approximate. Asked the user who reviews (GPT); built the blind package from the source tables only
-        (962 strings, 196 full review, 538 Argentine organizations, 1,456 mentions); wrote the instructions, the
-        annotation template and reference.py with its test; the scorer reads an independent reference when it exists
-        (method change); wrote the conclusions from the process notes.
+      work: Start time approximate. Asked the user who reviews (GPT); built the blind package from the source tables only
+        (962 strings, 196 full review, 538 Argentine organizations, 1,456 mentions); wrote the instructions, the annotation
+        template and reference.py with its test; the scorer reads an independent reference when it exists (method change);
+        wrote the conclusions from the process notes.
     agent_hours: 0.65
     human_hours: null
   change_tests:
@@ -240,31 +225,28 @@ steps:
     - started_on: '2026-10-23T10:48:00Z'
       ended_on: '2026-10-23T11:06:43Z'
       pauses: []
-      work: >-
-        Start time approximate (before the proposal commit at 10:55:53Z). Chose the alias from real unidentified affiliations; proposal approved; guard made
-        registry-driven (method change); correction and traceability scripts; two guarded runs (the first had a
-        profile lookup error before any change, then a missing re-grant for D); restore identical both times.
+      work: Start time approximate (before the proposal commit at 10:55:53Z). Chose the alias from real unidentified affiliations;
+        proposal approved; guard made registry-driven (method change); correction and traceability scripts; two guarded
+        runs (the first had a profile lookup error before any change, then a missing re-grant for D); restore identical
+        both times.
     agent_hours: 0.31
     human_hours: null
 interventions:
 - step: evaluate
-  decision: >-
-    GPT is the blind reference reviewer, among a person with an annotation sheet, GPT, or a fresh Claude subagent; the
-    score will say the references were reviewed by AI and a person still has to confirm them
+  decision: GPT is the blind reference reviewer, among a person with an annotation sheet, GPT, or a fresh Claude subagent;
+    the score will say the references were reviewed by AI and a person still has to confirm them
   reason: Who reviews the references belongs to the user
   kind: planned approval
   minutes: null
 - step: change_tests
-  decision: >-
-    Approved the change test as written (official Garrahan alias, 30-cell traceability) and option (b): the guard reads
-    files and tables from the registry, as a method change
+  decision: 'Approved the change test as written (official Garrahan alias, 30-cell traceability) and option (b): the guard
+    reads files and tables from the registry, as a method change'
   reason: The plan, expectations and generic changes belong to the user
   kind: planned approval
   minutes: null
 - step: evaluate
-  decision: >-
-    Approved the evaluation plan as written (five questions, B/D/C, 33 runs, scored only against the blind
-    reference) and option (b): the harness reads title and normalization from the registry, as a method change
+  decision: 'Approved the evaluation plan as written (five questions, B/D/C, 33 runs, scored only against the blind reference)
+    and option (b): the harness reads title and normalization from the registry, as a method change'
   reason: The plan and references belong to the user
   kind: planned approval
   minutes: null
@@ -279,16 +261,14 @@ interventions:
   kind: planned approval
   minutes: null
 - step: evaluate
-  decision: >-
-    Defer the blind reference review to the end of the experiment; continue with show-in-app, evaluation set-up without
-    references and the change test; no accuracy number until the review
+  decision: Defer the blind reference review to the end of the experiment; continue with show-in-app, evaluation set-up
+    without references and the change test; no accuracy number until the review
   reason: The user's choice of order; the reviewer is not named yet
   kind: unplanned decision
   minutes: null
 - step: quality
-  decision: >-
-    Approved the three dictionary terms (decisionReason, humanConfirmation, successor) and the seven quality rules as
-    shown in the session, after GPT's review
+  decision: Approved the three dictionary terms (decisionReason, humanConfirmation, successor) and the seven quality rules
+    as shown in the session, after GPT's review
   reason: Business definitions and dictionary terms belong to the user
   kind: planned approval
   minutes: null
@@ -298,14 +278,11 @@ interventions:
   kind: planned approval
   minutes: null
 - step: initialize
-  decision: >-
-    Reference plan for the 962 distinct strings: full review of the 196 that contain "Argentina"; a yes/no screen
-    (does it name an Argentine organization?) for the other 766, moving any yes to the full review
-  reason: >-
-    The bounded set has 962 distinct affiliation strings, not about 200 as estimated. The estimate counted only
-    strings mentioning Argentina; the approved questions cover every affiliation in the 100
-    works. The set is not redrawn; the user decides whether the reviewer's workload is acceptable or how the
-    reference plan changes. Decided by the user on 2026-10-22.
+  decision: 'Reference plan for the 962 distinct strings: full review of the 196 that contain "Argentina"; a yes/no screen
+    (does it name an Argentine organization?) for the other 766, moving any yes to the full review'
+  reason: The bounded set has 962 distinct affiliation strings, not about 200 as estimated. The estimate counted only strings
+    mentioning Argentina; the approved questions cover every affiliation in the 100 works. The set is not redrawn; the user
+    decides whether the reviewer's workload is acceptable or how the reference plan changes. Decided by the user on 2026-10-22.
   kind: business decision after an unexpected scope finding
   minutes: null
 - step: questions
@@ -314,10 +291,9 @@ interventions:
   kind: planned approval
   minutes: null
 - step: links
-  decision: >-
-    The user approved the link rules (R0 key, R1 full name and R2 unique acronym, each with a second piece of
-    evidence; doubtful cases to a reviewed CSV) and the reading of cq2: Rastro counts its own accepted
-    identifications, the reference counts the reviewer's, and the evaluation compares them
+  decision: 'The user approved the link rules (R0 key, R1 full name and R2 unique acronym, each with a second piece of evidence;
+    doubtful cases to a reviewed CSV) and the reading of cq2: Rastro counts its own accepted identifications, the reference
+    counts the reviewer''s, and the evaluation compares them'
   reason: The rules and the reading of a business definition belong to the user
   kind: planned approval
   minutes: null
@@ -350,17 +326,15 @@ errors_caught:
   fix: quote the table name in the mapping's source query; process note 15
 - step: links
   check: reading the unidentified Argentina-text mentions by hand
-  failure_kind: >-
-    the normalization dropped non-ASCII dashes (— and ‐) while removing accents, gluing words ("airesconicet"), so
-    rules missed CONICET and UBA in 24 mentions
+  failure_kind: the normalization dropped non-ASCII dashes (— and ‐) while removing accents, gluing words ("airesconicet"),
+    so rules missed CONICET and UBA in 24 mentions
   fix: drop only combining accents and turn every other symbol into a space; process note 20
 - step: links
   check: reviewer (GPT) on the linker and requirements
-  failure_kind: >-
-    cq2 requirement still carried the old definition after the user approved a new reading; cq3 gaps only searched
+  failure_kind: cq2 requirement still carried the old definition after the user approved a new reading; cq3 gaps only searched
     mentions without any identification; correction evidence lacked its sources
-  fix: cq2 re-proposed and re-approved; posible_hueco table over all Argentine-context mentions; URLs in the CSV;
-    process notes 23-24
+  fix: cq2 re-proposed and re-approved; posible_hueco table over all Argentine-context mentions; URLs in the CSV; process
+    notes 23-24
 - step: links
   check: reading the possible-gap segments by hand
   failure_kind: publisher HTML entities (&amp;, &#x00E1;) split by the segment rule and left in normalized text
@@ -371,24 +345,20 @@ errors_caught:
   fix: OPTIONAL with !BOUND inside the branch; process note 27
 - step: questions
   check: YAML read-back of the experiment log, before commit
-  failure_kind: >-
-    an unquoted line with a colon made the log invalid; the update script failed but the commit and push ran anyway
-    (commands chained with ; instead of &&), so f82554c lacked this session and the process notes
+  failure_kind: an unquoted line with a colon made the log invalid; the update script failed but the commit and push ran
+    anyway (commands chained with ; instead of &&), so f82554c lacked this session and the process notes
   fix: quoted the line, committed the log and notes separately; process note 30
 - step: questions
   check: reviewer (GPT) on the queries and query checks (9b69da4)
-  failure_kind: >-
-    row-count bounds could pass with repeated and missing mentions; cq3 returned no evidence and its labels implied
-    absence from ROR more strongly than a heuristic search shows; the quality proposal accepted any single source and
-    read a filled decision field as review
-  fix: >-
-    structural-checks.py from the pinned records; cq3 evidence column and candidate wording; quality proposal revised;
+  failure_kind: row-count bounds could pass with repeated and missing mentions; cq3 returned no evidence and its labels
+    implied absence from ROR more strongly than a heuristic search shows; the quality proposal accepted any single source
+    and read a filled decision field as review
+  fix: structural-checks.py from the pinned records; cq3 evidence column and candidate wording; quality proposal revised;
     process notes 31-33
 - step: quality
   check: good/bad examples (calidad.py --examples-only)
-  failure_kind: >-
-    the registry-status rule's aggregate SPARQL returned a row for an active organization (empty group with $this
-    pre-bound), so the good example failed
+  failure_kind: the registry-status rule's aggregate SPARQL returned a row for an active organization (empty group with
+    $this pre-bound), so the good example failed
   fix: HAVING (COUNT(?s) > 0); process note 35
 - step: quality
   check: reading the system clock before committing the log
@@ -396,17 +366,15 @@ errors_caught:
   fix: times taken from the clock and commits; process note 7 (a command to record sessions)
 - step: quality
   check: reviewer (GPT) running the isolated rules directly (2c84127)
-  failure_kind: >-
-    a withdrawn record reported a violation (severity on the SPARQL constraint, not the shape); empty or arbitrary
-    text passed as a person's confirmation; a missing status passed as active; blank evidence passed; the seven
-    good/bad pairs passed throughout
-  fix: severity on the shape; pending-only confirmation state; status completeness; non-blank patterns;
-    quality-cases.py with severities; process notes 37-38
+  failure_kind: a withdrawn record reported a violation (severity on the SPARQL constraint, not the shape); empty or arbitrary
+    text passed as a person's confirmation; a missing status passed as active; blank evidence passed; the seven good/bad
+    pairs passed throughout
+  fix: severity on the shape; pending-only confirmation state; status completeness; non-blank patterns; quality-cases.py
+    with severities; process notes 37-38
 - step: app
   check: browser visit and the app log (check_domain.py had passed)
-  failure_kind: >-
-    duplicate widget key: the demo and «Preguntar» drew the same question at once, so its table, why-this-number
-    selector and explain button got the same keys
+  failure_kind: 'duplicate widget key: the demo and «Preguntar» drew the same question at once, so its table, why-this-number
+    selector and explain button got the same keys'
   fix: keys include the tab that draws them (generic app change); process note 39
 - step: app
   check: reading the demo text against the data
@@ -414,107 +382,100 @@ errors_caught:
   fix: quoted in full
 - step: evaluate
   check: running the first saved answer of e1-0-B
-  failure_kind: >-
-    Claude copied a subagent's JSON reply by hand with its backslash escaping left in, so the saved first attempt was
-    a broken regular expression the subagent did not write
+  failure_kind: Claude copied a subagent's JSON reply by hand with its backslash escaping left in, so the saved first attempt
+    was a broken regular expression the subagent did not write
   fix: replies decoded with a script from then on; recorded in evaluation-runs.md; process note 42
 - step: change_tests
   check: first guarded run
-  failure_kind: >-
-    the guard looked up the domain's Ontop in `docker compose config`, which leaves out services behind a profile;
+  failure_kind: the guard looked up the domain's Ontop in `docker compose config`, which leaves out services behind a profile;
     it stopped before any change (no snapshot, ror.name unchanged)
   fix: tolerate a missing service in the port lookup; process note 44
 - step: change_tests
   check: reading correccion.json (D failed after the rebuild with permission denied)
-  failure_kind: >-
-    the linker recreates the afiliaciones schema and drops the read-only users' grants; the measurement script did not
-    grant them again (the evaluation harness does), so D's after-rebuild answers were errors, not results
+  failure_kind: the linker recreates the afiliaciones schema and drops the read-only users' grants; the measurement script
+    did not grant them again (the evaluation harness does), so D's after-rebuild answers were errors, not results
   fix: medir.py applies reader.sql first; whole test rerun; process note 45
 - step: experiment log
   check: reviewer (GPT) comparing declared hours with the listed session intervals (7d515f4)
-  failure_kind: >-
-    declared agent_hours summed to 1.02 h while the intervals summed to 1.39 h: links declared 0.12 h for four sessions
-    of 0.53 h (not updated after the third), mapping 0.10 h for 0.06 h, and the quality and app sessions overlapped
-    by 27 s
-  fix: >-
-    each step's agent_hours is now the sum of its own intervals; the app session starts when the quality session
-    ends; total without overlaps 1.89 h of 16. Starts marked approximate stay approximate; these are wall-clock
-    session intervals, not measured active work, and human time stays missing; process note 47
+  failure_kind: 'declared agent_hours summed to 1.02 h while the intervals summed to 1.39 h: links declared 0.12 h for four
+    sessions of 0.53 h (not updated after the third), mapping 0.10 h for 0.06 h, and the quality and app sessions overlapped
+    by 27 s'
+  fix: each step's agent_hours is now the sum of its own intervals; the app session starts when the quality session ends;
+    total without overlaps 1.89 h of 16. Starts marked approximate stay approximate; these are wall-clock session intervals,
+    not measured active work, and human time stays missing; process note 47
 - step: change_tests
   check: reviewer (GPT) running the correction checker on an altered copy of the measurements (7d515f4)
-  failure_kind: >-
-    the checker accepted a wrong organization in a same-size list, a measurement error and a broken cq1 coverage, and
-    the traceability scorer rejected B by default instead of inspecting its answers
-  fix: >-
-    exact expectations, errors fail, exit nonzero, tests with GPT's broken fixtures; whole guarded test rerun (passed,
-    restore identical); B's scorer inspects its answers (same result, 0 of 30, 16 with the value present); process
-    notes 48-49
+  failure_kind: the checker accepted a wrong organization in a same-size list, a measurement error and a broken cq1 coverage,
+    and the traceability scorer rejected B by default instead of inspecting its answers
+  fix: exact expectations, errors fail, exit nonzero, tests with GPT's broken fixtures; whole guarded test rerun (passed,
+    restore identical); B's scorer inspects its answers (same result, 0 of 30, 16 with the value present); process notes
+    48-49
 - step: app
   check: reviewer (GPT) on the app's notice (7d515f4)
   failure_kind: the notice said every answer covers all the data; only cq1's coverage was checked, cq3 is a heuristic
   fix: notice and FAQ say what was checked technically and that cq3 can miss cases
 - step: experiment log
   check: reading the output of the commit command
-  failure_kind: >-
-    the log update failed on a stale anchor, but the commit ran anyway because the commands were chained with ;
-    (the same failure as note 30)
+  failure_kind: the log update failed on a stale anchor, but the commit ran anyway because the commands were chained with
+    ; (the same failure as note 30)
   fix: log fixed and the local commit amended before pushing; process note 30 applies
 method_changes:
-- change: >-
-    ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports
+- change: ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports
     review_findings (warnings or info only) apart from defects_detected (any violation); quality-rules skill says where
     sh:severity goes; tests/test_generic_method.py covers a warning-only result
   scope: generic
-  reason: >-
-    a withdrawn ROR record (warning) and 91 pending human confirmations (info) were saved as defects; caught by GPT
-    (2c84127), approved by the user on 2026-10-22 (local time) as a recorded method change; oil and gas rerun with the
-    same counts (19 violations)
-- change: >-
-    app/dominio.py: «Por qué confiar» also shows for a domain with quality rules but no measured cards (a notice from
-    the domain's sin_medir text plus the quality table); quality results show violations, warnings and informational
-    findings apart; widget keys of an answer include the tab that draws it
+  reason: a withdrawn ROR record (warning) and 91 pending human confirmations (info) were saved as defects; caught by GPT
+    (2c84127), approved by the user on 2026-10-22 (local time) as a recorded method change; oil and gas rerun with the same
+    counts (19 violations)
+- change: 'app/dominio.py: «Por qué confiar» also shows for a domain with quality rules but no measured cards (a notice
+    from the domain''s sin_medir text plus the quality table); quality results show violations, warnings and informational
+    findings apart; widget keys of an answer include the tab that draws it'
   scope: generic
-  reason: >-
-    needed to show the approved app proposal (quality without an evaluation) and to fix a duplicate-key crash when the
-    demo and «Preguntar» show the same question; made while building the approved app, reported to the user
-    afterwards; energia and proveedores pass check_domain.py
-- change: >-
-    layer/evaluar.py reads the results title and the optional name-normalization SQL function from the domain's
-    method.evaluation entry (title, normalize); without a function, lists compare exactly. Registry entries added for
-    proveedores, energia and energia_lab with their previous values
+  reason: needed to show the approved app proposal (quality without an evaluation) and to fix a duplicate-key crash when
+    the demo and «Preguntar» show the same question; made while building the approved app, reported to the user afterwards;
+    energia and proveedores pass check_domain.py
+- change: layer/evaluar.py reads the results title and the optional name-normalization SQL function from the domain's method.evaluation
+    entry (title, normalize); without a function, lists compare exactly. Registry entries added for proveedores, energia
+    and energia_lab with their previous values
   scope: generic
   reason: approved by the user as option (b) of the evaluation plan; the harness had per-domain Python dictionaries
-- change: >-
-    layer/change_guard.py reads each domain's files and tables per test from method.change_guard, and its linker,
-    Ontop service and script folder from the method block; `run <test> [domain]`, defaulting to energia, whose
-    lists moved to the registry unchanged; services behind a compose profile no longer break the port lookup
+- change: layer/change_guard.py reads each domain's files and tables per test from method.change_guard, and its linker,
+    Ontop service and script folder from the method block; `run <test> [domain]`, defaulting to energia, whose lists moved
+    to the registry unchanged; services behind a compose profile no longer break the port lookup
   scope: generic
   reason: approved by the user as option (b) of the change-test plan; tests/test_change_guard.py passes
-- change: >-
-    app/dominio.py data_version keys a domain's saved answers to the tables its mapping reads (plus Lab's raw SQL
+- change: app/dominio.py data_version keys a domain's saved answers to the tables its mapping reads (plus Lab's raw SQL
     tables), instead of the database's WAL position
   scope: generic
-  reason: >-
-    the user found the app slow; writes in this experiment's domain (linker, change tests) discarded oil and gas
-    answers and Lab models; reported to the user, browser timings in docs/decisions.md
-- change: >-
-    new method skill `walkthrough` (step 7b, «Paso a paso»); app/dominio.py show_integration_example renders a
-    walkthrough's purpose, each step's part of Rastro and its live queries (sql_table takes the reader approach);
-    app/lab.py show_calculation
+  reason: the user found the app slow; writes in this experiment's domain (linker, change tests) discarded oil and gas answers
+    and Lab models; reported to the user, browser timings in docs/decisions.md
+- change: new method skill `walkthrough` (step 7b, «Paso a paso»); app/dominio.py show_integration_example renders a walkthrough's
+    purpose, each step's part of Rastro and its live queries (sql_table takes the reader approach); app/lab.py show_calculation
   scope: generic
-  reason: >-
-    the user asked to rebuild GPT's walkthroughs on real data with an explicit purpose, and to make them a skill of
+  reason: the user asked to rebuild GPT's walkthroughs on real data with an explicit purpose, and to make them a skill of
     the semantic-layer workflow; made outside this domain's steps, recorded here because it changes the method
-- change: >-
-    comments and docstrings of 46 Python files translated to English, including method files (app/dominio.py,
-    layer/*); no behaviour change, verified by comparing each file's syntax tree with the previous commit
+- change: comments and docstrings of 46 Python files translated to English, including method files (app/dominio.py, layer/*);
+    no behaviour change, verified by comparing each file's syntax tree with the previous commit
   scope: generic
   reason: the user asked for the source code in English, as the project's language rule says
-- change: >-
-    layer/evaluar.py uses <domain>/eval/referencias.json as the reference when it exists (who wrote it and its status
+- change: layer/evaluar.py uses <domain>/eval/referencias.json as the reference when it exists (who wrote it and its status
     go into the results), instead of the provisional SPARQL over Rastro
   scope: generic
-  reason: >-
-    the blind reference comes from an annotation, not from Rastro; any domain with an independent reference needs
+  reason: the blind reference comes from an annotation, not from Rastro; any domain with an independent reference needs
     the scorer to read it
+- change: 'layer/method.py experiment --start/--stop/--append/--lint and layer/experiment_log.py: the log is written by
+    commands, step hours come from the sessions, duplicate keys and overlaps are refused; close-phase lints before committing'
+  scope: generic
+  reason: After the experiment, from its conclusions (priority 1; notes 7, 30, 47); does not change its measured result
+- change: query-checks entries declare evidence (invariant or independent), the lifecycle binds each question to its own
+    entry and records the level, keys and bounds assertions, and the publication gate refuses a reference reviewer who approved
+    the requirements
+  scope: generic
+  reason: After the experiment, from its conclusions (priority 2; notes 8, 18, 25, 29, 31, 32); the three questions were
+    revalidated at the technical level
+- change: quality examples break every constraint of each rule and assert the reported severity (malos, severidad); the
+    oil and gas correction has a checker with a broken-fixture test
+  scope: generic
+  reason: After the experiment, from its conclusions (priority 3; notes 26, 35, 37, 38, 48); no rule of either domain turned
+    out wrong
 result: null

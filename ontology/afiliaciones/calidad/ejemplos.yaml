@@ -4,6 +4,12 @@
 IdentificacionCompleta:
   bueno: 'e:id a afiliaciones:Identification ; afiliaciones:ofMention e:mencion ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:rule "R2: sigla única" ; afiliaciones:sourceText "El texto contiene la sigla «CONICET» y «Argentina»." ; prov:wasDerivedFrom fuente:crossref, fuente:ror .'
   malo: 'e:id a afiliaciones:Identification ; afiliaciones:ofMention e:mencion ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:rule "R2: sigla única" ; afiliaciones:sourceText "El texto contiene la sigla «CONICET» y «Argentina»." ; prov:wasDerivedFrom fuente:crossref .'
+  malos:
+    - 'e:id a afiliaciones:Identification ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:rule "R2: sigla única" ; afiliaciones:sourceText "El texto contiene la sigla «CONICET» y «Argentina»." ; prov:wasDerivedFrom fuente:crossref, fuente:ror .'
+    - 'e:id a afiliaciones:Identification ; afiliaciones:ofMention e:mencion ; afiliaciones:identifies <https://ror.org/03cqe8w59>, <https://ror.org/0081fs513> ; afiliaciones:rule "R2: sigla única" ; afiliaciones:sourceText "El texto contiene la sigla «CONICET» y «Argentina»." ; prov:wasDerivedFrom fuente:crossref, fuente:ror .'
+    - 'e:id a afiliaciones:Identification ; afiliaciones:ofMention e:mencion ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:rule " " ; afiliaciones:sourceText "El texto contiene la sigla «CONICET» y «Argentina»." ; prov:wasDerivedFrom fuente:crossref, fuente:ror .'
+    - 'e:id a afiliaciones:Identification ; afiliaciones:ofMention e:mencion ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:rule "R2: sigla única" ; afiliaciones:sourceText "" ; prov:wasDerivedFrom fuente:crossref, fuente:ror .'
+    - 'e:id a afiliaciones:Identification ; afiliaciones:ofMention e:mencion ; afiliaciones:identifies <https://ror.org/03cqe8w59> ; afiliaciones:rule "R2: sigla única" ; afiliaciones:sourceText "El texto contiene la sigla «CONICET» y «Argentina»." ; prov:wasDerivedFrom fuente:ror .'
 OrganizacionEnArgentina:
   bueno: 'e:id afiliaciones:identifies <https://ror.org/03cqe8w59> .
     <https://ror.org/03cqe8w59> afiliaciones:country "AR" .'
@@ -15,11 +21,15 @@ RegistroActivo:
   malo: 'e:id afiliaciones:identifies <https://ror.org/0425cyr19> .
     <https://ror.org/0425cyr19> afiliaciones:status "withdrawn" ; afiliaciones:successor <https://ror.org/03cqe8w59> .
     <https://ror.org/03cqe8w59> afiliaciones:name "National Scientific and Technical Research Council" .'
+  severidad: Warning   # a record that is not active is a warning; a missing status is a violation
+  malos:
+    - {caso: 'e:id afiliaciones:identifies <https://ror.org/0081fs513> .', severidad: Violation}
 DudosaDecidida:
   bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "reject" ; afiliaciones:decisionReason "La coincidencia es casual: el texto nombra un lugar fuera de Argentina." ; afiliaciones:humanConfirmation "pending" .'
   malo: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "quizás" .'
 ConfirmadaPorPersona:
   bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate .'
+  severidad: Info   # it marks what is pending; it does not block answers
   malo: '<https://w3id.org/rastro/afiliaciones/doubtful/10.1002%2Falr.70038/8/0/https%3A%2F%2Fror.org%2F03e47dk66> a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "reject" ; afiliaciones:humanConfirmation "pending" .'
 MencionCompleta:
   bueno: 'e:mencion a afiliaciones:AffiliationMention ; afiliaciones:inPublication <https://doi.org/10.1001/jamaneurol.2025.0023> ; afiliaciones:affiliationText "Department of Neurology, Fleni, Buenos Aires, Argentina" .'

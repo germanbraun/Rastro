@@ -1,16 +1,19 @@
 # Executable checks for the oil and gas competency queries (python layer/method.py verify energia --expectations ...).
 # Expected values come from the sources as they come, recomputed with SQL over the raw tables (no Rastro link,
 # mapping or rule), or from the query's own definition. They are never copied from a query's output. Row bounds are
-# smoke checks (the contract: a count bound is an invariant, not evidence of accuracy); the full value checks are
-# cq2, cq13 and cq15's row count. Raw evidence measured on 2026-10-26 with the loads of 20–21/10/2026.
+# smoke checks (the contract: a count bound is an invariant, not evidence of accuracy). «evidence» says which: cq2
+# and cq13 are full checks against the raw tables (independent); the rest are invariants. Raw evidence measured on
+# 2026-10-26 with the loads of 20–21/10/2026.
 cq1.rq:
   query_sha256: 3d75fddedf32110245b320585336598845c18a32e3e27a6d85a4d8b2f3e22906
   columns: [company, share, gasShare, operated]
+  evidence: invariant
   # LIMIT 10, and the map's partner texts (sig_energia.concesion.participacion) name 104 different partners.
   rows: 10
 cq2.rq:
   query_sha256: 04828c39164febf95b56aa6e137331a02095f5e041e1928a8e0cc2414570e620
   columns: [type, wells, disagree]
+  evidence: independent
   # Recomputed from capitulo4 alone: each well's last declaration names YPF (empresa ILIKE 'YPF%'), grouped by that
   # declaration's tipopozo; «disagree» counts the wells whose registry (capitulo4.pozo) names a company that is not YPF.
   values:
@@ -24,65 +27,76 @@ cq2.rq:
 cq3.rq:
   query_sha256: 0f57824bfc6b6e35f0f188b6202ec0bbefe4d1d87d2e968e5a3396de281e96dc
   columns: [concession, operator, detected, declared]
+  evidence: invariant
   # LIMIT 10; the satellite layer has detections since 2024 (6,256 in Neuquén alone), placed only by Rastro.
   min_rows: 1
   max_rows: 10
 cq4.rq:
   query_sha256: f24a428ab5a2278e3b326108919b285949344e0b2900e24d487d1e71a2ec8b45
   columns: [company, unconventionalOil]
+  evidence: invariant
   # LIMIT 10, and 30 declaring companies report unconventional oil in capitulo4.produccion (fewer once their
   # names are joined, still more than 10).
   rows: 10
 cq5.rq:
   query_sha256: cfecc92e5ec79769be5a8d29ad0461b33f0a251eff8db20bfc157b929bb0ec4f
   columns: [concession, operator, detected, distanceKm, pipeline]
+  evidence: invariant
   # LIMIT 10; the distance to a pipeline is computed by Rastro (the database has no PostGIS), so only bounds.
   min_rows: 1
   max_rows: 10
 cq6.rq:
   query_sha256: 8ff047662b22c89117395c98c3277534599f966944a411fe660a0b35ac540bfb
   columns: [concession, operator, place, detected]
+  evidence: invariant
   # LIMIT 10; placing a detection in a protected area or near a town is Rastro's computation, so only bounds.
   min_rows: 1
   max_rows: 10
 cq7.rq:
   query_sha256: 1eb088bee5e89c46976e1fcdcc5fffd5e138572f592ea314dbe8e9652e48c357
   columns: [company, lei, operated]
+  evidence: invariant
   # At most one row per company searched in GLEIF (gleif_energia.candidato: 13 names searched).
   min_rows: 1
   max_rows: 13
 cq8.rq:
   query_sha256: f71a6efd91ceb09647b6a70858e41202191a9360f30c46dff5e5b4b35b87591a
   columns: [concession, operator, why]
+  evidence: invariant
   # One row per concession to review; the concessions map has 300.
   min_rows: 1
   max_rows: 300
 cq9.rq:
   query_sha256: 6b2c8ff9be649adcf6aa5a38bba37af4a9accfd4121ed764d656303a6dd021dd
   columns: [concession, since, previous, new, oilBefore, oilAfter, gasBefore, gasAfter]
+  evidence: invariant
   # Operator changes by area; capitulo4.produccion_historica declares 375 areas.
   min_rows: 1
   max_rows: 375
 cq10.rq:
   query_sha256: dfc820858cdf6eea63c0e7dd4dd1fc0e169b168d8e9eb4edc175e1c21d9e148a
   columns: [company, shaleGas, shaleOil]
+  evidence: invariant
   # LIMIT 10, and 25 declaring companies report shale gas in capitulo4.produccion.
   rows: 10
 cq11.rq:
   query_sha256: e59eeda83b2d7f027c55abd0bb706073c537b1a12bbee769474581ae8d854d6d
   columns: [pozo, concesion, gasEsperado, dato, regla]
+  evidence: invariant
   # The reviewed corrections exist (linking/energia/participaciones-revisadas.csv, correcciones.csv); which
   # predictions use them is the model's, so only a lower bound.
   min_rows: 1
 cq12.rq:
   query_sha256: 4fb7938175f8c278058061793a9cea068cbe9b4a720c417971102814f7e85655
   columns: [pozo, gasEsperado, desde, hasta, concesionYOperadora, fractura, profundidad]
+  evidence: invariant
   # LIMIT 10 over the current run's 2025 predictions.
   min_rows: 1
   max_rows: 10
 cq13.rq:
   query_sha256: 5f4d52ed89270a13d5a48682f755ffbc1d854c9b86b3c5d5771f0b610e63425c
   columns: [registro, cual, fecha, valor, cargado]
+  evidence: independent
   # Recomputed from the raw tables: well 166133 has one fracture report in fractura.fractura (4703, started
   # 2023-10-20, 18 stages, loaded 2025-01-14), and the model's target months 2 to 7 are capitulo4.produccion months
   # 2..7 of 2025, sum(prod_gas) / 1000 in millions of m³.
@@ -97,10 +111,12 @@ cq13.rq:
 cq14.rq:
   query_sha256: 4612e18a45fc533f3bd09765738e9381da7dfc9d8d3b62ba7a308f0717054193
   columns: [pozo, gasEsperado, dePrueba, queHacer]
+  evidence: invariant
   # Fracture report 4703 belongs to exactly one well in fractura.fractura (166133), which started in 2025.
   rows: 1
 cq15.rq:
   query_sha256: 34f55d7f6342d0a6f654b9851d40c045f2b71b86e65bc7698692623d21048fe9
   columns: [empresa, bolsa, sede, consultado, wikidata]
+  evidence: invariant
   # The saved Wikidata answer (wikidata_energia.empresa) lists a stock exchange for 2 companies.
   rows: 2

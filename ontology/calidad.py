@@ -105,7 +105,33 @@ def example_graph(config, text):
     return graph.parse(data=prefixes + "\n" + text, format="turtle")
 
 
+def broken_cases(example):
+    """A rule's broken examples: «malo» (the one the app shows) and the ones in «malos». Each is a Turtle string, or
+    {caso, severidad} when it must report another severity; «severidad» next to «malo» sets the rule's default."""
+    cases = [example["malo"], *example.get("malos", [])]
+    return [case if isinstance(case, dict) else {"caso": case} for case in cases]
+
+
+def constraints(graph, shape):
+    """What a rule checks, one entry per sh:property or sh:sparql block (the shape itself if it has neither)."""
+    found = set(graph.objects(shape, SH.property)) | set(graph.objects(shape, SH.sparql))
+    return found or {shape}
+
+
+def violated(report, shape):
+    """The constraints a validation report says failed, and the severities it reported."""
+    keys, severities = set(), set()
+    for result in report.subjects(RDF.type, SH.ValidationResult):
+        source = report.value(result, SH.sourceShape)
+        keys.add(report.value(result, SH.sourceConstraint) if source == shape and
+                 report.value(result, SH.sourceConstraint) is not None else source)
+        severities.add(str(report.value(result, SH.resultSeverity)).rsplit("#", 1)[-1])
+    return keys, severities
+
+
 def check_examples(config):
+    """Every rule passes its good example, and its broken examples fail every constraint it has (one broken case per
+    sh:property or sh:sparql block at least), each with the severity the case declares (Violation by default)."""
     examples = yaml.safe_load(config.examples.read_text()) or {}
     shapes = list(bloques(config))
     ids = {str(shape).rsplit("#", 1)[-1].rsplit("/", 1)[-1].rsplit(":", 1)[-1] for shape, _ in shapes}
@@ -113,13 +139,27 @@ def check_examples(config):
         raise ValueError(f"{config.domain}: examples must cover exactly every shape")
     for shape, graph in shapes:
         name = str(shape).rsplit("#", 1)[-1].rsplit("/", 1)[-1].rsplit(":", 1)[-1]
-        for key, expected in (("bueno", True), ("malo", False)):
-            sample = example_graph(config, examples[name][key])
+        sample = example_graph(config, examples[name]["bueno"])
+        if not blancos(sample, graph, shape):
+            raise ValueError(f"{name}: bueno example has no target nodes")
+        if not validate(sample, shacl_graph=graph, advanced=True)[0]:
+            raise ValueError(f"{name}: bueno example did not conform")
+        covered = set()
+        for n, case in enumerate(broken_cases(examples[name]), 1):
+            sample = example_graph(config, case["caso"])
             if not blancos(sample, graph, shape):
-                raise ValueError(f"{name}: {key} example has no target nodes")
-            conforms, _, _ = validate(sample, shacl_graph=graph, advanced=True)
-            if conforms != expected:
-                raise ValueError(f"{name}: {key} example did not produce expected conformance")
+                raise ValueError(f"{name}: broken example {n} has no target nodes")
+            conforms, report, _ = validate(sample, shacl_graph=graph, advanced=True)
+            if conforms:
+                raise ValueError(f"{name}: broken example {n} conformed")
+            keys, severities = violated(report, shape)
+            expected = case.get("severidad", examples[name].get("severidad", "Violation"))
+            if severities != {expected}:
+                raise ValueError(f"{name}: broken example {n} reported {sorted(severities)}, expected {expected}")
+            covered |= keys
+        missing = constraints(graph, shape) - covered
+        if missing:
+            raise ValueError(f"{name}: {len(missing)} of its constraints have no broken example")
     return len(shapes)
 
 

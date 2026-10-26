@@ -62,7 +62,11 @@ Below, `<domain>` is the registry entry, `<prefix>:` its prefix and `<port>` its
 5. **If it needs new data,** load it first (skill `add-source`), then add its mapping (with `rr:datatype` if the column comes from a `GROUP BY` or `DISTINCT`) and restart the domain's Ontop (`docker compose restart <method.ontop.service>`).
 6. **Validate:** `docker compose run --rm ontology-check` returns OK, and the query against Ontop gives an answer that makes sense to someone from the business:
    `curl --fail-with-body --show-error -H 'Accept: text/csv' --data-urlencode "query@<method.queries>cq<N>.rq" http://localhost:<port>/sparql`
-   Then add fingerprinted assertions to `layer/<domain>/query-checks.yaml` and run the executable gate in `verify`. HTTP success alone is insufficient.
+   Then add fingerprinted assertions to `layer/<domain>/query-checks.yaml`, with their `evidence` (`invariant` or
+   `independent`), and run the executable gate in `verify`. HTTP success alone is insufficient. Name the level when
+   you report: technical validation (invariants) is not accuracy validation (independent references). Keep what
+   Rastro counts (the system's definition) apart from what a blind reviewer checks (the reference's); if the business
+   reading changes, re-propose and re-approve the requirement, never only a note in a discussion.
 7. **If it goes to the app,** add it to `preguntas` in `app/dominios/<domain>.yaml` (simple question, technical wording and, if possible, «¿Por qué este número?» (Why this number?)). If it goes to the evaluation, follow the skill `evaluate`. If it touches values the source can get wrong, the skill `quality-rules`.
 8. **If it is for a predictive model** (Rastro Lab), use only data known at prediction time: nothing that arrived after the case started (see the skill `rastro-lab`).
 

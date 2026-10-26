@@ -1,7 +1,8 @@
 """Executable gates for the Rastro method. Run from the repository root.
 
 registry [domain], verify domain --expectations FILE, publication domain,
-experiment domain --init|--check. Missing evidence is pending, never a pass.
+experiment domain --init|--lint|--check|--start STEP|--stop STEP --work TEXT|--append KIND --field KEY=VALUE...
+The experiment log is written by these commands, never by hand. Missing evidence is pending, never a pass.
 """
 import argparse
 import csv
@@ -75,8 +76,13 @@ def registry_errors(registry, root=ROOT):
     return errors
 
 
-def check_csv(text, spec):
-    """Validate CSV shape and explicit assertions, including deliberately empty answers."""
+EVIDENCE = {"invariant": "technical", "independent": "independent"}   # what an entry's expectations rest on
+
+
+def check_csv(text, spec, root=ROOT):
+    """Validate CSV shape and explicit assertions, including deliberately empty answers. «keys» compares the rows'
+    key columns with a list derived from the sources: the same set, without repeats unless «repeats: true» (a key
+    with several answer rows); «bounds» holds every row."""
     reader = csv.DictReader(io.StringIO(text))
     if not reader.fieldnames or len(set(reader.fieldnames)) != len(reader.fieldnames):
         raise ValueError("Missing or duplicate CSV headers")
@@ -86,7 +92,7 @@ def check_csv(text, spec):
     rows = list(reader)
     if any(None in row or any(v is None for v in row.values()) for row in rows):
         raise ValueError("Malformed CSV rows")
-    assertions = set(spec) & {"rows", "min_rows", "max_rows", "values", "number"}
+    assertions = set(spec) & {"rows", "min_rows", "max_rows", "values", "number", "keys", "bounds"}
     if not assertions:
         raise ValueError("At least one explicit answer assertion is required")
     for key, ok in (("rows", len(rows) == spec.get("rows")),
@@ -99,6 +105,21 @@ def check_csv(text, spec):
         expected = sorted(tuple(str(v) for v in row) for row in spec["values"])
         if actual != expected:
             raise ValueError("Answer values differ (including duplicate counts)")
+    if "keys" in spec:
+        key_columns = spec["keys"]["columns"]
+        actual = [tuple(row[c] for c in key_columns) for row in rows]
+        with local(spec["keys"]["file"], root).open(encoding="utf-8") as source:
+            expected = {tuple(row[c] for c in key_columns) for row in csv.DictReader(source)}
+        if len(actual) != len(set(actual)) and not spec["keys"].get("repeats"):
+            raise ValueError("keys assertion failed: repeated keys")
+        if set(actual) != expected:
+            raise ValueError(f"keys assertion failed: {len(expected - set(actual))} missing, "
+                             f"{len(set(actual) - expected)} unexpected")
+    for column, limits in spec.get("bounds", {}).items():
+        for row in rows:
+            value = float(row[column]) if row[column] != "" else math.nan
+            if not math.isfinite(value) or not (limits.get("min", -math.inf) <= value <= limits.get("max", math.inf)):
+                raise ValueError(f"bounds assertion failed: {column}={row[column]!r}")
     if "number" in spec:
         number = spec["number"]
         if len(rows) != 1:
@@ -121,13 +142,15 @@ def verify_queries(cfg, expectations, root=ROOT, post=requests.post):
         spec = expectations[name]
         if spec.get("query_sha256") != digest(query):
             raise ValueError(f"{name}: missing or stale query fingerprint")
+        if spec.get("evidence") not in EVIDENCE:
+            raise ValueError(f"{name}: declare evidence: invariant (technical checks) or independent (references)")
         response = post(f"http://localhost:{port}/sparql", data={"query": query.read_text()},
                         headers={"Accept": "text/csv"}, timeout=60)
         response.raise_for_status()
         if response.headers.get("Content-Type", "").split(";")[0].strip().lower() != "text/csv":
             raise ValueError(f"{name}: endpoint did not return CSV")
-        count = check_csv(response.text, spec)
-        print(f"{name}: passed ({count} data rows)")
+        count = check_csv(response.text, spec, root)
+        print(f"{name}: passed ({count} data rows; {EVIDENCE[spec['evidence']]} validation)")
 
 
 def publication_errors(cfg, root=ROOT):
@@ -173,6 +196,17 @@ def publication_errors(cfg, root=ROOT):
             if entry is None or question_status(entry, cfg, root) != "validated":
                 errors.append(f"{qid}: lifecycle validation is pending or stale")
     evidence = data.get("references", {})
+    # Two roles: the business owner approves requirements, the reference reviewer provides evidence. One person
+    # cannot stand in for the other.
+    owners = set()
+    if lifecycle:
+        for entry in state["questions"].values():
+            approval = local(entry["approval"]["path"], root) if entry.get("approval") else None
+            if approval and approval.is_file():
+                owners.add((yaml.safe_load(approval.read_text()) or {}).get("reviewer"))
+    for qid, item in evidence.items():
+        if item.get("reviewer") and item["reviewer"] in owners:
+            errors.append(f"{qid}: the reference reviewer is the business owner who approved the requirements")
     if set(evidence) != qids:
         errors.append("Independent evidence must cover every question, including agreement cases")
     for qid in qids:
@@ -234,7 +268,14 @@ def main():
     parser.add_argument("domain", nargs="?")
     parser.add_argument("--expectations", type=Path)
     parser.add_argument("--init", action="store_true")
-    parser.add_argument("--check", action="store_true")
+    parser.add_argument("--check", action="store_true", help="closing gate: complete, and the log lints")
+    parser.add_argument("--lint", action="store_true", help="the log's structure, at any time")
+    parser.add_argument("--start", metavar="STEP", help="open a session in a step")
+    parser.add_argument("--stop", metavar="STEP", help="close the open session of a step")
+    parser.add_argument("--work", default="", help="what the closing session did")
+    parser.add_argument("--at", help="ISO time instead of now (say «approximate» in --work)")
+    parser.add_argument("--append", choices=["intervention", "error", "method-change"])
+    parser.add_argument("--field", action="append", default=[], metavar="KEY=VALUE")
     args = parser.parse_args()
     registry = yaml.safe_load((ROOT / "layer/dominios.yaml").read_text())
     if args.domain and args.domain not in registry:
@@ -267,9 +308,29 @@ def main():
                 yaml.safe_dump(data, out, sort_keys=False)
             print(f"Created pending log: {path}")
             return
-        errors = experiment_errors(yaml.safe_load(path.read_text()) or {})
-        from lifecycle import validation_errors
-        errors.extend(validation_errors(cfg, ROOT))
+        import experiment_log
+        data = experiment_log.load(path)   # refuses duplicate keys
+        if args.start or args.stop or args.append:
+            if args.start:
+                experiment_log.start(data, args.start, args.at)
+            if args.stop:
+                experiment_log.stop(data, args.stop, args.work, args.at)
+            if args.append:
+                fields = dict(item.split("=", 1) for item in args.field)
+                if "minutes" in fields:
+                    fields["minutes"] = None if fields["minutes"] in ("", "null") else float(fields["minutes"])
+                experiment_log.append(data, args.append, fields)
+            errors = experiment_log.lint_errors(data)
+            if errors:
+                raise ValueError("\n".join(errors))
+            experiment_log.save(path, data)
+            print(f"Recorded in {path.relative_to(ROOT)}")
+            return
+        errors = experiment_log.lint_errors(data, closing=args.check)
+        if args.check:
+            errors += experiment_errors(data)
+            from lifecycle import validation_errors
+            errors.extend(validation_errors(cfg, ROOT))
     if errors:
         raise ValueError("\n".join(errors))
     print(f"{args.command}: passed")

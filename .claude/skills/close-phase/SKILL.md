@@ -18,7 +18,9 @@ For a new domain, run `start-domain` first. Record measured time, interventions 
 
 ## Steps
 
-1. **Experiment evidence:** for a new-domain experiment run `python layer/method.py experiment <domain> --check`.
+1. **Experiment evidence:** the log is written by commands (`--start`, `--stop`, `--append`; see the contracts), never
+   by hand. Run `python layer/method.py experiment <domain> --lint` before every commit that touches it, and do not
+   commit if it fails. To close a new-domain experiment, run `python layer/method.py experiment <domain> --check`.
    Verify measured agent/person time, interventions, errors caught, method changes, version and outcomes. Missing
    evidence blocks claiming a completed experiment. Legacy maintenance uses decisions.md without invented history.
    Confirm business approvals and quality-defect dispositions; routine technical checks need no extra approval.

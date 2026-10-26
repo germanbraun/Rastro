@@ -12,7 +12,20 @@ Use `start-domain` before the first question. Record each question's state along
 | proposed | Business wording, scope, answer type, proposed definitions, uncertainties | A person decides business meaning |
 | approved | Approved definitions and scope, reviewer and date; expected answer or an independent verification plan | `add-source`, then `map-source` and `link-entities` as needed |
 | implemented | Query using loaded data and declared terms; source and mapping versions | `verify` |
-| validated | Executed assertions, query fingerprint, date and output; approved reference evidence for published accuracy | `evaluate`, then `show-in-app` |
+| validated | Executed assertions, query fingerprint, date and output, and the level they rest on; approved reference evidence for published accuracy | `evaluate`, then `show-in-app` |
+
+**Two levels of validation.** A question validated against invariants of its approved definitions is **technically
+validated**: its query is well formed and covers what it must, but nobody has compared its answer with an independent
+reference. It is validated **with independent references** only when its expectations come from the sources without
+going through Rastro (SQL over the raw tables, a blind annotation). The level is declared in the expectations and
+recorded in the lifecycle; never read «validated» as «correct» without it. The app's technical view says which.
+
+**Two roles.** The business owner approves requirements and definitions. The reference reviewer provides the evidence
+the answers are compared with, blind to Rastro's links. One person or record cannot stand in for the other: the
+publication gate refuses a reference reviewer who approved the requirements. What Rastro counts (the system's
+definition) and what the reviewer checks (the reference's) are written separately in each requirement. A changed
+business reading always goes back into the requirement file and the lifecycle (re-propose, re-approve), never only
+into a discussion note.
 
 An approved question does not yet need a working query. Do not invent terms to satisfy the early stage. `add-question`
 returns an approved requirement first and resumes query implementation after its dependencies exist. Failed checks
@@ -35,8 +48,12 @@ passed. Current evaluations use `prompt`, `try`, `rerun`, `puntaje`; legacy onco
 not current-harness subcommands. Do not migrate historical measurements merely to verify them.
 
 `query-checks.yaml` has exactly one entry per competency query, named `cq<N>.rq`. Each has its `query_sha256`, exact
-ordered `columns`, and explicit assertions: `rows`, `min_rows`, `max_rows`, `values` (rows as lists), or
-`number: {column: ..., value: ..., relative_tolerance: ..., absolute_tolerance: ...}`. Multiple assertions all apply.
+ordered `columns`, its `evidence` (`invariant` for technical checks, `independent` when the expected values come from
+the sources without Rastro), and explicit assertions: `rows`, `min_rows`, `max_rows`, `values` (rows as lists),
+`number: {column: ..., value: ..., relative_tolerance: ..., absolute_tolerance: ...}`, `keys: {columns: [...], file:
+<repo-relative CSV derived from the sources>, repeats: true|false}` (the answer's key set equals the file's, without
+repeated keys unless allowed), or `bounds: {<column>: {min: ..., max: ...}}` (every row). Multiple assertions all
+apply. A question binds to its own entry: editing another query's entry does not invalidate it.
 `rows: 0` expresses a deliberately empty result. Numeric tolerances default to zero. Expected values come from
 independent evidence or approved business invariants, never copied from the response just to pass. A count bound is
 an invariant check, not evidence of answer accuracy. Missing or stale checks block validation.
@@ -44,6 +61,23 @@ an invariant check, not evidence of answer accuracy. Missing or stale checks blo
 The runner requires HTTP success and CSV content, parses data rows separately from headers, and exits nonzero on any
 failed assertion. Keep its output with the experiment evidence. It does not by itself validate the app or model.
 Run the app's examples in both views and the model's own consistency checks separately.
+
+## The experiment log
+
+`docs/experiments/<domain>.yaml` is written by commands, never by hand (four hand-editing errors in the affiliations
+experiment: a duplicate key, an unparseable file, an end written early, hours never updated):
+
+```bash
+python layer/method.py experiment <domain> --start <step> [--at <ISO time>]
+python layer/method.py experiment <domain> --stop <step> --work "what the session did" [--at <ISO time>]
+python layer/method.py experiment <domain> --append intervention|error|method-change --field key=value ...
+python layer/method.py experiment <domain> --lint     # at any time; close-phase runs it before committing
+python layer/method.py experiment <domain> --check    # closing: complete, and the log lints
+```
+
+A step's `agent_hours` is the sum of its sessions minus their pauses. The lint refuses duplicate keys, overlapping
+sessions, an end before its start, more than one open session (none when closing) and hours that differ from the
+sessions. A time given with `--at` after the fact says «approximate» in the session's work.
 
 ## Independent references and publication
 

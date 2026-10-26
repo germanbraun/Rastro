@@ -50,7 +50,8 @@ def test_query_gate_rejects_http_failure_and_stale_checks(tmp_path):
     query = tmp_path / "cq1.rq"
     query.write_text("SELECT ?answer WHERE {}")
     cfg = {"method": {"queries": ".", "ontop": {"port": 8082}}}
-    expectations = {"cq1.rq": {"query_sha256": method.digest(query), "columns": ["answer"], "rows": 0}}
+    expectations = {"cq1.rq": {"query_sha256": method.digest(query), "columns": ["answer"], "rows": 0,
+                               "evidence": "invariant"}}
 
     def post(*args, **kwargs):
         response = requests.Response()
@@ -131,3 +132,33 @@ def test_publication_rejects_a_reviewed_answer_that_does_not_match_scoring(tmp_p
     manifest["references"]["q1"]["checked_answer"] = ["different"]
     path.write_text(yaml.safe_dump(manifest))
     assert any("differs from the scored reference" in e for e in method.publication_errors(cfg, tmp_path))
+
+
+def test_keys_and_bounds(tmp_path):
+    (tmp_path / "keys.csv").write_text("doi,pos\na,1\nb,2\n")
+    spec = {"columns": ["doi", "pos", "n"], "keys": {"columns": ["doi", "pos"], "file": "keys.csv"},
+            "bounds": {"n": {"min": 1, "max": 100}}}
+    assert method.check_csv("doi,pos,n\nb,2,5\na,1,100\n", spec, tmp_path) == 2
+    for body, error in [("doi,pos,n\na,1,5\n", "missing"), ("doi,pos,n\na,1,5\na,1,5\nb,2,5\n", "repeated"),
+                        ("doi,pos,n\na,1,5\nb,2,101\n", "bounds"), ("doi,pos,n\na,1,5\nb,2,\n", "bounds")]:
+        with pytest.raises(ValueError, match=error):
+            method.check_csv(body, spec, tmp_path)
+
+
+def test_every_expectation_declares_its_evidence(tmp_path):
+    query = tmp_path / "cq1.rq"
+    query.write_text("SELECT ?answer WHERE {}")
+    cfg = {"method": {"queries": ".", "ontop": {"port": 8082}}}
+    with pytest.raises(ValueError, match="declare evidence"):
+        method.verify_queries(cfg, {"cq1.rq": {"query_sha256": method.digest(query), "columns": ["answer"],
+                                               "rows": 0}}, tmp_path, None)
+
+
+def test_reference_reviewer_cannot_be_the_business_owner(tmp_path):
+    cfg, path, manifest = evidence_fixture(tmp_path)
+    (tmp_path / "approval.yaml").write_text(yaml.safe_dump({"reviewer": "test reviewer"}))
+    (tmp_path / "state.json").write_text(json.dumps({"questions": {
+        q: {"state": "validated", "proposal": {"path": "approval.yaml", "sha256": "x"},
+            "approval": {"path": "approval.yaml", "sha256": "x"}} for q in ("q1", "q2")}, "events": []}))
+    cfg["method"]["lifecycle"] = "state.json"
+    assert any("business owner" in e for e in method.publication_errors(cfg, tmp_path))

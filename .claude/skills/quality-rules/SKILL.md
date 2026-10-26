@@ -74,8 +74,11 @@ under the hood, with a real value from Rastro and a broken one.
 2. **Write the rule,** one block per rule, separated by a blank line (the app shows each block as is):
    `rdfs:label` in business words, `rdfs:comment` with why it matters and the common values, a target
    (`sh:targetClass`, `sh:targetSubjectsOf` or `sh:targetObjectsOf`) and `sh:message` in Spanish for each condition.
-3. **One good and one broken value** in the examples file. The broken one, if possible, the real case the rule found.
-   The tests (`tests/test_calidad.py`) check that the rule lets the good one pass and flags the broken one.
+3. **One good value, and broken values that break every constraint** in the examples file: `malo` (the one the app
+   shows; if possible, the real case the rule found) and `malos` for the rest, until each `sh:property` or `sh:sparql`
+   block fails at least once. Each broken case reports a severity: Violation by default, `severidad` next to `malo`
+   for the rule's default, or `{caso, severidad}` for one case. `--examples-only` fails on an uncovered constraint or
+   a different severity: one good and one broken example once passed while three rules were wrong.
 4. **If the rule looks at new data,** add its `CONSTRUCT` to the registered `method.quality.data` YAML file: only what the rule looks at. Do not change the generic Python runner.
 5. **Run and read:** the domain's `method.quality.run`; in the result file, for each rule, how many values it checked,
    the ones that fail (the first 10) and the affected predictions.
@@ -124,5 +127,11 @@ domain; the shared tests discover every domain with quality configuration and ex
 - **Affected predictions, only those of the current run:** Rastro keeps all published runs.
 - **What points to a value:** if the target is an object (`sh:targetObjectsOf`), the real example also shows the
   records that point to it.
+- **A check against a class that a range implies passes by construction:** if `rdfs:range` of a property makes Rastro
+  deduce the class, check the underlying value (a country, a status), not the class.
+- **Aggregate constraints need `HAVING`:** pySHACL pre-binds `$this`, so a `GROUP BY $this` without `HAVING` returns a
+  row (a failure) for an empty group. The good example is what catches it.
+- **The label says what the constraint tests:** a string comparison is not «una persona lo confirmó»; if the real check
+  needs data that does not exist yet, the rule says it only marks what is pending.
 
 Real cases, with their numbers: see `examples.md`.

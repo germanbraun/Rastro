@@ -27,8 +27,10 @@ Reuse its findings and actual approvals; a favorable inspection alone does not a
 3. Declare `method.lifecycle` (a JSON state file), `method.source_manifest` (a file recording source versions), and
    `method.app` for new domains. Use `layer/lifecycle.py` for every question handoff; update the source manifest when
    data changes, so prior validation receipts become stale. Do not synthesize human approval artifacts.
-4. Run `python layer/method.py experiment <domain> --init` before domain implementation. Record initialization time,
-   approvals and any framework changes as they occur. Never overwrite another experiment log.
+4. Run `python layer/method.py experiment <domain> --init` before your first commit (it records `git HEAD` as the
+   frozen method). From then on, record each working session with `--start <step>` and `--stop <step> --work "…"`,
+   and approvals, errors caught and method changes with `--append`, as they occur: the log is never edited by hand,
+   and step hours come from the sessions. Never overwrite another experiment log.
 5. Run `python layer/method.py registry <domain>`. Test the actual Ontop configuration: an empty mapping is not proof
    of a healthy service. If the runtime cannot start without mappings, record it as pending and build the first
    approved question's minimal implementation before claiming runtime readiness.

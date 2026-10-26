@@ -682,14 +682,14 @@ def validated_questions(cfg):
     registered = answer.DOMAINS[cfg["domain"]]
     if not registered.get("method", {}).get("lifecycle"):
         return cfg["preguntas"]
-    from lifecycle import question_status, read_state
+    from lifecycle import question_status, read_state, validation_level
     state = read_state(registered, answer.ROOT)
     result = []
     for question in cfg["preguntas"]:
         entry = state["questions"].get(question["id"])
         try:
             if entry and question_status(entry, registered, answer.ROOT) == "validated":
-                result.append(question)
+                result.append({**question, "nivel": validation_level(entry) or "technical"})
         except (FileNotFoundError, ValueError):
             continue  # Missing or changed inputs cannot retain validation.
     return result
@@ -773,6 +773,9 @@ def render(cfg_path, tech):
             item = options[chosen]
             if tech:
                 st.caption(idioma.t("dominio.render.tech_wording") + md(item["tecnica"]))
+                if item.get("nivel"):   # what «validated» rests on: invariants, or independent references
+                    st.caption(idioma.t("dominio.render.level_independent" if item["nivel"] == "independent"
+                                        else "dominio.render.level_technical"))
             if item.get("terminos"):
                 terms = glossary(item["terminos"])
                 with st.expander(idioma.t("dominio.render.terms", terms=", ".join(t for t, _ in terms))):

@@ -1188,3 +1188,23 @@ The user approved three compatibility adjustments after comparing the new journe
   terms of the three domains. The shale-gas term now says the sources declare thousands of m³ and Rastro shows
   millions.
 - **Why:** the user asked to continue with the pending clarity improvements.
+
+## 2026-10-26 — Method: a log written by commands, two levels of validation, rules tested per constraint
+
+Priorities 1 to 3 of the affiliations experiment's conclusions, approved by the user as planned. Recorded in that
+experiment's log as method changes made after it; they do not change its measured result.
+
+- **Experiment log by command** (`layer/experiment_log.py`, `method.py experiment --start/--stop/--append/--lint`):
+  hours come from the sessions; the lint refuses duplicate keys, overlaps, an end before its start, open sessions and
+  hours that differ from the intervals. `close-phase` lints before committing. The affiliations log was rewritten once
+  by the command; its parsed content is identical apart from the three new entries.
+- **Two levels of validation:** each `query-checks.yaml` entry declares `evidence: invariant | independent`; the
+  lifecycle binds a question to its own entry and records the level, and the technical view shows it. New
+  assertions: `keys` (affiliations' cq1 now proves it covers exactly the 1,456 source mentions) and `bounds` (cq2: each
+  organization in 1 to 100 publications). Oil and gas: cq2 and cq13 are `independent`, the other 13 `invariant`.
+  The three affiliations questions were revalidated (technical). The publication gate refuses a reference reviewer who
+  approved the requirements; the contracts name both roles.
+- **Rules tested per constraint:** quality examples now break every `sh:property` or `sh:sparql` block of each rule
+  and assert the reported severity. Oil and gas got 7 more broken cases, affiliations 6 and two declared severities
+  (Warning, Info); no rule of either domain turned out wrong. The oil and gas correction got a checker with exact
+  expectations (`correccion.py verificar`, run by `correccion.sh`) and a broken-fixture test; the recorded run passes.
