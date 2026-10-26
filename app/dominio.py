@@ -98,9 +98,16 @@ def run(query, domain):
 
 @st.cache_resource
 def warm_up():
-    """Warm-up: the first time someone opens the app, all the domains' example questions are computed
-    in the background, so the demo does not wait."""
+    """Warm-up: the first time someone opens the app, all the domains' example questions and the two Rastro Lab
+    models are computed in the background, so the demo does not wait."""
     import threading
+
+    def lab_work():   # the model takes the longest: it starts at once, next to the questions
+        try:
+            import lab
+            lab.datos()
+        except Exception:   # noqa: BLE001
+            pass
 
     def work():
         for config in sorted(p for p in Path("/app/dominios").glob("*.yaml") if not p.name.endswith(".en.yaml")):
@@ -114,12 +121,7 @@ def warm_up():
                         run(prefixed(why["query"].replace("{valor}", value), cfg["domain"]), cfg["domain"])
                 except Exception:   # noqa: BLE001 - a domain that is down does not stop the others
                     continue
-        try:   # and the two Rastro Lab models
-            import lab
-            lab.datos()
-        except Exception:   # noqa: BLE001
-            pass
-
+    threading.Thread(target=lab_work, daemon=True).start()
     threading.Thread(target=work, daemon=True).start()
     return True
 
@@ -166,12 +168,14 @@ def money(value):
 def as_table(columns, rows, cfg, tech, col_sources):
     """The answer as a table: columns with business names and readable numbers."""
     formats, names = cfg.get("formatos", {}), cfg.get("columnas", {})
+    decimals = {c: idioma.column_decimals([r[i] for r in rows], formats[c])
+                for i, c in enumerate(columns) if formats.get(c) in ("m3", "miles_m3")}
     data = []
     for row in rows:
         line = []
         for c, v in zip(columns, row):
             if v is not None and formats.get(c) in ("m3", "miles_m3"):   # volumes: millions of m³, exact if technical
-                v = money(v) if tech else idioma.millions(v, formats[c])
+                v = money(v) if tech else idioma.millions(v, formats[c], decimals=decimals[c])
             elif v is not None and formats.get(c) in ("dinero", "numero"):
                 v = money(v)
             elif v is not None and formats.get(c) == "porcentaje":
@@ -741,22 +745,6 @@ def render(cfg_path, tech):
     if example_tab:
         with tabs["example"], service_guard():
             show_integration_example(cfg["ejemplo_integracion"], domain, tech)
-    if cfg.get("lab"):
-        with tabs["lab"], service_guard():
-            import lab
-            import lab_alternative
-            # The experimental alternative models are a technical detail: the business view keeps the regression
-            choice = lab_alternative.select_model(cfg["alternative_lab"]) if cfg.get("alternative_lab") and tech else "ridge"
-            pozo = lab.select_well(cfg["ejemplo_lab"]) if cfg.get("ejemplo_lab") else None
-            if choice == "alternative":
-                lab_alternative.show_alternative(tech, pozo, cfg["alternative_lab"], cfg["ejemplo_lab"])
-            else:
-                if cfg.get("ejemplo_lab"):
-                    run_status = lab.show_run_status(pozo, cfg["ejemplo_lab"])
-                    with st.expander(cfg["ejemplo_lab"]["titulo"]):
-                        show_integration_example(cfg["ejemplo_lab"], domain, tech, key=f"{domain}_lab", pozo=pozo,
-                                                 run_id=run_status["run_id"])
-                lab.show_lab(tech, pozo=pozo)
     if tech:
         with tabs["hood"], service_guard():
             under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"), cfg.get("calidad"))
@@ -786,8 +774,9 @@ def render(cfg_path, tech):
             if tech:
                 st.caption(idioma.t("dominio.render.tech_wording") + md(item["tecnica"]))
             if item.get("terminos"):
-                with st.expander(idioma.t("dominio.render.terms", terms=", ".join(item["terminos"]))):
-                    st.markdown("\n".join(f"- **{md(t)}:** {md(m)}" for t, m in item["terminos"].items()))
+                terms = glossary(item["terminos"])
+                with st.expander(idioma.t("dominio.render.terms", terms=", ".join(t for t, _ in terms))):
+                    st.markdown("\n".join(f"- **{md(t)}:** {md(m)}" for t, m in terms))
             query = Path(item["query"]).read_text()
             if st.button(idioma.t("dominio.render.answer"), type="primary", key=f"{domain}_answer"):
                 st.session_state[f"{domain}_shown"] = (chosen, query, *run(query, domain))
@@ -827,6 +816,23 @@ def render(cfg_path, tech):
     if tech:
         with tabs["faq"]:
             domain_faq(cfg, tech)
+    # Rastro Lab last: the first time after a data change it trains the model, and the other tabs should not wait
+    if cfg.get("lab"):
+        with tabs["lab"], service_guard():
+            import lab
+            import lab_alternative
+            # The experimental alternative models are a technical detail: the business view keeps the regression
+            choice = lab_alternative.select_model(cfg["alternative_lab"]) if cfg.get("alternative_lab") and tech else "ridge"
+            pozo = lab.select_well(cfg["ejemplo_lab"]) if cfg.get("ejemplo_lab") else None
+            if choice == "alternative":
+                lab_alternative.show_alternative(tech, pozo, cfg["alternative_lab"], cfg["ejemplo_lab"])
+            else:
+                if cfg.get("ejemplo_lab"):
+                    run_status = lab.show_run_status(pozo, cfg["ejemplo_lab"])
+                    with st.expander(cfg["ejemplo_lab"]["titulo"]):
+                        show_integration_example(cfg["ejemplo_lab"], domain, tech, key=f"{domain}_lab", pozo=pozo,
+                                                 run_id=run_status["run_id"])
+                lab.show_lab(tech, pozo=pozo)
 
 
 @contextmanager
@@ -840,6 +846,12 @@ def service_guard():
         what = "database" if isinstance(error, psycopg.OperationalError) else "ontop"
         st.warning(idioma.t("dominio.service_down", what=idioma.t(f"dominio.service_down_{what}")))
         st.caption(idioma.t("dominio.service_down_admin"))
+
+
+def glossary(terms):
+    """(term, meaning) pairs. The Spanish file keys each meaning by its term; an English overlay may give an entry as
+    {term, text}, so the term itself is translated too."""
+    return [(m["term"], m["text"]) if isinstance(m, dict) else (t, m) for t, m in terms.items()]
 
 
 def domain_faq(cfg, tech):
@@ -919,9 +931,10 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
         # «numeros» lists the numbers, or maps each volume to its unit (m3, miles_m3) to show it in millions of m³
         numbers = why.get("numeros", ["parte"])
         units = numbers if isinstance(numbers, dict) else {}
+        decimals = {k: idioma.column_decimals([r.get(k) for r in records], unit) for k, unit in units.items()}
 
         def display(k, v):
-            return idioma.millions(v, units[k]) if k in units else money(v)
+            return idioma.millions(v, units[k], decimals=decimals[k]) if k in units else money(v)
 
         def fmt(record, template):
             return template.format(**{k: (display(k, v) if k in numbers and v not in (None, "") else (v or "—"))
@@ -1387,20 +1400,10 @@ def trust(cfg, tech, evaluation, changes):
         show_quality(cfg.get("calidad"))
         show_no_data(cfg.get("fuera"), tech)
         return
-    totals = evaluation.get("totals", {})
-    consistency = evaluation.get("consistency", {})
-    broken = max((sum(n for s, n in changes.get(c["antes"], {}).get("totals", {}).get("B", {}).items() if s not in ("✅", "—"))
-                  for c in cfg.get("cambios", [])), default=0)
-    numbers = {"c_consistent": totals.get("C", {}).get("consistent", "—"),
-               "b_consistent": totals.get("B", {}).get("consistent", "—"),
-               "n_consistency": len(consistency), "b_broken": broken,
-               "c_correct": totals.get("C", {}).get("correct", "—"), "b_correct": totals.get("B", {}).get("correct", "—"),
-               "n_questions": len(evaluation.get("questions", {}))}
+    totals, consistency = evaluation.get("totals", {}), evaluation.get("consistency", {})
     evidence = read_json(cfg["evidencia"]) if cfg.get("evidencia") and Path(cfg["evidencia"]).exists() else {}
-    if evidence:
-        numbers.update(pct_evidencia=f"{100 * evidence['enlaces_con_evidencia'] / evidence['enlaces']:.0f} %",
-                       n_enlaces=money(evidence["enlaces"]), cols=evidence["columnas"], cols_ok=evidence["columnas_con_fuente"])
-    else:
+    numbers = contraste.trust_numbers(cfg, evaluation, changes, evidence, money)   # the slides read the same numbers
+    if not evidence:
         numbers.update(pct_evidencia=idioma.t("dominio.trust.yes"), n_enlaces=idioma.t("dominio.trust.all_links"),
                        cols=idioma.t("dominio.trust.the_columns"), cols_ok=idioma.t("dominio.trust.all_columns"))
     st.markdown(idioma.t("dominio.trust.title"), help=ayuda("confiar"))

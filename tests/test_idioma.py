@@ -22,6 +22,8 @@ def placeholders(text):
 
 def walk(spanish, english, path="$"):
     """Yield problems where the English overlay does not fit the Spanish structure."""
+    if isinstance(english, dict) and isinstance(spanish, str) and set(english) == {"term", "text"}:
+        return   # a glossary entry that translates its term too (dominio.glossary)
     if isinstance(english, dict):
         if not isinstance(spanish, dict):
             yield f"{path}: English has a dictionary where Spanish has {type(spanish).__name__}"
@@ -77,3 +79,11 @@ def test_every_text_key_has_spanish_and_matching_placeholders():
         assert entry.get("es"), f"{key}: no Spanish"
         if entry.get("en"):
             assert placeholders(entry["en"]) == placeholders(entry["es"]), f"{key}: placeholders differ"
+
+
+def test_a_volume_column_shares_its_decimals():
+    column = [15_850_377, 3_994_269, 41_000]   # m³: 15,9 sets one decimal for the whole column
+    decimals = idioma.column_decimals(column)
+    assert [idioma.millions(v, "m3", "es", decimals) for v in column] == ["15,9", "4,0", "0,0"]
+    assert idioma.millions(12_301_226, "miles_m3", "en") == "12,301.2"
+    assert idioma.column_decimals([None, ""]) == 1

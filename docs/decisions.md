@@ -1173,3 +1173,18 @@ The user approved three compatibility adjustments after comparing the new journe
   with the command for whoever runs the demo, and the rest of the screen keeps working (answers already saved on
   disk still show). Checked by stopping the oil and gas Ontop.
 - **Why:** the user approved these three items after the clarity review.
+
+## 2026-10-26 — Aligned volume columns, Lab prepared first and drawn last, trust slide and English glossary
+
+- **Volumes:** a column of millions of m³ uses the decimals of its largest value (15,9 · 4,0 instead of 15,9 · 3,99).
+- **Rastro Lab's first load:** the warm-up trains the model in its own thread as soon as the app starts, the waiting
+  message says what happens and how long it takes, and the Lab tab is drawn last, so «Preguntar» and «Por qué
+  confiar» no longer wait for the model after a data change.
+- **The «Por qué confiar» slide reads the app's numbers:** `contraste.trust_numbers` computes them for the app and
+  for `numeros/energia.json` (`{{energia.confiar.*}}`). «79 en lugar de 12,6» became «un número equivocado»: no
+  file holds that figure directly. Other slides still type figures (the gas answer, the Lab error, quality counts,
+  the Wikidata table); they are the next candidates.
+- **English glossary:** an overlay entry may be `{term, text}`, so «Participación» reads «Share» in English; all 28
+  terms of the three domains. The shale-gas term now says the sources declare thousands of m³ and Rastro shows
+  millions.
+- **Why:** the user asked to continue with the pending clarity improvements.

@@ -1,4 +1,18 @@
 {
+ "confiar": {
+  "c_consistent": "5",
+  "b_consistent": "3",
+  "n_consistency": "5",
+  "b_broken": "3",
+  "c_correct": "10",
+  "b_correct": "7",
+  "d_correct": "10",
+  "n_questions": "10",
+  "pct_evidencia": "100 %",
+  "n_enlaces": "107.841",
+  "cols": "65",
+  "cols_ok": "65"
+ },
  "e01": {
   "ypf_sin": "21,4",
   "ypf_con": "12,6",

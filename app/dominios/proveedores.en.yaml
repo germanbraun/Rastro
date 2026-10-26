@@ -85,7 +85,7 @@ preguntas:
     tecnica: What is the total of the contracts of the Leidos corporate group, counting all its companies?
     ventaja: "The group builds itself. USAspending splits Leidos across 13 different parent companies; Rastro joins them with the ultimate parent company recorded by GLEIF and, for the acquisitions no source records (Dynetics, QTC, Gibbs & Cox), with a reviewed correction."
     terminos:
-      Grupo: the parent company and all its subsidiaries (corporate group).
+      Grupo: {term: "Corporate group", text: "the parent company and all its subsidiaries."}
     antes_despues:
       sin: {valor: "US$ 56.4 billion", detalle: "A search by the name «Leidos» leaves out companies of the group with another legal name (QTC, Dynetics, Gibbs & Cox and 1901 Group: US$ 7.7 billion) and includes a joint venture outside the group."}
       con: {valor: "US$ 63.4 billion", detalle: "30 companies: the 13 «parent companies» in the contracts database, consolidated into one group, with the evidence for each link."}
@@ -106,8 +106,8 @@ preguntas:
     tecnica: Which corporate group does «Science Applications International Corporation» belong to, and why?
     ventaja: The confusing name is resolved once. In 2013 the old SAIC was renamed Leidos and a new company took the name SAIC. Rastro does not add today's SAIC contracts to Leidos, and the evidence says why.
     terminos:
-      UEI: the number with which each company registers to sell to the US government.
-      LEI: the global company identifier (GLEIF), the same all over the world.
+      UEI: {term: "UEI", text: "the number with which each company registers to sell to the US government."}
+      LEI: {term: "LEI", text: "the global company identifier (GLEIF), the same all over the world."}
     antes_despues:
       sin: {valor: "Leidos: US$ 97.8 billion", detalle: "With another wording of the question, the SQL query followed historical parent companies and attributed US$ 41.4 billion of today's SAIC to Leidos."}
       con: {valor: "Leidos: US$ 63.4 billion", detalle: "SAIC is assigned to its own group by its current legal name. Leidos matches only its former name and is explicitly discarded."}
@@ -128,7 +128,7 @@ preguntas:
     tecnica: Which are the 5 corporate groups with the most contracts in IT services, including their subsectors?
     ventaja: «IT services» includes all its subsectors on its own, and each contract is added to its corporate group.
     terminos:
-      Servicios informáticos: sector 5415 of the NAICS classification (systems design, custom programming, computer facilities management…) (IT services).
+      Servicios informáticos: {term: "IT services", text: "sector 5415 of the NAICS classification (systems design, custom programming, computer facilities management…)."}
     evidencia:
       texto: "«IT services» includes these sectors:"
 
@@ -160,7 +160,7 @@ preguntas:
     tecnica: Which suppliers have their ultimate parent company outside the US?
     ventaja: «Foreign parent company» is defined once and several questions use it; the LEI joins USAspending with GLEIF.
     terminos:
-      Matriz final: the company at the very top of the corporate group, according to GLEIF (ultimate parent company).
+      Matriz final: {term: "Ultimate parent", text: "the company at the very top of the corporate group, according to GLEIF."}
     evidencia:
       texto: "How Rastro knows where the ultimate parent company is (some examples):"
 
@@ -178,7 +178,7 @@ preguntas:
     tecnica: Does any supplier, or its corporate group, appear on a government screening list?
     ventaja: Each match says which name matched and with which rule, so that compliance can review it in a minute.
     terminos:
-      Lista de control: the US government's sanctions and restrictions lists (OFAC, Commerce, State) (screening list).
+      Lista de control: {term: "Screening list", text: "the US government's sanctions and restrictions lists (OFAC, Commerce, State)."}
     evidencia:
       texto: "What each source says, side by side:"
 
@@ -221,7 +221,7 @@ preguntas:
     tecnica: How much does each agency contract with suppliers to review?
     ventaja: «Supplier to review» is a business rule written once in the dictionary; Rastro applies it on its own.
     terminos:
-      Proveedor para revisar: its parent company is outside the US or its name matches a screening list (supplier to review).
+      Proveedor para revisar: {term: "Supplier to review", text: "its parent company is outside the US or its name matches a screening list."}
 
 tarjetas:
   - titulo: The same question, the same answer

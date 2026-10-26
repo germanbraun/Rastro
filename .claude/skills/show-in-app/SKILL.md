@@ -41,7 +41,7 @@ The first screen says what Rastro is and how to read each screen (question → a
 | Why this number | For a row of the answer, the records and evidence behind it | `preguntas[].porque` (a query with `{valor}`; `numeros` lists its numbers, or maps each volume to its unit) |
 | Link status | One mark per link in every table with a `regla` column: 🔹 automatic rule, 🟠 reviewed by AI and a person must confirm, ✅ confirmed by a person with a document | derived from the rule and evidence (`app/enlaces.py`); nothing to configure |
 | Where the answer comes from | The sources used, what Rastro added, a sample of the evidence | `preguntas[].ventaja`, `evidencia`, `definicion` |
-| Glossary | The business terms of the question | `preguntas[].terminos` |
+| Glossary | The business terms of the question | `preguntas[].terminos` (an English overlay gives an entry as `{term, text}` to translate the term too) |
 | Before and after | The same question without and with Rastro, its numbers read now, with each source's latest load date | `preguntas[].antes_despues`: `valores` (one-row `sql` over the sources as they come, or `sparql`), `calculos`, `decimales`, `fuentes`; texts name the values in braces (`app/contraste.py`, which also exports them for the slides) |
 | What can be trusted | Cards with the measured numbers, each with one status line (when it was measured; references confirmed by a person or not, decided by the publication gate); the change test; quality rules; what happens when data is missing | `tarjetas` (filled from `evaluacion`, `cambio`, `evidencia`), `cambios`, `calidad`, `fuera` |
 | Guided demo | A few moments, one sentence each | `demo`, `demo_porque` |

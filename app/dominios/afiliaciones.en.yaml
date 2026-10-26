@@ -83,9 +83,9 @@ preguntas:
     tecnica: Which Argentine ROR organizations does Rastro identify in each Crossref affiliation, with its rule and evidence?
     ventaja: "The free text is joined to the registry with a written rule: the full name or a unique acronym, always with a second piece of evidence (Argentina or the organization's city). Doubtful candidates are not counted."
     terminos:
-      Afiliación: the text where an author says which institution they belong to, as the journal publishes it (affiliation).
-      Organización argentina: an organization with at least one location in Argentina in the ROR registry (Argentine organization).
-      Identificación: that an affiliation names an organization, with the rule that was used and the evidence (identification).
+      Afiliación: {term: "Affiliation", text: "the text where an author says which institution they belong to, as the journal publishes it."}
+      Organización argentina: {term: "Argentine organization", text: "an organization with at least one location in Argentina in the ROR registry."}
+      Identificación: {term: "Identification", text: "that an affiliation names an organization, with the rule that was used and the evidence."}
 
   - id: cq2
     porque:
@@ -101,8 +101,8 @@ preguntas:
     tecnica: How many distinct publications name each Argentine organization, without adding to the parent organizations?
     ventaja: "Each publication counts once per organization, and only if the text names it. What the registry says about whom each institute depends on is shown, but it does not add up."
     terminos:
-      Publicación: a scientific article from 2025, identified by its DOI (publication).
-      Organización madre: the organization an institute depends on in the registry; it does not receive the institute's publications (parent organization).
+      Publicación: {term: "Publication", text: "a scientific article from 2025, identified by its DOI."}
+      Organización madre: {term: "Parent organization", text: "the organization an institute depends on in the registry; it does not receive the institute's publications."}
 
   - id: cq3
     porque:
@@ -118,8 +118,8 @@ preguntas:
     tecnica: Which affiliations name an Argentine organization that ROR might not have registered, or name it in a way ROR does not record?
     ventaja: "What does not fit stays in view, with its evidence, for a person to review; Rastro does not make up organizations."
     terminos:
-      Candidato: something a person has to review; it is not a conclusion (candidate).
-      Búsqueda heurística: a simple rule for finding candidates, which can leave cases out (heuristic search).
+      Candidato: {term: "Candidate", text: "something a person has to review; it is not a conclusion."}
+      Búsqueda heurística: {term: "Heuristic search", text: "a simple rule for finding candidates, which can leave cases out."}
 
 faq:
   - pregunta: What does this domain show?

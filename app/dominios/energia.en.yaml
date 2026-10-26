@@ -138,8 +138,8 @@ preguntas:
     tecnica: How much 2025 oil belongs to each company, multiplying the production of each concession by its percentage?
     ventaja: "The partners are in a text on the concession map; Rastro splits them once, with their percentage, and matches each company's names across sources. Chevron takes part under two legal names; a reviewed correction groups them."
     terminos:
-      Participación: the percentage of a concession that belongs to each partner (share). The operator runs the wells, but the oil is divided among the partners.
-      m³: cubic metres of oil. One cubic metre is about 6.3 barrels.
+      Participación: {term: "Share", text: "the percentage of a concession that belongs to each partner (share). The operator runs the wells, but the oil is divided among the partners."}
+      m³: {term: "m³", text: "cubic metres of oil. One cubic metre is about 6.3 barrels."}
     antes_despues:
       sin: {valor: "YPF: {ypf_sin} M m³", detalle: "Adding up production by the company that declares it, YPF is assigned everything it operates, and half of La Amarga Chica, which is in the name of Petronas E&P Argentina (Vista's since 2025), does not appear."}
       con: {valor: "YPF: {ypf_con} M m³", detalle: "Its share in each concession, according to the partners on the map. Vista: {vista} M m³, with half of La Amarga Chica ({vista_lac}), which it bought from Petronas E&P Argentina in 2025; Chevron: {chevron} M m³, with its two legal names. Those two joins are 🟠 reviewed by AI, a person must confirm; YPF's {ypf_con} does not depend on them."}
@@ -165,8 +165,8 @@ preguntas:
     tecnica: How many wells with a sworn production declaration in 2025 does YPF operate today, by well type (energia:wellType), and in how many do the sources disagree?
     ventaja: "The well registry and the sworn production declarations do not always name the same operator. Rastro applies a rule written once (whoever declares the production of the last month prevails) and keeps in view what the registry says for each well."
     terminos:
-      Declaración jurada: what each company reports every month to the Secretaría de Energía about the production of each well (sworn production declaration).
-      Padrón de pozos: the register of all wells, with their location and their company (well registry).
+      Declaración jurada: {term: "Sworn production declaration", text: "what each company reports every month to the Secretaría de Energía about the production of each well."}
+      Padrón de pozos: {term: "Well registry", text: "the register of all wells, with their location and their company."}
     antes_despues:
       sin: {valor: "{padron} or {declaraciones}", detalle: "Two answers: the well registry says {padron} and the sworn production declarations, {declaraciones}. In {otra} wells the registry names another company (Pecom, Velitec, Copesa)."}
       con: {valor: "{pozos} wells", detalle: "One written rule: whoever declares the production of the last month prevails. What the registry says stays in view for each well. They are wells of every type: {petroliferos} oil, {gasiferos} gas, {inyeccion} injection and {otro} of other types; {produjeron} produced oil or gas in 2025."}
@@ -188,8 +188,8 @@ preguntas:
     tecnica: Which concessions have the most thermal anomalies detected by satellite since 2024, with their operator and their declared venting points?
     ventaja: "The satellite layer only gives date and province. Rastro places each point inside the outline of its concession, once, and so reaches the operator and the declared venting."
     terminos:
-      Venteo: releasing or flaring gas at the field instead of using it (venting).
-      Posible venteo: a thermal anomaly seen by a satellite. It is a sign to review, not a confirmation.
+      Venteo: {term: "Venting", text: "releasing or flaring gas at the field instead of using it."}
+      Posible venteo: {term: "Possible venting", text: "a thermal anomaly seen by a satellite. It is a sign to review, not a confirmation."}
     antes_despues:
       sin: {valor: "Neuquén: {neuquen}", detalle: "The satellite layer only gives date and province: it does not say which concession or which company. It also spells Tierra del Fuego in two ways."}
       con: {valor: "La Calera: {la_calera}", detalle: "{ubicados} possible venting events placed in their concession, with their operator. La Calera (Pluspetrol): {la_calera}, with no declared venting point on the map."}
@@ -211,7 +211,7 @@ preguntas:
     tecnica: Which companies declare the most unconventional oil in 2025 (the inferred class, with no mapping of its own)?
     ventaja: "«Unconventional» is defined once, in the business dictionary: shale or tight. No mapping assigns it; it holds for every question."
     terminos:
-      No convencional: oil from low-permeability rock (shale, such as Vaca Muerta, or tight), extracted with hydraulic fracturing (unconventional).
+      No convencional: {term: "Unconventional", text: "oil from low-permeability rock (shale, such as Vaca Muerta, or tight), extracted with hydraulic fracturing."}
 
   - id: e05
     porque:
@@ -228,7 +228,7 @@ preguntas:
     tecnica: Which concessions with possible venting detected by satellite have the nearest ENARGAS transmission pipeline 10 km or more away?
     ventaja: "The pipelines belong to another agency (ENARGAS). Rastro calculates once the distance from each concession to the nearest pipeline and joins it with the venting: a clue to where the gas has no outlet."
     terminos:
-      Gasoducto de transporte: the trunk pipes that carry gas to consumption centres (transmission pipeline). It does not include the internal pipes of each field.
+      Gasoducto de transporte: {term: "Transmission pipeline", text: "the trunk pipes that carry gas to consumption centres. It does not include the internal pipes of each field."}
     evidencia:
       texto: "Why Rastro gives the distance (some examples):"
 
@@ -246,7 +246,7 @@ preguntas:
     tecnica: Which possible venting events detected by satellite fall inside a protected area or less than 3 km from a town, according to the IGN?
     ventaja: "The towns and protected areas come from the Instituto Geográfico Nacional. Rastro places each possible venting event relative to them once, with the evidence, and reaches the concession and its operator."
     terminos:
-      Área protegida: a reserve or park with legal protection, national or provincial (protected area).
+      Área protegida: {term: "Protected area", text: "a reserve or park with legal protection, national or provincial."}
     evidencia:
       texto: "The surroundings of some possible venting events:"
 
@@ -264,7 +264,7 @@ preguntas:
     tecnica: Which companies producing in Argentina have an LEI in GLEIF, and how much oil do they operate?
     ventaja: "The LEI links each company to the global GLEIF register, the same one banks and regulators use. Rastro accepts it only if the legal name matches, and keeps in view what it discarded."
     terminos:
-      LEI: the global company identifier (GLEIF), the same all over the world.
+      LEI: {term: "LEI", text: "the global company identifier (GLEIF), the same all over the world."}
     evidencia:
       texto: "How each LEI was chosen (some examples):"
 
@@ -282,7 +282,7 @@ preguntas:
     tecnica: Which concessions are «to review» (inferred class, with no mapping of its own), with their operator and their reason?
     ventaja: "The rule is written once in the business dictionary: possible venting and, in addition, no transmission pipeline nearby or no venting report filed. Rastro infers it; it holds for this question, for the map and for any other that uses it."
     terminos:
-      Concesión para revisar: a concession worth looking at because of its possible venting (concession to review). It is a sign, not a conclusion.
+      Concesión para revisar: {term: "Concession to review", text: "a concession worth looking at because of its possible venting. It is a sign, not a conclusion."}
 
   - id: e09
     porque:
@@ -299,8 +299,8 @@ preguntas:
     tecnica: In which concessions did another company begin to declare most of the production between 2023 and 2025 (at least 3 months in a row), and how much oil and gas did they produce per month with each operator?
     ventaja: "The sworn production declarations are one file per year. Rastro joins them, decides month by month who declares most of each concession and marks each change with its evidence: this shows the mature areas YPF sold (Pecom, Petróleos Sudamericanos, Bentia, Quintana) and how much they produced."
     terminos:
-      Cambio de operadora: from that month on, another company declares most of the production of the concession, for at least 3 months in a row (change of operator).
-      Áreas maduras: conventional fields with many years of production, which often pass to smaller companies (mature areas).
+      Cambio de operadora: {term: "Change of operator", text: "from that month on, another company declares most of the production of the concession, for at least 3 months in a row."}
+      Áreas maduras: {term: "Mature fields", text: "conventional fields with many years of production, which often pass to smaller companies."}
     evidencia:
       texto: "Why Rastro says the operator changed (some examples):"
 
@@ -319,7 +319,7 @@ preguntas:
     tecnica: Which companies declare the most shale gas in 2025 (energia:ShaleProduction, with its gas in thousand m³)?
     ventaja: "Gas and oil are in the same dictionary and come from the same sworn production declarations: asking about gas means changing one word in the query."
     terminos:
-      Gas de shale: gas from low-permeability rock (such as Vaca Muerta), extracted with hydraulic fracturing (shale gas). It is measured in thousands of cubic metres.
+      Gas de shale: {term: "Shale gas", text: "gas from low-permeability rock (such as Vaca Muerta), extracted with hydraulic fracturing. The sources declare it in thousands of m³; Rastro shows it in millions of m³."}
 
 afirmaciones:
   titulo: Check a claim

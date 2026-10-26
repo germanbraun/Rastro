@@ -1,6 +1,8 @@
 # Texts of the oil and gas «Rastro Lab» tab (app/lab.py), in Spanish and English. Read with idioma.t("<key>").
 # The per-well explanation sentences, factor and fact names come from lab/gas/modelo.py and stay Spanish for now.
-lab.datos.spinner: {es: "Entrenando el modelo dos veces…", en: "Training the model twice…"}
+lab.datos.spinner:
+  es: "Preparando el modelo: se entrena dos veces, con las tablas originales y con Rastro. La primera vez después de un cambio en los datos tarda unos 30 segundos; después queda guardado."
+  en: "Preparing the model: it is trained twice, with the original tables and with Rastro. The first time after a data change takes about 30 seconds; then it is saved."
 
 lab.show_lab.title: {es: "#### ¿Cuánto gas va a dar un pozo nuevo?", en: "#### How much gas will a new well produce?"}
 lab.show_lab.intro:

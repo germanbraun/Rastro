@@ -576,7 +576,7 @@ preguntas:
     tecnica: ¿Qué empresas declaran más gas de shale en 2025 (energia:ShaleProduction, con su gas en miles de m³)?
     ventaja: "El gas y el petróleo están en el mismo diccionario y salen de las mismas declaraciones juradas: preguntar por gas es cambiar una palabra de la consulta."
     terminos:
-      Gas de shale: gas de rocas poco permeables (como Vaca Muerta), que se extrae con fractura hidráulica. Se mide en miles de metros cúbicos.
+      Gas de shale: gas de rocas poco permeables (como Vaca Muerta), que se extrae con fractura hidráulica. Las fuentes lo declaran en miles de m³; Rastro lo muestra en millones de m³.
 
 # Enriquecer con datos de afuera: una consulta une Rastro con Wikidata en vivo, en GraphDB, por el LEI; y lo mismo
 # guardado en Rastro (materializado: wikidata-energia-loader), que se consulta con la pregunta 15

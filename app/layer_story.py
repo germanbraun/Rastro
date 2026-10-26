@@ -49,8 +49,9 @@ def show_story(domain, why, columns, rows, where, tech):
         with st.expander(ui['breakdown_title']):
             visible = why['columnas']
             units = why['numeros'] if isinstance(why.get('numeros'), dict) else {}
-            shown = [{k: idioma.millions(v, units[k]) if k in units and v not in (None, '') else v for k, v in r.items()}
-                     for r in records]
+            decimals = {k: idioma.column_decimals([r.get(k) for r in records], unit) for k, unit in units.items()}
+            shown = [{k: idioma.millions(v, units[k], decimals=decimals[k]) if k in units and v not in (None, '') else v
+                      for k, v in r.items()} for r in records]
             tabla(enlaces.add_status(pd.DataFrame(shown))[[enlaces.label('column'), *visible]].rename(columns=visible),
                   column_config=enlaces.column_help(), key=f'{domain}_{where}_story_breakdown')
             st.caption(ui['breakdown_note'])
