@@ -191,7 +191,7 @@ steps:
     agent_hours: 0.21
     human_hours: null
   evaluate:
-    status: answers_collected_not_scored
+    status: scored_against_ai_reference
     evidence:
     - docs/experiments/research-affiliations/evaluation-proposal.md (approved); evaluation-runs.md
     - layer/afiliaciones/eval/questions.yaml, consistencia/parafrasis.yaml, reader.sql; 33 saved answers
@@ -199,6 +199,9 @@ steps:
     - 'blind review handed to GPT (user decision, 2026-10-26): docs/experiments/research-affiliations/blind-review/ (package
       built from crossref and ror only, instructions, empty annotation, reference.py)'
     - docs/experiments/research-affiliations/conclusions.md (from the 49 process notes, written before scoring)
+    - layer/afiliaciones/eval/referencias.json (from blind-review/annotations.csv, SHA-256 1bc6a056...f1a2)
+    - layer/afiliaciones/resultados.json and resultados.md (references reviewed by AI, a person still has to confirm them)
+    - layer/afiliaciones/adjudicacion.md (30 mentions, 6 causes; five linking defects found by the blind reference)
     sessions:
     - started_on: '2026-10-23T03:35:00Z'
       ended_on: '2026-10-23T03:46:44Z'
@@ -213,7 +216,14 @@ steps:
         (962 strings, 196 full review, 538 Argentine organizations, 1,456 mentions); wrote the instructions, the annotation
         template and reference.py with its test; the scorer reads an independent reference when it exists (method change);
         wrote the conclusions from the process notes.
-    agent_hours: 0.65
+    - started_on: '2026-10-26T20:24:00Z'
+      ended_on: '2026-10-26T20:26:20Z'
+      pauses: []
+      work: 'Start time approximate (just after rebasing on GPT''s annotation). Checked the annotation''s fingerprints against
+        GPT''s receipt; reference.py derived e1-e5 (63; 4 organizations; 70; 22 publications; 38); scored the 33 saved answers:
+        C 4/5, D 4/5, B 3/5; consistency C 2/2, D 2/2, B 1/2; adjudicated the 30 mentions where the reference and Rastro
+        differ and checked the score under alternative readings.'
+    agent_hours: 0.68
     human_hours: null
   change_tests:
     status: measured
@@ -419,6 +429,12 @@ errors_caught:
   failure_kind: the log update failed on a stale anchor, but the commit ran anyway because the commands were chained with
     ; (the same failure as note 30)
   fix: log fixed and the local commit amended before pushing; process note 30 applies
+- step: evaluate
+  check: blind reference review (GPT, three fresh reviewers)
+  failure_kind: 'five linking defects no method check caught: glued footnote letters, a generic acronym (CCT) without its
+    city, matching across segment boundaries, a short name inside a longer one, a shared acronym (CIC)'
+  fix: 'not fixed: the measurement stays as taken; each is a change in one place (normalization or rule), then e3 and e5
+    are re-measured where they apply, and said so'
 method_changes:
 - change: ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports
     review_findings (warnings or info only) apart from defects_detected (any violation); quality-rules skill says where

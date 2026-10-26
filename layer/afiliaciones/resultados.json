@@ -1,0 +1,721 @@
+{
+ "date": "2026-10-26",
+ "questions": {
+  "e1": {
+   "question": "¿En cuántas de las 100 publicaciones del conjunto alguna afiliación nombra al CONICET (organización ROR https://ror.org/03cqe8w59), contando cada publicación una vez y sin sumarle las de sus institutos? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+   "kind": "número",
+   "reference": 63,
+   "B": {
+    "question": "¿En cuántas de las 100 publicaciones del conjunto alguna afiliación nombra al CONICET (organización ROR https://ror.org/03cqe8w59), contando cada publicación una vez y sin sumarle las de sus institutos? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "WITH target AS (SELECT 'https://ror.org/03cqe8w59'::text AS id), ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), full_names AS (SELECT DISTINCT lower(n.value) AS v FROM ror.name n JOIN target t ON n.id = t.id WHERE n.types ~ '(ror_display|label|alias)'), acronyms AS (SELECT DISTINCT n.value AS v FROM ror.name n JOIN target t ON n.id = t.id WHERE n.types LIKE '%acronym%' AND NOT EXISTS (SELECT 1 FROM ror.name n2 JOIN ar ON ar.id = n2.id WHERE n2.types LIKE '%acronym%' AND lower(n2.value) = lower(n.value) AND n2.id <> n.id)) SELECT count(DISTINCT a.doi) AS publicaciones FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi WHERE EXISTS (SELECT 1 FROM full_names f WHERE position(f.v IN lower(a.name)) > 0) OR EXISTS (SELECT 1 FROM acronyms ac WHERE a.name ~* ('(^|[^[:alnum:]])' || regexp_replace(ac.v, '([.^$*+?()\\\\[\\\\]{}|\\\\\\\\-])', '\\\\\\\\\\\\1', 'g') || '($|[^[:alnum:]])'))",
+      "error": "invalid regular expression: parentheses () not balanced"
+     },
+     {
+      "query": "WITH target AS (SELECT 'https://ror.org/03cqe8w59'::text AS id), ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), full_names AS (SELECT DISTINCT lower(n.value) AS v FROM ror.name n JOIN target t ON n.id = t.id WHERE n.types ~ '(ror_display|label|alias)'), acronyms AS (SELECT DISTINCT n.value AS v FROM ror.name n JOIN target t ON n.id = t.id WHERE n.types LIKE '%acronym%' AND NOT EXISTS (SELECT 1 FROM ror.name n2 JOIN ar ON ar.id = n2.id WHERE n2.types LIKE '%acronym%' AND lower(n2.value) = lower(n.value) AND n2.id <> n.id)) SELECT count(DISTINCT a.doi) AS publicaciones FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi WHERE EXISTS (SELECT 1 FROM full_names f WHERE position(f.v IN lower(a.name)) > 0) OR EXISTS (SELECT 1 FROM acronyms ac WHERE a.name ~* ('(^|[^[:alnum:]])' || regexp_replace(ac.v, '([.^$*+?()\\[\\]{}|\\\\-])', '\\\\\\1', 'g') || '($|[^[:alnum:]])'))",
+      "error": "canceling statement due to statement timeout"
+     },
+     {
+      "query": "WITH tn AS MATERIALIZED (SELECT value, types FROM ror.name WHERE id = 'https://ror.org/03cqe8w59'), tacr AS MATERIALIZED (SELECT DISTINCT lower(value) AS v FROM tn WHERE types LIKE '%acronym%'), ar AS MATERIALIZED (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), shared AS MATERIALIZED (SELECT DISTINCT lower(n2.value) AS v FROM ror.name n2 JOIN ar ON ar.id = n2.id WHERE n2.id <> 'https://ror.org/03cqe8w59' AND n2.types LIKE '%acronym%' AND lower(n2.value) IN (SELECT v FROM tacr)), full_names AS MATERIALIZED (SELECT DISTINCT lower(value) AS v FROM tn WHERE types ~ '(ror_display|label|alias)'), acr AS MATERIALIZED (SELECT v FROM tacr WHERE v NOT IN (SELECT v FROM shared)), pat AS MATERIALIZED (SELECT '(^|[^[:alnum:]])(' || string_agg(regexp_replace(v, '([.^$*+?()\\[\\]{}|\\\\-])', '\\\\\\1', 'g'), '|') || ')($|[^[:alnum:]])' AS p FROM acr), aff AS MATERIALIZED (SELECT DISTINCT a.doi, lower(a.name) AS txt FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi WHERE a.name IS NOT NULL) SELECT count(DISTINCT aff.doi) AS publicaciones FROM aff LEFT JOIN pat ON true WHERE EXISTS (SELECT 1 FROM full_names f WHERE position(f.v IN aff.txt) > 0) OR (pat.p IS NOT NULL AND aff.txt ~ pat.p)",
+      "error": null
+     }
+    ],
+    "answer": 63.0,
+    "ok": true
+   },
+   "D": {
+    "question": "¿En cuántas de las 100 publicaciones del conjunto alguna afiliación nombra al CONICET (organización ROR https://ror.org/03cqe8w59), contando cada publicación una vez y sin sumarle las de sus institutos? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "SELECT COUNT(DISTINCT i.doi) FROM afiliaciones.identificacion i JOIN crossref.work w ON w.doi = i.doi WHERE i.organization = 'https://ror.org/03cqe8w59' AND i.status IN ('rule', 'correction-accepted')",
+      "error": null
+     }
+    ],
+    "answer": 63.0,
+    "ok": true
+   },
+   "C": {
+    "question": "¿En cuántas de las 100 publicaciones del conjunto alguna afiliación nombra al CONICET (organización ROR https://ror.org/03cqe8w59), contando cada publicación una vez y sin sumarle las de sus institutos? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>\nSELECT (COUNT(DISTINCT ?pub) AS ?n) WHERE {\n  ?id a afiliaciones:Identification ;\n      afiliaciones:identifies <https://ror.org/03cqe8w59> ;\n      afiliaciones:ofMention ?m .\n  ?m afiliaciones:inPublication ?pub .\n}",
+      "error": null
+     }
+    ],
+    "answer": 63.0,
+    "ok": true
+   }
+  },
+  "e2": {
+   "question": "¿Qué organizaciones argentinas nombran las afiliaciones de la publicación con DOI 10.1001/jamaneurol.2025.0023? Respondé con el identificador ROR completo de cada una (https://ror.org/...). Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+   "kind": "lista",
+   "reference": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/0145s0423",
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/0469ejq24"
+   ],
+   "B": {
+    "question": "¿Qué organizaciones argentinas nombran las afiliaciones de la publicación con DOI 10.1001/jamaneurol.2025.0023? Respondé con el identificador ROR completo de cada una (https://ror.org/...). Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "WITH aff AS (SELECT DISTINCT ' ' || regexp_replace(name, '[^[:alnum:]]+', ' ', 'g') || ' ' AS t FROM crossref.affiliation WHERE doi = '10.1001/jamaneurol.2025.0023'), ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), nm AS (SELECT n.id, n.types, trim(regexp_replace(n.value, '[^[:alnum:]]+', ' ', 'g')) AS v FROM ror.name n JOIN ar ON ar.id = n.id), acr AS (SELECT v FROM nm WHERE types LIKE '%acronym%' AND v <> '' GROUP BY v HAVING count(DISTINCT id) = 1), cand AS (SELECT DISTINCT nm.id FROM aff JOIN nm ON nm.v <> '' AND ((nm.types ~ '(ror_display|label|alias)' AND lower(aff.t) LIKE '% ' || lower(nm.v) || ' %') OR (nm.types LIKE '%acronym%' AND nm.v IN (SELECT v FROM acr) AND aff.t LIKE '% ' || nm.v || ' %'))) SELECT id FROM cand ORDER BY id",
+      "error": null
+     }
+    ],
+    "answer": [
+     "https://ror.org/0081fs513",
+     "https://ror.org/03cqe8w59",
+     "https://ror.org/0469ejq24"
+    ],
+    "ok": true
+   },
+   "D": {
+    "question": "¿Qué organizaciones argentinas nombran las afiliaciones de la publicación con DOI 10.1001/jamaneurol.2025.0023? Respondé con el identificador ROR completo de cada una (https://ror.org/...). Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "SELECT DISTINCT i.organization FROM afiliaciones.identificacion i WHERE i.doi = '10.1001/jamaneurol.2025.0023' ORDER BY i.organization",
+      "error": null
+     }
+    ],
+    "answer": [
+     "https://ror.org/0081fs513",
+     "https://ror.org/0145s0423",
+     "https://ror.org/03cqe8w59",
+     "https://ror.org/0469ejq24"
+    ],
+    "ok": true
+   },
+   "C": {
+    "question": "¿Qué organizaciones argentinas nombran las afiliaciones de la publicación con DOI 10.1001/jamaneurol.2025.0023? Respondé con el identificador ROR completo de cada una (https://ror.org/...). Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>\nSELECT DISTINCT ?org WHERE {\n  ?pub a afiliaciones:Publication ;\n       afiliaciones:doi \"10.1001/jamaneurol.2025.0023\" .\n  ?m afiliaciones:inPublication ?pub .\n  ?id a afiliaciones:Identification ;\n      afiliaciones:ofMention ?m ;\n      afiliaciones:identifies ?org .\n}",
+      "error": null
+     }
+    ],
+    "answer": [
+     "https://ror.org/0081fs513",
+     "https://ror.org/0145s0423",
+     "https://ror.org/03cqe8w59",
+     "https://ror.org/0469ejq24"
+    ],
+    "ok": true
+   }
+  },
+  "e3": {
+   "question": "¿Cuántas organizaciones argentinas distintas nombra al menos una afiliación de las 100 publicaciones del conjunto? Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+   "kind": "número",
+   "reference": 70,
+   "B": {
+    "question": "¿Cuántas organizaciones argentinas distintas nombra al menos una afiliación de las 100 publicaciones del conjunto? Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "WITH ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), txt AS (SELECT DISTINCT a.name FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi WHERE a.name IS NOT NULL AND a.name <> ''), acr AS (SELECT value FROM ror.name WHERE types LIKE '%acronym%' GROUP BY value HAVING COUNT(DISTINCT id) = 1), nm AS (SELECT n.id, n.value, (n.types LIKE '%acronym%') AS is_acr, regexp_replace(n.value, '([.^$*+?()\\[\\]{}|\\\\-])', '\\\\\\1', 'g') AS pat FROM ror.name n JOIN ar ON ar.id = n.id WHERE n.value IS NOT NULL AND n.value <> '' AND (n.types NOT LIKE '%acronym%' OR n.value IN (SELECT value FROM acr))) SELECT COUNT(DISTINCT nm.id) AS organizaciones FROM nm JOIN txt ON CASE WHEN nm.is_acr THEN txt.name ~ ('\\m' || nm.pat || '\\M') ELSE txt.name ~* ('\\m' || nm.pat || '\\M') END",
+      "error": null
+     }
+    ],
+    "answer": 62.0,
+    "ok": false
+   },
+   "D": {
+    "question": "¿Cuántas organizaciones argentinas distintas nombra al menos una afiliación de las 100 publicaciones del conjunto? Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "SELECT COUNT(DISTINCT i.organization) FROM afiliaciones.identificacion i JOIN crossref.work w ON w.doi = i.doi WHERE EXISTS (SELECT 1 FROM ror.location l WHERE l.id = i.organization AND l.country_code = 'AR')",
+      "error": null
+     }
+    ],
+    "answer": 69.0,
+    "ok": true
+   },
+   "C": {
+    "question": "¿Cuántas organizaciones argentinas distintas nombra al menos una afiliación de las 100 publicaciones del conjunto? Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>\nSELECT (COUNT(DISTINCT ?org) AS ?n) WHERE {\n  ?id a afiliaciones:Identification ;\n      afiliaciones:ofMention ?m ;\n      afiliaciones:identifies ?org .\n  ?m a afiliaciones:AffiliationMention ;\n     afiliaciones:inPublication ?p .\n  ?p a afiliaciones:Publication .\n}",
+      "error": null
+     }
+    ],
+    "answer": 69.0,
+    "ok": true
+   }
+  },
+  "e4": {
+   "question": "¿Qué publicaciones del conjunto nombran a la Universidad de Buenos Aires (organización ROR https://ror.org/0081fs513) en alguna afiliación? Respondé con el DOI de cada una, en minúsculas. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+   "kind": "lista",
+   "reference": [
+    "10.1001/jamaneurol.2025.0023",
+    "10.1002/14651858.cd016019",
+    "10.1002/ange.202422693",
+    "10.1002/cmdc.202500623",
+    "10.1002/ece3.70820",
+    "10.1002/jbm.a.37927",
+    "10.1021/acs.inorgchem.5c03575",
+    "10.1021/acsomega.4c07147",
+    "10.1029/2025gl115483",
+    "10.1063/5.0306490",
+    "10.1071/fp25196",
+    "10.1080/00288233.2024.2333841",
+    "10.1097/bsd.0000000000001683",
+    "10.1097/hjh.0000000000004053",
+    "10.1111/cla.70007",
+    "10.1111/jen.13409",
+    "10.1136/bmjopen-2024-090662",
+    "10.1142/s0219887825400407",
+    "10.1177/20501579251347487",
+    "10.1590/1809-4341.2025v22e01000",
+    "10.3390/pathogens14050437",
+    "10.5252/cryptogamie-mycologie2025v46a4"
+   ],
+   "B": {
+    "question": "¿Qué publicaciones del conjunto nombran a la Universidad de Buenos Aires (organización ROR https://ror.org/0081fs513) en alguna afiliación? Respondé con el DOI de cada una, en minúsculas. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "WITH ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), nombres AS (SELECT value FROM ror.name WHERE id = 'https://ror.org/0081fs513' AND types ~ '(ror_display|label|alias)'), siglas AS (SELECT n.value FROM ror.name n WHERE n.id = 'https://ror.org/0081fs513' AND n.types LIKE '%acronym%' AND NOT EXISTS (SELECT 1 FROM ror.name m JOIN ar ON ar.id = m.id WHERE m.types LIKE '%acronym%' AND upper(m.value) = upper(n.value) AND m.id <> n.id)) SELECT DISTINCT lower(a.doi) AS doi FROM crossref.affiliation a JOIN crossref.work w ON lower(w.doi) = lower(a.doi) WHERE EXISTS (SELECT 1 FROM nombres WHERE position(lower(nombres.value) IN lower(a.name)) > 0) OR EXISTS (SELECT 1 FROM siglas WHERE a.name ~ ('\\m' || regexp_replace(siglas.value, '([^[:alnum:]])', '\\\\\\1', 'g') || '\\M')) ORDER BY 1",
+      "error": "canceling statement due to statement timeout"
+     },
+     {
+      "query": "WITH ar AS MATERIALIZED (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), uba AS MATERIALIZED (SELECT value, types FROM ror.name WHERE id = 'https://ror.org/0081fs513'), siglas_ar AS MATERIALIZED (SELECT upper(n.value) AS v, count(DISTINCT n.id) AS c FROM ror.name n JOIN ar ON ar.id = n.id WHERE n.types LIKE '%acronym%' AND upper(n.value) IN (SELECT upper(value) FROM uba WHERE types LIKE '%acronym%') GROUP BY upper(n.value)), nombres AS MATERIALIZED (SELECT lower(value) AS v FROM uba WHERE types ~ '(ror_display|label|alias)'), siglas AS MATERIALIZED (SELECT '\\m' || regexp_replace(u.value, '([^[:alnum:]])', '\\\\\\1', 'g') || '\\M' AS re FROM uba u JOIN siglas_ar s ON s.v = upper(u.value) WHERE u.types LIKE '%acronym%' AND s.c = 1), afil AS MATERIALIZED (SELECT DISTINCT lower(a.doi) AS doi, a.name FROM crossref.affiliation a WHERE lower(a.doi) IN (SELECT lower(doi) FROM crossref.work)) SELECT DISTINCT f.doi FROM afil f WHERE EXISTS (SELECT 1 FROM nombres WHERE position(nombres.v IN lower(f.name)) > 0) OR EXISTS (SELECT 1 FROM siglas WHERE f.name ~ siglas.re) ORDER BY 1",
+      "error": null
+     }
+    ],
+    "answer": [
+     "10.1001/jamaneurol.2025.0023",
+     "10.1002/14651858.cd016019",
+     "10.1002/ange.202422693",
+     "10.1002/cmdc.202500623",
+     "10.1002/ece3.70820",
+     "10.1002/jbm.a.37927",
+     "10.1021/acs.inorgchem.5c03575",
+     "10.1021/acsomega.4c07147",
+     "10.1029/2025gl115483",
+     "10.1063/5.0306490",
+     "10.1071/fp25196",
+     "10.1080/00288233.2024.2333841",
+     "10.1097/bsd.0000000000001683",
+     "10.1097/hjh.0000000000004053",
+     "10.1111/cla.70007",
+     "10.1111/jen.13409",
+     "10.1136/bmjopen-2024-090662",
+     "10.1142/s0219887825400407",
+     "10.1177/20501579251347487",
+     "10.1590/1809-4341.2025v22e01000",
+     "10.3390/pathogens14050437",
+     "10.5252/cryptogamie-mycologie2025v46a4"
+    ],
+    "ok": true
+   },
+   "D": {
+    "question": "¿Qué publicaciones del conjunto nombran a la Universidad de Buenos Aires (organización ROR https://ror.org/0081fs513) en alguna afiliación? Respondé con el DOI de cada una, en minúsculas. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "SELECT DISTINCT lower(doi) FROM afiliaciones.identificacion WHERE organization = 'https://ror.org/0081fs513' ORDER BY 1",
+      "error": null
+     }
+    ],
+    "answer": [
+     "10.1001/jamaneurol.2025.0023",
+     "10.1002/14651858.cd016019",
+     "10.1002/ange.202422693",
+     "10.1002/cmdc.202500623",
+     "10.1002/ece3.70820",
+     "10.1002/jbm.a.37927",
+     "10.1021/acs.inorgchem.5c03575",
+     "10.1021/acsomega.4c07147",
+     "10.1029/2025gl115483",
+     "10.1063/5.0306490",
+     "10.1071/fp25196",
+     "10.1080/00288233.2024.2333841",
+     "10.1097/bsd.0000000000001683",
+     "10.1097/hjh.0000000000004053",
+     "10.1111/cla.70007",
+     "10.1111/jen.13409",
+     "10.1136/bmjopen-2024-090662",
+     "10.1142/s0219887825400407",
+     "10.1177/20501579251347487",
+     "10.1590/1809-4341.2025v22e01000",
+     "10.3390/pathogens14050437",
+     "10.5252/cryptogamie-mycologie2025v46a4"
+    ],
+    "ok": true
+   },
+   "C": {
+    "question": "¿Qué publicaciones del conjunto nombran a la Universidad de Buenos Aires (organización ROR https://ror.org/0081fs513) en alguna afiliación? Respondé con el DOI de cada una, en minúsculas. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "attempts": [
+     {
+      "query": "PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>\nSELECT DISTINCT ?doi WHERE {\n  ?id a afiliaciones:Identification ;\n      afiliaciones:identifies <https://ror.org/0081fs513> ;\n      afiliaciones:ofMention ?m .\n  ?m afiliaciones:inPublication ?p .\n  ?p afiliaciones:doi ?doi .\n}\nORDER BY ?doi",
+      "error": null
+     }
+    ],
+    "answer": [
+     "10.1001/jamaneurol.2025.0023",
+     "10.1002/14651858.cd016019",
+     "10.1002/ange.202422693",
+     "10.1002/cmdc.202500623",
+     "10.1002/ece3.70820",
+     "10.1002/jbm.a.37927",
+     "10.1021/acs.inorgchem.5c03575",
+     "10.1021/acsomega.4c07147",
+     "10.1029/2025gl115483",
+     "10.1063/5.0306490",
+     "10.1071/fp25196",
+     "10.1080/00288233.2024.2333841",
+     "10.1097/bsd.0000000000001683",
+     "10.1097/hjh.0000000000004053",
+     "10.1111/cla.70007",
+     "10.1111/jen.13409",
+     "10.1136/bmjopen-2024-090662",
+     "10.1142/s0219887825400407",
+     "10.1177/20501579251347487",
+     "10.1590/1809-4341.2025v22e01000",
+     "10.3390/pathogens14050437",
+     "10.5252/cryptogamie-mycologie2025v46a4"
+    ],
+    "ok": true
+   }
+  },
+  "e5": {
+   "question": "De las afiliaciones de las 100 publicaciones cuyo texto menciona Argentina (contiene «argentin», sin importar mayúsculas: Argentina, Argentine, argentino…), ¿cuántas no nombran ninguna organización argentina registrada en ROR? Cuente cada afiliación de cada autor por separado. Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
+   "kind": "número",
+   "reference": 38,
+   "B": {
+    "question": "De las afiliaciones de las 100 publicaciones cuyo texto menciona Argentina (contiene «argentin», sin importar mayúsculas: Argentina, Argentine, argentino…), ¿cuántas no nombran ninguna organización argentina registrada en ROR? Cuente cada afiliación de cada autor por separado. Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
+    "attempts": [
+     {
+      "query": "WITH ar AS (SELECT DISTINCT id FROM ror.location WHERE country_code = 'AR'), nm AS (SELECT n.id, n.value FROM ror.name n JOIN ar ON ar.id = n.id WHERE n.types ~ '(ror_display|label|alias)'), acr AS (SELECT n.id, n.value FROM ror.name n JOIN ar ON ar.id = n.id WHERE n.types LIKE '%acronym%' AND NOT EXISTS (SELECT 1 FROM ror.name m WHERE m.types LIKE '%acronym%' AND m.value = n.value AND m.id <> n.id)), af AS (SELECT a.* FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi WHERE a.name ILIKE '%argentin%') SELECT count(*) AS n FROM af a WHERE NOT EXISTS (SELECT 1 FROM nm WHERE strpos(lower(a.name), lower(nm.value)) > 0) AND NOT EXISTS (SELECT 1 FROM acr WHERE a.name ~ ('\\m' || regexp_replace(acr.value, '([^[:alnum:]])', '\\\\\\1', 'g') || '\\M'))",
+      "error": null
+     }
+    ],
+    "answer": 49.0,
+    "ok": false
+   },
+   "D": {
+    "question": "De las afiliaciones de las 100 publicaciones cuyo texto menciona Argentina (contiene «argentin», sin importar mayúsculas: Argentina, Argentine, argentino…), ¿cuántas no nombran ninguna organización argentina registrada en ROR? Cuente cada afiliación de cada autor por separado. Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
+    "attempts": [
+     {
+      "query": "SELECT count(*) FROM crossref.affiliation a JOIN crossref.work w ON w.doi = a.doi WHERE a.name ILIKE '%argentin%' AND NOT EXISTS (SELECT 1 FROM afiliaciones.identificacion i WHERE i.doi = a.doi AND i.author_position = a.author_position AND i.affiliation_position = a.affiliation_position AND i.status IN ('rule','correction-accepted'))",
+      "error": null
+     }
+    ],
+    "answer": 42.0,
+    "ok": false
+   },
+   "C": {
+    "question": "De las afiliaciones de las 100 publicaciones cuyo texto menciona Argentina (contiene «argentin», sin importar mayúsculas: Argentina, Argentine, argentino…), ¿cuántas no nombran ninguna organización argentina registrada en ROR? Cuente cada afiliación de cada autor por separado. Una organización argentina es una organización con al menos una sede en Argentina en ROR (versión 2.15). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
+    "attempts": [
+     {
+      "query": "PREFIX afiliaciones: <https://w3id.org/rastro/afiliaciones#>\nSELECT (COUNT(DISTINCT ?m) AS ?n) WHERE {\n  ?m a afiliaciones:AffiliationMention ;\n     afiliaciones:affiliationText ?t .\n  FILTER(CONTAINS(LCASE(STR(?t)), \"argentin\"))\n  FILTER NOT EXISTS {\n    ?i a afiliaciones:Identification ;\n       afiliaciones:ofMention ?m ;\n       afiliaciones:identifies ?o .\n  }\n}",
+      "error": null
+     }
+    ],
+    "answer": 42.0,
+    "ok": false
+   }
+  }
+ },
+ "totals": {
+  "B": {
+   "correct": 3,
+   "consistent": 1,
+   "consistent_correct": 8,
+   "retries": 2
+  },
+  "D": {
+   "correct": 4,
+   "consistent": 2,
+   "consistent_correct": 8,
+   "retries": 0
+  },
+  "C": {
+   "correct": 4,
+   "consistent": 2,
+   "consistent_correct": 8,
+   "retries": 0
+  }
+ },
+ "consistency": {
+  "e1": {
+   "texts": [
+    "¿En cuántas de las 100 publicaciones del conjunto alguna afiliación nombra al CONICET (organización ROR https://ror.org/03cqe8w59), contando cada publicación una vez y sin sumarle las de sus institutos? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "Contando cada publicación una sola vez, ¿cuántas de las 100 publicaciones del conjunto tienen alguna afiliación que nombra al CONICET (ROR https://ror.org/03cqe8w59), sin sumarle las publicaciones de sus institutos? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "Número de publicaciones distintas del conjunto de 100 en las que una afiliación nombra al CONICET (https://ror.org/03cqe8w59); las de sus institutos no cuentan para el CONICET. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina.",
+    "¿Cuántas publicaciones del conjunto, cada una contada una vez, nombran al CONICET (organización ROR https://ror.org/03cqe8w59) en al menos una afiliación? No se suman las de sus institutos. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina."
+   ],
+   "B": {
+    "answers": [
+     63.0,
+     63.0,
+     63.0,
+     63.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "D": {
+    "answers": [
+     63.0,
+     63.0,
+     63.0,
+     63.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "C": {
+    "answers": [
+     63.0,
+     63.0,
+     63.0,
+     63.0
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   }
+  },
+  "e4": {
+   "texts": [
+    "¿Qué publicaciones del conjunto nombran a la Universidad de Buenos Aires (organización ROR https://ror.org/0081fs513) en alguna afiliación? Respondé con el DOI de cada una, en minúsculas. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "Listá los DOI, en minúsculas, de las publicaciones del conjunto con al menos una afiliación que nombra a la Universidad de Buenos Aires (ROR https://ror.org/0081fs513). Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos.",
+    "¿En qué publicaciones del conjunto (DOI en minúsculas) alguna afiliación nombra a la Universidad de Buenos Aires, organización ROR https://ror.org/0081fs513? Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Las menciones de sus institutos no cuentan para la universidad.",
+    "Publicaciones del conjunto, por DOI en minúsculas, que nombran a la Universidad de Buenos Aires (https://ror.org/0081fs513) en una afiliación. Una afiliación nombra a una organización cuando su texto contiene el nombre de la organización, un nombre o alias que registra ROR, o una sigla que en ROR usa solo esa organización argentina. Una organización madre no recibe las menciones de sus institutos."
+   ],
+   "B": {
+    "answers": [
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ],
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ],
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ],
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ]
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": false
+   },
+   "D": {
+    "answers": [
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ],
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ],
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ],
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ]
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   },
+   "C": {
+    "answers": [
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ],
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ],
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ],
+     [
+      "10.1001/jamaneurol.2025.0023",
+      "10.1002/14651858.cd016019",
+      "10.1002/ange.202422693",
+      "10.1002/cmdc.202500623",
+      "10.1002/ece3.70820",
+      "10.1002/jbm.a.37927",
+      "10.1021/acs.inorgchem.5c03575",
+      "10.1021/acsomega.4c07147",
+      "10.1029/2025gl115483",
+      "10.1063/5.0306490",
+      "10.1071/fp25196",
+      "10.1080/00288233.2024.2333841",
+      "10.1097/bsd.0000000000001683",
+      "10.1097/hjh.0000000000004053",
+      "10.1111/cla.70007",
+      "10.1111/jen.13409",
+      "10.1136/bmjopen-2024-090662",
+      "10.1142/s0219887825400407",
+      "10.1177/20501579251347487",
+      "10.1590/1809-4341.2025v22e01000",
+      "10.3390/pathogens14050437",
+      "10.5252/cryptogamie-mycologie2025v46a4"
+     ]
+    ],
+    "ok": [
+     true,
+     true,
+     true,
+     true
+    ],
+    "same": true
+   }
+  }
+ },
+ "references": "Referencias de una revisión a ciegas hecha por GPT (asistente de IA), sin ver Rastro; falta que una persona las confirme."
+}

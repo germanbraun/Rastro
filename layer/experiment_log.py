@@ -103,14 +103,19 @@ def start(data, step, at=None):
         data["started_on"] = entry["sessions"][-1]["started_on"]
 
 
-def stop(data, step, work, at=None):
+def stop(data, step, work, at=None, status=None, evidence=()):
+    """Close the step's open session; optionally set the step's status and add evidence lines."""
     sessions = (data.get("steps") or {}).get(step, {}).get("sessions") or []
     if not sessions or sessions[-1].get("ended_on"):
         raise ValueError(f"No open session in {step}")
     if not work.strip():
         raise ValueError("Say what the session did (--work)")
     sessions[-1].update(ended_on=at or now(), work=work)
-    data["steps"][step]["agent_hours"] = step_hours(data["steps"][step])
+    entry = data["steps"][step]
+    entry["agent_hours"] = step_hours(entry)
+    if status:
+        entry["status"] = status
+    entry.setdefault("evidence", []).extend(evidence)
 
 
 def append(data, kind, fields):

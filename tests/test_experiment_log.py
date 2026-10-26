@@ -27,8 +27,10 @@ def test_start_and_stop_derive_the_hours():
     log.start(data, "links", "2026-10-22T11:00:00Z")
     data["steps"]["links"]["sessions"][-1]["pauses"] = [{"started_on": "2026-10-22T11:10:00Z",
                                                          "ended_on": "2026-10-22T11:20:00Z"}]
-    log.stop(data, "links", "review", "2026-10-22T11:40:00Z")
+    log.stop(data, "links", "review", "2026-10-22T11:40:00Z", "completed", ["linking/x/links.sql"])
     assert data["steps"]["links"]["agent_hours"] == 1.0
+    assert data["steps"]["links"]["status"] == "completed"
+    assert data["steps"]["links"]["evidence"] == ["linking/x/links.sql"]
     assert log.lint_errors(data, closing=True) == []
 
 

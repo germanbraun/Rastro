@@ -273,6 +273,8 @@ def main():
     parser.add_argument("--start", metavar="STEP", help="open a session in a step")
     parser.add_argument("--stop", metavar="STEP", help="close the open session of a step")
     parser.add_argument("--work", default="", help="what the closing session did")
+    parser.add_argument("--status", help="with --stop: the step's new status")
+    parser.add_argument("--evidence", action="append", default=[], help="with --stop: an evidence line to add")
     parser.add_argument("--at", help="ISO time instead of now (say «approximate» in --work)")
     parser.add_argument("--append", choices=["intervention", "error", "method-change"])
     parser.add_argument("--field", action="append", default=[], metavar="KEY=VALUE")
@@ -314,7 +316,7 @@ def main():
             if args.start:
                 experiment_log.start(data, args.start, args.at)
             if args.stop:
-                experiment_log.stop(data, args.stop, args.work, args.at)
+                experiment_log.stop(data, args.stop, args.work, args.at, args.status, args.evidence)
             if args.append:
                 fields = dict(item.split("=", 1) for item in args.field)
                 if "minutes" in fields:
