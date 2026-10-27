@@ -66,3 +66,29 @@ def test_meses_tarde():
     assert modelo.meses_tarde(fila) == 3
     fila["fracCargada"] = pd.Timestamp("2025-02-10")
     assert modelo.meses_tarde(fila) == 0
+
+
+def test_textos_en_ingles():
+    assert modelo.num(12345.67, lang="en") == "12,345.7"
+    assert modelo.signo(-4.9, "en") == "−4.9"
+    assert modelo.marca("corrección revisada con documento", "en") == "value corrected with a document"
+    assert modelo.socios_texto([{"socio": "YPF S.A.", "pct": 50.0}], "en") == "YPF S.A. 50 %"
+
+
+def test_cada_frase_esta_en_los_dos_idiomas():
+    for clave, frase in modelo.TEXTOS.items():
+        assert set(frase) == {"es", "en"}, clave
+
+
+def test_los_titulos_de_las_tablas_en_la_app_siguen_al_modelo():
+    """app/lab.py lays these headers over modelo's tables by position: the Spanish ones must be modelo's."""
+    import yaml
+    textos = yaml.safe_load((modelo.RAIZ / "app/textos/lab.yaml").read_text())
+    assert textos["lab.tables.inputs_columns"]["es"] == [t for _, t, *_ in modelo.ENTRADA_B] + ["Uso"]
+    assert textos["lab.tables.origin_concepts"]["es"] == [c for _, _, c, _ in modelo.ENTRADA_B]
+    assert textos["lab.tables.origin_sources"]["es"] == [f for *_, f in modelo.ENTRADA_B]
+    df = pozos().assign(areaNombre="A", grupo=["YPF"] * 6)
+    columnas = modelo.UBICACION + modelo.FRACTURA_B + modelo.PROFUNDIDAD_B
+    r = {"B": {"aportes": pd.DataFrame(0.0, index=df.index, columns=columnas)}}
+    assert textos["lab.tables.learned_columns"]["es"] == list(modelo.aprendido(r, df, {"socios": {}}).columns)
+    assert textos["lab.tables.concepts"]["es"] == list(modelo.peso_por_concepto(r, df))

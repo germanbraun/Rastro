@@ -1,6 +1,6 @@
 # Resultados: las predicciones de Rastro Lab, sin Rastro y con Rastro
 
-Fecha: 2026-10-21. Respuestas escritas por subagentes de Claude Code (Claude Opus 5.5) que solo vieron el prompt. Las referencias las escribió un asistente de IA; falta que las confirme una persona.
+Fecha: 2026-10-27. Respuestas escritas por subagentes de Claude Code (Claude Opus 5.5) que solo vieron el prompt. Las referencias las escribió un asistente de IA; falta que las confirme una persona.
 
 | | Sin Rastro (SQL) | SQL + enlaces de Rastro | Con Rastro |
 |---|---|---|---|

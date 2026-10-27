@@ -1221,3 +1221,21 @@ experiment's log as method changes made after it; they do not change its measure
   Disagreement with the reference 30 → 5 mentions (the debatable «Hospital Italiano»). The re-measured score is
   optimistic: the fixes were guided by the same reference. The blind number is the first one.
 - **Why:** the user asked to fix the defects and re-measure e3 and e5, saying so.
+
+## 2026-10-26 — Rastro Lab in English, with a new published run
+
+- **The explanation leaves the code:** the sentences `lab/gas/modelo.py` writes for each prediction (summary,
+  factors, facts and their marks) are in `app/textos/modelo.yaml`, in Spanish and English; `explicacion_a`,
+  `explicacion_b`, `num`, `signo`, `marca` and `socios_texto` take a language, Spanish by default. Facts carry an
+  `id` so the app does not compare a visible name. Data from the sources (names, link rules, evidence, raw columns)
+  stays as it comes. The Spanish explanations of all 559 wells are byte-identical before and after, so the blind test
+  of the explanations (`a_ciegas.py`) is unaffected.
+- **The technical view's tables** (what goes in, what the model learned, the weight of each concept) get English
+  headers in the app, laid over `modelo`'s Spanish ones by position; a test checks the Spanish lists still match
+  `modelo`. «Pesa dos cosas» listed three factors since depth was added; it now names no count.
+- **New run** `20261026-212547-1b8209a1`: the run version is the fingerprint of `modelo.py`, so the old run showed
+  "differs in code version". `--comparar` against `20261021-140450-6e4f1278`: 0 wells with another input or
+  prediction. Re-run because they name the run: quality (same failures; the «Prediccion» rule checks the predictions
+  of every published run, 5,590 → 6,149), the predictions evaluation (`energia_lab`: same answers and scores), the
+  query gate (15/15) and the slide numbers (only `Prediccion_revisados` changed).
+- **Why:** the user asked for Rastro Lab in English with a new published run.

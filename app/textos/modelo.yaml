@@ -1,0 +1,88 @@
+# Texts of the per-well explanation that lab/gas/modelo.py writes, in Spanish and English. modelo.py reads this file
+# itself (modelo.texto), so the console, the blind test and the app use the same sentences. Names, rules and evidence
+# from the sources stay as they come.
+modelo.marca_documento: {es: "dato corregido con documento", en: "value corrected with a document"}
+modelo.marca_ia: {es: "unión revisada por IA, a confirmar por una persona", en: "join reviewed by AI, to be confirmed by a person"}
+modelo.vacio: {es: "vacío (se usa {value})", en: "empty ({value} is used)"}
+
+modelo.hondo:
+  es: "Está a {depth} m de profundidad vertical (típico: {typical}), de su trayectoria; en el entrenamiento, los pozos más {who} dieron más gas."
+  en: "It is at {depth} m of vertical depth (typical: {typical}), from its trajectory; in training, {who} wells gave more gas."
+modelo.hondos: {es: "hondos", en: "deeper"}
+modelo.someros: {es: "someros", en: "shallower"}
+modelo.sin_trayectoria:
+  es: "No hay trayectoria de este pozo: el modelo usa la profundidad de un pozo típico."
+  en: "There is no trajectory for this well: the model uses the depth of a typical well."
+
+modelo.lugar:
+  es: "Los {n} pozos de {area} que vio el modelo ({who}) dieron una mediana de {median} millones de m³, {more} que la de todos los pozos ({all})."
+  en: "The {n} wells of {area} the model saw ({who}) gave a median of {median} million m³, {more} than that of all wells ({all})."
+modelo.todos_de: {es: "todos de {operator}", en: "all from {operator}"}
+modelo.mas: {es: "más", en: "more"}
+modelo.menos: {es: "menos", en: "less"}
+modelo.sin_pozos_area:
+  es: "El modelo no vio pozos de {area}: usa lo que vio de {operator} en otras concesiones."
+  en: "The model saw no wells of {area}: it uses what it saw of {operator} in other concessions."
+
+modelo.fractura_rama: {es: "largo de la rama horizontal", en: "lateral length"}
+modelo.fractura_etapas: {es: "etapas de fractura", en: "fracturing stages"}
+modelo.fractura_arena: {es: "arena bombeada", en: "sand pumped"}
+modelo.fractura_agua: {es: "agua inyectada", en: "water injected"}
+modelo.fractura_presion: {es: "presión máxima", en: "maximum pressure"}
+modelo.tipico: {es: "{part} (típico: {typical}), {contribution}", en: "{part} (typical: {typical}), {contribution}"}
+modelo.pesan: {es: "Pesan sobre todo: {parts}.", en: "What weighs most: {parts}."}
+modelo.reparte:
+  es: " Un pozo con más rama tiene más etapas: el modelo reparte entre las dos un mismo efecto, y juntas suman {total}."
+  en: " A well with a longer lateral has more stages: the model splits one effect between the two, and together they add up to {total}."
+modelo.sin_fractura:
+  es: "No hay datos de fractura de este pozo: el modelo usa los de un pozo típico."
+  en: "There is no fracturing data for this well: the model uses that of a typical well."
+
+modelo.juntas:
+  es: "El modelo no puede separar la concesión de su operadora ni de sus socios, y Rastro muestra por qué: {operators}{changes} y todos sus pozos comparten los mismos socios."
+  en: "The model cannot separate the concession from its operator or its partners, and Rastro shows why: {operators}{changes} and all its wells share the same partners."
+modelo.una_operadora: {es: "{area} tuvo una sola operadora en los pozos que vio el modelo", en: "{area} had a single operator in the wells the model saw"}
+modelo.varias_operadoras: {es: "{area} tuvo más de una operadora", en: "{area} had more than one operator"}
+modelo.sin_cambios: {es: ", no cambió de operadora entre 2023 y 2025", en: ", did not change operator between 2023 and 2025"}
+modelo.un_cambio: {es: ", cambió 1 vez de operadora entre 2023 y 2025", en: ", changed operator once between 2023 and 2025"}
+modelo.cambios: {es: ", cambió {n} veces de operadora entre 2023 y 2025", en: ", changed operator {n} times between 2023 and 2025"}
+
+modelo.hecho_operadora: {es: "Operadora", en: "Operator"}
+modelo.hecho_socios: {es: "Socios", en: "Partners"}
+modelo.hecho_fractura: {es: "Fractura", en: "Fracturing"}
+modelo.hecho_trayectoria: {es: "Trayectoria", en: "Trajectory"}
+modelo.regla_operadora: {es: "rige quien declara el pozo en su primer mes", en: "the company that reports the well in its first month"}
+modelo.nombre_operadora: {es: "Declarado como «{name}»; unido a {operator} por: {rule}.", en: "Reported as «{name}»; joined to {operator} by: {rule}."}
+modelo.fuentes_operadora: {es: "Capítulo IV de la Secretaría de Energía (declaraciones juradas)", en: "Capítulo IV of the Secretaría de Energía (sworn reports)"}
+modelo.sin_dato: {es: "sin dato", en: "no data"}
+modelo.fuentes_socios: {es: "Mapa de concesiones de la Secretaría de Energía (texto de socios)", en: "Concessions map of the Secretaría de Energía (partners text)"}
+modelo.con_documento: {es: ", corregido con un documento", en: ", corrected with a document"}
+modelo.no_figura: {es: "{operator} no figura entre los socios del mapa", en: "{operator} is not among the map's partners"}
+modelo.regla_socios_mapa: {es: "texto de socios del mapa", en: "the map's partners text"}
+modelo.no_figura_evidencia:
+  es: "Las declaraciones juradas dicen que opera {operator}, pero el mapa no la lista entre los socios de {area}. El modelo usa una participación típica."
+  en: "The sworn reports say {operator} operates it, but the map does not list it among the partners of {area}. The model uses a typical stake."
+modelo.valor_fractura: {es: "{lateral} m de rama, {stages} etapas", en: "{lateral} m lateral, {stages} stages"}
+modelo.otra_empresa: {es: "la informa otra empresa", en: "reported by another company"}
+modelo.tarde_uno: {es: "cargada 1 mes después de que arrancó el pozo", en: "loaded 1 month after the well started"}
+modelo.tarde: {es: "cargada {n} meses después de que arrancó el pozo", en: "loaded {n} months after the well started"}
+modelo.regla_fractura:
+  es: "las fracturas informadas hasta el mes en que arrancó el pozo, sumadas"
+  en: "the fracturing jobs reported up to the month the well started, added up"
+modelo.nombre_fractura: {es: "Informada como «{name}»; Rastro la une a {company}", en: "Reported as «{name}»; Rastro joins it to {company}"}
+modelo.no_es_operadora: {es: ", que no es la operadora ({operator}).", en: ", which is not the operator ({operator})."}
+modelo.fuentes_fractura: {es: "Datos de fractura de pozos (Adjunto IV), Secretaría de Energía", en: "Well fracturing data (Adjunto IV), Secretaría de Energía"}
+modelo.valor_trayectoria: {es: "{depth} m de profundidad vertical", en: "{depth} m of vertical depth"}
+modelo.regla_trayectoria:
+  es: "una por pozo: la de rama más larga entre las perforadas antes de que arrancara"
+  en: "one per well: the one with the longest lateral among those drilled before it started"
+modelo.fuentes_trayectoria: {es: "Trayectorias de pozo de Vaca Muerta, Secretaría de Energía", en: "Vaca Muerta well trajectories, Secretaría de Energía"}
+
+modelo.resumen:
+  es: "Se esperan {pred} millones de m³: un pozo promedio da {base}; estar en {area} con {operator} {place_sign} {place}, cómo se fracturó {frac_sign} {frac} y su profundidad {depth_sign} {depth}."
+  en: "{pred} million m³ expected: an average well gives {base}; being in {area} with {operator} {place_sign} {place}, how it was fractured {frac_sign} {frac} and its depth {depth_sign} {depth}."
+modelo.suma: {es: "suma", en: "adds"}
+modelo.resta: {es: "resta", en: "subtracts"}
+modelo.factor_lugar: {es: "{area}, con {operator}", en: "{area}, with {operator}"}
+modelo.factor_fractura: {es: "Cómo se fracturó", en: "How it was fractured"}
+modelo.factor_hondo: {es: "Su profundidad", en: "Its depth"}

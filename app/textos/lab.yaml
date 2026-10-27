@@ -1,5 +1,5 @@
 # Texts of the oil and gas «Rastro Lab» tab (app/lab.py), in Spanish and English. Read with idioma.t("<key>").
-# The per-well explanation sentences, factor and fact names come from lab/gas/modelo.py and stay Spanish for now.
+# The per-well explanation sentences, factor and fact names are in app/textos/modelo.yaml (lab/gas/modelo.py reads them).
 lab.datos.spinner:
   es: "Preparando el modelo: se entrena dos veces, con las tablas originales y con Rastro. La primera vez después de un cambio en los datos tarda unos 30 segundos; después queda guardado."
   en: "Preparing the model: it is trained twice, with the original tables and with Rastro. The first time after a data change takes about 30 seconds; then it is saved."
@@ -38,16 +38,47 @@ lab.show_lab.inputs_raw_note:
   en: "The percentage comes from searching the company's name in the map's partner text: if the name does not match,
     it stays empty; if the map is wrong, nothing says so."
 lab.show_lab.inputs_origin: {es: "**De dónde sale cada columna:**", en: "**Where each column comes from:**"}
+# The model's tables in the technical view: modelo.py writes their headers in Spanish; in English, lab.py lays these
+# over them, in the same order (modelo.ENTRADA_B, modelo.aprendido, modelo.peso_por_concepto)
+lab.tables.inputs_columns:
+  es: ["Pozo", "Empezó", "Operadora", "Concesión", "Participación (%)", "Rama horizontal (m)", "Etapas", "Arena (t)",
+    "Agua (m³)", "Presión máxima (psi)", "Profundidad vertical (m)", "Gas meses 2 a 7 (M m³)", "Uso"]
+  en: ["Well", "Started", "Operator", "Concession", "Share (%)", "Lateral length (m)", "Stages", "Sand (t)",
+    "Water (m³)", "Maximum pressure (psi)", "Vertical depth (m)", "Gas months 2 to 7 (M m³)", "Use"]
+lab.tables.use: {es: {prueba: prueba, entrenamiento: entrenamiento}, en: {prueba: test, entrenamiento: training}}
+lab.tables.origin_columns: {es: ["Columna", "Concepto de Rastro", "Fuente"], en: ["Column", "Rastro concept", "Source"]}
+lab.tables.origin_concepts:
+  es: ["energia:WellStart → energia:aboutWell", "energia:startMonth", "energia:company (unida entre fuentes)",
+    "energia:inConcession", "energia:Stake → energia:percent", "energia:Fracturing → energia:lateralLengthM",
+    "energia:fracStages", "energia:proppantTonnes", "energia:waterM3", "energia:maxPressurePsi",
+    "energia:WellTrajectory → energia:verticalDepthM", "energia:gasMonths2to7 (lo que se predice)"]
+  en: ["energia:WellStart → energia:aboutWell", "energia:startMonth", "energia:company (linked across sources)",
+    "energia:inConcession", "energia:Stake → energia:percent", "energia:Fracturing → energia:lateralLengthM",
+    "energia:fracStages", "energia:proppantTonnes", "energia:waterM3", "energia:maxPressurePsi",
+    "energia:WellTrajectory → energia:verticalDepthM", "energia:gasMonths2to7 (what is predicted)"]
+lab.tables.origin_sources:
+  es: ["Capítulo IV", "Capítulo IV", "Capítulo IV y correcciones revisadas", "Capítulo IV y mapa de concesiones",
+    "Mapa de concesiones y correcciones con documento", "Datos de fractura", "Datos de fractura", "Datos de fractura",
+    "Datos de fractura", "Datos de fractura", "Trayectorias de pozo", "Capítulo IV"]
+  en: ["Capítulo IV", "Capítulo IV", "Capítulo IV and reviewed corrections", "Capítulo IV and concessions map",
+    "Concessions map and corrections with a document", "Fracturing data", "Fracturing data", "Fracturing data",
+    "Fracturing data", "Fracturing data", "Well trajectories", "Capítulo IV"]
+lab.tables.learned_columns:
+  es: ["Concesión", "Operadora", "Socios (Rastro)", "Pozos de entrenamiento", "Mediana de su gas", "Efecto en la predicción"]
+  en: ["Concession", "Operator", "Partners (Rastro)", "Training wells", "Median of its gas", "Effect on the prediction"]
+lab.tables.concepts:
+  es: ["La concesión con su operadora y socios", "Cómo se fracturó el pozo", "La profundidad del pozo"]
+  en: ["The concession with its operator and partners", "How the well was fractured", "The well's depth"]
 lab.show_lab.learned_title: {es: "Qué aprendió el modelo", en: "What the model learned"}
 lab.show_lab.learned_text:
   es: "El modelo explica el {r2} % de la diferencia entre los pozos de 2025; la mediana de cada concesión, sola, el
     {r2_concession} %. Casi todo lo que sabe es dónde está el pozo: la fractura y la profundidad agregan poco, y
-    eso también es una conclusión. Pesa dos cosas, en millones de m³ por pozo, en promedio: {weights}. La
+    eso también es una conclusión. Lo que pesa cada factor, en millones de m³ por pozo, en promedio: {weights}. La
     operadora y los socios no se pueden separar de la concesión: Rastro muestra que dentro de una concesión son
     siempre los mismos."
   en: "The model explains {r2} % of the difference between the 2025 wells; each concession's median, alone,
     {r2_concession} %. Almost everything it knows is where the well is: fracturing and depth add little, and that
-    is also a conclusion. It weighs two things, in millions of m³ per well, on average: {weights}. The operator
+    is also a conclusion. What each factor weighs, in millions of m³ per well, on average: {weights}. The operator
     and the partners cannot be separated from the concession: Rastro shows that within a concession they are
     always the same."
 lab.show_lab.learned_note:
@@ -117,7 +148,7 @@ lab.show_lab.how_sparql:
     once in Rastro; the query also brings the rule and the evidence of each value."
 lab.show_lab.how_code: {es: "Código del modelo: lab/gas/modelo.py.", en: "Model code: lab/gas/modelo.py."}
 
-# Model variables in words (Spanish fracturing labels: lab/gas/modelo.py FRACTURA, capitalized).
+# Model variables in words (fracturing labels: modelo.fractura_* in app/textos/modelo.yaml, capitalized).
 lab.variable_label.grupo: {es: "Operadora", en: "Operator"}
 lab.variable_label.area: {es: "Concesión", en: "Concession"}
 lab.variable_label.pct: {es: "Participación de la operadora", en: "Operator's share"}

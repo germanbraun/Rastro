@@ -23,8 +23,16 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import yaml
 
 RAIZ = Path(__file__).resolve().parents[2]
+# Las frases de la explicación, en español e inglés (en la app, /app/textos)
+TEXTOS = yaml.safe_load((RAIZ / "app" / "textos" / "modelo.yaml").read_text())
+
+
+def texto(clave, lang="es", **valores):
+    """Una frase de la explicación en el idioma pedido."""
+    return TEXTOS[f"modelo.{clave}"][lang].format(**valores)
 
 PRUEBA = pd.Timestamp("2025-01-01")   # entrena con los pozos que empezaron antes de 2025, prueba con los de 2025
 # Solo los pozos que alguna vez declararon shale gas de Vaca Muerta: el resto no hace falta y hace lento todo
@@ -131,10 +139,8 @@ VARIABLES = {
     "A": {"categorias": ["empresa", "area"], "numeros": ["porcentaje"] + FRACTURA_A + PROFUNDIDAD_A},
     "B": {"categorias": ["grupo", "area"], "numeros": ["pct"] + FRACTURA_B + PROFUNDIDAD_B},
 }
-# Cómo se lee cada variable de fractura de Rastro: concepto, unidad y cuántos decimales
-FRACTURA = {"rama": ("largo de la rama horizontal", "m", 0), "etapas": ("etapas de fractura", "", 0),
-            "arena": ("arena bombeada", "t", 0), "agua": ("agua inyectada", "m³", 0),
-            "presion": ("presión máxima", "psi", 0)}
+# La unidad de cada variable de fractura de Rastro; su nombre es el texto «fractura_<variable>»
+FRACTURA = {"rama": "m", "etapas": "", "arena": "t", "agua": "m³", "presion": "psi"}
 
 
 # --- Para correr en la máquina (consola, pruebas de cambio, prueba a ciegas); la app usa sus propias conexiones ---
@@ -294,8 +300,10 @@ def referencias(a, prueba=PRUEBA):
             "entreno": int((~p).sum()), "prueba": int(p.sum())}
 
 
-def num(v, dec=1):
-    return f"{v:,.{dec}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+def num(v, dec=1, lang="es"):
+    """Un número: 12.345,6 en español, 12,345.6 en inglés."""
+    texto = f"{v:,.{dec}f}"
+    return texto if lang == "en" else texto.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
 def nombre(empresa):
@@ -309,16 +317,16 @@ def concesion(texto):
     return " ".join(w.upper() if w.upper() in ("I", "II", "III", "IV", "V") else w for w in str(texto).title().split())
 
 
-def signo(v):
+def signo(v, lang="es"):
     """Un aporte con su signo: «+3,9» o «−4,9»."""
-    return ("+" if v >= 0 else "−") + num(abs(v))
+    return ("+" if v >= 0 else "−") + num(abs(v), lang=lang)
 
 
-def marca(regla):
+def marca(regla, lang="es"):
     """Rastro marca los datos que no salen tal cual de la fuente."""
     if not isinstance(regla, str) or "revisad" not in regla:
         return ""
-    return "dato corregido con documento" if "documento" in regla else "unión revisada por IA, a confirmar por una persona"
+    return texto("marca_documento" if "documento" in regla else "marca_ia", lang)
 
 
 def dudosos(b, prueba=PRUEBA):
@@ -327,22 +335,22 @@ def dudosos(b, prueba=PRUEBA):
     return int(((p.reglaNombre.map(marca) != "") | (p.reglaSocio.map(marca) != "")).sum()), len(p)
 
 
-def explicacion_a(r, a, pozo):
+def explicacion_a(r, a, pozo, lang="es"):
     """Sin Rastro: lo que da una herramienta estándar con las tablas crudas, columna por columna."""
     i = a.index[a.idpozo == pozo][0]
     m, filas = r["A"], []
     for c in VARIABLES["A"]["categorias"] + VARIABLES["A"]["numeros"]:
         v = a.loc[i, c]
         if isinstance(v, float):
-            valor = f"vacío (se usa {m['relleno'][c]:g})" if np.isnan(v) else f"{v:g}"
+            valor = texto("vacio", lang, value=f"{m['relleno'][c]:g}") if np.isnan(v) else f"{v:g}"
         else:
             valor = str(v)
         filas.append({"columna": c, "valor": valor, "aporte": float(m["aportes"].loc[i, c])})
     return {"pred": float(m["pred"][i]), "filas": filas}
 
 
-def socios_texto(lista):
-    return ", ".join(f"{nombre(s['socio'])} {num(s['pct'], 1).rstrip('0').rstrip(',')} %" for s in lista)
+def socios_texto(lista, lang="es"):
+    return ", ".join(f"{nombre(s['socio'])} {num(s['pct'], 1, lang).rstrip('0').rstrip(',.')} %" for s in lista)
 
 
 UBICACION = ["grupo", "area", "pct"]   # en B, lo que no cambia dentro de una concesión
@@ -363,11 +371,17 @@ def aprendido(r, b, ctx, prueba=PRUEBA):
     return pd.DataFrame(filas).sort_values("Efecto en la predicción", ascending=False)
 
 
-def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
+def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA, lang="es"):
     """Con Rastro: dos factores. La concesión con su operadora y sus socios (que no cambian dentro de una
     concesión, así que el modelo no puede separarlos) y cómo se fracturó el pozo. Para cada uno, por qué suma o
     resta y los hechos de Rastro que lo respaldan, con su regla y su evidencia. «marca» dice si un dato no sale
-    tal cual de la fuente."""
+    tal cual de la fuente. lang es el idioma de las frases; los datos de las fuentes quedan como vienen."""
+    def t(clave, **valores):
+        return texto(clave, lang, **valores)
+
+    def n(v, dec=1):
+        return num(v, dec, lang)
+
     i = b.index[b.idpozo == pozo][0]
     f, m = b.loc[i], r["B"]
     entreno = b[b.inicio < prueba]
@@ -377,77 +391,75 @@ def explicacion_b(r, b, ctx, pozo, prueba=PRUEBA):
     hondo = float(m["aportes"].loc[i, PROFUNDIDAD_B].sum())
     if pd.notna(f.profundidad):
         tipica = m["relleno"]["profundidad"]
-        quienes = "hondos" if hondo * (f.profundidad - tipica) > 0 else "someros"   # el signo del aporte dice hacia dónde empuja
-        por_que_hondo = (f"Está a {num(f.profundidad, 0)} m de profundidad vertical (típico: {num(tipica, 0)}), de su trayectoria; "
-                         f"en el entrenamiento, los pozos más {quienes} dieron más gas.")
+        quienes = t("hondos" if hondo * (f.profundidad - tipica) > 0 else "someros")   # el signo del aporte dice hacia dónde empuja
+        por_que_hondo = t("hondo", depth=n(f.profundidad, 0), typical=n(tipica, 0), who=quienes)
     else:
-        por_que_hondo = "No hay trayectoria de este pozo: el modelo usa la profundidad de un pozo típico."
+        por_que_hondo = t("sin_trayectoria")
     fractura = float(m["aportes"].loc[i, FRACTURA_B].sum())
     misma = entreno[entreno.area == f.area]
     if len(misma):
         ops = sorted(misma.grupo.map(nombre).unique())
-        quienes = "todos de " + ops[0] if len(ops) == 1 else ", ".join(ops)
-        por_que_lugar = (f"Los {len(misma)} pozos de {area} que vio el modelo ({quienes}) "
-                         f"dieron una mediana de {num(misma.gas.median())} millones de m³, "
-                         f"{'más' if misma.gas.median() > m['mediana'] else 'menos'} que la de todos los pozos ({num(m['mediana'])}).")
+        quienes = t("todos_de", operator=ops[0]) if len(ops) == 1 else ", ".join(ops)
+        por_que_lugar = t("lugar", n=len(misma), area=area, who=quienes, median=n(misma.gas.median()),
+                          more=t("mas" if misma.gas.median() > m["mediana"] else "menos"), all=n(m["mediana"]))
     else:
-        por_que_lugar = f"El modelo no vio pozos de {area}: usa lo que vio de {operadora} en otras concesiones."
+        por_que_lugar = t("sin_pozos_area", area=area, operator=operadora)
     tiene = pd.notna(f.rama)
     if tiene:   # las dos variables de fractura que más mueven esta predicción, con su aporte real, contra un pozo típico
         ap = m["aportes"].loc[i, FRACTURA_B]
         orden = ap.abs().sort_values(ascending=False).index[:2]
-        partes = [f"{FRACTURA[c][0]} {num(f[c], 0)} {FRACTURA[c][1]}".strip() + f" (típico: {num(m['relleno'][c], 0)}), "
-                  + ("+" if ap[c] >= 0 else "−") + num(abs(ap[c])) for c in orden]
-        por_que_fractura = "Pesan sobre todo: " + "; ".join(partes) + "."
+        partes = [t("tipico", part=f"{t('fractura_' + c)} {n(f[c], 0)} {FRACTURA[c]}".strip(),
+                    typical=n(m["relleno"][c], 0), contribution=signo(ap[c], lang)) for c in orden]
+        por_que_fractura = t("pesan", parts="; ".join(partes))
         if set(orden) == {"rama", "etapas"} and ap["rama"] * ap["etapas"] < 0:
-            por_que_fractura += (" Un pozo con más rama tiene más etapas: el modelo reparte entre las dos un mismo efecto, "
-                                 f"y juntas suman {signo(ap['rama'] + ap['etapas'])}.")
+            por_que_fractura += t("reparte", total=signo(ap["rama"] + ap["etapas"], lang))
     else:
-        por_que_fractura = "No hay datos de fractura de este pozo: el modelo usa los de un pozo típico."
+        por_que_fractura = t("sin_fractura")
     cambios = int(ctx["cambios"].get(f.area, 0))
     una = len(misma) == 0 or misma.grupo.nunique() == 1
-    juntas = ("El modelo no puede separar la concesión de su operadora ni de sus socios, y Rastro muestra por qué: "
-              + (f"{area} tuvo una sola operadora en los pozos que vio el modelo" if una else f"{area} tuvo más de una operadora")
-              + (", no cambió de operadora entre 2023 y 2025" if cambios == 0 else f", cambió {cambios} vez de operadora entre 2023 y 2025")
-              + " y todos sus pozos comparten los mismos socios.")
+    juntas = t("juntas", operators=t("una_operadora" if una else "varias_operadoras", area=area),
+               changes=t("sin_cambios") if cambios == 0 else t("un_cambio") if cambios == 1 else t("cambios", n=cambios))
+    # «id» nombra cada hecho en cualquier idioma; «hecho» es su nombre para leer
     hechos = [
-        {"hecho": "Operadora", "valor": operadora, "marca": marca(f.reglaNombre),
-         "regla": "rige quien declara el pozo en su primer mes", "evidencia": f.evidencia,
-         "nombre": None if marca(f.reglaNombre) == "" else f"Declarado como «{f.nombre}»; unido a {operadora} por: {f.reglaNombre}.",
-         "fuentes": "Capítulo IV de la Secretaría de Energía (declaraciones juradas)"},
-        {"hecho": "Socios", "valor": socios_texto(ctx["socios"].get(f.area, [])) or "sin dato", "marca": marca(f.reglaSocio),
-         "regla": f.reglaSocio, "evidencia": f.textoSocio,
-         "fuentes": "Mapa de concesiones de la Secretaría de Energía (texto de socios)"
-                    + (", corregido con un documento" if "documento" in str(f.reglaSocio) else "")},
+        {"id": "operadora", "hecho": t("hecho_operadora"), "valor": operadora, "marca": marca(f.reglaNombre, lang),
+         "regla": t("regla_operadora"), "evidencia": f.evidencia,
+         "nombre": None if marca(f.reglaNombre) == "" else t("nombre_operadora", name=f.nombre, operator=operadora,
+                                                              rule=f.reglaNombre),
+         "fuentes": t("fuentes_operadora")},
+        {"id": "socios", "hecho": t("hecho_socios"), "valor": socios_texto(ctx["socios"].get(f.area, []), lang) or t("sin_dato"),
+         "marca": marca(f.reglaSocio, lang), "regla": f.reglaSocio, "evidencia": f.textoSocio,
+         "fuentes": t("fuentes_socios") + (t("con_documento") if "documento" in str(f.reglaSocio) else "")},
     ]
     if not isinstance(f.reglaSocio, str):   # la operadora no está entre los socios del mapa: las fuentes no coinciden
-        hechos[1].update(marca=f"{operadora} no figura entre los socios del mapa", regla="texto de socios del mapa",
-                         evidencia=f"Las declaraciones juradas dicen que opera {operadora}, pero el mapa no la lista entre "
-                                   f"los socios de {area}. El modelo usa una participación típica.")
+        hechos[1].update(marca=t("no_figura", operator=operadora), regla=t("regla_socios_mapa"),
+                         evidencia=t("no_figura_evidencia", operator=operadora, area=area))
     if tiene:
         informa = nombre(f.fracEmpresa)
         tarde = meses_tarde(f)
-        hechos.append({"hecho": "Fractura", "valor": f"{num(f.rama, 0)} m de rama, {num(f.etapas, 0)} etapas",
-                       "marca": " · ".join(x for x in (marca(f.fracRegla), "la informa otra empresa" if informa != operadora else "",
-                                                       f"cargada {tarde} {'mes' if tarde == 1 else 'meses'} después de que arrancó el pozo"
-                                                       if tarde else "") if x),
-                       "regla": "las fracturas informadas hasta el mes en que arrancó el pozo, sumadas",
+        hechos.append({"id": "fractura", "hecho": t("hecho_fractura"),
+                       "valor": t("valor_fractura", lateral=n(f.rama, 0), stages=n(f.etapas, 0)),
+                       "marca": " · ".join(x for x in (marca(f.fracRegla, lang), t("otra_empresa") if informa != operadora else "",
+                                                       (t("tarde_uno") if tarde == 1 else t("tarde", n=tarde)) if tarde else "")
+                                           if x),
+                       "regla": t("regla_fractura"),
                        "evidencia": f.fracEvidencia,
-                       "nombre": f"Informada como «{f.fracNombre}»; Rastro la une a {informa}"
-                                 + (f", que no es la operadora ({operadora})." if informa != operadora else "."),
-                       "fuentes": "Datos de fractura de pozos (Adjunto IV), Secretaría de Energía"})
+                       "nombre": t("nombre_fractura", name=f.fracNombre, company=informa)
+                                 + (t("no_es_operadora", operator=operadora) if informa != operadora else "."),
+                       "fuentes": t("fuentes_fractura")})
     if pd.notna(f.profundidad):
-        hechos.append({"hecho": "Trayectoria", "valor": f"{num(f.profundidad, 0)} m de profundidad vertical", "marca": "",
-                       "regla": "una por pozo: la de rama más larga entre las perforadas antes de que arrancara",
-                       "evidencia": f.trEvidencia, "fuentes": "Trayectorias de pozo de Vaca Muerta, Secretaría de Energía"})
-    resumen = (f"Se esperan {num(float(m['pred'][i]))} millones de m³: un pozo promedio da {num(m['base'])}; "
-               f"estar en {area} con {operadora} {'suma' if lugar >= 0 else 'resta'} {num(abs(lugar))}, "
-               f"cómo se fracturó {'suma' if fractura >= 0 else 'resta'} {num(abs(fractura))} "
-               f"y su profundidad {'suma' if hondo >= 0 else 'resta'} {num(abs(hondo))}.")
-    factores = [{"factor": f"{area}, con {operadora}", "aporte": lugar, "por_que": por_que_lugar,
+        hechos.append({"id": "trayectoria", "hecho": t("hecho_trayectoria"), "valor": t("valor_trayectoria", depth=n(f.profundidad, 0)),
+                       "marca": "", "regla": t("regla_trayectoria"), "evidencia": f.trEvidencia, "fuentes": t("fuentes_trayectoria")})
+
+    def suma(v):
+        return t("suma" if v >= 0 else "resta")
+
+    resumen = t("resumen", pred=n(float(m["pred"][i])), base=n(m["base"]), area=area, operator=operadora,
+                place_sign=suma(lugar), place=n(abs(lugar)), frac_sign=suma(fractura), frac=n(abs(fractura)),
+                depth_sign=suma(hondo), depth=n(abs(hondo)))
+    factores = [{"factor": t("factor_lugar", area=area, operator=operadora), "aporte": lugar, "por_que": por_que_lugar,
                  "nota": juntas if len(misma) else ""},
-                {"factor": "Cómo se fracturó", "aporte": fractura, "por_que": por_que_fractura, "nota": ""},
-                {"factor": "Su profundidad", "aporte": hondo, "por_que": por_que_hondo, "nota": ""}]
+                {"factor": t("factor_fractura"), "aporte": fractura, "por_que": por_que_fractura, "nota": ""},
+                {"factor": t("factor_hondo"), "aporte": hondo, "por_que": por_que_hondo, "nota": ""}]
     return {"pred": float(m["pred"][i]), "factores": factores, "hechos": hechos, "resumen": resumen,
             "real": float(f.gas), "inicio": f.inicio, "area": area, "operadora": operadora}
 

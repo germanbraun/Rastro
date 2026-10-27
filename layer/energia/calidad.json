@@ -1,7 +1,7 @@
 {
- "fecha": "2026-10-23",
+ "fecha": "2026-10-27",
  "domain": "energia",
- "triples": 456263,
+ "triples": 460669,
  "reglas": [
   {
    "id": "ConcesionHasta100",
@@ -102,7 +102,7 @@
      "mensaje": "El agua no es posible.",
      "severidad": "Violation",
      "predicciones": [
-      "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160191"
+      "https://w3id.org/rastro/energia/prediction/20261026-212547-1b8209a1/160191"
      ]
     },
     {
@@ -110,7 +110,7 @@
      "mensaje": "El agua no es posible.",
      "severidad": "Violation",
      "predicciones": [
-      "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160192"
+      "https://w3id.org/rastro/energia/prediction/20261026-212547-1b8209a1/160192"
      ]
     },
     {
@@ -118,7 +118,7 @@
      "mensaje": "El agua no es posible.",
      "severidad": "Violation",
      "predicciones": [
-      "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160193"
+      "https://w3id.org/rastro/energia/prediction/20261026-212547-1b8209a1/160193"
      ]
     },
     {
@@ -144,7 +144,7 @@
      "mensaje": "La presión máxima no es posible.",
      "severidad": "Violation",
      "predicciones": [
-      "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/164779"
+      "https://w3id.org/rastro/energia/prediction/20261026-212547-1b8209a1/164779"
      ]
     },
     {
@@ -155,10 +155,10 @@
     }
    ],
    "predicciones_afectadas": [
-    "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160191",
-    "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160192",
-    "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/160193",
-    "https://w3id.org/rastro/energia/prediction/20261021-140450-6e4f1278/164779"
+    "https://w3id.org/rastro/energia/prediction/20261026-212547-1b8209a1/160191",
+    "https://w3id.org/rastro/energia/prediction/20261026-212547-1b8209a1/160192",
+    "https://w3id.org/rastro/energia/prediction/20261026-212547-1b8209a1/160193",
+    "https://w3id.org/rastro/energia/prediction/20261026-212547-1b8209a1/164779"
    ]
   },
   {
@@ -187,7 +187,7 @@
    "nombre": "Cada predicción sale de un inicio de pozo y cae dentro de su rango",
    "porque": "Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.",
    "shacl": "@prefix calidad: <https://w3id.org/rastro/energia/calidad#> .\n@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix owl: <http://www.w3.org/2002/07/owl#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .\n@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n@prefix sh: <http://www.w3.org/ns/shacl#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\nowl:Class rdfs:subClassOf rdfs:Class .\n\nowl:DatatypeProperty rdfs:subClassOf rdf:Property .\n\ncalidad:Prediccion a sh:NodeShape ;\n    rdfs:label \"Cada predicción sale de un inicio de pozo y cae dentro de su rango\" ;\n    rdfs:comment \"Sin el inicio del pozo, la predicción no se puede explicar; fuera de su rango, el rango no dice nada.\" ;\n    sh:property [ sh:lessThanOrEquals energia:predictedHigh ;\n            sh:message \"La predicción es mayor que el máximo del rango.\" ;\n            sh:minCount 1 ;\n            sh:path energia:predictedGas ],\n        [ sh:message \"No dice de qué inicio de pozo sale.\" ;\n            sh:path prov:used ;\n            sh:qualifiedMaxCount 1 ;\n            sh:qualifiedMinCount 1 ;\n            sh:qualifiedValueShape [ sh:class energia:WellStart ] ],\n        [ sh:lessThanOrEquals energia:predictedGas ;\n            sh:message \"El mínimo del rango es mayor que la predicción.\" ;\n            sh:minCount 1 ;\n            sh:path energia:predictedLow ] ;\n    sh:targetClass energia:Prediction .\n\n",
-   "revisados": 5590,
+   "revisados": 6149,
    "coverage": "checked",
    "un_dato": "@prefix energia: <https://w3id.org/rastro/energia#> .\n@prefix prov: <http://www.w3.org/ns/prov#> .\n@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .\n\n<https://w3id.org/rastro/energia/prediction/20261021-0855-baf6d8fa/158961> a energia:Prediction ;\n    prov:used <https://w3id.org/rastro/energia/fracturing/158961>,\n        <https://w3id.org/rastro/energia/stake/FOR/TECPETROL>,\n        <https://w3id.org/rastro/energia/wellstart/158961> ;\n    energia:predictedGas 52.003 ;\n    energia:predictedHigh 68.337 ;\n    energia:predictedLow 19.022 .\n\n",
    "roto": "e:prediccion a energia:Prediction ; energia:predictedLow 25 ; energia:predictedGas 20 ; energia:predictedHigh 30 .",

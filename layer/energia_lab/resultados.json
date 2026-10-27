@@ -1,5 +1,5 @@
 {
- "date": "2026-10-21",
+ "date": "2026-10-27",
  "questions": {
   "l01": {
    "question": "En la corrida vigente del modelo de gas, ¿cuántas predicciones de pozos de prueba (los que empezaron a producir en 2025) se apoyan en un dato corregido a mano, es decir, una participación de la operadora corregida con un documento o una operadora cuyo nombre se unió a su grupo por una corrección revisada?",
@@ -244,5 +244,6 @@
    "retries": 1
   }
  },
- "consistency": {}
+ "consistency": {},
+ "references": "provisional: SPARQL over Rastro"
 }

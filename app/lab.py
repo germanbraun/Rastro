@@ -102,6 +102,7 @@ def show_lab(tech, pozo=None, note=""):
 
     if not tech:
         return
+    entrada_a, entrada_b, origen, tabla_aprendido, pesos = model_tables(entrada_a, entrada_b, origen, tabla_aprendido, pesos)
     with st.expander(idioma.t("lab.show_lab.inputs_title"), expanded=False):
         st.markdown(idioma.t("lab.show_lab.inputs_text", n=len(entrada_b)))
         sin_tab, con_tab = st.tabs([idioma.t("lab.show_lab.without_rastro"), idioma.t("lab.show_lab.with_rastro")])
@@ -122,6 +123,21 @@ def show_lab(tech, pozo=None, note=""):
 
     with st.expander(idioma.t("lab.show_lab.published_title"), expanded=False):
         show_published(tech)
+
+
+def model_tables(entrada_a, entrada_b, origen, aprendido, pesos):
+    """The model's tables with their headers in the interface's language (modelo writes them in Spanish); the
+    values from the sources and the raw column names stay as they come."""
+    use = idioma.t("lab.tables.use")
+    entrada_a = entrada_a.assign(uso=entrada_a.uso.map(use))
+    entrada_b = entrada_b.set_axis(idioma.t("lab.tables.inputs_columns"), axis=1)
+    entrada_b[entrada_b.columns[-1]] = entrada_b[entrada_b.columns[-1]].map(use)
+    origen = pd.DataFrame(dict(zip(idioma.t("lab.tables.origin_columns"),
+                                   (entrada_b.columns[:-1], idioma.t("lab.tables.origin_concepts"),
+                                    idioma.t("lab.tables.origin_sources")))))
+    aprendido = aprendido.set_axis(idioma.t("lab.tables.learned_columns"), axis=1)
+    pesos = dict(zip(idioma.t("lab.tables.concepts"), pesos.values()))
+    return entrada_a, entrada_b, origen, aprendido, pesos
 
 
 def show_how(tech):
@@ -145,17 +161,17 @@ def registros(pozo):
     return pd.DataFrame(rows, columns=columns)
 
 
-UNITS = {"grupo": "", "area": "", "pct": "%", "profundidad": "m", **{k: v[1] for k, v in modelo.FRACTURA.items()}}
+UNITS = {"grupo": "", "area": "", "pct": "%", "profundidad": "m", **modelo.FRACTURA}
 
 
 # The model writes these marks (modelo.marca); the app shows them with the same status mark as every link
-MODEL_MARKS = {"unión revisada por IA, a confirmar por una persona": "ia", "dato corregido con documento": "persona"}
+MODEL_MARKS = {"marca_ia": "ia", "marca_documento": "persona"}
 
 
 def mark(text):
     """A fact's mark: a link's review status with the app's one mark, any other note after an orange dot."""
     for model_text, key in MODEL_MARKS.items():
-        text = text.replace(model_text, enlaces.label(key))
+        text = text.replace(modelo.texto(model_text, idioma.lang()), enlaces.label(key))
     return text if text[:1] in "🟠✅" else f"● {text}"
 
 
@@ -166,7 +182,7 @@ def flags_text(row, variable, ui):
 
 
 def variable_label(variable):
-    """A model variable in words; the Spanish fracturing labels are modelo.FRACTURA's, capitalized."""
+    """A model variable in words; the fracturing labels are modelo's «fractura_<variable>» texts, capitalized."""
     label, unit = idioma.t(f"lab.variable_label.{variable}"), UNITS[variable]
     return f"{label} ({unit})" if unit else label
 
@@ -369,7 +385,7 @@ def show_well(key, pozo=None):
     inicial = next((i for i, p in enumerate(etiquetas.values()) if p == ejemplo), 0)
     if pozo is None:
         pozo = etiquetas[st.selectbox(idioma.t("lab.show_well.selector"), list(etiquetas), index=inicial, key=key, help=ayuda("lab_pozo"))]
-    ea, eb = modelo.explicacion_a(r, a, pozo), modelo.explicacion_b(r, b, ctx, pozo)
+    ea, eb = modelo.explicacion_a(r, a, pozo, lang=idioma.lang()), modelo.explicacion_b(r, b, ctx, pozo, lang=idioma.lang())
     origen = registros(pozo)
     meses = origen[origen.registro.str.startswith("Gas")].fecha.sort_values()
     fracturas = origen[origen.registro.str.startswith("Fractura")]
@@ -404,7 +420,7 @@ def show_well(key, pozo=None):
                 st.markdown(idioma.t("lab.show_well.rule_evidence", rule=h["regla"], evidence=h["evidencia"])
                             + (idioma.t("lab.show_well.name", name=h["nombre"]) if h.get("nombre") else "")
                             + idioma.t("lab.show_well.sources", sources=h["fuentes"]))
-                if h["hecho"] == "Fractura" and len(fracturas):   # «Fractura» is modelo's fact name, not a visible text
+                if h["id"] == "fractura" and len(fracturas):
                     st.markdown(idioma.t("lab.show_well.origin_records", records="; ".join(
                         idioma.t("lab.show_well.origin_record", id=x.cual,
                                  date=f"{x.fecha[8:10]}/{x.fecha[5:7]}/{x.fecha[:4]}",
