@@ -1239,3 +1239,14 @@ experiment's log as method changes made after it; they do not change its measure
   of every published run, 5,590 → 6,149), the predictions evaluation (`energia_lab`: same answers and scores), the
   query gate (15/15) and the slide numbers (only `Prediccion_revisados` changed).
 - **Why:** the user asked for Rastro Lab in English with a new published run.
+
+## 2026-10-26 — The predictions rule checks the current run; the change check in English
+
+- **Quality:** the «Prediccion» rule read the predictions of every published run (11 runs, 6,149 checked), so its
+  count grew with each publish and the slide said «· 6.149» for 559 predictions. Its data query
+  (`ontology/energia/calidad/datos.yaml`) now takes only the current run's: 559 checked, none fail; the other rules
+  and their failures are unchanged. Re-run: quality and the slide numbers (only `Prediccion_revisados`).
+- **The change test's warning** («Rastro avisa: …») is recorded in Spanish by each domain's `probar.py`. In English
+  the app writes the three known checks (units, scope, vocabulary) again with the numbers it reads from the recorded
+  text; any other check is shown as recorded. The recorded results are not touched, so nothing is re-measured.
+- **Why:** the user approved both after the Lab in English.

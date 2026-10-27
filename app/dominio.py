@@ -132,6 +132,30 @@ def prefixed(query, domain):
     return f"PREFIX {domain}: <{ns}>\n" + (PROV if "prov:" in query else "") + query
 
 
+# The change test's recorded checks (in Spanish) and the numbers each one carries
+CHECKS = {"check_units": re.compile(r"suma ([\d.,]+) millones de m³, y la producción nacional ronda los ([\d.,]+)"),
+          "check_cutoff": re.compile(r"hay contratos de US\$([\d.]+),"),
+          "check_vocabulary": re.compile(r"(\d+) estados que la ontología no documenta: (.*)")}
+
+
+def check_text(recorded):
+    """A change test's check in the interface's language: the known checks are written again with their numbers;
+    anything else is shown as recorded."""
+    text = recorded.split(": ", 1)[-1]
+    if idioma.lang() == "es":
+        return text
+    for key, pattern in CHECKS.items():
+        found = pattern.search(recorded)
+        if found:
+            if key == "check_vocabulary":
+                return idioma.t(f"dominio.trust.{key}", n=found.group(1), statuses=found.group(2))
+            numbers = [float(n.replace(".", "").replace(",", ".")) for n in found.groups()]
+            if key == "check_units":
+                return idioma.t(f"dominio.trust.{key}", total=idioma.number(numbers[0], 1), national=idioma.number(numbers[1], 1))
+            return idioma.t(f"dominio.trust.{key}", amount=idioma.number(numbers[0]))
+    return text
+
+
 def tabla(data, hide_index=True, use_container_width=True, column_config=None, key=None, **kwargs):
     """A table. Cells cut long text and do not scroll: if there are long texts, picking
     a row shows it in full below."""
@@ -1489,7 +1513,7 @@ def trust(cfg, tech, evaluation, changes):
             if before["totals"]["C"].get("❌", 0) > before["totals"]["B"].get("❌", 0):
                 st.caption(idioma.t("dominio.trust.fails_more"))
             if "🟡" in before.get("vocabulary", ""):
-                st.warning(idioma.t("dominio.trust.warns") + md(before["vocabulary"].split(": ", 1)[-1]))
+                st.warning(idioma.t("dominio.trust.warns") + md(check_text(before["vocabulary"])))
             if tech:
                 st.markdown(idioma.t("dominio.trust.fix_tech", where=change.get("donde", idioma.t("dominio.trust.of_mapping"))))
                 st.code(f"- {change['arreglo'][0]}\n+ {change['arreglo'][1]}", language="diff")

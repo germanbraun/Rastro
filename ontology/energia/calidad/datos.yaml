@@ -1,6 +1,6 @@
 # What the quality rules look at, and nothing else (ontology/calidad.py fetches it from Rastro with these CONSTRUCTs):
-# each link with its rule, source and evidence; the stakes; the predictions with what they used; the companies with
-# a LEI; the trajectories; the fracturing jobs. The energia: and prov: prefixes are added by the script.
+# each link with its rule, source and evidence; the stakes; the current run's predictions with what they used; the
+# companies with a LEI; the trajectories; the fracturing jobs. The energia: and prov: prefixes are added by the script.
 - |-
   CONSTRUCT { ?s energia:rule ?r ; prov:wasDerivedFrom ?f ; energia:sourceText ?t }
          WHERE { ?s energia:rule ?r . OPTIONAL { ?s prov:wasDerivedFrom ?f } OPTIONAL { ?s energia:sourceText ?t } }
@@ -11,7 +11,8 @@
 - |-
   CONSTRUCT { ?p a energia:Prediction ; prov:used ?u ; energia:predictedGas ?g ; energia:predictedLow ?l ;
                     energia:predictedHigh ?h . ?u a ?t }
-         WHERE { ?p a energia:Prediction . OPTIONAL { ?p energia:predictedGas ?g } OPTIONAL { ?p energia:predictedLow ?l }
+         WHERE { ?p a energia:Prediction ; prov:wasGeneratedBy ?run . ?run energia:current true .
+                 OPTIONAL { ?p energia:predictedGas ?g } OPTIONAL { ?p energia:predictedLow ?l }
                  OPTIONAL { ?p energia:predictedHigh ?h } OPTIONAL { ?p prov:used ?u . ?u a ?t } }
 - |-
   CONSTRUCT { ?e a energia:Company ; energia:lei ?l } WHERE { ?e a energia:Company ; energia:lei ?l }

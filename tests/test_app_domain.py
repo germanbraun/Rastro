@@ -61,3 +61,20 @@ def test_pending_lifecycle_questions_are_not_exposed(tmp_path, monkeypatch):
     monkeypatch.setattr(dominio.answer, "ROOT", tmp_path)
     monkeypatch.setitem(dominio.answer.DOMAINS, "library", {"method": {"lifecycle": "state.json"}})
     assert dominio.validated_questions({"domain": "library", "preguntas": [{"id": "q1"}]}) == []
+
+
+def test_change_check_in_english_keeps_its_numbers(monkeypatch):
+    import dominio
+    import idioma
+    recorded = ("🟡 Control de unidades: el petróleo de 2025 suma 293,2 millones de m³, y la "
+                "producción nacional ronda los 46,6: ¿cambió la unidad?")
+    monkeypatch.setattr(idioma, "lang", lambda: "en")
+    assert dominio.check_text(recorded) == ("2025 oil adds up to 293.2 million m³, and national production is around "
+                                            "46.6: did the unit change?")
+    assert "US$10,000," in dominio.check_text("🟡 Control del recorte: hay contratos de US$10.000, y el recorte dice")
+    assert dominio.check_text("🟡 Otro control: algo") == "algo"
+    monkeypatch.setattr(idioma, "lang", lambda: "es")
+    assert dominio.check_text(recorded) == recorded.split(": ", 1)[1]
+    monkeypatch.setattr(idioma, "lang", lambda: "en")
+    assert dominio.check_text("🟡 Control de vocabulario: 2 estados que la ontología no documenta: A, B") == \
+        "2 statuses the ontology does not document: A, B"

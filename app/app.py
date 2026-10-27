@@ -836,9 +836,8 @@ with trust_tab:
                 col.caption(change_summary(before["totals"][k]))
             if before["totals"]["C"].get("❌", 0) > before["totals"]["B"].get("❌", 0):
                 st.caption(t("app.change.fails_loud_tech") if TECH else t("app.change.fails_loud"))
-            # the measured result writes its warning in Spanish: it is shown as it was recorded
             if "Control de vocabulario" in before["vocabulary"] and "🟡" in before["vocabulary"]:
-                st.warning(t("app.change.warns") + before["vocabulary"].replace("🟡 Control de vocabulario: ", ""))
+                st.warning(t("app.change.warns") + dominio.check_text(before["vocabulary"]))
             if TECH:
                 st.markdown(t("app.change.fix_tech"))
                 st.code(f"- {change['fix'][0]}\n+ {change['fix'][1]}", language="diff")
