@@ -67,6 +67,18 @@ become rejections under the approved definition; 13 new candidates rejected; all
   the second matched an address («UNR-CONICET Rosario»); both were caught by comparing the links before and after,
   and corrected before measuring.
 
+## Re-test on unseen affiliations (2026-10-27)
+
+The fair test the re-measurement asked for: 100 more works from the same capture, linked with the rules before and
+after the fixes, against a new blind annotation (three fresh Claude reviewers, AI-reviewed, pending a person). Details
+in `docs/experiments/research-affiliations/holdout/README.md`.
+
+- Mentions that agree with the reference: 854 → **866 of 886** (96.4 % → 97.7 %); precision 0.961 → 0.985, recall
+  0.979 → 0.977. The fixes generalize.
+- Two defects remain on new data: a footnote digit glued to a name (6 strings) and a short name inside a longer one
+  not followed by «de/del/of» (2). Not fixed: the holdout stays as measured.
+- It scores links, not the five questions, so the 5/5 above stays optimistic until a person confirms the references.
+
 ## Limits
 
 - The reference is AI work. The three reviewers took about three minutes each for ~320 strings; their receipt says

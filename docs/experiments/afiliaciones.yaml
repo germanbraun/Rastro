@@ -453,6 +453,11 @@ errors_caught:
     city, matching across segment boundaries, a short name inside a longer one, a shared acronym (CIC)'
   fix: 'not fixed: the measurement stays as taken; each is a change in one place (normalization or rule), then e3 and e5
     are re-measured where they apply, and said so'
+- step: links
+  check: 'holdout: 100 unseen works, blind annotation by three fresh reviewers'
+  failure_kind: a footnote digit glued to a name («11Hospital…», «3CEMIC»; the fix handles only letters), 6 strings; a short
+    ROR name inside a longer one when the next word is not de/del/of («Instituto de Ciencias Físicas»), 2 strings
+  fix: 'not fixed: the holdout stays as measured; a fix would be tuned on it and needs another unseen set'
 method_changes:
 - change: ontology/calidad.py keeps each finding's SHACL severity, counts per severity per rule and in total, and reports
     review_findings (warnings or info only) apart from defects_detected (any violation); quality-rules skill says where

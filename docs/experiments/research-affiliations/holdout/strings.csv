@@ -1,0 +1,562 @@
+string_id,review,mentions,text
+h001,screen,3,"1 Federal University of Lavras, Department of Soil Science, P.O. Box 3037, Lavras, Minas Gerais 37200-900, Brazil"
+h002,screen,1,"10Hospital Universitario La Paz, Madrid, Spain"
+h003,full,1,"11Hospital Privado Universitario de Córdoba, Córdoba, Argentina"
+h004,screen,1,"12Hospital Clínico Universitario de Salamanca, Salamanca, Spain"
+h005,full,1,"13Hospital de Oncología Marie Curie, Buenos Aires, Argentina"
+h006,screen,1,"14Hospital Universitario y Politécnico La Fe, Valencia, Spain"
+h007,full,1,"15Hospital Italiano La Plata, La Plata, Argentina"
+h008,screen,1,"16Hospital Universitari Vall d'Hebron, Barcelona, Spain"
+h009,full,1,"17Hospital Regional José Bernardo Iturraspe, Córdoba, Argentina"
+h010,screen,1,"18Hospital Universitario Príncipe de Asturias, Madrid, Spain"
+h011,screen,1,"19Hospital Universitario Central de Asturias, Oviedo, Spain"
+h012,screen,1,1Hospital Pediátrico Alexander Fleming - Unidad de Inmunología -OSEP
+h013,screen,2,"1Hospital Universitario Ramon y Cajal / IRYCIS, Madrid, Spain"
+h014,screen,1,"1Laboratoire Matière et Systèmes Complexes, Université Paris Cité, CNRS (UMR 7057), Paris, France; email: axel.huerre@cnrs.fr"
+h015,full,7,"1Laboratorio de Inmunología Molecular, DQB/IQUIBICEN, Facultad de Ciencias Exactas y Naturales, Universidad de Buenos Aires, Argentina"
+h016,full,11,"1Servicio de Autoinmunidad e Inmunologia Hospital El Cruce, Florencio Varela, Argentina"
+h017,screen,1,"2 Department of Earth and Atmospheric Sciences, Central Michigan University, Mount Pleasant, Michigan 48859, USA"
+h018,screen,1,"20Hospital Arnau de Vilanova, Valencia, Spain"
+h019,screen,1,"21Hospital Puerta de Hierro Majadahonda, Madrid, Spain"
+h020,screen,1,"22Clinica Universidad de Navarra, Pamplona, Spain"
+h021,screen,1,"23Hospital Sanitas La Zarzuela, Madrid, Spain"
+h022,screen,1,"24Hospital Virgen del Puerto, Plasencia, Spain"
+h023,screen,1,"25Hospital de la Princesa, Madrid, Spain"
+h024,full,1,"26Clinica La Pequeña Familia, Junin, Argentina"
+h025,full,1,"27Clinica Centro, Junin, Argentina"
+h026,full,1,"28Clínica Universitaria Reina Fabiola, Córdoba, Argentina"
+h027,full,1,"29Sanatorio Allende, Córdoba, Argentina"
+h028,screen,2,"2Instituto Nacional de Cancerologia, Bogotá, Colombia"
+h029,screen,1,"2Laboratoire d’Hydrodynamique, Institut Polytechnique de Paris, CNRS-Ecole Polytechnique (UMR 7646), Palaiseau, France"
+h030,full,1,"2Laboratorio Biología Molecular Genética - Hospital Garrahan, Ciudad de Buenos Aires, Argentina"
+h031,full,3,"2Laboratorio de Inmunología Molecular, DQB/IQUIBICEN, Facultad de Ciencias Exactas y Naturales, Universidad de Buenos Aires, Argentina"
+h032,full,1,"2Servicio de Citometría, Hospital Garrahan, Argentina"
+h033,screen,1,"3 School of Earth, Environment, and Sustainability, Georgia Southern University, Statesboro, Georgia 30460, USA"
+h034,screen,1,"30Institut Català d'Oncologia-Hospitalet, Barcelona, Spain"
+h035,screen,2,"31ICO-IJC-Badalona-Hospital Germans Trias i Pujol, Badalona, Spain"
+h036,full,1,"32FUNDALEU, Buenos Aires, Argentina"
+h037,full,1,"3CEMIC, Buenos Aires, Argentina"
+h038,full,1,"3Institut Franco-Argentin de Dynamique des Fluides pour l’Environnement, CNRS (IRL 2027), Universidad de Buenos Aires, CONICET, Buenos Aires, Argentina"
+h039,full,1,"3Sanatorio de Niños, Rosario, Argentina"
+h040,full,1,"4 Lithium Argentina AG, Dammstrasse 19, 6300 Zug, Switzerland"
+h041,screen,2,"4Hospital Universitario Fundación Jiménez Díaz / IIS-FJD, Madrid, Spain"
+h042,full,1,"4Hospital de Niños Victor J Vilela, Rosario, Argentina"
+h043,screen,1,"4Institut Jean Le Rond d’Alembert, Sorbonne Université, CNRS (UMR 7190), Paris, France"
+h044,screen,1,"5 Lamont-Doherty Earth Observatory, Columbia University, Palisades, New York 10964-1000, USA"
+h045,full,1,"5Hospital Interzonal Materno Infantil de Mar del Plata, Argentina"
+h046,screen,2,"5Hospital Universitario 12 de Octubre, Madrid, Spain"
+h047,screen,1,"6Hospital Fernando Ocaranza, ISSSTE, Sonora, Mexico"
+h048,full,1,"7Hospital Universitario Austral, Buenos Aires, Argentina"
+h049,screen,2,"8Hospital General Universitario Gregorio Marañon, Instituto de Investigacion Sanitaria Gregorio Marañon, Madrid, Spain"
+h050,full,1,"9Hospital Italiano de Buenos Aires, Buenos Aires, Argentina"
+h051,full,3,"AInstituto Argentino de Nivología, Glaciología y Ciencias Ambientales (IANIGLA), Centro Científico Técnico (CCT) Mendoza–Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET), Mendoza, Argentina."
+h052,screen,3,Afromontane Research Unit &amp; Department of Geography University of the Free State: Qwaqwa Campus  Phuthaditjaba South Africa
+h053,full,7,"Alexander Fleming Institute, Buenos Aires, Argentina"
+h054,full,1,"Alexander Fleming Institute, Caba, Argentina"
+h055,full,1,"Alexander Fleming Institute, Ciudad Autónoma De Buenos Aires, Argentina"
+h056,full,5,"Alexander Fleming Institute, Ciudad De Buenos Aires, Argentina"
+h057,screen,1,"Alfred Health-Monash University, Melbourne, VIC, Australia"
+h058,screen,2,Alfred Wegener Institute Helmholtz Centre for Polar and Marine Research  Bremerhaven Germany
+h059,screen,1,"Antioxidants Research Group, Food Technology Department, Agrotecnio‐RECERCA Center University of Lleida Lleida Spain"
+h060,screen,2,"Asociación para el Desarrollo y Conservación de los Recursos Naturales (Illariy), Lima, Perú."
+h061,screen,1,"Aurora St. Luke’s Medical Center, Milwaukee, WI, USA"
+h062,screen,1,"Autonomous University of Barcelona, Spain"
+h063,screen,1,"BIOPOLIS Program in Genomics, Biodiversity and Land Planning, CIBIO  Vairão Portugal"
+h064,screen,2,"Barcelona Supercomputing Center, Barcelona, Spain"
+h065,full,1,"Becaria Doctoral CONICET, Academia Nacional de Medicina, Argentina"
+h066,screen,1,"Biobank for aging studies of the University of São Paulo Medical School, São Paulo, Brazil"
+h067,screen,1,"Biodiversity Dynamics and Conservation, Department of Botany and Biodiversity Research University of Vienna  Vienna Austria"
+h068,screen,1,"Biological Engineering Department, CenUR LN, Paysand&#x00FA;, Uruguay"
+h069,screen,5,Biology Department University of Padova  Padova Italy
+h070,screen,1,"Biomedical Research Networking Center in Cardiovascular Diseases (CIBERCV), Monforte de Lemos Avenue 3–5, 28029 Madrid, Spain"
+h071,full,1,"Biomining and Environmental Biotechnology Laboratory – National Commission of Atomic Energy, Av. Ptero González y Aragón No. 15, B1802AYA, Buenos Aires, Argentina"
+h072,screen,2,"Bird Ecology Lab, Instituto de Ciencias Marinas y Limnológicas Universidad Austral de Chile  Valdivia Chile"
+h073,screen,1,Botany and Mycology Unit. Finnish Museum of Natural History University of Helsinki  Finland
+h074,screen,1,CALYM  Lyon France
+h075,screen,1,"CENIMAT/I3N, Department of Materials Science NOVA School of Science and Technology Universidade NOVA de Lisboa  Caparica Portugal"
+h076,screen,1,"CIBER of Diabetes and Associated Metabolic Diseases (CIBERDEM), Carlos III Health Institute (ISCIII), 28029 Madrid, Spain"
+h077,screen,1,"CIBIO‐InBIO, Research Center in Biodiversity and Genetic Resources University of Porto  Vairão Portugal"
+h078,full,1,"CNRS-IRD-CONICET-UBA, Instituto Franco-Argentino para el Estudio del Clima y sus Impactos, Buenos Aires, Argentina"
+h079,screen,1,CNR‐ISP Institute of Polar Sciences  Bologna Italy
+h080,full,1,"CONICET and FLACSO, Argentina"
+h081,full,1,"CONICET – Centro de Arqueología Urbana, IAA-FADU, Universidad de Buenos Aires, Buenos Aires, Argentina"
+h082,full,3,CONICET – Universidad de Buenos Aires Instituto de Química Física de Materiales Medio Ambiente y Energía (INQUIMAE)  Pabellón 2 Ciudad Universitaria C1428EHA Buenos Aires Argentina
+h083,full,2,"CONICET – Universidad de Buenos Aires, Facultad de Farmacia y Bioquímica, Instituto de Nanobiotecnología (NANOBIOTEC), Buenos Aires, Argentina"
+h084,full,1,"CONICET, Argentina; GEALA, Argentina"
+h085,screen,1,CONICET-Universidad de Buenos Aires
+h086,screen,1,"Cancer Center Clinica Universidad de Navarra, CIMA, IDISNA, Pamplona, Spain"
+h087,screen,1,"Carrrera de Medicina Humana Universidad Científica del Sur (Scientific University of the South), Lima, Peru"
+h088,screen,1,"Center for Research in Physical and Mathematical Sciences (CICFIM), Faculty of Physical and Mathematical Sciences, Autonomous University of Nuevo León, San Nicolás de los Garza, Mexico."
+h089,screen,1,"Centre for Creativity and Entrepreneurial Studies, Dominican University Ibadan, 10, Education Layout, Ibadan 200132, Nigeria"
+h090,screen,1,"Centre for the Science of Learning and Technology, University of Bergen, Christiesgate 12, 5020 Bergen, Norway"
+h091,full,3,"Centro Integral de Neurología Vascular FLENI, Ciudad de Buenos Aires, Argentina"
+h092,screen,1,"Centro NanoMat, Polo Tecnológico de Pando, Facultad de Química, Universidad de la República, Pando 15600, Uruguay"
+h093,full,1,"Centro Regional Universitario Bariloche, Universidad Nacional del Comahue (CRUB-UNCO), Quintral 1250, 8400 San Carlos de Bariloche, Río Negro, Argentina."
+h094,screen,1,"Centro de Estudo de Medicina Dentária Baseada na Evidência (CEMDBE) – Cochrane Portugal, Faculdade de Medicina Dentária Universidade de Lisboa  Lisboa Portugal"
+h095,full,1,Centro de Hematología Pavlovsky  Buenos Aires Argentina
+h096,screen,1,"Centro de Investigaciones Tecnologicas, Biomedica y Medioambientales-CITBM, Faculty of Medicine San Fernando, Universidad Nacional Mayor de San Marcos, Lima, Perú."
+h097,full,1,"Centro de Investigaciones del Mar y la Atmósfera, CONICET-Universidad de Buenos Aires, Buenos Aires, Argentina"
+h098,full,2,"Centro de Investigaciones en Bioquímica Clínica e Inmunología (CIBICI), Consejo Nacional de Investigaciones Científicas y Tecnológicas (CONICET), Córdoba X5000HUA, Argentina; Departamento de Bioquímica Clínica, Facultad de Ciencias Químicas, Universidad Nacional de Córdoba"
+h099,full,1,"Centro de Investigaciones en Bioquímica Clínica e Inmunología (CIBICI), Consejo Nacional de Investigaciones Científicas y Tecnológicas (CONICET), Córdoba X5000HUA, Argentina; Departamento de Bioquímica Clínica, Facultad de Ciencias Químicas, Universidad Nacional de Córdoba; Current address"
+h100,full,1,"Centro de Investigaciones en Bioquímica Clínica e Inmunología (CIBICI), Consejo Nacional de Investigaciones Científicas y Tecnológicas (CONICET), Córdoba X5000HUA, Argentina; Departamento de Bioquímica Clínica, Facultad de Ciencias Químicas, Universidad Nacional de Córdoba; Current address: Department of Medicine, Division of Cardiology, New York University, Cardiovascular Research Center, New York, University School of Medicine, New York, NY, United States"
+h101,full,6,"Centro de Investigación y Desarrollo en Ciencias Aplicadas (CINDECA), Facultad de Ciencias Exactas, Universidad Nacional de La Plata (UNLP)—CONICET, Calle 47, 257, La Plata 1900, Argentina"
+h102,full,1,Centro para el Estudio de Sistemas Marinos – Consejo Nacional de Investigaciones Científicas y Técnicas  Puerto Madryn Argentina
+h103,screen,1,Children's Hospital at Westmead  Westmead New South Wales Australia
+h104,screen,1,Cincinnati Children's Hospital Medical Center  Cincinnati USA
+h105,screen,1,Clinical Hematology Department Institut Català d'Oncologia‐Hospitalet Institut d'Investigació Biomèdica de Bellvitge (IDIBELL) University of Barcelona  Barcelona Spain
+h106,full,1,"Clínica Argentina de General Pico, La Pampa, Argentina"
+h107,screen,1,"Clínica Bíblica Hospital, San José, Costa Rica."
+h108,full,5,"Clínica La Sagrada Familia, Ciudad de Buenos Aires, Argentina"
+h109,full,1,"Clínica Universitaria Reina Fabiola, Córdoba, Argentina"
+h110,screen,1,"Clínica Veterinaria Docente, Universidad de Las Américas (UDLA), Calle Shuara N40-55y Av. De Los Granados, Quito EC 170503, Ecuador"
+h111,full,2,"Clínica de Imágenes Neuquén, Neuquén, Argentina"
+h112,screen,3,"Clínica del Sur, La Paz, Bolivia"
+h113,screen,1,"Cognitive Neurology and Dementia, Neurology Department, Hospital del Salvador, Santiago, Chile"
+h114,screen,1,"Cognitive and Behavioral Neurology Unit ‐ University of São Paulo, São Paulo, Brazil"
+h115,full,2,"Comisi&#x00F3;n Nacional de Actividades Espaciales (CONAE), C&#x00F3;rdoba, Argentina"
+h116,full,2,Comisión Nacional de Energía Atómica (CNEA) Ezeiza Buenos Aires Argentina
+h117,full,2,"Comisión Nacional de Energía Atómica (CNEA), Gerencia de Investigación y Aplicaciones, Subgerencia de Tecnología y Aplicaciones de Aceleradores, San Martín, Buenos Aires, Argentina"
+h118,full,1,"Comisión de Investigaciones Científicas de la Provincia de Buenos Aires (CIC), Ministerio de Producción, Ciencia e Innovación Tecnológica, 526 Street, La Plata B1900, Argentina"
+h119,screen,1,Concord Repatriation General Hospital University of Sydney  Concord Australia
+h120,full,1,Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)  Buenos Aires Argentina
+h121,full,9,"Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET), Buenos Aires B1001, Argentina"
+h122,full,2,"Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET), Godoy Cruz 2290, Argentina"
+h123,full,1,"Consejo Nacional de Investigaciones Científicas y Técnicas, Córdoba 5000, Córdoba, Argentina"
+h124,full,2,"Consejo Nacional de Investigaciones Científicas y Técnicas-Instituto de Investigaciones Gino Germani-Universidad de Buenos Aires,  Argentina"
+h125,full,1,"Coordinador de láser de “Derma Internacional”, Buenos Aires, Argentina."
+h126,full,5,"Cytology Laboratory, Department of Clinical Biochemistry, School of Pharmacy and Biochemistry, University of Buenos Aires, Buenos Aires C1120, Argentina"
+h127,full,1,"Cátedra de Biología Celular y Molecular, Facultad de Ciencias Naturales y de la Salud, Universidad Nacional de la Patagonia San Juan Bosco, Comodoro Rivadavia U9005CXC, Argentina"
+h128,full,2,"Cátedra de Ecología, Departamento de Recursos Naturales y Ambiente, Facultad de Agronomía Universidad de Buenos Aires  Buenos Aires Argentina"
+h129,full,1,"Cátedra de Forrajicultura, Departamento de Producción Animal, Facultad de Agronomía Universidad de Buenos Aires  Buenos Aires Argentina"
+h130,screen,1,"D'Or Institute for Research and Education Rua Diniz Cordeiro, Rio de Janeiro, RJ, Brazil;"
+h131,screen,1,"DCU Centre for Possibility Studies, Dublin City University, Glasnevin Campus, D09 V209 Dublin, Ireland"
+h132,screen,5,"DEI Department, Marconi Institute for Creativity, University of Bologna, Viale Risorgimento 2, 40136 Bologna, Italy"
+h133,screen,1,"Dementia Laboratory, National Institute of Neurology and Neurosurgery, Mexico City, Mexico"
+h134,screen,1,"Dementias Laboratory, National Institute of Neurology and Neurosurgery, Mexico City, DF, Mexico"
+h135,screen,1,"Dental Specialty Center, Brazilian Military Police  Belo Horizonte Minas Gerais Brazil"
+h136,screen,4,Deparment of Endodontics Fluminense Federal University  Niterói Brazil
+h137,screen,2,"Departamento Investigación Médica, Universidad Técnica Oruro, Oruro, Bolivia"
+h138,screen,1,"Departamento de Agronomía, Universidad de Almería, ceiA3, Carretera Sacramento, s/n, La Cañada, 04120 Almería, Spain"
+h139,full,2,"Departamento de Biología, Bioquímica y Farmacia, Universidad Nacional del Sur, Buenos Aires B8000, Argentina"
+h140,screen,1,"Departamento de Botánica, Facultad de Ciencias Naturales y Oceanográficas Universidad de Concepción  Concepcion Chile"
+h141,full,2,"Departamento de Ciencias Químicas, Facultad de Farmacia y Bioquímica, Universidad de Buenos Aires, CABA 1113, Argentina; Instituto de Química y Metabolismo del Fármaco (IQUIMEFA), CONICET - Universidad de Buenos Aires, CABA 1113, Argentina"
+h142,full,1,"Departamento de Diagnóstico Molecular, LACE Laboratorios, Córdoba, Argentina"
+h143,full,2,"Departamento de Diagnóstico Molecular, LACE Laboratorios, Córdoba, Argentina; Unidad Asociada Área Ciencias Agrarias, Ingeniería, Ciencias Biológicas y de la Salud, Consejo Nacional de Investigaciones Científicas y Tecnológicas (CONICET), Facultad de Ciencias Químicas, Universidad Católica de Córdoba, Córdoba, Argentina"
+h144,full,2,"Departamento de Física, Facultad de Ciencias Exactas, Universidad Nacional de La Plata UNLP, La Plata B1900, Argentina"
+h145,full,2,"Departamento de Física, Facultad de Ciencias Exactas, Universidad Nacional de La Plata e Instituto de Física La Plata, IFLP (UNLP – CONICET, CCT La Plata), C.C. 67-1900, La Plata, Argentina"
+h146,full,3,"Departamento de Hemoterapia e Inmuno-hematología, Hospital de ClínicasJosé de San Martín, Universidad de Buenos Aires, Argentina"
+h147,full,3,"Departamento de Industrias, Facultad de Ciencias Exactas y Naturales, Universidad de Buenos Aires, Buenos Aires C1428EGA, Argentina"
+h148,screen,2,"Departamento de Ingeniería Química, Calle Virgen de África, 7 (Escuela Politécnica Superior), 41011 Sevilla, Spain"
+h149,full,7,"Departamento de Ingeniería Química, Facultad de Ingeniería, Universidad Nacional de La Plata (UNLP), Calle 1 esq. 47, La Plata 1900, Argentina"
+h150,screen,1,"Departamento de Mastozoología, Museo de Historia Natural, Universidad Nacional Mayor de San Marcos, Lima, Perú."
+h151,full,1,"Departamento de Métodos Cuantitativos y Sistemas de Información, Facultad de Agronomía Universidad de Buenos Aires  Buenos Aires Argentina"
+h152,full,2,"Departamento de Neurología, Hospital Británico, Ciudad de Buenos Aires, Argentina"
+h153,full,2,"Departamento de Química Biológica, Facultad de Ciencias Exactas y Naturales, Universidad de Buenos Aires, Buenos Aires B10001, Argentina"
+h154,screen,1,"Departamento de Química General e Inorgánica, Facultad de Química, Universidad de La Habana, CP 10400, La Habana, Cuba"
+h155,full,2,"Departamento de Química Teórica y Computacional, Facultad de Ciencias Químicas, Instituto de Investigaciones
+en Físico-Química de Córdoba, Universidad Nacional de Córdoba, INFIQC-CONICET, Cordoba,
+Argentina"
+h156,full,4,"Departamento de Química, INQUISUR, Universidad Nacional del Sur, Bahía Blanca B8000, Argentina"
+h157,screen,2,Department Chemie und Pharmazie Physikalische Chemie Friedrich-Alexander-Universität Erlangen-Nürnberg  Egerlandstraße 3 91058 Erlangen Germany
+h158,screen,1,"Department of Agronomy, Horticulture and Plant Science South Dakota State University  Brookings South Dakota USA"
+h159,screen,1,"Department of Basic Health Sciences, National University of Cuyo"
+h160,screen,1,"Department of Biochemistry, Faculty of Pharmacy, Complutense University of Madrid, IdISSC, Plaza Ramón y Cajal s/n, 28040 Madrid, Spain"
+h161,screen,1,Department of Biology University of Alabama at Birmingham  Birmingham Alabama USA
+h162,screen,1,"Department of Biophysics, Brain Research Institute, Universidad Veracruzana, Xalapa, Veracruz, Mexico;"
+h163,screen,1,"Department of Biostatistics, Universidad Católica de Murcia, Murcia, Spain"
+h164,screen,4,"Department of Cardiology, Hospital Español de Mendoza"
+h165,screen,1,"Department of Economics and Sustainable Development, Harokopio University, El. Veinzelou 70, 17676 Athens, Greece"
+h166,screen,1,"Department of Electrical, Biomedical and Computer Engineering, University of Pavia, Pavia, Italy"
+h167,full,2,Department of Endodontics Maimonides University (UMAI)  Buenos Aires Argentina
+h168,screen,1,Department of Endodontics Rio de Janeiro State University  Rio de Janeiro Brazil
+h169,screen,1,"Department of Energy, CIEMAT, 28040 Madrid, Spain"
+h170,screen,1,Department of Environmental Sciences University of Basel  Basel Switzerland
+h171,screen,1,"Department of Forestry Fisheries and the Environment, Fisheries Research and Development Branch  Cape Town South Africa"
+h172,screen,1,Department of Global Pediatric Medicine and Department of Surgery St. Jude Children's Research Hospital  Memphis Tennessee USA
+h173,screen,1,"Department of Head and Neck-Endocrine Oncology, Moffitt Cancer Center, Tampa, FL, USA"
+h174,screen,1,"Department of Human Development, Teachers College, Columbia University, 525 W. 120th Street, New York, NY 10027, USA"
+h175,screen,1,"Department of Information Engineering and Mathematics, University of Siena, Siena, Italy"
+h176,screen,1,Department of Internal Medicine The University of Texas Health Science Center at Houston Houston Texas USA
+h177,full,1,"Department of Internal Medicine, Genetic Unit, Hospital Central de Mendoza, Mendoza, Argentina"
+h178,screen,3,Department of Land Resources and Environmental Sciences Montana State University  Bozeman Montana USA
+h179,screen,1,"Department of Life Sciences, University of Trieste, Via E. Weiss, 2, 34128 Trieste, Italy"
+h180,screen,4,"Department of Mathematics and Statistics, University of Exeter, Exeter, United Kingdom"
+h181,screen,1,"Department of Metabolism and Nutrition, Institute of Food Science, Technology and Nutrition (ICTAN-CSIC), José Antonio Nováis 10, 28040 Madrid, Spain"
+h182,screen,1,Department of Neurology Rhode Island Hospital and Brown University  Providence Rhode Island USA
+h183,screen,1,"Department of Neurology Sheffield Teaching Hospitals NHS Foundation Trust, Royal Hallamshire Hospital  Sheffield UK"
+h184,screen,1,Department of Neurology University Hospital Essen  Essen Germany
+h185,screen,1,"Department of Neurology, Stroke Division Beth Israel Deaconess Medical Center and Harvard Medical School Boston Massachusetts USA"
+h186,full,1,"Department of Neurosurgery, University of Buenos Aires School of Medicine, Buenos Aires, Argentina"
+h187,screen,2,"Department of Neurosurgery, “Hospital Regional 1° de Octubre”, Instituto de Seguridad y Servicios Sociales de los Trabajadores del Estado, Mexico City, Mexico;"
+h188,screen,1,Department of Paediatric Surgery Chris Hani Baragwanath Academic Hospital Faculty of Health Sciences University of Witwatersrand  Johannesburg South Africa
+h189,screen,1,Department of Paediatric Surgery Royal Children's Hospital  Melbourne Victoria Australia
+h190,screen,1,Department of Paediatric Surgery and KKH Children's Blood and Cancer Centre KK Women's and Children's Hospital  Singapore Singapore
+h191,screen,1,Department of Paediatric Surgery and Urology Birmingham Children's Hospital  Birmingham UK
+h192,screen,1,Department of Pediatric Surgery Pediatric Oncology Institute—GRAACC—Federal University of São Paulo  São Paulo Brazil
+h193,screen,1,Department of Pediatric Surgery Tata Memorial Hospital  Mumbai India
+h194,screen,1,"Department of Pediatric Surgery, urology and transplantation Necker Enfants Malades Hospital APHP and Paris Cité University  Paris France"
+h195,full,1,"Department of Physics, Faculty of Exact and Natural Sciences and Surveying, National
+University of the Northeast, Avda. Libertad, 5300, 3400 Corrientes, Argentina"
+h196,screen,1,"Department of Physiology, Faculty of Medicine, Complutense University of Madrid, Plaza Ramón y Cajal s/n, 28040 Madrid, Spain"
+h197,screen,3,"Department of Physiology, Faculty of Pharmacy, Complutense University of Madrid, Hospital Clínico San Carlos, IdISSC, c/Prof. Martín Lagos Street, 28040 Madrid, Spain"
+h198,screen,5,"Department of Physiology, Faculty of Pharmacy, Complutense University of Madrid, Plaza Ramón y Cajal s/n, 28040 Madrid, Spain"
+h199,screen,1,Department of Plant and Environmental Sciences Clemson University  Clemson South Carolina USA
+h200,screen,1,Department of Psychiatry Rhode Island Hospital and Brown University  Providence Rhode Island USA
+h201,screen,1,"Department of Psychology, Monk Prayogshala, 4114, C Wing, Oberoi Garden Estates, Near Chandivali Studios, Powai, Mumbai 400072, India"
+h202,screen,1,"Department of Psychology, Pennsylvania State University, Moore Building, Fischer Road, State College, PA 16801, USA"
+h203,screen,1,"Department of Psychology, University of Hildesheim, Universitätsplatz 1, 31141 Hildesheim, Germany"
+h204,screen,1,"Department of Psychology, University of Nebraska at Omaha, 6001 Dodge St., Omaha, NE 68132, USA"
+h205,screen,1,"Department of Psychology, University of San Francisco, 2130 Fulton Ave., San Francisco, CA 94117, USA"
+h206,full,6,"Department of Research, Orange Solutions, Buenos Aires, Argentina"
+h207,full,1,Department of Social Science University of San Andrés Victoria Provincia de Buenos Aires Argentina
+h208,screen,1,Department of Surgery Division of Pediatric Surgery University of Rochester Medical Center Golisano Children's Hospital  Rochester New York USA
+h209,screen,1,Department of Surgery Lerner College of Medicine and Case Western Reserve University Cleveland Clinic Children's Hospital  Cleveland USA
+h210,screen,1,"Department of Teaching and Learning, University of Montana, 32 Campus Drive, Missoula, MT 59812, USA"
+h211,full,1,"Department of Theoretical and Computational Chemistry, Faculty of Chemical Sciences, National University of Córdoba, Córdoba, Argentina."
+h212,screen,1,"Department of Vascular Neurosurgery, Centro Médico Nacional “20 de Noviembre”, Instituto de Seguridad y Servicios Sociales de los Trabajadores del Estado, Ciudad de México, Mexico;"
+h213,full,2,"Dirección de Enfermería, Hospital de Clínicas José de San Martín, Universidad de Buenos Aires, Argentina"
+h214,screen,1,Discipline of Psychiatry and Discipline of Child &amp; Adolescent Health University of Sydney Medical School  Sydney New South Wales Australia
+h215,screen,1,"Division of BioInvasions, Macroecology &amp; Global Change, Department of Botany and Biodiversity Research University Vienna  Vienna Austria"
+h216,full,1,"Division of Endocrinology, Hospital de Clínicas (Clinics Hospital), University of Buenos Aires, Buenos Aires, Argentina"
+h217,screen,1,"Division of Geriatrics, University of São Paulo Medical School, São Paulo, São Paulo, Brazil"
+h218,screen,1,"Division of Microbiology, Immunology, and Pathology Colorado State University, Fort Collins, CO, USA"
+h219,screen,1,"Division of Neuroscience University of Sheffield, Royal Hallamshire Hospital  Sheffield UK"
+h220,full,1,"Division of Trauma and Surgery, Hospital Alemán, Ciudad Autónoma de Buenos Aires, Argentina"
+h221,screen,1,"Division of Vertebrate Zoology, Department of Mammalogy, American Museum of Natural History, 200 Central Park West, 10024-5102, New York, U.S.A."
+h222,full,1,"División Infectología, Hospital de Clínicas José de San Martín, Universidad de Buenos Aires, Argentina"
+h223,full,2,"División Nutrición, Hospital de Clínicas José de San Martín, Universidad de Buenos Aires, Argentina"
+h224,screen,1,Ecology and Biodiversity (E&amp;B) Utrecht University  Utrecht the Netherlands
+h225,screen,1,"Eduardo Torroja Institute for Construction Science (IETCC), Spanish National Research Council (CSIC), 28033 Madrid, Spain"
+h226,screen,4,"El.En. Group, Calenzano, Italy."
+h227,full,1,"Endocrinology Service, Instituto de Oncología “Angel H. Roffo” (Angel H. Roffo Institute of Oncology), University of Buenos Aires, Buenos Aires, Argentina"
+h228,screen,1,"Epigene Labs, 7 square Gabriel Fauré, 75017 Paris, France."
+h229,screen,1,Erastinho Pediatric Oncology Hospital  Curitiba (PR) Brazil
+h230,screen,2,"Estación Experimental Quempillén, Facultad de Ciencias Universidad Austral de Chile  Chiloé Chile"
+h231,screen,1,Faculdade de Medicina Dentária Universidade de Lisboa  Lisboa Portugal
+h232,full,1,Facultad de Agronomía Universidad de Buenos Aires (UBA) Ciudad Autónoma de Buenos Aires Buenos Aires Argentina
+h233,full,1,"Facultad de Agronomía, Departamento de Producción Vegetal Universidad de Buenos Aires  Buenos Aires Argentina"
+h234,full,1,"Facultad de Agronomía, Departamento de Recursos Naturales y Ambiente, Cátedra de Botánica General Universidad de Buenos Aires  Buenos Aires Argentina"
+h235,full,3,"Facultad de Agronomía, Área de Educación Agropecuaria y Ambiental Universidad de Buenos Aires  Buenos Aires Argentina"
+h236,full,1,"Facultad de Arquitectura y Diseño, Universidad Argentina de la Empresa (UADE), Ciudad Autónoma de Buenos Aires C1073, Argentina"
+h237,full,1,"Facultad de Ciencias Exactas y Naturales, Departamento de Ciencias de la Atmósfera y los Océanos, Universidad de Buenos Aires, Buenos Aires, Argentina"
+h238,full,1,"Facultad de Ciencias Exactas y Naturales, Departamento de Química, Universidad Nacional de Mar del Plata, B7602AYL Mar del Plata, Funes 3350, Argentina"
+h239,full,3,"Facultad de Ciencias Exactas y Naturales, Dpto. de Química Inorgánica, Analítica y Química Física, Ciudad Universitaria Universidad de Buenos Aires  Buenos Aires Argentina"
+h240,full,1,"Facultad de Ciencias Exactas, F&#x00ED;sicas y Naturales (FCEFyN) and the Facultad de Matem&#x00E1;tica, Astronom&#x00ED;a, F&#x00ED;sica y Computaci&#x00F3;n (FAMAF), Universidad Nacional de C&#x00F3;rdoba, C&#x00F3;rdoba, Argentina"
+h241,full,6,"Facultad de Ciencias Exactas, Fı́sicas y Naturales, Instituto de Ciencia y Tecnologı́a de los Alimentos (ICTA), Universidad Nacional de Córdoba (UNC), Av. Velez Sarsfield 1611, Córdoba, Argentina"
+h242,full,1,Facultad de Ciencias Médicas Universidad de Buenos Aires Buenos Aires Argentina
+h243,full,4,Facultad de Ciencias Naturales y Museo Universidad Nacional de La Plata  La Plata Argentina
+h244,full,1,"Facultad de Ciencias Veterinarias, Universidad Nacional de Rosario (UNR), Boulevard Ovidio Lagos y Ruta 33 Casilda, Santa Fe S2000, Argentina"
+h245,screen,5,"Facultad de Ciencias de La Salud, Carrera de Medicina Veterinaria, Universidad de Las Américas (UDLA), Antigua Vía a Nayón S/N, Quito EC 170124, Ecuador"
+h246,full,2,"Facultad de Farmacia y Bioquímica, Universidad de Buenos Aires, CABA 1113, Argentina"
+h247,screen,1,"Facultad de Industrias Agropecuarias y Ciencias Ambientales, Carrera de Medicina Veterinaria, Universidad Politécnica Estatal del Carchi (UPEC), Antisana S/N y Av. Universitaria, Tulcán EC 040102, Ecuador"
+h248,screen,1,"Facultad de Ingeniería y Ciencias Aplicadas, Carrera de Ingeniería en Biotecnología, Universidad de Las Américas (UDLA), Antigua Vía a Nayón S/N, Quito EC 170124, Ecuador"
+h249,full,2,"Facultad de Ingeniería, INTEMA, Universidad Nacional de Mar del Plata (UNMdP), Mar del Plata B7600, Argentina"
+h250,screen,1,"Facultad de Medicina Veterinaria y Zootecnia, Universidad Central del Ecuador, Gatto Sobral y Jerónimo Leiton, Quito EC 170521, Ecuador"
+h251,screen,1,Facultad de Psicología Universidad Autónoma de Madrid (UAM)  Madrid Spain
+h252,screen,1,"Faculty of Data and Decision Sciences, Technion—Israel Institute of Technology, Kiryat Hatechnion, Haifa 3200003, Israel"
+h253,screen,1,Faculty of Health Sciences Universidad de La Rioja Logroño Spain
+h254,screen,1,"Faculty of Medicine ‐ Federal University of Minas Gerais, Belo Horizonte, Minas Gerais, Brazil"
+h255,screen,1,Faculty of Sciences and Technology University of Algarve  Faro Portugal
+h256,screen,1,"Faculty of Statistics and Informatics, Universidad Veracruzana, Xalapa, Veracruz, Mexico;"
+h257,full,1,"Fisicoquímica, Facultad de Farmacia y Bioquímica‐IBIMOL Universidad de Buenos Aires‐CONICET Buenos Aires Argentina"
+h258,full,2,"Fleni, Buenos Aires, Argentina"
+h259,full,1,"Fleni, Buenos Aires, Buenos Aires, Argentina"
+h260,full,1,"Fleni, CABA, Buenos Aires, Argentina"
+h261,screen,1,Fram Project AS  Oslo Norway
+h262,screen,2,Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU) Interdisciplinary Center for Molecular Materials  Egerlandstr. 3 91058 Erlangen Germany
+h263,full,3,"Fundación de Salud Ayurveda Prema, Buenos Aires, Argentina"
+h264,screen,1,German Centre for Integrative Biodiversity Research (iDiv) Halle‐Jena‐Leipzig  Puschstraße 4 Leipzig 04103 Germany
+h265,screen,1,"Geroscience Center for Brain Health and Metabolism (GERO), Santiago, Region Metropolitana, Chile"
+h266,screen,1,"Geroscience Center for Brain Health and Metabolism (GERO), Santiago, Región Metropolitana de Santiago, Chile"
+h267,screen,1,"Global Brain Health Institute, Memory and Aging Center, University of California San Francisco, San Francisco, CA, USA"
+h268,full,1,"Group of Research and Development in Bioengineering (GIBIO), Universidad Tecnol&#x00F3;gica Nacional, Buenos Aires, Argentina"
+h269,full,1,"Grupo CLIOPE, Facultad Regional Mendoza, Universidad Tecnológica Nacional, Av. Carlos Thays 310, Parque General San Martín – CP  Mendoza Argentina"
+h270,full,4,"Grupo Vertebrados, Instituto de Investigaciones Marinas y Costeras, Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET) – Facultad de Ciencias Exactas y Naturales Universidad Nacional de Mar del Plata  Mar Del Plata Argentina"
+h271,full,1,"Grupo de Estudios Afrolatinoamericanos, Universidad de Buenos Aires, Buenos Aires, Argentina"
+h272,screen,1,"Grupo de Genética Molecular of University of Antioquia, Medellin, Colombia"
+h273,screen,1,"Grupo de Investigação em Bioquimica e Biologia Oral, Unidade de Investigação em Ciências Orais e Biomédicas (UICOB), Faculdade de Medicina Dentária Universidade de Lisboa  Lisboa Portugal"
+h274,screen,1,"Grupo de Neurociencias de Antioquia, Facultad de Medicina, Universidad de Antioquia, Medellin, Colombia"
+h275,screen,1,"Grupo de Neurociencias de Antioquia, Facultad de Medicina, Universidad de Antioquia, Medellín, Antioquia, Colombia"
+h276,screen,1,"Grupo de Nuevos Materiales y Didáctica de las Ciencias, Facultad de Ingeniería, Universidad del Magdalena, Santa Marta 470004, Colombia"
+h277,screen,1,Health Sciences PhD Program
+h278,full,1,"High Complexity Network Hospital “El Cruce,” Florencio Varela Argentina"
+h279,screen,1,"Hospital 12 de Octubre, Complutense University CNIO, MIC, Madrid, Spain"
+h280,screen,1,Hospital Biprovincial Quillota‐Petorca  Quillota Chile
+h281,screen,1,"Hospital Británico, Clínica de Memoria, Montevideo, Montevideo, Uruguay"
+h282,full,1,"Hospital Central de Mendoza, Mendoza, Argentina"
+h283,full,1,"Hospital Cesar Milstein, Ciudad de Buenos Aires, Argentina"
+h284,screen,1,"Hospital Clínico Universidad de Chile, Centro de Investigación Clínica Avanzada (CICA), Santiago, Santiago, Chile"
+h285,screen,1,"Hospital Clínico Universidad de Chile, Departamento de Neurología y Neurocirugía, Santiago, Chile"
+h286,screen,1,"Hospital Clínico Universidad de Chile, Departamento de Neurología y Neurocirugía, Santiago, Santiago, Chile"
+h287,screen,1,"Hospital Clínico Universidad de Chile, Unidad de Cerebro Saludable, Independencia, Santiago, Santiago, Chile"
+h288,screen,1,"Hospital Clínico Universidad de Chile, Unidad de Cerebro Saludable, Santiago, Chile"
+h289,screen,2,"Hospital Clínico Universidad de Chile, Unidad de Cerebro Saludable, Santiago, Metropolitana, Chile"
+h290,screen,2,"Hospital Clínico Universidad de Chile, Unidad de Cerebro Saludable, Santiago, Santiago, Chile"
+h291,screen,1,Hospital El Carmen
+h292,full,3,"Hospital El Carmen, Mendoza, Argentina"
+h293,full,5,"Hospital General San Martín de Paraná, Entre Ríos, Argentina"
+h294,full,3,"Hospital General de Agudos Dr. Ignacio Pirovano, Ciudad de Buenos Aires, Argentina"
+h295,full,3,"Hospital General de Agudos Dr. José María Ramos Mejía, Ciudad de Buenos Aires, Argentina"
+h296,full,1,"Hospital General de Agudos Dr. Teodoro Álvarez, Ciudad de Buenos Aires, Argentina"
+h297,full,5,"Hospital General de Agudos J. A. Fernández, Ciudad de Buenos Aires, Argentina"
+h298,screen,1,"Hospital Infantil de México, Federico Gómez, CDMX, México, México"
+h299,full,1,Hospital Italiano De Buenos Aires  Buenos Aires Argentina
+h300,full,4,"Hospital Italiano de Buenos Aires, Ciudad de Buenos Aires, Argentina"
+h301,full,2,"Hospital Privado de Rosario, Santa Fe, Argentina"
+h302,full,6,"Hospital Provincial del Centenario, Santa Fe, Argentina"
+h303,full,1,"Hospital Regional Dr. Louis Pasteur de Villa María, Córdoba, Argentina"
+h304,full,3,"Hospital San Bernardo de Salta, Salta, Argentina"
+h305,screen,1,"Hospital San Borja Arriarán, Santiago, Region Metropolitana, Chile"
+h306,full,2,"Hospital Universitario Austral, Buenos Aires, Argentina"
+h307,screen,1,Hospital da Criança de Brasília  Brasilia Brasil
+h308,full,1,"Hospital de Clínicas “José de San Martín”, Ciudad de Buenos Aires, Argentina"
+h309,screen,1,"Hospital de Clínicas, Montevideo, Montevideo, Uruguay"
+h310,screen,1,Hospital del Cancer de Barretos  Barretos Brazil
+h311,screen,4,"Hospital del Niño Dr. José Renán Esquivel, Panama City, Republic of Panama."
+h312,full,3,"Hospital Ángel Cruz Padilla, Tucumán, Argentina"
+h313,full,1,"Hospital “El Cruce”, Universidad Nacional Arturo Jauretche  Florencio Varela Argentina"
+h314,full,1,"IBAM, UNCuyo, CONICET, Facultad de Ciencias Agrarias, Almirante Brown 500, M5528AHB, Chacras de Coria, Mendoza 5500, Argentina"
+h315,full,2,"ICiAgro Litoral, National University of the Littoral, CONICET,  Argentina"
+h316,full,2,"INBIOFAL (CONICET – UNT), Instituto de Química Orgánica, Facultad de Bioquímica, Química y Farmacia, Universidad Nacional de Tucumán, Ayacucho 471, T4000CAN, San Miguel de Tucumán, Argentina"
+h317,full,1,"INIBIOMA-CONICET, Bariloche, Argentina."
+h318,full,1,"INTA Yuto Tropical Crops Experimental Station, Faculty of Agricultural Sciences, National University of Jujuy,  Argentina"
+h319,screen,1,"InCIAM & PSYCLE, Aix-Marseille University, 29 Avenue Robert Schuman, 13621 Aix-en-Provence cedex 01, France"
+h320,screen,1,"Independent Researcher, Monterrey, Mexico."
+h321,full,1,"Infectious Diseases Unit, Hospital Carlos G. Durand, Buenos Aires, Argentina."
+h322,screen,1,"Institució Catalana de Recerca i Estudis Avançats, Barcelona, Spain"
+h323,screen,1,"Institut Català d’Oncologia and Institut Josep Carreras, Hospital Germans Trias i Pujol, Badalona, Barcelona, Spain"
+h324,screen,1,Institut Curie  Saint Cloud France
+h325,screen,1,"Institut de Psychologie, Université de Paris Cité, 71 Avenue Edouard Vaillant, 92774 Boulogne-Billancourt, France"
+h326,screen,1,"Institut de Systématique, Evolution, Biodiversité (ISYEB, UMR 7205), CNRS‐MNHN‐SU‐EPHE‐UA, Sorbonne Université  Paris France"
+h327,screen,1,Institute for Marine and Antarctic Studies University of Tasmania  Hobart Australia
+h328,screen,3,"Institute of Applied and Physical Chemistry, University of Bremen, Leobener Straße 6, 28359 Bremen, Germany"
+h329,full,3,"Institute of Basic and Applied Psychology and Technology (IPSIBAT), National University of Mar del Plata (UNMDP), Psychology Faculty, Mar del Plata, Buenos Aires, Argentina"
+h330,screen,3,Institute of Botany of the Czech Academy of Sciences  Průhonice Czech Republic
+h331,screen,1,Institute of Cancer and Genomic Sciences University of Birmingham  Birmingham UK
+h332,screen,4,Institute of Ecology and Biodiversity (IEB)  Santiago Chile
+h333,full,2,"Institute of Environment, Habitat and Energy (INAHE-CONICET), CCT-Mendoza, Mendoza 5500, Argentina"
+h334,full,1,"Institute of Food Technology, National Scientific and Technical Research Council (CONICET), Faculty of Chemical Engineering, National University of the Littoral (FIQ-UNL), 1º de Mayo 3250, Santa Fe 3000, Argentina"
+h335,screen,3,"Institute of Inorganic Chemistry and Crystallography, University of Bremen, Leobener Straße 7, 28359 Bremen, Germany"
+h336,screen,2,Institute of Neuroscience University of Oregon  Eugene Oregon USA
+h337,full,1,"Institute of Neurosciences (INEU), Fleni‐CONICET, Buenos Aires, Buenos Aires, Argentina"
+h338,screen,2,"Institute of Sustainable Processes, University of Valladolid, Doctor Mergelina s/n, 47011, Valladolid, Spain"
+h339,full,2,"Institute of Theoretical and Applied Physical and Chemical Research (INIFTA), CONICET, National
+University of La Plata (UNLP), Diag. 113 and 64, C.C. 16, Branch 4, B1900 La Plata, Argentina"
+h340,full,1,"Instituto Antártico Argentino (IAA), 25 de Mayo 1143, 1650 San Martín, Buenos Aires, Argentina."
+h341,full,3,"Instituto Argentino de Nivología, Glaciología y Ciencias Ambientales (IANIGLA), CONICET y Universidad Nacional de Cuyo  Mendoza Argentina"
+h342,full,3,"Instituto Argentino de Nivología, Glaciología y Ciencias Ambientales (IANIGLA, CONICET-UNCuyo-Gob. Mza), Av. Ruiz Leal s/n°, Parque General San Martín, 5500 Mendoza, Argentina. ; charlene.gaillard.pal@gmail.com; acanthodes@gmail.com"
+h343,full,1,"Instituto Criptogámico, Área Botánica, Fundación Miguel Lillo, Miguel Lillo 251, T4000JFE San Miguel de Tucumán, Argentina."
+h344,full,1,"Instituto Interdisciplinario en Economía Política (IIEP), Universidad de Buenos Aires (UBA) and Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET), Argentina"
+h345,full,2,"Instituto Multidisciplinario de Biología Vegetal, IMBIV (CONICET‐UNC)  Córdoba Argentina"
+h346,full,1,"Instituto Multidisciplinario de Investigaciones Biológicas de San Luis (IMIBIO, CONICET)  San Luis Argentina"
+h347,full,4,Instituto Nacional de Tecnología Agropecuaria (INTA) Hurlingham Buenos Aires Argentina
+h348,full,2,"Instituto de Altos Estudios Espaciales “Mario Gulich”, Comisión Nacional de Actividades Espaciales (CONAE) and Universidad Nacional de Córdoba, Falda del Cañete 5187, Córdoba, Argentina"
+h349,full,1,"Instituto de Altos Estudios Especiales Mario Gulich, Universidad Nacional de C&#x00F3;rdoba, C&#x00F3;rdoba, Argentina"
+h350,full,3,"Instituto de Astronom&#x00ED;a y F&#x00ED;sica del Espacio (IAFE, CONICET-UBA), Pabell&#x00F3;n IAFE, CABA, Buenos Aires, Argentina"
+h351,full,1,"Instituto de Botánica Darwinion (CONICET-ANCEFN), Labardén 200, Casilla de Correo 22, B1642HYD San Isidro, Buenos Aires, Argentina;"
+h352,full,2,"Instituto de Botánica del Nordeste (UNNE-CONICET), Facultad de Ciencias Agrarias, Universidad Nacional del Nordeste, Corrientes 3400, Argentina"
+h353,full,2,"Instituto de Botánica del Nordeste (UNNE-CONICET), Facultad de Ciencias Exactas, Naturales y Agrimensura, Universidad Nacional del Nordeste, Corrientes 3400, Argentina"
+h354,full,3,"Instituto de Ciencia y Tecnología de Sistemas Alimentarios Sustentables, ICYTESAS, INTA CONICET  Hurlingham Buenos Aires Argentina"
+h355,full,1,"Instituto de Ciencias Físicas (ICIFI‐CONICET), Universidad Nacional de San Martín  Buenos Aires Argentina"
+h356,full,1,"Instituto de Ciencias Polares, Ambiente y Recursos Naturales (ICPA), Universidad Nacional de Tierra del Fuego (UNTDF)  Ushuaia Argentina"
+h357,screen,2,"Instituto de Ciencias de la Vid y del Vino‐ICVV (Consejo Superior de Investigaciones Científicas‐CSIC Universidad de La Rioja‐UR, Gobierno de La Rioja), Finca La Grajera Logroño Spain"
+h358,full,1,"Instituto de Diversidad y Ecología Animal (CONICET- UNC),  Argentina"
+h359,screen,1,"Instituto de Estadística, Universidad de la República, Uruguay, Montevideo, Montevideo, Uruguay"
+h360,full,1,"Instituto de Estudios de la Inmunidad Humoral Prof. Ricardo A. Margni (IDEHU), (Universidad de Buenos Aires- CONICET), Buenos Aires C1113AAD, Argentina; Cátedra de Inmunología, Facultad de Farmacia y Bioquímica"
+h361,full,3,"Instituto de Física La Plata IFLP-CONICET, CCT-La Plata, La Plata B1900, Argentina"
+h362,screen,1,"Instituto de Inform&#x00E1;tica, Universidade Federal do Rio Grande do Sul, Porto Alegre, Brazil"
+h363,full,3,"Instituto de Investigaciones Biológicas y Tecnológicas (IIByT, CONICET-UNC), https://dx.doi.org/62873Consejo Nacional de Investigaciones Cientı́ficas y Técnicas (CONICET), Av. Velez Sarsfield 1611, Córdoba, Argentina"
+h364,full,4,"Instituto de Investigaciones Fisiológicas y Ecológicas Vinculadas a la Agricultura (IFEVA) Universidad de Buenos Aires, CONICET  Buenos Aires Argentina"
+h365,full,1,"Instituto de Investigaciones Fisiológicas y Ecológicas Vinculadas a la Agricultura (IFEVA), Facultad de Agronomía CONICET, Universidad de Buenos Aires  Buenos Aires Argentina"
+h366,full,4,"Instituto de Investigaciones Marinas y Costeras (IIMyC), FCEyN, UNMdP – CONICET  Mar del Plata Argentina"
+h367,full,2,"Instituto de Investigaciones en Biodiversidad y Medioambiente (INIBIOMA, Universidad Nacional del Comahue-Consejo Nacional de Investigaciones Científicas y Técnicas), Pasaje Gutiérrez 1415, 8400 San Carlos de Bariloche, Río Negro, Argentina. ; evasil"
+h368,full,3,"Instituto de Investigaciones en Ingeniería Ambiental, Química y Biotecnología Aplicada (INGEBIO), Facultad de Química e Ingeniería del Rosario, Pontificia Universidad Católica Argentina, Av. Pellegrini 3314, Rosario 2000, Argentina"
+h369,full,1,Instituto de Investigaciones en Tecnología Química (INTEQUI‐CONICET)  San Luis Argentina
+h370,full,5,"Instituto de Investigación en Micología y Micotoxicología (IMICO), Consejo Nacional de Investigaciones Científicas y Técnicas-Universidad Nacional de Río Cuarto (CONICET-UNRC), Ruta 36 Km 601, Río Cuarto 5800, Córdoba, Argentina"
+h371,full,1,"Instituto de Limnología Dr. R. A Ringuelet (CONICET-UNLP),  Argentina"
+h372,full,2,"Instituto de Nanociencia y Nanotecnología (INN-CNEA-CONICET), San Martín, Buenos Aires, Argentina"
+h373,full,2,"Instituto de Neurología y Neurocirugía Sanatorio de los Arcos, Ciudad de Buenos Aires, Argentina"
+h374,screen,1,Instituto de Química Biológica de la Facultad de Ciencias Exactas y Naturales (IQUIBICEN)
+h375,full,3,"Instituto de Química Física de los Materiales, Medio Ambiente y Energía (INQUIMAE), Facultad de Ciencias Exactas y Naturales CONICET, Universidad de Buenos Aires  Buenos Aires Argentina"
+h376,screen,1,"Instituto de Química Orgánica, Facultad de Bioquímica, Química y Farmacia"
+h377,full,2,"Instituto de Química Rosario (CONICET), Facultad de Ciencias Bioquímicas y Farmacéuticas, Universidad Nacional de Rosario, Suipacha 531, Rosario 2000, Argentina"
+h378,full,3,Instituto de Química de San Luis (INQUISAL‐CONICET)  San Luis Argentina
+h379,full,1,"Instituto de Química y Metabolismo del Fármaco (IQUIMEFA), CONICET - Universidad de Buenos Aires, CABA 1113, Argentina; Departamento de Sanidad, Nutrición, Bromatología y Toxicología, Facultad de Farmacia y Bioquímica, Universidad de Buenos Aires, CABA 1113, Argentina"
+h380,screen,2,"Instituto de Química y Metabolismo del Fármaco, (IQUIMEFA) CONICET-Universidad de Buenos Aires; Cátedra de Farmacognosia, Facultad de Farmacia y Bioquímica"
+h381,full,1,"Instituto de Tecnología Agroindustrial del Noroeste Argentino (ITANOA), Estación Experimental Agroindustrial Obispo Colombres (EEAOC), Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET). CCT NOA Sur, Av. William Cross 3150, Las Talitas‐ CP T4101XAC  Tucumán Argentina"
+h382,full,3,"Instituto de Tecnología de Alimentos y Procesos Químicos (ITAPROQ), Facultad de Ciencias Exactas y Naturales, Ciudad Universitaria, Consejo Nacional de Investigaciones Científicas y Técnicas, Buenos Aires C1428EGA, Argentina"
+h383,full,1,"Intensive Care Unit, Clínica la Sagrada Familia, Ciudad Autónoma de Buenos Aires, Argentina"
+h384,full,2,"Intensive Care Unit, Hospital Nacional Alejandro Posadas, Buenos Aires, Argentina"
+h385,screen,1,"Jan Evangelista Purkyně University in Ústí n. L., Faculty of Environment  Ústí nad Labem Czech Republic"
+h386,screen,1,"Johnson &amp; Johnson, Beerse, Belgium"
+h387,full,1,"Johnson &amp; Johnson, Buenos Aires, Argentina"
+h388,screen,1,"Johnson &amp; Johnson, Raritan, NJ"
+h389,screen,1,"Johnson &amp; Johnson, Shanghai, China"
+h390,screen,1,"Johnson &amp; Johnson, Spring House, PA"
+h391,screen,1,"Key Laboratory of Geographical Processes and Ecological Security in Changbai Mountains, Ministry of Education, School of Geographical Sciences Northeast Normal University  Changchun China"
+h392,screen,1,"LIBPhys‐FCT UID/FIS/04559/2013, Faculdade de Medicina Dentária Universidade de Lisboa  Lisboa Portugal"
+h393,screen,1,"La Teppe Institute, Clinical Research Unit  Tain l’Hérmitage France"
+h394,screen,2,"LaPEA, Université Paris Cité and Univ Gustave Eiffel, 71 Avenue Edouard Vaillant, 92100 Boulogne Billancourt, France"
+h395,full,2,"Laboratorio Interdisciplinario de Neurociencia Cognitiva (LINC), Centro de Investigación en Neurociencia y Neurospicología (CINN) Universidad de Palermo (UP), Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)  Buenos Aires Argentina"
+h396,full,1,"Laboratorio de Análisis Palinológicos, Facultad de Ciencias Agrarias, Universidad Nacional de Jujuy, Alberdi 47, CP 4600, San Salvador de Jujuy, Jujuy, Argentina."
+h397,screen,1,"Laboratorio de Estrategias Antivirales, Departamento de Química Biológica, Facultad de Ciencias Exactas y Naturales"
+h398,screen,3,"Laboratorio de Invasiones Biológicas, Facultad de Ciencias Forestales Universidad de Concepción  Concepcion Chile"
+h399,full,6,"Laboratorio de Microbiología Molecular, Instituto de Microbiología Básica y Aplicada, Departamento de Ciencia y Tecnología, Universidad Nacional de Quilmes (UNQ), Roque Sáenz Peña 352, Bernal B1876BXD, Argentina"
+h400,full,2,"Laboratorio de Neuroanatomía Microquirúrgica, Segunda Cátedra de Anatomía, Universidad de Buenos Aires, Buenos Aires, Argentina;"
+h401,full,1,"Laboratorio de Obtención, Modificación, Caracterización y Evaluación de Materiales, Departamento de Ciencia y Tecnología, Universidad Nacional de Quilmes, Roque Sáenz Peña 352, Bernal B1876BXD, Argentina"
+h402,full,1,"Laboratorio de Química Orgánica y Espectroscopía Vibracional, Departamento de Química, Facultad de Ciencias Exactas, Universidad Nacional de Salta e Instituto de Investigaciones para la Industria Química (INIQUI)-CONICET, Av. Bolivia 5150-4400, Salta, Argentina"
+h403,screen,2,"Laboratorio de Tuberculosis, Oruro, Bolivia"
+h404,screen,1,"Laboratorio de Técnicas Anatómicas y Material Didactico, Escuela Superior de Medicina, Instituto Politécnico Nacional, Mexico City, Mexico;"
+h405,screen,1,"Laboratorio de demencias del Instituto Nacional de Neurología y Neurocirugía Manuel Velasco Suárez, Ciudad de Mexico, Mexico"
+h406,screen,1,"Laboratorios de Investigación, Dirección General de Investigación, Universidad de Las Américas (UDLA), Antigua Vía a Nayón S/N, Quito EC 170124, Ecuador"
+h407,screen,2,"Laboratory of Biology and Conservation of Chondrichthyes, Facultad de Ciencias del Mar y de Recursos Naturales Universidad de Valparaíso  Viña del Mar Chile"
+h408,screen,2,"Legend Biotech USA, Inc., Somerset, NJ"
+h409,screen,1,"Lem Compounding Research, Lentate Sul Seveso, Italy."
+h410,screen,4,"MAPEX Center for Materials and Processes, University of Bremen, Bibliothekstraße 1, 28359 Bremen, Germany"
+h411,screen,6,"MRC–University of Glasgow Centre for Virus Research, Glasgow, UK."
+h412,screen,1,Marqués de Valdecilla University Hospital  Santander Spain
+h413,screen,1,Martin Luther University Halle‐Wittenberg Institute of Biology/Geobotany and Botanical Garden  Am Kirchtor 1 Halle/Saale 06108 Germany
+h414,screen,1,"Mary Lou Fulton College for Teaching and Learning Innovation, Arizona State University, 1050 S. Forrest Mall, Tempe, AZ 85281, USA"
+h415,screen,1,"Medical College of Wisconsin, Milwaukee, WI"
+h416,screen,1,"Memory and Neuropsychiatric Clinic (CMYN), Neurology Service, Hospital del Salvador and Faculty of Medicine, Universidad de Chile, Santiago, Chile"
+h417,screen,1,"Microbiota and Vascular Biology Laboratory, IdISSC, c/Prof. Martín Lagos Street, 28040 Madrid, Spain"
+h418,screen,1,Millennium Institute Biodiversity of Antarctic and Subantarctic Ecosystems (BASE)  Santiago Chile
+h419,screen,2,"Mind, Brain and Behavior Research Center (CIMCYC) University of Granada  Granada Spain"
+h420,screen,1,"National Autonomous University of Mexico, Mexico City, Mexico"
+h421,screen,1,National Biodiversity Future Centre  Palermo Italy
+h422,full,1,National Council for Scientific and Technical Research (Centro para el Estudio de Sistemas Marinos – Consejo Nacional de Investigaciones Científicas y Técnicas)  Puerto Madryn Argentina
+h423,screen,1,"National Institute of Neurology and Neurosurgery, Mexico City, Mexico"
+h424,screen,1,National Institute of Water and Atmospheric Research  Wellington New Zealand
+h425,full,1,National Scientific and Technical Research Council (CONICET) and National University of San Martín (UNSAM) Buenos Aires Argentina
+h426,screen,1,Natural History Museum  Cromwell Road London SW7 5BD United Kingdom
+h427,screen,4,Natural History Museum University of Oslo  Oslo Norway
+h428,screen,1,"Neag School of Education, University of Connecticut, 2131 Hillside Road, Unit 3007, Storrs, CT 06269, USA"
+h429,screen,1,"Neural Dynamics and Modulation Lab, Cleveland, Ohio, USA;"
+h430,screen,1,"Neurology Service, Department of Medicine, Clínica Alemana, Universidad del Desarrollo, Santiago, Región Metropolitana de Santiago, Chile"
+h431,screen,1,"Neuropsychology and Clinical Neuroscience Laboratory (LANNEC), Physiopathology Department ‐ ICBM, Neuroscience and East Neuroscience Departments, Faculty of Medicine, University of Chile, Santiago, Chile"
+h432,screen,1,"Neurosciences Group of Antioquia, University of Antioquia, Medellín, Colombia"
+h433,screen,1,Olivia Newton John Cancer Research Centre Austin Health  Melbourne Australia
+h434,screen,1,Oncology Business Unit AstraZeneca  Gaithersburg Maryland USA
+h435,screen,1,Oncology R&amp;D AstraZeneca  San Francisco California USA
+h436,screen,1,"One Health Research Group, Facultad de Ciencias de la Salud, Universidad de Las Américas (UDLA), Antigua Vía a Nayón S/N, Quito EC 170124, Ecuador"
+h437,screen,1,"Oregon Health and Science University, Portland, OR, USA"
+h438,screen,1,"Organismal and Evolutionary Biology Research Programme Viikki Plant Science Center, University of Helsinki  Finland"
+h439,screen,2,"Pan American Health Organization/World Health Organization, Washington, DC, United States of America."
+h440,screen,1,Pediatric Surgery Service Department of Surgery Memorial Sloan Kettering Cancer Center  New York New York USA
+h441,screen,1,Pediatric Surgical Oncology SJD Barcelona Children's Hospital Universitat de Barcelona  Barcelona Spain
+h442,screen,1,"Peter MacCallum Cancer Centre and Royal Melbourne Hospital, Melbourne, Australia"
+h443,screen,2,"Plants and Ecosystems (PLECO), University of Antwerp  Antwerp Belgium"
+h444,full,2,Pontificia Universidad Católica Argentina
+h445,screen,1,"Postgraduate Program in Urban Infrastructure Systems, School of Polytechnic, Pontifical Catholic University of Campinas (PUC-Campinas), Campinas 13087-571, SP, Brazil"
+h446,screen,1,"Poznań University of Medical Sciences, Poznań, Poland"
+h447,screen,1,Princess Maxima Center of Pediatric Oncology  Utrecht Netherlands
+h448,screen,1,Private Practice  Porto Portugal
+h449,full,2,"Programa de Investigación y Análisis de Residuos y Contaminantes Químicos (PRINARC), Facultad de Ingeniería Química, Universidad Nacional del Litoral, Santa Fe 3000, Santa Fe, Argentina"
+h450,screen,1,"Psychology Department, University of Hertfordshire, College Lane, Hatfield AL10 9AB, UK"
+h451,screen,1,"Pôle Hospitalo‐Universitaire de Psychiatrie d'Adultes du Grand Nancy, Centre Psychothérapique de Nancy  Laxou France"
+h452,screen,2,"Research Center in Communication Psychology (PsiCom), Department of Psychology, Catholic University of the Sacred Heart, Via Largo Fra Agostino Gemelli, 1, 25123 Milan, Italy"
+h453,screen,1,"Research Center on Intelligent Technologies (CITIUS), University of Santiago de Compostela (USC), Rúa de Jenaro de la Fuente Domínguez, 15782 Santiago de Compostela, Spain"
+h454,full,2,"Sanatorio Anchorena San Martín, Buenos Aires, Argentina"
+h455,full,1,"Sanatorio Anchorena, Ciudad de Buenos Aires, Argentina"
+h456,full,1,Sanatorio Clínica Modelo de Morón  Morón Buenos Aires Argentina
+h457,full,3,"Sanatorio de La Trinidad Mitre, Ciudad de Buenos Aires, Argentina"
+h458,full,2,"Sanatorio de la Trinidad San Isidro, Buenos Aires, Argentina"
+h459,screen,7,"School of Biodiversity, One Health and Veterinary Medicine, University of Glasgow, Glasgow, UK."
+h460,screen,1,"School of Biological Sciences, University of Tasmania  Hobart Tasmania Australia"
+h461,full,1,"School of Communication, Universidad Austral, Mariano Acosta 1611, Pilar B1630FHB, Provincia de Buenos Aires, Argentina"
+h462,screen,2,School of Dentistry Grande Rio University (UNIGRANRIO)  Rio de Janeiro Brazil
+h463,screen,1,"School of Geography, Planning, and Spatial Sciences University of Tasmania  Hobart Tasmania Australia"
+h464,screen,1,"School of Mathematical and Statistical Sciences, Arizona State University, Tempe, AZ 85287-1804 USA."
+h465,screen,1,"School of Mathematics and Statistics, Victoria University of Wellington, Wellington 6140, New Zealand"
+h466,full,1,School of Psychology National Scientific and Technical Research Council of Argentina/University of Buenos Aires  Buenos Aires Argentina
+h467,screen,1,"School of Psychology, HSE University, 20 Myasnitskaya Street, Moscow 101000, Russia"
+h468,full,2,"Sección Ingeniería y Proyectos Agroindustriales, Estación Experimental Agroindustrial Obispo Colombres (EEAOC), W. Cross 3150, Las Talitas‐CP T4101XAC  Tucumán Argentina"
+h469,screen,1,"Section of Endocrinology, Department of Internal Medicine, School of Medicine, Universidad de Antioquia, (University of Antioquia), Cra. 51d No. 62-29, Medellín 050001, Colombia"
+h470,screen,1,"Service d’hématologie, Centre Hospitalier Universitaire (CHU) Hotel Dieu, Nantes, France"
+h471,screen,2,"Servicio Departamental de Salud (SEDES), Oruro, Bolivia"
+h472,screen,1,SingHealth Duke‐NUS Global Health Institute Duke‐NUS Medical School  Singapore Singapore
+h473,screen,1,"Stanford University School of Medicine, Stanford, CA"
+h474,screen,1,Stellenbosch University  Stellenbosch South Africa
+h475,screen,2,"Structural Bioinformatics and High Performance Computing Research Group (BIO-HPC), HiTech Innovation Hub"
+h476,full,1,"Structural Chemistry and Biochemistry Laboratory, Department of Clinical Biochemistry, Hematology Area, “José de
+San Martín” Clinical Hospital, University of Buenos Aires, Av. Córdoba, 2351, C1120AAF Buenos Aires, Argentina"
+h477,screen,1,Surgical Oncology Service Department of General Surgery Hospital Infantil de México Federico Gómez  Mexico City Mexico
+h478,screen,1,"Tel-Aviv Sourasky (Ichilov) Medical Center, Faculty of Medical &amp; Health Sciences, Tel Aviv University, Tel Aviv, Israel"
+h479,screen,1,"The Edward de Bono Institute for Creative Thinking and Innovation, University of Malta, MSD2080 Msida, Malta"
+h480,screen,1,"The Ohio State University Comprehensive Cancer Center, Columbus, OH"
+h481,screen,1,"The Teachers College, Emporia State University, 1 Kellogg Place, Emporia, KS 66801, USA"
+h482,screen,1,The World Bank
+h483,screen,1,"UFRRJ, Department Plant Science, Institute of Agronomy,  Brazil"
+h484,screen,1,"USP, São Paulo, São Paulo, Brazil"
+h485,full,1,"Unidad Asociada Área Ciencias Agrarias, Ingeniería, Ciencias Biológicas y de la Salud, Consejo Nacional de Investigaciones Científicas y Tecnológicas (CONICET), Facultad de Ciencias Químicas, Universidad Católica de Córdoba, Córdoba, Argentina; Departamento de Bioquímica Clínica, Facultad de Ciencias Químicas, Universidad Nacional de Córdoba"
+h486,full,3,"Unidad Ejecutora de Estudios en Neurociencias y Sistemas Complejos CONICET, Hospital “El Cruce”, Universidad Nacional Arturo Jauretche  Florencio Varela Argentina"
+h487,full,1,"Unidad de Investigación en Bioquímica Traslacional y Metabolismo (UBiTyM), Facultad de Odontología, Universidad de Buenos Aires, CABA 1113, Argentina"
+h488,screen,1,"Universidad Alberto Hurtado,  Chile"
+h489,screen,1,"Universidad Austral de Chile,  Chile"
+h490,screen,2,Universidad Católica San Antonio de Murcia (UCAM)
+h491,screen,1,Universidad Católica de Murcia (UCAM)
+h492,screen,1,"Universidad Católica del Maule,  Chile"
+h493,screen,1,"Universidad Diego Portales, Escuela de Kinesiología, Santiago Centro, Santiago, Chile"
+h494,screen,1,"Universidad Mayor, Facultad de Medicina y Ciencias de la Salud, Magíster en Kinesiología Gerontológica, Santiago, Santiago, Chile"
+h495,screen,1,"Universidad Mayor, Facultad de Medicina y Ciencias de la Salud, Núcleo Magíster en Salud de la Mujer, Providencia, Santiago, Santiago, Chile"
+h496,full,1,Universidad Nacional Arturo Jauretche  Florencio Varela Argentina
+h497,full,1,Universidad Nacional Arturo Jauretche Florencio Varela Argentina
+h498,screen,1,Universidad Nacional Autónoma de México Ciudad de México México
+h499,full,1,"Universidad Nacional de Avellaneda,  Argentina"
+h500,full,4,"Universidad Nacional de Córdoba Facultad de Ciencias Exactas, Físicas y Naturales Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET) Instituto de Investigaciones Biológicas y Tecnológicas (IIByT)  Av. Vélez Sarsfield 1611 Córdoba X5016GCA Argentina"
+h501,full,4,"Universidad Nacional de Córdoba, Facultad de Ciencias Exactas, Físicas y Naturales Centro de Ecología y Recursos Naturales Renovables  Av. Vélez Sarsfield 1611 Córdoba X5016GCA Argentina"
+h502,full,1,"Universidad Nacional de La Plata,  Argentina"
+h503,full,1,"Universidad Nacional de La Plata, and CONICET, La Plata, Argentina"
+h504,full,1,"Universidad Nacional de Quilmes, Quilmes 1876, Argentina"
+h505,full,1,"Universidad Nacional de Río Negro (UNRN) and Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET), Argentina"
+h506,full,1,"Universidad Nacional de San Martín, Escuela de Ciencia y Tecnología, San Martín, Buenos Aires, Argentina"
+h507,screen,1,Universidad Nacional de Tucumán
+h508,full,2,"Universidad Nacional del Centro de la Provincia de Buenos Aires and CONICET, Tandil, Argentina"
+h509,full,1,"Universidad Nacional del Córdoba,  Argentina"
+h510,screen,1,"Universidad Peruana Cayetano Heredia, Facultad de Medicina Veteriaria y Zootecnia, Lima, Perú."
+h511,screen,3,"Universidad de Atacama,  Chile"
+h512,full,1,"Universidad de Atacama,  Chile; Universidad del Aconcagua,  Argentina"
+h513,screen,5,Universidad de Buenos Aires
+h514,full,2,"Universidad de Buenos Aires (UBA), Facultad de Farmacia y Bioquímica, Departamento de Microbiología, Inmunología, Biotecnología y Genética, Cátedra de Biotecnología, Junín 956, C1113AAD Buenos Aires, Argentina"
+h515,full,1,"Universidad de Buenos Aires (UBA), Facultad de Farmacia y Bioquímica, Instituto de Química y Fisicoquímica Biológicas “Prof. Alejandro C. Paladini” (IQUIFIB), Buenos Aires, Argentina"
+h516,screen,3,Universidad de Buenos Aires Facultad de Ciencias Exactas y Naturales Departamento de Química Inorgánica Analítica y Química Física  Pabellón 2 Ciudad Universitaria C1428EHA Buenos Aires
+h517,full,1,"Universidad de Buenos Aires,  Argentina"
+h518,full,1,"Universidad de Buenos Aires, Facultad de Ciencias Exactas y Naturales, Departamento de Matemática, Buenos Aires, Argentina, and CONICET - Universidad de Buenos Aires, Instituto de Investigaciones Matemáticas “Luis A. Santaló” (IMAS), Buenos Aires, Argentina."
+h519,screen,1,Universidad de Chile  Santiago del Chile Chile
+h520,screen,1,"Universidad de Chile, Departamento de Kinesiología, Santiago, Metropolitana, Chile"
+h521,screen,1,"Universidad de Chile, Departamento de Kinesiología, Santiago, Santiago, Chile"
+h522,screen,1,"Universidad de Chile, Departamento de Neurociencia, Independencia, Santiago, Santiago, Chile"
+h523,screen,1,"Universidad de Chile, Instituto de Nutrición y Tecnología de los Alimentos (INTA), Unidad de Nutrición Pública, Santiago, Santiago, Chile"
+h524,screen,1,"Universidad de Chile, Santiago, Santiago, Chile"
+h525,screen,1,"Universidad de Concepción,  Chile"
+h526,full,1,Universidad de Morón Morón Buenos Aires Argentina
+h527,full,1,"Universidad de San Andrés, Argentina"
+h528,screen,1,"Universidad de Santiago de Chile, Chile"
+h529,screen,2,"Universidad de Santiago de Chile, Chile; Universidad de Chile, Chile"
+h530,full,1,"Universidad de Santiago de Chile, Chile; Universidad de San Andrés, Argentina; University of California, USA"
+h531,screen,1,"Universidad de la Frontera, Departamento de Medicina Interna, Temuco, Temuco, Chile"
+h532,screen,1,"Universidad del BioBio,  chile"
+h533,screen,1,Universidad del CEMA
+h534,screen,1,Universidade Federal do Paraná Clinical Hospital  Curitiba (PR) Brasil
+h535,screen,2,"Universidade Federal do Pará,  Brasil"
+h536,screen,1,"Universidade do Estado de Mato Grosso,  Brasil"
+h537,screen,1,"University Institute of Schaffhausen, Rheinstrasse 10, CH-8200 Schaffhausen, Switzerland"
+h538,screen,1,"University of Birmingham,  United Kingdom"
+h539,screen,1,"University of Chile, Santiago, Santiago, Chile"
+h540,screen,1,"University of Colorado School of Medicine, Aurora, CO, USA"
+h541,screen,1,"University of Lille, CHU Lille, Lille, France"
+h542,screen,1,"University of Miami Miller School of Medicine, Miami, United States of America."
+h543,screen,2,"University of São Paulo Medical School, São Paulo, São Paulo, Brazil"
+h544,screen,1,"Universitätsklinikum Würzburg, Medizinische Klinik und Poliklinik II, Würzburg, Germany"
+h545,screen,1,"Université de Lorraine, Centre national de la recherche scientifique, Ingénierie Moléculaire, Cellulaire et Physiopathologie  Nancy France"
+h546,screen,1,"Université de Tours, INSERM, Imaging Brain &amp; Neuropsychiatry, U1253  Tours France"
+h547,screen,1,"VA Providence Healthcare System, Center for Neurorestoration and Neurotechnology, VA Mind Brain Program  Providence Rhode Island USA"
+h548,screen,1,"Vegetation Ecology and Biodiversity Conservation Institute of Ecology, School of Sustainability, Leuphana University of Lüneburg  Lüneburg Germany"
+h549,screen,1,"W. Perry Center for Hemispheric Defense Studies and the National Defense University, Washington, DC, USA"
+h550,screen,1,West China School of Medicine/West China Hospital of Sichuan University  Chengdu China
+h551,screen,1,Westmead Institute for Medical Research  Westmead New South Wales Australia
+h552,screen,1,Wilmot Cancer Institute University of Rochester  Rochester New York USA
+h553,screen,1,ZS Associates  Toronto Canada
+h554,screen,1,Zoological Station Anton Dohrn  Napoli Italy
+h555,full,1,"Área de Química Analítica, Facultad de Química Bioquímica y Farmacia (FQByF) Universidad Nacional de San Luis (UNSL)  San Luis Argentina"
+h556,full,4,"Área de Química General e Inorgánica, Facultad de Química Bioquímica y Farmacia (FQByF) Universidad Nacional de San Luis (UNSL)  San Luis Argentina"

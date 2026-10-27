@@ -1,0 +1,319 @@
+{
+ "before": {
+  "h556": {
+   "text": "Área de Química General e Inorgánica, Facultad de Química Bioquímica y Farmacia (FQByF) Universidad Nacional de San Luis (UNSL)  San Luis Argentina",
+   "rastro": [
+    "https://ror.org/00mczdx43"
+   ],
+   "reference": []
+  },
+  "h555": {
+   "text": "Área de Química Analítica, Facultad de Química Bioquímica y Farmacia (FQByF) Universidad Nacional de San Luis (UNSL)  San Luis Argentina",
+   "rastro": [
+    "https://ror.org/00mczdx43"
+   ],
+   "reference": []
+  },
+  "h356": {
+   "text": "Instituto de Ciencias Polares, Ambiente y Recursos Naturales (ICPA), Universidad Nacional de Tierra del Fuego (UNTDF)  Ushuaia Argentina",
+   "rastro": [
+    "https://ror.org/01ebs6k31",
+    "https://ror.org/021wj5r76"
+   ],
+   "reference": [
+    "https://ror.org/021wj5r76"
+   ]
+  },
+  "h355": {
+   "text": "Instituto de Ciencias Físicas (ICIFI‐CONICET), Universidad Nacional de San Martín  Buenos Aires Argentina",
+   "rastro": [
+    "https://ror.org/00v29jp57",
+    "https://ror.org/01ebs6k31",
+    "https://ror.org/03cqe8w59"
+   ],
+   "reference": [
+    "https://ror.org/00v29jp57",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h533": {
+   "text": "Universidad del CEMA",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/017p13n71"
+   ]
+  },
+  "h145": {
+   "text": "Departamento de Física, Facultad de Ciencias Exactas, Universidad Nacional de La Plata e Instituto de Física La Plata, IFLP (UNLP – CONICET, CCT La Plata), C.C. 67-1900, La Plata, Argentina",
+   "rastro": [
+    "https://ror.org/01pmtm379",
+    "https://ror.org/01tjs6929",
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/03efzvv60"
+   ],
+   "reference": [
+    "https://ror.org/01pmtm379",
+    "https://ror.org/01tjs6929",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h051": {
+   "text": "AInstituto Argentino de Nivología, Glaciología y Ciencias Ambientales (IANIGLA), Centro Científico Técnico (CCT) Mendoza–Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET), Mendoza, Argentina.",
+   "rastro": [
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/03efzvv60"
+   ],
+   "reference": [
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h081": {
+   "text": "CONICET – Centro de Arqueología Urbana, IAA-FADU, Universidad de Buenos Aires, Buenos Aires, Argentina",
+   "rastro": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/02vyk6z19",
+    "https://ror.org/03cqe8w59"
+   ],
+   "reference": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h159": {
+   "text": "Department of Basic Health Sciences, National University of Cuyo",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/05sn8wf81"
+   ]
+  },
+  "h381": {
+   "text": "Instituto de Tecnología Agroindustrial del Noroeste Argentino (ITANOA), Estación Experimental Agroindustrial Obispo Colombres (EEAOC), Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET). CCT NOA Sur, Av. William Cross 3150, Las Talitas‐ CP T4101XAC  Tucumán Argentina",
+   "rastro": [
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/03efzvv60"
+   ],
+   "reference": [
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h038": {
+   "text": "3Institut Franco-Argentin de Dynamique des Fluides pour l’Environnement, CNRS (IRL 2027), Universidad de Buenos Aires, CONICET, Buenos Aires, Argentina",
+   "rastro": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/03cqe8w59"
+   ],
+   "reference": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/02y47v716",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h301": {
+   "text": "Hospital Privado de Rosario, Santa Fe, Argentina",
+   "rastro": [
+    "https://ror.org/04qtr9c10"
+   ],
+   "reference": []
+  },
+  "h037": {
+   "text": "3CEMIC, Buenos Aires, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/04czhsq43"
+   ]
+  },
+  "h048": {
+   "text": "7Hospital Universitario Austral, Buenos Aires, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/014nx0w70"
+   ]
+  },
+  "h050": {
+   "text": "9Hospital Italiano de Buenos Aires, Buenos Aires, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/00bq4rw46"
+   ]
+  },
+  "h003": {
+   "text": "11Hospital Privado Universitario de Córdoba, Córdoba, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/04qtr9c10"
+   ]
+  },
+  "h007": {
+   "text": "15Hospital Italiano La Plata, La Plata, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/027nnzv91"
+   ]
+  },
+  "h361": {
+   "text": "Instituto de Física La Plata IFLP-CONICET, CCT-La Plata, La Plata B1900, Argentina",
+   "rastro": [
+    "https://ror.org/01pmtm379",
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/03efzvv60"
+   ],
+   "reference": [
+    "https://ror.org/01pmtm379",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h333": {
+   "text": "Institute of Environment, Habitat and Energy (INAHE-CONICET), CCT-Mendoza, Mendoza 5500, Argentina",
+   "rastro": [
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/03efzvv60",
+    "https://ror.org/03vdg0553"
+   ],
+   "reference": [
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/03vdg0553"
+   ]
+  },
+  "h146": {
+   "text": "Departamento de Hemoterapia e Inmuno-hematología, Hospital de ClínicasJosé de San Martín, Universidad de Buenos Aires, Argentina",
+   "rastro": [
+    "https://ror.org/0081fs513"
+   ],
+   "reference": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/02hbrab76"
+   ]
+  }
+ },
+ "after": {
+  "h556": {
+   "text": "Área de Química General e Inorgánica, Facultad de Química Bioquímica y Farmacia (FQByF) Universidad Nacional de San Luis (UNSL)  San Luis Argentina",
+   "rastro": [
+    "https://ror.org/00mczdx43"
+   ],
+   "reference": []
+  },
+  "h555": {
+   "text": "Área de Química Analítica, Facultad de Química Bioquímica y Farmacia (FQByF) Universidad Nacional de San Luis (UNSL)  San Luis Argentina",
+   "rastro": [
+    "https://ror.org/00mczdx43"
+   ],
+   "reference": []
+  },
+  "h356": {
+   "text": "Instituto de Ciencias Polares, Ambiente y Recursos Naturales (ICPA), Universidad Nacional de Tierra del Fuego (UNTDF)  Ushuaia Argentina",
+   "rastro": [
+    "https://ror.org/01ebs6k31",
+    "https://ror.org/021wj5r76"
+   ],
+   "reference": [
+    "https://ror.org/021wj5r76"
+   ]
+  },
+  "h355": {
+   "text": "Instituto de Ciencias Físicas (ICIFI‐CONICET), Universidad Nacional de San Martín  Buenos Aires Argentina",
+   "rastro": [
+    "https://ror.org/00v29jp57",
+    "https://ror.org/01ebs6k31",
+    "https://ror.org/03cqe8w59"
+   ],
+   "reference": [
+    "https://ror.org/00v29jp57",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h533": {
+   "text": "Universidad del CEMA",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/017p13n71"
+   ]
+  },
+  "h081": {
+   "text": "CONICET – Centro de Arqueología Urbana, IAA-FADU, Universidad de Buenos Aires, Buenos Aires, Argentina",
+   "rastro": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/02vyk6z19",
+    "https://ror.org/03cqe8w59"
+   ],
+   "reference": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h159": {
+   "text": "Department of Basic Health Sciences, National University of Cuyo",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/05sn8wf81"
+   ]
+  },
+  "h038": {
+   "text": "3Institut Franco-Argentin de Dynamique des Fluides pour l’Environnement, CNRS (IRL 2027), Universidad de Buenos Aires, CONICET, Buenos Aires, Argentina",
+   "rastro": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/03cqe8w59"
+   ],
+   "reference": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/02y47v716",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "h037": {
+   "text": "3CEMIC, Buenos Aires, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/04czhsq43"
+   ]
+  },
+  "h048": {
+   "text": "7Hospital Universitario Austral, Buenos Aires, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/014nx0w70"
+   ]
+  },
+  "h050": {
+   "text": "9Hospital Italiano de Buenos Aires, Buenos Aires, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/00bq4rw46"
+   ]
+  },
+  "h003": {
+   "text": "11Hospital Privado Universitario de Córdoba, Córdoba, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/04qtr9c10"
+   ]
+  },
+  "h007": {
+   "text": "15Hospital Italiano La Plata, La Plata, Argentina",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/027nnzv91"
+   ]
+  },
+  "h358": {
+   "text": "Instituto de Diversidad y Ecología Animal (CONICET- UNC),  Argentina",
+   "rastro": [
+    "https://ror.org/03cqe8w59"
+   ],
+   "reference": [
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/056tb7j80"
+   ]
+  },
+  "h146": {
+   "text": "Departamento de Hemoterapia e Inmuno-hematología, Hospital de ClínicasJosé de San Martín, Universidad de Buenos Aires, Argentina",
+   "rastro": [
+    "https://ror.org/0081fs513"
+   ],
+   "reference": [
+    "https://ror.org/0081fs513",
+    "https://ror.org/02hbrab76"
+   ]
+  }
+ }
+}

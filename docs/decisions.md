@@ -1250,3 +1250,15 @@ experiment's log as method changes made after it; they do not change its measure
   the app writes the three known checks (units, scope, vocabulary) again with the numbers it reads from the recorded
   text; any other check is shown as recorded. The recorded results are not touched, so nothing is re-measured.
 - **Why:** the user approved both after the Lab in English.
+
+## 2026-10-27 — Affiliations: the linking fixes tested on unseen affiliations
+
+- **What:** 100 more works from the same approved capture (seed 20261027, none of the original 100; 886 mentions,
+  556 strings), linked with the rules before and after the five fixes, in a temporary table, against a blind
+  annotation by three fresh Claude reviewers who saw only the strings and the ROR list.
+- **Result:** mentions that agree 854 → 866 of 886; precision 0.961 → 0.985; recall 0.979 → 0.977. The fixes
+  generalize; the earlier 5/5 re-measurement remains optimistic because it scores questions on the tuned sample.
+- **Found:** a footnote digit glued to a name (6 strings) and a short name inside a longer one not followed by
+  «de/del/of» (2). Not fixed, so the holdout stays a fair measurement; three reviewer calls were wrong.
+- **Why:** it was the pending fair test; the user asked to complete the pending work. A person still has to confirm
+  both references.
