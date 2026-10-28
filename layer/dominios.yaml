@@ -28,6 +28,7 @@ oncologia:
     evaluation: {folder: layer/eval, harness: legacy, run: docker compose run --rm layer-eval}
     evidence: {result: layer/eval/evidencia.json, link_classes: [DrugLink],
                pattern: "?l prov:wasDerivedFrom ?f ; oncologia:interventionText ?t ; oncologia:linkRule ?r ."}
+  label_source: mesh           # rdfs:label comes from this source (the disease names of MeSH)
   # De qué fuente viene cada término de la ontología («rastro» = enlace de Rastro)
   term_sources:
     aact: [Trial, Sponsor, nctId, title, phase, status, startDate, whyStopped, sponsor, industry, condition]

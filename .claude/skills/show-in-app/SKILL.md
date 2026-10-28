@@ -71,6 +71,9 @@ The first screen says what Rastro is and how to read each screen (question → a
 | Map | The domain has geometries (points, outlines, lines) | `mapa` in a question |
 | Predictions (or any screen of the domain's own) | The domain has a model whose predictions are stored in Rastro | `extension`: a class in `app/extensions/<name>/` that subclasses `Extension` (`app/dominio/extension.py`) |
 
+What a domain needs beyond these keys goes in its extension, never in the shared code: `tests/test_generic_code.py`
+fails if `app/app.py` or `app/dominio/` names a domain, a source or a word of one domain's business.
+
 ## Steps
 
 1. **Choose, and write the proposal.** Pick 3 to 6 example questions from the competency questions that show what

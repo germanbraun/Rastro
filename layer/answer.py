@@ -309,6 +309,7 @@ def column_sources(query, domain):
 
     walk(algebra)
     ns, sources_of_term = DOMAINS[domain]["namespace"], term_sources(domain)
+    label_source = DOMAINS[domain].get("label_source")   # the source of rdfs:label, if the domain declares one
     link_from = {}   # term of a Rastro link → the sources it comes from
     for source, terms in DOMAINS[domain].get("link_sources", {}).items():
         for term in terms:
@@ -317,7 +318,7 @@ def column_sources(query, domain):
 
     def direct_source(predicate):
         if str(predicate).endswith("rdf-schema#label"):
-            return "mesh"
+            return label_source
         return sources_of_term.get(str(predicate).replace(ns, ""))
 
     def source_of(subject, predicate):
@@ -329,7 +330,7 @@ def column_sources(query, domain):
         cls = sources_of_term.get(types.get(subject, "").replace(ns, ""))
         if cls:
             return cls
-        others = {direct_source(p) for s, p, o in triples if s == subject} - {None, "rastro", "mesh"}
+        others = {direct_source(p) for s, p, o in triples if s == subject} - {None, "rastro", label_source}
         return others.pop() if len(others) == 1 else None
 
     def steps(predicate):

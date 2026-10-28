@@ -59,7 +59,7 @@ def render(cfg_path, tech):
     has_trust = bool(cfg.get("tarjetas") or cfg.get("calidad"))
     example_tab = bool(cfg.get("ejemplo_integracion")) and (tech or not has_trust)
     names = (["demo"] if cfg.get("demo") else []) + ["ask"] + (["trust"] if has_trust else []) \
-        + (["lab"] if ext and ext.has_tab() else []) + (["example"] if example_tab else []) \
+        + (["model"] if ext and ext.has_tab() else []) + (["example"] if example_tab else []) \
         + (["faq", "hood"] if tech else [])
     labels = [cfg["ejemplo_integracion"]["titulo"] if name == "example" else idioma.t(f"dominio.render.tab_{name}")
               for name in names]
@@ -146,9 +146,9 @@ def render(cfg_path, tech):
     if tech:
         with tabs["faq"]:
             faq.domain_faq(cfg, tech)
-    # Rastro Lab last: the first time after a data change it trains the model, and the other tabs should not wait
-    if "lab" in tabs:
-        with tabs["lab"], service_guard():
+    # The model tab (Rastro Lab) last: the first time after a data change it trains the model, and the other tabs should not wait
+    if "model" in tabs:
+        with tabs["model"], service_guard():
             ext.show_tab(tech)
 
 

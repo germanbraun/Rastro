@@ -62,7 +62,7 @@ dominio.render.level_independent:
 dominio.render.tab_demo: {es: "Demo", en: "Demo"}
 dominio.render.tab_ask: {es: "Preguntar", en: "Ask"}
 dominio.render.tab_trust: {es: "Por qué confiar", en: "Why trust it"}
-dominio.render.tab_lab: {es: "Rastro Lab", en: "Rastro Lab"}
+dominio.render.tab_model: {es: "Rastro Lab", en: "Rastro Lab"}
 dominio.render.tab_faq: {es: "Preguntas frecuentes", en: "FAQ"}
 dominio.render.tab_hood: {es: "Bajo el capó", en: "Under the hood"}
 dominio.render.walkthrough: {es: "**{title}** · {header}", en: "**{title}** · {header}"}
@@ -173,12 +173,6 @@ dominio.claim_verdict.does_not_hold_where: {es: "No se sostiene: {where}", en: "
 
 dominio.show_claims.claim: {es: "Afirmación", en: "Claim"}
 
-dominio.show_external.graph_rastro: {es: "Rastro\\nempresa · LEI · petróleo 2025", en: "Rastro\\ncompany · LEI · oil 2025"}
-dominio.show_external.graph_wikidata:
-  es: "Wikidata (internet)\\nsede · bolsa · dueño · sitio web"
-  en: "Wikidata (internet)\\nheadquarters · stock exchange · owner · website"
-dominio.show_external.graph_query: {es: "una consulta\\n(GraphDB)", en: "one query\\n(GraphDB)"}
-dominio.show_external.graph_lei: {es: "  el mismo LEI  ", en: "  the same LEI  "}
 dominio.show_external.live: {es: "Consultar en vivo", en: "Query live"}
 dominio.show_external.live_help:
   es: "Une Rastro y Wikidata ahora mismo. Tarda unos 15 segundos y necesita internet."
@@ -198,10 +192,6 @@ dominio.show_enrichment_saved.title: {es: "**Guardado en Rastro**", en: "**Saved
 dominio.show_enrichment_saved.not_saved:
   es: "Todavía no se guardó: `docker compose run --rm wikidata-energia-loader` y después el enlazador."
   en: "Not saved yet: `docker compose run --rm wikidata-energia-loader` and then the linker."
-dominio.show_enrichment_saved.col_company: {es: "Empresa", en: "Company"}
-dominio.show_enrichment_saved.col_exchange: {es: "Cotiza en", en: "Listed on"}
-dominio.show_enrichment_saved.col_headquarters: {es: "Sede", en: "Headquarters"}
-dominio.show_enrichment_saved.col_queried: {es: "Consultado el", en: "Queried on"}
 dominio.show_enrichment_saved.explain:
   es: "Lo mismo, guardado: lo que respondió Wikidata queda en Rastro como una fuente más, con el día de la consulta y la huella del
     archivo, unido por el LEI. No depende de internet, se puede repetir y lo usan las preguntas, el asistente de IA y el modelo de Rastro

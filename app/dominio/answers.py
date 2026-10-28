@@ -376,13 +376,13 @@ def show_external(cfg, tech):
     ext, domain = cfg["externo"], cfg["domain"]
     st.markdown(f"**{ext['titulo']}**", help=common.ayuda("externo"))
     st.markdown(common.md(ext["intro"]))
-    graph = {name: idioma.t(f"dominio.show_external.graph_{name}") for name in ("rastro", "wikidata", "query", "lei")}
+    graph = ext["grafo"]   # the diagram's labels: Rastro, the outside source, the query that joins them, the shared key
     st.graphviz_chart(f"""digraph {{ rankdir=LR; bgcolor="transparent";
         node [fontname="Helvetica", fontsize=14, style=filled, penwidth=0];
         r [label="{graph['rastro']}", shape=ellipse, fillcolor="#2F6FB5", fontcolor="white"];
-        w [label="{graph['wikidata']}", shape=ellipse, fillcolor="#FFF3E6", color="#FF8C42", penwidth=2];
-        q [label="{graph['query']}", shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#B8C2CF", penwidth=1];
-        r -> q [label="{graph['lei']}", dir=both, color="#7A8699", fontcolor="#7A8699", fontname="Helvetica"];
+        w [label="{graph['fuente']}", shape=ellipse, fillcolor="#FFF3E6", color="#FF8C42", penwidth=2];
+        q [label="{graph['consulta']}", shape=box, style="rounded,filled", fillcolor="#F4F6F9", color="#B8C2CF", penwidth=1];
+        r -> q [label="{graph['clave']}", dir=both, color="#7A8699", fontcolor="#7A8699", fontname="Helvetica"];
         q -> w [dir=both, color="#7A8699"]; }}""", use_container_width=True)
     key = f"{domain}_externo"
     if st.button(idioma.t("dominio.show_external.live"), type="primary", key=f"{key}_boton",
@@ -422,9 +422,7 @@ def show_enrichment_saved(ext, domain, tech):
     if not rows:
         st.info(idioma.t("dominio.show_enrichment_saved.not_saved"))
         return
-    headers = {c: idioma.t(f"dominio.show_enrichment_saved.col_{name}")
-               for c, name in [("empresa", "company"), ("bolsa", "exchange"), ("sede", "headquarters"), ("consultado", "queried")]}
-    common.tabla(pd.DataFrame(rows, columns=columns).rename(columns=headers | {"wikidata": "Wikidata"}),
+    common.tabla(pd.DataFrame(rows, columns=columns).rename(columns=ext.get("columnas_guardado", {})),
           hide_index=True, use_container_width=True)
     st.caption(common.md(idioma.t("dominio.show_enrichment_saved.explain")))
     if tech:

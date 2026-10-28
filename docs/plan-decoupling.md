@@ -1,5 +1,9 @@
 # Plan: a generic app, with each domain's code in its own place
 
+**Done (2026-10-28):** steps 1 to 4, each in its own commit. In step 3 the user chose to keep oncology's screen as it
+is, as its own extension (`has_own_screen`), instead of rebuilding it on the template. The record is in
+`docs/decisions.md`.
+
 ## Context
 
 The domain screen (`app/dominio/`) already draws suppliers, oil and gas and affiliations from their YAML, but the app

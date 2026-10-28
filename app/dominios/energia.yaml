@@ -642,6 +642,12 @@ externo:
   guardado: /layer/energia/externo/resultado-2026-10-20.csv
   numeros: {nombre: empresa, valor: su_parte_m3, unidad: m3}   # the saved file's columns the slides read
   tecnicas: [lei, wikidata]    # columns only the technical view shows
+  grafo:                       # the diagram: Rastro, the outside source, the query that joins them and the shared key
+    rastro: "Rastro\\nempresa · LEI · petróleo 2025"
+    fuente: "Wikidata (internet)\\nsede · bolsa · dueño · sitio web"
+    consulta: "una consulta\\n(GraphDB)"
+    clave: "  el mismo LEI  "
+  columnas_guardado: {empresa: Empresa, bolsa: Cotiza en, sede: Sede, consultado: Consultado el, wikidata: Wikidata}
   numericas: [su_parte_m3, declara_m3]
   fecha_guardado: 20 oct 2026
   intro: >-

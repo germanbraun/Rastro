@@ -348,6 +348,12 @@ afirmaciones:
 
 externo:
   titulo: Enrich with outside data (Wikidata)
+  grafo:
+    rastro: "Rastro\\ncompany · LEI · oil 2025"
+    fuente: "Wikidata (internet)\\nheadquarters · stock exchange · owner · website"
+    consulta: "one query\\n(GraphDB)"
+    clave: "  the same LEI  "
+  columnas_guardado: {empresa: Company, bolsa: Listed on, sede: Headquarters, consultado: Queried on, wikidata: Wikidata}
   fecha_guardado: Oct 20, 2026
   intro: >-
     **Enriching** means adding to your own data what another source knows, without losing where each value came from.

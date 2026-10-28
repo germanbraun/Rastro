@@ -48,7 +48,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | `enlaces.py` | The one mark for a link's review status (rule, AI-reviewed, person-confirmed) |
 | `grafo.py` | Draws an instance of the graph as SVG |
 | `check_domain.py` | Renders a domain in both views and runs every example query (the app check) |
-| `text_snapshot.py` | Captures every visible text, to compare languages |
+| `text_snapshot.py` | Captures every visible text of a domain, in both views, to compare languages or a change (before and after) |
 | `dominios/<domain>.yaml` (+ `.en.yaml`) | Everything specific to a domain's screen: questions, columns, evidence, cards |
 | `textos/*.yaml`, `ayuda*.yaml`, `faq*.yaml` | Interface texts in Spanish and English; no visible text lives in code |
 
@@ -88,7 +88,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | Folder | What it does |
 |---|---|
 | `infra/` | `docker-compose.yml` (included by `compose.yaml` at the root), the Ontop and loader images, Postgres init |
-| `tests/` | pytest; runs without Docker. GitHub runs it with ruff on every push (`.github/workflows/calidad.yml`) |
+| `tests/` | pytest; runs without Docker. GitHub runs it with ruff on every push (`.github/workflows/calidad.yml`). `test_generic_code.py` fails if the frame or the shared template names a domain, a source or a domain's business word |
 | `docs/` | Method, plan, decisions, experiments, demo scripts; `docs/slides/` builds the decks (`build.py`, `estilo.py`) |
 | `.claude/skills/` | The method as skills, generic for any domain; real cases in each `examples.md` |
 

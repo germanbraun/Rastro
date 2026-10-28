@@ -1345,3 +1345,16 @@ experiment's log as method changes made after it; they do not change its measure
   look and its demo script); it is now one more extension, so the decision can be revisited without touching the frame.
 - **Same screen:** see the snapshot comparison in the commit; nothing re-measured.
 - **Why:** the user asked that the main app stay independent of the domains.
+
+## 2026-10-28 — Decoupling, step 4: a test keeps the shared code generic
+
+- **What:** `tests/test_generic_code.py` reads the frame and the shared template (`app/app.py`, `app/dominio/`,
+  `idioma`, `contraste`, `enlaces`, `grafo`, `check_domain`, `layer/answer.py`) and fails if a name or a string of
+  their code (not a comment or docstring) names a domain, a source the registry knows or a business word that slipped
+  in before (pozo, well, concesión, m³, YPF), or if they import an extension. The words come from
+  `layer/dominios.yaml`, so a new domain is covered without editing the test.
+- **What it found and moved:** the outside-data diagram's labels and saved columns (now `externo.grafo` and
+  `columnas_guardado` in `energia.yaml`), MeSH as the source of `rdfs:label` (now `label_source` in the registry) and
+  the model tab's internal name (`lab` → `model`; the label is still «Rastro Lab»). `app/text_snapshot.py` lost its
+  oncology branch: oncology renders through the template like the others.
+- **Why:** so the frame stays independent of the domains after this change, not only today.
