@@ -1399,3 +1399,14 @@ experiment's log as method changes made after it; they do not change its measure
   the appendix («Cómo está armado»). Every later footer moved one place (by the footer alone: the styling script's
   other changes to slides it had not touched were discarded), and the demo script's slide numbers too.
 - **Why:** the user asked for a slide 3 with the conceptual schema, so the audience sees the whole before the cases.
+
+## 2026-10-28 — The demo opens with the problem; the six reasons become the summary
+
+- **What:** the story is now 9 slides: cover; the problem («¿quién produjo más gas?», operated vs. share); the
+  schema of a semantic layer; the four moments; «Por qué una capa semántica» as the summary; «Consideraciones».
+  «Qué es Rastro» left the oil and gas deck: the schema says the same with more, and it showed the suppliers'
+  dictionary words (now oil and gas words in the repo copy). The demo script follows the new order, and its audience
+  line now says consultants and data teams who know SQL, as agreed. The app's Demo tab already had the same four
+  moments in the same order; it is unchanged.
+- **Why:** five slides before the first live moment were too many for three minutes, two of them said the same, and
+  the strongest hook (the two rankings) came fourth. The user approved the change.

@@ -293,6 +293,10 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Why:** earlier versions had too many pieces to remember.
 - **Q29.** Is this the right order and selection for a three-minute pitch? Which moment would a skeptical SQL
   consultant find weakest?
+- **Changed 2026-10-28:** the deck opens with the problem (operated vs. share), then a schema of a semantic layer;
+  the six reasons became the closing summary, and «Qué es Rastro» left the deck. Story: 9 slides.
+- **Q29b.** Is a schema slide before the first live moment the right frame for SQL consultants, or should the
+  schema come only after they have seen one answer traced to its sources?
 
 **F3. Numbers are read, never typed** (repo rule; 2026-10-16, 2026-10-26, 2026-10-28)
 - **Decision:** app texts are in YAML. Measured numbers are read from their JSON files. Contrast cards run their own

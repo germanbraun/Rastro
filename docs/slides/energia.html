@@ -49,12 +49,24 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
-<section id="e-porque-capa" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:36px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué una capa semántica</p>
-<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Lo difícil de los datos se resuelve una vez, y queda escrito</h2>
-<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;width:1664px"><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">El significado se define una vez</p><p style="font-size:26px;line-height:1.4;color:#4A5568">«Producción», «operadora», «participación»: escritos una sola vez, en palabras de negocio. Todas las preguntas usan la misma definición.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">Las fuentes se unen una vez, con evidencia</p><p style="font-size:26px;line-height:1.4;color:#4A5568">Cada unión entre bases dice de dónde sale y por qué. No se rehace, ni se equivoca distinto, en cada consulta.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">Las preguntas no dependen de cómo se guardan los datos</p><p style="font-size:26px;line-height:1.4;color:#4A5568">Si una base cambia de columnas o de unidades, se ajusta la traducción en un lugar y las preguntas siguen iguales.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">Cada respuesta se puede auditar</p><p style="font-size:26px;line-height:1.4;color:#4A5568">De cualquier número se vuelve a los registros de origen y a las reglas que lo produjeron.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">La IA pregunta por conceptos, no adivina tablas</p><p style="font-size:26px;line-height:1.4;color:#4A5568">Un asistente consulta «Empresa» o «Pozo» ya unidos y puede citar la evidencia, en lugar de adivinar qué columnas y qué nombres van juntos.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">Estándares abiertos, no una caja negra</p><p style="font-size:26px;line-height:1.4;color:#4A5568">Diccionario, reglas y enlaces en estándares del W3C: se pueden leer, verificar y llevar a otras herramientas.</p></div></div>
+<section id="e-respuesta" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El problema</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Una pregunta, dos significados: ¿quién produjo más gas en Argentina en 2025?</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:28px;color:#7A8699;font-weight:700;text-transform:uppercase;letter-spacing:1px">Lo que opera cada empresa</p>
+<p style="font-size:40px;line-height:1.35">Total Austral 12,3<br>YPF 11,7<br>Tecpetrol 6,9</p>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">Lo que dicen los rankings publicados, un SQL sobre la declaración jurada y un asistente de IA con búsqueda. Cada operadora declara todo el gas de la concesión, también el de sus socios.</p>
+</div>
+<div style="flex:1;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:28px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Lo que le corresponde, con Rastro</p>
+<p style="font-size:40px;line-height:1.35">YPF 12,3<br>Tecpetrol 6,4<br>Total Austral 5,2</p>
+<p style="font-size:28px;line-height:1.4">El gas de cada concesión repartido según la participación de cada socio, con la regla y los registros de cada número.</p>
+</div>
+</div>
+<p style="font-size:28px;color:#4A5568">Miles de millones de m³. Nadie dice qué midió. Rastro escribe la definición una vez, muestra las dos y por qué.</p>
 <div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>2</p></div>
-<aside>Las razones, antes de los datos: cada una se muestra después con un caso real. El significado definido una vez es la diapositiva siguiente (operada o por participación). Las uniones con evidencia y la auditoría, en la demo y en el «Paso a paso» del anexo. Que las preguntas no dependen de cómo se guardan los datos es el momento «la base cambia». Lo de la IA, en la diapositiva del anexo «Lo mismo le pasa a un asistente de IA», con su matiz: el SQL con las mismas uniones también acierta, porque el valor está en integrar una vez. Los estándares son OWL (diccionario), R2RML (traducción de cada base), SHACL (reglas de calidad) y PROV-O (origen de cada dato).</aside>
+<aside>Empezamos con una pregunta que cualquiera del sector cree saber, y que tiene dos respuestas correctas. Los rankings publicados, un SQL sobre la declaración jurada y un asistente de IA con búsqueda en internet dicen lo mismo: Total Austral, YPF y Tecpetrol. Es lo que opera cada empresa, porque cada operadora declara todo el gas de la concesión, también el de sus socios. Si la pregunta es cuánto gas le corresponde a cada una, el orden cambia: YPF, Tecpetrol y Total Austral, que baja del primero al tercer lugar porque gran parte de lo que opera es de sus socios. Ninguna de las primeras respuestas dice qué midió. Rastro escribe la definición una vez, en el diccionario de negocio, muestra las dos y la evidencia de cada número: la participación de cada socio sale del mapa de concesiones, con su texto. Datos del Capítulo IV y los mapas de la Secretaría de Energía; el 99,4 % del gas de 2025 tiene sus participaciones. Lo operado coincide con los rankings publicados. Medido el 21/10/2026.</aside>
 </section>
 </div>
 <div class="slide">
@@ -134,42 +146,6 @@ addEventListener('resize', fit); fit();
 </section>
 </div>
 <div class="slide">
-<section id="e-respuesta" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El problema</p>
-<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Una pregunta, dos significados: ¿quién produjo más gas en Argentina en 2025?</h2>
-<div style="display:flex;gap:32px">
-<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:18px">
-<p style="font-size:28px;color:#7A8699;font-weight:700;text-transform:uppercase;letter-spacing:1px">Lo que opera cada empresa</p>
-<p style="font-size:40px;line-height:1.35">Total Austral 12,3<br>YPF 11,7<br>Tecpetrol 6,9</p>
-<p style="font-size:28px;line-height:1.4;color:#4A5568">Lo que dicen los rankings publicados, un SQL sobre la declaración jurada y un asistente de IA con búsqueda. Cada operadora declara todo el gas de la concesión, también el de sus socios.</p>
-</div>
-<div style="flex:1;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:18px">
-<p style="font-size:28px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Lo que le corresponde, con Rastro</p>
-<p style="font-size:40px;line-height:1.35">YPF 12,3<br>Tecpetrol 6,4<br>Total Austral 5,2</p>
-<p style="font-size:28px;line-height:1.4">El gas de cada concesión repartido según la participación de cada socio, con la regla y los registros de cada número.</p>
-</div>
-</div>
-<p style="font-size:28px;color:#4A5568">Miles de millones de m³. Nadie dice qué midió. Rastro escribe la definición una vez, muestra las dos y por qué.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>4</p></div>
-<aside>Empezamos con una pregunta que cualquiera del sector cree saber, y que tiene dos respuestas correctas. Los rankings publicados, un SQL sobre la declaración jurada y un asistente de IA con búsqueda en internet dicen lo mismo: Total Austral, YPF y Tecpetrol. Es lo que opera cada empresa, porque cada operadora declara todo el gas de la concesión, también el de sus socios. Si la pregunta es cuánto gas le corresponde a cada una, el orden cambia: YPF, Tecpetrol y Total Austral, que baja del primero al tercer lugar porque gran parte de lo que opera es de sus socios. Ninguna de las primeras respuestas dice qué midió. Rastro escribe la definición una vez, en el diccionario de negocio, muestra las dos y la evidencia de cada número: la participación de cada socio sale del mapa de concesiones, con su texto. Datos del Capítulo IV y los mapas de la Secretaría de Energía; el 99,4 % del gas de 2025 tiene sus participaciones. Lo operado coincide con los rankings publicados. Medido el 21/10/2026.</aside>
-</section>
-</div>
-<div class="slide">
-<section id="quees-energia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Qué es Rastro</p>
-<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Un diccionario de negocio entre las bases de datos y las preguntas</h2>
-<div style="display:flex;align-items:center;gap:28px">
-<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Las bases de datos</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Cada una con sus nombres y su formato. Permanecen donde están.</p></div>
-<p style="font-size:72px;color:#2F6FB5">→</p>
-<div style="flex:1.2;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Diccionario de negocio</p><p style="font-size:28px;line-height:1.4">Contrato, empresa, grupo, agencia. Rastro traduce cada base a estas palabras, una vez.</p></div>
-<p style="font-size:72px;color:#2F6FB5">→</p>
-<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Las preguntas</p><p style="font-size:28px;line-height:1.4;color:#4A5568">En lenguaje de negocio. Cada respuesta indica su fuente.</p></div>
-</div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>5</p></div>
-<aside>Rastro es un diccionario de negocio que se pone entre las bases y quien pregunta. Las bases quedan como están. Rastro las traduce, una sola vez, a palabras que todos entienden: contrato, empresa, grupo, agencia (o, en oncología, ensayo, fármaco, enfermedad). Un asistente de IA usa esas palabras para responder, y cada respuesta dice de qué base sale. Para quien quiera el detalle técnico, está en el anexo.</aside>
-</section>
-</div>
-<div class="slide">
 <section id="e-integracion" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">1 · Preguntar</p>
 <h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.12;width:1664px">«¿Cuánto petróleo de 2025 le corresponde a cada empresa?»</h2>
@@ -178,7 +154,7 @@ addEventListener('resize', fit); fit();
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">YPF: 12,6 M m³</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Su parte en cada concesión, según sus socios. Cada empresa, unida entre fuentes: Vista suma la mitad de La Amarga Chica, que compró a Petronas (una corrección con su fuente, revisada por IA: falta que una persona la confirme).</p></div>
 </div>
 <p style="font-size:32px;line-height:1.35;width:1400px"><b>8,8 millones de m³ asignados de más: unos US$ 3.600 millones</b> <span style="color:#4A5568">a US$ 65 el barril (un supuesto). Los socios se separan una vez y valen para todas las preguntas.</span></p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>6</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>4</p></div>
 <aside>Primer momento: integración. La operadora maneja los pozos, pero el petróleo se reparte entre los socios. Sumar por quien declara la producción le da a YPF 21,4 millones de metros cúbicos; su parte es 12,6. La mitad de La Amarga Chica figura en el mapa a nombre de Petronas E&P Argentina, que Vista compró en 2025: con Rastro, Vista suma esos 2,1 (una corrección con su fuente, revisada por un asistente de IA; falta que una persona la confirme; el 12,6 de YPF no depende de ella). Los socios están en un texto del mapa de concesiones: Rastro los separa una vez, con su porcentaje, y une los nombres de cada empresa entre fuentes. En la app, abrir «¿Por qué este número?» con YPF y Loma Campana: 50 % de la producción de la concesión, con el texto original del mapa. El recorrido completo, con Chevron, está en el anexo.</aside>
 </section>
 </div>
@@ -191,7 +167,7 @@ addEventListener('resize', fit); fit();
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">1 línea</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Rastro no arranca hasta arreglarlo: falla en voz alta, todo junto. Se cambia una línea, la traducción de esa columna al diccionario, y las 10 preguntas vuelven a responder.</p></div>
 </div>
 <p style="font-size:32px;line-height:1.35;width:1664px"><b>El nombre de cada columna está en un solo lugar.</b> <span style="color:#4A5568">Las preguntas usan el diccionario, no las tablas.</span></p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>7</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>5</p></div>
 <aside>Segundo momento: la base cambia. La Secretaría de Energía publica una versión nueva y la columna del petróleo cambia de nombre. Sin Rastro, cada consulta conoce los nombres de las columnas: tres de ocho se rompen y hay que buscarlas. Con Rastro, todo falla junto y se arregla con una línea; las diez preguntas vuelven a dar lo mismo que antes.</aside>
 </section>
 </div>
@@ -204,7 +180,7 @@ addEventListener('resize', fit); fit();
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">16,7 M m³ de error</p><p style="font-size:28px;line-height:1.4;color:#4A5568">La misma precisión, pero cada predicción se explica en conceptos de negocio (la concesión con su operadora, cómo se fracturó el pozo), con la fuente de cada dato. Marca los dudosos: 24 de 49 predicciones se apoyan en un dato corregido.</p></div>
 </div>
 <p style="font-size:32px;line-height:1.35;width:1664px"><b>Rastro no hace al modelo más preciso: hace que se pueda defender.</b> <span style="color:#4A5568">Cada predicción dice en qué se apoya.</span></p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>8</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>6</p></div>
 <aside>Tercer momento: predecir. El mismo modelo, entrenado dos veces: con las tablas tal como vienen y con Rastro. Predicen igual de bien; la diferencia es la explicación. Con Rastro, cada predicción dice qué la mueve, de qué fuente sale cada dato y cuáles están corregidos a mano o llegaron tarde: la fractura de 36 de 43 pozos de 2025 se cargó después de que el pozo arrancó.</aside>
 </section>
 </div>
@@ -217,8 +193,17 @@ addEventListener('resize', fit); fit();
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">1 lugar</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Un documento dice que en Aguada Pichana Este Total tiene el 55 %. Se corrige una vez, con el documento, y cambian solos la respuesta de participación, lo que entra al modelo y su explicación.</p></div>
 </div>
 <p style="font-size:32px;line-height:1.35;width:1664px"><b>Lo difícil se hace una vez, en un lugar.</b> <span style="color:#4A5568">Todo lo que se pregunta o se predice lo usa igual.</span></p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>9</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>7</p></div>
 <aside>Cuarto momento, el cierre: una corrección. El mapa reparte Aguada Pichana Este en partes iguales; el Acuerdo Marco de Neuquén dice que Total tiene el 55 %. Sin Rastro, ese dato vive en cada consulta y en el código del modelo. Con Rastro se corrige una vez, con su documento, y la respuesta, el modelo y la explicación cambian solos.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="e-porque-capa" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:112px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué una capa semántica</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Lo difícil de los datos se resuelve una vez, y queda escrito</h2>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px;width:1664px"><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">El significado se define una vez</p><p style="font-size:26px;line-height:1.4;color:#4A5568">«Producción», «operadora», «participación»: escritos una sola vez, en palabras de negocio. Todas las preguntas usan la misma definición.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">Las fuentes se unen una vez, con evidencia</p><p style="font-size:26px;line-height:1.4;color:#4A5568">Cada unión entre bases dice de dónde sale y por qué. No se rehace, ni se equivoca distinto, en cada consulta.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">Las preguntas no dependen de cómo se guardan los datos</p><p style="font-size:26px;line-height:1.4;color:#4A5568">Si una base cambia de columnas o de unidades, se ajusta la traducción en un lugar y las preguntas siguen iguales.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">Cada respuesta se puede auditar</p><p style="font-size:26px;line-height:1.4;color:#4A5568">De cualquier número se vuelve a los registros de origen y a las reglas que lo produjeron.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">La IA pregunta por conceptos, no adivina tablas</p><p style="font-size:26px;line-height:1.4;color:#4A5568">Un asistente consulta «Empresa» o «Pozo» ya unidos y puede citar la evidencia, en lugar de adivinar qué columnas y qué nombres van juntos.</p></div><div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px 32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2;color:#14213D">Estándares abiertos, no una caja negra</p><p style="font-size:26px;line-height:1.4;color:#4A5568">Diccionario, reglas y enlaces en estándares del W3C: se pueden leer, verificar y llevar a otras herramientas.</p></div></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>8</p></div>
+<aside>El resumen, después de los cuatro momentos: cada razón ya se vio con un caso real. El significado definido una vez es la pregunta del comienzo (operada o por participación). Las uniones con evidencia y la auditoría, en la demo y en el «Paso a paso» del anexo. Que las preguntas no dependen de cómo se guardan los datos es el momento «la base cambia». Lo de la IA, en la diapositiva del anexo «Lo mismo le pasa a un asistente de IA», con su matiz: el SQL con las mismas uniones también acierta, porque el valor está en integrar una vez. Los estándares son OWL (diccionario), R2RML (traducción de cada base), SHACL (reglas de calidad) y PROV-O (origen de cada dato).</aside>
 </section>
 </div>
 <div class="slide">
@@ -230,7 +215,7 @@ addEventListener('resize', fit); fit();
 <p>Las pruebas y las correcciones de nombres las armó un asistente de IA; falta que una persona las confirme. Un posible venteo es un indicio, no una confirmación.</p>
 </div>
 <h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.15;width:1664px;padding-top:20px">Próximo paso: un piloto con datos propios, integrados con las fuentes públicas</h2>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#9AA5B8"><p>Rastro · Petróleo y gas en Argentina</p><p>10</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#9AA5B8"><p>Rastro · Petróleo y gas en Argentina</p><p>9</p></div>
 <aside>Decir los límites antes de que los pregunten, en palabras simples. Para técnicos: con las mismas tablas de enlaces, un SQL bien hecho acierta igual; eso está en el anexo. Cerrar con la propuesta de piloto.</aside>
 </section>
 </div>
@@ -247,7 +232,7 @@ addEventListener('resize', fit); fit();
 <p style="font-size:32px;line-height:1.35;color:#2F6FB5">Paso a paso · Datos reales · Parte de Rastro: diccionario y mapeos</p>
 <h2 style="font-size:56px;line-height:1.1">Un pozo, dos tablas</h2>
 <p style="font-size:32px;line-height:1.35"><b>Para qué:</b> unir tablas que describen lo mismo con columnas distintas, sin cambiar los datos.</p><div style="display:flex;gap:32px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:36px;padding-bottom:16px">Padrón de pozos</h3><p style="font-size:32px;line-height:1.35">idpozo: <b>164166</b> · sigla CGC.SC.CS-4002<br>empresa: COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.<br>Cañadón Seco, Santa Cruz</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:36px;padding-bottom:16px">Declaraciones juradas</h3><p style="font-size:32px;line-height:1.35">idpozo: <b>164166</b> · enero de 2025<br>empresa: CGC ENERGIA SAU<br>gas: 3.404 miles de m³</p></div></div><p style="font-size:32px;line-height:1.35"><b>Las dos tablas → un Pozo en Rastro (164166), con su operadora y sus 12 declaraciones de 2025.</b></p><p style="font-size:32px;line-height:1.35">La unión es por el identificador oficial del pozo, el mismo en las dos tablas. No por parecido del nombre.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>12</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>11</p></div>
 <aside>Datos reales, consultados el 23/10/2026 (capitulo4.pozo y capitulo4.produccion, idpozo 164166; en la app, pestaña «Paso a paso», paso 1, con las consultas en la vista técnica). Señalar que la empresa se nombra distinto en cada tabla: es el paso siguiente.</aside>
 </section>
 </div>
@@ -256,7 +241,7 @@ addEventListener('resize', fit); fit();
 <p style="font-size:32px;line-height:1.35;color:#2F6FB5">Paso a paso · Datos reales · Parte de Rastro: enlaces con evidencia</p>
 <h2 style="font-size:56px;line-height:1.1">Una empresa, dos nombres</h2>
 <p style="font-size:32px;line-height:1.35"><b>Para qué:</b> unir lo que no comparte ningún código, y que cada unión diga por qué.</p><div style="display:flex;gap:32px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:36px;padding-bottom:16px">Declaraciones juradas</h3><p style="font-size:32px;line-height:1.35"><b>CGC ENERGIA SAU</b></p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:36px;padding-bottom:16px">Padrón y mapa de concesiones</h3><p style="font-size:32px;line-height:1.35"><b>COMPAÑÍA GENERAL DE COMBUSTIBLES S.A.</b></p></div></div><p style="font-size:32px;line-height:1.35"><b>En Rastro: una empresa.</b> Regla: corrección revisada. Evidencia: «Las declaraciones juradas la nombran CGC Energía; el padrón de pozos y el mapa de concesiones, Compañía General de Combustibles. Es la misma empresa.»</p><p style="font-size:32px;line-height:1.35">Revisada por un asistente de IA: <b>espera la confirmación de una persona</b>, y Rastro lo muestra siempre.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>13</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>12</p></div>
 <aside>Fila real de linking/energia/correcciones.csv, expuesta como energia:CompanyName con energia:rule, energia:sourceText y prov:wasDerivedFrom (paso 2 en la app). Insistir: la unión es una propuesta con evidencia hasta que una persona la confirma.</aside>
 </section>
 </div>
@@ -265,7 +250,7 @@ addEventListener('resize', fit); fit();
 <p style="font-size:32px;line-height:1.35;color:#2F6FB5">Paso a paso · Datos reales · Parte de Rastro: la respuesta y su origen</p>
 <h2 style="font-size:56px;line-height:1.1">La respuesta vuelve a sus registros</h2>
 <p style="font-size:32px;line-height:1.35"><b>¿Cuánto gas declaró en 2025 la Compañía General de Combustibles?</b></p><div style="display:flex;gap:32px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:36px;padding-bottom:16px">Sin Rastro: SQL por nombre</h3><p style="font-size:32px;line-height:1.35">«CGC ENERGIA SAU»: 78.621 declaraciones, 760.242 miles de m³<br>«COMPAÑÍA GENERAL…»: 8.684 declaraciones, 1.198.629 miles de m³<br>Cada nombre encuentra una parte.</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:36px;padding-bottom:16px">Con Rastro: una empresa</h3><p style="font-size:32px;line-height:1.35"><b>87.305 declaraciones<br>1.958.871 miles de m³</b><br>Y el porqué: el enlace del paso anterior.</p></div></div><p style="font-size:32px;line-height:1.35">De cada número se vuelve a sus declaraciones, a su pozo y a la unión que las suma. Eso es lo que mide «Por qué confiar».</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>14</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>13</p></div>
 <aside>Cifras de las dos consultas del paso 3 en la app, el 23/10/2026; si se recargan los datos, mostrarlas en vivo en la app en lugar de leer esta diapositiva. Las dos filas de «sin Rastro» suman lo mismo que Rastro: la diferencia es saber que son la misma empresa, con evidencia.</aside>
 </section>
 </div>
@@ -277,7 +262,7 @@ addEventListener('resize', fit); fit();
 <div style="display:flex;gap:32px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:36px;padding-bottom:16px">Sin Rastro</h3><p style="font-size:32px;line-height:1.35">SQL sobre las tablas tal como vienen.<br>Busca un nombre y encuentra una parte.</p><p style="font-size:56px;line-height:1.1;color:#2F6FB5;font-weight:bold;padding-top:12px">7 de 10</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:36px;padding-bottom:16px">SQL con los enlaces de Rastro</h3><p style="font-size:32px;line-height:1.35">Las mismas uniones, con su evidencia, como tablas.</p><p style="font-size:56px;line-height:1.1;color:#2F6FB5;font-weight:bold;padding-top:12px">10 de 10</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:36px;padding-bottom:16px">Con Rastro</h3><p style="font-size:32px;line-height:1.35">Consulta los conceptos del grafo: Empresa y Pozo ya unidos.</p><p style="font-size:56px;line-height:1.1;color:#2F6FB5;font-weight:bold;padding-top:12px">10 de 10</p></div></div>
 <p style="font-size:32px;line-height:1.35">La mejora viene de <b>integrar una vez, con evidencia</b>: con las mismas uniones, el SQL también acierta. El grafo de conocimiento es donde esas uniones se definen, se documentan y se auditan, y le da a la IA conceptos ya unidos y la evidencia para citarlos.</p>
 <p style="font-size:32px;line-height:1.35">El mismo asistente de IA, las mismas 10 preguntas; cada evaluador ve solo su consulta.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>15</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>14</p></div>
 <aside>Cifras leídas de layer/energia/resultados.json (totales B, D y C, a través de app/contraste.py); la siguiente diapositiva las detalla. No decir que el grafo le gana al SQL: con los mismos enlaces el SQL también acierta. Lo que suma el grafo es dónde vive la integración (definida, documentada, auditable) y que la IA consulta conceptos de negocio y cita evidencia. El caso de CGC de la diapositiva anterior es el ejemplo: con un solo nombre se pierde parte del gas.</aside>
 </section>
 </div>
@@ -293,7 +278,7 @@ display:flex;flex-direction:column;gap:24px">
         <p style="font-size:32px;line-height:1.35"><b>¿Por qué este número?</b> Elegimos una concesión y seguimos el cálculo hasta su fuente.</p>
         <p style="font-size:32px;line-height:1.35">Producción operada y participación son medidas distintas. Aquí calculamos la participación registrada.</p>
         <p style="font-size:32px;line-height:1.35">Parte de este número depende de una unión de nombres que todavía espera la confirmación de una persona (siguiente diapositiva).</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>16</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>15</p></div>
 <aside>Cifras de docs/experiments/layer-answer/chevron.json, tomadas el 2026-10-26;
 la app consulta los datos cargados hoy, así que conviene mostrarlas en vivo. Los metros cúbicos se redondean al
 mostrarlos. Decir que la unión de nombres que sostiene la parte de CHEVRON la revisó un asistente de IA
@@ -317,7 +302,7 @@ display:flex;flex-direction:column;gap:24px">
         <p style="font-size:32px;line-height:1.35">5,15 millones de m³ × 50 % = 2,57 millones de m³</p></div>
         <p style="font-size:32px;line-height:1.35"><b>🟠 Revisada por IA, falta una persona.</b> En el mapa figura «COMPAÑIA DE HIDROCARBURO NO CONVENCIONAL S.R.L.»: la unión a CHEVRON espera la confirmación de una persona.</p>
         <p style="font-size:32px;line-height:1.35">Los mapeos traducen las fuentes al mismo vocabulario. Los enlaces conectan las entidades.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>17</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>16</p></div>
 <aside>Cifras de docs/experiments/layer-answer/chevron.json, tomadas el 2026-10-26;
 la app consulta los datos cargados hoy, así que conviene mostrarlas en vivo. Los metros cúbicos se redondean al
 mostrarlos. Decir que la unión de nombres que sostiene la parte de CHEVRON la revisó un asistente de IA
@@ -338,7 +323,7 @@ display:flex;flex-direction:column;gap:24px">
         <p style="font-size:32px;line-height:1.35"><b>En la app:</b> «Ver los registros originales» y «Ver cómo se conectaron los nombres».</p>
         <p style="font-size:32px;line-height:1.35">Rastro reutiliza las definiciones en cada pregunta.
 SQL sobre los mismos enlaces también puede obtener la respuesta.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>18</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>17</p></div>
 <aside>Cifras de docs/experiments/layer-answer/chevron.json, tomadas el 2026-10-26;
 la app consulta los datos cargados hoy, así que conviene mostrarlas en vivo. Los metros cúbicos se redondean al
 mostrarlos. Decir que la unión de nombres que sostiene la parte de CHEVRON la revisó un asistente de IA
@@ -357,7 +342,7 @@ por una persona.</aside>
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:32px;font-weight:700">Cada dato, con su origen</p><p style="font-size:56px;font-weight:700;color:#2F6FB5">100 %</p><p style="font-size:28px;line-height:1.4;color:#4A5568">De los 107.841 enlaces entre fuentes guardan su fuente, su regla y su texto (PROV-O).</p></div>
 </div>
 <p style="font-size:28px;line-height:1.4;width:1664px">Con honestidad: con las mismas tablas de enlaces, un SQL bien hecho también acierta 10 de 10; el valor está en integrar una vez. Rastro falló dos preguntas al principio y se volvieron a medir. Falta que una persona confirme las referencias.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>19</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>18</p></div>
 <aside>Las mismas tres pruebas que en proveedores, medidas el 19 de octubre con el mismo asistente de IA. Correctas: Rastro 10 de 10, sin Rastro 7 de 10; sin Rastro no pudo calcular distancias a los gasoductos (se le acabó el tiempo en los tres intentos, en las dos preguntas que las usan) y contó mal los venteos en áreas protegidas (43 en lugar de 60). Las tres últimas preguntas (concesiones para revisar, cambios de operadora y gas de shale) se midieron después, con el mismo protocolo; la de gas de shale no tiene cruces difíciles y las tres formas aciertan. Consistencia: 5 de 5 contra 3 de 5. Cambios: un arreglo de una línea. Decirlo con honestidad: Rastro falló dos preguntas al principio. En la participación de YPF el diccionario tenía dos propiedades parecidas para concesión; se dejó una sola, se volvió a medir esa pregunta con asistentes nuevos y salió bien en las 4 formas. En los cambios de operadora dio 55 y el SQL sin Rastro 64: los 9 de más son reales (por ejemplo, YPF cedió Don Ruiz a Bentia y Llancanelo R a PCR) y están en áreas sin producción, que la regla de Rastro descartaba; se corrigió la regla y se volvieron a ejecutar las mismas consultas, sin pedir respuestas nuevas. La prueba también encontró concesiones sin distancia a un gasoducto, que se corrigieron. Y si a un SQL le damos las tablas de enlaces de Rastro, acierta 10 de 10: lo que vendemos es la integración hecha una vez. Cuarta prueba, cobertura: los 107.841 enlaces entre fuentes guardan de dónde salen, con qué regla y qué texto; y todas las columnas de las respuestas dicen su fuente.</aside>
 </section>
 </div>
@@ -382,7 +367,7 @@ por una persona.</aside>
 </div>
 </div>
 <p style="font-size:28px;color:#4A5568">Como los controles de calidad de una base, pero sobre todas las fuentes juntas, su evidencia y lo que las usa.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>20</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>19</p></div>
 <aside>Rastro no solo integra: comprueba lo que integró. 7 reglas, escritas una vez con las palabras del diccionario, se comprueban sobre todos los datos después de cada carga. Para alguien de SQL son como los controles de calidad de una tabla, pero miran las fuentes integradas, la evidencia de cada enlace y lo que usa cada dato. La primera vez encontraron 5 trayectorias de pozo sin evidencia: un dato vacío borraba el texto; se arregló en un lugar. Las dos últimas marcan valores imposibles de la fuente: 2 trayectorias (una a 276.939 m de profundidad) y 17 fracturas (presiones de más de 100.000 psi, 537.185 m³ de agua en tres pozos). Y como cada predicción de Rastro Lab dice qué datos usó, Rastro sabe que 4 predicciones de la corrida vigente heredan uno de esos errores. Las reglas no cambian el dato: lo marcan para revisar. Están en SHACL, el estándar del W3C, así que sirven en otras plataformas o herramientas de grafos de conocimiento.</aside>
 </section>
 </div>
@@ -404,7 +389,7 @@ por una persona.</aside>
 <p style="font-size:28px;line-height:1.4">«YPF tenía reservas por 150 mil millones de m³»: 🔍 Rastro no tiene el dato.</p>
 </div>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>21</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>20</p></div>
 <aside>Una IA que no tiene el dato puede inventarlo con seguridad. Lo medimos: 5 preguntas del sector que los datos de Rastro no responden, con la regla, para todos, de decir qué falta. Nadie inventó, tampoco la IA sola: es honesto decirlo. La diferencia está en lo que sí está: el gas que declaró Tecpetrol en 2025 lo responden los caminos con datos, 6.910 millones de m³, con su fuente; la IA sola dice que no lo sabe. Y para el día a día, «Comprobar una afirmación»: una frase de un informe o de la prensa, contra los datos. Rastro dice si se sostiene, si no (con el valor correcto) o si no tiene el dato. Cuando la frase se puede leer de dos formas, muestra las dos. Está en la app, en «Preguntar», y la medición en «Por qué confiar».</aside>
 </section>
 </div>
@@ -418,7 +403,7 @@ por una persona.</aside>
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">El asistente, sobre las predicciones</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">4 · 5 · 4</p><p style="font-size:28px;line-height:1.4;color:#4A5568">De 5 preguntas: sin Rastro, SQL con los enlaces de Rastro, con Rastro. Sin Rastro falla la que necesita sus reglas: qué datos están corregidos.</p></div>
 </div>
 <p style="font-size:32px;line-height:1.35;width:1400px"><b>Cada predicción queda en Rastro</b> <span style="color:#4A5568">con su corrida, el aporte de cada factor y los registros de origen que usó, cada uno con su número en la fuente.</span></p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>22</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>21</p></div>
 <aside>Rastro Lab guarda cada predicción como un dato más: qué corrida la hizo, qué datos usó y de qué registros salen, uno por uno. Con eso, Rastro dice de antemano qué predicciones hay que rehacer si la fuente corrige un registro, y lo comprobamos: corregida la fractura n.º 4703, cambió exactamente la predicción que había dicho Rastro. Una fuente nueva, las trayectorias de pozo, entró con una regla escrita una vez y llega a todo. Y medimos al asistente de IA con preguntas sobre las predicciones: sin Rastro responde 4 de 5, con SQL sobre los enlaces de Rastro 5 de 5, con Rastro 5 de 5; la que falla sin Rastro es la que necesita sus reglas.</aside>
 </section>
 </div>
@@ -430,7 +415,7 @@ por una persona.</aside>
 <div style="display:flex;gap:28px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Registro de origen</h3><p style="font-size:32px;line-height:1.35">Parte de fractura <b>4799</b><br>idpozo: 165404<br>cantidad_fracturas: <b>53</b></p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Significado en Rastro</h3><p style="font-size:32px;line-height:1.35">Fractura del pozo<br><b>energia:fracStages</b><br>Regla y fuente conservadas</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Fila del modelo</h3><p style="font-size:32px;line-height:1.35">Columna: <b>etapas</b><br>Valor original: <b>53</b><br>Valor usado: <b>53</b></p></div></div>
 <p style="font-size:32px;line-height:1.35">La tabla de la app conecta cada campo original con su propiedad, su columna y el valor que usa el modelo.</p>
 <p style="font-size:32px;line-height:1.35"><b>Fuente → significado → entrada → predicción → evidencia.</b> La ontología organiza el significado; el modelo recibe una tabla.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>23</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>22</p></div>
 <aside>Fuente: consulta sources.fractura de ejemplo_lab en app/dominios/energia.yaml, rol de solo lectura de Lab; parte 4799 del pozo 165404. Verificado el 24/10/2026. La app muestra las nueve variables y preserva las diferencias entre el cálculo sobre fuentes originales, el valor integrado y el valor imputado.</aside>
 </section>
 </div>
@@ -442,7 +427,7 @@ por una persona.</aside>
 <div style="display:flex;gap:28px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Corte cronológico</h3><p style="font-size:32px;line-height:1.35">Entrenamiento: pozos anteriores a 2025.<br>Evaluación: pozos de 2025.<br>Los faltantes usan el promedio del entrenamiento.</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Disponibilidad del dato</h3><p style="font-size:32px;line-height:1.35">Fractura informada: 04/10/2024.<br>Cargada en el portal: <b>24/04/2025</b>.<br>Estado: <b>Observado · Llegó tarde</b>.</p></div></div>
 <p style="font-size:32px;line-height:1.35">El recorrido es retrospectivo. Marcar que un dato llegó tarde no lo convierte en información disponible al iniciar el pozo.</p>
 <p style="font-size:32px;line-height:1.35">La app distingue <b>Observado</b>, <b>Imputado</b>, <b>Llegó tarde</b> y <b>Pendiente de confirmación humana</b>; conserva el valor original.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>24</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>23</p></div>
 <aside>Fuente: fila SPARQL_B del pozo 165404 y parte original 4799 (fecha_inicio_fractura, fecha_data), verificadas el 24/10/2026. Separa la fecha del evento de la fecha de carga. No es una afirmación de evaluación histórica sin fuga de información; no todas las fuentes registran su fecha de disponibilidad.</aside>
 </section>
 </div>
@@ -453,7 +438,7 @@ por una persona.</aside>
 <div style="display:flex;gap:28px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Regresión lineal</h3><p style="font-size:32px;line-height:1.35">ŷ = β₀ + Σ βᵢ xᵢ</p><p style="font-size:32px;line-height:1.35">ŷ: gas estimado<br>xᵢ: característica del pozo<br>βᵢ: coeficiente aprendido<br>β₀: intercepto</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Partiendo del promedio</h3><p style="font-size:32px;line-height:1.35">ŷ = ȳ + Σ βᵢ (xᵢ − x̄ᵢ)</p><p style="font-size:32px;line-height:1.35">ȳ: gas promedio del entrenamiento<br>x̄ᵢ: promedio de cada entrada<br>βᵢ (xᵢ − x̄ᵢ): aporte de esa entrada</p></div></div>
 <p style="font-size:32px;line-height:1.35"><b>En el pozo:</b> promedio + ubicación + fractura + profundidad = gas estimado.</p>
 <p style="font-size:32px;line-height:1.35">«Fractura» reúne cinco aportes: rama, etapas, arena, agua y presión. La siguiente lámina muestra sus valores.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>25</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>24</p></div>
 <aside>Es la misma regresión ridge escrita de dos formas. El ajuste centra entradas y objetivo sobre el entrenamiento; el intercepto no se penaliza. Las categorías se codifican como columnas 0/1 y sus aportes se agrupan. Los coeficientes se aprenden; los grupos se definen para explicar la cuenta. No se atribuyen efectos causales.</aside>
 </section>
 </div>
@@ -465,7 +450,7 @@ por una persona.</aside>
 <div style="display:flex;gap:28px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">La cuenta agrupada</h3><p style="font-size:32px;line-height:1.35">Base: 51,64<br>Concesión, operadora y socios: −3,57<br>Fractura: +6,80 · Profundidad: −0,72</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Abrir «Fractura» en la app</h3><p style="font-size:32px;line-height:1.35">Ver sus cinco variables y coeficientes.<br>Elegir «Etapas»: valor 53, aporte <b>+9,28</b>.<br>Abrir su parte original <b>4799</b>.</p></div></div>
 <p style="font-size:32px;line-height:1.35"><b>Aporte = (valor usado − promedio del entrenamiento) × coeficiente.</b> Las categorías suman sus columnas 0/1 centradas.</p>
 <p style="font-size:32px;line-height:1.35">La app calcula sin redondear y muestra qué valores fueron imputados. Los aportes explican el cálculo; no prueban causas físicas.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>26</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>25</p></div>
 <aside>Valores del modelo actual, detalle() y entrenar(), para el pozo 165404 el 24/10/2026: predicción sin redondear 54.14767395030741. Los valores impresos se redondean. No se cambió el ajuste del modelo. En la app se puede explorar cada grupo, seleccionar una variable y abrir el registro y sus URI de procedencia.</aside>
 </section>
 </div>
@@ -477,7 +462,7 @@ por una persona.</aside>
 <div style="display:flex;gap:28px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">¿Sigue siendo la misma cuenta?</h3><p style="font-size:32px;line-height:1.35">Comparar código y todas las entradas guardadas.<br>Comprobar predicción, aportes e identificadores de origen del pozo.</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Abrir los registros</h3><p style="font-size:32px;line-height:1.35">URI de la entidad y del origen.<br>Parte de fractura 4799 y sus fechas.<br>Regla, evidencia y fuente consultadas ahora.</p></div></div>
 <p style="font-size:32px;line-height:1.35">En esta carga, entradas y resultados coinciden, pero la <b>versión del código es distinta</b>. La app lo avisa y separa la corrida publicada del modelo actual.</p>
 <p style="font-size:32px;line-height:1.35">La evidencia actual no es una copia histórica inmutable. Un número de gas aislado no reconstruye toda la explicación.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>27</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>26</p></div>
 <aside>Consultas de la corrida vigente y compare_run() verificadas el 24/10/2026. Para 165404 coinciden el snapshot completo de entradas y los valores publicados dentro de su precisión, incluidos aportes y URI; difiere el hash de código. No se republicó ni sobrescribió la corrida para ocultar el aviso. Los registros de origen se consultan en las tablas actuales.</aside>
 </section>
 </div>
@@ -490,7 +475,7 @@ por una persona.</aside>
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">15.809 pozos</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Una regla escrita: rige quien declara la producción del último mes. Lo que dice el padrón queda a la vista en cada pozo. Son pozos de todo tipo: 5.391 petrolíferos, 1.394 gasíferos y el resto de inyección u otros; 5.689 produjeron en 2025.</p></div>
 </div>
 <p style="font-size:32px;line-height:1.35;width:1664px"><b>Cada respuesta justifica su resultado.</b> <span style="color:#4A5568">Si se prefiere otra regla, se cambia en un solo lugar.</span></p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>28</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>27</p></div>
 <aside>Segundo momento: trazabilidad. Ojo: los 15.809 son todos los pozos que YPF declara en 2025, de todo tipo (petrolíferos, gasíferos, de inyección y parados); 5.689 produjeron petróleo o gas. El padrón de pozos y las declaraciones juradas no siempre nombran a la misma operadora: en todo el país, 7.453 pozos. Sin Rastro hay dos respuestas. Rastro aplica una regla escrita una vez, rige quien declara el último mes, y en cada pozo deja a la vista lo que dice el padrón. La regla es una decisión de negocio: si se prefiere otra, se cambia en un lugar.</aside>
 </section>
 </div>
@@ -503,7 +488,7 @@ por una persona.</aside>
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">La Calera: 482</p><p style="font-size:28px;line-height:1.4;color:#4A5568">6.636 posibles venteos ubicados en su concesión, con su operadora. La Calera (Pluspetrol): 482, sin ningún punto de venteo declarado en el mapa.</p></div>
 </div>
 <p style="font-size:32px;line-height:1.35;width:1664px"><b>Cada punto se ubica una vez, con su evidencia.</b> <span style="color:#4A5568">Un posible venteo es un indicio para revisar, no una confirmación.</span></p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>29</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>28</p></div>
 <aside>Tercer momento: cruce con mapas. La capa satelital de la Secretaría de Energía marca anomalías térmicas, posibles venteos, pero solo dice fecha y provincia. Rastro ubica cada punto dentro del contorno de su concesión, una vez, y así llega a la operadora y a los venteos declarados. Decirlo con cuidado: es un indicio para revisar, no una acusación.</aside>
 </section>
 </div>
@@ -517,7 +502,7 @@ por una persona.</aside>
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con identificador global</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">12</p><p style="font-size:28px;line-height:1.4;color:#4A5568">empresas tienen LEI en GLEIF, aceptado solo si coincide el nombre legal. Los grupos (Chevron, Pluspetrol) no están en ningún registro: son correcciones revisadas.</p></div>
 </div>
 <p style="font-size:28px;line-height:1.4;width:1664px;color:#4A5568">Cada fuente nueva se suma una vez, con su evidencia, y queda disponible para todas las preguntas.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>30</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>29</p></div>
 <aside>El mismo Rastro suma fuentes de otros organismos sin rehacer nada. ENARGAS: la distancia de cada concesión al gasoducto de transporte más cercano, una pista de dónde el gas no tiene salida (no incluye los ductos internos de cada yacimiento). IGN: localidades y áreas protegidas cerca de los posibles venteos. GLEIF: el identificador global de las empresas que lo tienen. Ningún registro público tiene los grupos de estas empresas argentinas: por eso siguen siendo correcciones revisadas, con su motivo.</aside>
 </section>
 </div>
@@ -531,7 +516,7 @@ por una persona.</aside>
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:34px;display:flex;flex-direction:column;gap:12px"><p style="font-size:28px;font-weight:700">Las dos cosas</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">9</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Entre ellas Chihuido de la Sierra Negra (YPF), El Trapial (Chevron) y Aguada Federal (Vista).</p></div>
 </div>
 <p style="font-size:28px;line-height:1.4;width:1664px"><b>La regla está en el diccionario de negocio, no en cada consulta:</b> ningún mapeo dice qué concesión hay que revisar; Rastro lo deduce de las dos reglas. La usan la pregunta, el mapa de la app y cualquier herramienta. <span style="color:#4A5568">Es un indicio para revisar, no una conclusión.</span></p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>31</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>30</p></div>
 <aside>Lo que una consulta SQL no da gratis: una regla de negocio escrita una sola vez. «Concesión para revisar» combina tres fuentes de tres organismos: los posibles venteos del satélite, la distancia a los gasoductos de ENARGAS y las planillas de venteo que presentan las empresas. No es una columna ni tiene mapeo: el diccionario dice que lo son las que cumplen alguna de las dos reglas, y Rastro la deduce. Si mañana se cambia el umbral o se suma una regla, se cambia en un lugar y vale para todas las preguntas y para el mapa. En la app se ve sobre el mapa, con las concesiones para revisar en rojo.</aside>
 </section>
 </div>
@@ -551,7 +536,7 @@ por una persona.</aside>
 <p style="font-size:28px;color:#4A5568;line-height:1.35">Puede que se presenten por otra vía: es una pregunta para hacer, no una conclusión.</p>
 </div>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>32</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>31</p></div>
 <aside>GraphRAG anclado en la capa, en petróleo y gas. El grafo elige con consultas exactas: las cinco concesiones con más posibles venteos vistos por satélite, ubicados en su contorno, y los estudios ambientales que se presentaron en ellas desde 2022, unidos por el nombre de la concesión. El asistente de IA lee solo esos 72 textos y los agrupa por tema, citando cada estudio. Lo que aparece es útil para una consultora: Pluspetrol presenta las planillas de venteo de gas cada semestre; en las concesiones de YPF, el listado solo muestra el informe anual. Decirlo con cuidado: es una pregunta para hacer, no una conclusión.</aside>
 </section>
 </div>
@@ -566,7 +551,7 @@ por una persona.</aside>
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px"><p style="font-size:28px;color:#2F6FB5;font-weight:700">El problema</p><p style="font-size:32px;line-height:1.3;padding-top:12px">Datos que solo se unen en un mapa</p></div>
 </div>
 <p style="font-size:28px;line-height:1.4;width:1664px">Seis fuentes públicas de cuatro organismos: la producción pozo por pozo (Capítulo IV), los mapas de concesiones y venteos y los estudios ambientales de la Secretaría de Energía, los gasoductos de ENARGAS, las localidades y áreas protegidas del IGN, y el identificador global de empresas (GLEIF).</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>33</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>32</p></div>
 <aside>La pregunta del sector: quién produce, quién opera y dónde se ventea gas. Tres problemas: la misma empresa escrita de formas distintas en cada fuente; los socios de cada concesión están dentro de un texto del mapa, no en columnas; y muchas preguntas solo se responden ubicando puntos en un mapa. Cinco fuentes de cuatro organismos distintos.</aside>
 </section>
 </div>
@@ -587,7 +572,7 @@ por una persona.</aside>
 <li>¿Quiénes producen más gas de shale (Vaca Muerta)?</li>
 </ol>
 <p style="font-size:28px;color:#4A5568;width:1664px">En la app, cada una se responde en vivo y dice de qué fuente sale cada dato. Con un asistente de IA configurado, también se pueden hacer preguntas propias.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>34</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>33</p></div>
 <aside>Las diez preguntas de competencia del dominio, pensadas para operadoras y consultoras: producción por participación, operadora de cada pozo, venteos, no convencional, gasoductos, entorno, el registro global de empresas, las concesiones para revisar, los cambios de operadora y el gas de shale. Las diez están en la evaluación; las tres últimas se sumaron y se midieron después.</aside>
 </section>
 </div>
@@ -613,7 +598,7 @@ por una persona.</aside>
 <p style="font-size:28px">Capítulo IV · mapas de la Secretaría de Energía · ENARGAS · IGN · GLEIF, en Postgres. Los datos no se mueven.</p>
 </div>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>35</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>34</p></div>
 <aside>Rastro es una capa semántica: se pone entre las tablas y quien pregunta. Para quien sabe SQL, cada pieza tiene un equivalente. La ontología es el esquema de negocio que uno querría tener. Los mapeos son como definiciones de vistas, escritas en un estándar (R2RML). Los enlaces son las claves de join que no existían entre fuentes. SPARQL es SQL sobre conceptos, y Ontop es un compilador que lo traduce a SQL normal sobre las tablas reales.</aside>
 </section>
 </div>
@@ -629,7 +614,7 @@ por una persona.</aside>
 <div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:32px;font-weight:700;line-height:1.2">Datos de afuera, sin cargarlos</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Se conecta con datos abiertos como Wikidata por identificadores compartidos.</p></div>
 <div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:32px;font-weight:700;line-height:1.2">Sin atarse a un proveedor</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Estándares abiertos del W3C, que entienden otras herramientas.</p></div>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>36</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>35</p></div>
 <aside>Lo que se lleva el cliente, en una diapositiva. Todo lo que sigue es la evidencia de cada punto. Consistencia: la misma pregunta escrita de cuatro formas da la misma respuesta. Lenguaje de negocio: el LLM recibe la ontología, no el esquema. Fuente: cada columna dice de dónde sale. Mantenimiento: el conocimiento de cada fuente está en los mapeos. Datos de afuera: una consulta une Rastro con Wikidata. Estándares: OWL, R2RML y SPARQL.</aside>
 </section>
 </div>
@@ -651,7 +636,7 @@ por una persona.</aside>
 </div>
 </div>
 <p style="font-size:28px;color:#4A5568">En vivo: layer/energia/externo/wikidata.rq (necesita internet). Guardado: wikidata-energia-loader.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>37</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>36</p></div>
 <aside>Lo mismo que en oncología con el identificador del fármaco, acá con el de empresa. El LEI viene de GLEIF y Rastro lo guarda para 12 empresas; Wikidata usa el mismo. Una consulta en GraphDB trae de Rastro la producción de 2025 y de Wikidata la sede, la bolsa y el sitio web. Así aparece que YPF y Pampa cotizan en Nueva York. Hay que decirlo: solo 3 de las 12 tienen el LEI en Wikidata. Por nombre aparecen otras cuatro, pero el nombre es el del grupo, no el de la sociedad argentina, y no se usan sin revisarlas. Esto es enriquecer: sumar lo que sabe otra fuente sin perder de dónde vino. Rastro lo hace de dos formas. En vivo, una consulta une los dos grafos al momento y está siempre al día. Guardado, lo que respondió Wikidata queda en Rastro como una fuente más, con el día de la consulta y la huella del archivo: no depende de internet y se puede repetir. Hoy no entra al modelo de Rastro Lab.</aside>
 </section>
 </div>
@@ -726,7 +711,7 @@ por una persona.</aside>
 <line x1="1182" y1="400" x2="1248" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 </svg>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>38</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>37</p></div>
 <aside>De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL.</aside>
 </section>
 </div>
@@ -808,7 +793,7 @@ por una persona.</aside>
 <text x="160.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">a su fuente</text>
 </svg>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>39</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>38</p></div>
 <aside>El diccionario del dominio de petróleo y gas. La producción de cada pozo en 2025 la declara una empresa y pertenece a una concesión; cada concesión tiene socios, con su porcentaje, y una operadora en el mapa. Cada pozo tiene su operadora de hoy, según una regla escrita. Los venteos, vistos por satélite o declarados, caen en una concesión. Cada concesión sabe a qué distancia está el gasoducto de transporte más cercano (ENARGAS); cada venteo, su localidad más cercana y si cae en un área protegida (IGN); y las empresas que lo tienen, su LEI (GLEIF). Arriba, una regla de negocio: «no convencional» no tiene mapeo; Rastro la deduce de shale y tight. Cada unión guarda su evidencia, con PROV-O.</aside>
 </section>
 </div>
@@ -864,7 +849,7 @@ prov:wasGeneratedBy	lo generó (la regla)	rastro:activity/energia-stake-parsing
 </svg>
 </div>
 <p style="font-size:24px;color:#4A5568">Burbuja azul: una entidad · burbuja naranja: su clase en el diccionario · rectángulo: un dato simple (texto o número) · cada flecha: una propiedad, con su nombre de negocio.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>40</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>39</p></div>
 <aside>Así guarda Rastro que Chevron tiene el 50 % de Loma Campana: no como una columna, sino como un dato con su porcentaje, la concesión, la empresa, el texto del mapa del que salió, la fuente y la regla que lo creó. Cualquier herramienta que hable SPARQL lo lee igual. En el dibujo, cada burbuja es una entidad, cada rectángulo un dato simple y cada flecha una propiedad, con su nombre de negocio.</aside>
 </section>
 </div>
@@ -887,7 +872,7 @@ prov:wasGeneratedBy	lo generó (la regla)	rastro:activity/energia-stake-parsing
 </div>
 </div>
 <p style="font-size:28px;color:#4A5568">Después, Rastro une todo solo: cada pregunta usa la misma definición.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>41</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>40</p></div>
 <aside>Dos tipos de heterogeneidad. De datos: la misma empresa con nombres distintos en cada fuente (CGC), o dos fuentes que nombran operadoras distintas para el mismo pozo; el entity linking decide una vez, con una regla escrita y su evidencia. De esquema: la empresa está en una columna de la declaración jurada, en otra del mapa y dentro de un texto de socios; los mapeos las vuelven los mismos conceptos.</aside>
 </section>
 </div>
