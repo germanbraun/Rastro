@@ -1442,3 +1442,15 @@ experiment's log as method changes made after it; they do not change its measure
   Rastro can back with evidence, not because it is the most accurate on every cut. With 49 test wells these
   differences move with the seed and the cutoff year.
 - **Why:** the user asked to see the linear regression and to run every algorithm from the notebook.
+
+## 2026-10-28 — The notebook shows what Rastro adds to a tree model
+
+- **What:** a section 7 with XGBoost on gas: TreeSHAP contributions (XGBoost's own `pred_contribs`, no new package)
+  grouped into the same three business factors as ridge, with Rastro's facts and flags next to each; the XGBoost
+  predictions to review with their reason (47 of 49 for 2025, counting late fracturing); XGBoost trained with the
+  fracturing as it was when each well started (error 16.12 → 16.29: part of today's accuracy rests on data that
+  arrived later); and the Aguada Pichana Este correction reaching XGBoost (49 of 49 predictions change).
+- **The message:** Rastro does not make trees more accurate; it works on the inputs, so provenance, the list to
+  review, data without the future and a correction made once apply to any model. What an ensemble loses is ridge's
+  exact account: TreeSHAP splits the prediction, and Rastro puts the evidence next to each contribution.
+- **Why:** the user asked what Rastro adds to trees, with examples in the notebook.
