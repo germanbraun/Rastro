@@ -37,14 +37,21 @@ def fill(card, texts):
 
 
 def trust_numbers(cfg, evaluation, changes, evidence, number):
-    """The measured numbers of «Por qué confiar»: the evaluation, the consistency test, the change test (the most
-    queries that broke without Rastro in one scenario) and the evidence coverage. number(value) formats a count."""
+    """The measured numbers of «Por qué confiar»: the evaluation, the consistency test, the change test (the scenario
+    where the most queries broke without Rastro: how many broke, how many questions it ran and how many of them had
+    a query without Rastro, «—» being a question SQL over the sources could not answer) and the evidence coverage.
+    number(value) formats a count."""
     totals, consistency = evaluation.get("totals", {}), evaluation.get("consistency", {})
-    broken = max((sum(n for s, n in changes.get(c["antes"], {}).get("totals", {}).get("B", {}).items()
-                      if s not in ("✅", "—")) for c in cfg.get("cambios", [])), default=0)
+    scenarios = [changes.get(c["antes"], {}) for c in cfg.get("cambios", [])]
+    worst = max(scenarios, key=lambda r: sum(n for s, n in r.get("totals", {}).get("B", {}).items()
+                                             if s not in ("✅", "—")), default={})
+    without = worst.get("totals", {}).get("B", {})
+    broken = sum(n for s, n in without.items() if s not in ("✅", "—"))
     numbers = {"c_consistent": totals.get("C", {}).get("consistent", "—"),
                "b_consistent": totals.get("B", {}).get("consistent", "—"),
                "n_consistency": len(consistency), "b_broken": broken,
+               "change_questions": len(worst.get("cells", {})),
+               "b_answerable": sum(n for s, n in without.items() if s != "—"),
                "c_correct": totals.get("C", {}).get("correct", "—"), "b_correct": totals.get("B", {}).get("correct", "—"),
                "d_correct": totals.get("D", {}).get("correct", "—"),
                "n_questions": len(evaluation.get("questions", {}))}

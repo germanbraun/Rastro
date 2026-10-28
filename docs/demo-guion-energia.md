@@ -23,7 +23,7 @@ En **¿Por qué este número?**, con YPF y Loma Campana: el 50 % de la producci�
 
 ## 1:15 – 1:45 · 2 · La base cambia (app, momento 2; diapositiva 5)
 
-> «La Secretaría publica una versión nueva y una columna cambia de nombre. Sin Rastro, 3 de 8 consultas se rompen y hay que encontrarlas una por una. Con Rastro, todo falla junto, en voz alta, y se arregla con una línea: las 10 preguntas vuelven a responder.»
+> «La Secretaría publica una versión nueva y una columna cambia de nombre. De las 10 preguntas, sin Rastro 8 tienen consulta, y 3 de esas se rompen: hay que encontrarlas una por una. Con Rastro, todo falla junto, en voz alta, y se arregla con una línea: las 10 preguntas vuelven a responder.»
 
 ## 1:45 – 2:30 · 3 · Predecir (app, momento 3; diapositiva 6)
 
