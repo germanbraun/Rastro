@@ -261,3 +261,11 @@ The loaders run on demand and need credentials in `.env` (copied from `.env.exam
 Downloads stay in `data/raw/`, which is not versioned: openFDA keeps one JSON per drug there and does not request it again.
 
 If a password contains `$`, put it in single quotes in `.env`: Docker Compose interprets `$` in unquoted values.
+
+## License
+
+Rastro is under the [Business Source License 1.1](LICENSE): you may read, copy, modify and use it for anything
+that is not production, and in production for research, teaching or a 90-day evaluation. **Commercial use in
+production requires a license from the author** (contact through this repository). Each version becomes Apache 2.0
+four years after its release (this one on 2030-10-28). What a client builds with Rastro (its dictionary, mappings
+and links) is the client's. The public data sources keep their own licenses: see [NOTICE](NOTICE).

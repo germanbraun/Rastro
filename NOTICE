@@ -1,0 +1,29 @@
+Rastro
+Copyright (c) 2026 German Braun. Licensed under the Business Source License 1.1 (see LICENSE).
+
+Rastro's code is under that license. The data it loads is not: each public source keeps its own license, and
+downloaded data is not part of this repository (data/raw/ is not versioned), except the small snapshot that the
+Rastro Lab notebook reads (lab/notebooks/datos/), derived from the Secretaría de Energía's CC-BY 4.0 data.
+
+Oil and gas in Argentina
+- Secretaría de Energía de la Nación: Capítulo IV (production and well registry), well fracturing data (Adjunto IV),
+  Vaca Muerta well trajectories, environmental studies: CC-BY 4.0. Concessions, partners and satellite venting maps
+  (WFS): public data of the Secretaría de Energía.
+- ENARGAS: transport gas pipelines (through the Secretaría de Energía's WFS): public data.
+- Instituto Geográfico Nacional (IGN): towns and protected areas: CC-BY 4.0.
+- GLEIF (Legal Entity Identifiers): CC0 1.0.
+- Wikidata: CC0 1.0.
+
+US federal suppliers
+- USAspending: public domain. NAICS 2022 (US Census Bureau): public domain.
+- Consolidated Screening List (trade.gov): public domain. GLEIF and Wikidata: CC0 1.0.
+
+Oncology
+- AACT (ClinicalTrials.gov): public domain. ChEMBL: CC BY-SA 3.0. openFDA: CC0 1.0.
+- MeSH (US National Library of Medicine): NLM terms and conditions.
+
+Research affiliations in Argentina
+- Crossref works metadata: CC0 for factual metadata (abstracts not used). ROR (Research Organization Registry): CC0 1.0.
+
+Main software Rastro uses (each under its own license): Ontop, PostgreSQL, Streamlit, rdflib, pandas, NumPy,
+scikit-learn, XGBoost, LightGBM, pySHACL, and the triplestore used for MeSH (under its vendor's free license).

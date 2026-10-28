@@ -1465,3 +1465,30 @@ experiment's log as method changes made after it; they do not change its measure
 - **In the app:** the Rastro Lab tab ends with «Para correrlo uno mismo: abrir el cuaderno en Colab · verlo en
   GitHub» (`lab.show_lab.notebook`, Spanish and English).
 - **Why:** the user asked for a clearer notebook and a link to it from the app.
+
+## 2026-10-28 — A pilot offer and a 6-slide executive deck
+
+- **Pilot offer:** `docs/piloto.md`, one page in Spanish for a prospect: the problem, what Rastro does, what the demo
+  already measured (with its source), a 6-week pilot week by week, success criteria measured with the demo's own
+  tests on the client's data, what the client provides (read-only access, about 2 hours a week of a business
+  person), what stays with the client (open standards) and the honest limits. The price, the contact and one
+  client-specific criterion are placeholders for the owner.
+- **Executive deck:** `docs/slides/mazos/ejecutivo.json`, six slides reused from the main deck plus one new one:
+  the cover, the two rankings, the schema, the US$ 3.600 millones answer, «Por qué confiar» and the pilot
+  (`e-piloto`). `docs/slides/build.py` now numbers each deck's footers by its own order, so a shared slide shows
+  the right page in every deck. Published as its own shared deck.
+- **Why:** the user asked for what it takes to sell; a concrete pilot and a short deck for decision makers came first.
+
+## 2026-10-28 — Rastro is under the Business Source License 1.1
+
+- **What:** `LICENSE` is the official BSL 1.1 text (checked word for word against the SPDX list) with its
+  parameters: licensor German Braun; Additional Use Grant: production use for research and teaching, and a 90-day
+  evaluation for any organization; Change Date 2030-10-28; Change License Apache 2.0. `NOTICE` credits each public
+  data source with the license recorded in `rastro_meta.source`. The README says what is free and what needs a
+  license.
+- **Why:** to sell it, commercial production use has to be licensed, while the repository and the Colab notebook stay
+  public for evaluation and trust, and each version opens up after four years (an answer to lock-in). Alternatives
+  set aside: PolyForm Noncommercial (never opens up), open core (more work to split), a private repository (the public
+  notebook link would break).
+- **Pending, for the owner:** a lawyer's review before the first contract, and the intellectual-property clause of
+  any employment contract.
