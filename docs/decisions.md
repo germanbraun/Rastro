@@ -1454,3 +1454,14 @@ experiment's log as method changes made after it; they do not change its measure
   review, data without the future and a correction made once apply to any model. What an ensemble loses is ridge's
   exact account: TreeSHAP splits the prediction, and Rastro puts the evidence next to each contribution.
 - **Why:** the user asked what Rastro adds to trees, with examples in the notebook.
+
+## 2026-10-28 — The notebook, clearer; the Lab tab links to it
+
+- **Clearer:** section 2 is a two-line answer and its baselines moved to section 6 (which gains the median of all
+  wells); section 7 breaks the 47 wells to review into section 4's reasons plus late fracturing; a paragraph says why
+  ridge and XGBoost split a prediction differently (even with opposite signs) while Rastro's facts stay the same;
+  tables have no row numbers and wrap long text («Real» is now «Gas real»); two waterfall charts show well 165404 from
+  the average well to its prediction, with ridge and with XGBoost side by side.
+- **In the app:** the Rastro Lab tab ends with «Para correrlo uno mismo: abrir el cuaderno en Colab · verlo en
+  GitHub» (`lab.show_lab.notebook`, Spanish and English).
+- **Why:** the user asked for a clearer notebook and a link to it from the app.

@@ -150,6 +150,7 @@ def show_how(tech):
             st.markdown(idioma.t("lab.show_lab.how_sparql"))
             st.code(modelo.SPARQL_B.strip(), language="sparql")
             st.caption(idioma.t("lab.show_lab.how_code"))
+    st.markdown(idioma.t("lab.show_lab.notebook"))   # the notebook: the same model, run by anyone (Colab or GitHub)
 
 
 def registros(pozo):

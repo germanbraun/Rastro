@@ -147,6 +147,9 @@ lab.show_lab.how_sparql:
   en: "**With Rastro (SPARQL):** the same input, asked in dictionary concepts. The joins and the rules are defined
     once in Rastro; the query also brings the rule and the evidence of each value."
 lab.show_lab.how_code: {es: "Código del modelo: lab/gas/modelo.py.", en: "Model code: lab/gas/modelo.py."}
+lab.show_lab.notebook:
+  es: "**Para correrlo uno mismo:** [abrir el cuaderno en Colab](https://colab.research.google.com/github/germanbraun/Rastro/blob/main/lab/notebooks/rastro-lab.ipynb) · [verlo en GitHub](https://github.com/germanbraun/Rastro/blob/main/lab/notebooks/rastro-lab.ipynb). El mismo modelo, sin instalar nada: cómo Rastro explica una predicción, qué predicciones revisar y todos los algoritmos probados."
+  en: "**To run it yourself:** [open the notebook in Colab](https://colab.research.google.com/github/germanbraun/Rastro/blob/main/lab/notebooks/rastro-lab.ipynb) · [see it on GitHub](https://github.com/germanbraun/Rastro/blob/main/lab/notebooks/rastro-lab.ipynb). The same model, with nothing to install: how Rastro explains a prediction, which predictions to review and every algorithm tried."
 
 # Model variables in words (fracturing labels: modelo.fractura_* in app/textos/modelo.yaml, capitalized).
 lab.variable_label.grupo: {es: "Operadora", en: "Operator"}
