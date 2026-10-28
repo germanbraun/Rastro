@@ -1,6 +1,8 @@
 # Datos descargados: el repo guarda scripts, nunca los datos
 data/raw/
 data/cache/
+# Copies of a mapping the app's editor replaced (mappings/.backup/), kept to undo a save
+mappings/.backup/
 *.dump
 *.sql.gz
 *.zip

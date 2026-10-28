@@ -429,6 +429,37 @@ dominio.show_instances.turtle:
 dominio.under_the_hood.tab_console: {es: "Consola SPARQL y una instancia", en: "SPARQL console and an instance"}
 dominio.under_the_hood.tab_pieces: {es: "Diccionario, enlaces y mapeos", en: "Dictionary, links and mappings"}
 dominio.under_the_hood.tab_quality: {es: "Reglas de calidad (SHACL)", en: "Quality rules (SHACL)"}
+dominio.under_the_hood.tab_mapping_editor: {es: "Editor de mapeos (R2RML)", en: "Mapping editor (R2RML)"}
+dominio.editor.problem: {es: "Línea {line}, columna {column}: {text}", en: "Line {line}, column {column}: {text}"}
+dominio.editor.unknown_terms:
+  es: "Usa términos que el diccionario no declara: {terms}"
+  en: "It uses terms the dictionary does not declare: {terms}"
+dominio.editor.sparql_ok: {es: "Sintaxis correcta, y todos sus términos están en el diccionario.", en: "Valid syntax, and every term is in the dictionary."}
+dominio.editor.mapping_ok:
+  es: "Mapeo válido: {maps} bloques, cada uno con su tabla y su sujeto, y todos sus términos en el diccionario."
+  en: "Valid mapping: {maps} blocks, each with its table and its subject, and every term in the dictionary."
+dominio.editor.no_maps: {es: "No hay ningún bloque rr:TriplesMap.", en: "There is no rr:TriplesMap block."}
+dominio.editor.no_table: {es: "{map} no tiene tabla ni consulta SQL (rr:logicalTable).", en: "{map} has no table or SQL query (rr:logicalTable)."}
+dominio.editor.no_subject: {es: "{map} no dice qué entidad crea (rr:subjectMap).", en: "{map} does not say which entity it creates (rr:subjectMap)."}
+dominio.editor.no_predicate: {es: "Un rr:predicateObjectMap de {map} no tiene propiedad.", en: "An rr:predicateObjectMap of {map} has no property."}
+dominio.editor.no_object: {es: "Un rr:predicateObjectMap de {map} no tiene valor.", en: "An rr:predicateObjectMap of {map} has no value."}
+dominio.mapping_editor.title: {es: "**El mapeo de este dominio**", en: "**This domain's mapping**"}
+dominio.mapping_editor.caption:
+  es: "mappings/{file}: qué columna de qué tabla llena cada término del diccionario. Se edita acá, se comprueba y, si pasa, se guarda en el archivo real; Rastro lo vuelve a leer en unos segundos. «Aplicar» (o Ctrl+Enter) comprueba el texto."
+  en: "mappings/{file}: which column of which table fills each term of the dictionary. Edit it here, check it and, if it passes, save it to the real file; Rastro reads it again in a few seconds. «Apply» (or Ctrl+Enter) checks the text."
+dominio.mapping_editor.missing: {es: "Este dominio todavía no tiene el archivo {file}.", en: "This domain does not have the file {file} yet."}
+dominio.mapping_editor.upload: {es: "O cargar un mapeo (.ttl)", en: "Or load a mapping (.ttl)"}
+dominio.mapping_editor.diff: {es: "Qué cambia", en: "What changes"}
+dominio.mapping_editor.diff_now: {es: "{file} (hoy)", en: "{file} (today)"}
+dominio.mapping_editor.diff_edited: {es: "{file} (editado)", en: "{file} (edited)"}
+dominio.mapping_editor.save: {es: "Guardar en el archivo real", en: "Save to the real file"}
+dominio.mapping_editor.undo: {es: "Deshacer el último guardado", en: "Undo the last save"}
+dominio.mapping_editor.reloading: {es: "Rastro vuelve a leer el mapeo…", en: "Rastro is reading the mapping again…"}
+dominio.mapping_editor.saved: {es: "Guardado: Rastro responde con el mapeo nuevo.", en: "Saved: Rastro answers with the new mapping."}
+dominio.mapping_editor.not_answering:
+  es: "Rastro no responde con este mapeo (por ejemplo, una tabla o columna que no existe en la base). Deshacé el guardado."
+  en: "Rastro does not answer with this mapping (for example, a table or column the database does not have). Undo the save."
+dominio.mapping_editor.backup: {es: "El archivo anterior quedó en mappings/.backup/{file}.", en: "The previous file is kept in mappings/.backup/{file}."}
 
 dominio.show_quality_shacl.not_checked:
   es: "Todavía no se comprobaron: `docker compose run --rm calidad`."

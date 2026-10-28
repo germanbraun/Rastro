@@ -17,6 +17,7 @@ import enlaces
 import idioma
 
 from . import common
+from . import editor
 
 
 def mapping_blocks(path, names):
@@ -182,15 +183,65 @@ def show_instances(domain):
 def under_the_hood(domain, diagram=None, quality=None):
     """«Bajo el capó» (technical view): the SPARQL console, a graph instance and the dictionary, the
     links and the mappings, in a single tab."""
-    names = ["console", "pieces"] + (["quality"] if quality else [])
-    console, pieces, *rules = st.tabs([idioma.t(f"dominio.under_the_hood.tab_{name}") for name in names])
-    with console:
+    names = ["console", "pieces", "mapping_editor"] + (["quality"] if quality else [])
+    tabs = dict(zip(names, st.tabs([idioma.t(f"dominio.under_the_hood.tab_{name}") for name in names])))
+    with tabs["console"]:
         sparql_console(domain)
-    with pieces:
+    with tabs["pieces"]:
         show_pieces(domain, diagram)
+    with tabs["mapping_editor"]:
+        mapping_editor(domain)
     if quality:
-        with rules[0]:
+        with tabs["quality"]:
             show_quality_shacl(quality)
+
+
+def mapping_editor(domain):
+    """The domain's R2RML mapping in an editor: load the file or upload one, check it, see what changes, and save it
+    to the real file only if it passes; the file it replaces is kept so the save can be undone."""
+    path = editor.mapping_path(domain)
+    key = f"{domain}_mapeo"
+    st.markdown(idioma.t("dominio.mapping_editor.title"), help=common.ayuda("mapeos"))
+    st.caption(idioma.t("dominio.mapping_editor.caption", file=path.name))
+    if not path.exists():
+        st.info(idioma.t("dominio.mapping_editor.missing", file=path.name))
+        return
+    current = path.read_text()
+    uploaded = st.file_uploader(idioma.t("dominio.mapping_editor.upload"), type=["ttl"], key=f"{key}_subida")
+    source = uploaded.getvalue().decode("utf-8") if uploaded else current
+    version = f"{uploaded.name}-{uploaded.size}" if uploaded else str(path.stat().st_mtime)
+    text = editor.code_editor(source, "turtle", key=f"{key}_editor_{version}", height=24,
+                              problems=st.session_state.get(f"{key}_problemas", ()))
+    problems, warnings, maps = editor.mapping_check(text, domain)
+    if st.session_state.get(f"{key}_problemas", []) != problems:
+        st.session_state[f"{key}_problemas"] = problems
+        st.rerun()
+    editor.show_problems(problems, warnings, idioma.t("dominio.editor.mapping_ok", maps=maps))
+    changes = editor.diff(current, text, path.name)
+    if changes:
+        with st.expander(idioma.t("dominio.mapping_editor.diff"), expanded=True):
+            st.code(changes, language="diff")
+    save, undo = st.columns(2)
+    if save.button(idioma.t("dominio.mapping_editor.save"), type="primary", key=f"{key}_guardar",
+                   disabled=bool(problems) or not changes, use_container_width=True):
+        st.session_state[f"{key}_respaldo"] = str(editor.save_mapping(domain, text))
+        with st.spinner(idioma.t("dominio.mapping_editor.reloading")):
+            st.session_state[f"{key}_resultado"] = editor.ontop_answers(domain)
+        st.rerun()
+    backup = st.session_state.get(f"{key}_respaldo")
+    if backup and undo.button(idioma.t("dominio.mapping_editor.undo"), key=f"{key}_deshacer", use_container_width=True):
+        path.write_text(Path(backup).read_text())
+        st.session_state.pop(f"{key}_respaldo")
+        with st.spinner(idioma.t("dominio.mapping_editor.reloading")):
+            st.session_state[f"{key}_resultado"] = editor.ontop_answers(domain)
+        st.rerun()
+    if f"{key}_resultado" in st.session_state:
+        if st.session_state[f"{key}_resultado"]:
+            st.success(idioma.t("dominio.mapping_editor.saved"))
+        else:
+            st.error(idioma.t("dominio.mapping_editor.not_answering"))
+    if backup:
+        st.caption(idioma.t("dominio.mapping_editor.backup", file=Path(backup).name))
 
 
 def quality_result(quality):
@@ -284,8 +335,16 @@ def sparql_console(domain):
         st.session_state[f"{key}_cargada"] = chosen
         st.session_state[f"{key}_texto"] = examples.get(
             chosen, f"PREFIX {domain}: <{answer.DOMAINS[domain]['namespace']}>\nSELECT * WHERE {{ ?s ?p ?o }} LIMIT 10")
-    query = st.text_area(idioma.t("dominio.sparql_console.query"), key=f"{key}_texto", height=280)
-    if st.button(idioma.t("dominio.sparql_console.run"), type="primary", key=f"{key}_ejecutar"):
+    # The editor starts from the chosen example; «Aplicar» (or Ctrl+Enter) hands its text back to be checked
+    st.markdown(idioma.t("dominio.sparql_console.query"))
+    query = editor.code_editor(st.session_state[f"{key}_texto"], "sparql", key=f"{key}_editor_{chosen}",
+                               problems=st.session_state.get(f"{key}_problemas", ()))
+    problems, warnings = editor.sparql_check(query, domain)
+    if st.session_state.get(f"{key}_problemas", []) != problems:   # mark the error's line in the editor
+        st.session_state[f"{key}_problemas"] = problems
+        st.rerun()
+    editor.show_problems(problems, warnings, idioma.t("dominio.editor.sparql_ok"))
+    if st.button(idioma.t("dominio.sparql_console.run"), type="primary", key=f"{key}_ejecutar", disabled=bool(problems)):
         started = time.time()
         try:
             columns, rows = common.run(query, domain)

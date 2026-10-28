@@ -280,6 +280,12 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q28.** The audience knows SQL. Does hiding the SQL, the mappings and the SPARQL console behind a switch help
   them, or does it hide the thing they would trust most? Is one «Bajo el capó» tab the right home for the editor,
   the dictionary and the quality rules, or should a consultant reach them from the answer they are looking at?
+- **Added 2026-10-28:** the console became a code editor (line numbers, colors) that checks the query before it runs
+  (syntax error on its line, terms the dictionary lacks), and a fourth part, **«Editor de mapeos (R2RML)»**, loads the
+  domain's mapping or an uploaded one, checks it (Turtle, R2RML structure, dictionary terms), shows the diff and saves
+  it to the real file with a backup and one-click undo; Ontop reloads it in about two seconds.
+- **Q28b.** Editing the live mapping from the app makes the layer tangible for a consultant, but it changes what every
+  answer reads. Are a passing check, a diff, a backup and git enough, or should a save go through a review step?
 
 **F2. The demo in four moments, three minutes** (2026-10-21)
 - **Decision:** ask (an ownership share, with evidence), the source changes (a renamed column), predict (Lab), and

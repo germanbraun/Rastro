@@ -126,7 +126,7 @@ services:
       - ../layer:/layer:ro
       - ../lab:/lab:ro
       - ../ontology:/ontology:ro
-      - ../mappings:/mappings:ro
+      - ../mappings:/mappings       # writable: the mapping editor of «Bajo el capó» saves here (with a backup)
       - ../data/cache:/data/cache:ro
     command: ["streamlit", "run", "/app/app.py", "--server.port", "8501", "--server.address", "0.0.0.0",
               "--server.headless", "true", "--browser.gatherUsageStats", "false"]

@@ -1373,3 +1373,29 @@ experiment's log as method changes made after it; they do not change its measure
 - **No typed numbers:** `e-ejemplo-ia` reads B, D and C from the evaluation through `{{energia.confiar.*}}`.
 - **Guard:** `tests/test_slides_format.py` fails if a slide in a deck has `<style>`, a class or a margin, or a
   placeholder without its number.
+
+## 2026-10-28 — «Bajo el capó»: a SPARQL editor that checks the query, and an R2RML mapping editor
+
+- **What:** the SPARQL console is now a code editor (Ace, through `streamlit-ace`, the one new dependency) with line
+  numbers and colors. Before a query runs, Rastro checks its syntax (an error is marked on its line and column) and
+  warns about terms the dictionary does not declare; «Ejecutar» stays off while it has an error. A new part,
+  «Editor de mapeos (R2RML)», loads the domain's mapping or an uploaded `.ttl`, checks it (Turtle syntax with its
+  line; every triples map with a table and a subject; every predicate-object map with a property and a value; every
+  class and property in the dictionary; `ontology/check.py`'s shared-property rule), shows what changes and saves it
+  to the real file only if it passes. The file it replaces goes to `mappings/.backup/` (not versioned), with one-click
+  undo. Ontop's development mode restarts on the change in about two seconds (seen in its log); the app waits and
+  says whether Rastro answers with the new mapping.
+- **Why:** the user asked for a real editor with a syntax check, and to load and edit mappings from the app. The
+  user chose the dependency and saving to the real file with checks over a download-only draft.
+- **Limits:** the checks do not know the database: a table or column that does not exist only shows when Ontop
+  refuses the mapping, and then the app says so and offers the undo. The app's `mappings/` mount is now writable.
+
+## 2026-10-28 — Slide 3: a conceptual schema of a semantic layer
+
+- **What:** a new slide after «Por qué una capa semántica» (`e-esquema-capa`): the sources as they come on the left,
+  the semantic layer in the middle (the business dictionary drawn as Empresa, Concesión and Pozo with their relations,
+  and its translations, joins with evidence and quality rules), and who uses it on the right (business questions, AI
+  assistants, models, other tools). Business words only, as in the rest of the story; the technical pieces stay in
+  the appendix («Cómo está armado»). Every later footer moved one place (by the footer alone: the styling script's
+  other changes to slides it had not touched were discarded), and the demo script's slide numbers too.
+- **Why:** the user asked for a slide 3 with the conceptual schema, so the audience sees the whole before the cases.
