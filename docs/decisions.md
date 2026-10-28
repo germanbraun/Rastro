@@ -1358,3 +1358,18 @@ experiment's log as method changes made after it; they do not change its measure
   the model tab's internal name (`lab` → `model`; the label is still «Rastro Lab»). `app/text_snapshot.py` lost its
   oncology branch: oncology renders through the template like the others.
 - **Why:** so the frame stays independent of the domains after this change, not only today.
+
+## 2026-10-28 — The shared oil and gas deck in sync; slides with inline styles only
+
+- **What:** the shared deck had 27 of the repo's 40 slides and old numbers (the quality slide said 5.590 predictions
+  checked, now 559; its page numbers and one sentence of «1 · Preguntar» were behind). It now has the 40 slides, the
+  repo's order and sections, and every number from `docs/slides/numeros/energia.json`. It had no content of its own
+  beyond the repo's; the layout the page editor had saved for `e-integracion` was replaced by the repo's slide.
+- **Slides fixed for the deck's format:** 17 slides (12 of the oil and gas appendix, 5 of the other decks) used a
+  `<style>` block, classes or margins, which the shared deck drops. They now use inline styles only, measured in the
+  browser at the same positions (only `preguntas-*` lists are tighter without their item margins). The generator of
+  the three «Del número a la evidencia» slides (`docs/slides/layer_story.py`) writes inline styles too, and one of its
+  sentences is shorter so the slide ends above the footer (927 → under 900 px).
+- **No typed numbers:** `e-ejemplo-ia` reads B, D and C from the evaluation through `{{energia.confiar.*}}`.
+- **Guard:** `tests/test_slides_format.py` fails if a slide in a deck has `<style>`, a class or a margin, or a
+  placeholder without its number.

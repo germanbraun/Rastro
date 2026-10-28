@@ -3,8 +3,8 @@
 `app/dominios/energia.yaml` (and `energia.en.yaml`), keys `ejemplo_integracion` (inside «Por qué confiar»; its own tab
 in the technical view) and `ejemplo_lab` (an expander inside «Rastro Lab»).
 Slides: `e-ejemplo-mapeo`, `e-ejemplo-enlace` and `e-ejemplo-respuesta` open the technical appendix, right after
-`anexo-energia`, followed by the bridge `e-ejemplo-ia` (B, D and C from `layer/energia/resultados.json`; today typed,
-pending a move to the `{{energia.confiar.*}}` placeholders). `e-lab-entrada`, `e-lab-entrenamiento`, `e-lab-formula`,
+`anexo-energia`, followed by the bridge `e-ejemplo-ia` (B, D and C from `layer/energia/resultados.json`, through the
+`{{energia.confiar.*}}` placeholders). `e-lab-entrada`, `e-lab-entrenamiento`, `e-lab-formula`,
 `e-lab-aportes` and `e-lab-evidencia` follow `lab-energia`. The order is in `docs/slides/mazos/energia.json`. Script:
 the two optional sections at the end of `docs/demo-guion-energia.md`.
 

@@ -81,13 +81,13 @@ addEventListener('resize', fit); fit();
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Las preguntas</p>
 <h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">Preguntas de negocio sobre ensayos clínicos de cáncer</h2>
 <ol style="font-size:32px;line-height:1.35;width:1664px;padding-left:44px">
-<li style="margin-bottom:14px">¿Qué fármacos anti-HER2 están en ensayos de fase 3 de cáncer de mama, y quién los patrocina?</li>
-<li style="margin-bottom:14px">¿Cuántos ensayos hay por fase para fármacos que actúan sobre EGFR?</li>
-<li style="margin-bottom:14px">¿Qué empresas tienen más ensayos detenidos en cáncer de pulmón, y por qué?</li>
-<li style="margin-bottom:14px">¿Cuáles son los eventos adversos más reportados de los fármacos que se prueban en leucemia?</li>
-<li style="margin-bottom:14px">¿Qué targets tienen fármacos en ensayos activos pero ningún fármaco aprobado?</li>
-<li style="margin-bottom:14px">¿Cuántos ensayos de fase 3 de cáncer de mama prueban alguna terapia dirigida?</li>
-<li style="margin-bottom:14px">¿Por qué se detuvieron los ensayos de fase 3 de cáncer de pulmón con inhibidores de quinasa?</li>
+<li>¿Qué fármacos anti-HER2 están en ensayos de fase 3 de cáncer de mama, y quién los patrocina?</li>
+<li>¿Cuántos ensayos hay por fase para fármacos que actúan sobre EGFR?</li>
+<li>¿Qué empresas tienen más ensayos detenidos en cáncer de pulmón, y por qué?</li>
+<li>¿Cuáles son los eventos adversos más reportados de los fármacos que se prueban en leucemia?</li>
+<li>¿Qué targets tienen fármacos en ensayos activos pero ningún fármaco aprobado?</li>
+<li>¿Cuántos ensayos de fase 3 de cáncer de mama prueban alguna terapia dirigida?</li>
+<li>¿Por qué se detuvieron los ensayos de fase 3 de cáncer de pulmón con inhibidores de quinasa?</li>
 </ol>
 <p style="font-size:28px;color:#4A5568;width:1664px">En la app, cada una se responde en vivo y dice de qué fuente sale cada dato. Con un asistente de IA configurado, también se pueden hacer preguntas propias.</p>
 <aside>Algunas de las once preguntas de competencia del dominio. Cruzan ensayos, fármacos, eventos adversos y la jerarquía de enfermedades, y una de ellas responde sobre textos: el motivo escrito de cada ensayo detenido.</aside>
@@ -168,7 +168,7 @@ addEventListener('resize', fit); fit();
 <p>Es una demo con datos públicos de ensayos clínicos, fármacos y eventos adversos, de octubre de 2026.</p>
 <p>Las pruebas fueron elaboradas por un asistente de IA y están pendientes de validación humana.</p>
 </div>
-<h2 style="font-size:64px;font-weight:700;line-height:1.15;width:1664px;margin-top:20px">Próximo paso: un piloto con datos propios, integrados con las fuentes públicas</h2>
+<h2 style="font-size:64px;font-weight:700;line-height:1.15;width:1664px;padding-top:20px">Próximo paso: un piloto con datos propios, integrados con las fuentes públicas</h2>
 <aside>Decir los límites antes de que los pregunten, en palabras simples. Para técnicos: con las mismas tablas de enlaces, un SQL bien hecho acierta igual; eso está en el anexo. Cerrar con la propuesta de piloto.</aside>
 </section>
 </div>
@@ -238,7 +238,7 @@ addEventListener('resize', fit); fit();
 <div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL sin integración</p><div style="width:420px;height:48px;background:#D99A2B;border-radius:10px"></div><p style="font-size:36px;font-weight:700">1.543</p></div>
 <div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL sobre los enlaces</p><div style="width:155px;height:48px;background:#9AA5B8;border-radius:10px"></div><p style="font-size:36px;font-weight:700">571</p></div>
 <div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px;font-weight:700">SPARQL sobre Rastro</p><div style="width:118px;height:48px;background:#2F6FB5;border-radius:10px"></div><p style="font-size:36px;font-weight:700">435</p></div>
-<p style="font-size:30px;line-height:1.4;margin-top:12px">Sin integración, el LLM adivina qué fármaco nombra cada ensayo, con texto. Con la integración hecha una vez, solo nombra conceptos.</p>
+<p style="font-size:30px;line-height:1.4;padding-top:12px">Sin integración, el LLM adivina qué fármaco nombra cada ensayo, con texto. Con la integración hecha una vez, solo nombra conceptos.</p>
 </div>
 </div>
 <aside>Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto. Con las tablas de enlaces, 571. Con Rastro, 435 de SPARQL, solo conceptos, y Rastro genera el SQL. La gran diferencia la hace integrar una vez; SPARQL la hace un poco más corta y en palabras de negocio.</aside>

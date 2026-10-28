@@ -1,10 +1,9 @@
 <section id="e-lab-formula" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px 160px;display:flex;flex-direction:column;gap:24px">
-<style>#e-lab-formula p{font-size:32px;line-height:1.35} #e-lab-formula .cards{display:flex;gap:28px} #e-lab-formula .card{flex:1;background:white;border:1px solid #E1E4E8;border-radius:16px;padding:28px} #e-lab-formula h3{font-size:34px;margin-bottom:16px}</style>
-<p style="color:#2F6FB5">Rastro Lab · Paso a paso · La misma cuenta</p>
+<p style="font-size:32px;line-height:1.35;color:#2F6FB5">Rastro Lab · Paso a paso · La misma cuenta</p>
 <h2 style="font-size:56px;line-height:1.1">De la fórmula al pozo</h2>
-<div class="cards"><div class="card"><h3>Regresión lineal</h3><p>ŷ = β₀ + Σ βᵢ xᵢ</p><p>ŷ: gas estimado<br>xᵢ: característica del pozo<br>βᵢ: coeficiente aprendido<br>β₀: intercepto</p></div><div class="card"><h3>Partiendo del promedio</h3><p>ŷ = ȳ + Σ βᵢ (xᵢ − x̄ᵢ)</p><p>ȳ: gas promedio del entrenamiento<br>x̄ᵢ: promedio de cada entrada<br>βᵢ (xᵢ − x̄ᵢ): aporte de esa entrada</p></div></div>
-<p><b>En el pozo:</b> promedio + ubicación + fractura + profundidad = gas estimado.</p>
-<p>«Fractura» reúne cinco aportes: rama, etapas, arena, agua y presión. La siguiente lámina muestra sus valores.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><span>Rastro · Petróleo y gas en Argentina</span><span>24</span></div>
+<div style="display:flex;gap:28px"><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Regresión lineal</h3><p style="font-size:32px;line-height:1.35">ŷ = β₀ + Σ βᵢ xᵢ</p><p style="font-size:32px;line-height:1.35">ŷ: gas estimado<br>xᵢ: característica del pozo<br>βᵢ: coeficiente aprendido<br>β₀: intercepto</p></div><div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:28px"><h3 style="font-size:34px;padding-bottom:16px">Partiendo del promedio</h3><p style="font-size:32px;line-height:1.35">ŷ = ȳ + Σ βᵢ (xᵢ − x̄ᵢ)</p><p style="font-size:32px;line-height:1.35">ȳ: gas promedio del entrenamiento<br>x̄ᵢ: promedio de cada entrada<br>βᵢ (xᵢ − x̄ᵢ): aporte de esa entrada</p></div></div>
+<p style="font-size:32px;line-height:1.35"><b>En el pozo:</b> promedio + ubicación + fractura + profundidad = gas estimado.</p>
+<p style="font-size:32px;line-height:1.35">«Fractura» reúne cinco aportes: rama, etapas, arena, agua y presión. La siguiente lámina muestra sus valores.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>24</p></div>
 <aside>Es la misma regresión ridge escrita de dos formas. El ajuste centra entradas y objetivo sobre el entrenamiento; el intercepto no se penaliza. Las categorías se codifican como columnas 0/1 y sus aportes se agrupan. Los coeficientes se aprenden; los grupos se definen para explicar la cuenta. No se atribuyen efectos causales.</aside>
 </section>
