@@ -270,11 +270,16 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 ### F. App and demo
 
 **F1. Two views: business by default, technical on request** (2026-10-18)
-- **Decision:** no jargon in the main view ("business dictionary", "evidence"). Queries, generated SQL, RDF, mappings
-  and SHACL are behind «Ver detalles técnicos». Visible texts say "Rastro deduces", and tools are named only where
-  they are explained.
-- **Q28.** The audience knows SQL. Does hiding the SQL and the mappings by default help them, or does it hide the
-  thing they would trust most?
+- **Decision:** no jargon in the main view ("business dictionary", "evidence"). The switch «Ver detalles técnicos»
+  adds, next to each answer, its SPARQL query, the SQL Rastro generates and its RDF evidence, and opens the other
+  domains. It also adds the tab **«Bajo el capó»** (Under the hood), with three parts: a **SPARQL console** (an editor
+  to write and run any query over the domain, plus one instance drawn as a graph); **«Diccionario, enlaces y
+  mapeos»** (the ontology with its labels and diagram, the link tables with their rule and evidence, and the R2RML
+  mapping blocks that build them); and **«Reglas de calidad (SHACL)»** (each rule, what it checked and what failed).
+  Visible texts say "Rastro deduces", and tools are named only where they are explained.
+- **Q28.** The audience knows SQL. Does hiding the SQL, the mappings and the SPARQL console behind a switch help
+  them, or does it hide the thing they would trust most? Is one «Bajo el capó» tab the right home for the editor,
+  the dictionary and the quality rules, or should a consultant reach them from the answer they are looking at?
 
 **F2. The demo in four moments, three minutes** (2026-10-21)
 - **Decision:** ask (an ownership share, with evidence), the source changes (a renamed column), predict (Lab), and
