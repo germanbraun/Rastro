@@ -38,10 +38,10 @@ python3 lab/gas/modelo.py --comparar      # what changed between the last two ru
 ```
 
 The app shows it in the **Rastro Lab** tab and in moment 3 of the demo, through the oil and gas extension
-(`app/extensions/gas_lab/`: the class `GasLab`, and `lab.py` for the tab).
+(`app/extensions/energia/`: the class `OilAndGas`, and `lab.py` for the tab).
 
 - **After editing `lab/gas/modelo.py`:** run `python3 lab/gas/modelo.py --publicar`, then `docker compose restart app`. The run's version is the fingerprint of `modelo.py`, so any edit, even a comment, makes the app report the published run as different until it is published again.
-- **After editing `app/extensions/gas_lab/`:** `docker compose restart app`.
+- **After editing `app/extensions/energia/`:** `docker compose restart app`.
 - **Explanation sentences** are not in the code: they are in `app/textos/modelo.yaml`, each key with `es` and `en` (`modelo.texto(key, lang)` reads them). Edit both languages, and the Lab texts of the app in `app/textos/lab.yaml` and `app/dominios/energia.en.yaml` (`ejemplo_lab`) next to their Spanish ones. Check the Lab tab in Spanish and in English.
 
 ## The predictions, in Rastro

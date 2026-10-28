@@ -10,8 +10,7 @@
 All of them use the same model, the same base instructions and, for B and C, the
 same retries: if the query fails, the LLM sees the error and gets two more attempts.
 
-What is specific to each domain (oncology, suppliers) is in dominios.yaml; each function
-receives the domain and, if none is given, uses oncology.
+What is specific to each domain is in dominios.yaml; each function receives the domain.
 
 The LLM is chosen with RASTRO_PROVIDER:
   anthropic  Claude API (needs ANTHROPIC_API_KEY). Default model: claude-opus-5-5
@@ -49,7 +48,7 @@ nada: devolvé solo la query. """ + NO_DATA_RULE
 
 # --- What the LLM receives in each approach ----------------------
 
-def system_prompt(approach, domain="oncologia"):
+def system_prompt(approach, domain):
     d = DOMAINS[domain]
     base = d["base"]
     if approach == "A":
@@ -117,7 +116,7 @@ def ask_ollama(system, messages, schema):
 
 # --- Answer -------------------------------------------------------
 
-def answer(approach, question, kind, domain="oncologia"):
+def answer(approach, question, kind, domain):
     system = system_prompt(approach, domain)
     schema = output_schema(approach, kind)
     messages = [{"role": "user", "content": question}]
@@ -137,7 +136,7 @@ def answer(approach, question, kind, domain="oncologia"):
     return {"answer": None, "attempts": attempts}
 
 
-def explain_query(query, sql, domain="oncologia", language="es"):
+def explain_query(query, sql, domain, language="es"):
     """Explains in simple words a SPARQL query and the SQL that Ontop generated, for someone who
     knows SQL but not semantic technologies. Returns Markdown bullets, in Spanish or, with language="en", English."""
     system = ("Explicás consultas a una persona de negocio que sabe SQL pero no conoce tecnologías "
@@ -157,7 +156,7 @@ def retry_message(error):
     return f"La query falló con este error:\n{error}\n\nCorregila."
 
 
-def try_query(approach, query, kind, domain="oncologia"):
+def try_query(approach, query, kind, domain):
     """Runs the query of B (SQL) or C (SPARQL) and returns the answer or the error."""
     if sin_datos(query):
         return {"answer": None, "attempt": {"query": query, "error": None}}
@@ -187,13 +186,13 @@ def to_answer(column, kind):
 READER = "host=postgres port=5432 dbname=%s user={0} password={0}"
 
 
-def run_sql(query, approach="B", domain="oncologia"):
+def run_sql(query, approach, domain):
     user = DOMAINS[domain]["readers"][approach]
     with psycopg.connect(READER.format(user) % os.environ["PG_DB"]) as conn:
         return [row[0] for row in conn.execute(query).fetchall()]
 
 
-def sql_schema(approach="B", domain="oncologia"):
+def sql_schema(approach, domain):
     """The schema of the tables the read-only user sees, with their documentation."""
     d = DOMAINS[domain]
     user = d["readers"][approach]
@@ -213,7 +212,7 @@ def sql_schema(approach="B", domain="oncologia"):
     return f"{notes}\n\nTablas:\n{tables}"
 
 
-def run_sparql(query, domain="oncologia"):
+def run_sparql(query, domain):
     r = requests.post(DOMAINS[domain]["ontop"], data={"query": query}, timeout=120,
                       headers={"Accept": "application/sparql-results+json"})
     if not r.ok:
@@ -223,9 +222,6 @@ def run_sparql(query, domain="oncologia"):
     return [b[var]["value"] if var in b else None for b in data["results"]["bindings"]]
 
 
-APPROACHES = {k: (lambda q, kind, k=k: answer(k, q, kind)) for k in "ABC"}
-
-
 # --- Free questions for the interface ------------------------------
 
 FREE_RULES = """La query puede devolver varias columnas, con nombres de variable claros en \
@@ -233,12 +229,12 @@ español (por ejemplo ?farmaco, ?ensayos). Limitá el resultado a 50 filas. No e
 nada: devolvé solo la query. """ + NO_DATA_RULE
 
 # Which source each ontology term comes from (dominios.yaml)
-def term_sources(domain="oncologia"):
+def term_sources(domain):
     return {term: source for source, terms in DOMAINS[domain]["term_sources"].items() for term in terms}
 
 
 
-def ask_rastro(question, domain="oncologia", language="es"):
+def ask_rastro(question, domain, language="es"):
     """Answers a free question with SPARQL over Rastro. Needs a configured LLM. With language="en", the explanation
     after «SIN DATOS:» is written in English (the marker stays, the code looks for it)."""
     system = system_prompt("C", domain).replace(QUERY_RULES, FREE_RULES)
@@ -263,7 +259,7 @@ def ask_rastro(question, domain="oncologia", language="es"):
     return {"query": None, "columns": [], "rows": [], "attempts": attempts}
 
 
-def run_sparql_table(query, domain="oncologia"):
+def run_sparql_table(query, domain):
     """Runs SPARQL on Ontop and returns (columns, rows)."""
     r = requests.post(DOMAINS[domain]["ontop"], data={"query": query}, timeout=120,
                       headers={"Accept": "application/sparql-results+json"})
@@ -275,7 +271,7 @@ def run_sparql_table(query, domain="oncologia"):
     return columns, rows
 
 
-def ontop_sql(query, domain="oncologia"):
+def ontop_sql(query, domain):
     """The SQL that Ontop generates and runs on Postgres for a SPARQL query."""
     r = requests.get(DOMAINS[domain]["ontop"].replace("/sparql", "/ontop/reformulate"),
                      params={"query": query}, timeout=60)
@@ -285,7 +281,7 @@ def ontop_sql(query, domain="oncologia"):
     return "\n".join(lines[native + 1:]).strip() if native is not None else r.text.strip()
 
 
-def column_sources(query, domain="oncologia"):
+def column_sources(query, domain):
     """Sources of a query: (all the ones it uses, the ones of each result column).
 
     A column that is the object of a term (?farmaco in ?d :name ?farmaco) takes the

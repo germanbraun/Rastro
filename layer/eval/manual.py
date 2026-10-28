@@ -48,7 +48,7 @@ def main():
     entry = saved["questions"].setdefault(qid, {"question": q["question"]})
 
     if command == "prompt":
-        print(f"<sistema>\n{system_prompt(approach)}\n</sistema>\n")
+        print(f"<sistema>\n{system_prompt(approach, "oncologia")}\n</sistema>\n")
         print(f"<pregunta>\n{q['question']}\n</pregunta>\n")
         print("Respondé solo con un objeto JSON que cumpla este esquema, sin texto alrededor:")
         print(json.dumps(output_schema(approach, q["kind"]), ensure_ascii=False))
@@ -57,7 +57,7 @@ def main():
     if command == "set":
         entry[approach] = {"answer": json.loads(sys.stdin.read())["answer"], "attempts": []}
     elif command == "try":
-        result = try_query(approach, sys.stdin.read().strip(), q["kind"])
+        result = try_query(approach, sys.stdin.read().strip(), q["kind"], "oncologia")
         record = entry.setdefault(approach, {"answer": None, "attempts": []})
         record["attempts"].append(result["attempt"])
         error = result["attempt"]["error"]

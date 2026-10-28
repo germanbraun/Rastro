@@ -64,20 +64,26 @@ def test_pending_lifecycle_questions_are_not_exposed(tmp_path, monkeypatch):
 
 
 def test_change_check_in_english_keeps_its_numbers(monkeypatch):
+    """Each domain declares the checks its change test records (avisos_cambio), with an English text."""
     import dominio
     import idioma
+
+    def warnings(domain):
+        es, en = (yaml.safe_load((ROOT / f"app/dominios/{domain}{ext}").read_text()) for ext in (".yaml", ".en.yaml"))
+        return idioma.overlay(es, en)["avisos_cambio"]
     recorded = ("🟡 Control de unidades: el petróleo de 2025 suma 293,2 millones de m³, y la "
                 "producción nacional ronda los 46,6: ¿cambió la unidad?")
     monkeypatch.setattr(idioma, "lang", lambda: "en")
-    assert dominio.check_text(recorded) == ("2025 oil adds up to 293.2 million m³, and national production is around "
-                                            "46.6: did the unit change?")
-    assert "US$10,000," in dominio.check_text("🟡 Control del recorte: hay contratos de US$10.000, y el recorte dice")
-    assert dominio.check_text("🟡 Otro control: algo") == "algo"
+    assert dominio.check_text(recorded, warnings("energia")) == (
+        "2025 oil adds up to 293.2 million m³, and national production is around 46.6: did the unit change?")
+    assert "US$10,000," in dominio.check_text("🟡 Control del recorte: hay contratos de US$10.000, y el recorte dice",
+                                              warnings("proveedores"))
+    assert dominio.check_text("🟡 Otro control: algo", warnings("energia")) == "algo"
     monkeypatch.setattr(idioma, "lang", lambda: "es")
-    assert dominio.check_text(recorded) == recorded.split(": ", 1)[1]
+    assert dominio.check_text(recorded, warnings("energia")) == recorded.split(": ", 1)[1]
     monkeypatch.setattr(idioma, "lang", lambda: "en")
-    assert dominio.check_text("🟡 Control de vocabulario: 2 estados que la ontología no documenta: A, B") == \
-        "2 statuses the ontology does not document: A, B"
+    assert dominio.check_text("🟡 Control de vocabulario: 2 estados que la ontología no documenta: A, B",
+                              warnings("oncologia")) == "2 statuses the ontology does not document: A, B"
 
 
 def test_no_name_in_the_screen_code_hides_one_of_its_modules():

@@ -70,11 +70,12 @@ def format_number(value, decimals, language):
     return text if language == "en" else text.replace(",", "X").replace(".", ",").replace("X", ".")
 
 
-def millions(value, unit="m3", language=None, decimals=None):
-    """A volume in millions of m³, the one unit of the business view: «m3» values are in m³, «miles_m3» in
-    thousands of m³ (gas as the sources declare it). Two decimals under 10, one above; three when it is tiny. A
-    column passes the decimals of its largest value (column_decimals), so all its numbers line up."""
-    v = float(value) / (1e6 if unit == "m3" else 1e3)
+def scaled(value, scale, language=None, decimals=None):
+    """A quantity in the unit the business view shows: value / scale, where each domain declares its units and their
+    scale in its YAML («unidades»; oil and gas shows m³ in millions, scale 1e6). Two decimals under 10, one above;
+    three when it is tiny. A column passes the decimals of its largest value (column_decimals), so all its numbers
+    line up."""
+    v = float(value) / scale
     return format_number(v, decimals_for(v) if decimals is None else decimals, language or lang())
 
 
@@ -82,9 +83,8 @@ def decimals_for(v):
     return 1 if abs(v) >= 10 else 2 if abs(v) >= 0.1 or v == 0 else 3
 
 
-def column_decimals(values, unit="m3"):
-    """The decimals for a whole column of volumes: those of its largest value."""
-    scale = 1e6 if unit == "m3" else 1e3
+def column_decimals(values, scale):
+    """The decimals for a whole column of quantities shown as value / scale: those of its largest value."""
     numbers = [abs(float(v)) / scale for v in values if v not in (None, "")]
     return decimals_for(max(numbers)) if numbers else 1
 

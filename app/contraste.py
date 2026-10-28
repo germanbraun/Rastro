@@ -72,11 +72,6 @@ def story_numbers(cfg, sparql, number, ext=None):
         for prefix, reading in (("opera", first), ("parte", share)):
             out.update({f"{prefix}_{key(n)}": number(float(v) / reading["divisor"], 1)
                         for n, v in sparql(reading["consulta"])[1][:3]})
-        gas = "?p a energia:WellProduction ; energia:inConcession ?c ; energia:gas ?gas ."
-        (total,), = sparql(f"SELECT (SUM(?gas) AS ?n) WHERE {{ {gas} }}")[1]
-        (with_stake,), = sparql(f"SELECT (SUM(?gas) AS ?n) WHERE {{ {gas} "
-                                "FILTER EXISTS { ?s a energia:Stake ; energia:inConcession ?c } }")[1]
-        out["pct_participaciones"] = number(100 * float(with_stake) / float(total), 1)
     fuera = json.load(open(cfg["fuera"]["archivo"])) if cfg.get("fuera") else {}
     if fuera:
         asked = fuera["preguntas"].values()
@@ -84,6 +79,7 @@ def story_numbers(cfg, sparql, number, ext=None):
         control = next(q for q in asked if not q["sin_datos"])
         out["control"] = number(float(control["C"]["respuesta"]), 0)
     quality = json.load(open(cfg["calidad"]["archivo"])) if cfg.get("calidad") else {}
+    failing = set()
     if quality:
         out["reglas"] = number(len(quality["reglas"]), 0)
         for rule in quality["reglas"]:
@@ -92,19 +88,23 @@ def story_numbers(cfg, sparql, number, ext=None):
         failing = {e["dato"] for r in quality["reglas"] for e in r["ejemplos"] if e["predicciones"]}
         out["predicciones_afectadas"] = number(len({p for r in quality["reglas"] for e in r["ejemplos"]
                                                     for p in e["predicciones"]}), 0)
-        if failing:
-            values = " ".join(f"<{d}>" for d in sorted(failing))
-            _, ((water, psi),) = sparql(f"""SELECT (MAX(?w) AS ?agua) (MAX(?p) AS ?psi) WHERE {{ VALUES ?f {{ {values} }}
-              OPTIONAL {{ ?f energia:waterM3 ?w }} OPTIONAL {{ ?f energia:maxPressurePsi ?p }} }}""")
-            out.update(agua_afectada=number(float(water), 0), psi_afectada=number(float(psi), 0))
-        (deepest,), = sparql("SELECT (MAX(?d) AS ?n) WHERE { ?t energia:verticalDepthM ?d }")[1]
-        out["profundidad_max"] = number(float(deepest), 0)
+    # The domain's own slide numbers: one-row queries and arithmetic, like a contrast card. {fallas} in a query is
+    # the list of data that fail a quality rule and that a prediction used; without any, that query is skipped
+    own = cfg.get("numeros_demo")
+    if own:
+        fallas = " ".join(f"<{d}>" for d in sorted(failing))
+        card = {**own, "valores": [{"sparql": v["sparql"].replace("{fallas}", fallas)} for v in own["valores"]
+                                   if fallas or "{fallas}" not in v["sparql"]]}
+        found = values(card, None, sparql)
+        out.update({k: v for k, v in shown(card, found, number).items() if k in own["mostrar"]})
     saved = (cfg.get("externo") or {}).get("guardado")
     if saved and os.path.exists(saved):
         import csv
-        from idioma import millions
+        from idioma import scaled
+        spec = cfg["externo"]["numeros"]   # which columns of the saved file are the name and the number
+        scale = cfg["unidades"][spec["unidad"]]["escala"]
         rows = list(csv.DictReader(open(saved)))
-        out.update({f"externo_{key(r['empresa'])}": millions(r["su_parte_m3"], "m3", "es") for r in rows})
+        out.update({f"externo_{key(r[spec['nombre']])}": scaled(r[spec["valor"]], scale, "es") for r in rows})
         out["externo_con_lei"] = number(len(rows), 0)
     if ext:
         out.update(ext.story_numbers(number))

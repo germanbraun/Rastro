@@ -11,6 +11,9 @@ ejemplo_libre: "Por ejemplo: ¿qué empresas producen más gas en la cuenca Neuq
 evaluacion: /layer/energia/resultados.json
 cambio: /layer/energia/cambio/resultado.json
 correccion: /layer/energia/cambio/correccion.json
+avisos_cambio:                 # the change test records its check in Spanish; the English file writes it again
+  - patron: 'suma ([\d.,]+) millones de m³, y la producción nacional ronda los ([\d.,]+)'
+    texto: "el petróleo de 2025 suma {0} millones de m³, y la producción nacional ronda los {1}: ¿cambió la unidad?"   # shown as recorded in Spanish; the English file translates it
 evidencia: /layer/energia/evidencia.json   # cobertura de la evidencia (layer/evidencia.py)
 ontologia: /ontology/energia/energia.ttl
 texto: /layer/energia/textos/venteos.json   # la pregunta sobre textos (GraphRAG anclado)
@@ -90,7 +93,10 @@ columnas:
   oilAfter: Petróleo por mes después (millones de m³)
   gasBefore: Gas por mes antes (millones de m³)
   gasAfter: Gas por mes después (millones de m³)
-formatos:                      # volumes in m³ (m3) or in thousands of m³ (miles_m3): shown in millions of m³
+unidades:                      # the units the screen scales: values in m³ or in thousands of m³, shown in millions of m³
+  m3: {escala: 1000000}
+  miles_m3: {escala: 1000}
+formatos:                      # each volume column's unit (unidades); dinero, numero and porcentaje are built in
   share: m3
   gasShare: miles_m3
   shaleGas: miles_m3
@@ -634,6 +640,9 @@ externo:
   materializado: /ontology/energia/queries/cq15.rq
   consulta: /layer/energia/externo/wikidata.rq
   guardado: /layer/energia/externo/resultado-2026-10-20.csv
+  numeros: {nombre: empresa, valor: su_parte_m3, unidad: m3}   # the saved file's columns the slides read
+  tecnicas: [lei, wikidata]    # columns only the technical view shows
+  numericas: [su_parte_m3, declara_m3]
   fecha_guardado: 20 oct 2026
   intro: >-
     **Enriquecer** es sumarle a los datos propios lo que sabe otra fuente, sin perder de dónde vino cada dato.
@@ -692,7 +701,23 @@ cambios:
       - "petroleo AS petroleo_m3, prod_gas AS gas_mm3"
 
 # Rastro Lab: the same gas model with and without Rastro (lab/gas/modelo.py)
-extension: gas_lab.GasLab   # app/extensions/gas_lab/: the Rastro Lab tab, its walkthrough steps and its demo moment
+numeros_demo:                  # numbers only the slides show (app/contraste.py): one-row queries and arithmetic
+  valores:
+    - sparql: >-
+        SELECT (SUM(?gas) AS ?gas_total) WHERE { ?p a energia:WellProduction ; energia:inConcession ?c ; energia:gas ?gas . }
+    - sparql: >-
+        SELECT (SUM(?gas) AS ?gas_con_participacion) WHERE { ?p a energia:WellProduction ; energia:inConcession ?c ;
+        energia:gas ?gas . FILTER EXISTS { ?s a energia:Stake ; energia:inConcession ?c } }
+    - sparql: >-
+        SELECT (MAX(?w) AS ?agua_afectada) (MAX(?p) AS ?psi_afectada) WHERE { VALUES ?f { {fallas} }
+        OPTIONAL { ?f energia:waterM3 ?w } OPTIONAL { ?f energia:maxPressurePsi ?p } }
+    - sparql: >-
+        SELECT (MAX(?d) AS ?profundidad_max) WHERE { ?t energia:verticalDepthM ?d }
+  calculos:
+    pct_participaciones: 100 * gas_con_participacion / gas_total
+  decimales: {pct_participaciones: 1, agua_afectada: 0, psi_afectada: 0, profundidad_max: 0}
+  mostrar: [pct_participaciones, agua_afectada, psi_afectada, profundidad_max]
+extension: energia.OilAndGas   # app/extensions/energia/: Rastro Lab, the answer walkthrough and the correction view
 fuera:                         # ¿dice cuándo no tiene el dato? lo mide layer/fuera.py
   archivo: /layer/energia/fuera/resultados.json
   intro: >-

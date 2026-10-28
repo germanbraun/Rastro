@@ -8,6 +8,9 @@ resumen: >-
 ejemplo_libre: "Por ejemplo: ¿qué grupos tienen más contratos con la NASA?"
 evaluacion: /layer/proveedores/resultados.json
 cambio: /layer/proveedores/cambio/resultado.json
+avisos_cambio:                 # the change test records its check in Spanish; the English file writes it again
+  - patron: 'hay contratos de US\$([\d.]+),'
+    texto: "hay contratos de US${0}, y el recorte dice que todos superan US$10 millones: ¿cambió la unidad de los montos?"   # shown as recorded in Spanish; the English file translates it
 evidencia: /layer/proveedores/evidencia.json   # cobertura de la evidencia (layer/evidencia.py)
 ontologia: /ontology/proveedores/proveedores.ttl
 diagrama: {archivo: ontologia-proveedores, titulo: diccionario de proveedores}   # app/ontologia-proveedores.svg, lo dibuja docs/diagramas/build.py

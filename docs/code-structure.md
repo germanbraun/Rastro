@@ -41,10 +41,9 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | `dominio/faq.py` | «Preguntas frecuentes» and the glossary |
 | `dominio/common.py` | What they share: configuration, cached queries (`run`), tables (`tabla`), short texts |
 | `dominio/extension.py` | The interface a domain's own code implements (`Extension`): a model tab, its walkthrough steps, its demo moment, its slide numbers. The domain names its class in its YAML (`extension:`) |
-| `extensions/gas_lab/` | Oil and gas: Rastro Lab (`GasLab`), with the tab (`lab.py`), the walkthrough comparisons (`lab_walkthrough.py`) and the alternative model view (`lab_alternative.py`) |
-| `layer_story.py` | The «Paso a paso» of an answer: its calculation, connections and evidence |
-| `contraste.py` | The numbers of the «Sin Rastro / Con Rastro» cards, read live; also writes the slides' numbers |
-| `idioma.py` | Spanish by default, English on request: `t(key)` reads `textos/*.yaml`, `localized()` overlays `*.en.yaml` |
+| `extensions/energia/` | Oil and gas (`OilAndGas`): Rastro Lab, with the tab (`lab.py`), the walkthrough comparisons (`lab_walkthrough.py`) and the alternative model view (`lab_alternative.py`); the «Paso a paso» of the first answer (`story.py`); the correction test as the demo shows it (`correction.py`) |
+| `contraste.py` | The numbers of the «Sin Rastro / Con Rastro» cards, read live; also writes the slides' numbers (a domain's own slide queries are in its YAML, `numeros_demo`) |
+| `idioma.py` | Spanish by default, English on request: `t(key)` reads `textos/*.yaml`, `localized()` overlays `*.en.yaml`; `scaled()` shows a quantity in the unit its domain declares (`unidades`) |
 | `enlaces.py` | The one mark for a link's review status (rule, AI-reviewed, person-confirmed) |
 | `grafo.py` | Draws an instance of the graph as SVG |
 | `check_domain.py` | Renders a domain in both views and runs every example query (the app check) |

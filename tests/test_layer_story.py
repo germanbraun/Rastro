@@ -70,7 +70,7 @@ from pathlib import Path
 from unittest.mock import patch
 import rdflib, yaml
 import dominio
-from layer_story import show_story
+from extensions.energia.story import show_story
 graph = rdflib.Graph().parse(data={story_graph.serialize(format='turtle')!r}, format='turtle')
 why = yaml.safe_load(Path({str(ROOT / 'app/dominios/energia.yaml')!r}).read_text())['preguntas'][0]['porque']
 def query(text, domain):

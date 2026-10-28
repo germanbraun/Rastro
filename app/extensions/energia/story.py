@@ -18,7 +18,12 @@ import streamlit as st
 
 
 def show_story(domain, why, columns, rows, where, tech):
-    from dominio.common import md, prefixed, run, tabla
+    from dominio.common import domain_config, md, prefixed, run, tabla
+
+    scales = {unit: spec["escala"] for unit, spec in domain_config(domain)["unidades"].items()}
+
+    def millions(value, unit="m3", decimals=None):   # volumes in millions of m³, as the rest of the screen
+        return idioma.scaled(value, scales[unit], decimals=decimals)
 
     ui = why['recorrido']
     values = list(dict.fromkeys(row[columns.index(why['columna'])] for row in rows))
@@ -44,13 +49,13 @@ def show_story(domain, why, columns, rows, where, tech):
                 for col, variable, label in zip(st.columns(2), ['operated', 'share'],
                                                 [ui['operated_label'], ui['share_label']]):
                     value = answer[columns.index(variable)]
-                    col.metric(label, f'{idioma.millions(value)} M m³' if value not in (None, '') else ui['unavailable'])
+                    col.metric(label, f'{millions(value)} M m³' if value not in (None, '') else ui['unavailable'])
                 st.caption(ui['comparison_note'])
         with st.expander(ui['breakdown_title']):
             visible = why['columnas']
             units = why['numeros'] if isinstance(why.get('numeros'), dict) else {}
-            decimals = {k: idioma.column_decimals([r.get(k) for r in records], unit) for k, unit in units.items()}
-            shown = [{k: idioma.millions(v, units[k], decimals=decimals[k]) if k in units and v not in (None, '') else v
+            decimals = {k: idioma.column_decimals([r.get(k) for r in records], scales[unit]) for k, unit in units.items()}
+            shown = [{k: millions(v, units[k], decimals=decimals[k]) if k in units and v not in (None, '') else v
                       for k, v in r.items()} for r in records]
             tabla(enlaces.add_status(pd.DataFrame(shown))[[enlaces.label('column'), *visible]].rename(columns=visible),
                   column_config=enlaces.column_help(), key=f'{domain}_{where}_story_breakdown')
@@ -64,7 +69,7 @@ def show_story(domain, why, columns, rows, where, tech):
         link_cols, link_rows = run(link_query, domain)
         map_name, pending = map_link(record['texto'], [dict(zip(link_cols, row)) for row in link_rows])
         values = {**record, 'company': company, 'map_name': map_name or company,
-                  'production': idioma.millions(record['produccion']), 'share': idioma.millions(record['parte']),
+                  'production': millions(record['produccion']), 'share': millions(record['parte']),
                   'percent': str(record['porcentaje']).rstrip('0').rstrip('.')
                   if '.' in str(record['porcentaje']) else str(record['porcentaje'])}
         st.markdown('##### ' + ui['calculation_title'])

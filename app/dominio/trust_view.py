@@ -40,39 +40,6 @@ def show_change_short(cfg, changes, escenario, tech):
         st.code(f"- {change['arreglo'][0]}\n+ {change['arreglo'][1]}", language="diff")
 
 
-def show_correction(result, tech):
-    """One correction, every result: what changes in Rastro Layer and in Rastro Lab when a concession's corrected
-    share is set, without touching anything else."""
-    con, sin = result.get("con"), result.get("sin")
-    if not (con and sin):
-        st.info(idioma.t("dominio.show_correction.missing"))
-        return
-
-    def m3(v):
-        return f"{idioma.number(v / 1e6, 2)} M m³"
-
-    def pct(v):
-        return f"{v:g} %" if idioma.lang() == "en" else f"{v:g} %".replace(".", ",")
-
-    filas = [   # (where, without the correction, with the correction)
-        (idioma.t("dominio.show_correction.row_rastro"), m3(sin["layer_C"]), m3(con["layer_C"])),
-        (idioma.t("dominio.show_correction.row_sql_rastro"), m3(sin["layer_D"]), m3(con["layer_D"])),
-        (idioma.t("dominio.show_correction.row_without"), m3(sin["layer_B"]), m3(con["layer_B"])),
-        (idioma.t("dominio.show_correction.row_input_with"), pct(sin["lab_B_pct"]), pct(con["lab_B_pct"])),
-        (idioma.t("dominio.show_correction.row_input_without"), pct(sin["lab_A_pct"]), pct(con["lab_A_pct"])),
-        (idioma.t("dominio.show_correction.row_explanation"), idioma.t("dominio.show_correction.unmarked"),
-         idioma.t("dominio.show_correction.marked") if con["lab_B_marca"] else idioma.t("dominio.show_correction.unmarked")),
-    ]
-    yes, no = idioma.t("dominio.show_correction.yes"), idioma.t("dominio.show_correction.no")
-    headers = [idioma.t(f"dominio.show_correction.col_{c}") for c in ("where", "before", "after", "changed")]
-    df = pd.DataFrame([dict(zip(headers, (a, b, c, yes if b != c else no))) for a, b, c in filas])
-    st.caption(idioma.t("dominio.show_correction.what"))
-    common.tabla(df, key="demo_correccion")
-    st.markdown(common.md(idioma.t("dominio.show_correction.where_fixed", places=result["lugares_sin_rastro"])))
-    if tech:
-        st.caption(idioma.t("dominio.show_correction.measured"))
-
-
 def card_status(cfg, evaluation):
     """What each trust card's number is, in one line: when the evaluation was measured and whether its references are
     confirmed by a person (the publication gate decides), and how the change test and the evidence were measured."""
@@ -180,7 +147,7 @@ def trust(cfg, tech, evaluation, changes):
             if before["totals"]["C"].get("❌", 0) > before["totals"]["B"].get("❌", 0):
                 st.caption(idioma.t("dominio.trust.fails_more"))
             if "🟡" in before.get("vocabulary", ""):
-                st.warning(idioma.t("dominio.trust.warns") + common.md(common.check_text(before["vocabulary"])))
+                st.warning(idioma.t("dominio.trust.warns") + common.md(common.check_text(before["vocabulary"], cfg.get("avisos_cambio"))))
             if tech:
                 st.markdown(idioma.t("dominio.trust.fix_tech", where=change.get("donde", idioma.t("dominio.trust.of_mapping"))))
                 st.code(f"- {change['arreglo'][0]}\n+ {change['arreglo'][1]}", language="diff")

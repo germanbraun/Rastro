@@ -147,7 +147,7 @@ def sources():
     columns, rows = answer.run_sparql_table("""
         PREFIX oncologia: <https://w3id.org/rastro/oncologia#>
         SELECT ?id ?name ?license WHERE { ?s a oncologia:DataSource ; oncologia:name ?name ; oncologia:license ?license .
-          BIND (STRAFTER(STR(?s), "/source/") AS ?id) }""")
+          BIND (STRAFTER(STR(?s), "/source/") AS ?id) }""", "oncologia")
     # rastro_meta.source has the sources of every domain: here go the oncology ones
     return {r[0]: {"name": r[1], "license": r[2]} for r in rows if r[0] in STORAGE}
 
@@ -266,7 +266,7 @@ def name_of(iri):
 def evidence_of(nct, name):
     """A link's evidence, requested with PROV-O. One row per source it derives from."""
     query = EVIDENCE_ONE.format(nct=nct, name=name)
-    _, rows = answer.run_sparql_table(query)
+    _, rows = answer.run_sparql_table(query, "oncologia")
     if not rows:
         return query, []
     text, matched, rule, _, activity = rows[0]
@@ -299,7 +299,7 @@ def answer_drugs(rows):
 def evidence_summary(names, language):
     """Per drug: in how many trials it was recognized and what share by its name (PROV-O); language is the cache key."""
     values = " ".join(json.dumps(n) for n in names)
-    _, rows = answer.run_sparql_table(EVIDENCE_SUMMARY.format(names=values))
+    _, rows = answer.run_sparql_table(EVIDENCE_SUMMARY.format(names=values), "oncologia")
     totals, by_name = {}, {}
     for name, rule, n in rows:
         totals[name] = totals.get(name, 0) + int(n)
@@ -313,7 +313,7 @@ def evidence_summary(names, language):
 def evidence_examples(names, limit=5):
     """Examples of non-obvious links: the sponsor text is not the drug name."""
     values = " ".join(json.dumps(n) for n in names)
-    _, rows = answer.run_sparql_table(EVIDENCE_EXAMPLES.format(names=values))
+    _, rows = answer.run_sparql_table(EVIDENCE_EXAMPLES.format(names=values), "oncologia")
     picked, seen_rules, seen_drugs = [], set(), set()
     for name, nct, text, matched, rule in rows:   # first, a different rule and drug each time
         if text.strip().lower() != matched.lower() and rule not in seen_rules and name not in seen_drugs:
@@ -347,7 +347,7 @@ def show_text_question():
     if not st.session_state.get("text_shown"):
         return
     query = Path(item["consulta"]).read_text()
-    _, rows = answer.run_sparql_table(query)
+    _, rows = answer.run_sparql_table(query, "oncologia")
     texts = {nct: (status, drugs, why) for nct, status, drugs, why in rows}
     graph_part, _, ai_part = item["como"].partition("Un asistente de IA")
 
@@ -379,7 +379,7 @@ def show_text_question():
 
     text_step(6, t("app.text.step6_title"), t("app.text.step6_help"))
     facts_query = Path("/ontology/queries/cq11.rq").read_text()
-    _, facts = answer.run_sparql_table(facts_query)
+    _, facts = answer.run_sparql_table(facts_query, "oncologia")
     tabla(pd.DataFrame([{t("app.text.col_class"): m, t("app.text.col_trials"): int(n)} for m, n in facts]),
           hide_index=True, use_container_width=True)
     st.caption(t("app.text.facts_caption"))
@@ -408,7 +408,7 @@ def drug_why():
 
 
 def show_answer(query, columns, rows, note=None):
-    used, col_sources = answer.column_sources(query)
+    used, col_sources = answer.column_sources(query, "oncologia")
     drugs = answer_drugs(rows) if rows and "oncologia:testsDrug" in query else []
     info = sources()
 
@@ -464,7 +464,7 @@ def show_answer(query, columns, rows, note=None):
         st.markdown(t("app.answer.step_sql"))
         sql = None
         try:
-            sql = pretty(answer.ontop_sql(query), "B")
+            sql = pretty(answer.ontop_sql(query, "oncologia"), "B")
             st.code(sql, language="sql")
         except requests.RequestException:
             st.caption(t("app.answer.no_sql"))
@@ -568,7 +568,7 @@ with ask_tab:
         query = last_ok_query(saved()["questions"][options[chosen]["id"]], "C")
         # The answer is kept so «¿Por qué?» can pick a drug without losing it
         if st.button(t("app.ask.answer"), type="primary"):
-            st.session_state["shown"] = (chosen, query, *answer.run_sparql_table(query))
+            st.session_state["shown"] = (chosen, query, *answer.run_sparql_table(query, "oncologia"))
         if st.session_state.get("shown", (None,))[0] == chosen:
             _, query, columns, rows = st.session_state["shown"]
             show_answer(query, columns, rows, note=t("app.ask.saved_note"))
@@ -576,7 +576,7 @@ with ask_tab:
         question = st.text_area(t("app.ask.question"), placeholder=t("app.ask.placeholder"), help=ayuda("propia"))
         if st.button(t("app.ask.answer"), type="primary", disabled=not available or not question.strip()):
             with st.spinner(t("app.ask.spinner")):
-                result = answer.ask_rastro(question)
+                result = answer.ask_rastro(question, "oncologia")
             if result.get("sin_datos"):
                 st.warning(t("app.ask.no_data", reason=result["sin_datos"]))
             elif result["query"] is None:
@@ -780,7 +780,7 @@ with trust_tab:
                                 with st.expander(t("app.correct.sql_expander")):
                                     st.caption(t("app.correct.sql_caption"))
                                     try:
-                                        st.code(pretty(answer.ontop_sql(query), "B"), language="sql")
+                                        st.code(pretty(answer.ontop_sql(query, "oncologia"), "B"), language="sql")
                                     except requests.RequestException:
                                         st.caption(t("app.answer.no_sql"))
 
@@ -838,7 +838,8 @@ with trust_tab:
             if before["totals"]["C"].get("❌", 0) > before["totals"]["B"].get("❌", 0):
                 st.caption(t("app.change.fails_loud_tech") if TECH else t("app.change.fails_loud"))
             if "Control de vocabulario" in before["vocabulary"] and "🟡" in before["vocabulary"]:
-                st.warning(t("app.change.warns") + dominio.check_text(before["vocabulary"]))
+                st.warning(t("app.change.warns") + dominio.check_text(before["vocabulary"],
+                                                                     dominio.load_config("/app/dominios/oncologia.yaml").get("avisos_cambio")))
             if TECH:
                 st.markdown(t("app.change.fix_tech"))
                 st.code(f"- {change['fix'][0]}\n+ {change['fix'][1]}", language="diff")

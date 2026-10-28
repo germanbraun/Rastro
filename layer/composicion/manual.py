@@ -28,7 +28,7 @@ NAMES = {"D": "SQL + enlaces", "C": "Rastro"}
 
 def prompt(qid, approach):
     q = QUESTIONS[qid]
-    print(f"<sistema>\n{system_prompt(approach)}\n</sistema>\n")
+    print(f"<sistema>\n{system_prompt(approach, "oncologia")}\n</sistema>\n")
     print(f"<pregunta>\n{q['question']}\n</pregunta>\n")
     print("Respondé solo con un objeto JSON que cumpla este esquema, sin texto alrededor:")
     print(json.dumps(output_schema(approach, q["kind"]), ensure_ascii=False))
@@ -40,7 +40,7 @@ def attempt(qid, approach):
     if len(entry["attempts"]) >= MAX_ATTEMPTS:
         print(f"Ya hay {MAX_ATTEMPTS} intentos para esta pregunta: no se aceptan más.")
         return
-    result = try_query(approach, sys.stdin.read().strip(), QUESTIONS[qid]["kind"])
+    result = try_query(approach, sys.stdin.read().strip(), QUESTIONS[qid]["kind"], "oncologia")
     entry["attempts"].append(result["attempt"])
     entry["answer"] = result["answer"]
     path.write_text(json.dumps(entry, ensure_ascii=False, indent=1))
@@ -55,7 +55,7 @@ def score_all():
     totals = {k: 0 for k in NAMES}
     with admin() as conn:
         for qid, q in QUESTIONS.items():
-            reference = to_answer(run_sparql(SPEC["prefixes"] + q["reference"]), q["kind"])
+            reference = to_answer(run_sparql(SPEC["prefixes"] + q["reference"], "oncologia"), q["kind"])
             cells = []
             for k in NAMES:
                 path = ANSWERS / f"{qid}-{k}.json"

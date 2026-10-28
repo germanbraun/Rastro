@@ -1315,3 +1315,21 @@ experiment's log as method changes made after it; they do not change its measure
   model's code (`lab/gas/modelo.py`) is not touched, so its published run stays valid. Nothing re-measured.
 - **Inside the extension,** `lab.py` still names `energia`: that is its domain, so it is not coupling.
 - **Why:** the user asked that the main app stay independent of the domains (plan in `docs/plan-decoupling.md`).
+
+## 2026-10-28 — Decoupling, step 2: units, warnings and slide numbers are configuration; no default domain
+
+- **Units:** a domain declares the units its screen scales (`unidades: {m3: {escala: 1000000}, …}`);
+  `idioma.millions(value, "m3")` became `idioma.scaled(value, scale)`. The answer table, «¿Por qué este número?» and
+  the outside-data view read the domain's YAML (`formatos`, `numeros`, `externo.numericas` and `tecnicas`).
+- **Change warnings:** the three Spanish regexes in shared code (oil and gas units, suppliers' scope, oncology's
+  vocabulary) are now each domain's `avisos_cambio` (pattern, and the English text in its `.en.yaml`); numbers keep
+  the decimals they were recorded with. The saved change results are not touched.
+- **Slide numbers:** the oil and gas queries of `contraste.story_numbers` are `numeros_demo` in `energia.yaml`
+  (one-row queries plus arithmetic, like a contrast card; `{fallas}` is the failing data a prediction used).
+- **Oil and gas code moved into its extension** (`app/extensions/energia/`, the class renamed `OilAndGas`): the
+  «Paso a paso» of the first answer (`story.py`, was `app/layer_story.py`) and the correction view (`correction.py`,
+  with its texts in `app/textos/energia.yaml`). Demo moments of a type the shared screen does not know go to the
+  extension.
+- **No default domain:** `layer/answer.py` (12 functions) and `ontology/calidad.py` require it; oncology's legacy
+  scripts pass `"oncologia"`; the `calidad` service names `energia` in compose.
+- **Same screen:** see the snapshot comparison in the commit; nothing re-measured.

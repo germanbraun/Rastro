@@ -94,7 +94,8 @@ def main():
     with admin() as conn:
         conn.execute((HERE.parent / "reader.sql").read_text())
 
-    from answer import APPROACHES, MODEL, PROVIDER, run_sparql, to_answer, try_query  # noqa: E402
+    from answer import MODEL, PROVIDER, answer, run_sparql, to_answer, try_query  # noqa: E402
+    APPROACHES = {k: (lambda q, kind, k=k: answer(k, q, kind, "oncologia")) for k in "ABC"}
 
     # A rerun only executes saved queries, even if a provider is configured.
     can_generate = not args.rerun and (PROVIDER == "ollama" or bool(os.environ.get("ANTHROPIC_API_KEY")))
@@ -104,13 +105,13 @@ def main():
     for q in spec["questions"]:
         entry = saved["questions"].setdefault(q["id"], {})
         entry["question"] = q["question"]
-        entry["reference"] = to_answer(run_sparql(spec["prefixes"] + q["reference"]), q["kind"])
+        entry["reference"] = to_answer(run_sparql(spec["prefixes"] + q["reference"], "oncologia"), q["kind"])
         if args.rerun:
             for key in ("B", "D", "C"):
                 ok = [a for a in entry.get(key, {}).get("attempts", []) if a["error"] is None]
                 if ok:
                     start = time.time()
-                    entry[key]["answer"] = try_query(key, ok[-1]["query"], q["kind"])["answer"]
+                    entry[key]["answer"] = try_query(key, ok[-1]["query"], q["kind"], "oncologia")["answer"]
                     entry[key]["seconds"] = round(time.time() - start, 2)
         for key, approach in APPROACHES.items():
             if key in entry and key not in args.fresh:

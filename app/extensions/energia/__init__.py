@@ -1,7 +1,11 @@
-"""Oil and gas: Rastro Lab, the gas model of new Vaca Muerta wells with and without Rastro (lab/gas/modelo.py).
+"""Oil and gas: what this domain shows with its own code.
 
-The tab and its helpers are in lab.py, lab_walkthrough.py and lab_alternative.py; they are imported only when used,
-because loading the model's data takes a while.
+- Rastro Lab, the gas model of new Vaca Muerta wells with and without Rastro (lab/gas/modelo.py): the tab in lab.py,
+  with lab_walkthrough.py and lab_alternative.py.
+- story.py: the «Paso a paso» of the first answer (how a company's share is calculated, concession by concession).
+- correction.py: the correction test as the demo shows it.
+
+They are imported only when used, because loading the model's data takes a while.
 """
 import streamlit as st
 
@@ -9,7 +13,7 @@ from dominio import answers, common
 from dominio.extension import Extension
 
 
-class GasLab(Extension):
+class OilAndGas(Extension):
     def has_tab(self):
         return True
 
@@ -51,9 +55,17 @@ class GasLab(Extension):
             common.tabla(lab.current_evidence(record).rename(columns=example["ui"]["evidence_columns"]),
                          key=f"{key}_current_evidence")
 
-    def show_demo_moment(self, key):
-        from . import lab
-        lab.show_well(key=f"{key}_pozo", pozo=self.example_record())
+    def show_demo_moment(self, step, key, tech):
+        if step.get("tipo") == "lab":
+            from . import lab
+            lab.show_well(key=f"{key}_pozo", pozo=self.example_record())
+        elif step.get("tipo") == "correccion":
+            from .correction import show_correction
+            show_correction(common.read_json(self.cfg["correccion"]), tech)
+
+    def show_story(self, why, columns, rows, where, tech):
+        from .story import show_story
+        show_story(self.cfg["domain"], why, columns, rows, where, tech)
 
     def warm_up(self):
         from . import lab

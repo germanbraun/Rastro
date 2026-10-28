@@ -83,7 +83,7 @@ def test_every_text_key_has_spanish_and_matching_placeholders():
 
 def test_a_volume_column_shares_its_decimals():
     column = [15_850_377, 3_994_269, 41_000]   # m³: 15,9 sets one decimal for the whole column
-    decimals = idioma.column_decimals(column)
-    assert [idioma.millions(v, "m3", "es", decimals) for v in column] == ["15,9", "4,0", "0,0"]
-    assert idioma.millions(12_301_226, "miles_m3", "en") == "12,301.2"
-    assert idioma.column_decimals([None, ""]) == 1
+    decimals = idioma.column_decimals(column, 1e6)
+    assert [idioma.scaled(v, 1e6, "es", decimals) for v in column] == ["15,9", "4,0", "0,0"]
+    assert idioma.scaled(12_301_226, 1e3, "en") == "12,301.2"
+    assert idioma.column_decimals([None, ""], 1e6) == 1

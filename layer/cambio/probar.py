@@ -36,7 +36,7 @@ def check(entry, key, kind):
     ok = [a for a in entry[key]["attempts"] if a["error"] is None]
     if not ok:
         return None
-    result = try_query(key, ok[-1]["query"], kind)
+    result = try_query(key, ok[-1]["query"], kind, "oncologia")
     if result["answer"] is None and result["attempt"]["error"]:
         return "❌ error"
     if same(result["answer"], entry[key]["answer"]):
@@ -58,7 +58,7 @@ def vocabulary():
     """Vocabulary check: are there statuses the ontology does not document?"""
     try:
         values = run_sparql("PREFIX oncologia: <https://w3id.org/rastro/oncologia#> "
-                            "SELECT DISTINCT ?s WHERE { ?t oncologia:status ?s }")
+                            "SELECT DISTINCT ?s WHERE { ?t oncologia:status ?s }", "oncologia")
     except Exception as e:  # noqa: BLE001 - Rastro being down is also a demo result
         return f"Control de vocabulario: Rastro no responde ({str(e).splitlines()[0][:120]})"
     unknown = sorted(set(values) - ESTADOS)

@@ -21,21 +21,28 @@ def test_story_numbers_reads_each_source(tmp_path):
     (tmp_path / "fuera.json").write_text(json.dumps(fuera))
     (tmp_path / "externo.csv").write_text("empresa,su_parte_m3\nYPF S.A.,12570093.0\n")
     reading = {"divisor": 1000000, "consulta": "ranking"}
-    cfg = {"afirmaciones": {"ejemplos": [{"lecturas": [reading, reading]}]},
+    own = {"valores": [{"sparql": "SELECT total"}, {"sparql": "SELECT VALUES ?f { {fallas} }"}],
+           "calculos": {"pct": "100 * n / total"}, "decimales": {"pct": 1, "agua": 0}, "mostrar": ["pct", "agua"]}
+    cfg = {"afirmaciones": {"ejemplos": [{"lecturas": [reading, reading]}]}, "numeros_demo": own,
+           "unidades": {"m3": {"escala": 1e6}},
            "fuera": {"archivo": str(tmp_path / "fuera.json")}, "calidad": {"archivo": str(tmp_path / "calidad.json")},
-           "externo": {"guardado": str(tmp_path / "externo.csv")}}
+           "externo": {"guardado": str(tmp_path / "externo.csv"),
+                       "numeros": {"nombre": "empresa", "valor": "su_parte_m3", "unidad": "m3"}}}
     asked = []
 
     def sparql(query):
         asked.append(query)
         if query == "ranking":
             return ["empresa", "gas"], [["TOTAL AUSTRAL S.A.", "12335523.9"], ["YPF S.A.", "11728068.7"]]
-        return ["n", "m"], [["537184.6", "111515"]] if "VALUES" in query else [["10"]]
+        if "VALUES" in query:
+            return ["agua", "n"], [["537184.6", "50"]]
+        return ["total"], [["200"]]
 
     out = contraste.story_numbers(cfg, sparql, number)
     assert out["opera_total"] == "12.3" and out["parte_ypf"] == "11.7"
     assert out["sin_dato"] == "1" and out["control"] == "6910"
     assert out["Agua_fallas"] == "2" and out["Agua_revisados"] == "40" and out["predicciones_afectadas"] == "2"
     assert "<https://x/f/1>" in next(q for q in asked if "VALUES" in q)       # only the data a prediction used
-    assert out["agua_afectada"] == "537185" and out["externo_con_lei"] == "1"
-    assert "error_b" not in out                                              # Lab only when asked
+    assert out["agua"] == "537185" and out["pct"] == "25.0" and "n" not in out   # only what «mostrar» lists
+    assert out["externo_ypf"] == "12,6" and out["externo_con_lei"] == "1"
+    assert "error_b" not in out                                              # an extension's numbers only when it is given

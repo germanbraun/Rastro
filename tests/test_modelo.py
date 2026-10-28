@@ -81,7 +81,7 @@ def test_cada_frase_esta_en_los_dos_idiomas():
 
 
 def test_los_titulos_de_las_tablas_en_la_app_siguen_al_modelo():
-    """app/extensions/gas_lab/lab.py lays these headers over modelo's tables by position: the Spanish ones must be modelo's."""
+    """app/extensions/energia/lab.py lays these headers over modelo's tables by position: the Spanish ones must be modelo's."""
     import yaml
     textos = yaml.safe_load((modelo.RAIZ / "app/textos/lab.yaml").read_text())
     assert textos["lab.tables.inputs_columns"]["es"] == [t for _, t, *_ in modelo.ENTRADA_B] + ["Uso"]

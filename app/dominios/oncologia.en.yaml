@@ -1,5 +1,7 @@
 # English overlay for app/dominios/oncologia.yaml: only the visible texts. Lists are matched by position.
 # The example instances («Así se ve un dato del grafo») are keyed by their Spanish label, so they stay as they are.
+avisos_cambio:                 # the change test's check in English: {0}, {1}… are the numbers or words it found
+  - texto: "{0} statuses the ontology does not document: {1}"
 technical:
   pieces:
     enlaces:

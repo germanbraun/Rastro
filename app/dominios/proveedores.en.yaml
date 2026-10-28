@@ -1,6 +1,8 @@
 # English overlay of proveedores.yaml: only the visible texts, laid over the Spanish file by app/idioma.py.
 # Same nesting as the Spanish file; lists without «id» line up by position ({} keeps an item as it is).
 
+avisos_cambio:                 # the change test's check in English: {0}, {1}… are the numbers or words it found
+  - texto: "there are contracts of US${0}, and the scope says all exceed US$10 million: did the unit of the amounts change?"
 resumen: >-
   Public data from the US: federal contracts (USAspending), sectors (NAICS),
   the global company identifier (GLEIF), screening lists (trade.gov) and Wikidata.

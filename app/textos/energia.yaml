@@ -1,0 +1,30 @@
+# Texts of the oil and gas extension (app/extensions/energia/), in Spanish and English. Read with idioma.t("<key>").
+energia.correction.missing:
+  es: "Falta registrar la prueba de la corrección (layer/energia/cambio/correccion.sh registrar)."
+  en: "The correction test has not been recorded yet (layer/energia/cambio/correccion.sh registrar)."
+energia.correction.row_rastro: {es: "Respuesta de Rastro", en: "Rastro's answer"}
+energia.correction.row_sql_rastro: {es: "Respuesta con SQL sobre Rastro", en: "Answer with SQL over Rastro"}
+energia.correction.row_without: {es: "Respuesta sin Rastro", en: "Answer without Rastro"}
+energia.correction.row_input_with: {es: "Entrada del modelo, con Rastro", en: "Model input, with Rastro"}
+energia.correction.row_input_without: {es: "Entrada del modelo, sin Rastro", en: "Model input, without Rastro"}
+energia.correction.row_explanation: {es: "Explicación, con Rastro", en: "Explanation, with Rastro"}
+energia.correction.unmarked: {es: "sin marca", en: "not flagged"}
+energia.correction.marked: {es: "marcada", en: "flagged"}
+energia.correction.yes: {es: "sí", en: "yes"}
+energia.correction.no: {es: "no", en: "no"}
+energia.correction.col_where: {es: "Dónde", en: "Where"}
+energia.correction.col_before: {es: "Antes", en: "Before"}
+energia.correction.col_after: {es: "Después", en: "After"}
+energia.correction.col_changed: {es: "¿Cambió solo?", en: "Changed on its own?"}
+energia.correction.what:
+  es: "La respuesta es el petróleo de 2025 que le corresponde a YPF según su participación; la entrada del modelo, la participación de
+    Total en Aguada Pichana Este."
+  en: "The answer is the 2025 oil that belongs to YPF by its share; the model input, Total's share in Aguada Pichana Este."
+energia.correction.where_fixed:
+  es: "**Dónde se corrigió:** en un solo lugar, el archivo de participaciones revisadas (con el documento). Sin Rastro, el mismo dato se
+    lee del texto del mapa en {places} lugares (cada consulta y el código del modelo), y hay que encontrarlos y corregirlos uno por uno."
+  en: "**Where it was corrected:** in a single place, the file of reviewed shares (with the document). Without Rastro, the same value is
+    read from the map's text in {places} places (each query and the model's code), and they have to be found and corrected one by one."
+energia.correction.measured:
+  es: "Se mide con layer/energia/cambio/correccion.sh: saca la corrección, rearma Rastro, mide y la vuelve a poner."
+  en: "Measured with layer/energia/cambio/correccion.sh: it removes the correction, rebuilds Rastro, measures and puts it back."

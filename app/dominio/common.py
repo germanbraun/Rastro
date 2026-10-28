@@ -119,28 +119,27 @@ def prefixed(query, domain):
     return f"PREFIX {domain}: <{ns}>\n" + (PROV if "prov:" in query else "") + query
 
 
-# The change test's recorded checks (in Spanish) and the numbers each one carries
-CHECKS = {"check_units": re.compile(r"suma ([\d.,]+) millones de m³, y la producción nacional ronda los ([\d.,]+)"),
-          "check_cutoff": re.compile(r"hay contratos de US\$([\d.]+),"),
-          "check_vocabulary": re.compile(r"(\d+) estados que la ontología no documenta: (.*)")}
-
-
-def check_text(recorded):
-    """A change test's check in the interface's language: the known checks are written again with their numbers;
-    anything else is shown as recorded."""
+def check_text(recorded, warnings):
+    """A change test's check in the interface's language. The test records it in Spanish; each domain declares the
+    checks it knows («avisos_cambio»: a pattern and, in its English file, the text with {0}, {1}… for the pattern's
+    groups). In English a known check is written again with its numbers; anything else is shown as recorded."""
     text = recorded.split(": ", 1)[-1]
     if idioma.lang() == "es":
         return text
-    for key, pattern in CHECKS.items():
-        found = pattern.search(recorded)
-        if found:
-            if key == "check_vocabulary":
-                return idioma.t(f"dominio.trust.{key}", n=found.group(1), statuses=found.group(2))
-            numbers = [float(n.replace(".", "").replace(",", ".")) for n in found.groups()]
-            if key == "check_units":
-                return idioma.t(f"dominio.trust.{key}", total=idioma.number(numbers[0], 1), national=idioma.number(numbers[1], 1))
-            return idioma.t(f"dominio.trust.{key}", amount=idioma.number(numbers[0]))
+    for warning in warnings or []:
+        found = re.search(warning["patron"], recorded)
+        if found and warning.get("texto"):
+            return warning["texto"].format(*(spanish_number(g) for g in found.groups()))
     return text
+
+
+def spanish_number(text):
+    """A number as the Spanish text wrote it (12.345,6), in the interface's format with the same decimals; any other
+    text as it is."""
+    if not re.fullmatch(r"\d{1,3}(\.\d{3})*(,\d+)?|\d+(,\d+)?", text):
+        return text
+    decimals = len(text.split(",")[1]) if "," in text else 0
+    return idioma.number(float(text.replace(".", "").replace(",", ".")), decimals)
 
 
 def tabla(data, hide_index=True, use_container_width=True, column_config=None, key=None, **kwargs):

@@ -162,35 +162,6 @@ dominio.show_change_short.never:
   es: "De las {n} preguntas, sin Rastro {never} nunca tuvieron una consulta que funcionara."
   en: "Of the {n} questions, without Rastro {never} never had a query that worked."
 
-dominio.show_correction.missing:
-  es: "Falta registrar la prueba de la corrección (layer/energia/cambio/correccion.sh registrar)."
-  en: "The correction test has not been recorded yet (layer/energia/cambio/correccion.sh registrar)."
-dominio.show_correction.row_rastro: {es: "Respuesta de Rastro", en: "Rastro's answer"}
-dominio.show_correction.row_sql_rastro: {es: "Respuesta con SQL sobre Rastro", en: "Answer with SQL over Rastro"}
-dominio.show_correction.row_without: {es: "Respuesta sin Rastro", en: "Answer without Rastro"}
-dominio.show_correction.row_input_with: {es: "Entrada del modelo, con Rastro", en: "Model input, with Rastro"}
-dominio.show_correction.row_input_without: {es: "Entrada del modelo, sin Rastro", en: "Model input, without Rastro"}
-dominio.show_correction.row_explanation: {es: "Explicación, con Rastro", en: "Explanation, with Rastro"}
-dominio.show_correction.unmarked: {es: "sin marca", en: "not flagged"}
-dominio.show_correction.marked: {es: "marcada", en: "flagged"}
-dominio.show_correction.yes: {es: "sí", en: "yes"}
-dominio.show_correction.no: {es: "no", en: "no"}
-dominio.show_correction.col_where: {es: "Dónde", en: "Where"}
-dominio.show_correction.col_before: {es: "Antes", en: "Before"}
-dominio.show_correction.col_after: {es: "Después", en: "After"}
-dominio.show_correction.col_changed: {es: "¿Cambió solo?", en: "Changed on its own?"}
-dominio.show_correction.what:
-  es: "La respuesta es el petróleo de 2025 que le corresponde a YPF según su participación; la entrada del modelo, la participación de
-    Total en Aguada Pichana Este."
-  en: "The answer is the 2025 oil that belongs to YPF by its share; the model input, Total's share in Aguada Pichana Este."
-dominio.show_correction.where_fixed:
-  es: "**Dónde se corrigió:** en un solo lugar, el archivo de participaciones revisadas (con el documento). Sin Rastro, el mismo dato se
-    lee del texto del mapa en {places} lugares (cada consulta y el código del modelo), y hay que encontrarlos y corregirlos uno por uno."
-  en: "**Where it was corrected:** in a single place, the file of reviewed shares (with the document). Without Rastro, the same value is
-    read from the map's text in {places} places (each query and the model's code), and they have to be found and corrected one by one."
-dominio.show_correction.measured:
-  es: "Se mide con layer/energia/cambio/correccion.sh: saca la corrección, rearma Rastro, mide y la vuelve a poner."
-  en: "Measured with layer/energia/cambio/correccion.sh: it removes the correction, rebuilds Rastro, measures and puts it back."
 
 dominio.claim_verdict.no_data: {es: "Rastro no tiene el dato", en: "Rastro does not have the data"}
 dominio.claim_verdict.holds: {es: "Se sostiene", en: "It holds"}
@@ -363,15 +334,6 @@ dominio.trust.fails_more:
 dominio.trust.warns: {es: "Rastro avisa: ", en: "Rastro warns: "}
 # The change test records its check in Spanish (layer/<domain>/cambio/probar.py); in English the app rewrites the
 # known checks with the number it read, and shows any other as recorded
-dominio.trust.check_units:
-  es: "el petróleo de 2025 suma {total} millones de m³, y la producción nacional ronda los {national}: ¿cambió la unidad?"
-  en: "2025 oil adds up to {total} million m³, and national production is around {national}: did the unit change?"
-dominio.trust.check_vocabulary:
-  es: "{n} estados que la ontología no documenta: {statuses}"
-  en: "{n} statuses the ontology does not document: {statuses}"
-dominio.trust.check_cutoff:
-  es: "hay contratos de US${amount}, y el recorte dice que todos superan US$10 millones: ¿cambió la unidad de los montos?"
-  en: "there are contracts of US${amount}, and the scope says all exceed US$10 million: did the unit of the amounts change?"
 dominio.trust.fix_tech: {es: "**El arreglo en Rastro: una línea {where}**", en: "**The fix in Rastro: one line {where}**"}
 dominio.trust.of_mapping: {es: "del mapeo", en: "of the mapping"}
 dominio.trust.fix:

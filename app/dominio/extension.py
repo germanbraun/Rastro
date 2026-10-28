@@ -1,7 +1,8 @@
-"""What a domain adds to the shared screen with its own code: a model tab, its walkthrough steps, its demo moment.
+"""What a domain adds to the shared screen with its own code: a model tab, its walkthrough steps, its own demo
+moments, the story behind an answer and the numbers of its own slides.
 
-A domain declares its extension in its YAML (`extension: gas_lab.GasLab` is the class GasLab in
-app/extensions/gas_lab/). The shared screen calls the methods below and never imports a domain's code; each method
+A domain declares its extension in its YAML (`extension: energia.OilAndGas` is the class OilAndGas in
+app/extensions/energia/). The shared screen calls the methods below and never imports a domain's code; each method
 does nothing by default, so an extension writes only what its domain needs.
 """
 import importlib
@@ -29,8 +30,11 @@ class Extension:
     def show_step(self, step, example, record, tech, key):
         """What a walkthrough step adds after its queries, by the flags in its YAML."""
 
-    def show_demo_moment(self, key):
-        """The demo moment of type «lab»."""
+    def show_demo_moment(self, step, key, tech):
+        """A demo moment whose «tipo» the shared screen does not know (a model's prediction, say)."""
+
+    def show_story(self, why, columns, rows, where, tech):
+        """The step-by-step story behind an answer, when its «porque» has a «recorrido»."""
 
     def warm_up(self):
         """Work worth doing in the background when the app opens (training a model, say)."""

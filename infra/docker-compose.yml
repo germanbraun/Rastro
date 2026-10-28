@@ -445,7 +445,7 @@ services:
     volumes:
       - ../ontology:/ontology:ro
       - ../layer:/layer
-    command: ["python", "/ontology/calidad.py"]
+    command: ["python", "/ontology/calidad.py", "energia"]   # the demo domain; another: calidad python /ontology/calidad.py <domain>
 
   ontology-check:
     build: ./loaders

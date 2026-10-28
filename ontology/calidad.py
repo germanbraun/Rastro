@@ -1,4 +1,4 @@
-"""Registry-driven SHACL checks. python ontology/calidad.py [domain] [--examples-only].
+"""Registry-driven SHACL checks. python ontology/calidad.py <domain> [--examples-only].
 
 Execution failures exit nonzero. Detected source defects remain in the result with their
 coverage and affected predictions; they are not silently corrected or treated as runner errors.
@@ -39,7 +39,7 @@ class QualityConfig:
         return f"PREFIX {self.prefix}: <{self.namespace}>\nPREFIX prov: <http://www.w3.org/ns/prov#>\n"
 
     @classmethod
-    def load(cls, domain="energia", root=ROOT):
+    def load(cls, domain, root=ROOT):
         registry = yaml.safe_load((root / "layer/dominios.yaml").read_text())
         cfg = registry[domain]
         quality = cfg.get("method", {}).get("quality")
@@ -234,7 +234,7 @@ def evaluate(config, data, predictions=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("domain", nargs="?", default="energia")
+    parser.add_argument("domain")
     parser.add_argument("--examples-only", action="store_true")
     args = parser.parse_args()
     config = QualityConfig.load(args.domain)

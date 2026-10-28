@@ -26,15 +26,15 @@ from . import trust_view
 
 def as_table(columns, rows, cfg, tech, col_sources):
     """The answer as a table: columns with business names and readable numbers."""
-    formats, names = cfg.get("formatos", {}), cfg.get("columnas", {})
-    decimals = {c: idioma.column_decimals([r[i] for r in rows], formats[c])
-                for i, c in enumerate(columns) if formats.get(c) in ("m3", "miles_m3")}
+    formats, names, units = cfg.get("formatos", {}), cfg.get("columnas", {}), cfg.get("unidades", {})
+    decimals = {c: idioma.column_decimals([r[i] for r in rows], units[formats[c]]["escala"])
+                for i, c in enumerate(columns) if formats.get(c) in units}
     data = []
     for row in rows:
         line = []
         for c, v in zip(columns, row):
-            if v is not None and formats.get(c) in ("m3", "miles_m3"):   # volumes: millions of m³, exact if technical
-                v = common.money(v) if tech else idioma.millions(v, formats[c], decimals=decimals[c])
+            if v is not None and formats.get(c) in units:   # a declared unit, scaled; exact if technical
+                v = common.money(v) if tech else idioma.scaled(v, units[formats[c]]["escala"], decimals=decimals[c])
             elif v is not None and formats.get(c) in ("dinero", "numero"):
                 v = common.money(v)
             elif v is not None and formats.get(c) == "porcentaje":
@@ -151,8 +151,7 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
     if why["columna"] not in columns:
         return
     if why.get("recorrido"):
-        from layer_story import show_story
-        show_story(domain, why, columns, rows, where, tech)
+        extension.load(common.domain_config(domain)).show_story(why, columns, rows, where, tech)
         return
     values = list(dict.fromkeys(r[columns.index(why["columna"])] for r in rows if r[columns.index(why["columna"])]))
     with st.container(border=True):
@@ -165,13 +164,14 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
             st.info(idioma.t("dominio.show_why.no_evidence"))
             return
         records = [dict(zip(cols, r)) for r in found]
-        # «numeros» lists the numbers, or maps each volume to its unit (m3, miles_m3) to show it in millions of m³
+        # «numeros» lists the numbers, or maps each to one of the domain's units («unidades») to show it scaled
         numbers = why.get("numeros", ["parte"])
-        units = numbers if isinstance(numbers, dict) else {}
-        decimals = {k: idioma.column_decimals([r.get(k) for r in records], unit) for k, unit in units.items()}
+        declared = common.domain_config(domain).get("unidades", {})
+        scales = {k: declared[unit]["escala"] for k, unit in numbers.items()} if isinstance(numbers, dict) else {}
+        decimals = {k: idioma.column_decimals([r.get(k) for r in records], scale) for k, scale in scales.items()}
 
         def display(k, v):
-            return idioma.millions(v, units[k], decimals=decimals[k]) if k in units else common.money(v)
+            return idioma.scaled(v, scales[k], decimals=decimals[k]) if k in scales else common.money(v)
 
         def fmt(record, template):
             return template.format(**{k: (display(k, v) if k in numbers and v not in (None, "") else (v or "—"))
@@ -185,7 +185,7 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
                             height=620 + 55 * max(0, len(nodes) - 8), scale=0.95, font="Helvetica, Arial, sans-serif")
         st.markdown(f'<img src="data:image/svg+xml;base64,{base64.b64encode(drawing.encode()).decode()}" '
                     'style="width:100%;border-radius:12px">', unsafe_allow_html=True)
-        table = enlaces.add_status(pd.DataFrame([{k: display(k, v) if k in units and v not in (None, "") else v
+        table = enlaces.add_status(pd.DataFrame([{k: display(k, v) if k in scales and v not in (None, "") else v
                                                   for k, v in r.items()} for r in records]))
         table = table.rename(columns=why.get("columnas", {}))
         common.tabla(table, hide_index=True, use_container_width=True, column_config=enlaces.column_help(),
@@ -302,10 +302,8 @@ def show_demo(cfg, tech):
     tipo = step.get("tipo", "pregunta")
     if tipo == "cambio":
         trust_view.show_change_short(cfg, common.read_json(cfg["cambio"]), step.get("escenario"), tech)
-    elif tipo == "lab":
-        extension.load(cfg).show_demo_moment(key)
-    elif tipo == "correccion":
-        trust_view.show_correction(common.read_json(cfg["correccion"]), tech)
+    elif tipo not in ("pregunta", "texto"):   # a moment of the domain's own (a model's prediction, say)
+        extension.load(cfg).show_demo_moment(step, key, tech)
     elif step.get("texto"):
         show_text_question(cfg, tech, demo=True)
     else:
@@ -399,9 +397,10 @@ def show_external(cfg, tech):
             st.warning(idioma.t("dominio.show_external.no_answer", error=str(e)[:120]))
     table, when = st.session_state.get(key) or (pd.read_csv(ext["guardado"]),
                                                 idioma.t("dominio.show_external.saved_on", date=ext["fecha_guardado"]))
-    columns = [c for c in ext["columnas"] if c in table.columns and (tech or c not in ("lei", "wikidata"))]
+    # «tecnicas»: the columns only the technical view shows (identifiers); «numericas»: the numbers to format
+    columns = [c for c in ext["columnas"] if c in table.columns and (tech or c not in ext.get("tecnicas", []))]
     shown = table[columns].copy()
-    for c in ("su_parte_m3", "declara_m3"):
+    for c in ext.get("numericas", []):
         if c in shown:
             shown[c] = shown[c].map(lambda v: common.money(v) if pd.notna(v) else "—")
     shown = shown.fillna("—").rename(columns=ext["columnas"])

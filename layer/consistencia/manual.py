@@ -35,7 +35,7 @@ def text(qid, n):
 
 def prompt(qid, n, approach):
     kind = QUESTIONS[qid]["kind"]
-    print(f"<sistema>\n{system_prompt(approach)}\n</sistema>\n")
+    print(f"<sistema>\n{system_prompt(approach, "oncologia")}\n</sistema>\n")
     print(f"<pregunta>\n{text(qid, n)}\n</pregunta>\n")
     print("Respondé solo con un objeto JSON que cumpla este esquema, sin texto alrededor:")
     print(json.dumps(output_schema(approach, kind), ensure_ascii=False))
@@ -47,7 +47,7 @@ def attempt(qid, n, approach):
     if len(entry["attempts"]) >= MAX_ATTEMPTS:
         print(f"Ya hay {MAX_ATTEMPTS} intentos para esta pregunta: no se aceptan más.")
         return
-    result = try_query(approach, sys.stdin.read().strip(), QUESTIONS[qid]["kind"])
+    result = try_query(approach, sys.stdin.read().strip(), QUESTIONS[qid]["kind"], "oncologia")
     entry["attempts"].append(result["attempt"])
     entry["answer"] = result["answer"]
     path.write_text(json.dumps(entry, ensure_ascii=False, indent=1))

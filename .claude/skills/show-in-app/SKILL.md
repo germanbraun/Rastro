@@ -39,13 +39,13 @@ The first screen says what Rastro is and how to read each screen (question → a
 | Piece | What the user sees | Key in the domain's YAML |
 |---|---|---|
 | Summary and sources | What the domain is about; each source with its license | `resumen`, `fuentes`, `nota_rastro` |
-| Example questions | The question in plain words; the answer as a table with readable columns; quantities in one unit, the exact figure in the technical view | `preguntas[].simple`, `query`, `columnas`, `formatos` (`m3` or `miles_m3` for volumes, `numero`, `dinero`, `porcentaje`) |
-| Why this number | For a row of the answer, the records and evidence behind it | `preguntas[].porque` (a query with `{valor}`; `numeros` lists its numbers, or maps each volume to its unit) |
+| Example questions | The question in plain words; the answer as a table with readable columns; quantities in one unit, the exact figure in the technical view | `preguntas[].simple`, `query`, `columnas`, `formatos` (`numero`, `dinero`, `porcentaje`, or a unit the domain declares in `unidades` with its `escala`) |
+| Why this number | For a row of the answer, the records and evidence behind it | `preguntas[].porque` (a query with `{valor}`; `numeros` lists its numbers, or maps each to one of the domain's `unidades`) |
 | Link status | One mark per link in every table with a `regla` column: 🔹 automatic rule, 🟠 reviewed by AI and a person must confirm, ✅ confirmed by a person with a document | derived from the rule and evidence (`app/enlaces.py`); nothing to configure |
 | Where the answer comes from | The sources used, what Rastro added, a sample of the evidence | `preguntas[].ventaja`, `evidencia`, `definicion` |
 | Glossary | The business terms of the question | `preguntas[].terminos` (an English overlay gives an entry as `{term, text}` to translate the term too) |
 | Before and after | The same question without and with Rastro, its numbers read now, with each source's latest load date | `preguntas[].antes_despues`: `valores` (one-row `sql` over the sources as they come, or `sparql`), `calculos`, `decimales`, `fuentes`; texts name the values in braces (`app/contraste.py`, which also exports them for the slides) |
-| What can be trusted | Cards with the measured numbers, each with one status line (when it was measured; references confirmed by a person or not, decided by the publication gate); the change test; quality rules; what happens when data is missing | `tarjetas` (filled from `evaluacion`, `cambio`, `evidencia`), `cambios`, `calidad`, `fuera` |
+| What can be trusted | Cards with the measured numbers, each with one status line (when it was measured; references confirmed by a person or not, decided by the publication gate); the change test; quality rules; what happens when data is missing | `tarjetas` (filled from `evaluacion`, `cambio`, `evidencia`), `cambios`, `avisos_cambio` (the pattern of the change test's check and its English text), `calidad`, `fuera` |
 | Guided demo | A few moments, one sentence each | `demo`, `demo_porque` |
 | Frequent questions | Domain FAQ next to the general one, from a sidebar button (a tab in the technical view) | `faq` |
 

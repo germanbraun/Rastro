@@ -8,7 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "layer"))
-from extensions.gas_lab.lab_walkthrough import FACTORS, GROUPS, compare_run, same_inputs, value_status
+from extensions.energia.lab_walkthrough import FACTORS, GROUPS, compare_run, same_inputs, value_status
 import modelo
 
 
@@ -112,7 +112,7 @@ def test_audit_uses_captured_run_without_refetching_latest(run_id):
     from streamlit.testing.v1 import AppTest
     script = f'''
 import dominio
-from extensions.gas_lab import lab
+from extensions.energia import lab
 from unittest.mock import patch
 example = {{'aviso': 'Datos de prueba', 'selector': 'Paso',
  'ui': {{'run_missing': 'Sin corrida publicada'}}, 'pasos': [{{'titulo': 'Auditar', 'contenido': 'Evidencia',
@@ -141,7 +141,7 @@ def test_calculation_renders_inside_walkthrough_expander(example):
 
     def page(frame, fitted, config):
         import streamlit as st
-        from extensions.gas_lab import lab
+        from extensions.energia import lab
         from unittest.mock import patch
         with patch.object(lab, 'datos', return_value=(frame, frame, None, {'B': fitted})), \
              patch.object(lab, 'show_source_evidence', side_effect=lambda *args, **kwargs: st.caption('Source panel')):

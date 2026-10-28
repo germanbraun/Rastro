@@ -1,6 +1,8 @@
 # English overlay of energia.yaml: only the visible texts, laid over the Spanish file by app/idioma.py.
 # Same nesting as the Spanish file; lists without «id» line up by position ({} keeps an item as it is).
 
+avisos_cambio:                 # the change test's check in English: {0}, {1}… are the numbers or words it found
+  - texto: "2025 oil adds up to {0} million m³, and national production is around {1}: did the unit change?"
 resumen: >-
   Public data from Argentina: 2025 production well by well (Capítulo IV, with 2023 and 2024
   to see who operated each concession), the maps of
