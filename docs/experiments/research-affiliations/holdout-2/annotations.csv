@@ -1,0 +1,584 @@
+string_id,organizations,other_references,evidence,ambiguous,note
+k001,,,,,ninguna
+k002,,,,,ninguna
+k003,,,,,ninguna
+k004,,,,,ninguna
+k005,,,,,ninguna
+k006,,,,,ninguna
+k007,,,,,ninguna
+k008,,,,,ninguna
+k009,,,,,ninguna
+k010,,,,,ninguna
+k011,,,,,ninguna
+k012,https://ror.org/03w11wq45,,https://ror.org/03w11wq45=«Hospital Durand»,,
+k013,,https://ror.org/04t77r183,,,ninguna; Hospital Sor María Ludovica named with a form ROR does not have
+k014,,https://ror.org/051mda743,,,ninguna; «Hospital de Pediatria Juan P. Garrahan» is not a ROR form (ROR: Hospital de pediatria Garrahan)
+k015,,,,,ninguna
+k016,,,,,ninguna
+k017,,,,,ninguna
+k018,,,,,ninguna
+k019,,,,,ninguna
+k020,,,,,ninguna
+k021,,,,,ninguna
+k022,,,,,ninguna
+k023,,,,,ninguna
+k024,,,,,ninguna
+k025,,,,,ninguna
+k026,,,,,ninguna
+k027,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,IQUIBICEN not in ROR
+k028,,,,,ninguna
+k029,,,,,ninguna
+k030,,,,,ninguna
+k031,,,,,ninguna
+k032,,,,,ninguna
+k033,,,,,ninguna
+k034,,,,,ninguna
+k035,,,,,ninguna
+k036,,,,,ninguna; FUNDALEU not in ROR
+k037,,,,,ninguna
+k038,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,IQUIBICEN not in ROR
+k039,,https://ror.org/051mda743,,,ninguna; «Hospital Nacional de Pediatría Prof. Dr. Juan P. Garrahan» is not a ROR form
+k040,,,,,ninguna
+k041,,,,,ninguna
+k042,,,,,ninguna
+k043,,,,,ninguna
+k044,,,,,ninguna
+k045,,,,,ninguna
+k046,,,,,ninguna
+k047,,,,,ninguna
+k048,,,,,ninguna
+k049,,,,,ninguna
+k050,,,,,ninguna
+k051,,,,,ninguna
+k052,https://ror.org/03rq94151 https://ror.org/03cqe8w59 https://ror.org/0081fs513,,https://ror.org/03rq94151=«Instituto de Astronomía y Física del Espacio; IAFE; CONICET-UBA»; https://ror.org/03cqe8w59=«CONICET»; https://ror.org/0081fs513=«UBA; Universidad de Buenos Aires»,,
+k053,,,,,ninguna
+k054,,,,,ninguna
+k055,,,,,ninguna
+k056,,,,,ninguna
+k057,,,,,ninguna
+k058,,,,,ninguna; ACCORD Salud not in ROR
+k059,https://ror.org/01d67x059 https://ror.org/03cqe8w59,,https://ror.org/01d67x059=«Centro de Investigación y Extensión Forestal Andino Patagónico (CIEFAP)»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»,,
+k060,,,,,ninguna
+k061,,,,,ninguna
+k062,,,,,ninguna
+k063,,,,,ninguna
+k064,,,,,ninguna
+k065,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria»,,
+k066,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria»,,
+k067,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria»,,
+k068,,,,,ninguna
+k069,https://ror.org/02nvt4474 https://ror.org/03cqe8w59,,https://ror.org/02nvt4474=«Instituto de Efectividad Clínica y Sanitaria (IECS»; https://ror.org/03cqe8w59=«CONICET»,,CIESP and Argentine Cochrane Center not in ROR
+k070,,,,,ninguna
+k071,,,,,ninguna
+k072,,,,,ninguna
+k073,https://ror.org/01d67x059 https://ror.org/022g6pv04,,https://ror.org/01d67x059=«CIEFAP»; https://ror.org/022g6pv04=«Universidad Nacional de la Patagonia San Juan Bosco»,,
+k074,,,,,ninguna
+k075,,,,,ninguna
+k076,https://ror.org/00xp3z794,,https://ror.org/00xp3z794=«FLACSO Argentina»,,
+k077,,,,,ninguna
+k078,,,,,ninguna
+k079,,,,,ninguna
+k080,,,,,ninguna
+k081,,,,,ninguna
+k082,,,,,ninguna
+k083,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«CONICET»,yes,"«CONICET  La Plata» matches the acronym CONICET-LA PLATA of Centro Científico Tecnológico - La Plata (https://ror.org/03qan4b12) only if punctuation is ignored; La Plata reads as the city, not marked"
+k084,https://ror.org/03cqe8w59 https://ror.org/0081fs513,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/0081fs513=«Universidad de Buenos Aires»,,INFINA not in ROR
+k085,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«CONICET»,yes,"«CONICET. Mar del Plata» matches the acronym CONICET-MAR DEL PLATA of Centro Científico Tecnológico Mar del Plata (https://ror.org/05yqfsf29) only if punctuation is ignored; Mar del Plata reads as the city, not marked"
+k086,,,,,ninguna
+k087,,https://ror.org/0422kzb24,,,"ninguna; «Catholic University of Argentina» is not a ROR form (ROR: Pontifical Catholic University of Argentina, Universidad Católica Argentina)"
+k088,,,,,ninguna
+k089,,,,,ninguna
+k090,,,,,ninguna
+k091,,,,,ninguna
+k092,,,,,ninguna
+k093,,,,,ninguna
+k094,,,,,ninguna
+k095,https://ror.org/05m802881 https://ror.org/03cqe8w59 https://ror.org/01xz39a70 https://ror.org/00sx0cd23,,https://ror.org/05m802881=«Centro Atómico Bariloche»; https://ror.org/03cqe8w59=«CONICET»; https://ror.org/01xz39a70=«CNEA»; https://ror.org/00sx0cd23=«Instituto Balseiro»,,Instituto de Nanociencia y Nanotecnología not in ROR
+k096,https://ror.org/04bpvs643 https://ror.org/03cqe8w59,,https://ror.org/04bpvs643=«Centro Austral de Investigaciones Científicas (CADIC)»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»,,
+k097,https://ror.org/04czhsq43,,https://ror.org/04czhsq43=«CEMIC»,,
+k098,https://ror.org/055wmc747 https://ror.org/03cqe8w59,,https://ror.org/055wmc747=«Centro Científico Tecnológico Mendoza»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»,,"«CCT» here is the Mendoza CCT, not Centro Científico Tecnológico - Bahía Blanca whose acronym is CCT"
+k099,,,,,ninguna; Centro Oncológico Integral La Rioja not in ROR
+k100,https://ror.org/03cqe8w59 https://ror.org/02xm06c56,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/02xm06c56=«Universidad Abierta Interamericana»,,Centro de Altos Estudios en Ciencias Humanas y de la Salud not in ROR
+k101,,,,,ninguna
+k102,https://ror.org/03cqe8w59,,"https://ror.org/03cqe8w59=«Consejo, Nacional de Investigaciones Científicas y Técnicas; CONICET»",,CECOAL not in ROR
+k103,https://ror.org/02a53x034 https://ror.org/03cqe8w59 https://ror.org/01tjs6929,https://ror.org/02s7sax82,https://ror.org/02a53x034=«Centro de Estudios Parasitológicos y de Vectores (CEPAVE)»; https://ror.org/03cqe8w59=«CONICET»; https://ror.org/01tjs6929=«UNLP»,,«CICPBA» (Comisión de Investigaciones Científicas) is not a ROR form
+k104,https://ror.org/01tjs6929,https://ror.org/02s7sax82,https://ror.org/01tjs6929=«Universidad Nacional de La Plata (UNLP»,yes,"«CIC» (in UNLP-CIC) is the acronym of two ROR organizations (Comisión de Investigaciones Científicas and Centro de Investigaciones Cardiovasculares); here the Comisión, not marked. CEDECOR not in ROR"
+k105,,,,,ninguna
+k106,https://ror.org/02xkrvb18 https://ror.org/03cqe8w59,,https://ror.org/02xkrvb18=«IDES»; https://ror.org/03cqe8w59=«CONICET»,,Centro de Investigaciones Sociales (CIS) not in ROR
+k107,https://ror.org/01h6ezd77 https://ror.org/056tb7j80 https://ror.org/03cqe8w59,,https://ror.org/01h6ezd77=«Centro de Investigaciones en Ciencias de la Tierra (CICTERRA)»; https://ror.org/056tb7j80=«UNC»; https://ror.org/03cqe8w59=«CONICET»,,
+k108,,,,,ninguna
+k109,https://ror.org/04v30e006 https://ror.org/03cqe8w59,https://ror.org/02s7sax82,https://ror.org/04v30e006=«CIDCA»; https://ror.org/03cqe8w59=«CONICET»,yes,"full name differs from ROR (Criotecnología) but acronym CIDCA is unique; «CIC» is the acronym of two ROR organizations (here the Comisión de Investigaciones Científicas), not marked"
+k110,https://ror.org/03cqe8w59 https://ror.org/01tjs6929,https://ror.org/03qan4b12 https://ror.org/02s7sax82,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/01tjs6929=«Universidad Nacional de La Plata»,yes,"«CCT La Plata» is not a ROR form; «CIC-PBA»: CIC is the acronym of two ROR organizations, not marked. CINDECA not in ROR"
+k111,https://ror.org/04f7h3b65,,https://ror.org/04f7h3b65=«Universidad de San Andrés»,,Centro de Neurociencias Cognitivas not in ROR
+k112,https://ror.org/02skrr217,,https://ror.org/02skrr217=«Centro de Recursos Naturales Renovables de la Zona Semiárida»,,
+k113,,,,,ninguna
+k114,,,,,ninguna
+k115,,,,,ninguna
+k116,,,,,ninguna
+k117,,,,,ninguna; Clínica Universitaria Reina Fabiola not in ROR
+k118,,,,,ninguna
+k119,https://ror.org/04f7h3b65,,https://ror.org/04f7h3b65=«Universidad de San Andrés»,,
+k120,,,,,ninguna
+k121,https://ror.org/02c21vy68 https://ror.org/03cqe8w59,,https://ror.org/02c21vy68=«Universidad Nacional de La Pampa»; https://ror.org/03cqe8w59=«CONICET»,,ColBEC and INCITAP not in ROR
+k122,,,,,ninguna
+k123,,,,,ninguna; Confederación Farmacéutica Argentina (COFA) not in ROR
+k124,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas»,,
+k125,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»,,
+k126,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»,,
+k127,https://ror.org/03cqe8w59 https://ror.org/01etg5g76 https://ror.org/00v29jp57,,https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»; https://ror.org/01etg5g76=«Escuela Interdisciplinaria de Altos Estudios Sociales»; https://ror.org/00v29jp57=«Universidad Nacional de San Martín»,,
+k128,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»,,
+k129,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»,,
+k130,https://ror.org/03cqe8w59 https://ror.org/02zvkba47,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/02zvkba47=«National University of Comahue»,,INIBIOMA not in ROR
+k131,,,,,ninguna
+k132,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«CONICET»,,
+k133,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k134,https://ror.org/056tb7j80,,https://ror.org/056tb7j80=«Universidad Nacional de Córdoba»,,
+k135,https://ror.org/056tb7j80,,https://ror.org/056tb7j80=«Universidad Nacional de Córdoba»,,
+k136,,,,,ninguna
+k137,https://ror.org/0594de127 https://ror.org/03cqe8w59 https://ror.org/01t8pd591,,https://ror.org/0594de127=«IBODA»; https://ror.org/03cqe8w59=«CONICET»; https://ror.org/01t8pd591=«ANCEFN»,,"«Darwinion Institute of Botany» is not a ROR form, but IBODA is"
+k138,,,,,ninguna
+k139,,,,,ninguna; Municipalidad de General Pico and GOP not in ROR
+k140,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k141,,,,,ninguna
+k142,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k143,,,,,ninguna
+k144,,,,,ninguna
+k145,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k146,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k147,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k148,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k149,https://ror.org/056tb7j80,,https://ror.org/056tb7j80=«Universidad Nacional de Córdoba»,,
+k150,,,,,ninguna
+k151,,,,,ninguna
+k152,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k153,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k154,,,,,ninguna
+k155,,,,,ninguna
+k156,,,,,ninguna
+k157,,,,,ninguna
+k158,,,,,ninguna
+k159,,,,,ninguna
+k160,https://ror.org/055eqsb67,,https://ror.org/055eqsb67=«Universidad Nacional de Mar del Plata»,,
+k161,https://ror.org/0002pcv65,,https://ror.org/0002pcv65=«Universidad Nacional de Río Cuarto»,,
+k162,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k163,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k164,,,,,ninguna
+k165,,,,,ninguna
+k166,,,,,ninguna
+k167,,,,,ninguna
+k168,,,,,ninguna
+k169,,,,,ninguna
+k170,,,,,ninguna
+k171,,,,,ninguna
+k172,https://ror.org/03cqe8w59 https://ror.org/02zvkba47,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/02zvkba47=«National University of Comahue»,,INIBIOMA not in ROR
+k173,,,,,ninguna
+k174,https://ror.org/055eqsb67,,https://ror.org/055eqsb67=«National University of Mar del Plata»,,
+k175,,,,,ninguna
+k176,https://ror.org/0145s0423,,https://ror.org/0145s0423=«FLENI»,,
+k177,,,,,ninguna
+k178,https://ror.org/03ydmxb41,,https://ror.org/03ydmxb41=«Hospital Aleman»,,
+k179,,,,,ninguna
+k180,,,,,ninguna
+k181,https://ror.org/04sxme922,,https://ror.org/04sxme922=«Universidad Torcuato di Tella»,,
+k182,,,,,ninguna
+k183,,,,,ninguna
+k184,,,,,ninguna
+k185,https://ror.org/04czhsq43,,https://ror.org/04czhsq43=«Center for Medical Education and Clinical Research “Norberto Quirno” (CEMIC)»,,
+k186,,,,,ninguna
+k187,,,,,ninguna
+k188,,,,,ninguna
+k189,,,,,ninguna
+k190,https://ror.org/014nx0w70,,https://ror.org/014nx0w70=«Hospital Universitario Austral»,,
+k191,,,,,ninguna
+k192,,,,,ninguna
+k193,https://ror.org/0081fs513,,https://ror.org/0081fs513=«University of Buenos Aires»,,
+k194,,,,,ninguna
+k195,,,,,ninguna
+k196,,,,,ninguna
+k197,,,,,ninguna
+k198,,,,,ninguna
+k199,,,,,ninguna
+k200,,,,,ninguna
+k201,,,,,ninguna; Instituto de Oncología Ángel H. Roffo no está en ROR
+k202,,,,,ninguna
+k203,,,,,ninguna
+k204,,,,,ninguna
+k205,,,,,ninguna
+k206,,,,,ninguna
+k207,,,,,ninguna
+k208,,,,,ninguna
+k209,,,,,ninguna
+k210,,,,,ninguna
+k211,,,,,ninguna
+k212,,,,,ninguna
+k213,,https://ror.org/01tkmq646,,,ninguna; «Maimonides University» es Universidad Maimónides con una forma que ROR no tiene
+k214,,,,,ninguna
+k215,,,,,ninguna
+k216,https://ror.org/0081fs513,,https://ror.org/0081fs513=«University of Buenos Aires»,,
+k217,,,,,ninguna
+k218,,,,,ninguna
+k219,,,,,ninguna
+k220,https://ror.org/03cqe8w59 https://ror.org/0081fs513,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/0081fs513=«University of Buenos Aires»,,CIHIDECAR no está en ROR
+k221,,,,,ninguna
+k222,,,,,ninguna
+k223,,,,,ninguna
+k224,https://ror.org/0081fs513,,https://ror.org/0081fs513=«University of Buenos Aires»,,
+k225,,,,,ninguna
+k226,,,,,ninguna
+k227,,,,,ninguna
+k228,,,,,ninguna
+k229,,,,,ninguna
+k230,,,,,ninguna
+k231,,,,,ninguna
+k232,,,,,ninguna
+k233,,,,,ninguna
+k234,,,,,ninguna
+k235,,,,,ninguna
+k236,,,,,ninguna
+k237,,,,,ninguna
+k238,,,,,ninguna
+k239,,,,,ninguna
+k240,https://ror.org/04czhsq43,,https://ror.org/04czhsq43=«Center for Medical Education and Clinical Research “Norberto Quirno” (CEMIC)»,,
+k241,,https://ror.org/00bq4rw46,,,"ninguna; «Hospital Italiano, Buenos Aires» no es la forma ROR «Hospital Italiano de Buenos Aires»"
+k242,,,,,ninguna
+k243,,,,,ninguna
+k244,,,,,ninguna
+k245,,,,,ninguna
+k246,,,,,ninguna
+k247,,,,,ninguna
+k248,,,,,ninguna
+k249,,,,,ninguna
+k250,,,,,ninguna
+k251,,,,,ninguna
+k252,,,,,ninguna
+k253,,,,,ninguna
+k254,https://ror.org/001ecav82 https://ror.org/03cqe8w59,,https://ror.org/001ecav82=«Museo Argentino de Ciencias Naturales “Bernardino Rivadavia”»; https://ror.org/03cqe8w59=«CONICET»,,
+k255,,,,,ninguna
+k256,,,,,ninguna
+k257,,,,,ninguna
+k258,,,,,ninguna
+k259,,,,,ninguna
+k260,,,,,ninguna
+k261,,,,,ninguna
+k262,,,,,ninguna
+k263,https://ror.org/04sxme922,,https://ror.org/04sxme922=«Universidad Torcuato Di Tella»,,
+k264,,,,,ninguna; EEA Las Breñas (INTA) no está en ROR y el texto no nombra al INTA
+k265,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria»,,la Estación Experimental no está en ROR
+k266,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria»,,la Estación Experimental no está en ROR
+k267,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria»,,la Estación Experimental no está en ROR
+k268,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria (INTA-EEAMZA)»,,la EEA Mendoza no está en ROR
+k269,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria»,,la Estación Experimental no está en ROR
+k270,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria»,,la Estación Experimental no está en ROR
+k271,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«Instituto Nacional de Tecnología Agropecuaria»,,la Estación Experimental no está en ROR
+k272,https://ror.org/056tb7j80,,https://ror.org/056tb7j80=«Universidad Nacional de Córdoba»,,Centro de Zoología Aplicada no está en ROR
+k273,,,,,ninguna
+k274,,,,,ninguna
+k275,https://ror.org/04t730v47,,https://ror.org/04t730v47=«Universidad Tecnológica Nacional»,,
+k276,https://ror.org/05sn8wf81,,https://ror.org/05sn8wf81=«Universidad Nacional de Cuyo (UNCu-FCA)»,,
+k277,https://ror.org/056tb7j80,,https://ror.org/056tb7j80=«Universidad Nacional de Córdoba»,,
+k278,https://ror.org/02tphfq59,,https://ror.org/02tphfq59=«Universidad Nacional de Rosario»,,
+k279,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k280,https://ror.org/057ecva72,,https://ror.org/057ecva72=«Universidad Nacional del Nordeste»,,
+k281,https://ror.org/057ecva72,,https://ror.org/057ecva72=«Universidad Nacional del Nordeste»,,
+k282,https://ror.org/01tjs6929,,https://ror.org/01tjs6929=«Universidad Nacional de La Plata»,,
+k283,,,,,ninguna
+k284,,,,,ninguna
+k285,,,,,ninguna
+k286,,,,,ninguna
+k287,,,,,ninguna
+k288,https://ror.org/04chzd762,,https://ror.org/04chzd762=«UNT»,,IML (Instituto Miguel Lillo) no está en ROR; UNT en San Miguel de Tucumán
+k289,,,,,ninguna
+k290,https://ror.org/00pt8r998,,https://ror.org/00pt8r998=«National University of the Littoral»,,
+k291,https://ror.org/0422kzb24,,https://ror.org/0422kzb24=«Pontifical Catholic University of Argentina»,,
+k292,,,,,ninguna
+k293,,,,,ninguna
+k294,,,,,ninguna
+k295,,,,,ninguna
+k296,,,,,ninguna
+k297,,,,,ninguna
+k298,,https://ror.org/053f3rt53,,,ninguna; «Fundación Favaloro» no es una forma ROR (alias: «Fundación Favaloro para la Investigación y la Docencia Médica»)
+k299,https://ror.org/0431v7h69 https://ror.org/03cqe8w59,,https://ror.org/0431v7h69=«Fundación Instituto Leloir»; https://ror.org/03cqe8w59=«IIBBA‐CONICET»,,IIBBA no está en ROR
+k300,,,,,ninguna; Fundación SPINE no está en ROR
+k301,https://ror.org/05vas4792 https://ror.org/01tkmq646 https://ror.org/03cqe8w59,,https://ror.org/05vas4792=«Fundación de Historia Natural “Félix de Azara”»; https://ror.org/01tkmq646=«Universidad Maimónides»; https://ror.org/03cqe8w59=«CONICET»,,
+k302,,,,,ninguna
+k303,,,,,ninguna
+k304,,,,,ninguna
+k305,https://ror.org/033ztps90 https://ror.org/0002pcv65 https://ror.org/03cqe8w59,,https://ror.org/033ztps90=«IITEMA»; https://ror.org/0002pcv65=«UNRC»; https://ror.org/03cqe8w59=«CONICET»,,GEA no está en ROR
+k306,,,,,ninguna
+k307,,,,,ninguna
+k308,,,,,ninguna
+k309,,,,,ninguna
+k310,,,,,ninguna
+k311,,,,,ninguna
+k312,,,,,ninguna
+k313,,,,,ninguna
+k314,,,,,ninguna
+k315,,,,,ninguna
+k316,,,,,ninguna
+k317,,,,,ninguna
+k318,https://ror.org/01tjs6929 https://ror.org/03cqe8w59,https://ror.org/02s7sax82,https://ror.org/01tjs6929=«Universidad Nacional de La Plata (CONICET-CIC-UNLP)»; https://ror.org/03cqe8w59=«CONICET»,yes,«CIC» lo usan dos organizaciones de ROR (Comisión de Investigaciones Científicas y Centro de Investigaciones Cardiovasculares); por contexto es la CIC; CINDECA no está en ROR
+k319,,,,,ninguna
+k320,,,,,ninguna; Grupo de Observadores Piquenses no está en ROR
+k321,,,,,ninguna
+k322,,,,,ninguna
+k323,https://ror.org/057zmmf60 https://ror.org/01tjs6929 https://ror.org/03cqe8w59,https://ror.org/03qan4b12,https://ror.org/057zmmf60=«HInstituto de Biotecnología y Biología Molecular»; https://ror.org/01tjs6929=«Universidad Nacional de La Plata»; https://ror.org/03cqe8w59=«CCT La Plata-CONICET»,,"«CCT La Plata» es el Centro Científico Tecnológico - La Plata con forma no ROR; el acrónimo CCT en ROR es de Bahía Blanca, no se marca"
+k324,,,,,ninguna
+k325,https://ror.org/03ydmxb41,,https://ror.org/03ydmxb41=«Hospital Alemán»,,
+k326,,https://ror.org/014nx0w70,,,ninguna; «Hospital Austral» no es la forma ROR «Hospital Universitario Austral»
+k327,,,,,ninguna; Hospital Avellaneda (Tucumán) no está en ROR
+k328,,https://ror.org/04djj4v98,,,ninguna; «Hospital Británico» no es la forma ROR «Hospital Británico de Buenos Aires»
+k329,,https://ror.org/04djj4v98,,,"ninguna; «Hospital Británico, Buenos Aires» no es la forma ROR «Hospital Británico de Buenos Aires»"
+k330,https://ror.org/00tdzhd41,,https://ror.org/00tdzhd41=«Hospital Fernández»,,
+k331,https://ror.org/00bq4rw46,,https://ror.org/00bq4rw46=«Hospital Italiano de Buenos Aires»,,
+k332,https://ror.org/00bq4rw46,,https://ror.org/00bq4rw46=«Hospital Italiano de Buenos Aires»,,
+k333,https://ror.org/00bq4rw46,,https://ror.org/00bq4rw46=«Hospital Italiano de Buenos Aires»,,
+k334,,https://ror.org/00bq4rw46,,,"ninguna; «Hospital Italiano, Buenos Aires» no es la forma ROR «Hospital Italiano de Buenos Aires»"
+k335,,,,,ninguna; Hospital María Curie no está en ROR
+k336,,,,,ninguna; Hospital Pediátrico Dr. H. Notti no está en ROR
+k337,https://ror.org/04qtr9c10,,https://ror.org/04qtr9c10=«Hospital Privado Universitario de Córdoba»,,«Hospital Privado» (Córdoba) es el mismo hospital
+k338,https://ror.org/04qtr9c10,,https://ror.org/04qtr9c10=«Hospital Privado de Córdoba»,,«Hospital Privado» (Córdoba) es el mismo hospital
+k339,,,,,ninguna
+k340,https://ror.org/04czhsq43,,https://ror.org/04czhsq43=«CEMIC»,,
+k341,,,,,ninguna; Hospital Mario Larrain no está en ROR
+k342,,https://ror.org/05te51w08,,,ninguna; «Hospital de Niños Ricardo Gutiérrez» no es la forma ROR «Hospital General de Niños Ricardo Gutierrez»
+k343,,,,,ninguna; Hospital de Niños de San Justo no está en ROR
+k344,https://ror.org/00bq4rw46,,https://ror.org/00bq4rw46=«Hospital Italiano de Buenos Aires»,,
+k345,,,,,ninguna
+k346,,,,,ninguna
+k347,,,,,ninguna
+k348,https://ror.org/00mczdx43 https://ror.org/03cqe8w59,,https://ror.org/00mczdx43=«UNSL; Universidad Nacional de San Luis»; https://ror.org/03cqe8w59=«CONICET»,,INFAP no está en ROR
+k349,,,,,ninguna; Sociedad Argentina de Investigaciones en Bioquímica y Biología Molecular no está en ROR
+k350,,,,,ninguna
+k351,,,,,ninguna
+k352,,,,,ninguna
+k353,https://ror.org/028crwz56 https://ror.org/03cqe8w59,,https://ror.org/028crwz56=«Universidad Nacional del Sur»; https://ror.org/03cqe8w59=«Conicet»,,INQUISUR no está en ROR
+k354,,,,,ninguna
+k355,,,,,ninguna
+k356,,,,,ninguna
+k357,,,,,ninguna
+k358,https://ror.org/04chzd762,,https://ror.org/04chzd762=«National University of Tucumán»,,
+k359,,,,,ninguna
+k360,,,,,ninguna
+k361,https://ror.org/04chzd762,,https://ror.org/04chzd762=«National University of Tucumán»,,
+k362,,,,,ninguna
+k363,,,,,ninguna
+k364,,,,,ninguna
+k365,https://ror.org/04chzd762,,https://ror.org/04chzd762=«National University of Tucumán»,,
+k366,,,,,ninguna
+k367,,,,,ninguna
+k368,,,,,ninguna
+k369,https://ror.org/009d3ws08 https://ror.org/03cqe8w59,,https://ror.org/009d3ws08=«IFIMAR»; https://ror.org/03cqe8w59=«CONICET»,,
+k370,,,,,ninguna
+k371,https://ror.org/03cqe8w59 https://ror.org/0081fs513,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/0081fs513=«Universidad de Buenos Aires»,,Instituto Taquini (IATIMET) no está en ROR
+k372,https://ror.org/03cqe8w59 https://ror.org/0081fs513,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/0081fs513=«Universidad de Buenos Aires»,,Instituto Taquini (IATIMET) no está en ROR
+k373,https://ror.org/02b0zvv74,,https://ror.org/02b0zvv74=«Instituto Alexander Fleming»,,
+k374,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«CONICET»,,"IANIGLA no está en ROR; «CONICET  Mendoza» es CONICET y ciudad, no el CCT Mendoza"
+k375,https://ror.org/00sx0cd23 https://ror.org/05sn8wf81 https://ror.org/01xz39a70,,https://ror.org/00sx0cd23=«Instituto Balseiro»; https://ror.org/05sn8wf81=«Universidad Nacional de Cuyo»; https://ror.org/01xz39a70=«Comisión Nacional de Energía Atómica»,,
+k376,,,,,ninguna
+k377,,,,,ninguna
+k378,https://ror.org/046denk61,,https://ror.org/046denk61=«Instituto Nacional de Tecnología Industrial»,,
+k379,,,,,ninguna
+k380,,,,,ninguna
+k381,,,,,ninguna
+k382,,,,,ninguna; Instituto Santa María de la Salud no está en ROR
+k383,https://ror.org/04czhsq43,,https://ror.org/04czhsq43=«CEMIC»,yes,"el Instituto Universitario CEMIC es la universidad de CEMIC, no está en ROR por sí; se marca CEMIC"
+k384,https://ror.org/02rsnav77 https://ror.org/03cqe8w59,,https://ror.org/02rsnav77=«UNSJ»; https://ror.org/03cqe8w59=«CONICET»,,"Instituto de Automática no está en ROR; «CONICET, San Juan» es CONICET y ciudad, no el CCT San Juan"
+k385,https://ror.org/04x0n3178 https://ror.org/03cqe8w59 https://ror.org/02tphfq59,,https://ror.org/04x0n3178=«Instituto de Biología Molecular y Celular de Rosario (IBR)»; https://ror.org/03cqe8w59=«CONICET»; https://ror.org/02tphfq59=«Universidad Nacional de Rosario»,,
+k386,https://ror.org/01d424s79 https://ror.org/057ecva72 https://ror.org/03cqe8w59,,https://ror.org/01d424s79=«Instituto de Botánica del Nordeste (IBONE»; https://ror.org/057ecva72=«UNNE; Universidad Nacional del Nordeste»; https://ror.org/03cqe8w59=«CONICET; Consejo Nacional de Investigaciones Científicas y Técnicas»,,
+k387,,,,,ninguna
+k388,https://ror.org/03b9rkd85 https://ror.org/0002pcv65 https://ror.org/03cqe8w59,,https://ror.org/03b9rkd85=«ICBIA»; https://ror.org/0002pcv65=«National University of Río Cuarto»; https://ror.org/03cqe8w59=«CONICET»,,el nombre del texto («…y Ambiente») difiere del ROR; lo nombra el acrónimo ICBIA
+k389,https://ror.org/01kwwh635 https://ror.org/00pt8r998 https://ror.org/03cqe8w59,https://ror.org/003vet424,https://ror.org/01kwwh635=«Instituto de Desarrollo Tecnológico para la Industria Química (INTEC»; https://ror.org/00pt8r998=«UNL»; https://ror.org/03cqe8w59=«CONICET»; https://ror.org/003vet424=«CCT CONICET … Santa Fe»,,"CCT here is CCT Santa Fe; ROR acronym CCT belongs to CCT Bahía Blanca, so not counted"
+k390,https://ror.org/02s7sax82,https://ror.org/04t77r183,https://ror.org/02s7sax82=«Comisión de Investigaciones Científicas de la Provincia de Buenos Aires (CIC‐PBA)»; https://ror.org/04t77r183=«Children's Hospital HIAEP “Sor María Ludovica”»,,IDIP not in ROR; hospital form differs from ROR names
+k391,https://ror.org/03cqe8w59 https://ror.org/056tb7j80,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/056tb7j80=«UNC»,,IDEA not in ROR
+k392,https://ror.org/03cqe8w59 https://ror.org/056tb7j80,,https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»; https://ror.org/056tb7j80=«Universidad Nacional de Córdoba»,,IDEA not in ROR
+k393,https://ror.org/04chzd762 https://ror.org/03cqe8w59,,https://ror.org/04chzd762=«UNT»; https://ror.org/03cqe8w59=«CONICET»,,Instituto de Ecología Regional not in ROR
+k394,,,,,ninguna
+k395,https://ror.org/0081fs513 https://ror.org/03cqe8w59,,https://ror.org/0081fs513=«UBA; Universidad de Buenos Aires»; https://ror.org/03cqe8w59=«CONICET; Consejo Nacional de Investigaciones Científicas y Técnicas»,,IFIBYNE not in ROR
+k396,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,INFICA not in ROR
+k397,https://ror.org/02t6gq889 https://ror.org/01tjs6929 https://ror.org/03cqe8w59,,"https://ror.org/02t6gq889=«Instituto de Investigaciones Fisicoquímicas, Teóricas y Aplicadas (INIFTA)»; https://ror.org/01tjs6929=«UNLP»; https://ror.org/03cqe8w59=«CONICET»",,
+k398,https://ror.org/036a3f271,,https://ror.org/036a3f271=«Instituto de Investigaciones Medicas»,,Instituto de Investigaciones Médicas «Alfredo Lanari» is the ROR Instituto de Investigaciones Médicas (IDIM)
+k399,https://ror.org/034s8ev31,,https://ror.org/034s8ev31=«Instituto de Investigaciones en Ciencia y Tecnología de Materiales (INTEMA)»,,
+k400,https://ror.org/01tjs6929 https://ror.org/03cqe8w59,,https://ror.org/01tjs6929=«UNLP; Universidad Nacional de La Plata»; https://ror.org/03cqe8w59=«CONICET»,,LEICI not in ROR
+k401,https://ror.org/047v1n828 https://ror.org/03cqe8w59,,"https://ror.org/047v1n828=«Instituto de Investigaciones en Recursos Naturales, Agroecología y Desarrollo Rural»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»",,
+k402,https://ror.org/047v1n828 https://ror.org/048zgak80,,"https://ror.org/047v1n828=«Instituto de Investigaciones en Recursos Naturales, Agroecología y Desarrollo Rural»; https://ror.org/048zgak80=«Universidad Nacional de Río Negro (UNRN)»",,
+k403,https://ror.org/033ztps90 https://ror.org/03cqe8w59,,https://ror.org/033ztps90=«Instituto de Investigaciones en Tecnologias Energeticas y Materiales Avanzados (IITEMA)»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»,,
+k404,,,,,ninguna
+k405,https://ror.org/04nh79216 https://ror.org/03cqe8w59 https://ror.org/056tb7j80,,https://ror.org/04nh79216=«Instituto de Investigación Médica Mercedes y Martín Ferreyra; INIMEC»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas; CONICET»; https://ror.org/056tb7j80=«Universidad Nacional de Córdoba»,,
+k406,https://ror.org/01xz39a70 https://ror.org/03cqe8w59,,https://ror.org/01xz39a70=«CNEA»; https://ror.org/03cqe8w59=«CONICET»,,Instituto de Nanociencia y Nanotecnología not in ROR
+k407,https://ror.org/01xz39a70 https://ror.org/03cqe8w59,,https://ror.org/01xz39a70=«CNEA»; https://ror.org/03cqe8w59=«CONICET»,,Instituto de Nanociencia y Nanotecnología not in ROR
+k408,https://ror.org/00v29jp57 https://ror.org/03cqe8w59,,https://ror.org/00v29jp57=«UNSAM»; https://ror.org/03cqe8w59=«CONICET»,,Instituto de Nanosistemas / EByN not in ROR
+k409,,,,,ninguna (Instituto de Nefrología Clínica Pergamino not in ROR)
+k410,,,,,ninguna (Instituto Roffo not in ROR)
+k411,,,,,ninguna (Instituto Roffo not in ROR)
+k412,https://ror.org/03cqe8w59 https://ror.org/0081fs513,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/0081fs513=«Universidad de Buenos Aires»,,IQUIBICEN not in ROR
+k413,https://ror.org/03cqe8w59 https://ror.org/02tphfq59,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/02tphfq59=«Universidad Nacional de Rosario»,,IQUIR not in ROR
+k414,https://ror.org/02tphfq59 https://ror.org/03cqe8w59,,https://ror.org/02tphfq59=«Universidad Nacional de Rosario»; https://ror.org/03cqe8w59=«CONICET»,,Instituto de Química Rosario not in ROR
+k415,https://ror.org/03cqe8w59,https://ror.org/028crwz56,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/028crwz56=«UNS»,,INQUISUR not in ROR; UNS is not a ROR form of Universidad Nacional del Sur
+k416,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«INTA»,,CIRN / Instituto de Recursos Biológicos not in ROR
+k417,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,InTecFyB not in ROR
+k418,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,InTecFyB not in ROR
+k419,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,InTecFyB not in ROR
+k420,https://ror.org/027fxex97 https://ror.org/03cqe8w59,,https://ror.org/027fxex97=«Instituto para el Desarrollo Agroindustrial y de la Salud (IDAS)»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»,,
+k421,,,,,ninguna
+k422,,,,,ninguna
+k423,,,,,ninguna
+k424,,,,,ninguna
+k425,,,,,ninguna
+k426,,,,,ninguna
+k427,,,,,ninguna
+k428,,,,,ninguna
+k429,,,,,ninguna
+k430,,,,,ninguna
+k431,https://ror.org/03kr8x191 https://ror.org/03cqe8w59,,https://ror.org/03kr8x191=«UNaM»; https://ror.org/03cqe8w59=«CONICET»,,"LIDEE not in ROR; UNaM = ROR acronym UNAM of Universidad Nacional de Misiones (Oberá, Misiones)"
+k432,https://ror.org/04chzd762,,https://ror.org/04chzd762=«Universidad Nacional de Tucumán»,,LINT not in ROR (LINTA is a different org)
+k433,,,,,ninguna (Hospital Oscar Alende not in ROR)
+k434,https://ror.org/04f7h3b65 https://ror.org/03cqe8w59,,https://ror.org/04f7h3b65=«Universidad de San Andrés»; https://ror.org/03cqe8w59=«CONICET»,,LITERA not in ROR
+k435,https://ror.org/03cqe8w59,https://ror.org/011gakh74 https://ror.org/02s7sax82,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/011gakh74=«UNCPBA»; https://ror.org/02s7sax82=«CICPBA»,,CIVETAN not in ROR; UNCPBA and CICPBA are not ROR forms
+k436,,,,,ninguna
+k437,,,,,ninguna
+k438,https://ror.org/0422kzb24 https://ror.org/03cqe8w59,,https://ror.org/0422kzb24=«UCA»; https://ror.org/03cqe8w59=«CONICET»,,BIOMED not in ROR
+k439,,,,,ninguna
+k440,https://ror.org/01r53hz59,,https://ror.org/01r53hz59=«National University of Quilmes»,,
+k441,https://ror.org/0145s0423 https://ror.org/03cqe8w59,,https://ror.org/0145s0423=«Fleni»; https://ror.org/03cqe8w59=«CONICET»,,INEU not in ROR
+k442,,,,,ninguna
+k443,https://ror.org/03cqe8w59,https://ror.org/03w8cva37,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/03w8cva37=«CCT NOA Sur»,,"CERELA not in ROR; CCT NOA Sur is CCT Tucumán, form not in ROR (CCT acronym belongs to CCT Bahía Blanca)"
+k444,,,,,ninguna
+k445,,,,,ninguna
+k446,,,,,ninguna
+k447,https://ror.org/0384p7414,,https://ror.org/0384p7414=«Instituto Universitario de la Policía Federal Argentina»,,
+k448,,,,,ninguna
+k449,,,,,ninguna
+k450,,,,,ninguna
+k451,,,,,ninguna
+k452,,,,,ninguna
+k453,,,,,ninguna
+k454,,,,,ninguna
+k455,,,,,ninguna
+k456,,,,,ninguna (Museo Provincial de Historia Natural / Gobierno de La Pampa not in ROR)
+k457,https://ror.org/02c21vy68,,https://ror.org/02c21vy68=«Universidad Nacional de La Pampa»,,"Museo Provincial, ColBEC, GOP not in ROR"
+k458,https://ror.org/056tb7j80,,https://ror.org/056tb7j80=«UNC»,,Museo de Zoología not in ROR
+k459,,,,,ninguna
+k460,,,,,ninguna
+k461,,,,,ninguna
+k462,,,,,ninguna
+k463,,,,,ninguna
+k464,,,,,ninguna
+k465,,,,,"ninguna (National Cancer Institute in Kyiv, Ukraine: foreign org with same name as ROR label of Instituto Nacional del Cáncer)"
+k466,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«CONICET»,,
+k467,,,,,ninguna
+k468,https://ror.org/03cqe8w59 https://ror.org/02yn5by09,,https://ror.org/03cqe8w59=«National Scientific and Technical Research Council (CONICET)»; https://ror.org/02yn5by09=«Catholic University of Cuyo»,,
+k469,,,,,ninguna
+k470,,,,,ninguna
+k471,https://ror.org/05p6vdy67 https://ror.org/01tjs6929 https://ror.org/03cqe8w59,https://ror.org/02s7sax82,https://ror.org/05p6vdy67=«Instituto Multidisciplinario de Biología Celular (IMBICE)»; https://ror.org/01tjs6929=«UNLP»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET)»; https://ror.org/02s7sax82=«CIC‐PBA»,yes,"CIC acronym is shared by Comisión de Investigaciones Científicas and Centro de Investigaciones Cardiovasculares, so CIC-PBA not counted; CONICET-LA PLATA match is an artifact of «(CONICET)) La Plata»"
+k472,,,,,ninguna
+k473,,,,,ninguna
+k474,,,,,ninguna
+k475,,,,,ninguna
+k476,,,,,ninguna
+k477,,,,,ninguna
+k478,,,,,ninguna
+k479,,,,,ninguna
+k480,,,,,ninguna
+k481,,,,,ninguna
+k482,,,,,ninguna
+k483,,,,,ninguna
+k484,,,,,ninguna
+k485,,,,,ninguna
+k486,,,,,ninguna
+k487,https://ror.org/00xpayr72 https://ror.org/03cqe8w59,https://ror.org/028crwz56,"https://ror.org/00xpayr72=«Planta Piloto de Ingeniería Química, PLAPIQUI»; https://ror.org/03cqe8w59=«CONICET»; https://ror.org/028crwz56=«UNS»",,UNS is not a ROR form of Universidad Nacional del Sur
+k488,,,,,ninguna
+k489,https://ror.org/03cqe8w59 https://ror.org/02zvkba47,,https://ror.org/03cqe8w59=«CONICET»; https://ror.org/02zvkba47=«National University of Comahue»,,"INIBIOMA, ECOTONO not in ROR"
+k490,https://ror.org/0422kzb24 https://ror.org/03cqe8w59,,https://ror.org/0422kzb24=«Pontifical Catholic University of Argentina (UCA)»; https://ror.org/03cqe8w59=«CONICET»,,BIOMED not in ROR
+k491,https://ror.org/0422kzb24,,https://ror.org/0422kzb24=«Pontificia Universidad Católica Argentina»,,
+k492,,,,,ninguna
+k493,,,,,ninguna
+k494,,,,,ninguna
+k495,,,,,ninguna
+k496,,,,,ninguna
+k497,,,,,ninguna
+k498,,,,,ninguna
+k499,,,,,ninguna
+k500,,,,,ninguna
+k501,,,,,ninguna
+k502,,,,,ninguna
+k503,,,,,ninguna
+k504,,,,,ninguna (Sanatorio Parque not in ROR)
+k505,,,,,ninguna
+k506,,,,,ninguna
+k507,,,,,ninguna
+k508,,,,,ninguna
+k509,,,,,ninguna
+k510,,,,,ninguna
+k511,,,,,ninguna
+k512,,,,,ninguna
+k513,,,,,ninguna
+k514,https://ror.org/001ecav82 https://ror.org/03cqe8w59,,https://ror.org/001ecav82=«Museo Argentino de Ciencias Naturales “Bernardino Rivadavia”»; https://ror.org/03cqe8w59=«CONICET»,,
+k515,https://ror.org/00bq4rw46,,https://ror.org/00bq4rw46=«Hospital Italiano de Buenos Aires»,,
+k516,https://ror.org/028x29h02,,https://ror.org/028x29h02=«Servicio Meteorológico Nacional»,,
+k517,,,,,ninguna
+k518,https://ror.org/05r0mgr86,,https://ror.org/05r0mgr86=«Sociedad Argentina de Hipertensión Arterial»,,
+k519,,,,,ninguna
+k520,,,,,ninguna (Swiss Medical not in ROR)
+k521,,,,,ninguna
+k522,,,,,ninguna
+k523,,,,,ninguna
+k524,,,,,ninguna
+k525,,,,,ninguna
+k526,https://ror.org/03cqe8w59,,https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Cientificas y Tecnicas»,,The Nature Conservancy and IBIGEO not in Argentine ROR list
+k527,,,,,ninguna
+k528,,,,,ninguna
+k529,,,,,ninguna
+k530,,,,,ninguna
+k531,,,,,ninguna
+k532,,https://ror.org/047krn550,https://ror.org/047krn550=«UA Milstein»,,ninguna; Unidad Asistencial César Milstein = Hospital César Milstein; form not in ROR
+k533,,,,,ninguna
+k534,,,,,ninguna
+k535,,,,,ninguna
+k536,https://ror.org/04n143x36 https://ror.org/04krkan79 https://ror.org/03cqe8w59,,https://ror.org/04n143x36=«Unidad Ejecutora Lillo (UEL»; https://ror.org/04krkan79=«Fundación Miguel Lillo»; https://ror.org/03cqe8w59=«CONICET»,,
+k537,https://ror.org/04wm52x94,,https://ror.org/04wm52x94=«INTA»,,Unidad Integrada / FCA Balcarce not in ROR
+k538,https://ror.org/04czhsq43 https://ror.org/03cqe8w59,,https://ror.org/04czhsq43=«CEMIC»; https://ror.org/03cqe8w59=«CONICET»,,"UNA here is Unidad de Neurobiología Aplicada, not Universidad Nacional de las Artes"
+k539,,,,,ninguna
+k540,https://ror.org/00vgfzn51,,https://ror.org/00vgfzn51=«Universidad Argentina de la Empresa (UADE)»,,
+k541,https://ror.org/04hehwn14,,https://ror.org/04hehwn14=«Universidad Católica de Córdoba»,,
+k542,,,,,ninguna
+k543,https://ror.org/05sn8wf81,,https://ror.org/05sn8wf81=«Universidad Nacional de Cuyo»,,
+k544,https://ror.org/00p094v10 https://ror.org/03cqe8w59,,https://ror.org/00p094v10=«Universidad Nacional de Hurlingham; UNAHUR»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Científicas y Técnicas; CONICET»,,
+k545,https://ror.org/02c21vy68,,https://ror.org/02c21vy68=«Universidad Nacional de La Pampa»,,
+k546,https://ror.org/01tjs6929,,https://ror.org/01tjs6929=«Universidad Nacional de La Plata»,,
+k547,https://ror.org/03kr8x191,,https://ror.org/03kr8x191=«Universidad Nacional de Misiones»,,
+k548,https://ror.org/03kr8x191,,https://ror.org/03kr8x191=«Universidad Nacional de Misiones»,,
+k549,https://ror.org/057ecva72,,https://ror.org/057ecva72=«Universidad Nacional del Nordeste»,,
+k550,https://ror.org/057ecva72,,https://ror.org/057ecva72=«Universidad Nacional del Nordeste»,,
+k551,https://ror.org/028crwz56,,https://ror.org/028crwz56=«Universidad Nacional del Sur»,,
+k552,https://ror.org/04t730v47,,https://ror.org/04t730v47=«Universidad Tecnológica Nacional»,,Facultad Regional Villa María not in ROR
+k553,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k554,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k555,https://ror.org/0081fs513 https://ror.org/04sxme922,,https://ror.org/0081fs513=«Universidad de Buenos Aires»; https://ror.org/04sxme922=«Universidad Torcuato Di Tella»,,
+k556,https://ror.org/0081fs513 https://ror.org/03cqe8w59,https://ror.org/057xgqr91,"https://ror.org/0081fs513=«Universidad de Buenos Aires»; https://ror.org/03cqe8w59=«Consejo Nacional de Investigaciones Cientificas y Tecnicas»; https://ror.org/057xgqr91=«Instituto de Quimica de los Materiales, Ambiente y Energía»",,INQUIMAE named with a form not in ROR
+k557,https://ror.org/0081fs513,,https://ror.org/0081fs513=«Universidad de Buenos Aires»,,
+k558,https://ror.org/04f7h3b65,,https://ror.org/04f7h3b65=«Universidad de San Andrés»,,
+k559,https://ror.org/04f7h3b65 https://ror.org/03cqe8w59,,https://ror.org/04f7h3b65=«Universidad de San Andrés»; https://ror.org/03cqe8w59=«CONICET (Consejo Nacional de Investigaciones Científicas y Técnicas)»,,
+k560,,,,,ninguna
+k561,,,,,ninguna
+k562,,,,,ninguna
+k563,,,,,ninguna
+k564,https://ror.org/0081fs513,,https://ror.org/0081fs513=«University of Buenos Aires»,,
+k565,,,,,ninguna
+k566,,,,,ninguna
+k567,,,,,ninguna
+k568,,,,,ninguna
+k569,,,,,ninguna
+k570,,,,,ninguna
+k571,,,,,ninguna
+k572,,,,,ninguna
+k573,,,,,ninguna
+k574,,,,,ninguna
+k575,https://ror.org/01ebs6k31 https://ror.org/03cqe8w59,https://ror.org/01k6h2m87,https://ror.org/01ebs6k31=«Instituto de Ciencias»; https://ror.org/03cqe8w59=«CONICET»; https://ror.org/01k6h2m87=«Universidad Nacional General Sarmiento»,,«Universidad Nacional General Sarmiento» lacks «de»; not a ROR form
+k576,,,,,ninguna
+k577,,,,,ninguna
+k578,,,,,ninguna
+k579,,,,,ninguna
+k580,,,,,ninguna
+k581,,,,,ninguna (Sociedad Argentina de Microbiología General not in ROR)
+k582,,,,,ninguna
+k583,https://ror.org/04n143x36 https://ror.org/04krkan79 https://ror.org/03cqe8w59,,https://ror.org/04n143x36=«Unidad Ejecutora Lillo»; https://ror.org/04krkan79=«Fundación Miguel Lillo»; https://ror.org/03cqe8w59=«CONICET»,,

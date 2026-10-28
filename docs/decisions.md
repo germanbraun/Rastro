@@ -1492,3 +1492,47 @@ experiment's log as method changes made after it; they do not change its measure
   notebook link would break).
 - **Pending, for the owner:** a lawyer's review before the first contract, and the intellectual-property clause of
   any employment contract.
+
+## 2026-10-28 — The one-pagers tell the oil and gas case
+
+- **What:** `docs/one-pager.md` and `docs/one-pager-tecnico.md` now describe the demo case (YPF's oil, the same
+  question four ways, a renamed column, a corrected stake, Rastro Lab) instead of oncology, and point to the pilot
+  offer. Every number is the one in `layer/energia/resultados.json`, `layer/energia/cambio/correccion.json` and
+  `docs/slides/numeros/energia.json`; oncology's numbers stay in `docs/results.md`.
+- **Why:** the old pages described a case the demo no longer shows.
+
+## 2026-10-28 — The experiment log's header and human hours are set by command
+
+- **What:** `python layer/method.py experiment <domain> --set KEY=VALUE` sets `sources` (one per call),
+  `question_author`, `started_on`, `ended_on` or `result`; `--human-hours STEP=HOURS` records the person's time on a
+  step. Dates must parse; human hours only go to a step that exists; agent hours stay derived from the sessions.
+  `tests/test_experiment_log.py` covers it.
+- **Why:** the last fields filled by hand; a log written only by commands cannot carry a typo past the lint.
+
+## 2026-10-28 — The suppliers change test runs under the guard
+
+- **What:** the registry's `change_guard` gains `renamed: {table, column, to}`, the column a `cambio` test renames,
+  so `layer/change_guard.py` no longer names oil and gas tables in code. Suppliers has its entry (mapping, saved
+  answers, `usaspending.contract`, `awarding_agency`), and its `deshacer` restores from the snapshot instead of
+  multiplying the amounts back by 1000.
+- **Numbers:** the guarded run on the live database gives the same verdicts as before in every act (with Rastro 9 of
+  9 break on the rename and 9 of 9 are fixed in one line; without Rastro 6 of 9 stay right and 3 break). After it,
+  `usaspending.contract` has the same 36.145 rows, sum and minimum, the mapping is byte for byte the same, and no
+  snapshot schema is left. The amounts quoted in `resultado.json` are today's answers, which moved since the last
+  run because the data did.
+
+## 2026-10-28 — Affiliations: the glued footnote number is fixed; the longer-name rule is not
+
+- **What:** `linking/afiliaciones/link.py` removes a footnote number glued to a name («11Hospital…», «3CEMIC»), as it
+  already did for a letter. A second rule (an institute's name followed by a word of its own is the start of a
+  longer name) was written too, and dropped.
+- **How it was tested:** both fixes were written first; then a second holdout (`docs/experiments/research-affiliations/holdout-2/`,
+  seed 20261028 fixed before drawing, 100 works, 993 mentions, 583 strings, none of the earlier samples' works) was
+  annotated blind by three fresh Claude reviewers.
+- **Numbers:** before, 955 of 993 mentions agree (precision 1.000, recall 0.909). With both fixes, 942 (recall
+  0.886): the longer-name rule fixed nothing new and broke 11 strings («Instituto Nacional de Tecnología
+  Agropecuaria» followed by a local town). With only the footnote number, 955 again, and on the first holdout, where
+  it was found, 866 → 872 of 886. Rastro's own sample does not change (529 links, 104 candidates) and the saved
+  queries were re-run with no change.
+- **Why:** a fix tuned on a holdout is only known to generalize on a set it never saw; this one showed that one of
+  the two did not. The second holdout is consumed for the longer-name rule. Its reference was reviewed by AI only.

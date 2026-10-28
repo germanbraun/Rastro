@@ -1,0 +1,60 @@
+{
+ "before": {
+  "all": {
+   "mentions": 993,
+   "agree": 955,
+   "links_found": 527,
+   "links_reference": 580,
+   "correct": 527,
+   "precision": 1.0,
+   "recall": 0.909
+  },
+  "new_strings": {
+   "mentions": 961,
+   "agree": 923,
+   "links_found": 508,
+   "links_reference": 561,
+   "correct": 508,
+   "precision": 1.0,
+   "recall": 0.906
+  },
+  "doubtful_candidates": 103,
+  "doubtful_in_reference": 38
+ },
+ "after": {
+  "all": {
+   "mentions": 993,
+   "agree": 955,
+   "links_found": 527,
+   "links_reference": 580,
+   "correct": 527,
+   "precision": 1.0,
+   "recall": 0.909
+  },
+  "new_strings": {
+   "mentions": 961,
+   "agree": 923,
+   "links_found": 508,
+   "links_reference": 561,
+   "correct": 508,
+   "precision": 1.0,
+   "recall": 0.906
+  },
+  "doubtful_candidates": 107,
+  "doubtful_in_reference": 42
+ },
+ "strings": {
+  "total": 583,
+  "also_in_original_sample": 15
+ },
+ "ambiguous_strings": [
+  "k083",
+  "k085",
+  "k104",
+  "k109",
+  "k110",
+  "k318",
+  "k383",
+  "k471"
+ ]
+}

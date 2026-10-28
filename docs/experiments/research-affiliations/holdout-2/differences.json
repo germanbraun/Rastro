@@ -1,0 +1,244 @@
+{
+ "before": {
+  "k466": {
+   "text": "National Council of Science and Technology (CONICET)",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k073": {
+   "text": "BCIEFAP-Universidad Nacional de la Patagonia San Juan Bosco, Ruta 259 Km 16.24, Esquel, Chubut, Argentina.",
+   "rastro": [
+    "https://ror.org/022g6pv04"
+   ],
+   "reference": [
+    "https://ror.org/01d67x059",
+    "https://ror.org/022g6pv04"
+   ]
+  },
+  "k130": {
+   "text": "Conservation Biology Research Group (GRINBIC), ECOTONO Laboratory, INIBIOMA (CONICET – National University of Comahue) , San Carlos de Bariloche 8400 ,",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/02zvkba47",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k489": {
+   "text": "Pollination Ecology Group, ECOTONO Laboratory, INIBIOMA (CONICET – National University of Comahue) , San Carlos de Bariloche 8400 ,",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/02zvkba47",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k137": {
+   "text": "Darwinion Institute of Botany (IBODA, CONICET – ANCEFN) , San Isidro 1642 ,",
+   "rastro": [
+    "https://ror.org/0594de127"
+   ],
+   "reference": [
+    "https://ror.org/01t8pd591",
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/0594de127"
+   ]
+  },
+  "k290": {
+   "text": "Faculty of Agricultural Sciences, National University of the Littoral , Esperanza 3080 ,",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/00pt8r998"
+   ]
+  },
+  "k172": {
+   "text": "Department of Botany, INIBIOMA (CONICET – National University of Comahue) , San Carlos de Bariloche 8400 ,",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/02zvkba47",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k538": {
+   "text": "Unidad de Neurobiología Aplicada (UNA, CEMIC-CONICET)",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/04czhsq43"
+   ]
+  },
+  "k383": {
+   "text": "Instituto Universitario CEMIC (IUC)",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/04czhsq43"
+   ]
+  },
+  "k544": {
+   "text": "Universidad Nacional de Hurlingham-Consejo Nacional de Investigaciones Científicas y Técnicas (UNAHUR-CONICET)",
+   "rastro": [
+    "https://ror.org/00p094v10"
+   ],
+   "reference": [
+    "https://ror.org/00p094v10",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k106": {
+   "text": "Centro de Investigaciones Sociales (CIS, IDES-CONICET)",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/02xkrvb18",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k402": {
+   "text": "Instituto de Investigaciones en Recursos Naturales, Agroecología y Desarrollo Rural, Universidad Nacional de Río Negro (UNRN), San Carlos de Bariloche 8400, Río Negro, Argentina",
+   "rastro": [
+    "https://ror.org/048zgak80"
+   ],
+   "reference": [
+    "https://ror.org/047v1n828",
+    "https://ror.org/048zgak80"
+   ]
+  },
+  "k401": {
+   "text": "Instituto de Investigaciones en Recursos Naturales, Agroecología y Desarrollo Rural, Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET), San Carlos de Bariloche 8400, Río Negro, Argentina",
+   "rastro": [
+    "https://ror.org/03cqe8w59"
+   ],
+   "reference": [
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/047v1n828"
+   ]
+  },
+  "k012": {
+   "text": "1Hospital Durand",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/03w11wq45"
+   ]
+  }
+ },
+ "after": {
+  "k466": {
+   "text": "National Council of Science and Technology (CONICET)",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k073": {
+   "text": "BCIEFAP-Universidad Nacional de la Patagonia San Juan Bosco, Ruta 259 Km 16.24, Esquel, Chubut, Argentina.",
+   "rastro": [
+    "https://ror.org/022g6pv04"
+   ],
+   "reference": [
+    "https://ror.org/01d67x059",
+    "https://ror.org/022g6pv04"
+   ]
+  },
+  "k130": {
+   "text": "Conservation Biology Research Group (GRINBIC), ECOTONO Laboratory, INIBIOMA (CONICET – National University of Comahue) , San Carlos de Bariloche 8400 ,",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/02zvkba47",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k489": {
+   "text": "Pollination Ecology Group, ECOTONO Laboratory, INIBIOMA (CONICET – National University of Comahue) , San Carlos de Bariloche 8400 ,",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/02zvkba47",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k137": {
+   "text": "Darwinion Institute of Botany (IBODA, CONICET – ANCEFN) , San Isidro 1642 ,",
+   "rastro": [
+    "https://ror.org/0594de127"
+   ],
+   "reference": [
+    "https://ror.org/01t8pd591",
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/0594de127"
+   ]
+  },
+  "k290": {
+   "text": "Faculty of Agricultural Sciences, National University of the Littoral , Esperanza 3080 ,",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/00pt8r998"
+   ]
+  },
+  "k172": {
+   "text": "Department of Botany, INIBIOMA (CONICET – National University of Comahue) , San Carlos de Bariloche 8400 ,",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/02zvkba47",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k538": {
+   "text": "Unidad de Neurobiología Aplicada (UNA, CEMIC-CONICET)",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/04czhsq43"
+   ]
+  },
+  "k383": {
+   "text": "Instituto Universitario CEMIC (IUC)",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/04czhsq43"
+   ]
+  },
+  "k544": {
+   "text": "Universidad Nacional de Hurlingham-Consejo Nacional de Investigaciones Científicas y Técnicas (UNAHUR-CONICET)",
+   "rastro": [
+    "https://ror.org/00p094v10"
+   ],
+   "reference": [
+    "https://ror.org/00p094v10",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k106": {
+   "text": "Centro de Investigaciones Sociales (CIS, IDES-CONICET)",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/02xkrvb18",
+    "https://ror.org/03cqe8w59"
+   ]
+  },
+  "k402": {
+   "text": "Instituto de Investigaciones en Recursos Naturales, Agroecología y Desarrollo Rural, Universidad Nacional de Río Negro (UNRN), San Carlos de Bariloche 8400, Río Negro, Argentina",
+   "rastro": [
+    "https://ror.org/048zgak80"
+   ],
+   "reference": [
+    "https://ror.org/047v1n828",
+    "https://ror.org/048zgak80"
+   ]
+  },
+  "k401": {
+   "text": "Instituto de Investigaciones en Recursos Naturales, Agroecología y Desarrollo Rural, Consejo Nacional de Investigaciones Científicas y Técnicas (CONICET), San Carlos de Bariloche 8400, Río Negro, Argentina",
+   "rastro": [
+    "https://ror.org/03cqe8w59"
+   ],
+   "reference": [
+    "https://ror.org/03cqe8w59",
+    "https://ror.org/047v1n828"
+   ]
+  },
+  "k012": {
+   "text": "1Hospital Durand",
+   "rastro": [],
+   "reference": [
+    "https://ror.org/03w11wq45"
+   ]
+  }
+ }
+}

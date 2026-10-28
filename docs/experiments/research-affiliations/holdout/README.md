@@ -42,7 +42,8 @@ are the same.
 | A current name ROR lacks («Universidad del CEMA») | h533 | Debatable; marked ambiguous. |
 
 The two real defects (glued digit, longer name) are not fixed here: a fix would be tuned on this holdout, and testing
-it fairly needs another unseen set. 17 strings are marked ambiguous.
+it fairly needs another unseen set. That test is `../holdout-2/`: the glued number was kept, the longer-name rule
+dropped. 17 strings are marked ambiguous.
 
 ## Limits
 

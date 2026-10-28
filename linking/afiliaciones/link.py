@@ -30,7 +30,8 @@ import psycopg
 
 HERE = Path(__file__).parent
 CONTACT = re.compile(r"\S+@\S+|https?://\S+|www\.\S+")   # e-mails and web addresses are not evidence
-FOOTNOTE = re.compile(r"^([A-Z])(?=[A-ZÁÉÍÓÚ][a-záéíóúñ]{3,})")   # «AUniversidad…»: a footnote letter glued to the name
+# A footnote mark glued to the name: a letter («AUniversidad…») or a number («11Hospital…», «3CEMIC»)
+FOOTNOTE = re.compile(r"^([A-Z](?=[A-ZÁÉÍÓÚ][a-záéíóúñ]{3,})|\d{1,3}(?=[A-ZÁÉÍÓÚ]))")
 SEGMENT = re.compile(r"[,;()\[\]/]")   # boundaries a name cannot cross in a mention
 CONTINUES = {"de", "del", "of"}   # after a matched name, the start of a longer name
 CONNECTORS = {"de", "del", "la", "las", "los", "el", "y", "e", "of", "the", "and", "for", "en", "para"}

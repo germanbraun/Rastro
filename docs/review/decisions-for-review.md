@@ -390,6 +390,18 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q39.** Are word-list guards robust (false positives, easy to bypass)? Is "inline styles only" a reasonable cost to
   pay for one deck tool?
 
+**H4. Closing three set-aside items** (2026-10-28)
+- **Experiment log:** `--set` writes the header fields and `--human-hours` the person's time per step, so no field
+  is filled by hand.
+- **Suppliers change test:** now under the same snapshot-and-restore guard; the column a test renames is declared
+  in the registry, so the guard names no domain. A live run restored the table and mapping exactly, with the same
+  verdicts as before.
+- **Affiliations linking:** a glued footnote number is now removed. A second rule (a longer institute name) was
+  dropped after a second blind holdout (583 new strings): it fixed nothing and broke 11. With the kept fix, 955 of
+  993 mentions agree, precision 1.000, recall 0.909, unchanged.
+- **Q40.** Is a second AI-annotated holdout enough to accept a linker rule, or should every rule change wait for a
+  person's sample? Should the guard's `renamed` field be generalized to any schema change a test makes?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -408,45 +420,33 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
    - **Open:** no participant yet.
    - **Blocks:** the only non-circular evidence for Layer questions and for the Lab explanation claim (Q24).
 4. **Human minutes per step.**
-   - **Open:** experiment logs record agent hours, and human time stays null because only the person may log it.
+   - **Open:** experiment logs record agent hours; human time stays null until the person logs it, now with
+     `method.py experiment <domain> --human-hours <step>=<hours>`.
    - **Options:** the person logs time going forward, or the claim stays agent-hours only.
    - **Blocks:** any claim about the cost of the method (G1, G3).
-5. **Commands to fill the experiment log's header fields** (2026-10-27).
-   - **Open:** today the header is filled by hand and checked with `--lint`.
-   - **Options:** add the commands, or keep doing it by hand.
-   - **Blocks:** fully command-written logs.
-6. **A guard for the suppliers change test** (2026-10-27).
-   - **Open:** suppliers has no snapshot-and-restore guard, so its skill says not to run the test.
-   - **Options:** add its `change_guard` entry to the registry, or retire the test.
-   - **Blocks:** re-running the suppliers change numbers.
-7. **The two affiliation linking defects found by the holdout** (2026-10-27): a footnote digit glued to a name (6
-   strings), and a short name inside a longer one not followed by «de/del/of» (2 strings).
-   - **Open:** both were left unfixed on purpose, to keep the holdout fair.
-   - **Options:** fix them and draw a new holdout; or fix them and say the holdout is consumed.
-   - **Blocks:** nothing urgent, but they are known wrong links.
-8. **Oncology on its own screen or on the shared template** (2026-10-28).
+5. **Oncology on its own screen or on the shared template** (2026-10-28).
    - **Open:** it is kept as an extension for now.
    - **Options:** rebuild it on the template, which changes its look and its script; or leave it as it is.
    - **Blocks:** a single rendering path for all domains.
-9. **Which walkthrough belongs in the timed demo.**
+6. **Which walkthrough belongs in the timed demo.**
    - **Open:** this was listed as "not decided" on 2026-10-26. The same day the first moment went back to YPF and the
      Chevron walkthrough moved to the appendix, but the log does not record an explicit decision on the timed demo.
-10. **Demo readiness** (plan).
+7. **Demo readiness** (plan).
     - **Open:** the three-minute demo has not been rehearsed with a non-technical person, a salesperson has not given
       it from the script alone, and there is no backup video.
     - **Blocks:** the plan's final checkpoint.
-11. **Lab next steps** (2026-10-21).
+8. **Lab next steps** (2026-10-21).
     - **Open:** location, intensity per metre and start year as features; bootstrap intervals (the current range
       covers 71 of 100 wells, against a target of 80); error by well size.
     - **Blocks:** a better-calibrated Lab claim.
-12. **Slides that still type figures** (2026-10-26) — **resolved 2026-10-28.**
+9. **Slides that still type figures** (2026-10-26) — **resolved 2026-10-28.**
     - Every measured number on the oil and gas slides is now a placeholder filled from the measured files
       (the last one, the B/D/C scores on the AI slide, moved on 2026-10-28); `tests/test_slides_format.py` fails on a
       placeholder without its number. Kept here so the reviewer sees it was closed.
-13. **A second unfamiliar domain for the transfer experiment** (2026-10-22).
+10. **A second unfamiliar domain for the transfer experiment** (2026-10-22).
     - **Open:** the experiment plan asks for a repeat on a second unfamiliar domain, and none is approved.
     - **Blocks:** any "the method generalizes" claim beyond one case.
-14. **A licence for the repository.**
+11. **A licence for the repository.**
     - **Open:** this was named an owner's decision on 2026-10-21. The repository became public on 2026-10-27, and it
       has no licence file.
 
@@ -473,7 +473,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q39). Skip any you have no view on.
+- Answer per question number (Q1–Q40). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same
