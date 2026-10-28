@@ -273,6 +273,11 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
   evidence, the predictions to review and what a correction changes, and checks itself against the published run.
 - **Q24b.** For a technical reviewer, is a snapshot-based notebook convincing evidence of the explanation claim, or
   does it need a live connection to the layer to show that the evidence is not prepared in advance?
+- **Added:** it also runs every algorithm tried. On the published cut, XGBoost and Random Forest on gas directly
+  have a slightly lower mean error than ridge (16.12 and 16.27 against 16.67) and a lower R² (0.40, 0.43 against 0.46).
+- **Q24c.** Is publishing the linear model for its exact decomposition the right call when a gradient-boosted model
+  is slightly more accurate on mean error, or should the explanation work over an ensemble (with approximate
+  contributions) instead?
 
 ### F. App and demo
 

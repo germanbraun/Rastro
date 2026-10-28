@@ -1426,3 +1426,19 @@ experiment's log as method changes made after it; they do not change its measure
   `tests/test_notebook_snapshot.py` fails when `modelo.py` changes until the snapshot is saved again.
 - **Why:** the user asked for an advanced companion for technical audiences that shows Rastro's explanation
   capability for ML; accuracy is the same with and without Rastro, so the notebook says so first.
+
+## 2026-10-28 — The notebook shows the algorithm and runs every algorithm tried
+
+- **The algorithm:** a new section shows the ridge regression's formula and its code (read from `modelo.py`
+  with `inspect`), checks that scikit-learn's `Ridge(alpha=1)` gives the same predictions (difference 9·10⁻¹³) and
+  that a well's prediction is exactly the average well plus its contributions.
+- **The experiments:** the last section runs, with settings the reader can change (features A or B, cutoff date,
+  fracturing as it was when the well started, ridge's alpha), the concession median, ridge, the small tree and the
+  forest of `compare_trees.py`, and Random Forest, XGBoost and LightGBM with the thesis settings on log gas and on
+  gas (`alternative.py`). The thesis pipeline is left out: it needs its own downloads.
+- **What it shows, with the published settings:** XGBoost and Random Forest on gas directly have a slightly lower
+  mean error than ridge (B: 16.12 and 16.27 against 16.67) and a lower R² (0.40 and 0.43 against 0.46); on log gas
+  they do worse. The notebook says so, and that ridge is published because it splits exactly into contributions
+  Rastro can back with evidence, not because it is the most accurate on every cut. With 49 test wells these
+  differences move with the seed and the cutoff year.
+- **Why:** the user asked to see the linear regression and to run every algorithm from the notebook.
