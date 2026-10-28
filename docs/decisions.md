@@ -1561,3 +1561,18 @@ experiment's log as method changes made after it; they do not change its measure
   with the same numbers and placeholders; each page links its twin and says the two must say the same. The English
   prospect email links the English pilot offer.
 - **Why:** an international prospect who gets the English executive deck needs the documents in the same language.
+
+## 2026-10-28 — «Las fuentes de datos»: each oil and gas source explained in the app
+
+- **What:** a sidebar button in both views opens a window with each of the nine oil and gas sources (Capítulo IV, the
+  map service, ENARGAS, IGN, GLEIF, environmental studies, fracturing, trajectories, Wikidata): who publishes it,
+  what it is, what Rastro uses it for (Layer, Rastro Lab or enrichment) and what is worth knowing (the operator
+  reports its partners' share, partners inside a text, a map with a previous owner, satellite venting as a sign,
+  late fracturing reports). The license, link, rows and last load are read from `rastro_meta`, never typed; the
+  technical view adds each table and a technical note. Texts in `fuentes_detalle` (Spanish and English); the code
+  (`app/dominio/sources_view.py`) is generic, so any domain gets it by describing its sources.
+- **Shared sources:** GLEIF and Wikidata also serve the suppliers domain; `esquemas` limits the counts to this
+  domain's tables.
+- **Check:** `tests/test_sources_view.py` (every entry complete, registered and translated); seen in the app in
+  Spanish and English, business and technical view.
+- **Why:** the user asked for extended explanations of the oil and gas data sources.

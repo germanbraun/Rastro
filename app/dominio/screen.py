@@ -14,6 +14,7 @@ from . import answers
 from . import hood
 from . import trust_view
 from . import faq
+from . import sources_view
 from . import extension
 
 
@@ -51,6 +52,11 @@ def render(cfg_path, tech):
             # In the business view the frequent questions open from here, not from a tab of their own
             if st.button(idioma.t("dominio.render.tab_faq"), key=f"{domain}_faq_open", use_container_width=True):
                 faq.faq_dialog(cfg)
+        # What each source is and what to watch out for, in both views, when the domain describes its sources
+        if cfg.get("fuentes_detalle") and st.button(idioma.t("dominio.sources.title"), key=f"{domain}_sources_open",
+                                                    use_container_width=True):
+            with service_guard():
+                sources_view.sources_dialog(cfg, tech)
 
     # «Por qué confiar» needs a measured evaluation or quality rules; a domain with neither does not show the tab
     # The business view has four tabs at most: the demo, asking, why trust and Rastro Lab; «Paso a paso» goes inside

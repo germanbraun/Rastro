@@ -57,6 +57,8 @@ Below, `<domain>` is that entry and `<source>` the new source.
 7. **Load and check:** run the loader and the linker (`method.linker.service`), restart the domain's Ontop
    (`method.ontop.service`) and follow `verify`: counts, a known case, nothing outside the cut.
 8. **Document:** a row in the "Load data" table of `README.md` and an entry in `docs/decisions.md` (cut, why, load numbers).
+   If the domain describes its sources in the app (`fuentes_detalle` in its YAML, in both languages), add the new
+   source there: what it is, what Rastro uses it for and what is worth knowing (skill `show-in-app`).
 
 ## A person approves
 

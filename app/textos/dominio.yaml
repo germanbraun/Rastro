@@ -527,3 +527,14 @@ dominio.service_down_database: {es: "la base de datos", en: "the database"}
 dominio.service_down_admin:
   es: "Para quien prepara la demo: `docker compose up -d` y volver a cargar la página."
   en: "For whoever runs the demo: `docker compose up -d` and reload the page."
+dominio.sources.title: {es: "Las fuentes de datos", en: "The data sources"}
+dominio.sources.intro:
+  es: "Qué es cada fuente, qué toma Rastro de ella y qué conviene saber. Lo cargado se lee de los registros de carga de Rastro."
+  en: "What each source is, what Rastro takes from it and what is worth knowing. What was loaded is read from Rastro's load records."
+dominio.sources.what: {es: "Qué es:", en: "What it is:"}
+dominio.sources.use: {es: "Para qué la usa Rastro:", en: "What Rastro uses it for:"}
+dominio.sources.watch: {es: "Qué conviene saber:", en: "Worth knowing:"}
+dominio.sources.loaded:
+  es: "Licencia: {license} · [Sitio de la fuente]({url}) · Última carga: {date}, {rows} filas"
+  en: "License: {license} · [Source website]({url}) · Last load: {date}, {rows} rows"
+

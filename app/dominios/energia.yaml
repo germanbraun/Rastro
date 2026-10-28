@@ -64,6 +64,123 @@ nota_rastro: >-
   y en qué concesión cae cada venteo, y quién operó cada concesión mes a mes, que Rastro resuelve una
   vez y guarda con su evidencia
 
+# «Las fuentes de datos»: what each source is, what Rastro takes from it and what to watch out for. The name, the
+# license, the link, the version, the rows and the load date are read from Rastro's load records, never typed here.
+fuentes_detalle:
+  - id: capitulo4
+    nombre: "Capítulo IV: producción y padrón de pozos"
+    organismo: Secretaría de Energía de la Nación, portal de datos abiertos
+    que_es: >-
+      Las declaraciones juradas que cada empresa presenta todos los meses con la producción de petróleo, gas y agua
+      de cada pozo, y el padrón con todos los pozos del país, su empresa registrada y su ubicación.
+    que_usa: >-
+      La producción de 2025, pozo por pozo y mes por mes, para saber cuánto produce cada concesión y cada empresa;
+      la de 2023 y 2024, para ver quién operó cada concesión en el tiempo. Del padrón, la ubicación y el tipo de cada
+      pozo. Rastro Lab suma de 2018 a 2022, en un espacio aparte que no cambia ninguna respuesta.
+    cuidado:
+      - >-
+        La empresa que declara es la operadora, y declara toda la producción de la concesión, también la de sus
+        socios. Por eso «lo que opera» y «lo que le corresponde» son números distintos.
+      - El petróleo viene en m³ y el gas en miles de m³; Rastro los muestra en millones.
+      - Se usa 2025 porque el archivo de 2026 todavía no trae a todas las operadoras.
+      - El padrón y la declaración pueden nombrar empresas distintas para el mismo pozo; Rastro muestra las dos.
+  - id: sig_energia
+    nombre: Mapas de concesiones, socios y venteos
+    organismo: Secretaría de Energía de la Nación, servicio de mapas
+    que_es: >-
+      Las concesiones de explotación con su contorno, su operadora y sus socios; los puntos de venteo y quema que
+      declaran las empresas; y los posibles venteos que detecta un satélite.
+    que_usa: >-
+      Los socios de cada concesión y su porcentaje, para repartir la producción entre ellos; y en qué concesión cae
+      cada venteo.
+    cuidado:
+      - >-
+        Los socios están dentro de un texto («YPF S.A.: 50 %»). Rastro los separa una vez, con su porcentaje, y
+        guarda el texto original como evidencia.
+      - >-
+        El mapa puede traer un dueño anterior: la mitad de La Amarga Chica figura a nombre de Petronas, que Vista
+        compró en 2025. Una corrección con su fuente lo resuelve; la revisó un asistente de IA y falta que una
+        persona la confirme.
+      - Un venteo visto por satélite es un indicio (una anomalía térmica), no una confirmación.
+    tecnico: >-
+      El certificado del servidor llega sin la cadena completa: se descarga sin verificarlo, porque son datos públicos
+      de solo lectura. Los contornos se cruzan con los puntos en Python (la base no tiene PostGIS).
+  - id: enargas
+    nombre: Gasoductos de transporte
+    organismo: Ente Nacional Regulador del Gas (ENARGAS), publicado en el servicio de mapas de la Secretaría de Energía
+    que_es: Los gasoductos de transporte del país, con su nombre, la empresa licenciataria y su recorrido.
+    que_usa: >-
+      El gasoducto más cercano a cada concesión y a qué distancia está (0 km si la cruza), para encontrar
+      concesiones que ventean gas lejos de un gasoducto.
+    cuidado:
+      - Son los gasoductos de transporte; no están las redes de distribución ni las cañerías dentro de los yacimientos.
+      - Las distancias son aproximadas, sobre el mapa, y alcanzan para esta escala.
+  - id: ign
+    nombre: Localidades y áreas protegidas
+    organismo: Instituto Geográfico Nacional (IGN), listado en IDERA
+    que_es: Las localidades del país y las áreas protegidas, con su ubicación y su contorno.
+    que_usa: La localidad más cercana a cada posible venteo y si el venteo cae dentro de un área protegida.
+    cuidado:
+      - >-
+        Cada localidad es un punto: la distancia es a ese punto, no al borde del pueblo.
+  - id: gleif
+    nombre: Identificador de empresas (LEI)
+    esquemas: [gleif_energia]   # GLEIF is shared with another domain: count only this domain's tables
+    organismo: Global Legal Entity Identifier Foundation (GLEIF)
+    que_es: >-
+      El registro mundial del LEI, el identificador que usan las empresas para operar en los mercados financieros,
+      con su nombre legal y su estado.
+    que_usa: El LEI de las empresas que más producen, para unir la misma empresa entre fuentes y con datos de afuera.
+    cuidado:
+      - >-
+        Rastro busca cada empresa por su nombre: un candidato se acepta solo con una regla y su evidencia, y los
+        dudosos no se usan.
+      - No todas las operadoras tienen LEI.
+  - id: ambiental
+    nombre: Estudios ambientales
+    organismo: Secretaría de Energía de la Nación, portal de datos abiertos
+    que_es: >-
+      El listado de estudios e informes ambientales que las empresas presentan por cada concesión, con su fecha y su
+      tipo; entre ellos, las planillas de venteo de gas.
+    que_usa: Si una concesión con venteos presentó sus planillas de venteo, para marcar las concesiones para revisar.
+    cuidado:
+      - >-
+        La concesión viene escrita como texto, como la escribió quien presentó el estudio, sin su código. Rastro la
+        une por el nombre, con su regla y su evidencia.
+  - id: fractura
+    nombre: Datos de fractura de pozos
+    organismo: Secretaría de Energía de la Nación (Adjunto IV)
+    que_es: >-
+      Los datos de cada fractura hidráulica informada: el largo de la rama horizontal, las etapas, la arena, el agua y
+      la presión máxima, por pozo.
+    que_usa: Solo Rastro Lab, como datos del modelo que predice el gas de los pozos nuevos.
+    cuidado:
+      - >-
+        Muchas fracturas se informan tarde. Rastro Lab usa solo lo informado hasta el mes en que empezó el pozo y
+        marca lo que llegó después.
+      - Algunos valores no son posibles; una regla de calidad los encuentra, y la predicción que los usa lo dice.
+  - id: trayectorias
+    nombre: Trayectorias de pozos
+    organismo: Secretaría de Energía de la Nación, portal de datos abiertos
+    que_es: >-
+      La trayectoria de los pozos de Vaca Muerta: profundidad vertical, largo de la rama y fin de la perforación.
+    que_usa: Solo Rastro Lab, como datos del modelo que predice el gas de los pozos nuevos.
+    cuidado:
+      - Una trayectoria por pozo. Algunos valores no son posibles; una regla de calidad los encuentra.
+  - id: wikidata
+    nombre: Wikidata
+    esquemas: [wikidata_energia]
+    organismo: Wikidata, la base de conocimiento abierta de la Fundación Wikimedia
+    que_es: >-
+      Lo que se sabe de cada empresa: su sede, la bolsa en la que cotiza, su dueño o empresa matriz y su sitio web.
+    que_usa: >-
+      Completar las empresas que tienen LEI con lo que ninguna fuente oficial dice. Se consulta en vivo o se guarda
+      con su fecha.
+    cuidado:
+      - >-
+        Es colaborativa: puede estar incompleta o desactualizada. Rastro guarda qué dijo y cuándo.
+      - Solo se usan las empresas con el mismo LEI; el mismo nombre no alcanza.
+
 # Cómo se muestran las columnas de las respuestas
 columnas:
   company: Empresa

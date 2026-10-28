@@ -408,6 +408,12 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
   figures; a per-deck sales talk track in the speaker notes; an English twin of every executive slide.
 - **Q41.** Is a «why now» slide without numbers convincing, or does it read as opinion? Is keeping English slides as
   separate files (rather than a translation layer) the simpler way to keep them in step?
+
+**H6. Each source explained in the app** (2026-10-28)
+- **Decision:** a «Las fuentes de datos» window per domain: who publishes each source, what it is, what Rastro uses it
+  for and its caveats, with what was loaded read live from Rastro's load records.
+- **Q42.** Are the caveats the right ones for a consultant evaluating the data, and is anything said too strongly
+  (for example «a satellite venting is a sign, not a confirmation»)?
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -479,7 +485,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q41). Skip any you have no view on.
+- Answer per question number (Q1–Q42). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

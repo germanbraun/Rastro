@@ -48,6 +48,7 @@ The first screen says what Rastro is and how to read each screen (question → a
 | What can be trusted | Cards with the measured numbers, each with one status line (when it was measured; references confirmed by a person or not, decided by the publication gate); the change test; quality rules; what happens when data is missing | `tarjetas` (filled from `evaluacion`, `cambio`, `evidencia`), `cambios`, `avisos_cambio` (the pattern of the change test's check and its English text), `calidad`, `fuera` |
 | Guided demo | A few moments, one sentence each | `demo`, `demo_porque` |
 | Frequent questions | Domain FAQ next to the general one, from a sidebar button (a tab in the technical view) | `faq` |
+| The data sources | A sidebar button in both views: per source, who publishes it, what it is, what Rastro uses it for and what is worth knowing; the license, link, rows and last load are read from `rastro_meta.source` and `load_run`, never typed; the technical view adds each table and a technical note | `fuentes_detalle[]`: `id` (the source id in `rastro_meta.source`), `nombre`, `organismo`, `que_es`, `que_usa`, `cuidado` (a list), optional `tecnico`, and `esquemas` when a source is shared with another domain (only those schemas are counted) |
 
 **Technical view** (behind «Ver detalles técnicos»; the same answers, opened up):
 

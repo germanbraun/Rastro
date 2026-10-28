@@ -40,6 +40,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | `dominio/editor.py` | The two code editors (SPARQL and R2RML, with `streamlit-ace`) and their checks: syntax with its line, terms the dictionary lacks, R2RML structure; saving a mapping with a backup in `mappings/.backup/` |
 | `dominio/trust_view.py` | «Por qué confiar»: the measured evaluation, the change and correction tests, the «sin dato» test |
 | `dominio/faq.py` | «Preguntas frecuentes» and the glossary |
+| `dominio/sources_view.py` | «Las fuentes de datos»: each source's explanation (`fuentes_detalle`) with what was loaded, read from `rastro_meta` |
 | `dominio/common.py` | What they share: configuration, cached queries (`run`), tables (`tabla`), short texts |
 | `dominio/extension.py` | The interface a domain's own code implements (`Extension`): a model tab, its walkthrough steps, its demo moment, its slide numbers. The domain names its class in its YAML (`extension:`) |
 | `extensions/oncologia/` | Oncology (`Oncology`): its own screen, older than the template (`screen.py`), with its FAQ and plain-words questions |

@@ -45,6 +45,119 @@ nota_rastro: >-
   and which concession each venting event falls in, and who operated each concession month by month, which Rastro resolves
   once and keeps with its evidence
 
+fuentes_detalle:
+  - id: capitulo4
+    nombre: "Chapter IV: well production and register"
+    organismo: Argentina's Energy Secretariat, open data portal
+    que_es: >-
+      The sworn statements every company files each month with the oil, gas and water production of each well, and
+      the register of every well in the country, with its registered company and its location.
+    que_usa: >-
+      2025 production, well by well and month by month, to know how much each concession and each company produces;
+      2023 and 2024, to see who operated each concession over time. From the register, each well's location and type.
+      Rastro Lab adds 2018 to 2022, in a separate space that changes no answer.
+    cuidado:
+      - >-
+        The reporting company is the operator, and it reports all of the concession's production, its partners' share
+        included. That is why «what it operates» and «what belongs to it» are different numbers.
+      - Oil comes in m³ and gas in thousands of m³; Rastro shows them in millions.
+      - 2025 is used because the 2026 file does not yet include every operator.
+      - The register and the statement may name different companies for the same well; Rastro shows both.
+  - id: sig_energia
+    nombre: Maps of concessions, partners and venting
+    organismo: Argentina's Energy Secretariat, map service
+    que_es: >-
+      The production concessions with their outline, their operator and their partners; the venting and flaring
+      points companies declare; and the possible venting a satellite detects.
+    que_usa: >-
+      Each concession's partners and their percentage, to split the production among them; and which concession each
+      venting event falls in.
+    cuidado:
+      - >-
+        The partners are inside a text («YPF S.A.: 50 %»). Rastro splits them once, with their percentage, and keeps the
+        original text as evidence.
+      - >-
+        The map may carry a previous owner: half of La Amarga Chica is under Petronas, which Vista bought in 2025. A
+        correction with its source resolves it; an AI assistant reviewed it and a person still has to confirm it.
+      - A venting event seen by satellite is a sign (a thermal anomaly), not a confirmation.
+    tecnico: >-
+      The server's certificate comes without the full chain: it is downloaded without verifying it, since it is
+      public, read-only data. Outlines are crossed with points in Python (the database has no PostGIS).
+  - id: enargas
+    nombre: Transport gas pipelines
+    organismo: Argentina's gas regulator (ENARGAS), published in the Energy Secretariat's map service
+    que_es: The country's transport gas pipelines, with their name, the licensed company and their route.
+    que_usa: >-
+      The nearest pipeline to each concession and how far it is (0 km if it crosses it), to find concessions that vent
+      gas far from a pipeline.
+    cuidado:
+      - These are the transport pipelines; distribution networks and pipes inside the fields are not included.
+      - Distances are approximate, on the map, and good enough at this scale.
+  - id: ign
+    nombre: Towns and protected areas
+    organismo: Argentina's National Geographic Institute (IGN), listed in IDERA
+    que_es: The country's towns and protected areas, with their location and outline.
+    que_usa: The nearest town to each possible venting event and whether it falls inside a protected area.
+    cuidado:
+      - >-
+        Each town is a point: the distance is to that point, not to the edge of the town.
+  - id: gleif
+    nombre: Company identifier (LEI)
+    organismo: Global Legal Entity Identifier Foundation (GLEIF)
+    que_es: >-
+      The worldwide register of the LEI, the identifier companies use to operate in financial markets, with their
+      legal name and status.
+    que_usa: The LEI of the companies that produce the most, to link the same company across sources and with outside data.
+    cuidado:
+      - >-
+        Rastro searches each company by its name: a candidate is accepted only with a rule and its evidence, and
+        doubtful ones are not used.
+      - Not every operator has an LEI.
+  - id: ambiental
+    nombre: Environmental studies
+    organismo: Argentina's Energy Secretariat, open data portal
+    que_es: >-
+      The list of environmental studies and reports companies file for each concession, with their date and type;
+      among them, the gas venting forms.
+    que_usa: Whether a concession with venting filed its venting forms, to flag concessions to review.
+    cuidado:
+      - >-
+        The concession comes as text, written as whoever filed the study wrote it, without its code. Rastro links it
+        by name, with its rule and its evidence.
+  - id: fractura
+    nombre: Well fracturing data
+    organismo: Argentina's Energy Secretariat (Annex IV)
+    que_es: >-
+      The data of each reported hydraulic fracturing: the length of the horizontal section, the stages, the sand, the
+      water and the maximum pressure, by well.
+    que_usa: Only Rastro Lab, as inputs to the model that predicts the gas of new wells.
+    cuidado:
+      - >-
+        Many fracturings are reported late. Rastro Lab uses only what was reported up to the month the well started,
+        and flags what arrived later.
+      - Some values are not possible; a quality rule finds them, and the prediction that uses them says so.
+  - id: trayectorias
+    nombre: Well trajectories
+    organismo: Argentina's Energy Secretariat, open data portal
+    que_es: >-
+      The trajectory of Vaca Muerta wells: vertical depth, section length and the end of drilling.
+    que_usa: Only Rastro Lab, as inputs to the model that predicts the gas of new wells.
+    cuidado:
+      - One trajectory per well. Some values are not possible; a quality rule finds them.
+  - id: wikidata
+    nombre: Wikidata
+    organismo: Wikidata, the Wikimedia Foundation's open knowledge base
+    que_es: >-
+      What is known about each company: its headquarters, the stock exchange it is listed on, its owner or parent
+      company and its website.
+    que_usa: >-
+      To complete the companies that have an LEI with what no official source says. It is queried live or saved with
+      its date.
+    cuidado:
+      - >-
+        It is collaborative: it may be incomplete or out of date. Rastro keeps what it said and when.
+      - Only companies with the same LEI are used; the same name is not enough.
+
 columnas:
   company: Company
   share: Oil that belongs to it (million m³)
