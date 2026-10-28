@@ -1,0 +1,25 @@
+{
+  "v": 4,
+  "lists": "css",
+  "faces": {},
+  "designSystems": [],
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-28T20:00:00Z"
+  },
+  "title": "Rastro · Resumen ejecutivo",
+  "order": [
+    "cover-energia",
+    "e-respuesta",
+    "e-esquema-capa",
+    "e-integracion",
+    "pruebas-energia",
+    "e-piloto"
+  ],
+  "sections": {
+    "s1": {
+      "description": "El problema, Rastro, un número, por qué confiar y el piloto",
+      "start": "cover-energia"
+    }
+  }
+}

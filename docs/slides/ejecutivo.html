@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rastro · Resumen ejecutivo</title>
+
+<!-- Generado por build.py. No editar a mano: editar slides/ y volver a correr build.py. -->
+<style>
+*{margin:0;box-sizing:border-box}
+body{background:#3A3F4A;display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0}
+.slide{width:calc(1920px * var(--s));height:calc(1080px * var(--s));overflow:hidden}
+section{width:1920px;height:1080px;transform:scale(var(--s));transform-origin:0 0}
+aside{display:none}
+</style>
+<script>
+function fit(){document.documentElement.style.setProperty('--s', Math.min(1, (innerWidth - 48) / 1920))}
+addEventListener('resize', fit); fit();
+</script></head><body>
+<div class="slide">
+<section id="cover-energia" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<p style="font-size:32px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Rastro · Petróleo y gas en Argentina</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="120" height="120" aria-label="Rastro">
+  <defs>
+    <clipPath id="yema"><ellipse cx="32" cy="32" rx="22" ry="28"/></clipPath>
+    <radialGradient id="halo" cx="50%" cy="48%" r="50%">
+      <stop offset="0%" stop-color="#FFB27A" stop-opacity="0.55"/>
+      <stop offset="45%" stop-color="#8FC3F2" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#8FC3F2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="32" cy="33" rx="31" ry="31" fill="url(#halo)"/>
+  <g clip-path="url(#yema)">
+    <path d="M31.15,31.45 A2.00,2.70 0 1 1 32.85,31.45" fill="none" stroke="#FF7A2F" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M30.22,35.05 A4.55,6.14 0 1 1 33.78,35.05" fill="none" stroke="#FF8C42" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M29.46,38.75 A7.10,9.59 0 1 1 34.54,38.75" fill="none" stroke="#FFA05A" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M28.86,42.52 A9.65,13.03 0 1 1 35.14,42.52" fill="none" stroke="#FFB577" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M28.43,46.35 A12.20,16.47 0 1 1 35.57,46.35" fill="none" stroke="#78BEF5" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.1 1.1"/>
+    <path d="M28.18,50.23 A14.75,19.91 0 1 1 35.82,50.23" fill="none" stroke="#6AB2EF" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.2 1.2"/>
+    <path d="M28.11,54.16 A17.30,23.35 0 1 1 35.89,54.16" fill="none" stroke="#5DA7E9" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.3 1.3"/>
+    <path d="M28.21,58.11 A19.85,26.80 0 1 1 35.79,58.11" fill="none" stroke="#4F9BE4" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.4 1.3"/>
+    <path d="M28.50,62.07 A22.40,30.24 0 1 1 35.50,62.07" fill="none" stroke="#418FDE" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.6 1.4"/>
+    <path d="M28.10,65.87 A24.95,33.68 0 1 1 35.90,65.87" fill="none" stroke="#3484D8" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.7 1.4"/>
+    <path d="M27.70,69.67 A27.50,37.12 0 1 1 36.30,69.67" fill="none" stroke="#2678D2" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.8 1.5"/>
+  </g>
+  <circle cx="32" cy="29" r="1.3" fill="#FF7A2F"/>
+</svg>
+<h1 style="font-family:'Times New Roman', Times, serif;font-size:120px;font-weight:600;line-height:1.05;color:#F7F6F2">Rastro</h1>
+<p style="font-size:56px;line-height:1.2;color:#F7F6F2;width:1500px">Los datos cambian. Las preguntas, no.</p>
+<p style="font-size:32px;line-height:1.3;color:#D7DEE8;width:1400px">Una capa semántica sobre los datos de la organización: preguntas de negocio, con la fuente de cada dato.</p>
+<aside>Rastro integra bases de datos que no se hablan y deja preguntar en lenguaje de negocio. Cada respuesta dice de qué fuente sale. Esta demo usa datos públicos de la Secretaría de Energía, ENARGAS, el IGN y GLEIF, pensada para operadoras y consultoras del sector.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="e-respuesta" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El problema</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Una pregunta, dos significados: ¿quién produjo más gas en Argentina en 2025?</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:28px;color:#7A8699;font-weight:700;text-transform:uppercase;letter-spacing:1px">Lo que opera cada empresa</p>
+<p style="font-size:40px;line-height:1.35">Total Austral 12,3<br>YPF 11,7<br>Tecpetrol 6,9</p>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">Lo que dicen los rankings publicados, un SQL sobre la declaración jurada y un asistente de IA con búsqueda. Cada operadora declara todo el gas de la concesión, también el de sus socios.</p>
+</div>
+<div style="flex:1;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:28px;font-weight:700;text-transform:uppercase;letter-spacing:1px">Lo que le corresponde, con Rastro</p>
+<p style="font-size:40px;line-height:1.35">YPF 12,3<br>Tecpetrol 6,4<br>Total Austral 5,2</p>
+<p style="font-size:28px;line-height:1.4">El gas de cada concesión repartido según la participación de cada socio, con la regla y los registros de cada número.</p>
+</div>
+</div>
+<p style="font-size:28px;color:#4A5568">Miles de millones de m³. Nadie dice qué midió. Rastro escribe la definición una vez, muestra las dos y por qué.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>2</p></div>
+<aside>Empezamos con una pregunta que cualquiera del sector cree saber, y que tiene dos respuestas correctas. Los rankings publicados, un SQL sobre la declaración jurada y un asistente de IA con búsqueda en internet dicen lo mismo: Total Austral, YPF y Tecpetrol. Es lo que opera cada empresa, porque cada operadora declara todo el gas de la concesión, también el de sus socios. Si la pregunta es cuánto gas le corresponde a cada una, el orden cambia: YPF, Tecpetrol y Total Austral, que baja del primero al tercer lugar porque gran parte de lo que opera es de sus socios. Ninguna de las primeras respuestas dice qué midió. Rastro escribe la definición una vez, en el diccionario de negocio, muestra las dos y la evidencia de cada número: la participación de cada socio sale del mapa de concesiones, con su texto. Datos del Capítulo IV y los mapas de la Secretaría de Energía; el 99,4 % del gas de 2025 tiene sus participaciones. Lo operado coincide con los rankings publicados. Medido el 21/10/2026.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="e-esquema-capa" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Qué es una capa semántica</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Un diccionario de negocio entre las fuentes y quien pregunta</h2>
+<div style="width:1664px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 600" width="1664" height="600" font-family="Times New Roman, Times, serif" aria-label="Las fuentes, tal como vienen, se traducen a un diccionario de negocio con sus uniones y reglas; preguntas, asistentes de IA, modelos y otras herramientas lo usan">
+<defs>
+<marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
+<marker id="flecha-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2F6FB5"/></marker>
+<marker id="flecha-vuelta" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#2F6FB5"/></marker>
+</defs>
+<text x="230" y="30" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">LAS FUENTES, COMO VIENEN</text>
+<text x="832" y="30" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">LA CAPA SEMÁNTICA</text>
+<text x="1434" y="30" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">QUIÉN LA USA</text>
+<rect x="20" y="60" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="230" y="105" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Producción por pozo</text>
+<text x="230" y="140" text-anchor="middle" font-size="22" fill="#4A5568">tablas de la declaración jurada</text>
+<rect x="20" y="190" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="230" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Mapa de concesiones</text>
+<text x="230" y="270" text-anchor="middle" font-size="22" fill="#4A5568">los socios, dentro de un texto</text>
+<rect x="20" y="320" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="230" y="365" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Registro de empresas</text>
+<text x="230" y="400" text-anchor="middle" font-size="22" fill="#4A5568">otro nombre para la misma empresa</text>
+<rect x="20" y="450" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="230" y="495" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Gasoductos y localidades</text>
+<text x="230" y="530" text-anchor="middle" font-size="22" fill="#4A5568">puntos y líneas en un mapa</text>
+<line x1="442" y1="115" x2="516" y2="200" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="442" y1="245" x2="516" y2="260" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="442" y1="375" x2="516" y2="330" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="442" y1="505" x2="516" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<rect x="520" y="50" width="624" height="520" rx="20" fill="#2F6FB5"/>
+<rect x="548" y="74" width="568" height="262" rx="14" fill="#FFFFFF"/>
+<text x="572" y="108" font-size="24" font-weight="700" fill="#14213D">El diccionario de negocio</text>
+<ellipse cx="640" cy="170" rx="92" ry="34" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="640" y="179" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Empresa</text>
+<ellipse cx="1024" cy="170" rx="96" ry="34" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="1024" y="179" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Concesión</text>
+<ellipse cx="832" cy="286" rx="78" ry="32" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="832" y="295" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Pozo</text>
+<line x1="734" y1="170" x2="926" y2="170" stroke="#2F6FB5" stroke-width="2.5" marker-end="url(#flecha-azul)"/>
+<text x="830" y="156" text-anchor="middle" font-size="22" fill="#2F6FB5">socia en (con su %)</text>
+<line x1="680" y1="200" x2="772" y2="264" stroke="#2F6FB5" stroke-width="2.5" marker-end="url(#flecha-azul)"/>
+<text x="712" y="252" text-anchor="end" font-size="22" fill="#2F6FB5">opera</text>
+<line x1="892" y1="264" x2="986" y2="202" stroke="#2F6FB5" stroke-width="2.5" marker-end="url(#flecha-azul)"/>
+<text x="950" y="252" font-size="22" fill="#2F6FB5">en</text>
+<rect x="548" y="356" width="176" height="104" rx="12" fill="#4A84C4"/>
+<text x="636" y="398" text-anchor="middle" font-size="24" font-weight="700" fill="#FFFFFF">Traducciones</text>
+<text x="636" y="430" text-anchor="middle" font-size="19" fill="#FFFFFF">columna → concepto</text>
+<rect x="744" y="356" width="176" height="104" rx="12" fill="#4A84C4"/>
+<text x="832" y="398" text-anchor="middle" font-size="24" font-weight="700" fill="#FFFFFF">Uniones</text>
+<text x="832" y="430" text-anchor="middle" font-size="19" fill="#FFFFFF">con su evidencia</text>
+<rect x="940" y="356" width="176" height="104" rx="12" fill="#4A84C4"/>
+<text x="1028" y="398" text-anchor="middle" font-size="24" font-weight="700" fill="#FFFFFF">Reglas</text>
+<text x="1028" y="430" text-anchor="middle" font-size="19" fill="#FFFFFF">de calidad</text>
+<text x="832" y="508" text-anchor="middle" font-size="24" fill="#FFFFFF">Los datos no se copian: cada pregunta</text>
+<text x="832" y="540" text-anchor="middle" font-size="24" fill="#FFFFFF">se traduce a las fuentes en el momento.</text>
+<line x1="1146" y1="200" x2="1220" y2="115" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="1146" y1="260" x2="1220" y2="245" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="1146" y1="330" x2="1220" y2="375" stroke="#2F6FB5" stroke-width="3" marker-start="url(#flecha-vuelta)" marker-end="url(#flecha-azul)"/>
+<line x1="1146" y1="400" x2="1220" y2="505" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<rect x="1224" y="60" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1434" y="105" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Preguntas de negocio</text>
+<text x="1434" y="140" text-anchor="middle" font-size="22" fill="#4A5568">con las palabras del negocio</text>
+<rect x="1224" y="190" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1434" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Asistentes de IA</text>
+<text x="1434" y="270" text-anchor="middle" font-size="22" fill="#4A5568">preguntan por conceptos y citan</text>
+<rect x="1224" y="320" width="420" height="110" rx="14" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="1434" y="365" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Rastro Lab: modelos</text>
+<text x="1434" y="400" text-anchor="middle" font-size="22" fill="#14213D">la predicción vuelve con su evidencia</text>
+<rect x="1224" y="450" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1434" y="495" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Otras herramientas</text>
+<text x="1434" y="530" text-anchor="middle" font-size="22" fill="#4A5568">estándares abiertos del W3C</text>
+</svg></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>3</p></div>
+<aside>El dibujo de lo que sigue, antes del primer caso. A la izquierda, las fuentes tal como vienen: cada una guarda la misma realidad a su manera (la producción en tablas, los socios dentro de un texto del mapa, la misma empresa con otro nombre en otro registro, los gasoductos como líneas en un mapa). En el medio, la capa semántica: un diccionario de negocio con los conceptos que el negocio usa (Empresa, Pozo, Concesión) y cómo se relacionan; las traducciones que dicen qué columna de qué tabla es cada concepto; las uniones entre fuentes, cada una con su evidencia; y las reglas de calidad que se comprueban sobre todo. Los datos no se copian: cada pregunta se traduce a las fuentes en el momento. A la derecha, quien la usa: preguntas de negocio (Rastro Layer), asistentes de IA, modelos y cualquier herramienta que hable los estándares. Rastro Lab es el único camino de ida y vuelta: el modelo toma sus variables de la capa, cada una con su origen, y su predicción vuelve a la capa con los datos que usó, así que se explica y se audita como cualquier otra respuesta (momento 3 de la demo). Para quien sabe SQL: es como una capa de vistas bien documentada, con las uniones y su evidencia escritas una vez; las piezas técnicas están en el anexo («Cómo está armado»).</aside>
+</section>
+</div>
+<div class="slide">
+<section id="e-integracion" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">1 · Preguntar</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.12;width:1664px">«¿Cuánto petróleo de 2025 le corresponde a cada empresa?»</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">YPF: 21,4 M m³</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Sumando por la empresa que declara: a YPF se le asigna todo lo que opera, también lo que es de sus socios.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">YPF: 12,6 M m³</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Su parte en cada concesión, según sus socios. Cada empresa, unida entre fuentes: Vista suma la mitad de La Amarga Chica, que compró a Petronas (una corrección con su fuente, revisada por IA: falta que una persona la confirme).</p></div>
+</div>
+<p style="font-size:32px;line-height:1.35;width:1400px"><b>8,8 millones de m³ asignados de más: unos US$ 3.600 millones</b> <span style="color:#4A5568">a US$ 65 el barril (un supuesto). Los socios se separan una vez y valen para todas las preguntas.</span></p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>4</p></div>
+<aside>Primer momento: integración. La operadora maneja los pozos, pero el petróleo se reparte entre los socios. Sumar por quien declara la producción le da a YPF 21,4 millones de metros cúbicos; su parte es 12,6. La mitad de La Amarga Chica figura en el mapa a nombre de Petronas E&P Argentina, que Vista compró en 2025: con Rastro, Vista suma esos 2,1 (una corrección con su fuente, revisada por un asistente de IA; falta que una persona la confirme; el 12,6 de YPF no depende de ella). Los socios están en un texto del mapa de concesiones: Rastro los separa una vez, con su porcentaje, y une los nombres de cada empresa entre fuentes. En la app, abrir «¿Por qué este número?» con YPF y Loma Campana: 50 % de la producción de la concesión, con el texto original del mapa. El recorrido completo, con Chevron, está en el anexo.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="pruebas-energia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:28px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Por qué confiar</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Cuatro pruebas, medidas sobre datos reales</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:32px;font-weight:700">Respuestas correctas (las 10 preguntas)</p><p style="font-size:56px;font-weight:700;color:#2F6FB5">10 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Sin Rastro, 7 de 10: no pudo medir distancias a gasoductos y contó mal los venteos en áreas protegidas.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:32px;font-weight:700">La misma pregunta, la misma respuesta</p><p style="font-size:56px;font-weight:700;color:#2F6FB5">5 de 5</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Preguntando de 4 formas distintas. Sin Rastro, 3 de 5.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:32px;font-weight:700">Si una fuente cambia</p><p style="font-size:56px;font-weight:700;color:#2F6FB5">1 línea</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Sin Rastro, 3 consultas rotas y otra que da un número equivocado sin avisar.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:32px;font-weight:700">Cada dato, con su origen</p><p style="font-size:56px;font-weight:700;color:#2F6FB5">100 %</p><p style="font-size:28px;line-height:1.4;color:#4A5568">De los 107.841 enlaces entre fuentes guardan su fuente, su regla y su texto (PROV-O).</p></div>
+</div>
+<p style="font-size:28px;line-height:1.4;width:1664px">Con honestidad: con las mismas tablas de enlaces, un SQL bien hecho también acierta 10 de 10; el valor está en integrar una vez. Rastro falló dos preguntas al principio y se volvieron a medir. Falta que una persona confirme las referencias.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>5</p></div>
+<aside>Las mismas tres pruebas que en proveedores, medidas el 19 de octubre con el mismo asistente de IA. Correctas: Rastro 10 de 10, sin Rastro 7 de 10; sin Rastro no pudo calcular distancias a los gasoductos (se le acabó el tiempo en los tres intentos, en las dos preguntas que las usan) y contó mal los venteos en áreas protegidas (43 en lugar de 60). Las tres últimas preguntas (concesiones para revisar, cambios de operadora y gas de shale) se midieron después, con el mismo protocolo; la de gas de shale no tiene cruces difíciles y las tres formas aciertan. Consistencia: 5 de 5 contra 3 de 5. Cambios: un arreglo de una línea. Decirlo con honestidad: Rastro falló dos preguntas al principio. En la participación de YPF el diccionario tenía dos propiedades parecidas para concesión; se dejó una sola, se volvió a medir esa pregunta con asistentes nuevos y salió bien en las 4 formas. En los cambios de operadora dio 55 y el SQL sin Rastro 64: los 9 de más son reales (por ejemplo, YPF cedió Don Ruiz a Bentia y Llancanelo R a PCR) y están en áreas sin producción, que la regla de Rastro descartaba; se corrigió la regla y se volvieron a ejecutar las mismas consultas, sin pedir respuestas nuevas. La prueba también encontró concesiones sin distancia a un gasoducto, que se corrigieron. Y si a un SQL le damos las tablas de enlaces de Rastro, acierta 10 de 10: lo que vendemos es la integración hecha una vez. Cuarta prueba, cobertura: los 107.841 enlaces entre fuentes guardan de dónde salen, con qué regla y qué texto; y todas las columnas de las respuestas dicen su fuente.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="e-piloto" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Próximo paso</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Un piloto de 6 semanas, con sus datos y sus preguntas</h2>
+<div style="display:flex;gap:28px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:28px;font-weight:700;color:#2F6FB5">Semana 1</p><p style="font-size:32px;font-weight:700;line-height:1.2">Las preguntas y las fuentes</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Hasta 10 preguntas de negocio y 3 fuentes propias, aprobadas por una persona de la empresa.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:28px;font-weight:700;color:#2F6FB5">Semanas 2 a 4</p><p style="font-size:32px;font-weight:700;line-height:1.2">Cada pregunta, respondida con evidencia</p><p style="font-size:28px;line-height:1.4;color:#4A5568">El diccionario, las uniones entre fuentes y las mismas pruebas de esta demo, medidas sobre sus datos.</p></div>
+<div style="flex:1;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:28px;font-weight:700;color:#D7E6F7">Semanas 5 y 6</p><p style="font-size:32px;font-weight:700;line-height:1.2">Resultados y próximo paso</p><p style="font-size:28px;line-height:1.4">Opcional: un modelo propio explicado con la misma evidencia. Un informe con los números y los límites.</p></div>
+</div>
+<div style="display:flex;gap:28px">
+<p style="flex:1;font-size:28px;line-height:1.4"><b>Qué necesitamos:</b> <span style="color:#4A5568">acceso de solo lectura a las fuentes, en su infraestructura si lo prefieren, y una persona de negocio unas 2 horas por semana.</span></p>
+<p style="flex:1;font-size:28px;line-height:1.4"><b>Qué queda:</b> <span style="color:#4A5568">el diccionario, las traducciones y las uniones con su evidencia, en estándares abiertos: son de la empresa.</span></p>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>6</p></div>
+<aside>Cerrar con algo concreto. Seis semanas, con sus datos: la primera semana se eligen las preguntas y las fuentes con una persona de negocio de la empresa; de la segunda a la cuarta, cada pregunta queda respondida con evidencia y se miden las mismas pruebas de la demo (con y sin Rastro, la misma pregunta escrita de varias formas, una fuente que cambia); las dos últimas, los resultados y, si tienen un modelo, explicado con la misma evidencia. Lo que necesitamos es poco: acceso de solo lectura y unas horas de una persona de negocio, que además confirma las uniones que revisó un asistente de IA. Lo que queda es de ellos, en estándares abiertos. El detalle, el precio y los criterios de éxito están en la propuesta de piloto (docs/piloto.md).</aside>
+</section>
+</div>
+</body></html>

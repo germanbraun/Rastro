@@ -15,13 +15,18 @@ def number(match):
     return NUMBERS[domain][card][name]   # a missing number fails the build: never a stale typed copy
 
 
-def slide(name):
-    return re.sub(r"\{\{([\w.]+)\}\}", number, (here / "slides" / f"{name}.html").read_text().strip())
+# A slide's footer carries its page number; a slide shared by several decks gets each deck's own number
+FOOTER = re.compile(r'(<div style="position:absolute;left:128px;bottom:64px;[^"]*">.*?<p>)\d+(</p></div>)', re.S)
+
+
+def slide(name, page=None):
+    text = re.sub(r"\{\{([\w.]+)\}\}", number, (here / "slides" / f"{name}.html").read_text().strip())
+    return FOOTER.sub(lambda m: f"{m.group(1)}{page}{m.group(2)}", text) if page else text
 
 
 for deck in sorted((here / "mazos").glob("*.json")):
     meta = json.loads(deck.read_text())
-    slides = "\n".join(f'<div class="slide">\n{slide(i)}\n</div>' for i in meta["order"])
+    slides = "\n".join(f'<div class="slide">\n{slide(i, n)}\n</div>' for n, i in enumerate(meta["order"], 1))
     (here / f"{deck.stem}.html").write_text(f"""<!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{meta["title"]}</title>
