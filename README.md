@@ -262,6 +262,21 @@ Downloads stay in `data/raw/`, which is not versioned: openFDA keeps one JSON pe
 
 If a password contains `$`, put it in single quotes in `.env`: Docker Compose interprets `$` in unquoted values.
 
+## Selling Rastro
+
+Everything a prospect gets, in Spanish and in English (each page links its twin; the two must say the same):
+
+| What | Spanish | English |
+|---|---|---|
+| One page | [docs/one-pager.md](docs/one-pager.md) (and a technical one, [docs/one-pager-tecnico.md](docs/one-pager-tecnico.md)) | [docs/one-pager-en.md](docs/one-pager-en.md) |
+| Pilot offer (6 weeks; price and contact to fill) | [docs/piloto.md](docs/piloto.md) | [docs/piloto-en.md](docs/piloto-en.md) |
+| Executive deck (7 slides, a sales talk track in the notes) | `docs/slides/mazos/ejecutivo.json` | `docs/slides/mazos/ejecutivo-en.json` |
+| Email to a prospect (a draft) | [docs/email-prospecto.md](docs/email-prospecto.md) | same file |
+| The full demo and its script | `docs/slides/mazos/energia.json`, [docs/demo-guion-energia.md](docs/demo-guion-energia.md) | the app's English view |
+
+The decks are built with `python3 docs/slides/build.py`; `--export <deck> <folder>` writes a deck's files for the
+shared slide decks. Every number comes from the measured result files, never typed.
+
 ## License
 
 Rastro is under the [Business Source License 1.1](LICENSE): you may read, copy, modify and use it for anything

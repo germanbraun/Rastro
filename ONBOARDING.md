@@ -137,6 +137,7 @@ python3 -m pip install -r requirements-dev.txt                             # onc
 python3 -m ruff check . && python3 -m pytest -q                            # lint and unit tests (GitHub runs both on every push)
 python3 lab/gas/modelo.py                                                  # Rastro Lab from the console
 python3 docs/slides/build.py                                               # the HTML decks
+python3 docs/slides/build.py --export ejecutivo <folder>                    # one deck as shared-deck files
 ```
 
 ## Start from zero (deletes all loaded data)

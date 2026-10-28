@@ -48,14 +48,14 @@ def export(name, folder):
     print(f"{len(meta['order'])} slides in {folder}/project/slides; order: {meta['order']}")
 
 
-if sys.argv[1:2] == ["--export"]:
-    export(sys.argv[2], Path(sys.argv[3]))
-    sys.exit()
-
-for deck in sorted((here / "mazos").glob("*.json")):
-    meta = json.loads(deck.read_text())
-    slides = "\n".join(f'<div class="slide">\n{slide(i, n, meta)}\n</div>' for n, i in enumerate(meta["order"], 1))
-    (here / f"{deck.stem}.html").write_text(f"""<!doctype html>
+def main():
+    if sys.argv[1:2] == ["--export"]:
+        export(sys.argv[2], Path(sys.argv[3]))
+        return
+    for deck in sorted((here / "mazos").glob("*.json")):
+        meta = json.loads(deck.read_text())
+        slides = "\n".join(f'<div class="slide">\n{slide(i, n, meta)}\n</div>' for n, i in enumerate(meta["order"], 1))
+        (here / f"{deck.stem}.html").write_text(f"""<!doctype html>
 <html lang="{meta.get('lang', 'es')}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{meta["title"]}</title>
 {"".join(f'<link rel="stylesheet" href="{f["href"]}">' for f in meta.get("faces", {}).values() if f.get("href"))}
@@ -74,4 +74,8 @@ addEventListener('resize', fit); fit();
 {slides}
 </body></html>
 """)
-print("Mazos listos:", ", ".join(f"{d.stem}.html" for d in sorted((here / "mazos").glob("*.json"))))
+    print("Mazos listos:", ", ".join(f"{d.stem}.html" for d in sorted((here / "mazos").glob("*.json"))))
+
+
+if __name__ == "__main__":
+    main()
