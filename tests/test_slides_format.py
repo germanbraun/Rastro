@@ -17,6 +17,10 @@ def test_slide_uses_inline_styles_only(name):
     assert text.startswith(f'<section id="{name}"') and text.endswith("</section>") and text.count("<section") == 1
     for forbidden in ("<style", "class=", "margin"):
         assert forbidden not in text, f"{name}: {forbidden}"
+    # the elements the shared deck keeps; anything else (a <code>, say) it drops, text and all
+    kept = set("section h1 h2 h3 p ul ol li br b i u a span div img table tr th td hr aside".split())
+    used = set(re.findall(r"<([a-z][a-z0-9-]*)", re.sub(r"<svg.*?</svg>", "", text, flags=re.S)))
+    assert used <= kept | {"svg", "x-shape", "x-icon", "x-connector", "x-embed"}, f"{name}: {sorted(used - kept)}"
 
 
 def test_every_placeholder_has_its_number():
