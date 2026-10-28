@@ -1333,3 +1333,15 @@ experiment's log as method changes made after it; they do not change its measure
 - **No default domain:** `layer/answer.py` (12 functions) and `ontology/calidad.py` require it; oncology's legacy
   scripts pass `"oncologia"`; the `calidad` service names `energia` in compose.
 - **Same screen:** see the snapshot comparison in the commit; nothing re-measured.
+
+## 2026-10-28 — Decoupling, step 3: oncology's screen leaves app.py; the frame knows no domain
+
+- **What:** `app/app.py` went from 913 lines to 45: logo, language, view switch, domain selector and
+  `dominio.render`. Oncology's screen moved as it is to its extension (`app/extensions/oncologia/screen.py`, class
+  `Oncology`), which tells the template it draws its own screen (`has_own_screen`). Its FAQ, plain-words questions and
+  diagram moved next to it; its 228 texts moved from `app/textos/app.yaml` to `app/textos/oncologia.yaml` (keys
+  `app.*` → `oncologia.*`). Every domain now has a `config:` in `app/dominios.yaml`.
+- **Not rebuilt on the template:** the user chose to keep oncology's screen as it is (rebuilding it would change its
+  look and its demo script); it is now one more extension, so the decision can be revisited without touching the frame.
+- **Same screen:** see the snapshot comparison in the commit; nothing re-measured.
+- **Why:** the user asked that the main app stay independent of the domains.

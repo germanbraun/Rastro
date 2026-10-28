@@ -21,10 +21,13 @@ def render(cfg_path, tech):
     common.warm_up()
     cfg = common.load_config(cfg_path)
     domain = cfg["domain"]
+    ext = extension.load(cfg)
+    if ext and ext.has_own_screen():   # a domain older than the template keeps its own screen
+        ext.show_screen(tech)
+        return
     evaluation = common.read_json(cfg["evaluacion"]) if cfg.get("evaluacion") else {}
     changes = common.read_json(cfg["cambio"]) if cfg.get("cambio") else {}
     questions = common.validated_questions(cfg)
-    ext = extension.load(cfg)
     if not questions:
         st.info(idioma.t("dominio.render.no_questions"))
         return

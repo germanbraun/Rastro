@@ -1,4 +1,5 @@
 domain: oncologia
+extension: oncologia.Oncology   # app/extensions/oncologia/: its own screen, older than the shared template
 avisos_cambio:                 # the change test records its check in Spanish; the English file writes it again
   - patron: '(\d+) estados que la ontología no documenta: (.*)'
     texto: "{0} estados que la ontología no documenta: {1}"   # shown as recorded in Spanish; the English file translates it

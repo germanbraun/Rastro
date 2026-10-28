@@ -121,7 +121,8 @@ Example: the first demo question, «¿Cuánto petróleo le corresponde a cada em
 The screen code is the package `app/dominio/`, one module per part of the screen: `screen.py` (the tabs),
 `answers.py` («Preguntar»), `hood.py` («Bajo el capó»), `trust_view.py` («Por qué confiar»), `faq.py` and `common.py`
 (cached queries, tables). Modules call each other as `common.run(...)`, so a call says where the function lives; a
-test replaces a function there (`patch.object(dominio.common, "run", ...)`). Oncology's older screen is in `app/app.py`.
+test replaces a function there (`patch.object(dominio.common, "run", ...)`). Oncology keeps its older screen in its extension,
+`app/extensions/oncologia/screen.py`.
 
 Where a wrong number usually comes from: a name the linker did not join (look for the company in
 `energia.empresa_nombre`), a source column that changed (the mapping), or a stale app (`docker compose restart app`).

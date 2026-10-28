@@ -32,7 +32,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 
 | File | What it does |
 |---|---|
-| `app.py` | Entry point: language and view switches, the domain selector, and oncology's own (older) screen |
+| `app.py` | Entry point, the frame only: logo, language and view switches, the domain selector; it knows no domain |
 | `dominio/` | Every other domain's screen, drawn from its YAML. One module per part of the screen: |
 | `dominio/screen.py` | `render`: the tabs, in the business or the technical view |
 | `dominio/answers.py` | «Preguntar»: an answer with its sources and evidence, «¿Por qué este número?», the demo, claims, outside data, questions over texts |
@@ -41,6 +41,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | `dominio/faq.py` | «Preguntas frecuentes» and the glossary |
 | `dominio/common.py` | What they share: configuration, cached queries (`run`), tables (`tabla`), short texts |
 | `dominio/extension.py` | The interface a domain's own code implements (`Extension`): a model tab, its walkthrough steps, its demo moment, its slide numbers. The domain names its class in its YAML (`extension:`) |
+| `extensions/oncologia/` | Oncology (`Oncology`): its own screen, older than the template (`screen.py`), with its FAQ and plain-words questions |
 | `extensions/energia/` | Oil and gas (`OilAndGas`): Rastro Lab, with the tab (`lab.py`), the walkthrough comparisons (`lab_walkthrough.py`) and the alternative model view (`lab_alternative.py`); the «Paso a paso» of the first answer (`story.py`); the correction test as the demo shows it (`correction.py`) |
 | `contraste.py` | The numbers of the «Sin Rastro / Con Rastro» cards, read live; also writes the slides' numbers (a domain's own slide queries are in its YAML, `numeros_demo`) |
 | `idioma.py` | Spanish by default, English on request: `t(key)` reads `textos/*.yaml`, `localized()` overlays `*.en.yaml`; `scaled()` shows a quantity in the unit its domain declares (`unidades`) |

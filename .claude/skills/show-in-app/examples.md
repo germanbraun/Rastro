@@ -7,8 +7,9 @@
   rules, "when the data is missing" and the Rastro Lab tab.
 - **US federal suppliers** (`app/dominios/proveedores.yaml`) uses the business and technical views, questions over texts
   (`layer/proveedores/textos/leidos.json`, with a comparison against a word search) and the change test.
-- **Oncology** still has its own screen in `app/app.py` (older than the template in `app/dominio/`); its question over
-  texts is `layer/textos/detenidos-pulmon.json`. Moving it to the template is pending.
+- **Oncology** keeps its own screen, older than the template, in its extension (`app/extensions/oncologia/screen.py`,
+  `has_own_screen`); its question over texts is `layer/textos/detenidos-pulmon.json`. Moving it onto the template
+  would change its look and is not planned.
 - **Research affiliations** (`app/dominios/afiliaciones.yaml`) is a new-domain experiment on the same template.
 - Every configuration has its English overlay next to it (`energia.en.yaml`, and so on).
 - Suppliers and oncology appear only with «Ver detalles técnicos» (the demo is oil and gas).

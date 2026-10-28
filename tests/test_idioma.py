@@ -72,7 +72,7 @@ def test_every_text_key_has_spanish_and_matching_placeholders():
     for path in sorted((APP / "textos").glob("*.yaml")):
         texts.update(yaml.safe_load(path.read_text()) or {})
     used = set()
-    for source in APP.glob("*.py"):
+    for source in APP.rglob("*.py"):
         used |= set(re.findall(r'\bt\(\s*["\']([a-z_][\w.]*)["\']', source.read_text()))
     assert used <= set(texts), f"keys used in code but missing: {sorted(used - set(texts))}"
     for key, entry in texts.items():

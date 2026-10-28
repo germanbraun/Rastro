@@ -12,6 +12,13 @@ class Extension:
     def __init__(self, cfg):
         self.cfg = cfg   # the domain's configuration, already in the interface's language
 
+    def has_own_screen(self):
+        """Whether the domain draws its whole screen itself instead of the shared template."""
+        return False
+
+    def show_screen(self, tech):
+        """The domain's whole screen, when it has its own."""
+
     def has_tab(self):
         """Whether the domain shows a «Rastro Lab» tab."""
         return False
