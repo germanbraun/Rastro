@@ -76,7 +76,7 @@ why = yaml.safe_load(Path({str(ROOT / 'app/dominios/energia.yaml')!r}).read_text
 def query(text, domain):
     result = graph.query(text)
     return [str(v) for v in result.vars], [[str(v) if v is not None else None for v in row] for row in result]
-with patch.object(dominio, 'run', query):
+with patch.object(dominio.common, 'run', query):
     show_story('energia', why, ['company', 'share', 'operated'],
                [['CHEVRON', 2000000, 3000000], ['OTRA', 1500000, 2500000]], 'test', {tech!r})
 '''

@@ -7,7 +7,7 @@
   rules, "when the data is missing" and the Rastro Lab tab.
 - **US federal suppliers** (`app/dominios/proveedores.yaml`) uses the business and technical views, questions over texts
   (`layer/proveedores/textos/leidos.json`, with a comparison against a word search) and the change test.
-- **Oncology** still has its own screen in `app/app.py` (older than the template in `app/dominio.py`); its question over
+- **Oncology** still has its own screen in `app/app.py` (older than the template in `app/dominio/`); its question over
   texts is `layer/textos/detenidos-pulmon.json`. Moving it to the template is pending.
 - **Research affiliations** (`app/dominios/afiliaciones.yaml`) is a new-domain experiment on the same template.
 - Every configuration has its English overlay next to it (`energia.en.yaml`, and so on).
@@ -50,5 +50,5 @@ with citations, check.
 
 ## The map (oil and gas)
 
-`map_data` in `app/dominio.py` queries `energia:Concession`, `energia:DetectedVenting`, `energia:Pipeline` and
+`map_data` in `app/dominio/hood.py` queries `energia:Concession`, `energia:DetectedVenting`, `energia:Pipeline` and
 `energia:ConcessionToReview` with `geo:asWKT`: its domain-specific queries and display settings now live in `technical.map` in the domain YAML.

@@ -155,7 +155,7 @@ def show_how(tech):
 def registros(pozo):
     """The source records of a well's prediction, read from Rastro (question 13): the reported fracturings
     and the gas months, each one with its identifier or its month."""
-    from dominio import run
+    from dominio.common import run
     query = (Path("/ontology/energia/queries") / "cq13.rq").read_text().replace('"166133"', f'"{pozo}"')
     columns, rows = run(query, "energia")
     return pd.DataFrame(rows, columns=columns)
@@ -188,7 +188,7 @@ def variable_label(variable):
 
 
 def walkthrough_config():
-    from dominio import load_config
+    from dominio.common import load_config
     return load_config("/app/dominios/energia.yaml")["ejemplo_lab"]
 
 
@@ -320,7 +320,7 @@ SELECT ?dato ?regla ?evidencia ?origen ?identificador ?mes ?cargado WHERE {
 
 
 def show_source_evidence(pozo, variable, config, key="lab_variable", tech=False):
-    from dominio import sql_table
+    from dominio.common import sql_table
     ui = config["ui"]
     item = next(item for item in config["inputs"] if item["variable"] == variable)
     source = config["sources"][item["source"]]
@@ -431,7 +431,7 @@ def show_well(key, pozo=None):
 
 def show_published(tech):
     """The last run published in Rastro and two questions about its predictions, live."""
-    from dominio import run
+    from dominio.common import run
     columns, rows = run("""PREFIX energia: <https://w3id.org/rastro/energia#>
 PREFIX prov: <http://www.w3.org/ns/prov#>
 SELECT ?version ?fecha (COUNT(?p) AS ?predicciones) WHERE {

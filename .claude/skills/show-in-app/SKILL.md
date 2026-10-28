@@ -1,6 +1,6 @@
 ---
 name: show-in-app
-description: Show a domain's semantic layer in the Rastro app - the business view (questions in plain words, why each number, sources, what can be trusted) and the technical view (queries, the SQL Rastro generates, data as tables and as RDF, dictionary, mappings, links and quality rules), plus optional modules such as questions over texts (graph-grounded RAG). Use it when a domain is ready to be shown, when touching app/dominios/*.yaml or app/dominio.py, or when a number or a question in the app changes.
+description: Show a domain's semantic layer in the Rastro app - the business view (questions in plain words, why each number, sources, what can be trusted) and the technical view (queries, the SQL Rastro generates, data as tables and as RDF, dictionary, mappings, links and quality rules), plus optional modules such as questions over texts (graph-grounded RAG). Use it when a domain is ready to be shown, when touching app/dominios/*.yaml or app/dominio/, or when a number or a question in the app changes.
 ---
 
 # Show a domain in the app

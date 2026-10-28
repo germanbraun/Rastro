@@ -36,12 +36,12 @@ from unittest.mock import patch
 registry = {registry!r}
 with patch.dict(dominio.answer.DOMAINS, {{"library": registry}}), \\
      patch.object(dominio.answer, "ROOT", Path({str(tmp_path)!r})), \\
-     patch.object(dominio, "warm_up", lambda: None), \\
-     patch.object(dominio, "sources", lambda domain: {{}}), \\
-     patch.object(dominio, "llm_status", lambda: (False, "Sin LLM")), \\
-     patch.object(dominio, "ayuda", lambda key: None), \\
-     patch.object(dominio, "show_faq", lambda *args: st.caption("Preguntas frecuentes")), \\
-     patch.object(dominio, "run", lambda query, domain: (["answer"], [[2]])):
+     patch.object(dominio.common, "warm_up", lambda: None), \\
+     patch.object(dominio.common, "sources", lambda domain: {{}}), \\
+     patch.object(dominio.common, "llm_status", lambda: (False, "Sin LLM")), \\
+     patch.object(dominio.common, "ayuda", lambda key: None), \\
+     patch.object(dominio.faq, "show_faq", lambda *args: st.caption("Preguntas frecuentes")), \\
+     patch.object(dominio.common, "run", lambda query, domain: (["answer"], [[2]])):
     dominio.render({str(tmp_path / "app.yaml")!r}, {technical!r})
 '''
     app = AppTest.from_string(script).run(timeout=15)
@@ -78,3 +78,16 @@ def test_change_check_in_english_keeps_its_numbers(monkeypatch):
     monkeypatch.setattr(idioma, "lang", lambda: "en")
     assert dominio.check_text("🟡 Control de vocabulario: 2 estados que la ontología no documenta: A, B") == \
         "2 statuses the ontology does not document: A, B"
+
+
+def test_no_name_in_the_screen_code_hides_one_of_its_modules():
+    """The modules call each other as module.name: a variable with a module's name (a tab called trust_view, say)
+    would hide that module inside its function."""
+    import ast
+    package = ROOT / "app/dominio"
+    modules = {p.stem for p in package.glob("*.py")} - {"__init__"}
+    for path in package.glob("*.py"):
+        tree = ast.parse(path.read_text())
+        names = {n.id for n in ast.walk(tree) if isinstance(n, ast.Name) and isinstance(n.ctx, ast.Store)}
+        names |= {a.arg for n in ast.walk(tree) if isinstance(n, (ast.FunctionDef, ast.Lambda)) for a in n.args.args}
+        assert not names & modules, f"{path.name}: {names & modules}"

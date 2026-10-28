@@ -1,7 +1,7 @@
 """Rastro Layer: the demo.
 
 A domain selector (app/dominios.yaml): oncology is drawn here; the other domains,
-with dominio.py and their configuration file.
+with the dominio package (app/dominio/) and their configuration file.
 
 Oncology tabs:
   Preguntar          a question in natural language; the answer brings the source of
@@ -506,7 +506,7 @@ st.markdown(f"**{t('app.tagline')}**")
 st.markdown(t("app.what"))
 st.caption(t("app.how_to_read", marks=" · ".join(enlaces.label(k) for k in ("regla", "ia", "persona"))))
 
-# Domains: oncology has its screen in this file; the others are drawn with dominio.py
+# Domains: oncology has its screen in this file; the others are drawn with the dominio package
 # from their configuration (app/dominios.yaml)
 DOMAINS = idioma.localized("/app/dominios.yaml")
 available, status = llm_status()

@@ -1262,3 +1262,18 @@ experiment's log as method changes made after it; they do not change its measure
   «de/del/of» (2). Not fixed, so the holdout stays a fair measurement; three reviewer calls were wrong.
 - **Why:** it was the pending fair test; the user asked to complete the pending work. A person still has to confirm
   both references.
+
+## 2026-10-27 — Easier to debug: the screen code split by part, and how to trace a number
+
+- **What:** `app/dominio.py` (1,598 lines) is now the package `app/dominio/`: `common.py` (258 lines), `answers.py`
+  (540), `hood.py` (351), `trust_view.py` (265), `faq.py` (69) and `screen.py` (174). The split was done by a script:
+  every function is identical to the original once `module.name` is read as `name` (71 of 71, checked on the syntax
+  tree). Modules call each other as `common.run(...)`, so a call says where the function lives and a test patches it
+  there; `dominio.<name>` keeps working for the rest of the app. A new test fails if a variable takes a module's name
+  (a tab called `trust_tab` hid the module of that name; the app check found it, the unit tests did not).
+- **Guide:** ONBOARDING.md traces one demo number (YPF's share in Loma Campana) from the raw tables, through the linker,
+  the mapping and the SQL Rastro generates, to the screen, with commands that were run.
+- **CI** already ran ruff and pytest on every push (`.github/workflows/calidad.yml`); nothing to add.
+- **Checked:** 139 tests, ruff, `check_domain.py` for oil and gas, suppliers and affiliations (both views, every
+  example query) and oncology's screen in the browser. No number changes, so nothing is re-measured.
+- **Why:** the user asked that the code be easy for developers to review and debug.

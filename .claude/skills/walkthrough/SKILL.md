@@ -66,7 +66,7 @@ the semantic layer, one step per part of Rastro, and every number on screen come
      record, variable by variable and grouped).
 
    Write the same texts in English in `app/dominios/<domain>.en.yaml`, under the same keys.
-   `app/dominio.py` (`show_integration_example`) renders it; a domain needs no code.
+   `app/dominio/answers.py` (`show_integration_example`) renders it; a domain needs no code.
 3. **Slides and script:** one slide per step, kicker «Paso a paso · Datos reales · Parte de Rastro: …» and a «Para
    qué» line. Build them with the skill `decks`.
    - **Placement:** the semantic-layer walkthrough opens the technical appendix, right after its title slide and

@@ -1,4 +1,4 @@
-# What belongs to the research-affiliations domain in the app (drawn by app/dominio.py).
+# What belongs to the research-affiliations domain in the app (drawn by app/dominio/).
 # Paths inside the app container. Approved proposal: docs/experiments/research-affiliations/app-proposal.md.
 # No evaluation yet (the blind reference review is deferred), so no measured cards: only quality and a notice.
 

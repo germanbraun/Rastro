@@ -1,4 +1,4 @@
-# Lo propio del dominio de proveedores en la app (lo dibuja app/dominio.py).
+# What belongs to the suppliers domain in the app (drawn by app/dominio/).
 # Rutas dentro del contenedor de la app.
 
 domain: proveedores            # el de layer/dominios.yaml: endpoint, diccionario y notas para el LLM

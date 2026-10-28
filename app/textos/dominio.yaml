@@ -1,4 +1,4 @@
-# Texts of a domain's screen (app/dominio.py), in Spanish and English. Read with idioma.t("<key>", **values).
+# Texts of a domain's screen (app/dominio/), in Spanish and English. Read with idioma.t("<key>", **values).
 # Keys are dominio.<function>.<name>; {…} are values the code fills in.
 
 dominio.tabla.long_text:

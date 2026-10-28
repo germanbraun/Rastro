@@ -1,4 +1,4 @@
-# Lo propio del dominio de petróleo y gas en la app (lo dibuja app/dominio.py).
+# What belongs to the oil and gas domain in the app (drawn by app/dominio/).
 # Rutas dentro del contenedor de la app.
 
 domain: energia                # el de layer/dominios.yaml: endpoint, diccionario y notas para el LLM

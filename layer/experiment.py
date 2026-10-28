@@ -83,7 +83,7 @@ def main():
     results = run_checks(checks, ROOT, output)
     files = [ROOT / "docs/method.md", ROOT / "docs/method-contracts.md", *list((ROOT / ".claude/skills").rglob("*.md")),
              ROOT / "layer/method.py", ROOT / "layer/lifecycle.py", ROOT / "ontology/check.py", ROOT / "ontology/calidad.py",
-             ROOT / "layer/experiment.py", ROOT / "app/dominio.py", ROOT / "app/check_domain.py",
+             ROOT / "layer/experiment.py", *sorted((ROOT / "app/dominio").glob("*.py")), ROOT / "app/check_domain.py",
              ROOT / "layer/dominios.yaml", ROOT / "infra/docker-compose.yml", ROOT / "requirements-dev.txt",
              ROOT / "infra/loaders/requirements.txt"]
     report = {"domain": args.domain, "run": run, "method_commit": subprocess.check_output(

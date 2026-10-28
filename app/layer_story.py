@@ -18,7 +18,7 @@ import streamlit as st
 
 
 def show_story(domain, why, columns, rows, where, tech):
-    from dominio import md, prefixed, run, tabla
+    from dominio.common import md, prefixed, run, tabla
 
     ui = why['recorrido']
     values = list(dict.fromkeys(row[columns.index(why['columna'])] for row in rows))

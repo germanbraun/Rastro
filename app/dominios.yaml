@@ -1,6 +1,5 @@
-# Los dominios que muestra la app. Oncología tiene su propia pantalla (app.py); los demás
-# se dibujan con dominio.py a partir de su archivo de configuración.
-# El primero es el que abre la app: la demo empieza por petróleo y gas.
+# The domains the app shows. Oncology has its own screen (app.py); the others are drawn by app/dominio/
+# from their configuration file. The first one is the one the app opens: the demo starts with oil and gas.
 - id: energia
   name: Petróleo y gas en Argentina
   config: /app/dominios/energia.yaml

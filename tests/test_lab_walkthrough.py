@@ -123,7 +123,7 @@ def query(text, domain):
     assert '<https://example.org/21>' in text
     return ['value'], [[1]]
 with patch.object(lab, 'published_snapshot', side_effect=AssertionError('Must not select a different run')), \\
-     patch.object(dominio, 'run', side_effect=query):
+     patch.object(dominio.common, 'run', side_effect=query):
     dominio.show_integration_example(example, 'energia', False, pozo='21', run_id={run_id!r})
 '''
     app = AppTest.from_string(script).run(timeout=15)
