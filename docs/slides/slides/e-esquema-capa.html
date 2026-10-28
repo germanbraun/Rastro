@@ -5,6 +5,7 @@
 <defs>
 <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
 <marker id="flecha-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2F6FB5"/></marker>
+<marker id="flecha-vuelta" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#2F6FB5"/></marker>
 </defs>
 <text x="230" y="30" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">LAS FUENTES, COMO VIENEN</text>
 <text x="832" y="30" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">LA CAPA SEMÁNTICA</text>
@@ -53,7 +54,7 @@
 <text x="832" y="540" text-anchor="middle" font-size="24" fill="#FFFFFF">se traduce a las fuentes en el momento.</text>
 <line x1="1146" y1="200" x2="1220" y2="115" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
 <line x1="1146" y1="260" x2="1220" y2="245" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
-<line x1="1146" y1="330" x2="1220" y2="375" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="1146" y1="330" x2="1220" y2="375" stroke="#2F6FB5" stroke-width="3" marker-start="url(#flecha-vuelta)" marker-end="url(#flecha-azul)"/>
 <line x1="1146" y1="400" x2="1220" y2="505" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
 <rect x="1224" y="60" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="1434" y="105" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Preguntas de negocio</text>
@@ -61,13 +62,13 @@
 <rect x="1224" y="190" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="1434" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Asistentes de IA</text>
 <text x="1434" y="270" text-anchor="middle" font-size="22" fill="#4A5568">preguntan por conceptos y citan</text>
-<rect x="1224" y="320" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1434" y="365" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Modelos</text>
-<text x="1434" y="400" text-anchor="middle" font-size="22" fill="#4A5568">cada variable con su origen</text>
+<rect x="1224" y="320" width="420" height="110" rx="14" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="1434" y="365" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Rastro Lab: modelos</text>
+<text x="1434" y="400" text-anchor="middle" font-size="22" fill="#14213D">la predicción vuelve con su evidencia</text>
 <rect x="1224" y="450" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
 <text x="1434" y="495" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Otras herramientas</text>
 <text x="1434" y="530" text-anchor="middle" font-size="22" fill="#4A5568">estándares abiertos del W3C</text>
 </svg></div>
 <div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>3</p></div>
-<aside>El dibujo de lo que sigue, antes del primer caso. A la izquierda, las fuentes tal como vienen: cada una guarda la misma realidad a su manera (la producción en tablas, los socios dentro de un texto del mapa, la misma empresa con otro nombre en otro registro, los gasoductos como líneas en un mapa). En el medio, la capa semántica: un diccionario de negocio con los conceptos que el negocio usa (Empresa, Pozo, Concesión) y cómo se relacionan; las traducciones que dicen qué columna de qué tabla es cada concepto; las uniones entre fuentes, cada una con su evidencia; y las reglas de calidad que se comprueban sobre todo. Los datos no se copian: cada pregunta se traduce a las fuentes en el momento. A la derecha, quien la usa: preguntas de negocio, asistentes de IA, modelos como Rastro Lab y cualquier herramienta que hable los estándares. Para quien sabe SQL: es como una capa de vistas bien documentada, con las uniones y su evidencia escritas una vez; las piezas técnicas están en el anexo («Cómo está armado»).</aside>
+<aside>El dibujo de lo que sigue, antes del primer caso. A la izquierda, las fuentes tal como vienen: cada una guarda la misma realidad a su manera (la producción en tablas, los socios dentro de un texto del mapa, la misma empresa con otro nombre en otro registro, los gasoductos como líneas en un mapa). En el medio, la capa semántica: un diccionario de negocio con los conceptos que el negocio usa (Empresa, Pozo, Concesión) y cómo se relacionan; las traducciones que dicen qué columna de qué tabla es cada concepto; las uniones entre fuentes, cada una con su evidencia; y las reglas de calidad que se comprueban sobre todo. Los datos no se copian: cada pregunta se traduce a las fuentes en el momento. A la derecha, quien la usa: preguntas de negocio (Rastro Layer), asistentes de IA, modelos y cualquier herramienta que hable los estándares. Rastro Lab es el único camino de ida y vuelta: el modelo toma sus variables de la capa, cada una con su origen, y su predicción vuelve a la capa con los datos que usó, así que se explica y se audita como cualquier otra respuesta (momento 3 de la demo). Para quien sabe SQL: es como una capa de vistas bien documentada, con las uniones y su evidencia escritas una vez; las piezas técnicas están en el anexo («Cómo está armado»).</aside>
 </section>
