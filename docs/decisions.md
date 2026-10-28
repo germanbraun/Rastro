@@ -1554,3 +1554,10 @@ experiment's log as method changes made after it; they do not change its measure
 - **Not done:** a price slide, since a «[US$ __]» placeholder must not reach a prospect; the price stays in
   `docs/piloto.md`. A draft email to a prospect is in `docs/email-prospecto.md`.
 - **Why:** the user asked for all the improvements offered on the executive deck.
+
+## 2026-10-28 — The pilot offer and the one-pager in English
+
+- **What:** `docs/piloto-en.md` and `docs/one-pager-en.md`, translations of `docs/piloto.md` and `docs/one-pager.md`
+  with the same numbers and placeholders; each page links its twin and says the two must say the same. The English
+  prospect email links the English pilot offer.
+- **Why:** an international prospect who gets the English executive deck needs the documents in the same language.

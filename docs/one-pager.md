@@ -43,5 +43,5 @@ Un piloto de 6 semanas con sus datos y sus preguntas: [piloto.md](piloto.md).
 
 ---
 
-Versión técnica: [one-pager-tecnico.md](one-pager-tecnico.md). De dónde sale cada número: `layer/energia/resultados.json`,
+Versión técnica: [one-pager-tecnico.md](one-pager-tecnico.md). En inglés: [one-pager-en.md](one-pager-en.md). De dónde sale cada número: `layer/energia/resultados.json`,
 `layer/energia/cambio/*.json` y `docs/slides/numeros/energia.json`, que también llenan la demo y las diapositivas.

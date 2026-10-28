@@ -4,6 +4,8 @@
 
 **Para:** [nombre de la empresa] · **Preparado por:** [nombre] · **Fecha:** [__]
 
+Versión en inglés: [piloto-en.md](piloto-en.md). Las dos tienen que decir lo mismo.
+
 ## El problema que resuelve
 
 Las preguntas de negocio cruzan bases que no se hablan: la misma empresa escrita de tres formas, los socios dentro

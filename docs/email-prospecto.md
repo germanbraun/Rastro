@@ -42,7 +42,7 @@ We measured it on Argentina's public data: summing production by who reports it,
 oil in 2025; its real share, splitting each concession among its partners, is 12.6. Rastro integrates the sources
 once, with a business dictionary, and every answer says which record each value comes from.
 
-Here is a six-slide summary: [deck link]. The concrete proposal is a 6-week pilot with up to 10 of your questions and
+Here is a six-slide summary: [deck link], and the pilot proposal: [link to piloto-en.md]. The concrete proposal is a 6-week pilot with up to 10 of your questions and
 3 of your sources, with read-only access and about 2 hours a week of a business person. What gets built stays with
 [company], in open standards.
 
