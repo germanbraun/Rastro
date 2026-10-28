@@ -1536,3 +1536,21 @@ experiment's log as method changes made after it; they do not change its measure
   queries were re-run with no change.
 - **Why:** a fix tuned on a holdout is only known to generalize on a set it never saw; this one showed that one of
   the two did not. The second holdout is consumed for the longer-name rule. Its reference was reviewed by AI only.
+
+## 2026-10-28 — The executive deck: a sharper «why trust it», «why now», a sales talk track and an English version
+
+- **Slide 5** (`x-pruebas`, only in the executive deck): four big numbers instead of four paragraphs, and the fourth
+  test is now Rastro Lab (24 of 49 predictions say which value to check, same error as without Rastro) instead of
+  link coverage, which the main deck keeps. All numbers are placeholders.
+- **«Por qué ahora»** (`x-por-que-ahora`): three changes (AI assistants already query the data, sources change often,
+  models have to explain themselves), with no market figures: none were measured.
+- **Speaker notes for sales:** a deck can give a shared slide its own notes (`notes` in `mazos/*.json`), so the
+  executive deck carries a «qué decir» talk track per slide (about 5 minutes) without touching the main deck's notes.
+- **English version:** `mazos/ejecutivo-en.json` with `en-*` slides, generated from the Spanish ones and kept as
+  files; `"lang": "en"` swaps the number separators (US$ 3,600 million). An exception to «decks in Spanish only»,
+  for international prospects; the decks skill says a change to an executive slide goes to its `en-` twin.
+- **Export:** `build.py --export <deck> <folder>` writes the shared deck's slide files with numbers, page numbers and
+  notes filled in. Both shared decks are updated; PowerPoint and PDF come from the deck's own Export menu.
+- **Not done:** a price slide, since a «[US$ __]» placeholder must not reach a prospect; the price stays in
+  `docs/piloto.md`. A draft email to a prospect is in `docs/email-prospecto.md`.
+- **Why:** the user asked for all the improvements offered on the executive deck.

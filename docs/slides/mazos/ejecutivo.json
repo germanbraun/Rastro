@@ -13,13 +13,21 @@
     "e-respuesta",
     "e-esquema-capa",
     "e-integracion",
-    "pruebas-energia",
+    "x-pruebas",
+    "x-por-que-ahora",
     "e-piloto"
   ],
   "sections": {
     "s1": {
-      "description": "El problema, Rastro, un número, por qué confiar y el piloto",
+      "description": "El problema, Rastro, un número, por qué confiar, por qué ahora y el piloto",
       "start": "cover-energia"
     }
+  },
+  "notes": {
+    "cover-energia": "Qué decir (20 segundos): «Rastro es una capa entre las bases de datos de la empresa y las preguntas del negocio. Cada respuesta dice de qué fuente sale cada dato.» Lo que van a ver está medido con datos públicos de petróleo y gas de Argentina; en un piloto, se mide igual con los datos de ustedes. Duración total: unos 5 minutos y preguntas.",
+    "e-respuesta": "Qué decir (45 segundos): una pregunta que todos creen saber, ¿quién produjo más gas en 2025?, tiene dos respuestas correctas. Si se suma por quien declara, gana Total Austral con {{energia.demo.opera_total}} miles de millones de m³: es lo que dicen los rankings, un SQL y un asistente de IA. Si se reparte cada concesión entre sus socios, YPF tiene {{energia.demo.parte_ypf}}. El problema no es el cálculo: es que nadie dice cuál de las dos midió. Rastro escribe la definición una vez y muestra las dos, con su por qué. Preguntar al cliente: «¿Les pasa que dos áreas traen números distintos para lo mismo?»",
+    "e-esquema-capa": "Qué decir (45 segundos): a la izquierda, las bases como vienen; cada una guarda la realidad a su manera. En el medio, Rastro: un diccionario con las palabras del negocio (empresa, concesión, pozo), cómo se traduce cada base a esas palabras, cómo se une la misma empresa entre bases (cada unión con su evidencia) y reglas que comprueban los datos. Los datos no se copian: cada pregunta se traduce a las bases en el momento. A la derecha, quién lo usa: personas, asistentes de IA, modelos y otras herramientas, porque todo está en estándares abiertos. Si preguntan cómo se compara con un data warehouse: no reemplaza las bases ni copia los datos; pone las definiciones y las uniones en un solo lugar.",
+    "e-integracion": "Qué decir (1 minuto): el ejemplo concreto. Sumando por quien declara, a YPF se le asignan {{energia.e01.ypf_sin}} millones de m³ de petróleo; su parte real es {{energia.e01.ypf_con}}. La diferencia, {{energia.e01.exceso}} millones de m³, son unos US$ {{energia.e01.dolares}} millones a US$ {{energia.e01.precio}} el barril (aclarar que el precio es un supuesto). Ese error no es de una persona: es lo que pasa cuando cada consulta resuelve la integración por su cuenta. Con Rastro, los socios se separan una vez y valen para todas las preguntas, y cada número se puede abrir para ver de qué registros sale.",
+    "e-piloto": "Qué decir (1 minuto) y pedir el próximo paso: seis semanas, con sus datos y sus preguntas. Semana 1: elegimos juntos hasta 10 preguntas y 3 fuentes, con una persona de negocio. Semanas 2 a 4: cada pregunta respondida con evidencia y las mismas pruebas de esta demo, medidas sobre sus datos. Semanas 5 y 6: resultados, y si tienen un modelo, explicado con la misma evidencia. Necesitamos acceso de solo lectura, en su infraestructura si prefieren, y unas 2 horas por semana de alguien de negocio. Lo que se construye queda para ellos. Cerrar con una pregunta concreta: «¿Qué pregunta de negocio les gustaría ver respondida así, y con qué fuentes?» El detalle y el precio están en la propuesta de piloto."
   }
 }

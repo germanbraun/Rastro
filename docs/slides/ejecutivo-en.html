@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rastro · Executive summary</title>
+
+<!-- Generado por build.py. No editar a mano: editar slides/ y volver a correr build.py. -->
+<style>
+*{margin:0;box-sizing:border-box}
+body{background:#3A3F4A;display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0}
+.slide{width:calc(1920px * var(--s));height:calc(1080px * var(--s));overflow:hidden}
+section{width:1920px;height:1080px;transform:scale(var(--s));transform-origin:0 0}
+aside{display:none}
+</style>
+<script>
+function fit(){document.documentElement.style.setProperty('--s', Math.min(1, (innerWidth - 48) / 1920))}
+addEventListener('resize', fit); fit();
+</script></head><body>
+<div class="slide">
+<section id="en-cover" data-transition="fade" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<p style="font-size:32px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Rastro · Oil and gas in Argentina</p>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="120" height="120" aria-label="Rastro">
+  <defs>
+    <clipPath id="yema"><ellipse cx="32" cy="32" rx="22" ry="28"/></clipPath>
+    <radialGradient id="halo" cx="50%" cy="48%" r="50%">
+      <stop offset="0%" stop-color="#FFB27A" stop-opacity="0.55"/>
+      <stop offset="45%" stop-color="#8FC3F2" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#8FC3F2" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <ellipse cx="32" cy="33" rx="31" ry="31" fill="url(#halo)"/>
+  <g clip-path="url(#yema)">
+    <path d="M31.15,31.45 A2.00,2.70 0 1 1 32.85,31.45" fill="none" stroke="#FF7A2F" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M30.22,35.05 A4.55,6.14 0 1 1 33.78,35.05" fill="none" stroke="#FF8C42" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M29.46,38.75 A7.10,9.59 0 1 1 34.54,38.75" fill="none" stroke="#FFA05A" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M28.86,42.52 A9.65,13.03 0 1 1 35.14,42.52" fill="none" stroke="#FFB577" stroke-width="1.45" stroke-linecap="round"/>
+    <path d="M28.43,46.35 A12.20,16.47 0 1 1 35.57,46.35" fill="none" stroke="#78BEF5" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.1 1.1"/>
+    <path d="M28.18,50.23 A14.75,19.91 0 1 1 35.82,50.23" fill="none" stroke="#6AB2EF" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.2 1.2"/>
+    <path d="M28.11,54.16 A17.30,23.35 0 1 1 35.89,54.16" fill="none" stroke="#5DA7E9" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.3 1.3"/>
+    <path d="M28.21,58.11 A19.85,26.80 0 1 1 35.79,58.11" fill="none" stroke="#4F9BE4" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.4 1.3"/>
+    <path d="M28.50,62.07 A22.40,30.24 0 1 1 35.50,62.07" fill="none" stroke="#418FDE" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.6 1.4"/>
+    <path d="M28.10,65.87 A24.95,33.68 0 1 1 35.90,65.87" fill="none" stroke="#3484D8" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.7 1.4"/>
+    <path d="M27.70,69.67 A27.50,37.12 0 1 1 36.30,69.67" fill="none" stroke="#2678D2" stroke-width="1.45" stroke-linecap="round" stroke-dasharray="1.8 1.5"/>
+  </g>
+  <circle cx="32" cy="29" r="1.3" fill="#FF7A2F"/>
+</svg>
+<h1 style="font-family:'Times New Roman', Times, serif;font-size:120px;font-weight:600;line-height:1.05;color:#F7F6F2">Rastro</h1>
+<p style="font-size:56px;line-height:1.2;color:#F7F6F2;width:1500px">The data changes. The questions don't.</p>
+<p style="font-size:32px;line-height:1.3;color:#D7DEE8;width:1400px">A semantic layer over an organization's data: business questions, with the source of every value.</p>
+<aside>What to say (20 seconds): «Rastro is a layer between a company's databases and its business questions. Every answer says which source each value comes from.» What you are about to see is measured on public oil and gas data from Argentina; in a pilot, it is measured the same way on your data. About 5 minutes plus questions.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="en-respuesta" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">The problem</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">One question, two meanings: who produced the most gas in Argentina in 2025?</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:28px;color:#7A8699;font-weight:700;text-transform:uppercase;letter-spacing:1px">What each company operates</p>
+<p style="font-size:40px;line-height:1.35">Total Austral 12.3<br>YPF 11.7<br>Tecpetrol 6.9</p>
+<p style="font-size:28px;line-height:1.4;color:#4A5568">What published rankings, a SQL query over the official filings and a web-searching AI assistant say. Each operator reports all the gas of the concession, its partners' share included.</p>
+</div>
+<div style="flex:1;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:18px">
+<p style="font-size:28px;font-weight:700;text-transform:uppercase;letter-spacing:1px">What each one owns, with Rastro</p>
+<p style="font-size:40px;line-height:1.35">YPF 12.3<br>Tecpetrol 6.4<br>Total Austral 5.2</p>
+<p style="font-size:28px;line-height:1.4">Each concession's gas split by each partner's stake, with the rule and the records behind every number.</p>
+</div>
+</div>
+<p style="font-size:28px;color:#4A5568">Billions of m³. Nobody says what they measured. Rastro writes the definition once and shows both, and why.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Oil and gas in Argentina</p><p>2</p></div>
+<aside>What to say (45 seconds): a question everyone thinks they know, who produced the most gas in 2025, has two correct answers. Summing by who reports it, Total Austral wins with 12.3 billion m³: that is what the rankings, a SQL query and an AI assistant say. Splitting each concession among its partners, YPF has 12.3. The problem is not the arithmetic: nobody says which of the two they measured. Rastro writes the definition once and shows both, with the why. Ask the prospect: «Do two of your teams bring different numbers for the same thing?»</aside>
+</section>
+</div>
+<div class="slide">
+<section id="en-esquema" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">What a semantic layer is</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">A business dictionary between the sources and whoever asks</h2>
+<div style="width:1664px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 600" width="1664" height="600" font-family="Times New Roman, Times, serif" aria-label="The sources, as they come, are translated into a business dictionary with its links and rules; questions, AI assistants, models and other tools use it">
+<defs>
+<marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
+<marker id="flecha-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#2F6FB5"/></marker>
+<marker id="flecha-vuelta" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M10,0 L0,5 L10,10 z" fill="#2F6FB5"/></marker>
+</defs>
+<text x="230" y="30" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">THE SOURCES, AS THEY COME</text>
+<text x="832" y="30" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">THE SEMANTIC LAYER</text>
+<text x="1434" y="30" text-anchor="middle" font-size="22" font-weight="700" letter-spacing="2" fill="#2F6FB5">WHO USES IT</text>
+<rect x="20" y="60" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="230" y="105" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Production per well</text>
+<text x="230" y="140" text-anchor="middle" font-size="22" fill="#4A5568">tables of the official filings</text>
+<rect x="20" y="190" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="230" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Concession map</text>
+<text x="230" y="270" text-anchor="middle" font-size="22" fill="#4A5568">the partners, inside a text</text>
+<rect x="20" y="320" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="230" y="365" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Company register</text>
+<text x="230" y="400" text-anchor="middle" font-size="22" fill="#4A5568">another name for the same company</text>
+<rect x="20" y="450" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="230" y="495" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Pipelines and towns</text>
+<text x="230" y="530" text-anchor="middle" font-size="22" fill="#4A5568">points and lines on a map</text>
+<line x1="442" y1="115" x2="516" y2="200" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="442" y1="245" x2="516" y2="260" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="442" y1="375" x2="516" y2="330" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="442" y1="505" x2="516" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<rect x="520" y="50" width="624" height="520" rx="20" fill="#2F6FB5"/>
+<rect x="548" y="74" width="568" height="262" rx="14" fill="#FFFFFF"/>
+<text x="572" y="108" font-size="24" font-weight="700" fill="#14213D">The business dictionary</text>
+<ellipse cx="640" cy="170" rx="92" ry="34" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="640" y="179" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Company</text>
+<ellipse cx="1024" cy="170" rx="96" ry="34" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="1024" y="179" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Concession</text>
+<ellipse cx="832" cy="286" rx="78" ry="32" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="832" y="295" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Well</text>
+<line x1="734" y1="170" x2="926" y2="170" stroke="#2F6FB5" stroke-width="2.5" marker-end="url(#flecha-azul)"/>
+<text x="830" y="156" text-anchor="middle" font-size="22" fill="#2F6FB5">partner in (with its %)</text>
+<line x1="680" y1="200" x2="772" y2="264" stroke="#2F6FB5" stroke-width="2.5" marker-end="url(#flecha-azul)"/>
+<text x="712" y="252" text-anchor="end" font-size="22" fill="#2F6FB5">operates</text>
+<line x1="892" y1="264" x2="986" y2="202" stroke="#2F6FB5" stroke-width="2.5" marker-end="url(#flecha-azul)"/>
+<text x="950" y="252" font-size="22" fill="#2F6FB5">in</text>
+<rect x="548" y="356" width="176" height="104" rx="12" fill="#4A84C4"/>
+<text x="636" y="398" text-anchor="middle" font-size="24" font-weight="700" fill="#FFFFFF">Translations</text>
+<text x="636" y="430" text-anchor="middle" font-size="19" fill="#FFFFFF">column → concept</text>
+<rect x="744" y="356" width="176" height="104" rx="12" fill="#4A84C4"/>
+<text x="832" y="398" text-anchor="middle" font-size="24" font-weight="700" fill="#FFFFFF">Links</text>
+<text x="832" y="430" text-anchor="middle" font-size="19" fill="#FFFFFF">with their evidence</text>
+<rect x="940" y="356" width="176" height="104" rx="12" fill="#4A84C4"/>
+<text x="1028" y="398" text-anchor="middle" font-size="24" font-weight="700" fill="#FFFFFF">Quality</text>
+<text x="1028" y="430" text-anchor="middle" font-size="19" fill="#FFFFFF">rules</text>
+<text x="832" y="508" text-anchor="middle" font-size="24" fill="#FFFFFF">The data is not copied: each question</text>
+<text x="832" y="540" text-anchor="middle" font-size="24" fill="#FFFFFF">is translated to the sources on the fly.</text>
+<line x1="1146" y1="200" x2="1220" y2="115" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="1146" y1="260" x2="1220" y2="245" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<line x1="1146" y1="330" x2="1220" y2="375" stroke="#2F6FB5" stroke-width="3" marker-start="url(#flecha-vuelta)" marker-end="url(#flecha-azul)"/>
+<line x1="1146" y1="400" x2="1220" y2="505" stroke="#4A5568" stroke-width="2.5" marker-end="url(#flecha)"/>
+<rect x="1224" y="60" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1434" y="105" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Business questions</text>
+<text x="1434" y="140" text-anchor="middle" font-size="22" fill="#4A5568">in the business's own words</text>
+<rect x="1224" y="190" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1434" y="235" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">AI assistants</text>
+<text x="1434" y="270" text-anchor="middle" font-size="22" fill="#4A5568">ask by concept and cite</text>
+<rect x="1224" y="320" width="420" height="110" rx="14" fill="#E8F0FA" stroke="#2F6FB5" stroke-width="2"/>
+<text x="1434" y="365" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Rastro Lab: models</text>
+<text x="1434" y="400" text-anchor="middle" font-size="22" fill="#14213D">the prediction comes back with its evidence</text>
+<rect x="1224" y="450" width="420" height="110" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
+<text x="1434" y="495" text-anchor="middle" font-size="28" font-weight="700" fill="#14213D">Other tools</text>
+<text x="1434" y="530" text-anchor="middle" font-size="22" fill="#4A5568">open W3C standards</text>
+</svg></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Oil and gas in Argentina</p><p>3</p></div>
+<aside>What to say (45 seconds): on the left, the databases as they come; each one stores reality its own way. In the middle, Rastro: a dictionary in the business's words (company, concession, well), how each database translates into those words, how the same company is linked across databases (each link with its evidence) and rules that check the data. The data is not copied: each question is translated to the databases on the fly. On the right, who uses it: people, AI assistants, models and other tools, because everything is in open standards. If asked how it compares to a data warehouse: it does not replace the databases or copy the data; it puts the definitions and the links in one place.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="en-integracion" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">1 · Ask</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.12;width:1664px">«How much of 2025's oil belongs to each company?»</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Without Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">YPF: 21.4 M m³</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Summing by the reporting company: YPF gets everything it operates, its partners' share included.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">With Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">YPF: 12.6 M m³</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Its share of each concession, by its partners. Each company linked across sources: Vista adds half of La Amarga Chica, bought from Petronas (a correction with its source, reviewed by AI: a person still has to confirm it).</p></div>
+</div>
+<p style="font-size:32px;line-height:1.35;width:1400px"><b>8.8 million m³ over-assigned: about US$ 3,600 million</b> <span style="color:#4A5568">at US$ 65 a barrel (an assumption). The partners are split once and hold for every question.</span></p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Oil and gas in Argentina</p><p>4</p></div>
+<aside>What to say (1 minute): the concrete example. Summing by who reports it, YPF is assigned 21.4 million m³ of oil; its real share is 12.6. The difference, 8.8 million m³, is about US$ 3,600 million at US$ 65 a barrel (say the price is an assumption). That error is not one person's: it is what happens when every query solves the integration on its own. With Rastro the partners are split once and hold for every question, and each number can be opened to see the records behind it.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="en-pruebas" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Why trust it</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">Four tests, measured on public data</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:28px;font-weight:700;color:#7A8699;text-transform:uppercase;letter-spacing:1px">Correct answers</p><p style="font-size:72px;font-weight:700;color:#2F6FB5;line-height:1">10 of 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Without Rastro, 7 of 10.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:28px;font-weight:700;color:#7A8699;text-transform:uppercase;letter-spacing:1px">Same question, 4 wordings</p><p style="font-size:72px;font-weight:700;color:#2F6FB5;line-height:1">5 of 5</p><p style="font-size:28px;line-height:1.4;color:#4A5568">give the same answer. Without Rastro, 3 of 5.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:28px;font-weight:700;color:#7A8699;text-transform:uppercase;letter-spacing:1px">A source changes</p><p style="font-size:72px;font-weight:700;color:#2F6FB5;line-height:1">1 line</p><p style="font-size:28px;line-height:1.4;color:#4A5568">to fix it. Without Rastro, 3 broken queries you first have to find.</p></div>
+<div style="flex:1;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:28px;font-weight:700;color:#D7E6F7;text-transform:uppercase;letter-spacing:1px">An explained model</p><p style="font-size:72px;font-weight:700;line-height:1">24 of 49</p><p style="font-size:28px;line-height:1.4">predictions say which value to check. Same error as without Rastro (16.7).</p></div>
+</div>
+<p style="font-size:28px;line-height:1.4;width:1664px;color:#4A5568"><b style="color:#14213D">In fairness:</b> with the same links, well-written SQL also gets 10 of 10. The value is integrating once and keeping it in one place. A person still has to confirm the references.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Oil and gas in Argentina</p><p>5</p></div>
+<aside>What to say (1 minute): «We don't ask you to believe us: we measured it.» One: of 10 business questions, Rastro answers 10 correctly; SQL over the tables as they come, 7. Two: the same question in four wordings gives the same answer in 5 of 5; without Rastro, in 3. Three: when the source renames a column, with Rastro you fix one line; without it there are broken queries you first have to find. Four: a model predicting the gas of new wells is as accurate with and without Rastro, but with Rastro each prediction says which value to check. Close on fairness, which is what builds trust: with the same links good SQL also gets it right; what we sell is the integration done once. If asked who built the references: an AI assistant; a person still has to confirm them, and in the pilot someone from the company does.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="en-por-que-ahora" style="background:#14213D;color:#F7F6F2;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:600;color:#8FB8E8;letter-spacing:2px;text-transform:uppercase">Why now</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px;color:#F7F6F2">Three changes make integrating once worth more</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;border-top:4px solid #8FB8E8;padding:32px 0 0;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700;line-height:1.2">AI already queries the data</p><p style="font-size:28px;line-height:1.45;color:#D7DEE8">It answers fast, but without shared definitions each assistant picks its own. With a business dictionary, it asks by concept and cites the source.</p></div>
+<div style="flex:1;border-top:4px solid #8FB8E8;padding:32px 0 0;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700;line-height:1.2">Sources change often</p><p style="font-size:28px;line-height:1.45;color:#D7DEE8">New versions, renamed columns, other units. If the integration lives in every query, every change is fixed many times.</p></div>
+<div style="flex:1;border-top:4px solid #8FB8E8;padding:32px 0 0;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700;line-height:1.2">Models have to explain themselves</p><p style="font-size:28px;line-height:1.45;color:#D7DEE8">A number without evidence cannot be audited or defended. With Rastro, every prediction says where each value comes from.</p></div>
+</div>
+<p style="font-size:32px;line-height:1.35;width:1500px">What gets built stays in open standards: it belongs to the company and does not need Rastro to be read.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#8FB8E8"><p>Rastro · Oil and gas in Argentina</p><p>6</p></div>
+<aside>What to say (45 seconds): integrating data is not a new problem; what is new is what it costs not to solve it. First, teams already use AI assistants to query their data: without a common dictionary, each one defines «YPF's production» its own way and nobody knows where the number comes from. Second, sources change all the time, and if every query, dashboard and model solves the integration on its own, every change is fixed many times. Third, when a model decides something, someone asks why: Rastro returns the evidence. And what gets built stays in open standards, so there is no lock-in to us. Give no market figures here: we did not measure them.</aside>
+</section>
+</div>
+<div class="slide">
+<section id="en-piloto" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">Next step</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">A 6-week pilot, with your data and your questions</h2>
+<div style="display:flex;gap:28px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:28px;font-weight:700;color:#2F6FB5">Week 1</p><p style="font-size:32px;font-weight:700;line-height:1.2">The questions and the sources</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Up to 10 business questions and 3 of your sources, approved by someone from the business.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:28px;font-weight:700;color:#2F6FB5">Weeks 2 to 4</p><p style="font-size:32px;font-weight:700;line-height:1.2">Every question, answered with evidence</p><p style="font-size:28px;line-height:1.4;color:#4A5568">The dictionary, the links between sources and this demo's same tests, measured on your data.</p></div>
+<div style="flex:1;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:28px;font-weight:700;color:#D7E6F7">Weeks 5 and 6</p><p style="font-size:32px;font-weight:700;line-height:1.2">Results and next step</p><p style="font-size:28px;line-height:1.4">Optional: one of your models explained with the same evidence. A report with the numbers and the limits.</p></div>
+</div>
+<div style="display:flex;gap:28px">
+<p style="flex:1;font-size:28px;line-height:1.4"><b>What we need:</b> <span style="color:#4A5568">read-only access to the sources, on your infrastructure if you prefer, and a business person for about 2 hours a week.</span></p>
+<p style="flex:1;font-size:28px;line-height:1.4"><b>What stays:</b> <span style="color:#4A5568">the dictionary, the translations and the links with their evidence, in open standards: they are yours.</span></p>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Oil and gas in Argentina</p><p>7</p></div>
+<aside>What to say (1 minute), then ask for the next step: six weeks, with your data and your questions. Week 1: together we choose up to 10 questions and 3 sources, with a business person. Weeks 2 to 4: every question answered with evidence, and this demo's same tests measured on your data. Weeks 5 and 6: results and, if you have a model, explained with the same evidence. We need read-only access, on your infrastructure if you prefer, and about 2 hours a week of a business person. What gets built stays with you. Close with a concrete question: «Which business question would you like to see answered this way, and from which sources?» The details and the price are in the pilot proposal.</aside>
+</section>
+</div>
+</body></html>

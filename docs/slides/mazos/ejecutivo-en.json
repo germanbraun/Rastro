@@ -1,0 +1,27 @@
+{
+  "v": 4,
+  "lists": "css",
+  "faces": {},
+  "designSystems": [],
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-28T23:00:00Z"
+  },
+  "title": "Rastro · Executive summary",
+  "lang": "en",
+  "order": [
+    "en-cover",
+    "en-respuesta",
+    "en-esquema",
+    "en-integracion",
+    "en-pruebas",
+    "en-por-que-ahora",
+    "en-piloto"
+  ],
+  "sections": {
+    "s1": {
+      "description": "The problem, Rastro, one number, why trust it, why now and the pilot",
+      "start": "en-cover"
+    }
+  }
+}

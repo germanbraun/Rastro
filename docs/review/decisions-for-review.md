@@ -402,6 +402,12 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q40.** Is a second AI-annotated holdout enough to accept a linker rule, or should every rule change wait for a
   person's sample? Should the guard's `renamed` field be generalized to any schema change a test makes?
 
+
+**H5. The executive deck for sales** (2026-10-28)
+- **Decision:** slide 5 becomes four big numbers with Rastro Lab as the fourth test; a «why now» slide with no market
+  figures; a per-deck sales talk track in the speaker notes; an English twin of every executive slide.
+- **Q41.** Is a «why now» slide without numbers convincing, or does it read as opinion? Is keeping English slides as
+  separate files (rather than a translation layer) the simpler way to keep them in step?
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -473,7 +479,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q40). Skip any you have no view on.
+- Answer per question number (Q1–Q41). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same
