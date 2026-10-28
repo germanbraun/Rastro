@@ -8,7 +8,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "app"))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "layer"))
-from lab_walkthrough import FACTORS, GROUPS, compare_run, same_inputs, value_status
+from extensions.gas_lab.lab_walkthrough import FACTORS, GROUPS, compare_run, same_inputs, value_status
 import modelo
 
 
@@ -111,20 +111,21 @@ def test_every_model_input_has_exactly_one_explanation_group():
 def test_audit_uses_captured_run_without_refetching_latest(run_id):
     from streamlit.testing.v1 import AppTest
     script = f'''
-import dominio, lab
+import dominio
+from extensions.gas_lab import lab
 from unittest.mock import patch
 example = {{'aviso': 'Datos de prueba', 'selector': 'Paso',
  'ui': {{'run_missing': 'Sin corrida publicada'}}, 'pasos': [{{'titulo': 'Auditar', 'contenido': 'Evidencia',
  'consultas': [{{'titulo': 'Resultado', 'sparql':
    'SELECT ?value WHERE {{ VALUES ?run {{ <https://example.org/{{corrida_publicada}}> }} '
-   'VALUES ?well {{ <https://example.org/{{pozo_ejemplo}}> }} }}'}}] * 2}}]}}
+   'VALUES ?well {{ <https://example.org/{{registro_ejemplo}}> }} }}'}}] * 2}}]}}
 def query(text, domain):
     assert '<https://example.org/captured-run>' in text
     assert '<https://example.org/21>' in text
     return ['value'], [[1]]
 with patch.object(lab, 'published_snapshot', side_effect=AssertionError('Must not select a different run')), \\
      patch.object(dominio.common, 'run', side_effect=query):
-    dominio.show_integration_example(example, 'energia', False, pozo='21', run_id={run_id!r})
+    dominio.show_integration_example(example, 'energia', False, record='21', run_id={run_id!r})
 '''
     app = AppTest.from_string(script).run(timeout=15)
     assert not app.exception, [error.message for error in app.exception]
@@ -140,7 +141,7 @@ def test_calculation_renders_inside_walkthrough_expander(example):
 
     def page(frame, fitted, config):
         import streamlit as st
-        import lab
+        from extensions.gas_lab import lab
         from unittest.mock import patch
         with patch.object(lab, 'datos', return_value=(frame, frame, None, {'B': fitted})), \
              patch.object(lab, 'show_source_evidence', side_effect=lambda *args, **kwargs: st.caption('Source panel')):

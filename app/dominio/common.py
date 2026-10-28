@@ -86,12 +86,15 @@ def warm_up():
     models are computed in the background, so the demo does not wait."""
     import threading
 
-    def lab_work():   # the model takes the longest: it starts at once, next to the questions
-        try:
-            import lab
-            lab.datos()
-        except Exception:   # noqa: BLE001
-            pass
+    def lab_work():   # a model takes the longest: it starts at once, next to the questions
+        from . import extension
+        for config in sorted(p for p in Path("/app/dominios").glob("*.yaml") if not p.name.endswith(".en.yaml")):
+            try:
+                ext = extension.load(yaml.safe_load(config.read_text()))
+                if ext:
+                    ext.warm_up()
+            except Exception:   # noqa: BLE001
+                pass
 
     def work():
         for config in sorted(p for p in Path("/app/dominios").glob("*.yaml") if not p.name.endswith(".en.yaml")):

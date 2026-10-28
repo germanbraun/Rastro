@@ -1301,3 +1301,17 @@ experiment's log as method changes made after it; they do not change its measure
   to the GitHub repository in the app's sidebar, in Spanish and English.
 - **The repository is public;** the plan's open question about keeping it private is closed by that.
 - **Why:** the user wants developers to be able to run, review and debug Rastro on their own.
+
+## 2026-10-28 — Decoupling, step 1: Rastro Lab is the oil and gas extension
+
+- **What:** the shared screen (`app/dominio/`) no longer imports Rastro Lab. A domain names its own code in its YAML
+  (`extension: gas_lab.GasLab`); `app/dominio/extension.py` defines the interface (`Extension`: a tab, a walkthrough's
+  example record and published run, its step flags, a demo moment, the warm-up, its slide numbers), every method
+  empty by default. The Lab tab's three modules moved unchanged to `app/extensions/gas_lab/`. The walkthrough
+  placeholder `{pozo_ejemplo}` is now `{registro_ejemplo}`.
+- **Same screen:** every visible text of the four domains, in Spanish and English, is identical before and after
+  (`app/text_snapshot.py`, 16 views); the slide numbers JSON is identical; `check_domain.py` passes for oil and gas,
+  suppliers and affiliations; the Lab demo moment and the four walkthrough steps checked in the browser. The
+  model's code (`lab/gas/modelo.py`) is not touched, so its published run stays valid. Nothing re-measured.
+- **Inside the extension,** `lab.py` still names `energia`: that is its domain, so it is not coupling.
+- **Why:** the user asked that the main app stay independent of the domains (plan in `docs/plan-decoupling.md`).

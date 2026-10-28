@@ -72,7 +72,7 @@ def test_actual_tree_labels_render_from_domain_yaml(monkeypatch):
     root = Path(__file__).resolve().parents[1]
     monkeypatch.syspath_prepend(str(root / 'app'))
     monkeypatch.syspath_prepend(str(root / 'layer'))
-    from lab_alternative import tree_svg
+    from extensions.gas_lab.lab_alternative import tree_svg
     ui = yaml.safe_load((root / 'app/dominios/energia.yaml').read_text())['alternative_lab']
     path = {'steps': [{'feature': 'etapas', 'value': 53., 'threshold': 30., 'operator': '<', 'yes': False},
                       {'feature': 'grupo=A & B', 'value': 1., 'threshold': .5, 'operator': '≤', 'yes': False}], 'leaf': .1}
@@ -94,7 +94,7 @@ def test_well_accuracy_compares_distance_to_observed(monkeypatch, prediction, ri
     root = Path(__file__).resolve().parents[1]
     monkeypatch.syspath_prepend(str(root / 'app'))
     monkeypatch.syspath_prepend(str(root / 'layer'))
-    from lab_alternative import compare_errors
+    from extensions.gas_lab.lab_alternative import compare_errors
     result, error, baseline = compare_errors(prediction, ridge, observed)
     assert result == status
     assert (error, baseline) == errors

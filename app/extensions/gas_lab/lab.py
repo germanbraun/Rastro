@@ -12,7 +12,7 @@ import streamlit as st
 import answer
 import enlaces
 import idioma
-from lab_walkthrough import GROUPS, compare_run, value_status
+from .lab_walkthrough import GROUPS, compare_run, value_status
 from dominio import ayuda, data_version, md, tabla
 
 sys.path.insert(0, "/lab/gas")

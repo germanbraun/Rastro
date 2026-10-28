@@ -40,8 +40,9 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | `dominio/trust_view.py` | «Por qué confiar»: the measured evaluation, the change and correction tests, the «sin dato» test |
 | `dominio/faq.py` | «Preguntas frecuentes» and the glossary |
 | `dominio/common.py` | What they share: configuration, cached queries (`run`), tables (`tabla`), short texts |
-| `lab.py` | The «Rastro Lab» tab: the gas model with and without Rastro, and each well's explanation |
-| `layer_story.py`, `lab_walkthrough.py`, `lab_alternative.py` | The «Paso a paso» walkthroughs and the alternative model view |
+| `dominio/extension.py` | The interface a domain's own code implements (`Extension`): a model tab, its walkthrough steps, its demo moment, its slide numbers. The domain names its class in its YAML (`extension:`) |
+| `extensions/gas_lab/` | Oil and gas: Rastro Lab (`GasLab`), with the tab (`lab.py`), the walkthrough comparisons (`lab_walkthrough.py`) and the alternative model view (`lab_alternative.py`) |
+| `layer_story.py` | The «Paso a paso» of an answer: its calculation, connections and evidence |
 | `contraste.py` | The numbers of the «Sin Rastro / Con Rastro» cards, read live; also writes the slides' numbers |
 | `idioma.py` | Spanish by default, English on request: `t(key)` reads `textos/*.yaml`, `localized()` overlays `*.en.yaml` |
 | `enlaces.py` | The one mark for a link's review status (rule, AI-reviewed, person-confirmed) |

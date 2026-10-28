@@ -61,12 +61,13 @@ the semantic layer, one step per part of Rastro, and every number on screen come
      opens inside «Por qué confiar»; for `ejemplo_lab`, an expander inside the model's tab), `encabezado`, `para_que`, `aviso` (which real case, read live) and
      `selector`;
    - for each step in `pasos`: `titulo`, `parte`, `contenido`, `consultas` (each with `titulo` and `sql` or
-     `sparql`; `{pozo_ejemplo}` in a query is replaced by the model's example record), and optionally `tecnico` with
-     `lenguaje` (shown only in the technical view) and `calculo_pozo` (the model's real calculation for its example
-     record, variable by variable and grouped).
+     `sparql`; for a model, `{registro_ejemplo}` is replaced by its example record and `{corrida_publicada}` by its
+     published run), and optionally `tecnico` with `lenguaje` (shown only in the technical view). A model's own
+     step flags are read by its extension (`app/extensions/`, `show_step`).
 
    Write the same texts in English in `app/dominios/<domain>.en.yaml`, under the same keys.
-   `app/dominio/answers.py` (`show_integration_example`) renders it; a domain needs no code.
+   `app/dominio/answers.py` (`show_integration_example`) renders it; a domain needs no code, except a model's
+   extension.
 3. **Slides and script:** one slide per step, kicker «Paso a paso · Datos reales · Parte de Rastro: …» and a «Para
    qué» line. Build them with the skill `decks`.
    - **Placement:** the semantic-layer walkthrough opens the technical appendix, right after its title slide and

@@ -19,6 +19,7 @@ import enlaces
 import idioma
 
 from . import common
+from . import extension
 from . import hood
 from . import trust_view
 
@@ -230,9 +231,11 @@ def loaded(source_ids):
     return rows
 
 
-def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=None):
+def show_integration_example(example, domain, tech, key=None, record=None, run_id=None, ext=None):
     """A walkthrough on real data: what it is for, which part of Rastro each step shows, and each step's live
-    queries (raw sources with SQL as they come, Rastro with SPARQL), so every number on screen comes from a query."""
+    queries (raw sources with SQL as they come, Rastro with SPARQL), so every number on screen comes from a query.
+    A model's walkthrough has its extension (ext): {registro_ejemplo} is the model's example record (record, if
+    given), {corrida_publicada} its published run (run_id, if given), and the extension adds to each step."""
     steps = example["pasos"]
     if example.get("encabezado"):
         st.markdown(f"### {common.md(example['encabezado'])}")
@@ -252,11 +255,9 @@ def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=
     missing_run_shown = False
     for n, query in enumerate(step.get("consultas", [])):
         if "{corrida_publicada}" in str(query):
-            import lab
             from urllib.parse import quote
             if run_id is None:
-                snapshot = lab.published_snapshot()
-                run_id = snapshot["run"]["id"] if snapshot else ""
+                run_id = ext.published_run() if ext else ""
             if not run_id:
                 if not missing_run_shown:
                     st.info(example["ui"]["run_missing"])
@@ -264,10 +265,9 @@ def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=
                 continue
             query = {k: v.replace("{corrida_publicada}", quote(str(run_id), safe=""))
                      for k, v in query.items()}
-        if "{pozo_ejemplo}" in str(query):   # the model's example well, the same one the Lab tab opens with
-            import lab
-            pozo = pozo if pozo is not None else lab.modelo.pozo_ejemplo(lab.datos()[1])
-            query = {k: v.replace("{pozo_ejemplo}", str(pozo)) for k, v in query.items()}
+        if "{registro_ejemplo}" in str(query):   # the model's example record, the same one its tab opens with
+            record = record if record is not None else ext.example_record()
+            query = {k: v.replace("{registro_ejemplo}", str(record)) for k, v in query.items()}
         st.markdown(f"**{common.md(query['titulo'])}**")
         if query.get("sql"):
             columns, rows = common.sql_table(query["sql"], domain, approach="B")
@@ -276,17 +276,8 @@ def show_integration_example(example, domain, tech, key=None, pozo=None, run_id=
         common.tabla(pd.DataFrame(rows, columns=columns), key=f"{key or domain}_paso{selected}_{n}")
         if tech:
             st.code(query.get("sql") or query["sparql"], language="sql" if query.get("sql") else "sparql")
-    if step.get("entrada_pozo"):
-        import lab
-        lab.show_input_row(pozo, example, tech)
-    if step.get("calculo_pozo"):
-        import lab
-        lab.show_calculation(pozo=pozo, config=example, tech=tech)
-    if step.get("evidencia_pozo"):
-        import lab
-        st.markdown(example["ui"]["current_evidence_title"])
-        common.tabla(lab.current_evidence(pozo).rename(columns=example["ui"]["evidence_columns"]),
-              key=f"{key or domain}_current_evidence")
+    if ext:
+        ext.show_step(step, example, record, tech, key or domain)
     if tech and step.get("tecnico"):
         st.code(step["tecnico"], language=step.get("lenguaje", "turtle"))
 
@@ -312,8 +303,7 @@ def show_demo(cfg, tech):
     if tipo == "cambio":
         trust_view.show_change_short(cfg, common.read_json(cfg["cambio"]), step.get("escenario"), tech)
     elif tipo == "lab":
-        import lab
-        lab.show_well(key=f"{key}_pozo", pozo=lab.modelo.pozo_ejemplo(lab.datos()[1]))
+        extension.load(cfg).show_demo_moment(key)
     elif tipo == "correccion":
         trust_view.show_correction(common.read_json(cfg["correccion"]), tech)
     elif step.get("texto"):

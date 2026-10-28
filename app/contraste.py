@@ -60,10 +60,11 @@ def key(name):
     return name.split()[0].lower()
 
 
-def story_numbers(cfg, sparql, number, lab=None):
+def story_numbers(cfg, sparql, number, ext=None):
     """The other numbers the demo slides show, each from where the app reads it: the two readings of the first
     «Comprobar una afirmación», the «sin dato» test, the quality rules, the saved Wikidata enrichment and, when
-    lab() is given, Rastro Lab. number(value, decimals) formats; values by company are keyed by key()."""
+    the domain has an extension (ext), its own numbers (Rastro Lab's, for oil and gas). number(value, decimals)
+    formats; values by company are keyed by key()."""
     out = {}
     claims = (cfg.get("afirmaciones") or {}).get("ejemplos") or []
     if claims:
@@ -105,12 +106,8 @@ def story_numbers(cfg, sparql, number, lab=None):
         rows = list(csv.DictReader(open(saved)))
         out.update({f"externo_{key(r['empresa'])}": millions(r["su_parte_m3"], "m3", "es") for r in rows})
         out["externo_con_lei"] = number(len(rows), 0)
-    if lab:
-        result = lab()
-        r, (doubtful, tested), start = result[3], result[5], result[8]
-        out.update(error_a=number(r["A"]["error"], 1), error_b=number(r["B"]["error"], 1),
-                   dudosos=number(doubtful, 0), probados=number(tested, 0),
-                   con_fractura=number(start["con_fractura"], 0), tarde=number(start["tarde"], 0))
+    if ext:
+        out.update(ext.story_numbers(number))
     return out
 
 
@@ -145,11 +142,9 @@ def main(domain):
         if card.get("valores"):
             numbers[item["id"]] = shown(card, values(card, sql, sparql),
                                         lambda value, decimals: format_number(value, decimals, "es"))
-    lab = None
-    if cfg.get("lab"):
-        import lab as lab_tab
-        lab = lab_tab.calcular
-    numbers["demo"] = story_numbers(cfg, sparql, lambda value, decimals: format_number(value, decimals, "es"), lab)
+    from dominio import extension
+    numbers["demo"] = story_numbers(cfg, sparql, lambda value, decimals: format_number(value, decimals, "es"),
+                                    extension.load(cfg))
     print(json.dumps(numbers, ensure_ascii=False, indent=1))
 
 

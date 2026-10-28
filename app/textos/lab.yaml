@@ -1,4 +1,4 @@
-# Texts of the oil and gas «Rastro Lab» tab (app/lab.py), in Spanish and English. Read with idioma.t("<key>").
+# Texts of the oil and gas «Rastro Lab» tab (app/extensions/gas_lab/lab.py), in Spanish and English. Read with idioma.t("<key>").
 # The per-well explanation sentences, factor and fact names are in app/textos/modelo.yaml (lab/gas/modelo.py reads them).
 lab.datos.spinner:
   es: "Preparando el modelo: se entrena dos veces, con las tablas originales y con Rastro. La primera vez después de un cambio en los datos tarda unos 30 segundos; después queda guardado."

@@ -8,10 +8,11 @@ from textwrap import wrap
 import pandas as pd
 import streamlit as st
 
-import alternative
 import idioma
-import lab
 from dominio import tabla
+
+from . import lab
+import alternative  # noqa: E402  (lab/gas/alternative.py, on the path once lab is imported)
 
 
 def load_artifact():

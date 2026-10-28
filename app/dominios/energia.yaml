@@ -691,8 +691,8 @@ cambios:
       - "prod_pet AS petroleo_m3, prod_gas AS gas_mm3"
       - "petroleo AS petroleo_m3, prod_gas AS gas_mm3"
 
-# Rastro Lab: el mismo modelo de gas con y sin Rastro (app/lab.py, lab/gas/modelo.py)
-lab: gas
+# Rastro Lab: the same gas model with and without Rastro (lab/gas/modelo.py)
+extension: gas_lab.GasLab   # app/extensions/gas_lab/: the Rastro Lab tab, its walkthrough steps and its demo moment
 fuera:                         # ¿dice cuándo no tiene el dato? lo mide layer/fuera.py
   archivo: /layer/energia/fuera/resultados.json
   intro: >-
@@ -1285,7 +1285,7 @@ ejemplo_lab:
         - titulo: La predicción publicada (corrida comparada, millones de m³)
           sparql: >-
             SELECT ?prediccion ?minimo ?maximo ?corrida WHERE {
-              ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{pozo_ejemplo}> ;
+              ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{registro_ejemplo}> ;
                  prov:wasGeneratedBy ?run ; energia:predictedGas ?prediccion ; energia:predictedLow ?minimo ;
                  energia:predictedHigh ?maximo .
               VALUES ?run { <https://w3id.org/rastro/energia/modelrun/{corrida_publicada}> }
@@ -1294,7 +1294,7 @@ ejemplo_lab:
         - titulo: Lo que sumó cada factor, guardado con la predicción
           sparql: >-
             SELECT ?factor ?aporte WHERE {
-              ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{pozo_ejemplo}> ;
+              ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{registro_ejemplo}> ;
                  prov:wasGeneratedBy ?run .
               VALUES ?run { <https://w3id.org/rastro/energia/modelrun/{corrida_publicada}> }
               ?c energia:ofPrediction ?p ; energia:factor ?factor ; energia:amount ?aporte .
@@ -1302,7 +1302,7 @@ ejemplo_lab:
         - titulo: Los registros que usó, con su regla, su evidencia y su fuente
           sparql: >-
             SELECT ?r ?registro ?regla ?evidencia ?src ?fuente ?cargado WHERE {
-              ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{pozo_ejemplo}> ;
+              ?p a energia:Prediction ; energia:aboutWell <https://w3id.org/rastro/energia/well/{registro_ejemplo}> ;
                  prov:wasGeneratedBy ?run ; prov:used ?r .
               VALUES ?run { <https://w3id.org/rastro/energia/modelrun/{corrida_publicada}> }
               VALUES (?tipo ?registro) { (energia:WellStart "Inicio del pozo") (energia:Fracturing "Fractura informada")

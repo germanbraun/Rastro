@@ -14,6 +14,7 @@ from . import answers
 from . import hood
 from . import trust_view
 from . import faq
+from . import extension
 
 
 def render(cfg_path, tech):
@@ -23,6 +24,7 @@ def render(cfg_path, tech):
     evaluation = common.read_json(cfg["evaluacion"]) if cfg.get("evaluacion") else {}
     changes = common.read_json(cfg["cambio"]) if cfg.get("cambio") else {}
     questions = common.validated_questions(cfg)
+    ext = extension.load(cfg)
     if not questions:
         st.info(idioma.t("dominio.render.no_questions"))
         return
@@ -54,7 +56,7 @@ def render(cfg_path, tech):
     has_trust = bool(cfg.get("tarjetas") or cfg.get("calidad"))
     example_tab = bool(cfg.get("ejemplo_integracion")) and (tech or not has_trust)
     names = (["demo"] if cfg.get("demo") else []) + ["ask"] + (["trust"] if has_trust else []) \
-        + (["lab"] if cfg.get("lab") else []) + (["example"] if example_tab else []) \
+        + (["lab"] if ext and ext.has_tab() else []) + (["example"] if example_tab else []) \
         + (["faq", "hood"] if tech else [])
     labels = [cfg["ejemplo_integracion"]["titulo"] if name == "example" else idioma.t(f"dominio.render.tab_{name}")
               for name in names]
@@ -65,7 +67,7 @@ def render(cfg_path, tech):
             answers.show_demo(cfg, tech)
     if example_tab:
         with tabs["example"], service_guard():
-            answers.show_integration_example(cfg["ejemplo_integracion"], domain, tech)
+            answers.show_integration_example(cfg["ejemplo_integracion"], domain, tech, ext=ext)
     if tech:
         with tabs["hood"], service_guard():
             hood.under_the_hood(domain, cfg.get("diagrama", {}).get("archivo"), cfg.get("calidad"))
@@ -135,31 +137,16 @@ def render(cfg_path, tech):
             if cfg.get("ejemplo_integracion") and not example_tab:
                 with st.expander(idioma.t("dominio.render.walkthrough", title=cfg["ejemplo_integracion"]["titulo"],
                                                 header=cfg["ejemplo_integracion"].get("encabezado", ""))), service_guard():
-                    answers.show_integration_example(cfg["ejemplo_integracion"], domain, tech)
+                    answers.show_integration_example(cfg["ejemplo_integracion"], domain, tech, ext=ext)
             trust_view.trust(cfg, tech, evaluation, changes)
 
     if tech:
         with tabs["faq"]:
             faq.domain_faq(cfg, tech)
     # Rastro Lab last: the first time after a data change it trains the model, and the other tabs should not wait
-    if cfg.get("lab"):
+    if "lab" in tabs:
         with tabs["lab"], service_guard():
-            import lab
-            import lab_alternative
-            # The experimental alternative models are a technical detail: the business view keeps the regression
-            choice = lab_alternative.select_model(cfg["alternative_lab"]) if cfg.get("alternative_lab") and tech else "ridge"
-            pozo = lab.select_well(cfg["ejemplo_lab"]) if cfg.get("ejemplo_lab") else None
-            if choice == "alternative":
-                lab_alternative.show_alternative(tech, pozo, cfg["alternative_lab"], cfg["ejemplo_lab"])
-            else:
-                # Business view: the three numbers, the well, then «Paso a paso» and how it is calculated
-                run_status = lab.show_run_status(pozo, cfg["ejemplo_lab"], tech) if cfg.get("ejemplo_lab") else {}
-                lab.show_lab(tech, pozo=pozo, note=run_status.get("note", ""))
-                if cfg.get("ejemplo_lab"):
-                    with st.expander(cfg["ejemplo_lab"]["titulo"]):
-                        answers.show_integration_example(cfg["ejemplo_lab"], domain, tech, key=f"{domain}_lab", pozo=pozo,
-                                                 run_id=run_status["run_id"])
-                lab.show_how(tech)
+            ext.show_tab(tech)
 
 
 @contextmanager

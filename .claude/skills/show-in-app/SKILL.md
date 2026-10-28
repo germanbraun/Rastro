@@ -69,7 +69,7 @@ The first screen says what Rastro is and how to read each screen (question → a
 | Check a claim (technical view only) | There are claims worth checking against the data (holds, does not hold, no data) | `afirmaciones` |
 | Enrichment from an outside source (technical view only) | A shared key with an outside source (live and saved) | `externo` |
 | Map | The domain has geometries (points, outlines, lines) | `mapa` in a question |
-| Predictions | The domain has a model whose predictions are stored in Rastro | `lab` |
+| Predictions (or any screen of the domain's own) | The domain has a model whose predictions are stored in Rastro | `extension`: a class in `app/extensions/<name>/` that subclasses `Extension` (`app/dominio/extension.py`) |
 
 ## Steps
 
