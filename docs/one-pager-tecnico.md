@@ -1,19 +1,18 @@
 # Rastro Layer · en una página (versión técnica)
 
-> Esta página describe el caso de oncología. La demo actual es petróleo y gas: ver [demo-guion-energia.md](demo-guion-energia.md) y el [README](../README.md).
-
 > **Los datos cambian. Las preguntas, no.**
 
-**Una capa semántica sobre cuatro fuentes públicas de oncología. Los datos se integran una vez; un LLM pregunta en conceptos de negocio, y cada respuesta dice de qué fuente sale.**
+**Una capa semántica sobre fuentes públicas de petróleo y gas de Argentina. Los datos se integran una vez; un LLM
+pregunta en conceptos de negocio, y cada respuesta dice de qué fuente sale.**
 
 ## Qué gana una empresa
 
-- **Respuestas consistentes:** una sola definición de cada concepto.
+- **Respuestas consistentes:** una sola definición de cada concepto (por ejemplo, «la parte de una empresa»).
 - **Preguntas en lenguaje de negocio:** el LLM lee un vocabulario, no cientos de columnas.
-- **Cada dato con su fuente:** respuestas auditables.
+- **Cada dato con su fuente:** respuestas auditables, y cada unión entre fuentes con su regla y su evidencia.
 - **Menos mantenimiento:** si una fuente cambia, se arregla en un lugar.
-- **Datos de afuera sin cargarlos:** se une con Wikidata por identificadores compartidos.
-- **Sin atarse a un proveedor:** estándares abiertos del W3C.
+- **Modelos explicados:** las variables de un modelo salen de la misma capa, con su evidencia.
+- **Sin atarse a un proveedor:** estándares abiertos del W3C (OWL, R2RML, SHACL, PROV-O).
 
 ## Qué es, en términos de SQL
 
@@ -21,35 +20,41 @@
 |---|---|
 | Ontología | El esquema de negocio que te gustaría tener |
 | Mapeos (R2RML) | Definiciones de vistas: esta columna es este concepto |
-| Enlaces | Las claves de join que faltaban, calculadas una vez |
-| SPARQL + Ontop | SQL sobre conceptos, compilado a SQL sobre las tablas reales |
+| Enlaces | Las claves de join que faltaban, calculadas una vez y con su evidencia |
+| Reglas de calidad (SHACL) | Los `CHECK` que las fuentes no tienen, sobre los datos ya integrados |
+| SPARQL | SQL sobre conceptos, que Rastro traduce a SQL sobre las tablas reales |
 
-## La evidencia (el mismo LLM, Claude Opus 5.5)
+## La evidencia (el mismo LLM, 10 preguntas, medido el 20 de octubre de 2026)
 
 | | SQL directo | SQL + enlaces de Rastro | Rastro |
 |---|---|---|---|
-| Correctas, de 20 | 18 | 20 | **20** |
-| Misma respuesta, preguntando de 4 formas | 1 de 10 | 10 de 10 | **10 de 10** |
-| Una columna de la fuente cambia de nombre | 5 consultas rotas | 5 consultas rotas | **1 línea del mapeo** |
-| Un valor cambia de formato | 5 respuestas en 0, sin aviso | igual | **avisa; 1 línea** |
-| El negocio cambia una definición | cada consulta | cada consulta | **1 línea de la ontología** |
+| Correctas, de 10 | 7 | 10 | **10** |
+| Misma respuesta, preguntando de 4 formas | 3 de 5 | 5 de 5 | **5 de 5** |
+| Una columna de la fuente cambia de nombre | consultas rotas, a encontrar | igual | **1 línea del mapeo** |
+| Un documento corrige una participación | 5 lugares | 5 lugares | **1 lugar**, con el documento |
 | De dónde sale cada dato | no | no | **por columna** |
-| Une datos de Wikidata en la misma consulta | no | no | **sí** |
 
-**Cómo leerla:** la precisión y la consistencia vienen de integrar una vez. La capa semántica agrega que esa integración se mantiene en un lugar, trae la fuente de cada dato y se conecta con datos de afuera. Solo, sin datos, el LLM acierta 5 de 20.
+**Cómo leerla:** la precisión y la consistencia vienen de integrar una vez: con las tablas de enlaces, el SQL acierta
+igual. La capa semántica agrega que esa integración se mantiene en un lugar, trae la fuente de cada dato y alimenta un
+modelo que se explica con la misma evidencia.
 
-**Segundo dominio** (contratos federales de EE. UU., sus empresas, grupos y listas de control; otro Ontop, mismo método): SQL directo 4 de 9, SQL + enlaces de Rastro 8 de 9, Rastro 8 de 9; misma respuesta en las 4 formas, 3 de 5, 3 de 5 y 4 de 5. Como en oncología, con las tablas de enlaces el SQL acierta igual. El SQL falla al unir USAspending con GLEIF, porque toma el primer candidato sin verificarlo. La referencia, que sale de Rastro, se queda corta en 2 preguntas (`layer/proveedores/adjudicacion.md`).
+**Rastro Lab** (el gas de los pozos nuevos de Vaca Muerta): el mismo modelo con variables de las tablas crudas y de
+Rastro tiene el mismo error (16,7 en los dos); con Rastro, cada predicción dice qué datos conviene revisar (24 de 49).
+
+**Otros dominios, mismo método:** contratos federales de EE. UU. y oncología, en la vista técnica de la app.
 
 ## Límites, dichos de entrada
 
-- Con las tablas de enlaces de Rastro, el SQL acierta igual, incluso en preguntas de 3 o 4 cruces. Una capa de vistas SQL resolvería parte de lo demás.
-- Una foto de octubre de 2026: 106.483 ensayos, 3.739 fármacos, 81 % de las intervenciones enlazadas.
-- Las preguntas y sus referencias las hizo un asistente de IA; falta la confirmación humana.
+- Con las tablas de enlaces de Rastro, el SQL acierta igual. Una capa de vistas SQL resolvería parte de lo demás.
+- Una foto de los datos de 2025; las preguntas y sus referencias las hizo un asistente de IA y falta la confirmación
+  humana (`layer/energia/adjudicacion.md`).
 
 ## Próximo paso
 
-Un piloto con datos del cliente sumados a las fuentes públicas.
+Un piloto de 6 semanas con datos del cliente sumados a las fuentes públicas: [piloto.md](piloto.md).
 
 ---
 
-Versión para todos: [one-pager.md](one-pager.md). Cómo se midió cada número: [results.md](results.md).
+Versión para todos: [one-pager.md](one-pager.md). De dónde sale cada número: `layer/energia/resultados.json`,
+`layer/energia/cambio/correccion.json` y `docs/slides/numeros/energia.json`. Los números de oncología siguen en
+[results.md](results.md).

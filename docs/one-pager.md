@@ -1,41 +1,47 @@
 # Rastro · en una página
 
-> Esta página describe el caso de oncología. La demo actual es petróleo y gas: ver [demo-guion-energia.md](demo-guion-energia.md) y el [README](../README.md).
-
 > **Los datos cambian. Las preguntas, no.**
 
-**Rastro integra tus datos una vez. Preguntás en lenguaje de negocio, y cada respuesta dice de dónde sale y se puede auditar.**
+**Rastro integra sus datos una vez. Se pregunta en palabras de negocio, y cada respuesta dice de dónde sale y se puede
+auditar.**
 
 ## El problema
 
-Las bases de datos no se hablan entre sí. En oncología, el mismo fármaco aparece como «Pembrolizumab 200 mg» en un ensayo clínico, como un código en una base de fármacos y como «KEYTRUDA» en los reportes de la FDA. Cada consulta tiene que resolver eso por su cuenta, y cada una lo resuelve distinto.
+Las bases de datos no se hablan entre sí. En petróleo y gas, la producción la informa la operadora de cada pozo, pero
+lo que le corresponde a cada empresa depende de su participación en la concesión, que está en otra base, a veces
+dentro de un texto, y la misma empresa aparece escrita de varias formas. Cada consulta lo resuelve por su cuenta, y
+cada una lo resuelve distinto.
 
 ## Qué hace Rastro
 
-Pone un **diccionario de negocio** entre tus bases y tus preguntas: ensayo, fármaco, sponsor, enfermedad. Traduce cada base a esas palabras una sola vez. Después, cualquiera pregunta con esas palabras, y Rastro busca en cada base.
+Pone un **diccionario de negocio** entre las bases y las preguntas: pozo, concesión, operadora, participación. Traduce
+cada base a esas palabras una sola vez, une las mismas empresas entre fuentes (cada unión con su evidencia) y comprueba
+los datos con reglas de calidad. Después, cualquiera pregunta con esas palabras, y Rastro busca en cada base.
 
-## Tres pruebas, medidas sobre datos reales
+## Cuatro pruebas, medidas sobre datos públicos de Argentina
 
 | | Sin Rastro | Con Rastro |
 |---|---|---|
-| **La misma pregunta, hecha de 4 formas** | la respuesta cambió en 9 de 10 preguntas | **la misma, en 10 de 10** |
-| **Si una base cambia** | hay que reescribir cada consulta; algunas dan cero sin avisar | **se arregla en una línea** |
-| **¿Por qué dice eso?** | no se sabe | **muestra la evidencia de cada fármaco, con el enlace al ensayo** |
+| **¿Cuánto petróleo de 2025 le corresponde a YPF?** | 21,4 millones de m³: le suma lo de sus socios | **12,6**, su parte en cada concesión, con la evidencia |
+| **La misma pregunta, hecha de 4 formas** | la misma respuesta en 3 de 5 preguntas | **en 5 de 5** |
+| **La fuente cambia el nombre de una columna** | consultas rotas que hay que encontrar | **se arregla en 1 línea** |
+| **Un documento corrige un porcentaje** | el dato vive en 5 lugares | **se corrige en 1**, y cambian solos la respuesta, el modelo y su explicación |
 
-Sin datos integrados, un asistente de IA solo acierta 5 de 20 preguntas: responde de memoria.
-
-**Funciona en otro dominio.** Con contratos del gobierno de EE. UU., sus empresas y sus grupos, el mismo asistente acierta 8 de 9 preguntas con Rastro y 4 de 9 sin Rastro, y Rastro no cae en la trampa de dos empresas con el mismo nombre (SAIC y Leidos).
+**Y un modelo de machine learning** (el gas de los pozos nuevos de Vaca Muerta): con las variables de Rastro predice
+igual de bien, y cada predicción dice de dónde sale cada dato y cuáles conviene revisar.
 
 ## Lo que hay que saber
 
-- El valor está en integrar los datos una vez y mantenerlos en un lugar.
-- La demo usa cuatro bases públicas de oncología, con datos de octubre de 2026.
-- Las pruebas las armó un asistente de IA; falta que una persona las confirme.
+- El valor está en integrar los datos una vez y mantenerlos en un lugar: con las mismas uniones, un SQL bien escrito
+  también acierta, y la demo lo muestra.
+- La demo usa datos públicos de la Secretaría de Energía y de otras fuentes abiertas, de 2025.
+- Las referencias de las pruebas las armó un asistente de IA; falta que una persona las confirme.
 
 ## Próximo paso
 
-Un piloto con tus datos sumados a las fuentes públicas.
+Un piloto de 6 semanas con sus datos y sus preguntas: [piloto.md](piloto.md).
 
 ---
 
-Versión técnica, con la comparación completa: [one-pager-tecnico.md](one-pager-tecnico.md). Cómo se midió cada número: [results.md](results.md).
+Versión técnica: [one-pager-tecnico.md](one-pager-tecnico.md). De dónde sale cada número: `layer/energia/resultados.json`,
+`layer/energia/cambio/*.json` y `docs/slides/numeros/energia.json`, que también llenan la demo y las diapositivas.
