@@ -1410,3 +1410,19 @@ experiment's log as method changes made after it; they do not change its measure
   moments in the same order; it is unchanged.
 - **Why:** five slides before the first live moment were too many for three minutes, two of them said the same, and
   the strongest hook (the two rankings) came fourth. The user approved the change.
+
+## 2026-10-28 — A Colab notebook that shows how Rastro explains an ML prediction
+
+- **What:** `lab/notebooks/rastro-lab.ipynb` (with an «Open in Colab» link) trains the same ridge model with the
+  raw-table features (A) and with Rastro's (B), using `lab/gas/modelo.py` itself, and centers on the explanation:
+  well 165404 explained as columns (A) and as concepts with their facts, rule, evidence, source and what to look at
+  twice (B); the 2025 predictions to review (24 of 49 rest on a link or a value that does not come as is from the
+  source; 36 of 49 had their fracturing loaded after the well started); what the Aguada Pichana Este correction
+  changes (37 of 49 predictions); other algorithms (forests 16.92–16.98 against ridge 16.67); and a last cell that
+  fails unless its 559 predictions are the published run's (they are, within 0.0005 million m³).
+- **Data:** a snapshot of the model's five inputs and the published predictions, `lab/notebooks/datos/` (about
+  670 KB, the B file compressed), saved by `lab/gas/snapshot.py` with a manifest of fingerprints. It is the one
+  exception to «data outside the repo» (CLAUDE.md says so), because Colab cannot reach Postgres or Ontop.
+  `tests/test_notebook_snapshot.py` fails when `modelo.py` changes until the snapshot is saved again.
+- **Why:** the user asked for an advanced companion for technical audiences that shows Rastro's explanation
+  capability for ML; accuracy is the same with and without Rastro, so the notebook says so first.

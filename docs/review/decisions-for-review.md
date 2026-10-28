@@ -267,6 +267,13 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q27.** Is keeping the weaker but explainable model the right call for a product about explanation? Or does it
   invite the objection "your explanations are of a model nobody would deploy"?
 
+**E5. A Colab notebook for the explanation** (2026-10-28)
+- **Decision:** `lab/notebooks/rastro-lab.ipynb` runs the same model code on a saved snapshot of its inputs (the one
+  exception to keeping data out of the repo), shows one prediction explained as columns and as concepts with
+  evidence, the predictions to review and what a correction changes, and checks itself against the published run.
+- **Q24b.** For a technical reviewer, is a snapshot-based notebook convincing evidence of the explanation claim, or
+  does it need a live connection to the layer to show that the evidence is not prepared in advance?
+
 ### F. App and demo
 
 **F1. Two views: business by default, technical on request** (2026-10-18)

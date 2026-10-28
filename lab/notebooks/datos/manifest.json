@@ -1,0 +1,39 @@
+{
+  "saved_utc": "2026-10-28T17:42:49+00:00",
+  "model_version": "1b8209a1",
+  "run": "20261026-212547-1b8209a1",
+  "files": {
+    "gas.csv": {
+      "rows": 696,
+      "sha256": "00b97fb2ddc92daf767990c387d7928abdbe84e202755f09913253802bf7988f"
+    },
+    "a.csv": {
+      "rows": 591,
+      "sha256": "d3eb4a9a0628e148bf7d8268e7533500922bf8212c405b3bef66a796a13388f7"
+    },
+    "b.csv.gz": {
+      "rows": 5120,
+      "sha256": "7c66e8ec28cfb98809a55577705ac7651a68304606201b7502fc42732b654129"
+    },
+    "socios.csv": {
+      "rows": 474,
+      "sha256": "a7e92be2af7267a7bf96d0388691780acb91c5c8251934c5d36ff473fe40b275"
+    },
+    "cambios.csv": {
+      "rows": 59,
+      "sha256": "adba0b03d1ff7a8fc1bfe80898b8a606f0ca20889ea5d0904dd4cdb9a308299c"
+    },
+    "predicciones.csv": {
+      "rows": 559,
+      "sha256": "f5205bf804ee3a5a4ce36e29c08614a1db40e9fecc713041062321c076574ef0"
+    }
+  },
+  "query_sha256": {
+    "gas": "784e6f36d79f41984eae66191e0b8c93ed404a98d39e634f905613a1f95ee923",
+    "a": "da0c62c42f3d0ab5ab678656a70bb5c35cfdd08473ba5d28cb1cbe6b34e1a1a6",
+    "b": "b5889228e410cd6e9b5ce55f9630252def4ec188ae4a53dffc9a0f11416b7d61",
+    "socios": "10ea53ab2e08564c835298f848014698e7db8f2da63afc65e0daaaad730d9893",
+    "cambios": "5a7c2a407c486c5352dffe1d05db0f8d8283341de6edc555194ff597acb9d135"
+  },
+  "source": "Public data of the Secretaría de Energía (Argentina), read through Rastro; see README.md"
+}

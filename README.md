@@ -211,6 +211,12 @@ docker compose run --rm --no-deps calidad python /ontology/calidad.py afiliacion
 
 A linear model (ridge regression) predicts the gas of months 2 to 7 of a new Vaca Muerta shale gas well, with the raw tables and with Rastro, and explains each prediction with the exact contribution of each variable. Both predict equally well; with Rastro, each variable says where it comes from and which ones were corrected or arrived late. In the app, the **Rastro Lab** tab. Details in [docs/lab-gas-vaca-muerta.md](docs/lab-gas-vaca-muerta.md).
 
+**Without installing anything:** [`lab/notebooks/rastro-lab.ipynb`](lab/notebooks/rastro-lab.ipynb)
+([open in Colab](https://colab.research.google.com/github/germanbraun/Rastro/blob/main/lab/notebooks/rastro-lab.ipynb))
+trains the same model from a saved copy of its inputs (`lab/notebooks/datos/`) and shows how Rastro explains a
+prediction: the facts behind each factor with their rule, evidence and source, the predictions to review, and what a
+correction changes. It checks that its numbers are the published run's.
+
 It runs on the machine, not in Docker: it needs `python3 -m pip install -r requirements-dev.txt`, the oil and gas Ontop on `localhost:8082` and the `lab-gas-loader` data (below).
 
 ```bash

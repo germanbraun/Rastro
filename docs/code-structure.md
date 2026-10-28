@@ -71,6 +71,8 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | File | What it does |
 |---|---|
 | `modelo.py` | The gas model with variables from the raw tables (A) and from Rastro (B); training, explanation, publishing a run (`--publicar`). Its version is the hash of this file |
+| `snapshot.py` | Saves the model's inputs and the published predictions for the notebook (`lab/notebooks/datos/`, with fingerprints) |
+| `../notebooks/rastro-lab.ipynb` | The notebook (also in Colab): same model with and without Rastro, how Rastro explains a prediction, the predictions to review, a correction, other algorithms; it checks itself against the published run |
 | `a_ciegas.py` | Builds the blind test of the explanations |
 | `alternative.py`, `compare_trees.py`, `thesis_pipeline.py`, `reproduce_thesis.py` | Read-only comparisons with other models and the published thesis |
 
