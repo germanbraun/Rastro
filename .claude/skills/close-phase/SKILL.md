@@ -5,9 +5,7 @@ description: Close a step or a phase of the Rastro plan, in any domain (verify, 
 
 # Close a phase
 
-Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
-For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
-
+Read `docs/method-contracts.md` for lifecycle states, gates and experiment evidence; record time, interventions and caught errors as you work.
 
 ## Constraints
 
@@ -25,8 +23,8 @@ For a new domain, run `start-domain` first. Record measured time, interventions 
    evidence blocks claiming a completed experiment. Legacy maintenance uses decisions.md without invented history.
    Confirm business approvals and quality-defect dispositions; routine technical checks need no extra approval.
 2. **Verify** with the skill `verify`. Do not close a phase with its checkpoint failing.
-3. **Publication:** run `python layer/method.py publication <domain>` before new accuracy claims; independently reviewed references must cover agreement cases too.
-4. **Check that the numbers match** everywhere: what changed in the app (which reads them from its JSON files) must say the same in `docs/decisions.md`, the domain's docs and the demo material (script and slides: skill `decks`).
+3. **Publication:** run `python layer/method.py publication <domain>` before new accuracy claims; independently reviewed references must cover agreement cases too. The gate covers new claims; numbers already published stay as they are, labelled provisional until the gate passes.
+4. **Check that the numbers match** everywhere: what changed in the app (which reads them from its JSON files) must say the same in `docs/decisions.md`, the domain's docs and the demo material. For the slides, refresh their numbers and rebuild with the skill `decks`. If a model's code changed, publish a new run of it first. After changing app, layer or lab code, `docker compose restart app` before checking.
 5. **Mark the plan** in `docs/plan.md`: finished steps with `[x]`. Keep the plan short: a summary of what was achieved, not the history.
 6. **Decisions:** one entry in `docs/decisions.md` for each new decision, with date, what was decided, why and the numbers that back it. If a decision is a rule that must always be followed, it also goes to `CLAUDE.md` or to a skill.
 7. **README and `CLAUDE.md`:** if how something is started, loaded or measured changed.

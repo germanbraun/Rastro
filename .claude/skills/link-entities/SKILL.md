@@ -5,9 +5,7 @@ description: Link entities across sources in Rastro (the same company, place or 
 
 # Link across sources, with evidence
 
-Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
-For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
-
+Read `docs/method-contracts.md` for lifecycle states, gates and experiment evidence; record time, interventions and caught errors as you work.
 
 Step 4 of the method (`docs/method.md`). It is the step that adds the most value and the one that hides the most business
 decisions: saying that two records are the same thing, or that a company "operates" or "owns" something, is a rule, and
@@ -42,7 +40,7 @@ its whole schema (`DROP`): anything that cannot be rebuilt goes in its own schem
 ## Steps: narrow down, decide, test
 
 1. **Narrow down with the strongest thing available, and write the proposal.** In this order:
-   - a **shared key** (a registry identifier such as the LEI, the source's own identifier);
+   - a **shared key** (a registry identifier, the source's own identifier);
    - a **domain rule** (a point falls inside an outline; whoever reports the latest period rules);
    - the **normalized name** (uppercase, without accents, punctuation or legal form), with one normalization function
      per domain, reused by every rule.
@@ -55,11 +53,11 @@ its whole schema (`DROP`): anything that cannot be rebuilt goes in its own schem
 
    A person reviews it at a glance; the rule and the doubtful cases are decided here. The table goes into the decision
    or the experiment log.
-2. **Decide the rule and write it** in the link table: a `regla` column with the rule in words and an `evidencia`
-   column with the values that justify it (for example, the normalized name that matched, quoted). When two sources
+2. **Decide the rule and write it** in the link table: a rule column with the rule in words and an evidence column
+   with the values that justify it (for example, the normalized name that matched, quoted). When two sources
    disagree, **a written rule wins and the other version stays visible** (both values are kept, each with its source).
-3. **Doubtful cases go to a reviewed CSV,** never to a hidden rule: `nombre, grupo, motivo` (or the document that
-   backs it). If an AI assistant reviewed it, the reason says so: «Revisado por un asistente de IA, a confirmar por una
+3. **Doubtful cases go to a reviewed CSV,** never to a hidden rule: each row with its decision and its reason (or the
+   document that backs it); each domain's columns are in `examples.md`. If an AI assistant reviewed it, the reason says so: «Revisado por un asistente de IA, a confirmar por una
    persona» (reviewed by an AI assistant, to be confirmed by a person), and the app marks it 🟠. `app/enlaces.py` reads
    each link's status from its rule and evidence: that phrase, or a reviewed rule («… revisada») without a document,
    is AI-reviewed; a reviewed correction that cites its document is ✅ confirmed by a person; anything else is an
@@ -67,18 +65,25 @@ its whole schema (`DROP`): anything that cannot be rebuilt goes in its own schem
 4. **Map the link** (skill `map-source`): a link class with `prov:wasDerivedFrom` (the source),
    `prov:wasGeneratedBy` (the rule's activity), and the domain's rule and evidence-text properties
    (`<prefix>:rule` / `<prefix>:sourceText` or the names the domain already uses; see `term_sources`). Add the class to
-   `link_sources` in `layer/dominios.yaml` and to the domain's list of links in `layer/evidencia.py`, so it counts in
-   the evidence coverage.
+   `link_sources` and to `method.evidence.link_classes` in `layer/dominios.yaml` (`layer/evidencia.py` reads that
+   list), so it counts in the evidence coverage. Without a `method.evidence` block the domain has no coverage count:
+   add one, copying an existing entry.
 5. **Test** (the checks below).
 
 ## The check that decides
 
 - **Every link has a source and evidence:** the quality rule for link evidence (skill `quality-rules`, run with the
   domain's `method.quality.run`). Empty evidence is a link that cannot be audited. If the domain has no quality runner
-  yet, check it with `layer/evidencia.py` and a SPARQL count of links without `prov:wasDerivedFrom` or evidence text.
+  yet, count with SPARQL the links without `prov:wasDerivedFrom` or evidence text.
 - **Count per rule:** how many links come from each rule and how many from corrections. A big jump after a change is
   explained before moving on.
 - **A known case, by hand:** pick one and check in both sources that the link is correct.
+- **Before and after a fix:** when a rule changes, export the links before and after and read every difference. A fix
+  often loses correct links or adds a wrong one somewhere else.
+- **A fix tuned on a reference is re-tested on unseen records:** if the defect was found by comparing with a
+  reference, the re-measured score fits that reference by construction (optimistic). Run the old and new rules on
+  records the fix was not tuned on, against a new blind reference, without loading them into Rastro. Do not fix what
+  that test finds on the same records: a fair test of that fix needs another unseen set.
 - **The questions that use it answer, and what was measured does not change by accident:** the domain's evaluation
   (`method.evaluation.run`) with `rerun` and `puntaje`. If a question changes, adjudicate it with the data from each
   source (`layer/<domain>/adjudicacion.md`).

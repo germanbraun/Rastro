@@ -5,13 +5,23 @@ it.
 
 ## Where it exists today
 
-Only for oil and gas (`energia`):
+Oil and gas (`energia`):
 
 - Rules: `ontology/energia/calidad/reglas.ttl`
 - Examples: `ontology/energia/calidad/ejemplos.yaml`
+- Data: `ontology/energia/calidad/datos.yaml`; predictions: `ontology/energia/calidad/predicciones.rq`
 - Result: `layer/energia/calidad.json`
 - Runner: `ontology/calidad.py energia` (paths, prefix, CONSTRUCT queries and endpoint come from the registry;
   `ONTOP_ENERGIA` remains a runtime endpoint override), service `calidad`: `docker compose run --rm calidad`, about 3 minutes.
+
+Research affiliations (`afiliaciones`):
+
+- Rules, examples and data in `ontology/afiliaciones/calidad/` (`reglas.ttl`, `ejemplos.yaml`, `datos.yaml`); result
+  `layer/afiliaciones/calidad.json`. No predictions.
+- Run: `docker compose run --rm --no-deps calidad python /ontology/calidad.py afiliaciones`, after starting
+  `ontop-afiliaciones`. No oil and gas service is needed.
+- Severities in use: `calidad:ConfirmadaPorPersona` reports Info for every AI-reviewed doubtful candidate still
+  waiting for a person, so the result is `review_findings`, not `defects_detected`.
 
 Suppliers (`proveedores`) and oncology (`oncologia`) have no quality rules yet.
 

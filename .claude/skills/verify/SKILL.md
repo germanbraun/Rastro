@@ -5,8 +5,9 @@ description: Verify a domain with executable registry and query assertions, qual
 
 # Verify Rastro
 
-Read `docs/method-contracts.md`. New domains start with `start-domain`. Report passed, failed, pending and not
-applicable separately. Record evidence in the experiment log while working; never infer readiness from a PID or port.
+Read `docs/method-contracts.md` for lifecycle states, gates and experiment evidence; record time, interventions and caught errors as you work.
+
+Report passed, failed, pending and not applicable separately; never infer readiness from a PID or port.
 
 ## Contract
 
@@ -18,40 +19,39 @@ applicable separately. Record evidence in the experiment log while working; neve
 
 ## Steps
 
-1. From the repository root with the development environment active, run:
+1. **Start the required services** (the domain's Ontop and what it needs; see `method.ontop`) and check actual
+   readiness, logs and source counts against the approved scope. An unexplained zero count is a failure. Preserve
+   which services were already running and stop only those you started.
+2. **Run the gates in one command** (the default path), from the repository root with the development environment
+   active:
    ```bash
-   python layer/method.py registry <domain>
+   python layer/experiment.py <domain> --expectations layer/<domain>/query-checks.yaml [--measure] [--publish]
    ```
-   Missing capabilities mean pending. Inspect the declared evaluation harness before choosing commands.
-2. Start the required services and check actual readiness, logs and source counts against the approved scope.
-   A zero count can be expected for an approved empty scope; an unexplained zero is a failure. Preserve which optional
-   services were already running and stop only those you started.
-3. Check the selected ontology with `docker compose run --rm ontology-check python /ontology/check.py
-   /ontology/<domain>` (oncology uses `/ontology`). Before release, check every registered domain explicitly;
-   the default checker discovers all registered ontologies and deduplicates shared ones. It checks declared terms
-   and shared-property `rdfs:domain` against explicit mapping classes; also compare class counts with source scope.
-4. Run the query gate:
-   ```bash
-   python layer/method.py verify <domain> --expectations layer/<domain>/query-checks.yaml
-   ```
-   Cover every competency query. Empty answers must be explicitly expected. Each entry declares its `evidence`:
-   `invariant` (technical validation) or `independent` (expected values from the sources without Rastro, for
-   example SQL over the raw tables). Prefer real coverage over row counts: `keys` against a key list exported from the
-   source, `bounds` per row. The contracts document the format. HTTP error pages, CSV headers, stale query hashes and
-   missing expectations cannot pass. Report the level of each query; «validated» alone does not mean «correct».
-5. Run quality rules and their good/bad-example tests. Distinguish runner failure from successfully detected data
-   defects. Record each relevant defect's human disposition and affected claims; do not demand defect-free sources.
-   Missing quality coverage is pending or explicitly not applicable with a reason.
-6. Re-run saved evaluation queries, then score, using the declared harness:
-   - current: `<method.evaluation.run> rerun`, then `<method.evaluation.run> puntaje`;
-   - legacy oncology: `<method.evaluation.run> python /layer/eval/run.py --rerun` (scoring is part of that runner).
-   Compare answers and scores to the preserved starting files. Explain changes. Never use `git checkout` to discard
-   date changes; preserve user edits and leave reviewed generated diffs available.
-7. Exercise the domain in both app views and run every example query; test the model's own consistency checks when
-   applicable. A health endpoint alone does not validate screen execution. Restart imported modules when needed.
-8. Before publishing accuracy claims, run `python layer/method.py publication <domain>`. Missing independent review
-   or stale artifacts keep scores provisional. Before closing a new-domain experiment, run
-   `python layer/method.py experiment <domain> --check`.
+   It runs, in order, and keeps each exit code, output and duration under `data/cache/experiments/<domain>/<run>/`
+   (`report.json`):
+   - the registry (`layer/method.py registry`) and the ontology check (`ontology/check.py`);
+   - if `method.quality` exists: the good/bad examples (`--examples-only`) and the rules over the data
+     (`method.quality.run`);
+   - the query gate (`layer/method.py verify`): one fingerprinted entry per competency query, each with its
+     `evidence` level, `invariant` or `independent`. Report the level; «validated» alone does not mean «correct»;
+   - if `method.app` exists and is not legacy: both app views and every example query (`app/check_domain.py`);
+   - `--measure`: re-runs the saved evaluation queries and scores them, with the declared harness;
+   - `--publish`: the publication gate (step 5).
+   A missing capability is pending, not passed. If a gate fails, re-run it alone to read it (commands in
+   `docs/method-contracts.md`).
+3. **Read what the runner does not decide:**
+   - quality: tell runner failure from a detected data defect; record each relevant defect's human disposition and
+     the claims it affects; do not demand defect-free sources;
+   - evaluation: compare answers and scores with the preserved starting files and explain changes. Never use
+     `git checkout` to discard date changes; preserve user edits;
+   - the model's own consistency checks, when the domain has one.
+4. **App:** `docker compose run --rm --no-deps -T app python /app/check_domain.py <domain>` (the runner calls it
+   too). A legacy app screen is exercised by hand in both views. A health endpoint alone does not validate the
+   screens; restart imported modules when they changed.
+5. **Before publishing accuracy claims:** `python layer/method.py publication <domain>` (or `--publish`). Missing
+   independent review or stale artifacts keep scores provisional. The gate covers new claims; numbers already
+   published stay as they are, labelled provisional until the gate passes. Before closing a new-domain experiment,
+   run `python layer/method.py experiment <domain> --check`.
 
 ## Report
 

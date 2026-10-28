@@ -5,8 +5,7 @@ description: Build a «Paso a paso» walkthrough for a domain - a few steps on r
 
 # A walkthrough: Paso a paso
 
-Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
-For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
+Read `docs/method-contracts.md` for lifecycle states, gates and experiment evidence; record time, interventions and caught errors as you work.
 
 Part of the step "Show" of the method (`docs/method.md`), after `show-in-app`. The demo answers «what does Rastro
 do for me»; a walkthrough answers «how does it do it», for someone who knows SQL. It follows **one real case** through
@@ -32,7 +31,7 @@ the semantic layer, one step per part of Rastro, and every number on screen come
 - **Say what it is for.** The walkthrough opens with `para_que` (what it wants to show, in one or two sentences) and
   each step has `parte`: the part of Rastro it shows, in business words (dictionary and mappings, links with
   evidence, the answer and its origin, the model, the explanation, traceability).
-- **One case through every step.** The same record (a well, a company, a publication) from the first step to the
+- **One case through every step.** The same record (a company, an asset, a document) from the first step to the
   last, so the audience follows one thread.
 - **Pending stays pending.** If a link in the case was reviewed by an AI assistant, the step says that a person still
   has to confirm it.
@@ -42,8 +41,8 @@ the semantic layer, one step per part of Rastro, and every number on screen come
   learned) and show it computed for one record, term by term. A traceability step shows the actual records with their
   rule, evidence and source, never only a description of them.
 - **Explanations are not causes.** A model's explanation says how it reached the number, not why the world is so.
-- **Slides are a snapshot.** The slide repeats the values of the day and its notes (`aside`) say which query and date
-  they come from, and to show them live in the app if the data changed.
+- **Measured numbers on slides are placeholders,** filled from the same values the app shows (skill `decks`), never
+  typed. A case value with no placeholder (a count on one day) goes in the notes (`aside`) with its query and date.
 
 ## Steps
 
@@ -58,25 +57,25 @@ the semantic layer, one step per part of Rastro, and every number on screen come
    Add `para_que` above it. A person reviews it.
 2. **Write the configuration** in `app/dominios/<domain>.yaml`, under `ejemplo_integracion` (and `ejemplo_lab` for
    a model):
-   - for the walkthrough: `titulo` (its tab in the technical view; in the business view it opens inside «Por qué
-     confiar», labeled with `titulo` and `encabezado`), `encabezado`, `para_que`, `aviso` (which real case, read live) and
+   - for the walkthrough: `titulo` (for `ejemplo_integracion`, its tab in the technical view; in the business view it
+     opens inside «Por qué confiar»; for `ejemplo_lab`, an expander inside the model's tab), `encabezado`, `para_que`, `aviso` (which real case, read live) and
      `selector`;
    - for each step in `pasos`: `titulo`, `parte`, `contenido`, `consultas` (each with `titulo` and `sql` or
      `sparql`; `{pozo_ejemplo}` in a query is replaced by the model's example record), and optionally `tecnico` with
      `lenguaje` (shown only in the technical view) and `calculo_pozo` (the model's real calculation for its example
      record, variable by variable and grouped).
 
+   Write the same texts in English in `app/dominios/<domain>.en.yaml`, under the same keys.
    `app/dominio.py` (`show_integration_example`) renders it; a domain needs no code.
-3. **Slides and script:** one slide per step in `docs/slides/slides/`, kicker «Paso a paso · Datos reales · Parte de
-   Rastro: …» and a «Para qué» line.
+3. **Slides and script:** one slide per step, kicker «Paso a paso · Datos reales · Parte de Rastro: …» and a «Para
+   qué» line. Build them with the skill `decks`.
    - **Placement:** the semantic-layer walkthrough opens the technical appendix, right after its title slide and
      before the results: it is the technical motivation. It is followed by one bridge slide, «Lo mismo le pasa a un
-     asistente de IA», with the domain's measured B, D and C scores read from its results file. The slide says
+     asistente de IA», with the domain's measured B, D and C scores as placeholders. The slide says
      plainly that the gain comes from integrating once with evidence (D scores like C), and what the graph adds: where
      the integration is defined, documented and audited, and concepts and evidence the AI can cite.
    - A model's walkthrough goes right after the model's slide.
-   - Renumber the footers and the slide references in the demo script, then run `python3 docs/slides/build.py`
-     (skill `decks`).
+   - Update the slide references in the demo script (footers are numbered by the `decks` procedure).
    - In the demo script, one short optional section per walkthrough: its purpose, and one line per step with its part
      of Rastro.
 
@@ -88,7 +87,8 @@ the semantic layer, one step per part of Rastro, and every number on screen come
 - **Every number in the text and the slides matches a query today.** Search the step texts and the slides for digits,
   and compare each one with its query's output.
 - **The slides fit:** the content ends above the footer.
-- **A look in the browser,** at desktop width: the purpose box, one step with its tables, and the technical view.
+- **A look in the browser,** at desktop width, in Spanish and in English: the purpose box, one step with its tables,
+  and the technical view.
 
 ## A person approves
 

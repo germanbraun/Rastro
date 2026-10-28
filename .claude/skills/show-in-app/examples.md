@@ -9,15 +9,18 @@
   (`layer/proveedores/textos/leidos.json`, with a comparison against a word search) and the change test.
 - **Oncology** still has its own screen in `app/app.py` (older than the template in `app/dominio.py`); its question over
   texts is `layer/textos/detenidos-pulmon.json`. Moving it to the template is pending.
+- **Research affiliations** (`app/dominios/afiliaciones.yaml`) is a new-domain experiment on the same template.
+- Every configuration has its English overlay next to it (`energia.en.yaml`, and so on).
 - Suppliers and oncology appear only with «Ver detalles técnicos» (the demo is oil and gas).
 
 ## A business-view question (oil and gas, e01)
 
 «¿Cuánto petróleo de 2025 le corresponde a cada empresa, según su participación?» (how much 2025 oil belongs to each
 company, by its share): `query: /ontology/energia/queries/cq1.rq`; «¿Por qué este número?» lists, concession by
-concession, the share and the partners' text from the concessions map, with its source; `antes_despues` shows YPF with
-21.4 million m³ when summing by who reports the production, and 12.6 by its share. Those two numbers are typed in the
-YAML and come from `layer/energia/sin-rastro.sql` and question 1: they are checked by hand after each re-measurement.
+concession, the share and the partners' text from the concessions map, with its source; `antes_despues` shows YPF's oil
+when summing by who reports the production (`{ypf_sin}`) and by its share (`{ypf_con}`). Both are read live with
+`valores`: a one-row SQL over the raw table (as in `layer/energia/sin-rastro.sql`) and a SPARQL query (as question 1).
+`tests/test_enlaces.py` fails if the card's texts type a number.
 
 ## Trust cards (oil and gas)
 

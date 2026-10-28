@@ -1,9 +1,12 @@
 # Worked example: oil and gas (`energia`)
 
-`app/dominios/energia.yaml`, keys `ejemplo_integracion` (tab «Paso a paso») and `ejemplo_lab` (inside «Rastro Lab»).
-Slides: `e-ejemplo-mapeo`, `e-ejemplo-enlace` and `e-ejemplo-respuesta` open the technical appendix (11–13),
-followed by the bridge `e-ejemplo-ia` (14: B 7, D 10 and C 10 of 10 from `layer/energia/resultados.json`);
-`e-lab-entrada`, `e-lab-aportes` and `e-lab-evidencia` follow the Rastro Lab slide (19–21). Script: the two optional sections at the end of `docs/demo-guion-energia.md`.
+`app/dominios/energia.yaml` (and `energia.en.yaml`), keys `ejemplo_integracion` (inside «Por qué confiar»; its own tab
+in the technical view) and `ejemplo_lab` (an expander inside «Rastro Lab»).
+Slides: `e-ejemplo-mapeo`, `e-ejemplo-enlace` and `e-ejemplo-respuesta` open the technical appendix, right after
+`anexo-energia`, followed by the bridge `e-ejemplo-ia` (B, D and C from `layer/energia/resultados.json`; today typed,
+pending a move to the `{{energia.confiar.*}}` placeholders). `e-lab-entrada`, `e-lab-entrenamiento`, `e-lab-formula`,
+`e-lab-aportes` and `e-lab-evidencia` follow `lab-energia`. The order is in `docs/slides/mazos/energia.json`. Script:
+the two optional sections at the end of `docs/demo-guion-energia.md`.
 
 ## The case
 

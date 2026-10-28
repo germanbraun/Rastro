@@ -4,8 +4,9 @@ Concrete cases for the skill `evaluate`. The generic procedure is in `SKILL.md`;
 
 ## Which domains are evaluated with `layer/evaluar.py`
 
-Oil and gas (`energia`, folder `layer/energia/`), suppliers (`proveedores`, folder `layer/proveedores/`) and the
-predictions set (`energia_lab`, folder `layer/energia_lab/`). Oncology (`oncologia`) has its evaluation in
+Oil and gas (`energia`, folder `layer/energia/`), suppliers (`proveedores`, folder `layer/proveedores/`), research
+affiliations (`afiliaciones`, folder `layer/afiliaciones/`) and the predictions set (`energia_lab`, folder
+`layer/energia_lab/`). Oncology (`oncologia`) has its evaluation in
 `layer/eval`, run with `docker compose run --rm layer-eval`.
 
 ## Measure a question (oil and gas)
@@ -26,6 +27,14 @@ docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje
 git diff layer/energia/resultados.md
 # Preserve pre-existing edits; review generated diffs without Git checkout/reset.
 ```
+
+## Independent references (affiliations)
+
+`layer/afiliaciones/eval/referencias.json` replaces the SPARQL references: its `nota` says they come from a blind
+review by an AI assistant that did not see Rastro, still to be confirmed by a person. Adjudication in
+`layer/afiliaciones/adjudicacion.md`. The domain's `layer-eval` run needs `ontop-afiliaciones` started first (the
+service only waits for the oil and gas Ontop). No domain has a `reference-evidence.yaml` yet, so every score is
+provisional (`python layer/method.py publication afiliaciones` stays pending).
 
 ## One prompt per subagent: the discarded check (oil and gas)
 

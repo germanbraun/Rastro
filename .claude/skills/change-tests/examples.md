@@ -23,6 +23,7 @@ layer/energia/cambio/correccion.sh registrar
 git status --short    # when done, the CSV and the saved answers must be as before
 ```
 
+- The checker's test: `tests/test_energia_correccion.py`.
 - It measures the share answer (with Rastro, SQL with links and without Rastro), what goes into the Rastro Lab model and its explanation.
 - The result is saved in `cambio/correccion.json`, which moment 4 of the demo reads.
 - What was measured: the prediction barely moves (the share is fixed within the concession), so do not say it changes.
@@ -39,6 +40,10 @@ The result is saved in `cambio/impacto.json`, which the Rastro Lab tab shows.
 
 ## US suppliers (`proveedores`): the source changes
 
+**Legacy and unguarded: do not run until it has a guard.** The registry has no `change_guard` for this domain, and its
+`deshacer` restores the amounts with inverse arithmetic (`amount * 1000`), which `docs/method-contracts.md` forbids.
+Its saved `resultado.json` stays as evidence of the last run.
+
 Scripts in `layer/proveedores/cambio/` (`cambio.sh`, `probar.py`). They simulate a new USAspending version.
 
 ```bash
@@ -46,8 +51,28 @@ layer/proveedores/cambio/cambio.sh registrar   # runs the 9 queries, the two act
 ```
 
 - Act 1: `awarding_agency` is renamed to `agency_name`. Act 2: amounts are in thousands of dollars.
-- The fix is one line of `mappings/proveedores.r2rml.ttl`, then restart `ontop-proveedores` (port 8081). Always end with `deshacer`.
+- The fix is one line of `mappings/proveedores.r2rml.ttl`, then restart `ontop-proveedores` (port 8081).
 - No correction or impact test in this domain.
+
+## Research affiliations (`afiliaciones`): one correction, every result
+
+`layer/afiliaciones/cambio/correccion.sh` simulates that ROR adds the official name of the Garrahan hospital as an
+alias (a new row in `ror.name`, as its next release would). It measures every saved evaluation query (B, D, C) and
+cq1-cq3 before, right after the source change and after rebuilding the links (`afiliaciones-linker`, restart
+`ontop-afiliaciones`); then the guard puts everything back. Approved plan:
+`docs/experiments/research-affiliations/change-test-proposal.md`.
+
+```bash
+layer/afiliaciones/cambio/correccion.sh registrar
+```
+
+- Guarded: the files and tables it may change are in `method.change_guard` (`linking/afiliaciones/correcciones.csv`,
+  the saved answers, `ror.name` and the `afiliaciones` link tables).
+- Result: `cambio/correccion.json` (measurements in `medicion-antes.json`, `medicion-fuente.json`,
+  `medicion-despues.json`). The checker's test: `tests/test_afiliaciones_cambio.py`.
+- Traceability of 30 answer cells per approach, read-only: `python /layer/afiliaciones/cambio/trazabilidad.py` in the
+  `layer-eval` service, written to `cambio/trazabilidad.json`.
+- No source-change or impact test in this domain.
 
 ## Oncology (`oncologia`)
 

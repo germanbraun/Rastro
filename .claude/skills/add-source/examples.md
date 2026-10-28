@@ -8,6 +8,7 @@ Concrete cases for the skill `add-source`. The generic procedure is in `SKILL.md
   trajectories, and the Wikidata enrichment.
 - Suppliers (`proveedores`): USAspending, NAICS, the government control lists (CSL), GLEIF, Wikidata.
 - Oncology (`oncologia`): AACT, ChEMBL, openFDA, MeSH.
+- Research affiliations (`afiliaciones`): Crossref (100 works) and the ROR data dump.
 
 ## Loaders to copy
 
@@ -15,6 +16,13 @@ Concrete cases for the skill `add-source`. The generic procedure is in `SKILL.md
 - `data/lab-gas/` (oil and gas): the sources only Rastro Lab uses (earlier years, fracturing and well trajectories).
   Well trajectories are the most complete example of a source added end to end: loader, link with its rule, mapping,
   dictionary, model and explanation.
+
+## A loader that writes the source manifest (research affiliations)
+
+`data/afiliaciones/load.py` loads approved snapshots from `data/raw/research-affiliations/` (it checks their
+fingerprints and never downloads) and, after a successful load, rewrites `layer/afiliaciones/sources.yaml`
+(`method.source_manifest`): each source's version, file fingerprints and row counts per table. A change there makes
+the domain's implemented and validated questions stale (`layer/lifecycle.py`).
 
 ## A source only for Rastro Lab (oil and gas)
 

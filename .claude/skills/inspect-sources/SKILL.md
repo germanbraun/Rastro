@@ -1,80 +1,57 @@
 ---
 name: inspect-sources
-description: Inspect candidate public data sources before choosing a domain or approving a new source. Propose grounded questions and a minimal conceptual semantic layer without registering a domain or building a loader.
+description: Inspect candidate public data sources read-only before choosing a domain or approving a new source, and propose grounded questions and a minimal conceptual semantic layer. Use it when a domain is not chosen yet, or when an existing domain needs a source whose access, terms, keys or joins are still unknown.
 ---
 
 # Inspect candidate sources
 
-Read `docs/method.md` and `docs/method-contracts.md`. This is the optional discovery handoff before `start-domain`,
-or before `add-source` when an existing domain needs an unfamiliar source. It does not replace either workflow.
+Read `docs/method-contracts.md` for lifecycle states, gates and experiment evidence; record time, interventions and caught errors as you work.
+
+Optional discovery before `start-domain` (a new domain) or `add-source` (an unfamiliar source for an existing domain).
+It replaces neither, and it approves nothing.
 
 ## Contract
 
-- **Takes:** the user's objective, candidate domain or sources, existing questions if any, and any approved time
-  budget, scope and reviewer roles. Reuse those decisions; do not restart their approval.
-- **Returns:** an evidence-backed source profile, a feasibility recommendation, unresolved decisions and candidate
-  business questions when requested; then a minimal conceptual semantic-layer proposal when questions and inspected
-  sources support it. No source, question, model or implementation is approved by the inspection itself.
-- **Does not:** load a database, register a domain, start services, change the app, implement mappings/links, or
-  evaluate model answers. Inspection downloads and local profiling are allowed within the authorized scope.
+- **Takes:** the objective, candidate domain or sources, existing questions if any, and any approved time budget,
+  scope and reviewer roles. Reuse those decisions.
+- **Returns:** a source profile with evidence, a recommendation, open decisions, candidate questions when asked, and
+  a minimal conceptual semantic-layer proposal when the evidence supports it.
+- **Does not:** load a database, register a domain, start services, change the app, implement mappings or links, or
+  evaluate answers. Downloads and local profiling within the authorized scope are allowed.
 
-## Workflow
+## Steps
 
-1. **Record the objective and working interval.** Use the agreed budget and stop at its limit, reporting partial
-   findings. Log actual session start/stop times and pauses as work happens. Separate session elapsed time,
-   automated process duration and human effort; missing human time stays missing. Do not count another chat's time.
-2. **Find original publishers and inspect actual access.** Consult connected sources or browse official catalogs,
-   APIs and documentation. Record source and download URLs, access date, response failures and final transport
-   after redirects. A search snippet, accessible catalog or HTTP success alone does not prove a usable data file.
-3. **Preserve the inspected snapshot.** Download only what is useful for inspection into ignored `data/raw/`.
-   Record byte count, SHA-256 and source version for every artifact supporting the findings. Keep public metadata
-   and reproducible profiling scripts in the report folder when useful; keep raw files, credentials and response
-   headers containing cookies outside version control. Do not change project dependencies solely to read a file.
-4. **Profile content and meaning.** Establish record grain, candidate keys, nulls and duplicates, units, observation
-   period, geography and relevant source definitions. Distinguish reporting year, upload/modification time and
-   effective date. Check for multiple tables, aggregates, market/category partitions and temporal role changes
-   before proposing a join or sum. Report bounded samples as samples, not full-file measurements.
-5. **Check reuse and reproducibility.** Record the publisher's actual license/access terms, refresh policy and
-   version mechanism. Distinguish the license on a catalog from terms on separately hosted files. State unclear
-   permissions and mutable/unpinned inputs as unresolved; do not infer permission or immutable versions from access.
-6. **Inspect the integration.** Compare keys and concrete records across sources. Show matched candidates, missing
-   keys, ambiguous alternatives, grain mismatches and what evidence could resolve them. Candidate links remain
-   unapproved. Trace upstream origin: two publishers repeating the same data are not independent measurements.
-   Complementary sources can still be useful; an independently calculated original-record reference can verify an
-   answer without a second publisher reporting the same number. Record overlap with Rastro's existing knowledge.
-7. **Return a bounded recommendation.** Say suitable, conditional, unsuitable or incomplete, with supporting
-   findings and remaining decisions. When proposing questions, give plain wording, definitions, answer type,
-   required sources, integration/control role and an independent verification plan. Respect the requested count;
-   do not manufacture questions to favor Rastro or assume B/D/C accuracy must differ.
-8. **Propose the semantic layer after inspection.** Ground a minimal conceptual model in proposed questions and
-   inspected fields. Save `semantic-layer-proposal.md` beside the report: purpose, a concept/source/question table,
-   entity grain and candidate identifiers, relationships/cardinality, a small diagram and a worked source example
-   alongside it. Explain counting, deduplication, time, provenance and unresolved links. Label illustrative text
-   and unreviewed identifications; never invent source records or approvals. Show why each concept is needed; reuse
-   the dictionary for domain extensions. If evidence or questions are insufficient, mark the model pending and say
-   what is missing. This proposes business meaning, not executable ontology/R2RML or permission to implement it.
-   Reuse recorded approvals; new or changed meanings follow the existing business-approval rules.
+1. **Objective and budget.** Stop at the agreed budget and report partial findings. There is no registered domain
+   yet, so `method.py experiment` cannot log time: keep start, stop and pauses in an `inspection-time.yaml` in the
+   report folder, filled as you work. Missing human time stays missing.
+2. **Original publishers and real access.** Record source and download URLs, access date, failures and redirects. A
+   catalog page or an HTTP 200 does not prove a usable data file.
+3. **Snapshot.** Download only what the inspection needs into `data/raw/`. Record bytes, SHA-256 and source version
+   of every file behind a finding. Raw files and credentials never go into the repo.
+4. **Content and meaning.** Grain, candidate keys, nulls, duplicates, units, period, geography and source
+   definitions. Tell reporting year, upload date and effective date apart. Look for mixed tables, aggregates and
+   partitions before proposing a join or a sum. A sample is reported as a sample.
+5. **Reuse terms.** The publisher's actual license, refresh policy and versioning; a catalog's license may not cover
+   files hosted elsewhere. Unclear terms stay open questions.
+6. **Integration.** Compare keys and real records across sources: matches, misses, ambiguous candidates, grain
+   mismatches. Trace upstream origin: two publishers repeating the same data are not independent evidence. Note what
+   Rastro already knows.
+7. **Recommendation:** suitable, conditional, unsuitable or incomplete, with findings and open decisions. Candidate
+   questions get plain wording, definitions, answer type, sources, whether they test integration, and an independent
+   verification plan. Do not shape questions to favor Rastro.
+8. **Conceptual semantic layer**, only when questions and inspected fields support it: `semantic-layer-proposal.md`
+   beside the report, with a concept/source/question table, grain and identifiers, relationships, a small diagram
+   and one worked source example. Label illustrative text; never invent records or approvals. Otherwise say what is
+   missing. It is a proposal for `map-source`, not an ontology.
 
 ## Evidence and handoff
 
-For a candidate experiment, use `docs/experiments/<candidate>/`; for existing-domain upkeep, use its source notes
-and record the decision in `docs/decisions.md`. Do not require a registry entry or initialize a domain experiment
-merely to inspect sources. Retain:
+Keep it in `docs/experiments/<candidate>/` for a new domain; for an existing domain, in its source notes and an entry
+in `docs/decisions.md`. Keep: the report (facts, measurements and hypotheses told apart), a snapshot manifest with
+URLs and fingerprints, the profiling code that reproduces the numbers, the time file, and the proposal or why it is
+pending. Unreadable files and unconfirmed units are limits, not passed checks.
 
-- A concise report covering access, terms, versions, grain, keys, coverage, join examples, independence, familiarity
-  and recommendation; distinguish observed facts, derived measurements and hypotheses.
-- A snapshot manifest with source URLs and fingerprints, plus enough commands or profiling code to reproduce
-  reported measurements. Never copy response values into future expected answers just to make checks pass.
-- The measured time, actual interventions and unresolved decisions. Identify review as pending until it happens.
-- The conceptual semantic-layer proposal, diagram and grounded example when feasible; otherwise why it is pending.
-  Hand it to `map-source` to refine from approved questions and loaded data.
+After a person approves the scope: a new domain goes to `start-domain`, questions to `add-question`, loaders to
+`add-source`.
 
-Check hashes and reproducibility of the reported measurements; validate any new scripts. Unreadable files and
-unconfirmed units remain explicit limits, not successful checks. A metadata-only result can be useful but must say so.
-
-After the user approves the selected scope, hand a new domain to `start-domain`; questions go through `add-question`
-and loaders through `add-source`. Reuse real approvals and keep their exact boundaries. The inspection alone
-establishes neither answer accuracy nor transfer of the method. Do not retroactively claim this skill was used for
-an earlier inspection; record when it was introduced if it affects an experiment's frozen method version.
-
-Read [examples.md](examples.md) for the electricity inspection that motivated this skill, not for domain rules.
+Real inspections: [examples.md](examples.md).

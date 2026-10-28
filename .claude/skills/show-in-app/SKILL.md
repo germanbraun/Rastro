@@ -5,9 +5,7 @@ description: Show a domain's semantic layer in the Rastro app - the business vie
 
 # Show a domain in the app
 
-Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
-For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
-
+Read `docs/method-contracts.md` for lifecycle states, gates and experiment evidence; record time, interventions and caught errors as you work.
 
 The step "Show" of the method (`docs/method.md`), between "Measure" and "Maintain": the semantic layer is delivered as an
 app that a business person can use and a technical person can audit. The app is a template: what belongs to a domain is
@@ -17,8 +15,9 @@ described in its configuration file, not programmed.
 
 - **Takes:** a domain whose competency questions answer in Rastro (skills `add-question`, `map-source`), with its
   measurements done (skill `evaluate`) and, if it has them, its quality rules (skill `quality-rules`).
-- **Returns:** the domain's app configuration (`app/dominios/<domain>.yaml`), its entry in the app's domain list
-  (`app/dominios.yaml`), and the domain working in both views of the app.
+- **Returns:** the domain's app configuration (`app/dominios/<domain>.yaml`) and its English overlay
+  (`app/dominios/<domain>.en.yaml`), its entry in the app's domain list (`app/dominios.yaml` and `app/dominios.en.yaml`),
+  and the domain working in both views and both languages.
 - **Does not:** write a measured number by hand, or show a question that has not been checked against its query.
 
 ## Constraints
@@ -27,6 +26,9 @@ described in its configuration file, not programmed.
 - **Never show a question that has not been checked against its query** today.
 - **No internal class or table names in the business view:** columns, glossary and texts use the users' words.
 - **A saved text summary is regenerated,** never edited by hand.
+- **Every visible text in Spanish and English:** edit the Spanish text and its English counterpart together
+  (`app/dominios/<domain>.en.yaml`, `app/dominios.en.yaml`, and `app/textos/*.yaml` for texts the code uses). The overlay
+  holds only texts; anything missing falls back to Spanish.
 
 ## What the app shows, and where it comes from
 
@@ -37,7 +39,7 @@ The first screen says what Rastro is and how to read each screen (question → a
 | Piece | What the user sees | Key in the domain's YAML |
 |---|---|---|
 | Summary and sources | What the domain is about; each source with its license | `resumen`, `fuentes`, `nota_rastro` |
-| Example questions | The question in plain words; the answer as a table with readable columns; volumes in one unit (for example millions of m³), the exact figure in the technical view | `preguntas[].simple`, `query`, `columnas`, `formatos` (`m3` or `miles_m3` for volumes, `numero`, `dinero`, `porcentaje`) |
+| Example questions | The question in plain words; the answer as a table with readable columns; quantities in one unit, the exact figure in the technical view | `preguntas[].simple`, `query`, `columnas`, `formatos` (`m3` or `miles_m3` for volumes, `numero`, `dinero`, `porcentaje`) |
 | Why this number | For a row of the answer, the records and evidence behind it | `preguntas[].porque` (a query with `{valor}`; `numeros` lists its numbers, or maps each volume to its unit) |
 | Link status | One mark per link in every table with a `regla` column: 🔹 automatic rule, 🟠 reviewed by AI and a person must confirm, ✅ confirmed by a person with a document | derived from the rule and evidence (`app/enlaces.py`); nothing to configure |
 | Where the answer comes from | The sources used, what Rastro added, a sample of the evidence | `preguntas[].ventaja`, `evidencia`, `definicion` |
@@ -79,14 +81,17 @@ The first screen says what Rastro is and how to read each screen (question → a
 
    Below it, one line per optional module: whether the domain gets it and why (the piece it has). A person reviews it;
    the table goes into the decision or the experiment log.
-2. **Register the domain** in `app/dominios.yaml` (id, name in the users' language, configuration file) and copy the
-   shape of an existing configuration. The first domain in the list is the one the app opens with.
+2. **Register the domain** in `app/dominios.yaml` (id, name in the users' language, configuration file) and its name
+   in `app/dominios.en.yaml`, and copy the shape of an existing configuration. The first domain in the list is the one
+   the app opens with.
 3. **Business view first:** write the example questions of the proposal. For each: the question in plain words (`simple`), the technical wording (`tecnica`), the query file, readable
    column names, "why this number" for its main column, what Rastro added, the glossary. Use the users' words, never
-   class or table names.
-4. **What can be trusted:** require `python layer/method.py publication <domain>` before showing new accuracy claims. Missing independent evidence means provisional, not published. point the cards and sections to the domain's measurement files (`evaluacion`, `cambio`,
+   class or table names. Then write the same texts in English in `app/dominios/<domain>.en.yaml`.
+4. **What can be trusted:** point the cards and sections to the domain's measurement files (`evaluacion`, `cambio`,
    `evidencia`, `calidad`, `fuera`). Card texts use placeholders filled from those files (`{c_correct}`, `{b_correct}`),
-   never typed numbers.
+   never typed numbers. Run `python layer/method.py publication <domain>` before showing new accuracy claims: missing
+   independent evidence means provisional, not published. The gate covers new claims; numbers already published stay
+   as they are, labelled provisional until the gate passes.
 5. **Technical view:** register the domain's pieces for the technical view (the console's queries folder and port,
    two to five example records, the ontology file, the link tables and mapping blocks to show). Write the
    plain-words explanation of each example query (`explicacion`).
@@ -108,8 +113,8 @@ The first screen says what Rastro is and how to read each screen (question → a
   (`muestra`, `ventaja`, `faq`): each one must match its source today, or be replaced by a placeholder. After any
   re-measurement, check them again.
 - **Questions over texts:** the selected records' count matches the query today; every cited id exists among them.
-- **A look in the browser,** at desktop and phone width: the business view has no jargon; the technical view shows
-  query, SQL, sources and evidence for each answer.
+- **A look in the browser,** at desktop and phone width, in Spanish and in English: the business view has no jargon;
+  the technical view shows query, SQL, sources and evidence for each answer.
 
 ## A person approves
 

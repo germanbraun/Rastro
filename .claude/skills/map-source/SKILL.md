@@ -1,18 +1,13 @@
 ---
 name: map-source
-description: Map a source that is already loaded to Rastro's business dictionary, in any domain - the ontology terms the questions need and the R2RML mapping that fills them. Use it when touching the ontologies, the R2RML mappings or the dictionary notes (sparql-notes.md), or when a competency question needs data that Rastro does not have yet.
+description: Map a source that is already loaded to Rastro's business dictionary, in any domain - the ontology terms the questions need and the R2RML mapping that fills them. Use it when touching the ontologies, the R2RML mappings or the dictionary notes (sparql-notes.md), or when a competency question needs a term or a mapping that Rastro does not have yet.
 ---
 
 # Map a source to the dictionary
 
-Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
-For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
+Read `docs/method-contracts.md` for lifecycle states, gates and experiment evidence; record time, interventions and caught errors as you work.
 
-If inspection produced `semantic-layer-proposal.md`, read it before proposing terms. Reuse its question/concept/source
-grounding, diagram, example and recorded approvals; check against approved requirements and loaded fields. It is a
-conceptual proposal, not proof that terms, links or mappings are approved or implemented. Record differences and
-reopen approval only where business meaning changes; keep implementation minimal.
-
+If an inspection left a `semantic-layer-proposal.md`, start from it; it is a proposal, so the approvals below still apply.
 
 Steps 2 and 3 of the method (`docs/method.md`): the dictionary and the mappings go together, because a new concept without
 a mapping answers nothing, and a mapping without a concept does not exist for the assistant.
@@ -66,7 +61,7 @@ A new domain gets its own entry, following the existing ones.
      something to a given kind of thing).
    - **A property used by two classes has no `rdfs:domain`.** With a domain, Rastro deduces that everything that uses it
      belongs to that class.
-   - If the definition can be read two ways (for example, operated or by share), do not choose: it is a business
+   - If the definition can be read two ways, do not choose: it is a business
      decision.
 3. **Write the mapping,** in the source's section of the domain's mapping (`method.mapping`):
    - One `rr:TriplesMap` per linker table or view, with the domain's IRI template
@@ -88,30 +83,22 @@ A new domain gets its own entry, following the existing ones.
   `docker compose logs <method.ontop.service>`.
 - `docker compose run --rm ontology-check` is OK: each query uses only declared terms, in every domain.
 - **Every competency question of the domain answers** and the answer makes sense to a business person:
-  `python layer/method.py verify <domain> --expectations layer/<domain>/query-checks.yaml`
+  `python layer/method.py verify <domain> --expectations layer/<domain>/query-checks.yaml`. If the domain has no
+  query-checks file yet, query each competency question with `curl` (see `add-question`) and record the executable
+  check as pending.
 - **The counts match the source:** `SELECT (COUNT(DISTINCT ?x) AS ?n) WHERE { ?x a <prefix>:<Class> }` against
   `SELECT count(*)` on the table. If Rastro counts too many, it is almost always an extra `rdfs:domain`.
 - **What was measured does not change by accident:** run the domain's evaluation (`method.evaluation.run`) with
-  `rerun` and `puntaje` for the current harness (use the declared legacy runner otherwise); preserve and review generated diffs without resetting pre-existing edits. If the registry has no `method.evaluation`, the domain
-  is not measured yet.
+  `rerun` and `puntaje` for the current harness (the declared legacy runner otherwise); review the generated diffs
+  without resetting other people's edits. No `method.evaluation` in the registry means the domain is not measured yet.
+- **Lifecycle:** if the domain declares `method.lifecycle`, a changed ontology or mapping makes its questions'
+  validations stale; validate them again with `layer/lifecycle.py validate` (see `add-question`).
 
 ## A person approves
 
 - **The proposal:** its new terms and its open questions, before the mapping is written.
-- Each new term that is a **business definition** (what «operator», «new» or «active» means in that domain).
+- Each new term that is a **business definition** (what a business word means in that domain).
 - Changing the meaning of a term already used in questions, in the app or in the model.
-
-## Grounding
-
-- **Questions first:** competency questions as a requirement and as a test of an ontology come from
-  Grüninger and Fox (1995) and are the basis of current methodologies such as LOT (Poveda-Villalón et al., *Engineering
-  Applications of Artificial Intelligence* 111, 2022, doi:10.1016/j.engappai.2022.104755).
-- **Query the data where it lives, through mappings:** ontology-based data access (OBDA), with R2RML (W3C
-  recommendation, 2012) and Ontop (Calvanese et al., *Semantic Web* 8(3), 2017).
-- **Narrow down, decide, test:** language models write promising mappings without examples (Hofer, Frey and Rahm,
-  KGCW 2024, CEUR 3718, paper 6), but they invent terms and write invalid mappings when left alone; it works better to
-  narrow candidates with cheap methods and let the language model choose among a few (Magneto, Liu et al., PVLDB
-  18(8), 2025). That is why the tests decide correctness, not the model.
 
 ## Watch out for
 
@@ -124,7 +111,7 @@ A new domain gets its own entry, following the existing ones.
 - **Two similar words for the same thing:** the assistant picks the wrong one. Keep only one.
 - **Ontop does not support `*` or `+` paths:** anything that needs a closure (a hierarchy, a "within") is precomputed in
   Postgres and mapped as a plain property.
-- **After changing something, restart the domain's Ontop;** the Streamlit app does not reload imported modules:
-  `docker compose restart app`.
+- **After changing something, restart the domain's Ontop;** the app does not reload imported modules:
+  `docker compose restart app`. Texts shown in the app change through `show-in-app`.
 
 Real cases, with their numbers: see `examples.md`.

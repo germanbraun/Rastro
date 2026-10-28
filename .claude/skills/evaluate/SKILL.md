@@ -5,9 +5,7 @@ description: Measure a domain's evaluation questions with the three paths (witho
 
 # Evaluate a domain
 
-Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
-For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
-
+Read `docs/method-contracts.md` for lifecycle states, gates and experiment evidence; record time, interventions and caught errors as you work.
 
 Step 6 of the method (`docs/method.md`). The evaluation compares three paths on the same questions, with the same AI assistant:
 
@@ -38,15 +36,22 @@ The files: questions in `<folder>/eval/questions.yaml`, saved answers in `<folde
    Where the reference comes from is either independent of Rastro (a source's own total, a published figure) or from
    Rastro, and then it is marked to be adjudicated. The approaches are B, D and C. How it is scored: a number with 5 %
    tolerance, or a list with F1. A person reviews it; the table goes into the decision or the experiment log.
-   Record the exact model/version, prompts, retries and source versions in the evidence manifest described in `docs/method-contracts.md`. Then write the question in `eval/questions.yaml`, in business words, with the definitions it uses and its reference (SPARQL over Rastro). If it has paraphrases, in `consistencia/parafrasis.yaml`. It usually starts as a competency question (skill `add-question`).
+   Then write the question in `eval/questions.yaml`, in business words, with the definitions it uses and its reference
+   query (SPARQL over Rastro). That reference is provisional: an independent one goes in `<folder>/eval/referencias.json`
+   (`{"nota": who made it and its status, "answers": {question id: answer}}`), and `puntaje` uses it instead. If it has paraphrases, in `consistencia/parafrasis.yaml`. It usually starts as a competency question (skill `add-question`).
 2. **One subagent per path, which only sees the prompt:** generate the prompt with
    `<run> prompt <q> 0 <B|D|C>`,
    give it to a new subagent with no other context, and test what it returns with
    `<run> try <q> 0 <B|D|C> < query.sql`. Up to 3 attempts, giving it back the error message. Never show it the reference or other answers. **One prompt per subagent:** if a subagent sees the four forms of a question together, it repeats the same query and consistency stops measuring anything (this happened once, and that check was discarded).
 3. **Score:** `<run> puntaje`. Tolerance: 5 % for numbers; for lists, F1 of 80 % or more.
-4. **Independently validate every reference**, even when all paths agree. Preserve the checked answer, source/version, supporting artifact and fingerprint, reviewer and date. **Adjudicate** each question where the paths differ, with each source's data, in `<folder>/adjudicacion.md`: who was right and why. The reference comes from Rastro, so Rastro's advantage can be circular until adjudicated.
+4. **Independently validate every reference**, even when all paths agree (in `eval/referencias.json`; an AI-made
+   reference says so in its `nota` and waits for a person). Preserve the checked answer, source/version, supporting artifact and fingerprint, reviewer and date. **Adjudicate** each question where the paths differ, with each source's data, in `<folder>/adjudicacion.md`: who was right and why. The reference comes from Rastro, so Rastro's advantage can be circular until adjudicated.
 
-5. **Publication gate:** `python layer/method.py publication <domain>`. The manifest binds approved evidence to the questions, run artifacts and result. Missing or stale evidence blocks publication, not exploratory scoring. Never invent reviewer approval.
+5. **Publication gate:** record the exact model and version, prompts, retries, source versions and result in
+   `<folder>/reference-evidence.yaml` (format in `docs/method-contracts.md`), then run
+   `python layer/method.py publication <domain>`. Missing or stale evidence blocks publication, not exploratory
+   scoring. Never invent reviewer approval. The gate covers new claims; numbers already published stay as they are,
+   labelled provisional until the gate passes.
 
 ## After changing data, mappings or rules
 
@@ -93,7 +98,6 @@ value from the source** (skill `quality-rules`). Write the type down in the adju
 
 - A fix after measuring (to the dictionary, to a rule) is measured again only on what it affects, with new subagents, and is stated as such in `docs/decisions.md`.
 - What is reproducible is the saved answers, not the model's temperature.
-- If Rastro fails because of something in the dictionary, it is noted; it is not silently fixed before publishing.
 - The test with questions we did not write is in `docs/preguntas-a-ciegas.md`.
 
 Worked examples from the existing domains (commands, folders, the predictions question set, the discarded check): `examples.md`.

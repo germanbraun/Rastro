@@ -5,9 +5,7 @@ description: Write, test and read Rastro's quality rules (SHACL) over a domain's
 
 # Quality rules
 
-Read `docs/method-contracts.md` for lifecycle states, executable gates, approval reuse and experiment evidence.
-For a new domain, run `start-domain` first. Record measured time, interventions and caught errors as work happens.
-
+Read `docs/method-contracts.md` for lifecycle states, gates and experiment evidence; record time, interventions and caught errors as you work.
 
 Step 5 of the method (`docs/method.md`). A rule says what the integrated data must look like, in the words of the
 dictionary, and it is checked over all of Rastro's data after every load. **It does not fix anything:** it shows what
@@ -41,10 +39,9 @@ of CONSTRUCT queries), `result`, `run`, optional `prefix`, and optional `predict
 `?prediction ?record` for the current run). The registry supplies the endpoint and namespace. The same runner and
 tests discover every configured domain; do not copy Python code for another domain.
 
-If quality coverage is missing, add these domain files and the registry entry. Run
-`python ontology/calidad.py <domain> --examples-only` before querying services. In Docker, use the shared quality
-service with `--no-deps` after starting that domain's declared endpoint, then override the command with
-`python /ontology/calidad.py <domain>`; no energy service is required for another domain.
+If quality coverage is missing, add these domain files and the `method.quality` entry. Test the examples first,
+without services: `python ontology/calidad.py <domain> --examples-only`. Then start the domain's Ontop and run
+`method.quality.run`, which holds the full command (see `examples.md`).
 
 The app shows the result in «Por qué confiar» (why trust it) and, with «Ver detalles técnicos» (see technical details),
 under the hood, with a real value from Rastro and a broken one.
@@ -104,7 +101,7 @@ domain; the shared tests discover every domain with quality configuration and ex
 - **The proposal:** each rule's condition, threshold and open questions, before the rules file is written.
 - **The thresholds** (what is impossible and what is only unusual).
 - **What to do with what fails:** correct it with a document (reviewed CSV, skill `link-entities`), notify the source,
-  or remove it from the model. The last one changes Rastro Lab and is measured again (skill `rastro-lab`).
+  or remove it from the model. The last one changes the model and it is measured again (skill `rastro-lab`).
 
 ## Grounding
 

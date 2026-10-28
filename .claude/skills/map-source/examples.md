@@ -9,8 +9,9 @@ The domain-specific content of the `map-source` skill. The skill itself is gener
 | Oil and gas (`energia`) | `ontology/energia/energia.ttl` | `mappings/energia.r2rml.ttl` | `layer/energia/sparql-notes.md` | :8082, `ontop-energia` |
 | Suppliers (`proveedores`) | `ontology/proveedores/proveedores.ttl` | `mappings/proveedores.r2rml.ttl` | `layer/proveedores/sparql-notes.md` | :8081, `ontop-proveedores` |
 | Oncology (`oncologia`) | `ontology/rastro.ttl` | `mappings/rastro.r2rml.ttl` | `layer/sparql-notes.md` | :8080, `ontop` |
+| Research affiliations (`afiliaciones`) | `ontology/afiliaciones/afiliaciones.ttl` | `mappings/afiliaciones.r2rml.ttl` | `layer/afiliaciones/sparql-notes.md` | :8083, `ontop-afiliaciones` |
 
-Note that oncology does not follow the `ontology/<domain>/` layout: always read the paths from `layer/dominios.yaml`.
+This table is a snapshot: the registry is the source of truth. Oncology does not follow the `ontology/<domain>/` layout: always read the paths from `layer/dominios.yaml`.
 
 ## Naming and modelling (oil and gas)
 
@@ -21,7 +22,8 @@ Note that oncology does not follow the `ontology/<domain>/` layout: always read 
 - Source values kept as they are, without translating them: `"vaca muerta"`, `"SHALE"`.
 - Link properties in the mapping: `prov:wasDerivedFrom`, `prov:wasGeneratedBy`, `energia:rule` and
   `energia:sourceText`. (Suppliers uses `proveedores:linkRule` and `proveedores:sourceText`; oncology,
-  `oncologia:linkRule` and `oncologia:interventionText`.)
+  `oncologia:linkRule` and `oncologia:interventionText`; research affiliations, `afiliaciones:rule`,
+  `afiliaciones:sourceText` and `afiliaciones:linkStatus`, with one `prov:wasDerivedFrom` per source the link joins.)
 
 ## Checks, as run for oil and gas
 
