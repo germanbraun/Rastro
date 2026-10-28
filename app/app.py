@@ -518,6 +518,7 @@ with st.sidebar:
     TECH = st.toggle(t("app.technical"), value=False, help=t("app.technical_help"))
     DOMAIN = (st.radio(t("app.domain"), DOMAINS, format_func=lambda d: d["name"], key="domain", help=ayuda("dominio"))
               if TECH else DOMAINS[0])
+    st.caption(t("app.sidebar.code"))
 if DOMAIN.get("config"):
     dominio.render(DOMAIN["config"], TECH)
     st.stop()

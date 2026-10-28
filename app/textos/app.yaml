@@ -189,6 +189,9 @@ app.answer.prov_caption:
 
 app.sidebar.examples_work: {es: "Las preguntas de ejemplo funcionan igual.", en: "The example questions work all the same."}
 app.sidebar.sources: {es: "Fuentes", en: "Sources"}
+app.sidebar.code:
+  es: "[Código de Rastro en GitHub](https://github.com/germanbraun/Rastro)"
+  en: "[Rastro's code on GitHub](https://github.com/germanbraun/Rastro)"
 app.sidebar.public_data:
   es: "Datos públicos de oncología: ensayos clínicos (AACT), fármacos (ChEMBL), efectos adversos (openFDA) y enfermedades (MeSH)."
   en: "Public oncology data: clinical trials (AACT), drugs (ChEMBL), adverse effects (openFDA) and diseases (MeSH)."
