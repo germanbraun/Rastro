@@ -1277,3 +1277,27 @@ experiment's log as method changes made after it; they do not change its measure
 - **Checked:** 139 tests, ruff, `check_domain.py` for oil and gas, suppliers and affiliations (both views, every
   example query) and oncology's screen in the browser. No number changes, so nothing is re-measured.
 - **Why:** the user asked that the code be easy for developers to review and debug.
+
+## 2026-10-27 — Skills checked against the code, generic, without typed numbers
+
+- **What:** all 15 skills were reviewed against the repository (26 files changed). A mechanical check confirmed
+  every path, compose service and `method.py` command they name; three reviewers then read five skills each.
+- **Fixed:** steps that no longer matched the code (the link classes live in the registry, the independent reference
+  is `eval/referencias.json`, `layer/experiment.py` runs the gates, footers are written by `estilo.py`, a model edit
+  needs `--publicar`); repeated steps became one-line handoffs; the slide procedure lives only in `decks`; measured
+  numbers are read through placeholders, never typed; every app text is edited in Spanish and English; the
+  research-affiliations domain is in the examples.
+- **Generic:** method skills name no domain or data source outside their `examples.md`. Only `rastro-lab` and `decks`,
+  the demo's own skills, stay specific.
+- **Left for a decision:** commands to fill the experiment log's header fields (until then the skill says to fill
+  them by hand and run `--lint`), and a guard for the suppliers change test (until then the skill says not to run it).
+  The slide `e-ejemplo-ia` still types three measured numbers.
+- **Why:** the user asked to review all skills, and that they stay generic for any domain and source.
+
+## 2026-10-27 — Documentation for developers, and the repository is public
+
+- **What:** `ONBOARDING.md` (start, stop, restart, check, reset, and how to trace a number), `docs/code-structure.md`
+  (how a value flows, what each main file does, where to change what, what the Spanish file names mean), and a link
+  to the GitHub repository in the app's sidebar, in Spanish and English.
+- **The repository is public;** the plan's open question about keeping it private is closed by that.
+- **Why:** the user wants developers to be able to run, review and debug Rastro on their own.

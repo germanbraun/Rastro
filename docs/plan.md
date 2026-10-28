@@ -168,7 +168,7 @@ Tomadas (detalle en [decisions.md](decisions.md)):
 
 Abiertas:
 
-- [ ] ¿El repo de GitHub queda privado?
+- [x] The GitHub repository is public (https://github.com/germanbraun/Rastro); the app's sidebar links to it (2026-10-27)
 
 ## Petróleo y gas en Argentina (el caso de la demo)
 
