@@ -40,9 +40,9 @@ The result is saved in `cambio/impacto.json`, which the Rastro Lab tab shows.
 
 ## US suppliers (`proveedores`): the source changes
 
-**Legacy and unguarded: do not run until it has a guard.** The registry has no `change_guard` for this domain, and its
-`deshacer` restores the amounts with inverse arithmetic (`amount * 1000`), which `docs/method-contracts.md` forbids.
-Its saved `resultado.json` stays as evidence of the last run.
+Guarded: the registry's `change_guard` names the mapping, the saved answers and `usaspending.contract`, and the
+column the first act renames (`awarding_agency`). `deshacer` restores the table and the mapping from the guard's
+snapshot, never with inverse arithmetic.
 
 Scripts in `layer/proveedores/cambio/` (`cambio.sh`, `probar.py`). They simulate a new USAspending version.
 

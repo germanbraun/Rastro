@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Demo de cambio del dominio de proveedores: simula que USAspending publica una versión
-# nueva y muestra dónde se arregla.
+# Suppliers change test: simulates a new USAspending version and shows where it is fixed.
 #
 #   layer/proveedores/cambio/cambio.sh probar          las 9 queries, sin Rastro y con Rastro
 #   layer/proveedores/cambio/cambio.sh renombrar       acto 1: awarding_agency pasa a llamarse agency_name
@@ -10,17 +9,25 @@
 #   layer/proveedores/cambio/cambio.sh registrar       corre los dos actos y guarda el resultado
 #                                                      para la app (resultado.json, en esta carpeta)
 #
-# Se corre desde cualquier carpeta del repo. Siempre terminar con "deshacer".
+# Runs from any folder of the repo. Only "registrar" and "probar" run on their own: the acts run inside the
+# guard (layer/change_guard.py), which snapshots the mapping and the contracts table and restores them exactly.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+
+if [ -z "${RASTRO_CHANGE_GUARD:-}" ]; then
+  case "${1:-}" in
+    registrar) exec python3 "$ROOT/layer/change_guard.py" run cambio proveedores ;;
+    probar) ;;
+    deshacer) exec python3 "$ROOT/layer/change_guard.py" recover ;;
+    *) echo "Use registrar (guarded); recover with python3 layer/change_guard.py recover"; exit 1 ;;
+  esac
+fi
 MAPPING="$ROOT/mappings/proveedores.r2rml.ttl"
-AGENCY="SELECT generated_internal_id, award_id, recipient_uei, awarding_agency, awarding_sub_agency,"
-AMOUNT="naics_code, amount, start_date, end_date, description"
 compose() { docker compose -f "$ROOT/infra/docker-compose.yml" "$@"; }
 sql() { compose exec -T postgres psql -U rastro -v ON_ERROR_STOP=1 -q -c "$1"; }
 
-# Cambia una línea del mapeo de contratos: la que contiene el patrón $1 pasa a ser $2
+# Changes one line of the contracts mapping: the one matching $1 becomes $2
 set_line() {
   python3 - "$MAPPING" "$1" "$2" <<'PY'
 import re, sys
@@ -41,11 +48,6 @@ restart_ontop() {
     sleep 2
   done
   echo "Ontop no levantó en 2 minutos (es lo esperado si el mapeo no coincide con la base)."
-}
-
-has_column() {
-  compose exec -T postgres psql -U rastro -tAc \
-    "SELECT 1 FROM information_schema.columns WHERE table_schema='usaspending' AND table_name='contract' AND column_name='$1'"
 }
 
 case "${1:-}" in
@@ -78,11 +80,8 @@ case "${1:-}" in
     grep -n "agency_name AS\|amount \* 1000" "$MAPPING" || true
     restart_ontop ;;
   deshacer)
-    if [ -n "$(has_column agency_name)" ]; then sql "ALTER TABLE usaspending.contract RENAME COLUMN agency_name TO awarding_agency"; fi
-    # Los montos del recorte superan US$10 millones: si hay menos, están en miles
-    sql "UPDATE usaspending.contract SET amount = amount * 1000 WHERE (SELECT min(amount) FROM usaspending.contract) < 10000000"
-    set_line "SELECT generated_internal_id, award_id, recipient_uei, [^\n]*awarding_sub_agency," "$AGENCY"
-    set_line "naics_code, [^\n]*, start_date, end_date, description" "$AMOUNT"
+    # Restores the mapping and the contracts table from the guard's snapshot, not with inverse arithmetic
+    python3 "$ROOT/layer/change_guard.py" restore-source
     restart_ontop
     echo "Todo como estaba." ;;
   *)

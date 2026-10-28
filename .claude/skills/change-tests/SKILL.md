@@ -22,7 +22,8 @@ They are the central argument of the method (step 8, Maintain, in `docs/method.m
 Read the domain's entry in `layer/dominios.yaml`:
 
 - `method.change_tests`: the folder with the scripts (for example `layer/<domain>/cambio/`).
-- `method.change_guard`: the files and tables each test may change, which the guard restores.
+- `method.change_guard`: the files and tables each test may change, which the guard restores, and the column a
+  `cambio` test renames (`renamed: {table, column, to}`), which the guard checks before and renames back.
 - `method.mapping`, `method.ontop.service`, `method.linker.service`, `method.linker.corrections`, `method.evaluation`: what the scripts change, restart and measure.
 
 If the domain has no `change_tests`, create the folder following the existing pattern (see examples.md) and add the path to the registry.

@@ -5,7 +5,8 @@ Use: python layer/change_guard.py run cambio|correccion|impacto [domain]   (doma
 Internal: restore-source restores the source and mapping between cambio acts.
 Run only on an isolated development database, with other writers stopped.
 What each test may change comes from the domain's method.change_guard entry in layer/dominios.yaml (files, and
-tables per test); the linker and Ontop to rebuild, and the folder with the test scripts, from the same method block.
+tables per test, and the column the cambio test renames); the linker and Ontop to rebuild, and the folder with the
+test scripts, from the same method block.
 """
 import fcntl
 import json
@@ -23,15 +24,15 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 STATE = ROOT / "data/cache/change-test-guard"
 COMPOSE = ["docker", "compose", "-f", str(ROOT / "infra/docker-compose.yml")]
-DOMAIN, FILES, TABLES, LINKER, ONTOP, SCRIPTS = None, [], {}, None, None, None
+DOMAIN, FILES, TABLES, RENAMED, LINKER, ONTOP, SCRIPTS = None, [], {}, None, None, None, None
 
 
 def configure(domain):
     """Read what the domain's change tests may change, and what to rebuild, from the registry."""
-    global DOMAIN, FILES, TABLES, LINKER, ONTOP, SCRIPTS
+    global DOMAIN, FILES, TABLES, RENAMED, LINKER, ONTOP, SCRIPTS
     method = yaml.safe_load((ROOT / "layer/dominios.yaml").read_text())[domain]["method"]
     guard = method["change_guard"]
-    DOMAIN, FILES, TABLES = domain, guard["files"], guard["tables"]
+    DOMAIN, FILES, TABLES, RENAMED = domain, guard["files"], guard["tables"], guard.get("renamed")
     LINKER, ONTOP = method["linker"]["service"], method["ontop"]["service"]
     SCRIPTS = method["change_tests"]
 
@@ -88,14 +89,18 @@ def restore_files(state, only_mapping=False):
             raise RuntimeError(f"File restoration differs: {name}")
 
 
+def has_column(table, column):
+    schema, name = table.split(".")
+    return sql(f"SELECT count(*) FROM information_schema.columns WHERE table_schema='{schema}' "
+               f"AND table_name='{name}' AND column_name='{column}'") == "1"
+
+
 def snapshot(kind):
-    if kind == "cambio" and DOMAIN == "energia":
-        count = sql("SELECT count(*) FROM information_schema.columns WHERE table_schema='capitulo4' "
-                    "AND table_name='produccion' AND column_name='prod_pet'")
-        if count != "1":
-            raise ValueError("Expected prod_pet column before mutation; recover earlier changes first")
+    if kind == "cambio" and RENAMED and not has_column(RENAMED["table"], RENAMED["column"]):
+        raise ValueError(f"Expected {RENAMED['column']} column before mutation; recover earlier changes first")
     STATE.mkdir()  # Never overwrite an unfinished recovery.
-    state = {"kind": kind, "domain": DOMAIN, "schema": "rastro_test_" + uuid.uuid4().hex, "tables": TABLES[kind],
+    state = {"kind": kind, "domain": DOMAIN, "renamed": RENAMED if kind == "cambio" else None,
+             "schema": "rastro_test_" + uuid.uuid4().hex, "tables": TABLES[kind],
              "database": os.environ.get("PG_DB", "rastro"), "user": os.environ.get("PG_USER", "rastro")}
     save_files(state)
     schema = state["schema"]
@@ -116,18 +121,20 @@ def restore_tables(state, source_only=False):
     if (state["database"] != os.environ.get("PG_DB", "rastro")
             or state["user"] != os.environ.get("PG_USER", "rastro")):
         raise ValueError("Database configuration changed since snapshot; restore the original settings first")
+    renamed = state.get("renamed")
     tables = state["tables"]
     if source_only:
-        tables = [t for t in tables if t == "capitulo4.produccion"]
+        tables = [t for t in tables if renamed and t == renamed["table"]]
     if not tables:
         return
     schema = state["schema"]
     statements = []
-    if "capitulo4.produccion" in tables:
-        statements.append("""DO $$ BEGIN
-IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='capitulo4'
-AND table_name='produccion' AND column_name='petroleo') THEN
-ALTER TABLE capitulo4.produccion RENAME COLUMN petroleo TO prod_pet;
+    if renamed and renamed["table"] in tables:
+        table_schema, table_name = renamed["table"].split(".")
+        statements.append(f"""DO $$ BEGIN
+IF EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='{table_schema}'
+AND table_name='{table_name}' AND column_name='{renamed["to"]}') THEN
+ALTER TABLE {renamed["table"]} RENAME COLUMN {renamed["to"]} TO {renamed["column"]};
 END IF; END $$""")
     statements.append("TRUNCATE " + ", ".join(tables))
     for table in tables:

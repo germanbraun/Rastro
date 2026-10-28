@@ -91,3 +91,13 @@ def test_change_measurement_rejects_empty_and_broken_baselines():
     measurement.validate_step("renombrar-arreglado", {"q1": {"B": "❌ error", "C": "✅ igual"}}, "✅ units")
     with pytest.raises(RuntimeError, match="unit control"):
         measurement.validate_step("valores-arreglado", {"q1": {"B": "❌ error", "C": "✅ igual"}}, "🟡 wrong units")
+
+
+def test_each_domain_names_the_column_its_change_test_renames():
+    guard.configure("proveedores")
+    assert guard.RENAMED == {"table": "usaspending.contract", "column": "awarding_agency", "to": "agency_name"}
+    assert guard.TABLES["cambio"] == ["usaspending.contract"]
+    guard.configure("afiliaciones")
+    assert guard.RENAMED is None
+    guard.configure("energia")
+    assert guard.RENAMED["column"] == "prod_pet"

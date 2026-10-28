@@ -66,6 +66,11 @@ proveedores:
     evaluation: {folder: layer/proveedores, harness: current, run: docker compose run --rm -T layer-eval python /layer/evaluar.py proveedores,
                  title: proveedores del Estado, normalize: proveedores.normalize}
     change_tests: layer/proveedores/cambio/
+    change_guard:
+      files: [mappings/proveedores.r2rml.ttl, layer/proveedores/respuestas]
+      tables:
+        cambio: [usaspending.contract]
+      renamed: {table: usaspending.contract, column: awarding_agency, to: agency_name}
     evidence: {result: layer/proveedores/evidencia.json, link_classes: [GroupLink, LeiLink, WatchlistLink],
                pattern: "?l prov:wasDerivedFrom ?f ; proveedores:sourceText ?t ."}
   term_sources:
@@ -117,6 +122,7 @@ energia: &energia
         cambio: [capitulo4.produccion]
         correccion: []
         impacto: [fractura.fractura, lab_gas.corrida, lab_gas.prediccion, lab_gas.entrada, lab_gas.aporte]
+      renamed: {table: capitulo4.produccion, column: prod_pet, to: petroleo}   # what the cambio test renames
     evidence: {result: layer/energia/evidencia.json,
                link_classes: [Stake, OperatorLink, CompanyName, LocationLink, PipelineLink, SurroundingsLink,
                               LeiLink, StudyLink, OperatorChange],

@@ -115,8 +115,9 @@ blocks that claim. Missing domain quality rules are pending unless explicitly no
 
 ## Safe change tests
 
-Run on an isolated development database with other writers stopped. Energy scripts enter `layer/change_guard.py`
-automatically for `registrar`. The guard takes a shared nonblocking lock, snapshots actual local files (including
+Run on an isolated development database with other writers stopped. Every domain with `method.change_guard` in
+the registry (oil and gas, suppliers, affiliations) enters `layer/change_guard.py` automatically for `registrar`.
+The column a `cambio` test renames is declared there too (`renamed`), so the guard checks it before and restores it. The guard takes a shared nonblocking lock, snapshots actual local files (including
 pre-existing edits and untracked answers) and affected database tables, then restores them on exit or interruption.
 It rebuilds the derived layer and waits for Ontop health. Tables are compared with `EXCEPT ALL` after restoration;
 files are compared byte for byte. Do not use Git checkout/reset or inverse arithmetic as recovery.
