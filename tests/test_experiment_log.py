@@ -62,3 +62,20 @@ def test_saving_keeps_the_affiliations_log_identical(tmp_path):
     log.save(copy, log.load(original))
     assert log.load(copy) == log.load(original)
     assert log.lint_errors(log.load(original)) == []
+
+
+def test_header_and_human_hours_are_set_by_command():
+    data = {}
+    log.start(data, "links", "2026-10-22T10:00:00Z")
+    log.set_field(data, "sources", "one")
+    log.set_field(data, "sources", "two")
+    log.set_field(data, "ended_on", "2026-10-23T10:00:00Z")
+    log.set_human_hours(data, "links", 0.5)
+    assert data["sources"] == ["one", "two"] and data["steps"]["links"]["human_hours"] == 0.5
+    with pytest.raises(ValueError, match="not a header field"):
+        log.set_field(data, "agent_hours", "3")
+    with pytest.raises(ValueError):
+        log.set_field(data, "ended_on", "yesterday")
+    with pytest.raises(ValueError, match="start it first"):
+        log.set_human_hours(data, "quality", 1)
+

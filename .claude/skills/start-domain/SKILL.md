@@ -36,11 +36,13 @@ Reuse its findings and actual approvals; a favorable inspection alone does not a
    python layer/method.py experiment <domain> --start <step>
    python layer/method.py experiment <domain> --stop <step> --work "what the session did" [--status completed] [--evidence <path>]
    python layer/method.py experiment <domain> --append intervention|error|method-change --field key=value ...
+   python layer/method.py experiment <domain> --set sources="<source, version>" --set question_author="<who>" --set result="<one line>" --set ended_on=<ISO time>
+   python layer/method.py experiment <domain> --human-hours <step>=<hours as the person reports them>
    ```
    Steps are exactly `initialize`, `questions`, `sources`, `mapping`, `links`, `quality`, `evaluate`, `show`,
    `maintain` (the command accepts any name; a typo only fails at `--check`). Sessions and appended entries always go
-   through the command. No command sets `sources`, `question_author`, `ended_on`, `human_hours` or `result` yet:
-   until one exists, fill those header/result fields by hand, then run `experiment <domain> --lint`.
+   through the command. The header fields and human hours also go through the command (`--set`, `--human-hours`); a
+   missing human time stays empty, never estimated.
 5. **Check the shell.** Run `python layer/method.py registry <domain>`. Start the Ontop service: an empty mapping is
    not proof of a healthy service. If it cannot start without mappings, record it as pending and build the first
    approved question's minimal implementation before claiming readiness.

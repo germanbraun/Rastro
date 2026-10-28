@@ -278,6 +278,10 @@ def main():
     parser.add_argument("--at", help="ISO time instead of now (say «approximate» in --work)")
     parser.add_argument("--append", choices=["intervention", "error", "method-change"])
     parser.add_argument("--field", action="append", default=[], metavar="KEY=VALUE")
+    parser.add_argument("--set", action="append", default=[], metavar="KEY=VALUE",
+                        help="a header field: sources (adds one), question_author, started_on, ended_on, result")
+    parser.add_argument("--human-hours", action="append", default=[], metavar="STEP=HOURS",
+                        help="the person's time on a step, as they report it")
     args = parser.parse_args()
     registry = yaml.safe_load((ROOT / "layer/dominios.yaml").read_text())
     if args.domain and args.domain not in registry:
@@ -312,7 +316,7 @@ def main():
             return
         import experiment_log
         data = experiment_log.load(path)   # refuses duplicate keys
-        if args.start or args.stop or args.append:
+        if args.start or args.stop or args.append or args.set or args.human_hours:
             if args.start:
                 experiment_log.start(data, args.start, args.at)
             if args.stop:
@@ -322,6 +326,11 @@ def main():
                 if "minutes" in fields:
                     fields["minutes"] = None if fields["minutes"] in ("", "null") else float(fields["minutes"])
                 experiment_log.append(data, args.append, fields)
+            for item in args.set:
+                experiment_log.set_field(data, *item.split("=", 1))
+            for item in args.human_hours:
+                step, hours = item.split("=", 1)
+                experiment_log.set_human_hours(data, step, float(hours))
             errors = experiment_log.lint_errors(data)
             if errors:
                 raise ValueError("\n".join(errors))

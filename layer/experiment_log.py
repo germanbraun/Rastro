@@ -11,6 +11,7 @@ SESSION_FIELDS = ("started_on", "ended_on", "pauses", "work")
 APPENDS = {"intervention": ("interventions", ("step", "decision", "reason", "kind", "minutes")),
            "error": ("errors_caught", ("step", "check", "failure_kind", "fix")),
            "method-change": ("method_changes", ("change", "scope", "reason"))}
+HEADER = ("sources", "question_author", "started_on", "ended_on", "result")
 
 
 class StrictLoader(yaml.SafeLoader):
@@ -124,3 +125,26 @@ def append(data, kind, fields):
     if missing:
         raise ValueError(f"{kind} requires {missing}")
     data.setdefault(key, []).append({f: fields[f] for f in required})
+
+
+def set_field(data, key, value):
+    """Set a header field; each `sources` value adds one source. Dates must parse."""
+    if key not in HEADER:
+        raise ValueError(f"{key} is not a header field; one of {HEADER}")
+    if not str(value).strip():
+        raise ValueError(f"{key} needs a value")
+    if key in ("started_on", "ended_on"):
+        when(value)
+    if key == "sources":
+        data.setdefault("sources", []).append(value)
+    else:
+        data[key] = value
+
+
+def set_human_hours(data, step, hours):
+    """The person's own time on a step, as they report it; agent hours stay derived from the sessions."""
+    if step not in (data.get("steps") or {}):
+        raise ValueError(f"No step {step} in the log: start it first")
+    if hours < 0:
+        raise ValueError("Hours cannot be negative")
+    data["steps"][step]["human_hours"] = hours
