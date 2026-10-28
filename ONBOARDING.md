@@ -2,7 +2,7 @@
 
 Day-to-day commands to run Rastro on a laptop. Everything runs from the repository root with Docker Compose
 (`compose.yaml` includes `infra/docker-compose.yml`). The why behind each part is in `README.md`; the plan in
-`docs/plan.md`.
+`docs/plan.md`; a map of the code, in `docs/code-structure.md`.
 
 ## What runs where
 

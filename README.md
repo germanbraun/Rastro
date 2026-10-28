@@ -139,6 +139,9 @@ recorded. Claude implemented it and another assistant reviewed every stage.
 Each domain uses its own SPARQL prefix (`energia:`, `proveedores:`, `oncologia:`, `afiliaciones:`), for example
 `energia:Well`.
 
+The main files, how a value flows through them and where to change what: `docs/code-structure.md`. Running and
+debugging: `ONBOARDING.md`.
+
 ## The demo
 
 The app, decks and demo scripts are in Spanish, for Argentine audiences.
