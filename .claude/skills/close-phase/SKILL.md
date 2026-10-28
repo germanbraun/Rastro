@@ -16,8 +16,8 @@ Read `docs/method-contracts.md` for lifecycle states, gates and experiment evide
 
 ## Steps
 
-1. **Experiment evidence:** the log is written by commands (`--start`, `--stop`, `--append`; see the contracts), never
-   by hand. Run `python layer/method.py experiment <domain> --lint` before every commit that touches it, and do not
+1. **Experiment evidence:** the log is written by commands (`--start`, `--stop`, `--append`, and `--set` and
+   `--human-hours` for the header and the person's time; see the contracts), never by hand. Run `python layer/method.py experiment <domain> --lint` before every commit that touches it, and do not
    commit if it fails. To close a new-domain experiment, run `python layer/method.py experiment <domain> --check`.
    Verify measured agent/person time, interventions, errors caught, method changes, version and outcomes. Missing
    evidence blocks claiming a completed experiment. Legacy maintenance uses decisions.md without invented history.
@@ -26,7 +26,11 @@ Read `docs/method-contracts.md` for lifecycle states, gates and experiment evide
 3. **Publication:** run `python layer/method.py publication <domain>` before new accuracy claims; independently reviewed references must cover agreement cases too. The gate covers new claims; numbers already published stay as they are, labelled provisional until the gate passes.
 4. **Check that the numbers match** everywhere: what changed in the app (which reads them from its JSON files) must say the same in `docs/decisions.md`, the domain's docs and the demo material. For the slides, refresh their numbers and rebuild with the skill `decks`. If a model's code changed, publish a new run of it first. After changing app, layer or lab code, `docker compose restart app` before checking.
 5. **Mark the plan** in `docs/plan.md`: finished steps with `[x]`. Keep the plan short: a summary of what was achieved, not the history.
-6. **Decisions:** one entry in `docs/decisions.md` for each new decision, with date, what was decided, why and the numbers that back it. If a decision is a rule that must always be followed, it also goes to `CLAUDE.md` or to a skill.
+6. **Decisions:** one entry in `docs/decisions.md` for each new decision, with date, what was decided, why and the numbers that back it. If a decision is a rule that must always be followed, it also goes to `CLAUDE.md` or to a skill. A decision someone
+   should review also goes to `docs/review/decisions-for-review.md` (its question, and out of «Open decisions» when it
+   closes one).
+   **Re-check the skills:** grep `.claude/skills/` (SKILL.md and examples.md) for the files, commands and rules the
+   change touched, and adjust what is stale; skills stay generic, with domain cases only in examples.md.
 7. **README and `CLAUDE.md`:** if how something is started, loaded or measured changed.
 8. **Before committing, check secrets and names:**
    ```bash

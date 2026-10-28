@@ -22,6 +22,11 @@ The same thing in three places, which must say the same:
 | Script | `docs/demo-guion-energia.md` |
 | Deck | `docs/slides/mazos/energia.json` (order) and `docs/slides/slides/*.html` (one slide per file) |
 
+The sales material repeats some of these numbers and must say the same too, in both languages (each page links its
+twin): the executive decks (`mazos/ejecutivo.json`, `mazos/ejecutivo-en.json`), the one-pagers and the pilot offer
+(`docs/one-pager*.md`, `docs/piloto*.md`) and the email draft (`docs/email-prospecto.md`). The README's «Selling
+Rastro» lists them all. The documents type the numbers with their source file: update them when the numbers change.
+
 ## Steps
 
 1. **Before new accuracy claims**, run `python layer/method.py publication <domain>`; missing independent evidence blocks those claims. The gate covers new claims; numbers already published stay as they are, labelled provisional until the gate passes. **Change the text in all three places at once;** in the app, edit the Spanish text and its English counterpart (`app/dominios/energia.en.yaml`, `app/dominios.en.yaml`, `app/textos/*.yaml`). The script and the decks are in Spanish, except the executive deck's English version (`mazos/ejecutivo-en.json`, slides `en-*.html`): a change to an executive slide goes to its `en-` twin too. Every number on a slide or in the script must be measured (in `layer/**/resultados.json`, `layer/energia/cambio/*.json` or what `lab/gas/modelo.py` prints).

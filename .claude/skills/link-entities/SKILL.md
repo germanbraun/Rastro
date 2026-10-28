@@ -83,7 +83,9 @@ its whole schema (`DROP`): anything that cannot be rebuilt goes in its own schem
 - **A fix tuned on a reference is re-tested on unseen records:** if the defect was found by comparing with a
   reference, the re-measured score fits that reference by construction (optimistic). Run the old and new rules on
   records the fix was not tuned on, against a new blind reference, without loading them into Rastro. Do not fix what
-  that test finds on the same records: a fair test of that fix needs another unseen set.
+  that test finds on the same records: a fair test of that fix needs another unseen set. Write the fix before drawing
+  that set and fix its seed first; a rule that fixes nothing there and breaks links is dropped, and the set is then
+  spent for that rule. Then run the linker on Rastro's own data and re-run the saved queries.
 - **The questions that use it answer, and what was measured does not change by accident:** the domain's evaluation
   (`method.evaluation.run`) with `rerun` and `puntaje`. If a question changes, adjudicate it with the data from each
   source (`layer/<domain>/adjudicacion.md`).

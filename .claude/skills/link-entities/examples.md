@@ -81,6 +81,11 @@ concession.
   before, 866 after; precision 0.961 → 0.985, recall 0.979 → 0.977. Two defects found there (a footnote digit glued
   to a name, a short name inside a longer one) were not fixed: a fix would be tuned on that holdout. The annotation
   was made by AI reviewers and still needs a person's spot check.
+- **The second unseen set decided which fix stays** (`docs/experiments/research-affiliations/holdout-2/README.md`):
+  both fixes were written first, then 100 more works (seed fixed before drawing) were annotated blind. Of 993
+  mentions, 955 agreed before; with both fixes 942: the longer-name rule fixed nothing new and broke 11 strings (a big
+  organization's name followed by a local town). It was dropped; the glued footnote number was kept (955, no harm;
+  on the first holdout 866 → 872). Rastro's own sample did not change and the saved queries were re-run.
 
 ## Watch out for: what happened
 
