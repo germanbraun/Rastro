@@ -30,8 +30,6 @@ con_rastro: >-
 fuentes_respuesta: >-
   The sources the data in this answer comes from. «Rastro links» are the joins between sources that Rastro
   computed once, with their evidence (for example, that two names are the same company).
-explicar: >-
-  Explains in business terms what the query does and the SQL that Rastro generated.
 texto: >-
   The graph chooses which records to read with an exact query; then an AI assistant summarizes only those
   texts, citing each record. The AI does not choose what to read.

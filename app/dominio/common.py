@@ -27,11 +27,6 @@ def read_json(path):
     return _load_json(path, p.stat().st_mtime) if p.exists() else {}
 
 
-@st.cache_data
-def _load_yaml(path, mtime):   # the file's date is part of the key: if it changes, it is read again
-    return yaml.safe_load(Path(path).read_text())
-
-
 def ayuda(key):
     """The text of the «?» icon for each part of the app (app/ayuda.yaml, with its English overlay)."""
     p = Path("/app/ayuda.yaml")

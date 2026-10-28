@@ -30,8 +30,6 @@ con_rastro: >-
 fuentes_respuesta: >-
   Las fuentes de las que salen los datos de esta respuesta. «Enlaces de Rastro» son las uniones entre
   fuentes que Rastro calculó una vez, con su evidencia (por ejemplo, que dos nombres son la misma empresa).
-explicar: >-
-  Explica en palabras de negocio qué hace la consulta y el SQL que generó Rastro.
 texto: >-
   El grafo elige con una consulta exacta qué registros leer; después un asistente de IA resume solo esos
   textos, citando cada registro. La IA no elige qué leer.
