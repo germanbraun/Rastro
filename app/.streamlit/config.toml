@@ -1,10 +1,11 @@
-# The app's look (read from the working directory, /app): the decks' colours, always light, and no Streamlit
+# The app's look (read from the working directory, /app): one blue palette (text navy, accent blue, backgrounds
+# light blue), always light, and no Streamlit
 # developer menu or «Deploy» button for the people it is shown to
 [theme]
 base = "light"
 primaryColor = "#2F6FB5"
-backgroundColor = "#F7F6F2"
-secondaryBackgroundColor = "#ECEAE3"
+backgroundColor = "#F5F8FC"
+secondaryBackgroundColor = "#E8F0FA"
 textColor = "#14213D"
 font = "sans serif"
 

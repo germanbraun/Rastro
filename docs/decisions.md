@@ -1841,3 +1841,18 @@ experiment's log as method changes made after it; they do not change its measure
 - **With the defaults:** 210 h a year without Rastro, 18 h with it, US$ 11,520 saved at US$ 60 an hour; these depend
   on the assumptions and are not claims.
 
+## 2026-10-29 — One blue palette, every text readable
+
+- **What:** text and titles navy #14213D, secondary text slate #4A5568, accent blue #2F6FB5, the page light blue
+  #F5F8FC, the sidebar soft blue #E8F0FA (`app/.streamlit/config.toml`, `app/estilo.py`). Notices on soft backgrounds
+  of the palette with navy text; code blocks and inline code with the palette's darker shades; Lab's warning marks in
+  dark amber (`estilo.MARK`) instead of Streamlit's orange; disabled buttons readable.
+- **Measured:** every visible text's WCAG contrast against its real background, in the start page, the wizard, and
+  every section of both views. Before: captions 4.2:1, inline code 2.7:1, code highlighting down to 2.4:1, the
+  orange mark 3.6:1, disabled buttons 2.4:1. After: no text under 4.5:1; the lowest is 4.78:1.
+- **The wizard** says real use needs the Claude API (the agent runs on the Agent SDK with the method's skills) and
+  lists the minimum requirements (a machine, read-only access, the API, the people).
+- **Skills:** a new project skill, `deploy-customer` (install, check, back up, restore, upgrade, what reaches the
+  model); `show-in-app` has the look's rules (one stylesheet, 4.5:1) and the English default; `decks` says how the
+  Spanish scripts open the app.
+

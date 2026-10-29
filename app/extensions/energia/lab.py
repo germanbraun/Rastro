@@ -1,6 +1,7 @@
 """Oil and gas «Rastro Lab» tab: the same gas model, with and without Rastro, and the explanation of
 each prediction side by side. The model is in lab/gas/modelo.py; here the data is only loaded and shown.
 """
+import html
 import json
 import os
 import sys
@@ -11,6 +12,7 @@ import streamlit as st
 
 import answer
 import enlaces
+import estilo
 import idioma
 from .lab_walkthrough import GROUPS, compare_run, value_status
 from dominio import ayuda, md, tabla, version
@@ -416,7 +418,10 @@ def show_well(key, pozo=None):
                 st.caption(x["nota"])
         st.markdown(idioma.t("lab.show_well.facts"))
         for h in eb["hechos"]:
-            st.markdown(f"**{h['hecho']}:** {h['valor']}" + (f"  \n:orange[{mark(h['marca'])}]" if h["marca"] else ""))
+            # The mark in dark amber (estilo.MARK), not Streamlit's orange, which falls under 4.5:1 on the background
+            st.markdown(f"**{h['hecho']}:** {html.escape(str(h['valor']))}"
+                        + (f"  \n<span style='color:{estilo.MARK}'>{html.escape(mark(h['marca']))}</span>"
+                           if h["marca"] else ""), unsafe_allow_html=True)
             with st.popover(idioma.t("lab.show_well.where_from")):
                 st.markdown(idioma.t("lab.show_well.rule_evidence", rule=h["regla"], evidence=h["evidencia"])
                             + (idioma.t("lab.show_well.name", name=h["nombre"]) if h.get("nombre") else "")

@@ -28,6 +28,8 @@ def example_cfg():
 
 def show():
     st.info(idioma.t("wizard.sketch"))
+    with st.expander(idioma.t("wizard.requirements_title")):
+        st.markdown(idioma.t("wizard.requirements"))
     all_steps = steps()
     i = min(st.session_state.get("wizard_step", 0), len(all_steps) - 1)
     st.markdown(" → ".join(f"**{n + 1} · {s['titulo']}**" if n == i else f"{n + 1} · {s['titulo']}"

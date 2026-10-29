@@ -31,6 +31,10 @@ described in its configuration file, not programmed.
   domain's `portada` (its contrast question and the change and correction tests, read now, never typed; English in
   the overlay); a domain shows after «Ver la demo», and `?inicio=demo` opens it directly. The look (the decks'
   colours, no Streamlit menu) is `app/.streamlit/config.toml`.
+- **The look, in one place:** the theme is `app/.streamlit/config.toml` (the decks' colours, always light) and every
+  shared rule is in `app/estilo.py` (room, titles, cards side by side as tall as the tallest, big numbers). A screen
+  adds CSS only scoped to its own keyed container; text and background keep a WCAG contrast of at least 4.5:1.
+- **The app opens in English** (`idioma.DEFAULT`); every visible text is written in Spanish with its English overlay.
 - **Links to confirm:** when a domain's reviewed corrections have rows an AI reviewed, «Por qué confiar» opens with
   «Uniones para confirmar» (`review_view.py`), where a person confirms with a document or rejects with a reason. It
   writes `linking/`, so the app mounts it writable; nothing to configure.

@@ -62,6 +62,7 @@ layer/energia/cambio/impacto.sh registrar              # which predictions chang
 python3 lab/gas/modelo.py [<well>|--12-meses|--como-trabajo-publicado|--publicar|--comparar]   # Rastro Lab from the console
 python layer/method.py new-domain <domain> --title "…"  # a new domain's scaffold (skill start-domain)
 python3 docs/slides/build.py                           # builds the HTML decks
+infra/customer/install.sh <domain>                     # a customer installation (skill deploy-customer): backup.sh, restore.sh, upgrade.sh
 ```
 
 The scripts in `lab/` and `layer/energia/cambio/correccion.py` run on the machine, not in Docker: they need Python with `requirements-dev.txt` and the oil and gas Ontop on localhost:8082.
@@ -88,3 +89,4 @@ The scripts in `lab/` and `layer/energia/cambio/correccion.py` run on the machin
 
 - `rastro-lab`: train, measure and explain the oil and gas model with and without Rastro
 - `decks`: build and publish Rastro's decks and keep the demo script consistent
+- `deploy-customer`: install, check, back up, restore and upgrade Rastro at a customer, and what data reaches the model
