@@ -67,7 +67,6 @@ The first screen says what Rastro is and how to read each screen (question → a
 
 | Module | When | Key |
 |---|---|---|
-| Talk to the data (a chat over the layer) | The domain answers free questions through its dictionary and a person will follow up on answers | `conversar` (optional `ejemplo`) |
 | Questions over texts (graph-grounded RAG) | The domain has free-text records (reports, studies, descriptions) and a question that needs to read them | `texto` |
 | Check a claim (technical view only) | There are claims worth checking against the data (holds, does not hold, no data) | `afirmaciones` |
 | Enrichment from an outside source (technical view only) | A shared key with an outside source (live and saved) | `externo` |
@@ -107,9 +106,10 @@ fails if `app/app.py` or `app/dominio/` names a domain, a source or a word of on
    - the summary is saved with its date (`.json`, with `consulta`, `simple`, `como`, `temas`); the records are read
      live, so anyone can open a cited record and read the original text;
    - if the data changes, the summary is generated again; a person checks that each citation says what the theme says.
-   For talking to the data (`layer/chat.py`, `app/dominio/chat_view.py`): the context is the domain's ontology and
-   notes (as for a free question); each turn writes a query, runs it, answers in words from the result only, and
-   code flags any number of the answer that is not in the result. Nothing to write but `conversar` and its example.
+   Talking to the data is not optional: it is how every domain takes a free question (Preguntar → «Conversar con los
+   datos», `layer/chat.py`, `app/dominio/chat_view.py`). The context is the domain's ontology and notes; each turn
+   writes a query, runs it, answers in words from the result only, and code flags any number not in the result.
+   Nothing to write but `ejemplo_libre`, a first question and a follow-up the domain's data answers.
 7. **Check** (below), in both views with the real runner: `docker compose run --rm --no-deps -T app python /app/check_domain.py <domain>` (it opens every section in turn, since only the open one is drawn). Then inspect the visual layout in the browser.
 
 ## The check that decides

@@ -7,7 +7,7 @@ resumen: >-
   para ver quién operó cada concesión) y los mapas de
   concesiones, socios y venteos de gas y los estudios ambientales de la Secretaría de Energía, los gasoductos de ENARGAS, las
   localidades y áreas protegidas del IGN, y el identificador global de empresas (GLEIF).
-ejemplo_libre: "Por ejemplo: ¿qué empresas producen más gas en la cuenca Neuquina?"
+ejemplo_libre: "Por ejemplo: ¿quién produjo más gas en 2025? Y después: ¿y cuánto le corresponde por su participación?"
 evaluacion: /layer/energia/resultados.json
 cambio: /layer/energia/cambio/resultado.json
 correccion: /layer/energia/cambio/correccion.json
@@ -17,8 +17,6 @@ avisos_cambio:                 # the change test records its check in Spanish; t
 evidencia: /layer/energia/evidencia.json   # cobertura de la evidencia (layer/evidencia.py)
 ontologia: /ontology/energia/energia.ttl
 texto: /layer/energia/textos/venteos.json   # la pregunta sobre textos (GraphRAG anclado)
-conversar:                     # «Conversar con los datos» en Preguntar (layer/chat.py)
-  ejemplo: "Por ejemplo: ¿quién produjo más gas en 2025? Y después: ¿y cuánto le corresponde por su participación?"
 diagrama: {archivo: ontologia-energia, titulo: diccionario de petróleo y gas}   # app/ontologia-energia.svg, lo dibuja docs/diagramas/build.py
 
 # The demo in two acts: Rastro Layer (a number you can trust), then Rastro Lab (a prediction you can defend)

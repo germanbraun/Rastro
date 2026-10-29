@@ -202,10 +202,10 @@ lab.show_published.missing:
 lab.show_published.intro:
   es: "Cada predicción queda en Rastro como un dato más: con su rango, el aporte de cada factor, la corrida que la
     hizo (versión {version}, del {date}, {n} predicciones) y los datos de Rastro que usó. Así se le puede
-    preguntar a Rastro por las predicciones, con una consulta o en palabras en «Preguntar → Mi propia pregunta»."
+    preguntar a Rastro por las predicciones, con una consulta o en palabras en «Preguntar → Conversar con los datos»."
   en: "Every prediction stays in Rastro as one more piece of data: with its range, the contribution of each factor,
     the run that made it (version {version}, of {date}, {n} predictions) and the Rastro data it used. So Rastro
-    can be asked about the predictions, with a query or in words in «Ask → My own question»."
+    can be asked about the predictions, with a query or in words in «Ask → Talk to the data»."
 lab.show_published.cq11:
   es: "**¿Qué predicciones de 2025 se apoyan en un dato corregido?**"
   en: "**Which 2025 predictions rest on a corrected value?**"

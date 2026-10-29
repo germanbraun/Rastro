@@ -70,15 +70,12 @@ dominio.render.walkthrough: {es: "**{title}** · {header}", en: "**{title}** · 
 dominio.render.mode_example: {es: "Una pregunta de ejemplo", en: "An example question"}
 dominio.render.mode_chat: {es: "Conversar con los datos", en: "Talk to the data"}
 dominio.render.mode_text: {es: "Una pregunta sobre textos", en: "A question about texts"}
-dominio.render.mode_free: {es: "Mi propia pregunta", en: "My own question"}
 dominio.render.mode_label: {es: "Tipo de pregunta", en: "Kind of question"}
 dominio.render.question: {es: "Pregunta", en: "Question"}
 dominio.render.tech_wording: {es: "Formulación técnica: ", en: "Technical wording: "}
 dominio.render.terms: {es: "¿Qué significa {terms}?", en: "What does {terms} mean?"}
 dominio.render.answer: {es: "Responder", en: "Answer"}
 dominio.render.live_note: {es: "Se ejecuta ahora, en vivo, sobre los datos.", en: "It runs now, live, over the data."}
-dominio.render.writing: {es: "El LLM está escribiendo la query...", en: "The LLM is writing the query..."}
-dominio.render.no_data: {es: "Rastro no tiene ese dato: {missing}", en: "Rastro does not have that data: {missing}"}
 dominio.render.failed:
   es: "El LLM no logró una query que funcione en tres intentos."
   en: "The LLM did not manage a working query in three attempts."

@@ -1,7 +1,8 @@
 """«Conversar con los datos»: a chat over the domain's business dictionary (layer/chat.py), in Preguntar.
 
 Each answer is in words, with its data and evidence below (the same view as a free question), and any number the
-answer says that is not in its result is flagged. A domain turns it on with «conversar» in its YAML.
+answer says that is not in its result is flagged. It is how a free question is asked in every domain; its example
+is the domain's «ejemplo_libre».
 """
 import streamlit as st
 
@@ -45,7 +46,7 @@ def show_chat(cfg, tech):
     if history and st.button(idioma.t("dominio.chat.new"), key=f"{key}_new"):
         history.clear()
         st.rerun()
-    example = (cfg.get("conversar") or {}).get("ejemplo") or idioma.t("dominio.chat.placeholder")
+    example = cfg.get("ejemplo_libre") or idioma.t("dominio.chat.placeholder")
     question = st.chat_input(example, key=f"{key}_input")
     if question:
         with st.chat_message("user"):

@@ -12,8 +12,9 @@ llm: >-
   necesitan: sus consultas ya están escritas y corren en vivo.
 modo: >-
   Una pregunta de ejemplo: elegir entre las preguntas ya preparadas. Una pregunta sobre textos: la IA
-  resume solo los textos que eligió el grafo. Enriquecer con datos de afuera: Rastro unido con Wikidata, en vivo o guardado. Mi
-  propia pregunta: escribir una pregunta libre (necesita un asistente de IA configurado). El recorrido
+  resume solo los textos que eligió el grafo. Enriquecer con datos de afuera: Rastro unido con Wikidata, en vivo o guardado. Conversar
+  con los datos: preguntas propias y las que siguen, respondidas en palabras con los datos (necesita un
+  asistente de IA configurado). El recorrido
   guiado está en la pestaña «Demo».
 pregunta: >-
   Preguntas de ejemplo de este dominio. Cada una se responde en vivo sobre los datos, con una consulta
@@ -33,6 +34,7 @@ fuentes_respuesta: >-
 texto: >-
   El grafo elige con una consulta exacta qué registros leer; después un asistente de IA resume solo esos
   textos, citando cada registro. La IA no elige qué leer.
+# oncology's own screen (app/extensions/oncologia/screen.py)
 propia: >-
   Escribir una pregunta en palabras de negocio. Un asistente de IA la traduce en una consulta sobre el
   diccionario; la consulta y el SQL quedan a la vista para revisarlos.

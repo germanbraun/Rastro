@@ -1685,3 +1685,13 @@ experiment's log as method changes made after it; they do not change its measure
   context, follow-ups, retries, «sin datos», the number check). No accuracy is claimed until it is measured with the
   domain's evaluation and «does it say when it lacks the data?» questions.
 
+## 2026-10-29 — One way to ask in your own words: the chat replaces «Mi propia pregunta»
+
+- **Why:** both used the ontology as context and wrote the same kind of query; the chat also remembers the
+  conversation, answers in words and checks its numbers. Two options that do almost the same confuse a business user.
+- **What:** Preguntar has «Una pregunta de ejemplo», «Conversar con los datos» and the domain's optional modules. The
+  chat is on for every domain on the shared screen (no `conversar` key); its example is the domain's `ejemplo_libre`.
+  Oncology keeps its own older screen, with its free question. `answer.ask_rastro` stays for the evaluation.
+- **Cost:** each free question now makes one more model call (the answer in words), a few seconds more.
+- **Checked:** the three domains of the shared screen open every section in both views (`check_domain.py`).
+

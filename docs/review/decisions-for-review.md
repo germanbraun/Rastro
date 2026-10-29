@@ -446,6 +446,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 **H12. A chat over the semantic layer** (2026-10-29)
 - **Decision:** a chat whose context is the ontology; each turn is a query over the layer, an answer from its result
   only, and a code check that flags any number not in the result. A module of the app, not a separate product.
+- **Update:** the chat replaced «Mi propia pregunta»: one way to ask in your own words.
 - **Q48.** Is flagging an unbacked number enough, or should such an answer be withheld? Should the chat also search
   the texts (GraphRAG) in the same conversation, choosing the tool per question?
 

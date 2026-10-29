@@ -12,8 +12,9 @@ llm: >-
   their queries are already written and run live.
 modo: >-
   An example question: choose one of the prepared questions. A question about texts: the AI summarizes only
-  the texts the graph chose. Enrich with outside data: Rastro joined with Wikidata, live or saved. My own
-  question: write a free-form question (requires a configured AI assistant). The guided tour is in the
+  the texts the graph chose. Enrich with outside data: Rastro joined with Wikidata, live or saved. Talk to
+  the data: your own questions and follow-ups, answered in words with the data (requires a configured AI
+  assistant). The guided tour is in the
   «Demo» tab.
 pregunta: >-
   Example questions for this domain. Each one is answered live over the data, with a query over the
@@ -33,6 +34,7 @@ fuentes_respuesta: >-
 texto: >-
   The graph chooses which records to read with an exact query; then an AI assistant summarizes only those
   texts, citing each record. The AI does not choose what to read.
+# oncology's own screen (app/extensions/oncologia/screen.py)
 propia: >-
   Write a question in business terms. An AI assistant translates it into a query over the dictionary; the
   query and the SQL stay visible so you can review them.

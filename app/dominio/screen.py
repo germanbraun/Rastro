@@ -117,12 +117,12 @@ def show_ask(cfg, tech, domain, questions):
     # Fixed internal names for the modes; the radio shows (and returns) their labels
     mode_labels = {"example": idioma.t("dominio.render.mode_example"), "chat": idioma.t("dominio.render.mode_chat"),
                    "text": idioma.t("dominio.render.mode_text"),
-                   "claims": (cfg.get("afirmaciones") or {}).get("titulo"), "external": (cfg.get("externo") or {}).get("titulo"),
-                   "free": idioma.t("dominio.render.mode_free")}
+                   "claims": (cfg.get("afirmaciones") or {}).get("titulo"), "external": (cfg.get("externo") or {}).get("titulo")}
     # Checking a claim and outside data are rarer: only in the technical view
-    modes = ["example"] + (["chat"] if cfg.get("conversar") else []) + (["text"] if cfg.get("texto") else []) \
+    # The chat is how a free question is asked: it remembers the conversation and checks its numbers (chat_view)
+    modes = ["example", "chat"] + (["text"] if cfg.get("texto") else []) \
         + (["claims"] if cfg.get("afirmaciones") and tech else []) + (["external"] if cfg.get("externo") and tech else [])
-    by_label = {mode_labels[m]: m for m in modes + ["free"]}
+    by_label = {mode_labels[m]: m for m in modes}
     mode = by_label.get(st.radio(idioma.t("dominio.render.mode_label"), list(by_label), help=common.ayuda("modo"),
                                  horizontal=True, label_visibility="visible", key=f"{domain}_mode"))
     if mode == "chat":
@@ -158,23 +158,6 @@ def show_ask(cfg, tech, domain, questions):
                 answers.before_after(item["antes_despues"], domain)
             answers.show_answer(cfg, tech, query, columns, rows, item,
                         note=idioma.t("dominio.render.live_note"))
-    else:
-        available, _ = common.llm_status()
-        question = st.text_area(idioma.t("dominio.render.question"), placeholder=cfg.get("ejemplo_libre", ""),
-                                key=f"{domain}_free", help=common.ayuda("propia"))
-        if st.button(idioma.t("dominio.render.answer"), type="primary", disabled=not available or not question.strip(),
-                     key=f"{domain}_free_answer"):
-            with st.spinner(idioma.t("dominio.render.writing")):
-                result = answer.ask_rastro(question, domain, idioma.lang())
-            if result.get("sin_datos"):
-                st.warning(idioma.t("dominio.render.no_data", missing=result["sin_datos"]))
-            elif result["query"] is None:
-                st.error(idioma.t("dominio.render.failed"))
-            else:
-                answers.show_answer(cfg, tech, result["query"], result["columns"], result["rows"],
-                            note=idioma.t("dominio.render.attempts", n=len(result["attempts"])))
-        if not available:
-            st.info(idioma.t("dominio.render.need_llm"))
 
 
 @contextmanager
