@@ -279,6 +279,9 @@ Everything a prospect gets, in Spanish and in English (each page links its twin;
 The decks are built with `python3 docs/slides/build.py`; `--export <deck> <folder>` writes a deck's files for the
 shared slide decks. Every number comes from the measured result files, never typed.
 
+To deliver a pilot at a customer (install, hardening, the method's steps week by week) and what is left for a wizard
+the customer runs on its own: [docs/customer-deployment.md](docs/customer-deployment.md).
+
 ## License
 
 Rastro is under the [Business Source License 1.1](LICENSE): you may read, copy, modify and use it for anything

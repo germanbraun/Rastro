@@ -426,6 +426,12 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q44.** Is a silently wrong number a stronger pitch than broken queries, or does «Rastro's number also changes
   until fixed» weaken it?
 
+**H9. Deploying at a customer** (2026-10-29)
+- **Decision:** consultant-run pilots on a hardened VM in the customer's network first; a customer-run wizard over the
+  Claude API (Agent SDK, in the customer's network) after two or three pilots.
+- **Q45.** Is a VM per customer the right unit, or will customers expect a hosted service from the start? Which
+  piece of the wizard would a buyer miss first: source connectors, approval screens or login?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -497,7 +503,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q44). Skip any you have no view on.
+- Answer per question number (Q1–Q45). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

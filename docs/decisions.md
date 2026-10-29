@@ -1630,3 +1630,13 @@ experiment's log as method changes made after it; they do not change its measure
   3,1 s, because the answers and the Lab models are saved on disk. Only after loading or rebuilding data does the
   first visit recompute everything (about 45 s): open the app once before a demo.
 
+## 2026-10-29 — Deploying at a customer: consultant-run pilots first, a wizard later
+
+- **Decision:** the first customers get a pilot run by a consultant with Claude Code and the method's skills, on a VM
+  in the customer's network, hardened (Ontop out of dev mode, read-only database users, the app behind the customer's
+  login, no ports open to the outside). A wizard the customer runs comes after two or three pilots, built on the Agent
+  SDK in the customer's network so the data stays there, starting with what the experiment logs show takes most time.
+- **Why:** the method, its checks and its approvals already work; what is missing for a customer to run it alone is
+  source connectors as configuration, an orchestrator, approval screens and login (`docs/customer-deployment.md`).
+  Whether a business user can answer what the agent leaves open is still unmeasured.
+
