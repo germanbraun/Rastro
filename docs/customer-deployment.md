@@ -64,6 +64,19 @@ dev mode with open CORS, everything reading as the database owner, no login, por
 
 `rastro_readonly` reads every table, present and future, and writes nothing (`pg_read_all_data`).
 
+**In one command,** with the domains to serve:
+
+```bash
+infra/customer/install.sh <domain>
+```
+
+It fills in `.env` what is missing (it never changes a value already there): the database owner's password for a new
+database, the read-only and reader passwords, and a login whose password it shows once (only its hash is kept). Then it
+starts Postgres, creates the users, starts each domain's Ontop, the app and the proxy, and runs `check.py`. Running it
+again changes nothing. If the database already exists with the demo password, it says so instead of changing it.
+
+The same, step by step, for when something needs to be done by hand:
+
 1. **`.env`:** copy `.env.example` and fill in, before the first start (Postgres takes `PG_PASSWORD` when it creates
    the database): `PG_PASSWORD`, `RASTRO_READONLY_PASSWORD`, `RASTRO_READER_PASSWORD` (for example
    `openssl rand -hex 16`), `RASTRO_HOST` (the name users type), `RASTRO_LOGIN_USER`, `RASTRO_LOGIN_HASH` and,
@@ -166,7 +179,7 @@ Each one is a module of the app, switched on in the domain's YAML (skill `show-i
 ### 2.6 Checklist
 
 - [ ] Read-only access to each source; the decision on what data may be sent to the model, in writing
-- [ ] VM with Docker; `.env` filled in; customer setup started; `infra/customer/check.py` all ✅ (section 2.2)
+- [ ] VM with Docker; `infra/customer/install.sh <domain>`, with `check.py` all ✅ (section 2.2)
 - [ ] Domain started; scope approved; questions approved
 - [ ] Each source loaded and recorded; dictionary and mappings checked; links reviewed by the customer
 - [ ] Quality rules run; evaluation measured and adjudicated; change test recorded

@@ -4,6 +4,8 @@
 -- The domains' SQL readers (layer/dominios.yaml, «readers») keep their own grants and get the password of .env
 -- instead of their own name.
 
+SET client_min_messages = warning;   -- running it again is expected: no notices
+
 SELECT format('CREATE ROLE rastro_readonly LOGIN PASSWORD %L', :'readonly_password')
 WHERE NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'rastro_readonly') \gexec
 

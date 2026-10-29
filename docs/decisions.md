@@ -1714,3 +1714,14 @@ experiment's log as method changes made after it; they do not change its measure
 - **Later, if wanted:** GraphRAG over the full reports means loading their PDFs (where the portal publishes them, and
   under which licence), with the graph still choosing which to read and each citation pointing to its page.
 
+## 2026-10-29 — The customer setup in one command
+
+- **What:** `infra/customer/install.sh <domain>`: fills in `.env` only what is missing (new database owner password,
+  read-only and reader passwords, a login whose password is shown once and kept only as a hash), starts the services
+  in the order that works (Postgres, users, Ontop, app, proxy; waiting until healthy) and runs `check.py`.
+- **Tried** with a copy of this machine's `.env`: the users and login took effect (the login answers 401 without it,
+  200 with it); a second run added nothing; the demo's other Ontop services, still running with the laptop settings,
+  were correctly flagged. The demo was restored and checked after.
+- **Not done on purpose:** changing the password of a database that already exists, which would break what uses it;
+  the script says how instead.
+
