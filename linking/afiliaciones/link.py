@@ -160,13 +160,16 @@ def link(conn):
 
 
 def corrections():
+    """Each reviewed candidate: (decision, reason, confirmation). A decision a person rejected («rejected by …») is not
+    applied: the candidate stays doubtful with no decision, and keeps the rejection as its evidence."""
     path = HERE / "correcciones.csv"
     if not path.exists():
         return {}
     with path.open(newline="", encoding="utf-8") as f:
         return {(r["doi"], int(r["author_position"]), int(r["affiliation_position"]), r["organization"]):
-                (r["decision"], r["reason"] + (f" Fuente: {r['source']}" if r.get("source") else ""),
-                 r["human_confirmation"])
+                ((None, None) if r["human_confirmation"].startswith("rejected by ")
+                 else (r["decision"], r["reason"] + (f" Fuente: {r['source']}" if r.get("source") else "")))
+                + (r["human_confirmation"],)
                 for r in csv.DictReader(f)}
 
 

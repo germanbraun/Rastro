@@ -25,8 +25,10 @@ RegistroActivo:
   malos:
     - {caso: 'e:id afiliaciones:identifies <https://ror.org/0081fs513> .', severidad: Violation}
 DudosaDecidida:
-  bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "reject" ; afiliaciones:decisionReason "La coincidencia es casual: el texto nombra un lugar fuera de Argentina." ; afiliaciones:humanConfirmation "pending" .'
+  bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "reject" ; afiliaciones:decisionReason "La coincidencia es casual: el texto nombra un lugar fuera de Argentina." ; afiliaciones:humanConfirmation "pending" . e:confirmada a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "accept" ; afiliaciones:decisionReason "La sigla y la ciudad coinciden." ; afiliaciones:humanConfirmation "confirmed by Ana Pérez on 2026-10-29; evidence: sitio web de la organización" .'
   malo: 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "quizás" .'
+  malos:
+    - 'e:dudosa a afiliaciones:DoubtfulCandidate ; afiliaciones:reviewDecision "accept" ; afiliaciones:decisionReason "La sigla y la ciudad coinciden." ; afiliaciones:humanConfirmation "ok, lo vi" .'
 ConfirmadaPorPersona:
   bueno: 'e:dudosa a afiliaciones:DoubtfulCandidate .'
   severidad: Info   # it marks what is pending; it does not block answers

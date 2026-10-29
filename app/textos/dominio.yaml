@@ -587,6 +587,7 @@ dominio.review.intro:
 dominio.review.person: {es: "Tu nombre (queda escrito en cada confirmación)", en: "Your name (written in each confirmation)"}
 dominio.review.document: {es: "Documento que lo respalda (nombre, fecha, página o enlace)", en: "Document that backs it (name, date, page or link)"}
 dominio.review.confirm: {es: "Confirmar", en: "Confirm"}
+dominio.review.page: {es: "Se muestran {shown} de {n}; al confirmar o rechazar, aparecen las siguientes.", en: "Showing {shown} of {n}; confirming or rejecting brings up the next ones."}
 dominio.review.reject: {es: "Rechazar", en: "Reject"}
 dominio.review.reason: {es: "Motivo del rechazo", en: "Reason for rejecting"}
 dominio.review.confirmed: {es: "Confirmada: ahora dice quién la confirmó, cuándo y con qué documento.", en: "Confirmed: it now says who confirmed it, when and with which document."}
@@ -626,7 +627,7 @@ dominio.method.sources: {es: "{loaded} de {n} fuentes cargadas; última carga {l
 dominio.method.dictionary: {es: "{classes} conceptos, {properties} relaciones y atributos", en: "{classes} concepts, {properties} relations and attributes"}
 dominio.method.mapping: {es: "{maps} traducciones (mapas R2RML)", en: "{maps} translations (R2RML maps)"}
 dominio.method.links: {es: "{corrections} correcciones revisadas; {waiting} esperan a una persona", en: "{corrections} reviewed corrections; {waiting} wait for a person"}
-dominio.method.links_other: {es: "Además, {n} esperan a una persona en un formato que la app todavía no revisa (columna human_confirmation).", en: "Also, {n} wait for a person in a format the app does not review yet (human_confirmation column)."}
+dominio.method.links_other: {es: "Además, {n} esperan a una persona en un formato que la app todavía no revisa.", en: "Also, {n} wait for a person in a format the app does not review yet."}
 dominio.method.quality: {es: "{rules} reglas, comprobadas el {date}; {failing} datos no las cumplen", en: "{rules} rules, checked on {date}; {failing} values fail them"}
 dominio.method.evaluate: {es: "Con Rastro: {correct} de {n} preguntas, medido el {date}.", en: "With Rastro: {correct} of {n} questions, measured on {date}."}
 dominio.method.references_pending: {es: "Faltan las referencias independientes: los números son provisorios.", en: "The independent references are missing: the numbers are provisional."}

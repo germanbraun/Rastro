@@ -50,17 +50,18 @@ calidad:RegistroActivo a sh:NodeShape ;
 
 calidad:DudosaDecidida a sh:NodeShape ;
     rdfs:label "Cada candidato dudoso tiene una decisión, aceptar o rechazar, su motivo y su estado de confirmación" ;
-    rdfs:comment "Sin decisión, un candidato no se sabe si cuenta; sin motivo, no se puede revisar por qué se aceptó o rechazó. Hasta que se apruebe un registro de confirmación, el único estado válido es «pending»: ningún texto libre cuenta como confirmación." ;
+    rdfs:comment "Sin decisión, un candidato no se sabe si cuenta; sin motivo, no se puede revisar por qué se aceptó o rechazó. La confirmación es «pending» o un registro aprobado (29/10/2026) con quién, cuándo y con qué evidencia o por qué: «confirmed by <nombre> on <AAAA-MM-DD>; evidence: <documento>» o «rejected by <nombre> on <AAAA-MM-DD>; reason: <motivo>». Ningún otro texto cuenta como confirmación. Una decisión rechazada no se aplica: el candidato queda sin decisión hasta que alguien decida de nuevo." ;
     sh:targetClass afiliaciones:DoubtfulCandidate ;
     sh:property [ sh:path afiliaciones:reviewDecision ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "accept" "reject" ) ;
                   sh:message "No tiene una decisión, aceptar o rechazar." ] ;
     sh:property [ sh:path afiliaciones:decisionReason ; sh:minCount 1 ; sh:pattern "\\S" ; sh:message "No dice el motivo de la decisión." ] ;
-    sh:property [ sh:path afiliaciones:humanConfirmation ; sh:minCount 1 ; sh:maxCount 1 ; sh:in ( "pending" ) ;
-                  sh:message "Su confirmación no es «pending», y todavía no hay un registro de confirmación aprobado (quién, cuándo y con qué evidencia)." ] .
+    sh:property [ sh:path afiliaciones:humanConfirmation ; sh:minCount 1 ; sh:maxCount 1 ;
+                  sh:pattern "^(pending|confirmed by \\S.* on [0-9]{4}-[0-9]{2}-[0-9]{2}; evidence: \\S.*|rejected by \\S.* on [0-9]{4}-[0-9]{2}-[0-9]{2}; reason: \\S.*)$" ;
+                  sh:message "Su confirmación no es «pending» ni un registro aprobado: quién, cuándo y con qué evidencia (o por qué se rechazó)." ] .
 
 calidad:ConfirmadaPorPersona a sh:NodeShape ;
     rdfs:label "Cada decisión sobre un candidato dudoso dice si falta que una persona la confirme (informativa)" ;
-    rdfs:comment "Las decisiones las tomó un asistente de IA y las validó otro. Quién decidió y si una persona confirmó son dos datos distintos. Hasta que exista un registro de confirmación aprobado (quién, cuándo y con qué evidencia), lo marca «pending»: esta regla avisa lo pendiente, no comprueba confirmaciones. No bloquea las respuestas." ;
+    rdfs:comment "Las decisiones las tomó un asistente de IA y las validó otro. Quién decidió y si una persona confirmó son dos datos distintos. Mientras una persona no la confirme o rechace (en la app, «Uniones para confirmar»), queda «pending» y esta regla lo avisa; el formato del registro lo comprueba calidad:DudosaDecidida. No bloquea las respuestas." ;
     sh:targetClass afiliaciones:DoubtfulCandidate ;
     sh:property [ sh:path afiliaciones:humanConfirmation ; sh:not [ sh:in ( "pending" ) ] ; sh:severity sh:Info ;
                   sh:message "Decidido por un asistente de IA; falta que una persona lo confirme." ] .

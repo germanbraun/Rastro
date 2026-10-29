@@ -1,10 +1,15 @@
 """«Uniones para confirmar»: a person confirms or rejects the corrections an AI assistant reviewed (Por qué confiar).
 
-The corrections are the domain's reviewed CSVs (`method.linker.corrections` in layer/dominios.yaml) that keep a
-«motivo»; a row waits for a person while its motivo says so (enlaces.AI). Confirming rewrites that sentence with who
-confirmed it, when and with which document, so the link shows as confirmed by a person (enlaces.status). Rejecting
-moves the row to <file>-rechazadas.csv with who, when and why. Either reaches the answers when Rastro is rebuilt
-(the domain's linker, then its Ontop); a rejection changes the data, so the saved answers are measured again.
+The corrections are the domain's reviewed CSVs (`method.linker.corrections` in layer/dominios.yaml), in one of two
+formats:
+- with a «motivo»: a row waits while its motivo says so (enlaces.AI). Confirming rewrites that sentence with who
+  confirmed it, when and with which document, so the link shows as confirmed by a person (enlaces.status); rejecting
+  moves the row to <file>-rechazadas.csv with who, when and why.
+- with a «human_confirmation» column: a row waits while it says «pending». Confirming or rejecting writes the approved
+  record there («confirmed by <name> on <date>; evidence: …» or «rejected by …; reason: …»); the row stays, and the
+  linker does not apply a rejected decision.
+Either reaches the answers when Rastro is rebuilt (the domain's linker, then its Ontop); a rejection changes the data,
+so the saved answers are measured again.
 """
 import csv
 import datetime
@@ -20,13 +25,16 @@ import idioma
 from . import common
 
 AI_SENTENCE = "Revisado por un asistente de IA, a confirmar por una persona."
+CONFIRMATION = "human_confirmation"   # the second format's column (approved on 29/10/2026)
+PAGE = 10                             # rows shown at a time
 
 
 def files(domain, root=None):
-    """The domain's reviewed corrections that keep a reason («motivo»)."""
+    """The domain's reviewed corrections in a format this screen reviews («motivo» or «human_confirmation»)."""
     root = root or answer.ROOT
     paths = (answer.DOMAINS[domain].get("method", {}).get("linker") or {}).get("corrections", [])
-    return [root / p for p in paths if (root / p).exists() and "motivo" in (root / p).open().readline()]
+    return [root / p for p in paths if (root / p).exists()
+            and {"motivo", CONFIRMATION} & set((root / p).open().readline().strip().split(","))]
 
 
 def read(path):
@@ -45,7 +53,8 @@ def write(path, fields, rows):
 
 def pending(paths):
     """(path, row index, row) for every correction that still waits for a person."""
-    return [(path, i, row) for path in paths for i, row in enumerate(read(path)[1]) if enlaces.AI in row["motivo"]]
+    return [(path, i, row) for path in paths for i, row in enumerate(read(path)[1])
+            if (row[CONFIRMATION].strip() == "pending" if CONFIRMATION in row else enlaces.AI in row["motivo"])]
 
 
 def confirm(path, index, person, document, today=None):
@@ -53,6 +62,10 @@ def confirm(path, index, person, document, today=None):
     if not (person.strip() and document.strip()):
         raise ValueError("A confirmation needs who confirms and the document")
     fields, rows = read(path)
+    if CONFIRMATION in fields:
+        on = (today or datetime.date.today()).isoformat()
+        rows[index][CONFIRMATION] = f"confirmed by {person.strip()} on {on}; evidence: {document.strip()}"
+        return write(path, fields, rows)
     date = (today or datetime.date.today()).strftime("%d/%m/%Y")
     said = f"Confirmado por {person.strip()} el {date}, con este documento: {document.strip()}."
     motivo = rows[index]["motivo"]
@@ -65,6 +78,10 @@ def reject(path, index, person, reason, today=None):
     if not (person.strip() and reason.strip()):
         raise ValueError("A rejection needs who rejects and why")
     fields, rows = read(path)
+    if CONFIRMATION in fields:   # the row stays, with the rejection as its record; the linker does not apply it
+        on = (today or datetime.date.today()).isoformat()
+        rows[index][CONFIRMATION] = f"rejected by {person.strip()} on {on}; reason: {reason.strip()}"
+        return write(path, fields, rows)
     row = rows.pop(index)
     write(path, fields, rows)
     rejected = path.with_name(path.stem + "-rechazadas.csv")
@@ -85,11 +102,15 @@ def show_review(cfg, tech):
     with st.expander(idioma.t("dominio.review.title", n=len(waiting)), expanded=bool(done)):
         st.caption(idioma.t("dominio.review.intro"))
         person = st.text_input(idioma.t("dominio.review.person"), key=f"{domain}_review_person")
-        for n, (path, index, row) in enumerate(waiting):
+        if len(waiting) > PAGE:
+            st.caption(idioma.t("dominio.review.page", shown=PAGE, n=len(waiting)))
+        for n, (path, index, row) in enumerate(waiting[:PAGE]):
             with st.container(border=True):
-                shown = {k: v for k, v in row.items() if k != "motivo" and v}
+                why = row.get("motivo") or row.get("reason", "")
+                shown = {k: v for k, v in row.items() if v and k not in ("motivo", "reason", "source", "validated_by",
+                                                                         CONFIRMATION)}
                 st.markdown(" → ".join(f"**{common.md(v)}**" for v in shown.values()))
-                st.caption(enlaces.label("ia") + " · " + common.md(row["motivo"]))
+                st.caption(enlaces.label("ia") + " · " + common.md(why))
                 key = f"{domain}_review_{path.stem}_{index}"
                 document = st.text_input(idioma.t("dominio.review.document"), key=f"{key}_doc")
                 yes, no = st.columns(2)

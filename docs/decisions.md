@@ -1760,3 +1760,17 @@ experiment's log as method changes made after it; they do not change its measure
   `preguntas` key (oncology) always shows: the first version of the filter hid it, caught before committing.
 - **Tried** with a throwaway domain: listed in the app's file, not shown; the four real domains shown; then removed.
 
+## 2026-10-29 — The confirmation record for research affiliations (approved)
+
+- **Approved by the user:** `human_confirmation` is «pending», «confirmed by <name> on <YYYY-MM-DD>; evidence: <document>»
+  or «rejected by <name> on <YYYY-MM-DD>; reason: <why>». The quality rule `DudosaDecidida` accepted only «pending»
+  until a record was approved; it now accepts exactly these three (a pattern), with a confirmed case in its good example
+  and free text as a broken one (7 good/bad pairs pass). Re-run on the data: the same result, 0 violations, 1 warning,
+  104 pending.
+- **The linker** does not apply a rejected decision: the candidate stays doubtful with no decision (the rule then asks
+  for one) and keeps the rejection as its evidence.
+- **In the app,** «Uniones para confirmar» reviews this format too, ten rows at a time (104 wait today); «Método»
+  counts them as reviewable. Tested on a copy of the CSV, including that what the screen writes matches the rule.
+- **To improve:** the affiliations card shows raw fields (DOI, positions, ROR link, decision); it needs the mention's
+  text and the organization's name to read as business words.
+

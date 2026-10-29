@@ -100,8 +100,9 @@ its whole schema (`DROP`): anything that cannot be rebuilt goes in its own schem
   app: «Por qué confiar» → «Uniones para confirmar» (`app/dominio/review_view.py`), for CSVs with a `motivo`. The
   person confirms with the document (the motivo then names who, when and which document, so the link turns ✅) or
   rejects with a reason (the row moves to `<file>-rechazadas.csv`). Then run the linker and restart Ontop; after a
-  rejection, re-run the saved queries. A CSV with its own confirmation column (like `human_confirmation`) is not
-  covered yet.
+  rejection, re-run the saved queries. A CSV with a `human_confirmation` column gets the approved record there
+  («confirmed by <name> on <YYYY-MM-DD>; evidence: …» or «rejected by …; reason: …»; the row stays) and its linker
+  must not apply a rejected decision; a quality rule accepts only «pending» or those two records.
 
 ## Grounding
 

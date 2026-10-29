@@ -58,3 +58,46 @@ def test_the_files_are_written_as_they_were(corrections):
     fields, rows = review_view.read(corrections)
     review_view.write(corrections, fields, rows)
     assert corrections.read_text() == (ROOT / "linking/energia/correcciones.csv").read_text()
+
+
+@pytest.fixture
+def decisions(tmp_path):
+    path = tmp_path / "correcciones.csv"
+    shutil.copy(ROOT / "linking/afiliaciones/correcciones.csv", path)
+    return path
+
+
+def test_the_confirmation_column_format_is_reviewed(decisions):
+    waiting = review_view.pending([decisions])
+    assert len(waiting) == len(review_view.read(decisions)[1])   # all «pending» today
+    _, index, _ = waiting[0]
+    review_view.confirm(decisions, index, "Ana Pérez", "sitio web de la organización", today=DAY)
+    _, rejected_index, _ = review_view.pending([decisions])[0]
+    review_view.reject(decisions, rejected_index, "Ana Pérez", "La sigla es de otra institución", today=DAY)
+    rows = review_view.read(decisions)[1]
+    assert rows[index]["human_confirmation"] == "confirmed by Ana Pérez on 2026-10-29; evidence: sitio web de la organización"
+    assert rows[rejected_index]["human_confirmation"] == "rejected by Ana Pérez on 2026-10-29; reason: La sigla es de otra institución"
+    assert len(rows) == len(waiting) and len(review_view.pending([decisions])) == len(waiting) - 2   # rows stay
+
+
+def test_the_records_match_the_approved_quality_rule(decisions):
+    import re
+    rule = (ROOT / "ontology/afiliaciones/calidad/reglas.ttl").read_text()
+    pattern = re.search(r'humanConfirmation ; sh:minCount 1 ; sh:maxCount 1 ;\s*sh:pattern "(.+?)" ;', rule).group(1)
+    pattern = pattern.replace("\\\\", "\\")
+    review_view.confirm(decisions, 0, "Ana Pérez", "sitio web", today=DAY)
+    review_view.reject(decisions, 1, "Ana Pérez", "otra institución", today=DAY)
+    for row in review_view.read(decisions)[1][:3]:
+        assert re.match(pattern, row["human_confirmation"]), row["human_confirmation"]
+
+
+def test_the_linker_does_not_apply_a_rejected_decision(decisions, monkeypatch):
+    sys.path.insert(0, str(ROOT / "linking/afiliaciones"))
+    import link
+    review_view.reject(decisions, 0, "Ana Pérez", "otra institución", today=DAY)
+    monkeypatch.setattr(link, "HERE", decisions.parent)
+    reviewed = link.corrections()
+    first = review_view.read(decisions)[1][0]
+    key = (first["doi"], int(first["author_position"]), int(first["affiliation_position"]), first["organization"])
+    assert reviewed[key][:2] == (None, None) and reviewed[key][2].startswith("rejected by Ana Pérez")
+
