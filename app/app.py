@@ -18,6 +18,7 @@ sys.path.insert(0, "/layer")
 import dominio  # noqa: E402  (a domain's screen from its configuration)
 from dominio import ayuda  # noqa: E402  (the «?» icons)
 import enlaces  # noqa: E402  (one mark for a link's review status)
+import estilo  # noqa: E402  (the app's look: one stylesheet)
 import idioma  # noqa: E402  (the interface language: Spanish by default, English on request)
 import inicio  # noqa: E402  (the start page: the demo or the wizard's sketch)
 import wizard  # noqa: E402  (a sketch of the wizard, to discuss)
@@ -25,19 +26,26 @@ from idioma import t  # noqa: E402
 
 st.set_page_config(page_title="Rastro", page_icon="/app/logo.svg", layout="wide")
 idioma.init()   # before any text, so the first lines are already in the chosen language
+estilo.apply()
 
-st.markdown('<img src="data:image/svg+xml;base64,' + base64.b64encode(Path("/app/logo-horizontal.svg").read_bytes()).decode()
-            + '" style="height:56px;margin:8px 0 4px 0" alt="Rastro">', unsafe_allow_html=True)
-st.markdown(f"**{t('app.tagline')}**")
-st.markdown(t("app.what"))
+# Where the visit starts: the start page with its two cards, the demo (today's app) or the wizard's sketch
+PLACE = inicio.place()
+LOGO = base64.b64encode(Path("/app/logo-horizontal.svg").read_bytes()).decode()
+if PLACE == "start":   # the start page leads with the tagline as its title
+    st.markdown(f'<img src="data:image/svg+xml;base64,{LOGO}" style="height:52px;margin:0 0 12px" alt="Rastro">',
+                unsafe_allow_html=True)
+    st.markdown(f"# {t('app.tagline')}")
+    st.markdown(t("app.what"))
+else:                  # the demo and the wizard: one compact line
+    st.markdown(f'<div style="display:flex;align-items:center;gap:16px;margin-bottom:8px">'
+                f'<img src="data:image/svg+xml;base64,{LOGO}" style="height:36px" alt="Rastro">'
+                f'<span style="color:#4A5568;font-weight:600">{t("app.tagline")}</span></div>', unsafe_allow_html=True)
 
 # A new domain is listed from the start (method.py new-domain) with «preguntas: []» and stays hidden until it has a
 # question; a domain with a screen of its own (oncology) has no «preguntas» key and always shows
 DOMAINS = [d for d in idioma.localized("/app/dominios.yaml")
            if (dominio.load_config(d["config"]) or {}).get("preguntas", True)]
 
-# Where the visit starts: the start page with its two cards, the demo (today's app) or the wizard's sketch
-PLACE = inicio.place()
 if PLACE != "demo":
     with st.sidebar:
         idioma.selector()

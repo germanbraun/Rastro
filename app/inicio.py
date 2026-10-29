@@ -54,13 +54,16 @@ def show_numbers(cfg):
     """The problem in three numbers, from the demo domain; nothing if they cannot be read now."""
     try:
         values = numbers(cfg)
-        figures = [(f["valor"].format(**values), f["texto"].format(**values)) for f in cfg["portada"]["cifras"]]
+        figures = [(f["valor"].format(**values), f.get("etiqueta", ""), f["texto"].format(**values))
+                   for f in cfg["portada"]["cifras"]]
     except Exception:   # noqa: BLE001 - a service down or a missing measurement: the start page still shows
         return
     st.markdown(idioma.t("inicio.problem"))
-    for column, (value, text) in zip(st.columns(len(figures)), figures):
+    for column, (value, label, text) in zip(st.columns(len(figures)), figures):
         with column.container(border=True):
-            st.markdown(f"### {value}")
+            st.markdown(f'<div style="font-size:2.1rem;font-weight:700;color:#2F6FB5;line-height:1.1">{value}</div>'
+                        f'<div style="font-weight:600;color:#14213D;margin:2px 0 6px">{label}</div>',
+                        unsafe_allow_html=True)
             st.caption(text)
 
 
@@ -114,7 +117,7 @@ def show_start(cfg):
     """The start page; cfg is the demo domain's configuration (the first in app/dominios.yaml)."""
     if cfg.get("portada"):
         show_numbers(cfg)
-    st.markdown(idioma.t("inicio.choose"))
+    st.markdown(f"### {idioma.t('inicio.choose')}")
     st.markdown(SAME_HEIGHT, unsafe_allow_html=True)
     demo, wizard = st.container(key="inicio_cards").columns(2, gap="large")
     with demo.container(border=True):

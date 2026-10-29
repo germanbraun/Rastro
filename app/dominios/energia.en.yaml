@@ -11,10 +11,13 @@ resumen: >-
 portada:
   cifras:
     - valor: "US$ {e01[dolares]} M"
-      texto: "of 2025 oil assigned in excess to YPF, summing by who reports it ({e01[exceso]} million m³, at US$ {e01[precio]} a barrel, an assumption)."
-    - valor: "{cambio[b_broken]} broken queries"
+      etiqueta: of oil assigned in excess
+      texto: "To YPF in 2025, summing by who reports the production: {e01[exceso]} million m³ of its partners' oil, at US$ {e01[precio]} a barrel (an assumption)."
+    - valor: "{cambio[b_broken]}"
+      etiqueta: broken queries
       texto: "when the source renames a column. With Rastro, it is fixed in one line."
-    - valor: "{correccion[lugares]} places"
+    - valor: "{correccion[lugares]}"
+      etiqueta: places for one value
       texto: "where the same value lives without Rastro. With Rastro it is corrected in one, and reaches every answer and the model."
 ejemplo_libre: "For example: who produced the most gas in 2025? And then: and how much belongs to it by its share?"
 diagrama: {titulo: oil and gas dictionary}

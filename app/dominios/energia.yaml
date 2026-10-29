@@ -12,10 +12,13 @@ portada:                       # the start page (app/inicio.py): the problem in 
                                # from the change and correction tests (layer/energia/cambio/)
   cifras:
     - valor: "US$ {e01[dolares]} M"
-      texto: "de petróleo de 2025 asignado de más a YPF, sumando por quien lo declara ({e01[exceso]} millones de m³, a US$ {e01[precio]} el barril, un supuesto)."
-    - valor: "{cambio[b_broken]} consultas rotas"
+      etiqueta: de petróleo asignado de más
+      texto: "A YPF en 2025, sumando por quien declara la producción: {e01[exceso]} millones de m³ de sus socios, a US$ {e01[precio]} el barril (un supuesto)."
+    - valor: "{cambio[b_broken]}"
+      etiqueta: consultas rotas
       texto: "cuando la fuente le cambia el nombre a una columna. Con Rastro, se arregla en una línea."
-    - valor: "{correccion[lugares]} lugares"
+    - valor: "{correccion[lugares]}"
+      etiqueta: lugares para un mismo dato
       texto: "donde vive el mismo dato sin Rastro. Con Rastro se corrige en uno, y llega a todas las respuestas y al modelo."
 ejemplo_libre: "Por ejemplo: ¿quién produjo más gas en 2025? Y después: ¿y cuánto le corresponde por su participación?"
 evaluacion: /layer/energia/resultados.json
