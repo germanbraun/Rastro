@@ -18,6 +18,9 @@ def show_correction(result, tech, part=None):
     def m3(v):
         return f"{idioma.number(v / 1e6, 2)} M m³"
 
+    def gas(v):   # gas is recorded in thousands of m³
+        return f"{idioma.number(v / 1e3, 0)} M m³"
+
     def pct(v):
         return f"{v:g} %" if idioma.lang() == "en" else f"{v:g} %".replace(".", ",")
 
@@ -36,9 +39,22 @@ def show_correction(result, tech, part=None):
     yes, no = idioma.t("energia.correction.yes"), idioma.t("energia.correction.no")
     headers = [idioma.t(f"energia.correction.col_{c}") for c in ("where", "before", "after", "changed")]
     df = pd.DataFrame([dict(zip(headers, (a, b, c, yes if b != c else no))) for a, b, c in filas])
-    st.caption(idioma.t(f"energia.correction.what_{part}" if part else "energia.correction.what"))
-    common.tabla(df, key=f"demo_correccion_{part or 'todo'}")
-    if part != "lab":
+    if part == "layer" and "total_ape_gas" in con:   # the demo: one answer, before and after, in business words
+        before, after = st.columns(2)
+        with before.container(border=True):
+            st.markdown(idioma.t("energia.correction.before_title", pct=pct(sin["rastro_total"])))
+            st.metric(idioma.t("energia.correction.total_gas"), gas(sin["total_ape_gas"]))
+        with after.container(border=True):
+            st.markdown(idioma.t("energia.correction.after_title", pct=pct(con["rastro_total"])))
+            st.metric(idioma.t("energia.correction.total_gas"), gas(con["total_ape_gas"]))
+        st.markdown(common.md(idioma.t("energia.correction.where_fixed", places=result["lugares_sin_rastro"])))
+    elif part == "lab":   # the callback in Rastro Lab: one sentence
+        st.success(idioma.t("energia.correction.reached_model", con=pct(con["lab_B_pct"]), sin=pct(sin["lab_B_pct"]),
+                            raw=pct(con["lab_A_pct"])))
+    if part is None or tech:
+        st.caption(idioma.t(f"energia.correction.what_{part}" if part else "energia.correction.what"))
+        common.tabla(df, key=f"demo_correccion_{part or 'todo'}")
+    if part is None:
         st.markdown(common.md(idioma.t("energia.correction.where_fixed", places=result["lugares_sin_rastro"])))
     if tech:
         st.caption(idioma.t("energia.correction.measured"))

@@ -37,6 +37,11 @@ def test_la_demo_de_petroleo_y_gas():
     assert [p.get("acto") for p in pasos] == ["Rastro Layer"] * 3 + ["Rastro Lab"]
     assert pasos[2].get("parte") == "layer" and pasos[3].get("correccion") and pasos[3].get("puente")
     assert len(cargar("app/dominios/energia.en.yaml")["demo"]) == len(pasos)   # the English overlay goes by position
+    # Moment 2 is told with one recorded answer: its scenario names the question and the overlay keeps the order
+    cambio = next(c for c in cfg["cambios"] if c["antes"] == pasos[1]["escenario"])
+    assert cambio["valor"]["pregunta"] in {q["id"] for q in cfg["preguntas"]}
+    english = cargar("app/dominios/energia.en.yaml")["cambios"][cfg["cambios"].index(cambio)]
+    assert english["valor"]["texto"] and english["valor"]["unidad"]
     ids = {q["id"] for q in cfg["preguntas"]}
     for p in pasos:
         assert p.get("tipo", "pregunta") in {"pregunta", "cambio", "lab", "correccion"}

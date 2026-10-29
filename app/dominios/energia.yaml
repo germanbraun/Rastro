@@ -37,9 +37,9 @@ demo:
     acto: Rastro Layer
     titulo: "La fuente publica una versión nueva"
     tipo: cambio
-    escenario: renombrar
+    escenario: valores
     muestra: >-
-      Sin Rastro, las consultas se rompen de a una y hay que encontrarlas. Con Rastro, se arregla en un lugar.
+      Sin Rastro, el número cambia y nadie se entera. Con Rastro, una regla avisa y se arregla en un lugar.
   - paso: Una corrección
     acto: Rastro Layer
     titulo: "Se corrige un dato una vez, y cambian todas las respuestas"
@@ -57,8 +57,7 @@ demo:
       Todo lo que Rastro sabe (cada unión, cada regla, cada corrección) también lo hereda un modelo.
     muestra: >-
       Un pozo nuevo de Vaca Muerta. El mismo modelo con y sin Rastro: predicen igual de bien, pero con
-      Rastro la predicción dice en qué se apoya, de dónde sale cada dato y cuáles conviene revisar. Debajo, la
-      corrección del momento 3: sin tocar el modelo, ya llegó a su entrada y su explicación la marca.
+      Rastro la predicción dice en qué se apoya, de dónde sale cada dato y cuáles conviene revisar.
 
 # Fuentes: nombre corto para los encabezados del modo técnico
 fuentes:
@@ -818,6 +817,11 @@ cambios:
     sql: UPDATE capitulo4.produccion SET prod_pet = prod_pet * 6.2898;
     antes: valores
     despues: valores-arreglado
+    valor:                       # the demo tells this change with one recorded answer (resultado.json, «values»)
+      pregunta: e01
+      texto: "¿cuánto petróleo de 2025 le corresponde a YPF?"
+      escala: 1000000
+      unidad: millones de m³
     donde: "del mapeo (mappings/energia.r2rml.ttl)"
     arreglo:
       - "prod_pet AS petroleo_m3, prod_gas AS gas_mm3"

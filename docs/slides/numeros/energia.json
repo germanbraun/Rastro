@@ -43,6 +43,12 @@
   "ubicados": "6.636",
   "la_calera": "482"
  },
+ "cambio": {
+  "antes": "12,6",
+  "sin": "79,1",
+  "con": "79,1",
+  "arreglado": "12,6"
+ },
  "demo": {
   "opera_total": "12,3",
   "opera_ypf": "11,7",
@@ -76,6 +82,8 @@
   "externo_pan": "5,61",
   "externo_pampa": "0,62",
   "externo_con_lei": "3",
+  "gas_total_sin": "1.118",
+  "gas_total_con": "2.256",
   "error_a": "16,7",
   "error_b": "16,7",
   "dudosos": "24",

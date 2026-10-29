@@ -58,7 +58,8 @@ restart_ontop() {
 
 case "${1:-}" in
   probar)
-    compose run --rm -T layer-eval python /layer/energia/cambio/probar.py ${2:+--guardar "$2"} ;;
+    # --no-deps: in the rename step Ontop is down on purpose, and layer-eval would wait for it to be healthy
+    compose run --rm --no-deps -T layer-eval python /layer/energia/cambio/probar.py ${2:+--guardar "$2"} ;;
   registrar)
     "$0" probar antes
     "$0" renombrar

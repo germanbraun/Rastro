@@ -62,6 +62,22 @@ def trust_numbers(cfg, evaluation, changes, evidence, number):
     return numbers
 
 
+def change_numbers(cfg, changes, number):
+    """The change scenario the demo tells with one answer («valor» in cambios): that answer before the change, right
+    after it without and with Rastro, and after the one-line fix, as the change test recorded them."""
+    change = next((c for c in cfg.get("cambios", []) if c.get("valor")), None)
+    if not change:
+        return {}
+    valor = change["valor"]
+
+    def at(step, path):
+        v = (changes.get(step, {}).get("values") or {}).get(valor["pregunta"], {}).get(path)
+        return number(v / valor.get("escala", 1), valor.get("decimales", 1)) if v is not None else "—"
+
+    return {"antes": at("antes", "C"), "sin": at(change["antes"], "B"), "con": at(change["antes"], "C"),
+            "arreglado": at(change["despues"], "C")}
+
+
 def key(name):
     """A company's token key: the first word of its name, in lower case («TOTAL AUSTRAL S.A.» → total)."""
     return name.split()[0].lower()
@@ -149,6 +165,7 @@ def main(domain):
         if card.get("valores"):
             numbers[item["id"]] = shown(card, values(card, sql, sparql),
                                         lambda value, decimals: format_number(value, decimals, "es"))
+    numbers["cambio"] = change_numbers(cfg, read("cambio"), lambda value, decimals: format_number(value, decimals, "es"))
     from dominio import extension
     numbers["demo"] = story_numbers(cfg, sparql, lambda value, decimals: format_number(value, decimals, "es"),
                                     extension.load(cfg))

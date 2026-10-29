@@ -39,15 +39,17 @@ def short(value):
 
 
 def check(entry, key, kind):
+    """The cell the app shows, and the number the query gives now (None for a list, an error or no query)."""
     ok = [a for a in entry["attempts"] if a["error"] is None]
     if not ok:
-        return None
+        return None, None
     result = try_query(key, ok[-1]["query"], kind, "energia")
+    value = result["answer"] if isinstance(result["answer"], (int, float)) else None
     if result["answer"] is None and result["attempt"]["error"]:
-        return "❌ error"
+        return "❌ error", None
     if same(result["answer"], entry["answer"]):
-        return "✅ igual"
-    return f"🟡 {short(result['answer'])}, era {short(entry['answer'])}"
+        return "✅ igual", value
+    return f"🟡 {short(result['answer'])}, era {short(entry['answer'])}", value
 
 
 def control():
@@ -71,21 +73,23 @@ def validate_step(step, cells, control_text):
         raise RuntimeError("No saved queries executed")
     paths = ("B", "C") if step in {"antes", "despues"} else ("C",)
     if step in {"antes", "despues", "renombrar-arreglado", "valores-arreglado"}:
-        if any(not row.get(path, "").startswith("✅") for row in cells.values() for path in paths):
+        # «—» is a question SQL over the sources cannot answer at all: not a broken answer
+        if any(row.get(path, "")[:1] not in ("✅", "—") for row in cells.values() for path in paths):
             raise RuntimeError(f"{step}: saved answers were not preserved")
         if not control_text.startswith("✅"):
             raise RuntimeError(f"{step}: unit control failed")
 
 
 def main():
-    cells, totals = {}, {k: {} for k in NAMES}
+    cells, values, totals = {}, {}, {k: {} for k in NAMES}
     for path in sorted(ANSWERS.glob("e*-0-B.json")):
         qid = path.name.split("-")[0]
-        cells[qid] = {}
+        cells[qid], values[qid] = {}, {}
         for k in NAMES:
             entry = json.loads((ANSWERS / f"{qid}-0-{k}.json").read_text())
             kind = "lista" if isinstance(entry["answer"], list) else "número"
-            cells[qid][k] = check(entry, k, kind) or "—"
+            cell, values[qid][k] = check(entry, k, kind)
+            cells[qid][k] = cell or "—"
             status = cells[qid][k].split(" ")[0]
             totals[k][status] = totals[k].get(status, 0) + 1
         print(f"{qid:5}" + "".join(f"{cells[qid][k]:40}" for k in NAMES))
@@ -97,7 +101,8 @@ def main():
     if "--guardar" in sys.argv:
         step = sys.argv[sys.argv.index("--guardar") + 1]
         saved = json.loads(RESULT.read_text()) if RESULT.exists() else {}
-        saved[step] = {"cells": cells, "totals": totals, "vocabulary": check_text}
+        # values: each numeric answer as the query gives it now, so the app can show the number, not only its status
+        saved[step] = {"cells": cells, "values": values, "totals": totals, "vocabulary": check_text}
         RESULT.write_text(json.dumps(saved, ensure_ascii=False, indent=1))
         validate_step(step, cells, check_text)
 

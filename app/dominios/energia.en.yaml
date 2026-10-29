@@ -27,7 +27,7 @@ demo:
   - paso: The database changes
     titulo: "The source publishes a new version"
     muestra: >-
-      Without Rastro, queries break one by one and have to be found. With Rastro, it is fixed in one place.
+      Without Rastro, the number changes and nobody notices. With Rastro, a rule warns and it is fixed in one place.
   - paso: A correction
     titulo: "A value is corrected once, and every answer changes"
     muestra: >-
@@ -40,8 +40,6 @@ demo:
     muestra: >-
       A new Vaca Muerta well. The same model with and without Rastro: they predict equally well, but with
       Rastro the prediction says what it relies on, where each value comes from and which ones are worth checking.
-      Below, the correction from moment 3: without touching the model, it has already reached its input, and its
-      explanation flags it.
 
 fuentes:
   sig_energia: Maps (WFS)
@@ -509,6 +507,9 @@ cambios:
   - titulo: The way a value is written changes
     que: The Secretaría de Energía publishes a new version of Capítulo IV and oil is now in barrels.
     donde: "in the mapping (mappings/energia.r2rml.ttl)"
+    valor:
+      texto: "how much of 2025's oil belongs to YPF?"
+      unidad: million m³
   - titulo: The name of a column changes
     que: The Secretaría de Energía publishes a new version of Capítulo IV and the oil column is renamed.
     donde: "in the mapping (mappings/energia.r2rml.ttl)"

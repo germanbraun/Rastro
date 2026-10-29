@@ -4,11 +4,12 @@
   "layer_D": 12570093.352460362,
   "layer_B": 12581212.57,
   "rastro_total": 55.0,
+  "total_ape_gas": 2255845.8461198,
   "lab_pozo": "166269",
   "lab_B_pct": 55.0,
   "lab_A_pct": 27.27,
-  "lab_B_pred": 54.285062561464095,
-  "lab_A_pred": 54.32434205211997,
+  "lab_B_pred": 53.803759965551336,
+  "lab_A_pred": 53.841683563752134,
   "lab_B_marca": "dato corregido con documento",
   "lab_pozos_ape": 6
  },
@@ -18,12 +19,14 @@
   "layer_D": 12581212.573201405,
   "layer_B": 12581212.57,
   "rastro_total": 27.27,
+  "total_ape_gas": 1118489.3858852172,
   "lab_pozo": "166269",
   "lab_B_pct": 27.27,
   "lab_A_pct": 27.27,
-  "lab_B_pred": 54.322780942460206,
-  "lab_A_pred": 54.32434205211997,
+  "lab_B_pred": 53.84155322608943,
+  "lab_A_pred": 53.841683563752134,
   "lab_B_marca": "",
   "lab_pozos_ape": 6
- }
+ },
+ "documento": 55.0
 }

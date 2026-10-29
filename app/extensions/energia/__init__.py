@@ -77,6 +77,9 @@ class OilAndGas(Extension):
         from . import lab
         result = lab.calcular()
         r, (doubtful, tested), start = result[3], result[5], result[8]
-        return dict(error_a=number(r["A"]["error"], 1), error_b=number(r["B"]["error"], 1),
+        correction = common.read_json(self.cfg["correccion"])   # moment 3: Total's gas in Aguada Pichana Este
+        gas = {f"gas_total_{k}": number(correction[k]["total_ape_gas"] / 1e3, 0)
+               for k in ("sin", "con") if "total_ape_gas" in correction.get(k, {})}
+        return dict(**gas, error_a=number(r["A"]["error"], 1), error_b=number(r["B"]["error"], 1),
                     dudosos=number(doubtful, 0), probados=number(tested, 0),
                     con_fractura=number(start["con_fractura"], 0), tarde=number(start["tarde"], 0))

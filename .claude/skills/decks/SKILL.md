@@ -12,14 +12,14 @@ The oil and gas story is **two acts, four moments, one sentence each**, and it i
 **Rastro Layer, a number you can trust:**
 
 1. **Ask:** Rastro answers with evidence (YPF's oil by who reports, `{{energia.e01.ypf_sin}}`, versus split among the partners, `{{energia.e01.ypf_con}}`).
-2. **The source changes:** without Rastro, broken queries you have to find; with Rastro, one line.
-3. **One correction:** you correct once and every answer that depends on it changes on its own. Do not mention the model yet.
+2. **The source changes:** oil arrives in barrels. Without Rastro, YPF's number silently jumps (`{{energia.cambio.antes}}` → `{{energia.cambio.sin}}`); with Rastro, a check warns and one line fixes it. The renamed column (broken queries) stays in «Por qué confiar».
+3. **One correction:** you correct once and every answer that depends on it changes on its own: Total's gas in Aguada Pichana Este, `{{energia.demo.gas_total_sin}}` → `{{energia.demo.gas_total_con}}`. Do not mention the model yet.
 
 **Rastro Lab, a prediction you can defend** (opened by one bridge sentence: everything Rastro knows, a model inherits too):
 
 4. **Predict:** the same model with and without Rastro predicts the same; with Rastro the prediction is explained and flags the doubtful data. It comes back to moment 3: the same correction already reached the model's input and its explanation, without touching the model.
 
-In the app, each moment has its `acto`; the correction shows its Layer half (`parte: layer`) and the Lab moment its Lab half (`correccion: true`), both read from the measured correction test.
+In the app, each moment has its `acto`; the correction shows its Layer half (`parte: layer`) and the Lab moment its Lab half (`correccion: true`) as one sentence, both read from the measured correction test. In the business view each moment shows one number; the tables go behind «Ver detalles técnicos».
 
 The same thing in three places, which must say the same:
 

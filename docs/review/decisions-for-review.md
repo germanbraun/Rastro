@@ -420,6 +420,12 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q43.** Does the callback land in three minutes, or would a sales audience rather see the correction once, at the
   end, reaching everything at the same time? Is one bridge sentence enough to switch from answers to predictions?
 
+**H8. One number per demo moment** (2026-10-29)
+- **Decision:** the source change is told with the units scenario (a silently wrong number, caught by a check) and
+  the correction with Total's gas before and after; counts and tables only in the technical view.
+- **Q44.** Is a silently wrong number a stronger pitch than broken queries, or does «Rastro's number also changes
+  until fixed» weaken it?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -491,7 +497,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q43). Skip any you have no view on.
+- Answer per question number (Q1–Q44). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

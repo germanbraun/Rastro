@@ -140,6 +140,24 @@ dominio.show_demo.live_note: {es: "Se ejecuta ahora, en vivo, sobre los datos.",
 dominio.show_demo.back: {es: "← Anterior", en: "← Previous"}
 dominio.show_demo.next: {es: "Siguiente →", en: "Next →"}
 
+dominio.show_change_value.question:
+  es: "La pregunta: {question} Antes del cambio, Rastro responde **{value}**."
+  en: "The question: {question} Before the change, Rastro answers **{value}**."
+dominio.show_change_value.without_title: {es: "**Sin Rastro**", en: "**Without Rastro**"}
+dominio.show_change_value.without_changed:
+  es: "La misma consulta ahora da **{value}**, y nada avisa: el número parece normal."
+  en: "The same query now gives **{value}**, and nothing warns: the number looks normal."
+dominio.show_change_value.without_fix:
+  es: "Para arreglarlo, alguien tiene que notarlo, y después encontrar y reescribir cada consulta que lee ese dato."
+  en: "To fix it, someone has to notice, and then find and rewrite every query that reads that value."
+dominio.show_change_value.with_title: {es: "**Con Rastro**", en: "**With Rastro**"}
+dominio.show_change_value.with_warns:
+  es: "Rastro avisa con una regla de control escrita una vez: «{warning}»"
+  en: "Rastro warns with a check written once: «{warning}»"
+dominio.show_change_value.with_fix:
+  es: "Se cambia **una línea**, la traducción de esa columna, y vuelve a **{value}**; las {ok} de {n} preguntas responden igual que antes."
+  en: "**One line** is changed, that column's translation, and it is back to **{value}**; {ok} of {n} questions answer as before."
+dominio.show_change_value.all_questions: {es: "Todas las preguntas, una por una", en: "All the questions, one by one"}
 dominio.show_change_short.missing: {es: "Falta registrar la prueba de cambio.", en: "The change test has not been recorded yet."}
 dominio.show_change_short.just_changed: {es: "**Recién cambiada la base**", en: "**Right after the database changed**"}
 dominio.show_change_short.without_broken:

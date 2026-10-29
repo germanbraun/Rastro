@@ -25,11 +25,13 @@ En **¿Por qué este número?**, con YPF y Loma Campana: el 50 % de la producci�
 
 ### 1:15 – 1:45 · 2 · La base cambia (app, momento 2; diapositiva 5)
 
-> «La Secretaría publica una versión nueva y una columna cambia de nombre. De las 10 preguntas, sin Rastro 8 tienen consulta, y 3 de esas se rompen: hay que encontrarlas una por una. Con Rastro, todo falla junto, en voz alta, y se arregla con una línea: las 10 preguntas vuelven a responder.»
+> «La Secretaría publica una versión nueva y el petróleo pasa a estar en barriles. Sin Rastro, la consulta sigue funcionando: a YPF le corresponden ahora 79,1 millones de m³ en vez de 12,6, y nada avisa. Con Rastro, una regla escrita una vez avisa que el petróleo de 2025 suma mucho más que la producción nacional, se cambia una línea y vuelve a 12,6. Un número equivocado que nadie nota es peor que una consulta rota.»
+
+Si preguntan por las consultas rotas: con una columna que cambia de nombre, sin Rastro se rompen 3 de 8 consultas y hay que buscarlas; con Rastro, todo falla junto y se arregla con una línea (Por qué confiar).
 
 ### 1:45 – 2:10 · 3 · Una corrección (app, momento 3; diapositiva 6)
 
-> «Un documento dice que en Aguada Pichana Este Total tiene el 55 %, no el 27,27 % del mapa. Se corrige una vez en Rastro, con el documento, y cambian solas todas las respuestas que dependen de esa participación. Sin Rastro, ese dato vive en cinco lugares, y si se olvida uno los resultados no coinciden. Lo difícil se hace una vez, en un lugar.»
+> «El mapa le da a Total el 27,27 % de Aguada Pichana Este; un documento, el Acuerdo Marco de Neuquén, dice 55 %. Se corrige una vez en Rastro, con el documento, y el gas de 2025 que le corresponde a Total ahí pasa de 1.118 a 2.256 millones de m³, en todas las respuestas a la vez. Sin Rastro, ese porcentaje vive en cinco lugares, y si se olvida uno los resultados no coinciden. Lo difícil se hace una vez, en un lugar.»
 
 No decir todavía que la corrección llega al modelo: es la vuelta del acto siguiente.
 
@@ -41,9 +43,9 @@ No decir todavía que la corrección llega al modelo: es la vuelta del acto sigu
 
 > «Un modelo predice cuánto gas va a dar un pozo nuevo de Vaca Muerta. Es el mismo modelo con y sin Rastro, y predicen igual de bien. La diferencia: con Rastro, la predicción dice en qué se apoya (la concesión con su operadora, cómo se fracturó el pozo), de dónde sale cada dato y cuáles conviene revisar.»
 
-Abrir **¿De dónde sale?** en la fractura: dice cuándo se cargó el dato. Después, la tabla de abajo, la vuelta al momento 3:
+Abrir **¿De dónde sale?** en la fractura: dice cuándo se cargó el dato. Después, la frase verde de abajo, la vuelta al momento 3:
 
-> «¿Se acuerdan de la corrección de Aguada Pichana Este? Nadie tocó el modelo: ya llegó a su entrada, y su explicación dice que es un dato corregido con documento. Sin Rastro, el modelo sigue leyendo el 27,27 %.»
+> «¿Se acuerdan de la corrección de Aguada Pichana Este? Nadie tocó el modelo: ya entra con el 55 %, y su explicación dice que es un dato corregido con documento. El modelo sin Rastro sigue leyendo el 27,27 % del mapa.»
 
 Si preguntan si cambió la predicción: casi nada (lo dice la prueba de la corrección); lo que cambia es que el dato es el correcto y lo dice.
 

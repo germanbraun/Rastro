@@ -14,17 +14,58 @@ from . import common
 from . import hood
 
 
+def show_change_value(cfg, changes, change, before, after):
+    """A change-test scenario told with one answer: its number before the change, right after it (with and without
+    Rastro) and after the one-line fix, all as recorded by the change test. change["valor"] names the evaluation
+    question whose recorded answer is shown, its wording (texto) and how to scale its number."""
+    valor = change["valor"]
+    q, scale = valor["pregunta"], valor.get("escala", 1)
+
+    def shown(step, path):
+        v = (changes.get(step, {}).get("values") or {}).get(q, {}).get(path)
+        return f"{idioma.number(v / scale, valor.get('decimales', 1))} {valor['unidad']}" if v is not None else "—"
+
+    n = len(before["cells"])
+    st.markdown(common.md(change["que"]))
+    st.markdown(idioma.t("dominio.show_change_value.question", question=common.md(valor["texto"]),
+                         value=shown("antes", "C")))
+    without, with_ = st.columns(2)
+    with without.container(border=True):
+        st.markdown(idioma.t("dominio.show_change_value.without_title"))
+        st.markdown(idioma.t("dominio.show_change_value.without_changed", value=shown(change["antes"], "B")))
+        st.markdown(idioma.t("dominio.show_change_value.without_fix"))
+    with with_.container(border=True):
+        st.markdown(idioma.t("dominio.show_change_value.with_title"))
+        if "🟡" in before.get("vocabulary", ""):
+            st.markdown(idioma.t("dominio.show_change_value.with_warns",
+                                 warning=common.md(common.check_text(before["vocabulary"], cfg.get("avisos_cambio")))))
+        st.markdown(idioma.t("dominio.show_change_value.with_fix", value=shown(change["despues"], "C"),
+                             ok=after["totals"]["C"].get("✅", 0), n=n))
+
+
 def show_change_short(cfg, changes, escenario, tech):
-    """A change-test scenario, short: how many questions are still right before and after the fix."""
+    """A change-test scenario, short: how many questions are still right before and after the fix. A scenario with
+    «valor» is told with one answer's number instead, and the counts stay in the technical view."""
     change = next((c for c in cfg["cambios"] if c["antes"] == escenario), cfg["cambios"][0])
     before, after = changes.get(change["antes"]), changes.get(change["despues"])
     if not (before and after):
         st.info(idioma.t("dominio.show_change_short.missing"))
         return
+    if change.get("valor") and "values" in before:
+        show_change_value(cfg, changes, change, before, after)
+        if tech:
+            with st.expander(idioma.t("dominio.show_change_value.all_questions")):
+                show_change_counts(change, before, after, tech)
+        return
+    st.markdown(common.md(change["que"]))
+    show_change_counts(change, before, after, tech)
+
+
+def show_change_counts(change, before, after, tech):
+    """How many questions break and how many answer again, without and with Rastro, and the fixed line."""
     n = len(before["cells"])
     rotas = before["totals"]["B"].get("❌", 0) + before["totals"]["B"].get("🟡", 0)
     sin_query = before["totals"]["B"].get("—", 0)
-    st.markdown(common.md(change["que"]))
     antes, despues = st.columns(2)
     with antes.container(border=True):
         st.markdown(idioma.t("dominio.show_change_short.just_changed"))

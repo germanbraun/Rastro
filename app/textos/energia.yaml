@@ -26,6 +26,16 @@ energia.correction.what_layer:
 energia.correction.what_lab:
   es: "La corrección de Rastro Layer (Total en Aguada Pichana Este), tal como llegó a este modelo: la entrada y su explicación."
   en: "The correction from Rastro Layer (Total in Aguada Pichana Este), as it reached this model: the input and its explanation."
+energia.correction.before_title:
+  es: "**Antes de corregir:** el mapa le da a Total el {pct}"
+  en: "**Before the correction:** the map gives Total {pct}"
+energia.correction.after_title:
+  es: "**Corregido una vez en Rastro:** el documento dice {pct}"
+  en: "**Corrected once in Rastro:** the document says {pct}"
+energia.correction.total_gas: {es: "Gas de 2025 que le corresponde a Total en Aguada Pichana Este", en: "2025 gas that belongs to Total in Aguada Pichana Este"}
+energia.correction.reached_model:
+  es: "La corrección del momento 3 ya llegó al modelo, sin tocarlo: Total en Aguada Pichana Este entra con el {con} (antes, {sin}), y la explicación lo marca «dato corregido con documento». El modelo sin Rastro sigue leyendo el {raw} del mapa."
+  en: "The correction from moment 3 has already reached the model, without touching it: Total in Aguada Pichana Este goes in with {con} (before, {sin}), and the explanation flags it «corrected with a document». The model without Rastro still reads the map's {raw}."
 energia.correction.where_fixed:
   es: "**Dónde se corrigió:** en un solo lugar, el archivo de participaciones revisadas (con el documento). Sin Rastro, el mismo dato se
     lee del texto del mapa en {places} lugares (cada consulta y el código del modelo), y hay que encontrarlos y corregirlos uno por uno."

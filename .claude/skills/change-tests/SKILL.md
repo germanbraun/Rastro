@@ -64,13 +64,15 @@ Usual subcommands: `probar`, `renombrar`, `valores`, `arreglar <act>`, `deshacer
 
 Add a sanity check in `probar.py` on a known total (for example the yearly volume) so a unit change is caught even when queries "still answer".
 
+Save each numeric answer next to its status (`values` in `resultado.json`), so the app and the slides can tell a scenario with one real number (a `valor` in the domain's `cambios`: the question, its wording, scale and unit) instead of counts. Run the evaluator with `--no-deps` while the layer is broken on purpose: a service that waits for a healthy layer would never start. A step with a question that SQL over the sources cannot answer (`—`) is not a broken step.
+
 ## 2. One correction, every result (`correccion.sh`)
 
 Change one value once - remove a reviewed correction (a row of a file in `method.linker.corrections`), or add the row a
 source's next release would add - rebuild the layer (linker + Ontop restart), measure, and let the guard put it back.
 
 - Measure the affected answer with the three paths (without the layer, SQL with links, with the layer) and anything downstream that uses it (a model's inputs and explanations, if the domain has one).
-- Save the result in `correccion.json`.
+- Save the result in `correccion.json`, with the business answer the correction moves most (the one the demo shows) and the document's value, saved while the corrections file still has it (the check runs after the row is removed).
 - When done, the changed file or table and the saved answers must be as before (byte-for-byte comparison to the starting snapshot, including untracked files).
 - What is claimed must match what was measured: if a downstream result barely moves, do not say it changes.
 - **Declare exact expectations before measuring and check them with code** (`correccion.py verificar`, run by

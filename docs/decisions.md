@@ -1588,7 +1588,23 @@ experiment's log as method changes made after it; they do not change its measure
 - **Not done:** making a well in Aguada Pichana Este the Lab example. Its 2025 wells have no fracturing data yet, and
   the model predicts 53.8 million m³ for well 166269, which gave 17.7. The Lab moment keeps its well with data, and
   the concession reaches Lab through the correction's rows. The prediction itself barely moves with the correction
-  (54.32 → 54.29 in `layer/energia/cambio/correccion.json`), so no text says it changes.
+  (53.84 → 53.80 million m³ in `layer/energia/cambio/correccion.json`, re-recorded the same day), so no text says it changes.
 - App (`acto`, `puente`, `parte`, `correccion` in the demo steps), script and deck (slides 6 and 7 swapped, act names
   in the headers) changed together; no number was re-measured.
+
+## 2026-10-29 — Moments 2 to 4 told with one number each
+
+- **Why:** without «Ver detalles técnicos», «La base cambia» showed counts of queries and «Una corrección» a table where
+  YPF's answer moved from 12,58 to 12,57 million m³: hard to see the value.
+- **Moment 2** now uses the units change: oil in barrels. Without Rastro, YPF's answer silently goes from 12,6 to 79,1
+  million m³; with Rastro the unit check warns («¿cambió la unidad?») and one line brings it back to 12,6. The renamed
+  column (3 of 8 queries break) stays in «Por qué confiar».
+- **Moment 3** shows Total's 2025 gas in Aguada Pichana Este: 1.118 million m³ with the map's 27,27 %, 2.256 with the
+  document's 55 %. **Moment 4** ends with one sentence: the correction already reached the model's input.
+- **Re-measured:** the change test now saves each numeric answer (`values`) and the correction test Total's gas and the
+  document's value; both re-recorded. Every change-test status and number is unchanged; in the correction test the Lab predictions for
+  the example well are 53,8 instead of 54,3 million m³ (the model was retrained since 21 October), and the correction
+  still barely moves them (53,84 → 53,80). Three bugs found on the way: the
+  evaluator waited for the broken Ontop (now `--no-deps`), «—» counted as a broken answer, and the correction check
+  read the CSV after the row was removed.
 
