@@ -1813,3 +1813,15 @@ experiment's log as method changes made after it; they do not change its measure
   #F7F6F2), always light, and no Streamlit developer menu or «Deploy» button; the app runs from `/app` to read it.
   The open section's underline uses the same blue.
 
+## 2026-10-29 — The demo keeps showing if the database stops answering
+
+- **What:** the answers are saved on disk under a data version read from Postgres, so a database outage broke even
+  what was saved. Now the version, and the load dates under the contrast card, are remembered while the app runs
+  (`common.remembered`): if the database stops answering, Rastro shows the saved answers with a notice («La base de
+  datos no responde ahora: Rastro muestra las respuestas que ya tenía guardadas»). Each demo moment runs inside its
+  own guard, so «Anterior» and «Siguiente» always show.
+- **Tried for real:** with Postgres stopped and the one-minute caches expired, the four demo moments and the start
+  page's numbers showed in full, with the notice. Before the fix, moment 1 failed and the demo could not move on.
+- **Limit:** it serves what the app read since it started; after a restart with the database down, it says the
+  database is not answering. Open the demo once before presenting.
+

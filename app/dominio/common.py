@@ -69,6 +69,29 @@ def data_version(domain, reads=""):
     return f"{loads}|{inserts}|" + "|".join(str(f.stat().st_mtime) if f.exists() else "" for f in files)
 
 
+_REMEMBERED = {}   # key → the last value read from the database while this app runs
+
+
+def remembered(key, read):
+    """read(), or, if the database stops answering, the last value it gave while this app runs: what was already read
+    keeps showing (a demo does not fail in front of a client), with a notice that these are saved answers."""
+    import psycopg
+    try:
+        _REMEMBERED[key] = read()
+    except psycopg.OperationalError:
+        if key not in _REMEMBERED:
+            raise
+        if not st.session_state.get("rastro_saved_notice"):
+            st.session_state["rastro_saved_notice"] = True
+            st.toast(idioma.t("dominio.saved_answers"), icon="💾")
+    return _REMEMBERED[key]
+
+
+def version(domain, reads=""):
+    """data_version, remembered: with it, the answers saved on disk keep showing if the database stops answering."""
+    return remembered(("version", domain, reads), lambda: data_version(domain, reads))
+
+
 @st.cache_data(persist="disk", show_spinner=False)
 def _run_saved(query, domain, version):
     return answer.run_sparql_table(query, domain)
@@ -77,7 +100,7 @@ def _run_saved(query, domain, version):
 def run(query, domain):
     """A query over Rastro. The answer is saved on disk: it survives an app restart, and it is
     recalculated if the data or the mappings change (data_version)."""
-    return _run_saved(query, domain, data_version(domain))
+    return _run_saved(query, domain, version(domain))
 
 
 @st.cache_resource

@@ -635,3 +635,7 @@ dominio.method.show: {es: "{validated} de {n} preguntas de la app validadas", en
 dominio.method.maintain: {es: "Pruebas registradas: {tests}", en: "Recorded tests: {tests}"}
 dominio.method.not_built: {es: "Todavía no", en: "Not yet"}
 
+dominio.saved_answers:
+  es: "La base de datos no responde ahora: Rastro muestra las respuestas que ya tenía guardadas."
+  en: "The database is not answering right now: Rastro shows the answers it had already saved."
+

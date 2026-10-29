@@ -22,7 +22,7 @@ This file only re-exports the names the rest of the app uses as dominio.<name>.
 import answer  # noqa: F401  (tests reach it as dominio.answer)
 
 from .common import (  # noqa: F401
-    PROV, load_config, read_json, ayuda, sources, data_version, run, warm_up, prefixed, check_text, spanish_number,
+    PROV, load_config, read_json, ayuda, sources, data_version, version, run, warm_up, prefixed, check_text, spanish_number,
     tabla, md, money, PROV_NS, RDF_TYPE, domain_config, technical, ontology_file, labels, short_iri, sql_table,
     short, validated_questions, llm_status,
 )

@@ -13,7 +13,7 @@ import answer
 import enlaces
 import idioma
 from .lab_walkthrough import GROUPS, compare_run, value_status
-from dominio import ayuda, data_version, md, tabla
+from dominio import ayuda, md, tabla, version
 
 sys.path.insert(0, "/lab/gas")
 import modelo  # noqa: E402
@@ -63,7 +63,7 @@ def rango_y_dentro(r, b):
 def datos():
     """The data and the two models. They are saved to disk and rebuilt if the data or the mappings change."""
     with st.spinner(idioma.t("lab.datos.spinner")):   # Lab also reads raw tables directly
-        return _datos(data_version("energia", modelo.SQL_GAS + modelo.SQL_A), modelo.version())
+        return _datos(version("energia", modelo.SQL_GAS + modelo.SQL_A), modelo.version())
 
 
 def show_lab(tech, pozo=None, note=""):

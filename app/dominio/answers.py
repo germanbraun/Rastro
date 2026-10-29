@@ -195,7 +195,7 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
 def card_numbers(card, domain):
     """A contrast card's numbers as text, read now the same way the slides read them (contraste.py); the queries'
     answers are cached until the data changes."""
-    found = contraste.values(card, lambda q: _sql_saved(q, domain, common.data_version(domain, reads=q)),
+    found = contraste.values(card, lambda q: _sql_saved(q, domain, common.version(domain, reads=q)),
                              lambda q: common.run(common.prefixed(q, domain), domain))
     return contraste.shown(card, found, idioma.number)
 
@@ -215,7 +215,8 @@ def before_after(card, domain):
         st.warning(idioma.t("dominio.before_after.cost") + common.md(card["impacto"]))
     if card.get("fuentes"):
         st.caption(idioma.t("dominio.before_after.data", sources="; ".join(
-            idioma.t("dominio.before_after.source", name=name, date=date) for name, date in loaded(tuple(card["fuentes"])))))
+            idioma.t("dominio.before_after.source", name=name, date=date)
+            for name, date in common.remembered(("loaded", tuple(card["fuentes"])), lambda: loaded(tuple(card["fuentes"]))))))
 
 
 @st.cache_data(persist="disk", show_spinner=False)
@@ -310,6 +311,22 @@ def show_demo(cfg, tech):
         st.markdown(idioma.t("dominio.show_demo.what_is", step=common.md(step["paso"]).lower(), text=common.md(step["que_es"])))
     if step.get("muestra"):
         st.markdown(common.md(step["muestra"]))
+    from .screen import service_guard   # here: screen imports this module
+    with service_guard():   # if a service fails, the moment says so and the buttons below still move the demo on
+        show_moment(cfg, tech, step, key)
+    back, _, forward = st.columns([2, 3, 2])
+    if i > 0 and back.button(idioma.t("dominio.show_demo.back"), key=f"{key}_back"):
+        st.session_state[key] = i - 1
+        st.rerun()
+    if i < len(steps) - 1 and forward.button(idioma.t("dominio.show_demo.next"), type="primary", key=f"{key}_next"):
+        st.session_state[key] = i + 1
+        st.rerun()
+
+
+def show_moment(cfg, tech, step, key):
+    """What one moment of the demo runs: a change test, a moment of the domain's own, a question over texts or an
+    example question with its contrast card and its answer."""
+    domain = cfg["domain"]
     tipo = step.get("tipo", "pregunta")
     if tipo == "cambio":
         trust_view.show_change_short(cfg, common.read_json(cfg["cambio"]), step.get("escenario"), tech)
@@ -327,13 +344,6 @@ def show_demo(cfg, tech):
         if item.get("antes_despues"):
             before_after(item["antes_despues"], domain)
         show_answer(cfg, tech, query, columns, rows, item, note=idioma.t("dominio.show_demo.live_note"), where="demo")
-    back, _, forward = st.columns([2, 3, 2])
-    if i > 0 and back.button(idioma.t("dominio.show_demo.back"), key=f"{key}_back"):
-        st.session_state[key] = i - 1
-        st.rerun()
-    if i < len(steps) - 1 and forward.button(idioma.t("dominio.show_demo.next"), type="primary", key=f"{key}_next"):
-        st.session_state[key] = i + 1
-        st.rerun()
 
 
 GRAPHDB = "http://graphdb:7200/repositories/rastro"
