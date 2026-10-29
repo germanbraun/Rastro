@@ -97,6 +97,10 @@ Create `<method.evaluation.folder>/reference-evidence.yaml` from actual evidence
   `reviewer`, `reviewed_on`, `artifact` (repo-relative evidence file), `sha256`, and `adjudication` (the decision or
   an explicit statement that the approaches agree).
 
+`layer/review_packet.py <domain> build` prepares the reviewer's packet and form; `record` writes the
+`references`, `questions_sha256`, `result_artifact`, `attempt_artifacts` and `source_versions` from the filled form.
+The evaluation run's `model`, `model_version` and `prompt_artifacts` are the evaluator's to record.
+
 Independent means checked against original source records, a separately calculated reference, or an applicable
 published figure, rather than trusting the Rastro reference query. Preserve definitions, units and period. The gate
 checks B/D/C coverage, that independently checked answers match the scored references, fingerprints and review records; it cannot establish a human's identity or the truth of a review.

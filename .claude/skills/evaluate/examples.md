@@ -65,3 +65,10 @@ Questions in `layer/energia/fuera/preguntas.yaml`. Examples of missing data in t
 - Wrong query: Rastro reached the operator through the share instead of the declared name.
 - Ambiguous definition: "producing", what each company operates or what it is entitled to.
 - Impossible source value: a pressure of 111.515 psi.
+
+## Reference review packet (oil and gas, 2026-10-29)
+
+`review_packet.py energia build` wrote a 536-line packet for the 10 questions and a form with one row each. A
+throwaway form (Rastro's answers, e02 changed to 15700) recorded and rescored: B 7, D 10, C 10 of 10 (15700 is within
+5 % of 15809). The gate then listed only the run's model, model version and prompts, not saved when oil and gas was
+measured. The throwaway files were removed and the results restored; the real form waits for a person.

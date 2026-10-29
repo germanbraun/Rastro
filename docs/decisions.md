@@ -1865,3 +1865,19 @@ experiment's log as method changes made after it; they do not change its measure
   and reloads the page once (a zero-height component, hidden). Tried with «Dark» stored: one reload, then the app's
   light blue background and navy titles.
 
+
+## 2026-10-29 — A packet for the independent review of the references
+
+- **Why:** the oil and gas accuracy numbers (10 of 10 with Rastro, 10 with SQL + links, 7 without) rest on reference
+  answers that an AI assistant wrote from Rastro, so they stay provisional until a person checks them with the
+  sources. That work had no shape: the reviewer would have to find each question, the sources and their versions.
+- **What:** `layer/review_packet.py <domain> build` writes `layer/<domain>/revision/paquete.md` (Spanish, for the
+  reviewer: per question, Rastro's answer, how the three approaches answered, the differences already adjudicated,
+  the source tables the query without Rastro reads with their loaded version, and that query as a starting point) and
+  `formulario.csv`, one row per question. `record` reads the form; only when all rows are reviewed (answer, sources,
+  how it was checked, reviewer, date) does it write `eval/referencias.json`, score again and write the references and
+  source versions into `reference-evidence.yaml`. It never fills in a reviewer, a date or an answer.
+- **Tried with a throwaway form** (filled with Rastro's own answers and one changed; then removed and the results
+  restored): the gate's per-question errors were gone; what remained was the evaluation run's model, model version
+  and prompts, which were not saved when oil and gas was measured. Closing that needs the prompts saved at the next
+  measurement, not the reviewer.

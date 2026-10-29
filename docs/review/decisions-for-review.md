@@ -463,6 +463,13 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q50.** Is three states (done, waits, not built) enough, or should «waits for a person» and «half done» be told
   apart?
 
+**H15. A packet for the reviewer of the references** (2026-10-29)
+- **Decision:** the person who checks the reference answers gets one packet per domain (each question, Rastro's
+  answer, the sources and versions, a SQL query over the sources to start from) and fills one form; a script turns the
+  complete form into the references and the publication evidence, and does nothing while a row is pending.
+- **Q51.** Is giving the reviewer the query written without Rastro a fair starting point, or does it anchor them on
+  the evaluator's reading? Should the reviewer see Rastro's answer before checking, or only after?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**

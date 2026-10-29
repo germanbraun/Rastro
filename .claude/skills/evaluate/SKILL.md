@@ -45,7 +45,13 @@ The files: questions in `<folder>/eval/questions.yaml`, saved answers in `<folde
    `<run> try <q> 0 <B|D|C> < query.sql`. Up to 3 attempts, giving it back the error message. Never show it the reference or other answers. **One prompt per subagent:** if a subagent sees the four forms of a question together, it repeats the same query and consistency stops measuring anything (this happened once, and that check was discarded).
 3. **Score:** `<run> puntaje`. Tolerance: 5 % for numbers; for lists, F1 of 80 % or more.
 4. **Independently validate every reference**, even when all paths agree (in `eval/referencias.json`; an AI-made
-   reference says so in its `nota` and waits for a person). Preserve the checked answer, source/version, supporting artifact and fingerprint, reviewer and date. **Adjudicate** each question where the paths differ, with each source's data, in `<folder>/adjudicacion.md`: who was right and why. The reference comes from Rastro, so Rastro's advantage can be circular until adjudicated.
+   reference says so in its `nota` and waits for a person). Preserve the checked answer, source/version, supporting artifact and fingerprint, reviewer and date.
+   For a person outside, `docker compose run --rm -T layer-eval python /layer/review_packet.py <domain> build` writes the packet
+   (`<folder>/revision/paquete.md`: per question, Rastro's answer, the three approaches, the adjudications, the source
+   tables with their loaded version and the SQL query over the sources to start from) and the form
+   (`revision/formulario.csv`). When the person has filled every row, `record` writes `eval/referencias.json`, scores
+   again and writes the references and source versions into `reference-evidence.yaml`; with a row pending it writes
+   nothing. Never fill in the form yourself. **Adjudicate** each question where the paths differ, with each source's data, in `<folder>/adjudicacion.md`: who was right and why. The reference comes from Rastro, so Rastro's advantage can be circular until adjudicated.
 
 5. **Publication gate:** record the exact model and version, prompts, retries, source versions and result in
    `<folder>/reference-evidence.yaml` (format in `docs/method-contracts.md`), then run
