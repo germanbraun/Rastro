@@ -33,8 +33,8 @@ described in its configuration file, not programmed.
 
 ## What the app shows, and where it comes from
 
-**Business view** (the default; plain words, no jargon, in the users' language). At most four tabs: Demo, Preguntar,
-Por qué confiar and the model's tab; the walkthrough opens inside «Por qué confiar» and the FAQ from a sidebar button.
+**Business view** (the default; plain words, no jargon, in the users' language). At most four sections (drawn as tabs):
+Demo, Preguntar, Por qué confiar and the model's; the walkthrough opens inside «Por qué confiar» and the FAQ from a sidebar button.
 The first screen says what Rastro is and how to read each screen (question → answer → «¿Por qué este número?»).
 
 | Piece | What the user sees | Key in the domain's YAML |

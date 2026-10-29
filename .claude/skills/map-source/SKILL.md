@@ -70,6 +70,8 @@ A new domain gets its own entry, following the existing ones.
    - The source values as they are, without translating them.
    - If it is a link, `prov:wasDerivedFrom` (the source), `prov:wasGeneratedBy` (the rule), and the domain's rule and
      evidence-text properties (see the skill `link-entities`).
+   - A domain started with `method.py new-domain` already maps its sources (`<#DataSource>`, from `rastro_meta.source`);
+     keep that map and add the source's id to its `WHERE` (skill `add-source`).
 4. **Tell the assistant:** the term in the dictionary notes (`sparql_notes`), said the way a business person would
    say it, and how to reach it from what already exists. **The same, at the same level, in the SQL-with-links notes**
    (`links_notes`): if one of the paths knows more, the evaluation is not fair. Add the term to `term_sources` (and to

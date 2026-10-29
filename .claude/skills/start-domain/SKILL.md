@@ -49,9 +49,10 @@ Reuse its findings and actual approvals; a favorable inspection alone does not a
    `maintain` (the command accepts any name; a typo only fails at `--check`). Sessions and appended entries always go
    through the command. The header fields and human hours also go through the command (`--set`, `--human-hours`); a
    missing human time stays empty, never estimated.
-5. **Check the shell.** Run `python layer/method.py registry <domain>`. Start the Ontop service: an empty mapping is
-   not proof of a healthy service. If it cannot start without mappings, record it as pending and build the first
-   approved question's minimal implementation before claiming readiness.
+5. **Check the shell.** Run `python layer/method.py registry <domain>`. Start the Ontop service: with the scaffold's
+   sources map it starts and answers (0 sources until the first one); Ontop refuses a mapping with no map at all.
+   A healthy service answering nothing is not a working domain: readiness comes with the first approved question's
+   minimal implementation.
 6. **Hand off** to `add-question` at proposed/approved, not with an invented query.
 
 ## Check that decides

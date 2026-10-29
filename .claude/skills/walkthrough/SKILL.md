@@ -101,7 +101,7 @@ the semantic layer, one step per part of Rastro, and every number on screen come
 - **A fictional example is easier to write and costs trust.** Next to real data, invented records are hard to tell
   apart. If no real case shows a step, drop the step.
 - **The question in the last step must be one Rastro answers today.** Otherwise the walkthrough sells a feature.
-- **Keys of the tables:** the same answer drawn in two tabs at once needs distinct widget keys; the renderer adds the
-  tab and the step to them.
+- **Keys of the tables:** the same answer can be drawn in two places (its own section in the technical view, inside
+  «Por qué confiar» in the business view); the renderer adds the place and the step to the widget keys.
 
 Real cases, with their queries: see `examples.md`.

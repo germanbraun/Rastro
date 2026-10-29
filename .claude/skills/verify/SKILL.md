@@ -46,8 +46,9 @@ Report passed, failed, pending and not applicable separately; never infer readin
      `git checkout` to discard date changes; preserve user edits;
    - the model's own consistency checks, when the domain has one.
 4. **App:** `docker compose run --rm --no-deps -T app python /app/check_domain.py <domain>` (the runner calls it
-   too). A legacy app screen is exercised by hand in both views. A health endpoint alone does not validate the
-   screens; restart imported modules when they changed.
+   too). It opens every section of both views in turn. A legacy app screen is exercised by hand in both views. A
+   health endpoint alone does not validate the screens; restart imported modules when they changed. On a customer
+   machine, also `python3 infra/customer/check.py` (the customer setup: users, ports, login).
 5. **Before publishing accuracy claims:** `python layer/method.py publication <domain>` (or `--publish`). Missing
    independent review or stale artifacts keep scores provisional. The gate covers new claims; numbers already
    published stay as they are, labelled provisional until the gate passes. Before closing a new-domain experiment,

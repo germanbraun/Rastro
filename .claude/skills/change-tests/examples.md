@@ -11,7 +11,9 @@ layer/energia/cambio/cambio.sh registrar    # the two acts (renamed column, oil 
 - Act 1 (`renombrar`): `prod_pet` is renamed to `petroleo`. Act 2 (`valores`): oil is in barrels.
 - Each act changes the source, restarts Ontop (`ontop-energia`), measures, fixes **one line** of the mapping and measures again. It always ends with `deshacer`; the guard restores inputs even on failure; if recovery is incomplete, run `python layer/change_guard.py recover` before another test.
 - `probar.py` checks that 2025 oil stays around 46.6 million m³ (about 800,000 barrels per day); if the unit changes, Rastro warns.
-- The result is saved in `cambio/resultado.json` (steps `antes`, `renombrar`, `renombrar-arreglado`, `valores`, `valores-arreglado`, `despues`), which «Por qué confiar» (Why trust it) and moment 2 of the demo read.
+- The result is saved in `cambio/resultado.json` (steps `antes`, `renombrar`, `renombrar-arreglado`, `valores`, `valores-arreglado`, `despues`), which «Por qué confiar» (Why trust it) reads. Moment 2 of the demo tells act 2 (`valores`) with one recorded number,
+  YPF's oil (`values` of `e01`): 12,6 → 79,1 without Rastro, back to 12,6 with the one-line fix (`valor` in the
+  domain's `cambios`).
 - If you change the mapping line that reads oil (`prod_pet AS petroleo_m3`), update the pattern in `cambio.sh` and the `arreglo` entries in `app/dominios/energia.yaml`.
 
 ## Oil and gas (`energia`): one correction, every result
@@ -24,8 +26,10 @@ git status --short    # when done, the CSV and the saved answers must be as befo
 ```
 
 - The checker's test: `tests/test_energia_correccion.py`.
-- It measures the share answer (with Rastro, SQL with links and without Rastro), what goes into the Rastro Lab model and its explanation.
-- The result is saved in `cambio/correccion.json`, which moment 4 of the demo reads.
+- It measures the share answer (with Rastro, SQL with links and without Rastro), Total's 2025 gas in Aguada Pichana
+  Este (`total_ape_gas`, the number the demo shows: 1.118 → 2.256 million m³), what goes into the Rastro Lab model and
+  its explanation, and saves the document's value (`documento`) while the CSV still has it.
+- The result is saved in `cambio/correccion.json`: moment 3 of the demo shows its Layer half, moment 4 its Lab half.
 - What was measured: the prediction barely moves (the share is fixed within the concession), so do not say it changes.
 
 ## Oil and gas (`energia`): which predictions change
