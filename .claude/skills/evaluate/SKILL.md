@@ -40,7 +40,8 @@ The files: questions in `<folder>/eval/questions.yaml`, saved answers in `<folde
    query (SPARQL over Rastro). That reference is provisional: an independent one goes in `<folder>/eval/referencias.json`
    (`{"nota": who made it and its status, "answers": {question id: answer}}`), and `puntaje` uses it instead. If it has paraphrases, in `consistencia/parafrasis.yaml`. It usually starts as a competency question (skill `add-question`).
 2. **One subagent per path, which only sees the prompt:** generate the prompt with
-   `<run> prompt <q> 0 <B|D|C>`,
+   `<run> prompt <q> 0 <B|D|C>` (it is also kept in `<folder>/prompts/`: commit it with the answers, it is evidence
+   of the run),
    give it to a new subagent with no other context, and test what it returns with
    `<run> try <q> 0 <B|D|C> < query.sql`. Up to 3 attempts, giving it back the error message. Never show it the reference or other answers. **One prompt per subagent:** if a subagent sees the four forms of a question together, it repeats the same query and consistency stops measuring anything (this happened once, and that check was discarded).
 3. **Score:** `<run> puntaje`. Tolerance: 5 % for numbers; for lists, F1 of 80 % or more.
@@ -53,7 +54,8 @@ The files: questions in `<folder>/eval/questions.yaml`, saved answers in `<folde
    again and writes the references and source versions into `reference-evidence.yaml`; with a row pending it writes
    nothing. Never fill in the form yourself. **Adjudicate** each question where the paths differ, with each source's data, in `<folder>/adjudicacion.md`: who was right and why. The reference comes from Rastro, so Rastro's advantage can be circular until adjudicated.
 
-5. **Publication gate:** record the exact model and version, prompts, retries, source versions and result in
+5. **Publication gate:** write the model and version that answered in `<folder>/eval/run.yaml`; `review_packet.py
+   record` copies them, the saved prompts, the answers, the source versions and the result into
    `<folder>/reference-evidence.yaml` (format in `docs/method-contracts.md`), then run
    `python layer/method.py publication <domain>`. Missing or stale evidence blocks publication, not exploratory
    scoring. Never invent reviewer approval. The gate covers new claims; numbers already published stay as they are,

@@ -1,0 +1,340 @@
+<sistema>
+Respondés preguntas de negocio sobre la producción de petróleo y gas de Argentina en 2025, pozo por pozo, las concesiones, sus socios y operadoras, los venteos de gas, los gasoductos de transporte, las localidades y áreas protegidas cercanas y el LEI de las empresas. Seguí al pie de la letra las definiciones que trae la pregunta. Si la respuesta es una lista, devolvé solo los nombres pedidos; si es un número, un solo número.
+
+Escribí una sola query SPARQL sobre la ontología de Rastro que responda la pregunta. La query tiene que devolver una sola columna: los nombres si la respuesta es una lista, o una sola fila con el número si la respuesta es un número. No expliques nada: devolvé solo la query. Si los datos no alcanzan para responder (falta el período, la medida o el tema), no inventes una query: devolvé en su lugar una sola línea que empiece con «SIN DATOS:» y diga qué falta.
+
+Endpoint SPARQL de Rastro (Ontop) sobre cinco fuentes públicas: la producción declarada pozo por pozo (Capítulo IV) y los mapas de concesiones y venteos (WFS) de la Secretaría de Energía de Argentina, los gasoductos de transporte de ENARGAS, las localidades y áreas protegidas del IGN, y GLEIF.
+
+- Prefijos: `PREFIX energia: <https://w3id.org/rastro/energia#>`, y `PREFIX prov: <http://www.w3.org/ns/prov#>` solo si la consulta usa `prov:` (la evidencia de los enlaces).
+- La producción es la de 2025. `energia:oil` es petróleo en m³ y `energia:gas` es gas en miles de m³, por pozo y formación (`energia:WellProduction`).
+- `energia:declaredBy` es la empresa que declara la producción; `energia:Stake` es la participación de una empresa en una concesión (`energia:percent`, de 0 a 100). Para «lo que le corresponde» a una empresa, multiplicar la producción de la concesión por su porcentaje.
+- `energia:operator` de un `energia:Well` es quién lo opera hoy (la empresa que declara su último mes).
+- `energia:formation` está en minúsculas: "vaca muerta". `energia:UnconventionalProduction` incluye shale y tight.
+- `energia:DetectedVenting` son posibles venteos vistos por satélite desde 2024 (un indicio, no una confirmación); `energia:DeclaredVenting`, los puntos de quema declarados. Los dos tienen `energia:inConcession`.
+- `energia:inConcession` es la única propiedad que une algo con su concesión: la producción (`energia:WellProduction`), la participación (`energia:Stake`), los venteos, los enlaces y los estudios ambientales.
+- Las empresas tienen un solo nombre por grupo cuando una corrección revisada lo dice: "CHEVRON", "PLUSPETROL", "COMPAÑIA GENERAL DE COMBUSTIBLES".
+- `energia:PipelineLink` (`energia:aboutConcession`, `energia:pipeline`, `energia:distanceKm`): el gasoducto de transporte de ENARGAS más cercano a cada concesión; 0 km si la cruza.
+- `energia:SurroundingsLink` (`energia:aboutVenting`, `energia:nearestTown`, `energia:distanceKm`, `energia:protectedArea`): la localidad más cercana a cada posible venteo y su área protegida, según el IGN.
+- `energia:lei` de una `energia:Company` es su identificador global en GLEIF (solo las que lo tienen).
+- `energia:CompanyName` es cada nombre de empresa tal como lo escribe una fuente (`energia:nameInSource`, el mismo texto que `energia:declaredName`), con la empresa que es (`energia:company`) y por qué (`energia:rule`: «corrección revisada» si se unió a su grupo a mano).
+- Los nombres de empresas están como en cada fuente, casi siempre en mayúsculas y con su forma societaria («S.A.», «SAU», «S.R.L.»).
+- `energia:ConcessionToReview` (concesión para revisar) se deduce de `energia:VentingFarFromPipeline` y `energia:VentingWithoutReports`; `energia:reviewReason` dice el motivo.
+- `energia:WellStart` (inicio de un pozo nuevo, 2023 a 2025; `energia:aboutWell`): su primer mes con producción (`energia:startMonth`), la empresa que lo declaró ese mes (`energia:company`, con el nombre tal cual en `energia:declaredName`), el tipo de pozo, la formación y si es shale o tight en ese mes (`energia:startWellType`, `energia:startFormation`, `energia:startResource`) y la concesión (`energia:inConcession`); el gas de sus meses 2 a 7 y de sus primeros 12 meses, en millones de m³ (`energia:gasMonths2to7`, `energia:gasFirst12Months`). La operadora de hoy está en `energia:operator`.
+- `energia:Fracturing` (fractura de un pozo, de los datos de fractura; `energia:aboutWell`): largo de la rama horizontal en m (`energia:lateralLengthM`), etapas (`energia:fracStages`), arena en t (`energia:proppantTonnes`), agua en m³ (`energia:waterM3`), presión máxima en psi (`energia:maxPressurePsi`) e inicio (`energia:fracDate`), y cuándo se cargó en el portal (`energia:loadedOn`), sumando las fracturas informadas hasta el mes en que arrancó el pozo; la empresa que informa es `energia:company`.
+- `energia:Enrichment` (enriquecimiento con Wikidata, por el LEI; `energia:company` es la empresa): `energia:headquarters` (sede), `energia:stockExchange` (bolsa en la que cotiza; varias, separadas por coma), `energia:owner` (dueño o matriz), `energia:website` y el día de la consulta (`energia:loadedOn`). Solo las empresas que Wikidata tiene con su LEI.
+- `energia:WellTrajectory` (trayectoria de un pozo; `energia:aboutWell`): profundidad vertical en m (`energia:verticalDepthM`), largo de la rama en m (`energia:lateralLengthM`) y fin de la perforación (`energia:drillingEnd`); una por pozo.
+- Los registros de origen, uno por uno: `energia:FractureReport` (cada fractura informada, con `energia:reportId`, `energia:fracDate`, `energia:loadedOn`) y `energia:MonthlyGas` (el gas de un pozo en un mes, `energia:productionMonth` y `energia:monthGas`). Un `energia:Fracturing` y un `energia:WellStart` dicen de qué registros salen con `prov:wasDerivedFrom`.
+- Rastro Lab (predicciones de gas de pozos nuevos): `energia:ModelRun` es una corrida del modelo (`energia:current true` es la vigente; `energia:modelVersion`, `energia:trainedUntil`, `energia:testError`). `energia:Prediction` es una predicción (`energia:aboutWell`, `energia:predictedGas`, `energia:predictedLow`, `energia:predictedHigh`, `energia:inTest true` para los pozos de 2025 que el modelo no vio), con `prov:wasGeneratedBy` su corrida y `prov:used` los datos que usó (un `energia:WellStart`, un `energia:Fracturing` y un `energia:Stake`; prefijo `PREFIX prov: <http://www.w3.org/ns/prov#>`). `energia:Contribution` es el aporte de un factor (`energia:ofPrediction`, `energia:factor`: "La concesión con su operadora y socios" o "Cómo se fracturó el pozo", `energia:amount` en millones de m³). Un dato corregido tiene `energia:rule` con «revisada».
+- `energia:OperatorChange` (cambio de operadora, 2023 a 2025): una concesión (`energia:inConcession`) pasa de `energia:previousCompany` a `energia:newCompany` desde `energia:month`; la nueva declara la mayor parte de la producción al menos 3 meses seguidos.
+- Las concesiones, los venteos y los gasoductos (`energia:Pipeline`) tienen su geometría en `geo:asWKT` (GeoSPARQL; prefijo `PREFIX geo: <http://www.opengis.net/ont/geosparql#>`).
+- El endpoint no soporta caminos de largo arbitrario (`*`, `+`).
+
+
+Ontología:
+@prefix energia: <https://w3id.org/rastro/energia#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix geo: <http://www.opengis.net/ont/geosparql#> .
+
+<https://w3id.org/rastro/energia> a owl:Ontology ;
+    rdfs:label "Diccionario de negocio: petróleo y gas en Argentina"@es ;
+    rdfs:comment """Lo mínimo para responder las preguntas de ontology/energia/competency-questions.md:
+la producción de 2025 pozo por pozo, las concesiones con sus socios, quién opera cada pozo y los
+venteos de gas, con los gasoductos de transporte (ENARGAS), las localidades y áreas protegidas (IGN)
+y el identificador global de las empresas (GLEIF), y los cambios de operadora de cada concesión
+entre 2023 y 2025. Cada enlace entre fuentes lleva su evidencia, con PROV-O. «Producción no
+convencional» no tiene mapeo: Ontop la deduce de sus subclases (shale y tight)."""@es ;
+    owl:versionInfo "0.6" .
+
+# Clases ---------------------------------------------------------
+
+energia:DataSource a owl:Class ;
+    rdfs:label "Fuente de datos"@es .
+
+energia:Company a owl:Class ;
+    rdfs:label "Empresa"@es ;
+    rdfs:comment "Una empresa, con todos los nombres con que aparece en las fuentes. Si una corrección revisada lo dice, varias razones sociales son un mismo grupo (por ejemplo, Chevron)."@es .
+
+energia:Concession a owl:Class ;
+    rdfs:label "Concesión"@es ;
+    rdfs:comment "Un área de explotación de hidrocarburos, con su contorno en el mapa de la Secretaría de Energía."@es .
+
+energia:Well a owl:Class ;
+    rdfs:label "Pozo"@es ;
+    rdfs:comment "Un pozo que declaró producción en 2025."@es .
+
+energia:WellProduction a owl:Class ;
+    rdfs:label "Producción de un pozo"@es ;
+    rdfs:comment "Lo que produjo un pozo en 2025 desde una formación, según las declaraciones juradas mensuales (Capítulo IV)."@es .
+
+energia:UnconventionalProduction a owl:Class ;
+    rdfs:subClassOf energia:WellProduction ;
+    rdfs:label "Producción no convencional"@es ;
+    rdfs:comment "Producción de shale o de tight. Ningún mapeo la asigna: se deduce de sus subclases."@es .
+
+energia:ShaleProduction a owl:Class ;
+    rdfs:subClassOf energia:UnconventionalProduction ;
+    rdfs:label "Producción de shale"@es .
+
+energia:TightProduction a owl:Class ;
+    rdfs:subClassOf energia:UnconventionalProduction ;
+    rdfs:label "Producción de tight"@es .
+
+energia:Stake a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Participación"@es ;
+    rdfs:comment "La parte de una empresa en una concesión, separada del texto de socios del mapa. Su evidencia es ese texto."@es .
+
+energia:OperatorLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Operadora de un pozo"@es ;
+    rdfs:comment "Quién opera hoy un pozo y por qué: la empresa que declara su producción del último mes. Si el padrón de pozos dice otra cosa, queda a la vista."@es .
+
+energia:WellStart a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Inicio de un pozo"@es ;
+    rdfs:comment "Cómo arrancó un pozo nuevo (2023 a 2025): su primer mes con producción, la empresa que lo declaró ese mes y con qué tipo de pozo. Es lo que se sabía al arrancar, no lo de hoy: sirve para predecir pozos nuevos sin usar el futuro."@es .
+energia:startMonth a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "primer mes con producción"@es .
+energia:startWellType a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "tipo de pozo al arrancar"@es .
+energia:startFormation a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "formación al arrancar"@es .
+energia:startResource a owl:DatatypeProperty ; rdfs:domain energia:WellStart ; rdfs:label "shale o tight al arrancar"@es .
+energia:gasMonths2to7 a owl:DatatypeProperty ; rdfs:domain energia:WellStart ;
+    rdfs:label "gas de los meses 2 a 7 (millones de m³)"@es ;
+    rdfs:comment "El gas que dio el pozo del segundo al séptimo mes desde que arrancó, sumando sus formaciones. El primer mes suele ser parcial. Vacío si todavía no tiene esos meses. Es lo que predice Rastro Lab."@es .
+energia:gasFirst12Months a owl:DatatypeProperty ; rdfs:domain energia:WellStart ;
+    rdfs:label "gas de los primeros 12 meses (millones de m³)"@es ;
+    rdfs:comment "El gas de los primeros 12 meses del pozo, sumando sus formaciones. Vacío si todavía no los tiene."@es .
+energia:declaredName a owl:DatatypeProperty ;
+    rdfs:label "nombre declarado"@es ;
+    rdfs:comment "El nombre con el que la empresa declaró el pozo o informó su fractura. Su energia:CompanyName dice por qué Rastro sabe qué empresa es."@es .
+
+energia:Fracturing a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Fractura de un pozo"@es ;
+    rdfs:comment "Cómo se fracturó un pozo, según los datos de fractura (Adjunto IV): las fracturas informadas hasta el mes en que arrancó, sumadas. La empresa que informa (energia:company) se une a las demás por su nombre."@es .
+energia:lateralLengthM a owl:DatatypeProperty ; rdfs:label "largo de la rama horizontal (m)"@es .   # sin dominio: fractura y trayectoria
+energia:fracStages a owl:DatatypeProperty ; rdfs:label "etapas de fractura"@es .   # sin dominio: la fractura de un pozo y cada registro
+energia:proppantTonnes a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "arena bombeada (t)"@es .
+energia:waterM3 a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "agua inyectada (m³)"@es .
+energia:maxPressurePsi a owl:DatatypeProperty ; rdfs:domain energia:Fracturing ; rdfs:label "presión máxima (psi)"@es .
+energia:fracDate a owl:DatatypeProperty ; rdfs:label "inicio de la fractura"@es .   # sin dominio: la fractura de un pozo y cada registro
+energia:loadedOn a owl:DatatypeProperty ; rdfs:label "cargado en la fuente"@es ;
+    rdfs:comment "El día en que el dato se cargó en el portal de la fuente. La fractura de un pozo puede cargarse meses después de que arrancó: una predicción hecha antes no la tenía."@es .
+
+energia:Enrichment a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Enriquecimiento"@es ;
+    rdfs:comment "Lo que una fuente de afuera sabe de una empresa y ninguna de las fuentes de Rastro tiene: hoy, Wikidata (sede, bolsa en la que cotiza, dueño o matriz, sitio web). Se une por una clave compartida, el LEI, y guarda el día en que se consultó (energia:loadedOn). También se puede consultar en vivo, sin guardarlo."@es .
+energia:wikidataEntity a owl:ObjectProperty ; rdfs:domain energia:Enrichment ; rdfs:label "entidad en Wikidata"@es .
+energia:headquarters a owl:DatatypeProperty ; rdfs:domain energia:Enrichment ; rdfs:label "sede"@es .
+energia:stockExchange a owl:DatatypeProperty ; rdfs:domain energia:Enrichment ; rdfs:label "bolsa en la que cotiza"@es .
+energia:owner a owl:DatatypeProperty ; rdfs:domain energia:Enrichment ; rdfs:label "dueño o matriz"@es .
+energia:website a owl:DatatypeProperty ; rdfs:domain energia:Enrichment ; rdfs:label "sitio web"@es .
+
+energia:WellTrajectory a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Trayectoria de un pozo"@es ;
+    rdfs:comment "Cómo se perforó un pozo, según las trayectorias de Vaca Muerta: profundidad vertical y largo de la rama horizontal. Una por pozo: la de rama más larga entre las perforadas antes de que arrancara."@es .
+energia:verticalDepthM a owl:DatatypeProperty ; rdfs:domain energia:WellTrajectory ; rdfs:label "profundidad vertical (m)"@es .
+energia:drillingEnd a owl:DatatypeProperty ; rdfs:domain energia:WellTrajectory ; rdfs:label "fin de la perforación"@es .
+
+energia:FractureReport a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Fractura informada"@es ;
+    rdfs:comment "Un registro de los datos de fractura (Adjunto IV), con su identificador en la fuente. La fractura de un pozo (energia:Fracturing) dice de qué registros sale con prov:wasDerivedFrom."@es .
+energia:reportId a owl:DatatypeProperty ; rdfs:domain energia:FractureReport ; rdfs:label "identificador en la fuente"@es .
+
+energia:MonthlyGas a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Gas de un pozo en un mes"@es ;
+    rdfs:comment "El gas que declaró un pozo nuevo en uno de los meses que suman su gas de los meses 2 a 7 (millones de m³), de las declaraciones juradas. El inicio del pozo (energia:WellStart) dice de qué meses sale con prov:wasDerivedFrom."@es .
+energia:productionMonth a owl:DatatypeProperty ; rdfs:domain energia:MonthlyGas ; rdfs:label "mes"@es .
+energia:monthGas a owl:DatatypeProperty ; rdfs:domain energia:MonthlyGas ; rdfs:label "gas del mes (millones de m³)"@es .
+
+energia:ModelRun a owl:Class ;
+    rdfs:subClassOf prov:Activity ;
+    rdfs:label "Corrida del modelo"@es ;
+    rdfs:comment "Una vez que se entrenó el modelo de gas de Rastro Lab: con qué versión del código, cuándo, hasta qué fecha de inicio de los pozos entrenó y cuánto se equivocó con los pozos de prueba."@es .
+energia:modelVersion a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "versión del modelo"@es .
+energia:trainedUntil a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "entrenado con pozos que empezaron antes de"@es .
+energia:testError a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "error medio en la prueba (millones de m³)"@es .
+energia:testR2 a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "R² en la prueba"@es .
+energia:inRangeShare a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "parte de los pozos de prueba dentro de su rango"@es .
+energia:current a owl:DatatypeProperty ; rdfs:domain energia:ModelRun ; rdfs:label "es la corrida vigente"@es .
+
+energia:Prediction a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Predicción de gas"@es ;
+    rdfs:comment "El gas que el modelo espera de un pozo nuevo en sus meses 2 a 7 (millones de m³), con un rango. prov:wasGeneratedBy dice qué corrida la hizo y prov:used, qué datos de Rastro usó: el inicio del pozo, su fractura y la participación de su operadora."@es .
+energia:predictedGas a owl:DatatypeProperty ; rdfs:domain energia:Prediction ; rdfs:label "gas esperado (millones de m³)"@es .
+energia:predictedLow a owl:DatatypeProperty ; rdfs:domain energia:Prediction ; rdfs:label "gas esperado, desde (millones de m³)"@es .
+energia:predictedHigh a owl:DatatypeProperty ; rdfs:domain energia:Prediction ; rdfs:label "gas esperado, hasta (millones de m³)"@es .
+energia:inTest a owl:DatatypeProperty ; rdfs:domain energia:Prediction ; rdfs:label "es un pozo de prueba"@es ;
+    rdfs:comment "Verdadero si el modelo no vio el pozo al entrenar (pozos de 2025)."@es .
+
+energia:Contribution a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Aporte a una predicción"@es ;
+    rdfs:comment "Cuánto suma o resta un factor (la concesión con su operadora y socios, o cómo se fracturó el pozo) a una predicción, respecto de un pozo promedio. La predicción es el pozo promedio más sus aportes."@es .
+energia:ofPrediction a owl:ObjectProperty ; rdfs:domain energia:Contribution ; rdfs:range energia:Prediction ; rdfs:label "de la predicción"@es .
+energia:factor a owl:DatatypeProperty ; rdfs:domain energia:Contribution ; rdfs:label "factor"@es .
+energia:amount a owl:DatatypeProperty ; rdfs:domain energia:Contribution ; rdfs:label "aporte (millones de m³)"@es .
+
+energia:CompanyName a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Nombre de una empresa en una fuente"@es ;
+    rdfs:comment "Cómo aparece una empresa en una fuente, y por qué Rastro sabe que es esa empresa."@es .
+
+energia:LocationLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Ubicación de un venteo"@es ;
+    rdfs:comment "En qué concesión cae un venteo y por qué: el punto está dentro del contorno de la concesión en el mapa."@es .
+
+energia:PipelineLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Gasoducto más cercano"@es ;
+    rdfs:comment "El gasoducto de transporte de ENARGAS más cercano al contorno de una concesión, y a cuántos km. 0 km si lo cruza."@es .
+
+energia:SurroundingsLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Entorno de un venteo"@es ;
+    rdfs:comment "La localidad más cercana a un posible venteo y si cae dentro de un área protegida, según el IGN."@es .
+
+energia:LeiLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Identificador global de una empresa"@es ;
+    rdfs:comment "El LEI de una empresa en GLEIF: se acepta si su nombre legal, normalizado, es igual. Guarda lo descartado."@es .
+
+energia:Venting a owl:Class ;
+    rdfs:label "Venteo"@es ;
+    rdfs:comment "Un punto donde se ventea o se quema gas, ubicado dentro de una concesión."@es .
+
+energia:DetectedVenting a owl:Class ;
+    rdfs:subClassOf energia:Venting ;
+    rdfs:label "Posible venteo detectado por satélite"@es ;
+    rdfs:comment "Una anomalía térmica que un satélite vio desde 2024. Es un indicio, no una confirmación."@es .
+
+energia:DeclaredVenting a owl:Class ;
+    rdfs:subClassOf energia:Venting ;
+    rdfs:label "Punto de venteo declarado"@es ;
+    rdfs:comment "Una chimenea o fosa de quema que la empresa declaró (RES. 319/93)."@es .
+
+# Propiedades ----------------------------------------------------
+
+energia:name a owl:DatatypeProperty ; rdfs:label "nombre"@es .
+energia:license a owl:DatatypeProperty ; rdfs:domain energia:DataSource ; rdfs:label "licencia"@es .
+energia:fromSource a owl:ObjectProperty ; rdfs:range energia:DataSource ; rdfs:label "viene de"@es .
+
+energia:concessionId a owl:DatatypeProperty ; rdfs:domain energia:Concession ; rdfs:label "código de la concesión"@es .
+energia:operatorOnMap a owl:ObjectProperty ; rdfs:domain energia:Concession ; rdfs:range energia:Company ;
+    rdfs:label "operadora según el mapa"@es .
+energia:reportedBy a owl:DatatypeProperty ; rdfs:domain energia:Concession ;
+    rdfs:label "informó el mapa"@es ;
+    rdfs:comment "La empresa que informó el contorno al mapa. Puede no ser la operadora de hoy."@es .
+
+energia:wellId a owl:DatatypeProperty ; rdfs:label "identificador del pozo"@es .
+energia:wellType a owl:DatatypeProperty ; rdfs:domain energia:Well ; rdfs:label "tipo de pozo"@es ;
+    rdfs:comment "Tal como lo declara la empresa en su última declaración jurada de 2025: «Petrolífero», «Gasífero», «Inyección de Agua», «Otro tipo»…"@es .
+energia:well a owl:ObjectProperty ; rdfs:domain energia:WellProduction ; rdfs:range energia:Well ; rdfs:label "pozo"@es .
+energia:declaredBy a owl:ObjectProperty ; rdfs:domain energia:WellProduction ; rdfs:range energia:Company ;
+    rdfs:label "la declara"@es .
+energia:formation a owl:DatatypeProperty ; rdfs:domain energia:WellProduction ; rdfs:label "formación"@es ;
+    rdfs:comment "La formación productiva, en minúsculas: «vaca muerta», «comodoro rivadavia»…"@es .
+energia:basin a owl:DatatypeProperty ; rdfs:label "cuenca"@es .
+energia:province a owl:DatatypeProperty ; rdfs:label "provincia"@es .
+energia:oil a owl:DatatypeProperty ; rdfs:domain energia:WellProduction ; rdfs:label "petróleo (m³)"@es .
+energia:gas a owl:DatatypeProperty ; rdfs:domain energia:WellProduction ; rdfs:label "gas (miles de m³)"@es .
+
+energia:operator a owl:ObjectProperty ; rdfs:domain energia:Well ; rdfs:range energia:Company ;
+    rdfs:label "operadora hoy"@es .
+
+energia:inConcession a owl:ObjectProperty ; rdfs:range energia:Concession ; rdfs:label "en la concesión"@es ;
+    rdfs:comment "La concesión donde está: la producción de un pozo (energia:WellProduction), la participación de una empresa (energia:Stake), un venteo, un enlace o un estudio ambiental. Es la única propiedad que une algo con su concesión."@es .
+energia:partner a owl:ObjectProperty ; rdfs:domain energia:Stake ; rdfs:range energia:Company ; rdfs:label "socia"@es .
+energia:percent a owl:DatatypeProperty ; rdfs:domain energia:Stake ; rdfs:label "porcentaje"@es .
+
+energia:aboutWell a owl:ObjectProperty ; rdfs:range energia:Well ; rdfs:label "sobre el pozo"@es .   # sin dominio: la usan la operadora de un pozo, su inicio y su fractura
+energia:company a owl:ObjectProperty ; rdfs:range energia:Company ; rdfs:label "empresa"@es .
+energia:registryCompany a owl:DatatypeProperty ; rdfs:domain energia:OperatorLink ;
+    rdfs:label "empresa según el padrón"@es .
+energia:nameInSource a owl:DatatypeProperty ; rdfs:domain energia:CompanyName ; rdfs:label "nombre en la fuente"@es .
+energia:rule a owl:DatatypeProperty ; rdfs:label "regla"@es .
+energia:sourceText a owl:DatatypeProperty ; rdfs:label "evidencia"@es .
+
+# Shared properties have no domain: preserve the explicit mapped classes without adding unrelated types.
+energia:aboutVenting a owl:ObjectProperty ; rdfs:range energia:Venting ; rdfs:label "sobre el venteo"@es .
+energia:aboutConcession a owl:ObjectProperty ; rdfs:range energia:Concession ; rdfs:label "sobre la concesión"@es .
+energia:pipeline a owl:DatatypeProperty ; rdfs:domain energia:PipelineLink ; rdfs:label "gasoducto"@es .
+energia:pipelineOperator a owl:DatatypeProperty ; rdfs:label "licenciataria del gasoducto"@es .   # sin dominio: lo usan el gasoducto y el enlace
+energia:distanceKm a owl:DatatypeProperty ; rdfs:label "distancia (km)"@es .
+energia:nearestTown a owl:DatatypeProperty ; rdfs:domain energia:SurroundingsLink ; rdfs:label "localidad más cercana"@es .
+energia:protectedArea a owl:DatatypeProperty ; rdfs:domain energia:SurroundingsLink ; rdfs:label "área protegida"@es .
+energia:lei a owl:DatatypeProperty ; rdfs:label "LEI"@es .
+energia:legalName a owl:DatatypeProperty ; rdfs:domain energia:LeiLink ; rdfs:label "nombre legal en GLEIF"@es .
+energia:date a owl:DatatypeProperty ; rdfs:label "fecha"@es .
+energia:satellite a owl:DatatypeProperty ; rdfs:domain energia:DetectedVenting ; rdfs:label "satélite"@es .
+
+energia:EnvironmentalStudy a owl:Class ;
+    rdfs:label "Estudio ambiental"@es ;
+    rdfs:comment "Un estudio o informe ambiental que presentó una empresa (monitoreo, abandono de pozos, planillas de venteo de gas…), según el listado de la Secretaría de Energía."@es .
+
+energia:StudyLink a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Concesión de un estudio ambiental"@es ;
+    rdfs:comment "A qué concesión del mapa corresponde un estudio: el listado nombra la concesión como texto, y se une si el nombre coincide."@es .
+
+energia:studyId a owl:DatatypeProperty ; rdfs:domain energia:EnvironmentalStudy ; rdfs:label "número del estudio"@es .
+energia:studyType a owl:DatatypeProperty ; rdfs:domain energia:EnvironmentalStudy ; rdfs:label "tipo de estudio"@es .
+energia:aboutStudy a owl:ObjectProperty ; rdfs:domain energia:StudyLink ; rdfs:range energia:EnvironmentalStudy ; rdfs:label "sobre el estudio"@es .
+
+# Geometrías (GeoSPARQL, el estándar de OGC) y la regla «concesión para revisar» ---------
+
+energia:Pipeline a owl:Class ;
+    rdfs:label "Gasoducto de transporte"@es ;
+    rdfs:comment "Un tramo de gasoducto de transporte de gas, según ENARGAS."@es .
+
+energia:ConcessionToReview a owl:Class ;
+    rdfs:subClassOf energia:Concession ;
+    rdfs:label "Concesión para revisar"@es ;
+    rdfs:comment "Una concesión que conviene mirar: tiene posibles venteos vistos por satélite y además no tiene un gasoducto de transporte cerca, o no presentó planillas de venteo de gas. Ningún mapeo la asigna: se deduce de sus subclases."@es .
+
+energia:VentingFarFromPipeline a owl:Class ;
+    rdfs:subClassOf energia:ConcessionToReview ;
+    rdfs:label "Con venteos y sin gasoducto cerca"@es ;
+    rdfs:comment "Posibles venteos desde 2024 y el gasoducto de transporte más cercano a 10 km o más."@es .
+
+energia:VentingWithoutReports a owl:Class ;
+    rdfs:subClassOf energia:ConcessionToReview ;
+    rdfs:label "Con venteos y sin planillas de venteo"@es ;
+    rdfs:comment "Al menos 20 posibles venteos desde 2024 y ninguna planilla de venteo de gas (Res. 143/98) presentada desde 2022."@es .
+
+energia:reviewReason a owl:DatatypeProperty ; rdfs:label "motivo para revisar"@es .
+geo:asWKT a owl:DatatypeProperty ; rdfs:label "geometría (WKT)"@es ;
+    rdfs:comment "El contorno, el punto o el trazado, en WKT: el estándar de OGC que leen GeoSPARQL y las herramientas de mapas."@es .
+
+# Cambios de operadora (2023 a 2025) -------------------------------
+
+energia:OperatorChange a owl:Class ;
+    rdfs:subClassOf prov:Entity ;
+    rdfs:label "Cambio de operadora"@es ;
+    rdfs:comment "Una concesión pasa a otra operadora: desde ese mes, otra empresa declara la mayor parte de su producción, al menos 3 meses seguidos. Un mes sin producción cuenta si lo declara una sola empresa. Guarda lo que producía la concesión por mes, en promedio, antes y después."@es .
+
+energia:previousCompany a owl:ObjectProperty ; rdfs:domain energia:OperatorChange ; rdfs:range energia:Company ; rdfs:label "operadora anterior"@es .
+energia:newCompany a owl:ObjectProperty ; rdfs:domain energia:OperatorChange ; rdfs:range energia:Company ; rdfs:label "operadora nueva"@es .
+energia:month a owl:DatatypeProperty ; rdfs:domain energia:OperatorChange ; rdfs:label "desde el mes"@es ;
+    rdfs:comment "El primer día del primer mes con la operadora nueva."@es .
+energia:oilBefore a owl:DatatypeProperty ; rdfs:domain energia:OperatorChange ; rdfs:label "petróleo por mes antes (m³)"@es .
+energia:oilAfter a owl:DatatypeProperty ; rdfs:domain energia:OperatorChange ; rdfs:label "petróleo por mes después (m³)"@es .
+energia:gasBefore a owl:DatatypeProperty ; rdfs:domain energia:OperatorChange ; rdfs:label "gas por mes antes (miles de m³)"@es .
+energia:gasAfter a owl:DatatypeProperty ; rdfs:domain energia:OperatorChange ; rdfs:label "gas por mes después (miles de m³)"@es .
+
+</sistema>
+
+<pregunta>
+¿Cuántos pozos con producción declarada en 2025 opera hoy YPF, si la operadora de un pozo es la empresa que declara su producción en el último mes en que el pozo aparece en 2025?
+</pregunta>
+
+Respondé solo con un objeto JSON que cumpla este esquema, sin texto alrededor:
+{"type": "object", "properties": {"query": {"type": "string"}}, "required": ["query"], "additionalProperties": false}

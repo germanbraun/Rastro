@@ -7,7 +7,8 @@ assistant): this script gives it the prompt, runs each query it proposes and sco
     The first argument is the domain; its files are in layer/<dominio>/.
 
     prompt <q> <n> <B|D|C> the prompt of question q; n = 0 is the evaluation question
-                           and n = 1, 2, 3 are its other wordings (consistencia/parafrasis.yaml)
+                           and n = 1, 2, 3 are its other wordings (consistencia/parafrasis.yaml);
+                           it is also kept in layer/<dominio>/prompts/<q>-<n>-<B|D|C>.txt
     try <q> <n> <B|D|C>    runs a query (from stdin), saves the attempt and shows the
                            result or the error, with the message to give back to the LLM
     rerun                  runs the saved queries again (if the data changed), without
@@ -43,6 +44,7 @@ EVALUATION = DOMAINS[DOMAIN]["method"]["evaluation"]
 NORMALIZE = EVALUATION.get("normalize")   # SQL function for company names; without one, lists compare exactly
 TITLE = EVALUATION["title"]
 ANSWERS = HERE / "respuestas"
+PROMPTS = HERE / "prompts"   # what each evaluator saw, written by «prompt»
 SPEC = yaml.safe_load((HERE / "eval" / "questions.yaml").read_text())
 QUESTIONS = {q["id"]: q for q in SPEC["questions"]}
 PARAPHRASES = yaml.safe_load((HERE / "consistencia" / "parafrasis.yaml").read_text()) or {}
@@ -64,10 +66,15 @@ def text(qid, n):
 
 
 def prompt(qid, n, approach):
-    print(f"<sistema>\n{system_prompt(approach, DOMAIN)}\n</sistema>\n")
-    print(f"<pregunta>\n{text(qid, n)}\n</pregunta>\n")
-    print("Respondé solo con un objeto JSON que cumpla este esquema, sin texto alrededor:")
-    print(json.dumps(output_schema(approach, QUESTIONS[qid]["kind"]), ensure_ascii=False))
+    """Prints the prompt and keeps it in prompts/<q>-<n>-<B|D|C>.txt: what the evaluator saw is evidence of the run
+    (reference-evidence.yaml lists it), and the notes it is built from change over time."""
+    shown = (f"<sistema>\n{system_prompt(approach, DOMAIN)}\n</sistema>\n\n"
+             f"<pregunta>\n{text(qid, n)}\n</pregunta>\n\n"
+             "Respondé solo con un objeto JSON que cumpla este esquema, sin texto alrededor:\n"
+             + json.dumps(output_schema(approach, QUESTIONS[qid]["kind"]), ensure_ascii=False) + "\n")
+    PROMPTS.mkdir(exist_ok=True)
+    (PROMPTS / f"{qid}-{n}-{approach}.txt").write_text(shown)
+    print(shown, end="")
 
 
 def attempt(qid, n, approach):

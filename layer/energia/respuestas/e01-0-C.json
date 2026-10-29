@@ -2,7 +2,7 @@
  "question": "¿Cuántos metros cúbicos de petróleo producidos en 2025 le corresponden a YPF según su participación, es decir, sumando en cada concesión la producción de petróleo multiplicada por el porcentaje de YPF en esa concesión?",
  "attempts": [
   {
-   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (SUM(?oilC * ?pct / 100) AS ?total) WHERE {\n  { SELECT ?c (SUM(?oil) AS ?oilC) WHERE {\n      ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil .\n    } GROUP BY ?c }\n  { SELECT ?c (SUM(?pc) AS ?pct) WHERE {\n      ?s a energia:Stake ; energia:inConcession ?c ; energia:partner ?co ; energia:percent ?pc .\n      { SELECT DISTINCT ?co WHERE {\n          ?co a energia:Company ; energia:name ?n .\n          FILTER(STRSTARTS(UCASE(STR(?n)), \"YPF\"))\n      } }\n    } GROUP BY ?c }\n}",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (SUM(?oilC * ?pct / 100) AS ?petroleo) WHERE {\n  {\n    SELECT ?c (SUM(?oil) AS ?oilC) WHERE {\n      ?p a energia:WellProduction ;\n         energia:inConcession ?c ;\n         energia:oil ?oil .\n    }\n    GROUP BY ?c\n  }\n  {\n    SELECT ?c (SUM(?percent) AS ?pct) WHERE {\n      ?s a energia:Stake ;\n         energia:inConcession ?c ;\n         energia:partner ?co ;\n         energia:percent ?percent .\n      ?co energia:name ?n .\n      FILTER(REGEX(UCASE(STR(?n)), \"^YPF( |$|\\\\.)\"))\n    }\n    GROUP BY ?c\n  }\n}",
    "error": null
   }
  ],

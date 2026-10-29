@@ -469,6 +469,9 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
   complete form into the references and the publication evidence, and does nothing while a row is pending.
 - **Q51.** Is giving the reviewer the query written without Rastro a fair starting point, or does it anchor them on
   the evaluator's reading? Should the reviewer see Rastro's answer before checking, or only after?
+- **Update:** the evaluation was measured again with every prompt saved (30 fresh evaluators): without Rastro 8 of
+  10 (was 7), SQL + links 10, with Rastro 10. With a throwaway filled form the publication gate passes, so the
+  person's review is the only thing left.
 
 ## 3. Open decisions
 

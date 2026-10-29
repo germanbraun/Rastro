@@ -2,11 +2,7 @@
  "question": "¿Cuántas concesiones hay que revisar por venteos, si se revisa una concesión que tiene posibles venteos detectados por satélite desde el 1 de enero de 2024 dentro de su contorno y además cumple al menos una de dos reglas, (a) el gasoducto de transporte de ENARGAS más cercano está a 10 km o más de su contorno, o (b) tiene al menos 20 de esos posibles venteos y no presentó ninguna planilla de venteo de gas (Res. 143/98) desde el 1 de enero de 2022 según el listado de estudios ambientales?",
  "attempts": [
   {
-   "query": "{\"query\": \"select count(distinct id_concesion) from energia.concesion_revisar\"}",
-   "error": "syntax error at or near \"{\"\nLINE 1: {\"query\": \"select count(distinct id_concesion) from energia....\n        ^"
-  },
-  {
-   "query": "select count(distinct id_concesion) from energia.concesion_revisar",
+   "query": "SELECT COUNT(DISTINCT id_concesion) FROM energia.concesion_revisar WHERE motivo IN ('sin gasoducto cerca', 'sin planillas de venteo')",
    "error": null
   }
  ],

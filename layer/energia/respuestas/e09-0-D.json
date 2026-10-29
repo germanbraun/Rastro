@@ -2,11 +2,7 @@
  "question": "¿Cuántos cambios de operadora hubo en las concesiones entre 2023 y 2025, si cada mes la operadora de una concesión es la empresa que declara la mayor parte de su producción (petróleo en m³ más gas en miles de m³), solo cuentan las rachas de al menos 3 meses seguidos con la misma operadora, y hay un cambio cada vez que la racha siguiente es de otra empresa? Contar como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L., a CGC Energía SAU y Compañía General de Combustibles S.A., y a GeoPark Argentina Ltd. (Sucursal Argentina) y GeoPark Argentina S.A.",
  "attempts": [
   {
-   "query": "{\"query\": \"select count(*) from energia.cambio_operadora where mes >= date '2023-01-01' and mes < date '2026-01-01'\"}",
-   "error": "syntax error at or near \"{\"\nLINE 1: {\"query\": \"select count(*) from energia.cambio_operadora whe...\n        ^"
-  },
-  {
-   "query": "select count(*) from energia.cambio_operadora where mes >= date '2023-01-01' and mes < date '2026-01-01'",
+   "query": "WITH g AS (SELECT o.id_concesion, o.mes, CASE WHEN e.nombre ILIKE '%pluspetrol%' THEN 'PLUSPETROL' WHEN e.nombre ILIKE '%geopark%' THEN 'GEOPARK' WHEN e.nombre ILIKE '%general de combustibles%' OR e.nombre ~* '\\mCGC\\M' THEN 'CGC' ELSE o.empresa_id END AS op FROM energia.operador_area_mes o LEFT JOIN energia.empresa e ON e.empresa_id = o.empresa_id WHERE o.mes >= DATE '2023-01-01' AND o.mes < DATE '2026-01-01'), n AS (SELECT id_concesion, op, (EXTRACT(YEAR FROM mes) * 12 + EXTRACT(MONTH FROM mes))::int AS m FROM g), i AS (SELECT id_concesion, op, m, m - ROW_NUMBER() OVER (PARTITION BY id_concesion, op ORDER BY m) AS isla FROM n), r AS (SELECT id_concesion, op, MIN(m) AS ini FROM i GROUP BY id_concesion, op, isla HAVING COUNT(*) >= 3), s AS (SELECT id_concesion, op, LAG(op) OVER (PARTITION BY id_concesion ORDER BY ini) AS anterior FROM r) SELECT COUNT(*) AS cambios FROM s WHERE anterior IS NOT NULL AND anterior <> op",
    "error": null
   }
  ],

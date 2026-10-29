@@ -2,7 +2,7 @@
  "question": "¿Cuántas concesiones tienen al menos un posible venteo detectado por satélite desde el 1 de enero de 2024 dentro de su contorno y tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más de su contorno?",
  "attempts": [
   {
-   "query": "SELECT count(DISTINCT v.id_concesion)\nFROM energia.venteo v\nJOIN energia.concesion_gasoducto g ON g.id_concesion = v.id_concesion\nWHERE v.tipo = 'detectado' AND v.fecha >= DATE '2024-01-01'\n  AND g.distancia_km >= 10",
+   "query": "SELECT COUNT(DISTINCT v.id_concesion) FROM energia.venteo v JOIN energia.concesion_gasoducto g ON g.id_concesion = v.id_concesion WHERE v.tipo = 'detectado' AND v.fecha >= DATE '2024-01-01' AND v.id_concesion IS NOT NULL AND g.distancia_km >= 10",
    "error": null
   }
  ],

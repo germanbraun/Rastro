@@ -1881,3 +1881,22 @@ experiment's log as method changes made after it; they do not change its measure
   restored): the gate's per-question errors were gone; what remained was the evaluation run's model, model version
   and prompts, which were not saved when oil and gas was measured. Closing that needs the prompts saved at the next
   measurement, not the reviewer.
+
+## 2026-10-29 — Oil and gas measured again, with every prompt saved
+
+- **Why:** the publication gate needs the prompts each evaluator saw, and the first measurement did not keep them.
+  `evaluar.py prompt` now writes each prompt to `layer/<domain>/prompts/<q>-<n>-<B|D|C>.txt`, and
+  `layer/<domain>/eval/run.yaml` says which model answered; `review_packet.py record` copies both into
+  `reference-evidence.yaml`.
+- **Measured:** the 10 evaluation questions (form 0) with the three approaches: 30 fresh subagents (Claude Opus 5.5),
+  each reading only its prompt file, up to 3 attempts given back the error. Without Rastro 8 of 10 (was 7), SQL +
+  links 10 of 10, with Rastro 10 of 10. The change: e08 without Rastro answered for the first time (47 against 45,
+  within the 5 % tolerance; before, all 3 attempts timed out). e05 (36 against 33) and e06 (43 against 60) still fail
+  without Rastro, the same failures adjudicated before. Retries: 3 without Rastro (e05, e06, e08: timeouts), none
+  with links or with Rastro.
+- **Consistency** keeps the three other wordings from the first measurement; with the new form-0 answers, without
+  Rastro gives the same answer in all four forms in 2 of 5 questions (was 3); with links and with Rastro, 5 of 5.
+- **The gate:** with a throwaway filled form it passed (then removed and the results restored). What remains is a
+  person's review of the references (`layer/energia/revision/`). The numbers stay provisional until then.
+- **Updated where typed:** the demo script, README, `docs/method.md`; the decks' numbers were refreshed and rebuilt
+  (`b_correct` 8, `b_consistent` 2).

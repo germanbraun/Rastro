@@ -72,3 +72,10 @@ Questions in `layer/energia/fuera/preguntas.yaml`. Examples of missing data in t
 throwaway form (Rastro's answers, e02 changed to 15700) recorded and rescored: B 7, D 10, C 10 of 10 (15700 is within
 5 % of 15809). The gate then listed only the run's model, model version and prompts, not saved when oil and gas was
 measured. The throwaway files were removed and the results restored; the real form waits for a person.
+
+## Re-measured with saved prompts (oil and gas, 2026-10-29)
+
+30 fresh subagents, each told to read only its prompt file (`prompts/<q>-0-<X>.txt`) and answer with the JSON: B 8,
+D 10, C 10 of 10. Three B queries timed out and were given the error back (e08 succeeded on its third attempt). The
+consistency forms (n = 1–3) were not re-measured and say so. With `eval/run.yaml` and the prompts, the gate's only
+missing piece is the person's review.

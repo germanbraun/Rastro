@@ -207,6 +207,14 @@ def record(domain):
     run["result_artifact"] = {"path": repo_path(here / "resultados.json"), "sha256": digest(here / "resultados.json")}
     run["attempt_artifacts"] = [{"path": repo_path(p), "sha256": digest(p)}
                                 for p in sorted((here / "respuestas").glob("*-0-*.json"))]
+    # The evaluation run's own record (eval/run.yaml: model and version, written by whoever measured) and the prompts
+    # its evaluators saw (prompts/, kept by evaluar.py prompt)
+    measured = here / "eval" / "run.yaml"
+    run.update({k: v for k, v in (yaml.safe_load(measured.read_text()) if measured.exists() else {}).items()
+                if k in {"model", "model_version"}})
+    prompts = sorted((here / "prompts").glob("*-0-*.txt"))
+    if prompts:
+        run["prompt_artifacts"] = [{"path": repo_path(p), "sha256": digest(p)} for p in prompts]
     scored = json.loads((here / "resultados.json").read_text())["questions"]
     known = sources()
     read = sorted({t for e in scored.values() for t in tables_in(last_query(e.get("B")), known)})

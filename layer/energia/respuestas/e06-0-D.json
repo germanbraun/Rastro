@@ -2,7 +2,7 @@
  "question": "¿Cuántos posibles venteos detectados por satélite desde el 1 de enero de 2024, dentro del contorno de alguna concesión, caen dentro de un área protegida del Instituto Geográfico Nacional?",
  "attempts": [
   {
-   "query": "SELECT count(DISTINCT v.id)\nFROM energia.venteo v\nJOIN energia.venteo_entorno e ON e.id = v.id\nWHERE v.tipo = 'detectado'\n  AND v.fecha >= DATE '2024-01-01'\n  AND v.id_concesion IS NOT NULL\n  AND coalesce(e.area_protegida, '') <> ''",
+   "query": "SELECT COUNT(DISTINCT v.id) FROM energia.venteo v JOIN energia.venteo_entorno e ON e.id = v.id WHERE v.tipo = 'detectado' AND v.fecha >= DATE '2024-01-01' AND v.id_concesion IS NOT NULL AND e.area_protegida IS NOT NULL AND e.area_protegida <> ''",
    "error": null
   }
  ],

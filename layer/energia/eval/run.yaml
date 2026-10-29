@@ -1,0 +1,6 @@
+# The evaluation run behind resultados.json: who answered (layer/review_packet.py copies this into
+# reference-evidence.yaml). The prompts each evaluator saw are in ../prompts/, kept by «evaluar.py prompt».
+model: Claude Opus 5.5
+model_version: claude-opus-5-5
+measured_on: '2026-10-29'
+evaluators: one fresh subagent per prompt (question × approach), with only its prompt; up to 3 attempts, given back the error

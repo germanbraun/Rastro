@@ -1,13 +1,13 @@
 {
  "confiar": {
   "c_consistent": "5",
-  "b_consistent": "3",
+  "b_consistent": "2",
   "n_consistency": "5",
   "b_broken": "3",
   "change_questions": "10",
   "b_answerable": "8",
   "c_correct": "10",
-  "b_correct": "7",
+  "b_correct": "8",
   "d_correct": "10",
   "n_questions": "10",
   "pct_evidencia": "100 %",

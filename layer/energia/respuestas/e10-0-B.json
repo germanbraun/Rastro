@@ -2,7 +2,7 @@
  "question": "¿Cuáles son las 5 empresas que declararon más gas de shale en 2025 (producción cuyo subtipo de recurso es shale, gas en miles de m³), contando como una sola empresa a Pluspetrol S.A. y Pluspetrol Cuenca Neuquina S.R.L.?",
  "attempts": [
   {
-   "query": "SELECT empresa FROM (SELECT CASE WHEN upper(empresa) LIKE 'PLUSPETROL%' THEN 'PLUSPETROL S.A.' ELSE empresa END AS empresa, sum(prod_gas) AS gas FROM capitulo4.produccion WHERE anio = 2025 AND upper(trim(sub_tipo_recurso)) = 'SHALE' GROUP BY 1) t ORDER BY gas DESC NULLS LAST LIMIT 5",
+   "query": "SELECT empresa_unificada FROM (SELECT CASE WHEN upper(trim(empresa)) LIKE 'PLUSPETROL%' THEN 'PLUSPETROL S.A.' ELSE trim(empresa) END AS empresa_unificada, SUM(prod_gas) AS gas FROM capitulo4.produccion WHERE anio = 2025 AND upper(trim(sub_tipo_recurso)) = 'SHALE' GROUP BY 1) t ORDER BY gas DESC NULLS LAST LIMIT 5",
    "error": null
   }
  ],

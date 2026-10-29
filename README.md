@@ -74,7 +74,7 @@ Rastro answers who operates and who owns each concession, how much each company 
 wells are. Every value says where it comes from. **Rastro Lab** predicts the gas of new Vaca Muerta shale wells with the
 same model trained twice, on the raw tables and on Rastro, and explains each prediction with the records it used.
 
-- **Measured:** B 7 of 10, D 10 of 10, C 10 of 10 questions.
+- **Measured:** B 8 of 10, D 10 of 10, C 10 of 10 questions (re-measured on 2026-10-29 with saved prompts).
 - **Also running:** quality rules in SHACL, a test for what Rastro says when it lacks the data, and change tests
   (a source renames a column or changes a unit; one correction reaches every result; which predictions change when the
   source corrects a record).
@@ -191,7 +191,7 @@ Every script in `data/` records its loads in `rastro_meta.load_run`, which feeds
 
 ## Evaluate Rastro Layer
 
-Oil and gas, suppliers and research affiliations compare three ways of answering: **B**, without Rastro (SQL over the raw tables); **D**, SQL with Rastro's link tables; and **C**, with Rastro (SPARQL). In oil and gas: B 7 of 10, D 10 of 10 and C 10 of 10; in suppliers: B 4 of 9, D 8 of 9 and C 8 of 9. Research affiliations has its answers collected and waits for a blind reference before scoring.
+Oil and gas, suppliers and research affiliations compare three ways of answering: **B**, without Rastro (SQL over the raw tables); **D**, SQL with Rastro's link tables; and **C**, with Rastro (SPARQL). In oil and gas: B 8 of 10, D 10 of 10 and C 10 of 10; in suppliers: B 4 of 9, D 8 of 9 and C 8 of 9. Research affiliations has its answers collected and waits for a blind reference before scoring.
 
 ```bash
 docker compose run --rm -T layer-eval python /layer/evaluar.py energia puntaje   # or another domain; also prompt, try and rerun

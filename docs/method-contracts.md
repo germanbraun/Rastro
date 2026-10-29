@@ -99,7 +99,8 @@ Create `<method.evaluation.folder>/reference-evidence.yaml` from actual evidence
 
 `layer/review_packet.py <domain> build` prepares the reviewer's packet and form; `record` writes the
 `references`, `questions_sha256`, `result_artifact`, `attempt_artifacts` and `source_versions` from the filled form.
-The evaluation run's `model`, `model_version` and `prompt_artifacts` are the evaluator's to record.
+It also copies `model` and `model_version` from `<folder>/eval/run.yaml` (written by whoever measured) and lists the
+prompts `evaluar.py prompt` kept in `<folder>/prompts/` as `prompt_artifacts`.
 
 Independent means checked against original source records, a separately calculated reference, or an applicable
 published figure, rather than trusting the Rastro reference query. Preserve definitions, units and period. The gate

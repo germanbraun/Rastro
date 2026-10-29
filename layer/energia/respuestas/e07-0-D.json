@@ -2,7 +2,7 @@
  "question": "¿Qué empresas que declaran producción en 2025 tienen un LEI activo en GLEIF cuyo nombre legal es el de la empresa?",
  "attempts": [
   {
-   "query": "SELECT DISTINCT e.nombre\nFROM energia.empresa e\nJOIN energia.empresa_lei l ON l.empresa_id = e.empresa_id\nWHERE EXISTS (SELECT 1 FROM energia.produccion_pozo p WHERE p.empresa_id = e.empresa_id)\n  AND EXISTS (SELECT 1 FROM gleif_energia.candidato c WHERE c.lei = l.lei AND upper(c.estado) = 'ACTIVE')\nORDER BY e.nombre",
+   "query": "SELECT DISTINCT e.nombre FROM energia.empresa e JOIN energia.empresa_lei l ON l.empresa_id = e.empresa_id WHERE e.empresa_id IN (SELECT DISTINCT empresa_id FROM energia.produccion_pozo WHERE empresa_id IS NOT NULL) AND EXISTS (SELECT 1 FROM gleif_energia.candidato c WHERE c.lei = l.lei AND upper(c.estado) = 'ACTIVE') ORDER BY e.nombre",
    "error": null
   }
  ],

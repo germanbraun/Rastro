@@ -2,7 +2,7 @@
  "question": "¿Cuántas concesiones tienen al menos un posible venteo detectado por satélite desde el 1 de enero de 2024 dentro de su contorno y tienen el gasoducto de transporte de ENARGAS más cercano a 10 km o más de su contorno?",
  "attempts": [
   {
-   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?c) AS ?n) WHERE {\n  ?v a energia:DetectedVenting ; energia:inConcession ?c ; energia:date ?d .\n  FILTER(STR(?d) >= \"2024-01-01\")\n  ?p a energia:PipelineLink ; energia:aboutConcession ?c ; energia:distanceKm ?km .\n  FILTER(?km >= 10)\n}",
+   "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?c) AS ?n) WHERE {\n  ?c a energia:VentingFarFromPipeline .\n}",
    "error": null
   }
  ],
