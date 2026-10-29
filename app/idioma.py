@@ -12,6 +12,7 @@ import streamlit as st
 import yaml
 
 LANGUAGES = {"es": "Español", "en": "English"}
+DEFAULT = "en"   # the language a visit opens in (decided on 2026-10-29)
 APP = Path(__file__).parent
 TEXTS = APP / "textos"
 
@@ -21,10 +22,12 @@ def lang():
 
 
 def init():
-    """The language, set once per session before anything is drawn: «?lang=en» in the address opens it in English."""
+    """The language, set once per session before anything is drawn: the app opens in English; «?lang=es» in the
+    address, or the switch, shows it in Spanish. (Spanish stays the texts' base language, and lang()'s fallback outside
+    a session, as the checks and scripts use it.)"""
     if "lang" not in st.session_state:
         asked = st.query_params.get("lang")
-        st.session_state["lang"] = asked if asked in LANGUAGES else "es"
+        st.session_state["lang"] = asked if asked in LANGUAGES else DEFAULT
 
 
 def selector():

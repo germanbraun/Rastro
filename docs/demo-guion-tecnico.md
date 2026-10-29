@@ -9,7 +9,7 @@ Para consultores que saben SQL y no conocen tecnologías semánticas. Las diapos
 Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La app explica cada pregunta en palabras simples.
 
 1. Levantar todo, desde la carpeta del repo: `docker compose up -d` (lo hace alguien técnico, una vez).
-2. Abrir http://localhost:8501/?inicio=demo, prender «Ver detalles técnicos», elegir **Oncología** en **Caso de uso**, ir a la pestaña **Preguntar** y probar una pregunta de ejemplo.
+2. Abrir http://localhost:8501/?inicio=demo&lang=es, prender «Ver detalles técnicos», elegir **Oncología** en **Caso de uso**, ir a la pestaña **Preguntar** y probar una pregunta de ejemplo.
 3. Si algo falla en vivo, las diapositivas tienen las mismas respuestas. No hace falta la terminal.
 
 ## 0:00 – 1:30 · Problema, capa y beneficios (diapositivas 1 a 4)

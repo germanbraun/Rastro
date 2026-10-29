@@ -135,7 +135,7 @@ recorded. Claude implemented it and another assistant reviewed every stage.
 | `linking/` | links between each domain's sources, with their rule, evidence and reviewed corrections |
 | `layer/` | the domain registry (`dominios.yaml`), lifecycle and method commands, natural-language questions (`answer.py`), the evaluation (`evaluar.py`) and each domain's evaluation, change tests and notes |
 | `lab/` | Rastro Lab: the Vaca Muerta gas model (`lab/gas/`) |
-| `app/` | the demo (Streamlit, in Spanish with an English view); each domain is a YAML file in `app/dominios/` |
+| `app/` | the demo (Streamlit; opens in English, with a Spanish view); each domain is a YAML file in `app/dominios/` |
 | `.claude/skills/` | the method's skills, generic for any domain |
 | `docs/` | method, plan, decisions, experiments, decks (`slides/`), demo scripts and human review |
 | `tests/` | tests (pytest) |
@@ -148,8 +148,8 @@ debugging: `ONBOARDING.md`.
 
 ## The demo
 
-The app, decks and demo scripts are in Spanish, for Argentine audiences. The app also has an English view, and the
-executive deck an English version (see «Selling Rastro»).
+The decks and demo scripts are in Spanish, for Argentine audiences (the scripts open the app with `?lang=es`). The
+app opens in English and has a Spanish view; the executive deck has an English version (see «Selling Rastro»).
 
 | Domain | Script | Deck |
 |---|---|---|
@@ -174,10 +174,10 @@ docker compose up -d
 | Ontop, one per domain | oncology http://localhost:8080, suppliers :8081, oil and gas :8082, research affiliations :8083 (`/sparql`; the last one with `docker compose --profile afiliaciones up -d`) | Virtual SPARQL endpoint over Postgres, with its domain's ontology and mappings; reloads when they are edited |
 | GraphDB Free | http://localhost:7210 | Triplestore with the `rastro` repository: MeSH 2026 in the graph `<http://id.nlm.nih.gov/mesh/2026>` and the Lucene connector `mesh` |
 
-The app opens in Spanish, on a start page with the problem in three measured numbers, a call to a pilot (its
-«Escribinos» needs `RASTRO_CONTACT` in `.env`) and two cards: «Ver la demo» and «Armá tu capa semántica» (a sketch of
-the wizard, to discuss). `?inicio=demo` opens the demo directly; the sidebar's «Idioma» switch, or `?lang=en`, shows
-it in English.
+The app opens in English (`?lang=es` or the sidebar switch shows it in Spanish, the language of the Argentine demo
+scripts), on a start page with the problem in three measured numbers, a call to a pilot (its «Write to us» needs
+`RASTRO_CONTACT` in `.env`) and two cards: «Ver la demo» and «Armá tu capa semántica» (a sketch of
+the wizard, to discuss). `?inicio=demo` opens the demo directly.
 
 Ports are changed by copying `.env.example` to `.env`. By default they avoid 5432 and 7200, to coexist with a local Postgres and GraphDB.
 

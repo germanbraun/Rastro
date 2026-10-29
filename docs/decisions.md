@@ -1825,3 +1825,10 @@ experiment's log as method changes made after it; they do not change its measure
 - **Limit:** it serves what the app read since it started; after a restart with the database down, it says the
   database is not answering. Open the demo once before presenting.
 
+## 2026-10-29 — The app opens in English
+
+- **Asked by the user.** A visit opens in English (`app/idioma.py` `DEFAULT`); `?lang=es` or the sidebar switch shows
+  Spanish. The texts are still written in Spanish with an English overlay, and `idioma.lang()` still falls back to
+  Spanish outside a session, so the checks and scripts are unchanged. The Spanish demo scripts open the app with
+  `?inicio=demo&lang=es`.
+
