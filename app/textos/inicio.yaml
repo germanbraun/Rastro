@@ -47,3 +47,24 @@ wizard.col_source: {es: "Fuente", en: "Source"}
 wizard.col_tables: {es: "Tablas", en: "Tables"}
 wizard.col_rows: {es: "Filas", en: "Rows"}
 wizard.col_loaded: {es: "Última carga", en: "Last load"}
+wizard.example_unavailable: {es: "El ejemplo de este paso no se puede leer ahora.", en: "This step's example cannot be read right now."}
+wizard.add_source: {es: "Agregar fuente", en: "Add source"}
+wizard.added: {es: "**Fuentes agregadas ({n})**, solo en esta sesión:", en: "**Sources added ({n})**, in this session only:"}
+wizard.clear_sources: {es: "Quitar todas", en: "Remove all"}
+wizard.col_kind: {es: "Tipo", en: "Kind"}
+wizard.your_question: {es: "Escribí una pregunta de negocio", en: "Write a business question"}
+wizard.question_placeholder: {es: "Por ejemplo: ¿cuánto gas le corresponde a cada empresa?", en: "For example: how much gas belongs to each company?"}
+wizard.closest:
+  es: "**Ejemplo:** así quedó definida la pregunta aprobada más parecida de la demo. En el wizard real, Rastro propone la definición de tu pregunta y vos la aprobás."
+  en: "**Example:** this is how the demo's closest approved question was defined. In the real wizard, Rastro proposes the definition of your question and you approve it."
+wizard.defined_as: {es: "Definida como: ", en: "Defined as: "}
+wizard.dictionary_example: {es: "**Ejemplo:** el diccionario de petróleo y gas de la demo.", en: "**Example:** the demo's oil and gas dictionary."}
+wizard.links_example:
+  es: "**Ejemplo:** hoy la demo tiene {n} uniones que revisó un asistente de IA y esperan a una persona. Algunas:"
+  en: "**Example:** today the demo has {n} links an AI assistant reviewed that wait for a person. Some of them:"
+wizard.quality_example: {es: "**Ejemplo:** las reglas de la demo, comprobadas el {date}, y cuántos datos no las cumplen:", en: "**Example:** the demo's rules, checked on {date}, and how many values fail them:"}
+wizard.col_rule: {es: "Regla", en: "Rule"}
+wizard.col_failing: {es: "No la cumplen", en: "Failing"}
+wizard.results_example: {es: "**Ejemplo:** dónde está la demo en cada paso del método:", en: "**Example:** where the demo stands in each step of the method:"}
+wizard.publish_example: {es: "**Hoy**, una instalación para un cliente es un comando, con su usuario de solo lectura, su login y su chequeo:", en: "**Today**, a customer installation is one command, with its read-only users, its login and its check:"}
+
