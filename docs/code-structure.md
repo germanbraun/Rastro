@@ -64,6 +64,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | `fuera.py` | Does the assistant say when it lacks the data? |
 | `evidencia.py` | How many links keep their source, rule and evidence |
 | `method.py`, `lifecycle.py`, `experiment.py`, `experiment_log.py` | The method's executable gates, question lifecycle, gate runner and experiment log |
+| `new_domain.py` | A new domain's scaffold (`method.py new-domain`): folders, registry entry, Ontop service |
 | `change_guard.py` | Saves and restores the exact inputs of a change test |
 | `<domain>/` | Per domain: evaluation questions and saved answers (`eval/`), `resultados.json`, adjudication, change tests (`cambio/`) |
 

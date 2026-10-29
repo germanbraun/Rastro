@@ -1655,3 +1655,16 @@ experiment's log as method changes made after it; they do not change its measure
   more than before (each section drawn on its own).
 - **Simple on purpose:** one shared login. The customer's single sign-on replaces the proxy service.
 
+## 2026-10-29 — A new domain in one command
+
+- **What:** `python layer/method.py new-domain <domain> --title "..."` (`layer/new_domain.py`) writes the scaffold of
+  docs/method.md «Before step 0»: folders, ontology header, mapping, notes, `reader.sql`, registry entry, an Ontop
+  service on the next free port and its customer settings. It checks everything before writing and refuses to
+  overwrite.
+- **Found trying it:** Ontop does not start with an empty mapping («Does not contain any (valid) TriplesMaps»). Every
+  domain maps its sources from `rastro_meta.source`, so the scaffold starts with that map, reading `WHERE false` until
+  the first source: Ontop starts healthy and answers (0 sources), and `ontology-check` passes.
+- **Left out on purpose:** the app entry. An app screen with no question would show an empty domain; `show-in-app`
+  adds it with the first question. Tried with a throwaway domain (registry, Ontop, ontology check, experiment log,
+  customer config), then removed.
+

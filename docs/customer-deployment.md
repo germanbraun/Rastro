@@ -126,8 +126,9 @@ order. Each step ends in a check that decides, and in an approval only where the
 | 5 | Show it in the app, and a «Paso a paso» on one real case | `show-in-app`, `walkthrough` | The wording and the demo questions |
 | 6 | Verify, close and hand over | `verify`, `close-phase` | — |
 
-A new domain also needs, today, a few edits the skills make by hand: an `ontop-<domain>` service in
-`infra/docker-compose.yml`, its entry in `layer/dominios.yaml` and in `app/dominios.yaml`, and a restart.
+A new domain starts with one command, `python layer/method.py new-domain <domain> --title "..."`: its folders,
+registry entry and Ontop service (also in the customer setup), checked before anything is written. The app entry
+comes with `show-in-app`.
 
 **Connecting the customer's sources.** Two ways; for a pilot, the first:
 
@@ -224,7 +225,7 @@ it is, and changes only who drives the agent.
 | Piece | Why it is needed | Size |
 |---|---|---|
 | Source connectors as configuration | Today each source is a loader written by the agent; the wizard needs a form for a database (JDBC), files and common APIs, with a generic loader | Large |
-| Domain set-up without hand edits | A new domain edits the compose file, two registries and the app list; the orchestrator must generate them | Medium |
+| Domain set-up without hand edits | Done for the scaffold (`method.py new-domain`); the app entry is still added by hand in `show-in-app` | Small |
 | The orchestrator | Walks the steps, runs each check, stores each approval, resumes after a failure | Large |
 | The wizard screens | One per approval (section 3.1); most can reuse the app's technical view (dictionary, links, quality, evaluation) | Large |
 | Agent runtime | The Agent SDK with the repo's skills and tools, sandboxed to the workspace | Medium |

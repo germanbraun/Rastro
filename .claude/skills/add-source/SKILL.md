@@ -49,7 +49,9 @@ Below, `<domain>` is that entry and `<source>` the new source.
    - If the domain declares `method.source_manifest`, the loader rewrites it after every successful load (versions,
      fingerprints, row counts): that is what makes earlier validations stale.
 4. **Service** `<source>-loader` in `infra/docker-compose.yml`, with `profiles: ["load"]` and `build: ./loaders`; add it
-   to `method.loaders`.
+   to `method.loaders`. Add the source's id to the domain's `<#DataSource>` map (a new domain's map reads
+   `WHERE false` until its first source) and its schema's `GRANT`s to `layer/<domain>/reader.sql`. In the customer
+   setup, run `infra/customer/setup.sh` again after the load: it gives the new readers the password of `.env`.
 5. **Credentials** only through `.env` variables; add the empty variable to `.env.example`. Never put a password in a
    URL: errors print it.
 6. **Then:** follow `map-source` (dictionary and mapping), `link-entities` if it names things already in Rastro, and

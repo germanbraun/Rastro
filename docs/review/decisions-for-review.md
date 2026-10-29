@@ -437,6 +437,12 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
   only on the machine) and puts a password login over HTTPS in front of the app; a script checks every point.
 - **Q46.** Is one shared password login acceptable for a pilot, or should single sign-on be there from day one?
 
+**H11. A new domain in one command** (2026-10-29)
+- **Decision:** a command writes a new domain's scaffold and checks it; the scaffold's mapping already maps the
+  domain's sources so the endpoint starts; the app entry waits for the first question.
+- **Q47.** Should the scaffold also add the domain to the app (hidden until it has a question), so the wizard has one
+  less step?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -508,7 +514,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q46). Skip any you have no view on.
+- Answer per question number (Q1–Q47). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

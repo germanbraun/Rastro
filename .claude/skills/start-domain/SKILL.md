@@ -23,11 +23,17 @@ Reuse its findings and actual approvals; a favorable inspection alone does not a
 1. **Scope.** Start measuring agent and human time now; keep notes until the log exists. Propose the name/prefix,
    region, period, sources and business-question owner. Reuse an existing scope approval; ask a person only for
    missing business decisions.
-2. **Scaffold and registry entry.** Check free ports and existing services. Add the folders, ontology header, empty
-   mapping, notes, read-only users and Ontop service described in `docs/method.md` ("Before step 0"). Add the registry
-   entry. Leave out capabilities not built; do not copy another domain's evaluation command or constants.
-3. **Lifecycle.** Declare `method.lifecycle` (a JSON state file), `method.source_manifest` (the source versions,
-   written by the loaders) and `method.app`. Every question goes through `layer/lifecycle.py`
+2. **Scaffold and registry entry,** in one command, once the name and scope are approved:
+   ```bash
+   python layer/method.py new-domain <domain> --title "<what it is about, in Spanish>"
+   ```
+   It writes the folders, the ontology header (with the domain's `DataSource`, `name` and `license`), a mapping whose
+   only map reads the domain's sources (none until the first one, but Ontop starts), the notes, `reader.sql`, the
+   registry entry with only the keys whose piece exists, the Ontop service on the next free port and its customer
+   settings. It refuses to overwrite anything. Do not copy another domain's evaluation command or constants.
+3. **Lifecycle.** `new-domain` declares `method.lifecycle` (the state file appears with the first transition);
+   declare `method.source_manifest` (the source versions, written by the loaders) with the first loader, and
+   `method.app` with `show-in-app`. Every question goes through `layer/lifecycle.py`
    (`propose`, `approve`, `implement`, `validate`); never synthesize a human approval artifact.
 4. **Experiment log.** Only after the registry entry passes (the command refuses an unknown domain), and before your
    first commit (it records `git HEAD` as the frozen method):

@@ -60,6 +60,7 @@ layer/energia/cambio/cambio.sh registrar               # change test (always end
 layer/energia/cambio/correccion.sh registrar           # one correction, every result (~15 min)
 layer/energia/cambio/impacto.sh registrar              # which predictions change if the source corrects a record (~15 min)
 python3 lab/gas/modelo.py [<well>|--12-meses|--como-trabajo-publicado|--publicar|--comparar]   # Rastro Lab from the console
+python layer/method.py new-domain <domain> --title "…"  # a new domain's scaffold (skill start-domain)
 python3 docs/slides/build.py                           # builds the HTML decks
 ```
 

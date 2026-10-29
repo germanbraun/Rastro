@@ -62,7 +62,8 @@ Reuse existing approvals; when the selected scope is approved, hand off to `star
 
 ## Before step 0: start a domain
 
-The `start-domain` skill owns initialization. A new domain starts as a minimal scaffold. Runtime readiness must be
+The `start-domain` skill owns initialization. A new domain starts as a minimal scaffold, written by
+`python layer/method.py new-domain <domain> --title "..."` (items 2 to 4 below; `layer/new_domain.py`). Runtime readiness must be
 checked, not assumed from an empty mapping. Record pending capabilities until the first minimal implementation runs.
 
 1. **Name and prefix:** a short name in lowercase (`<domain>`), which is also the SPARQL prefix (`<prefix>:`) and the

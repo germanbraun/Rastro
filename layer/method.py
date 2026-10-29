@@ -1,6 +1,6 @@
 """Executable gates for the Rastro method. Run from the repository root.
 
-registry [domain], verify domain --expectations FILE, publication domain,
+new-domain domain --title TEXT, registry [domain], verify domain --expectations FILE, publication domain,
 experiment domain --init|--lint|--check|--start STEP|--stop STEP --work TEXT|--append KIND --field KEY=VALUE...
 The experiment log is written by these commands, never by hand. Missing evidence is pending, never a pass.
 """
@@ -264,7 +264,7 @@ def experiment_errors(data):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=["registry", "verify", "publication", "experiment"])
+    parser.add_argument("command", choices=["new-domain", "registry", "verify", "publication", "experiment"])
     parser.add_argument("domain", nargs="?")
     parser.add_argument("--expectations", type=Path)
     parser.add_argument("--init", action="store_true")
@@ -282,7 +282,22 @@ def main():
                         help="a header field: sources (adds one), question_author, started_on, ended_on, result")
     parser.add_argument("--human-hours", action="append", default=[], metavar="STEP=HOURS",
                         help="the person's time on a step, as they report it")
+    parser.add_argument("--title", help="new-domain: what the domain is about, in Spanish (its label and prompt)")
     args = parser.parse_args()
+    if args.command == "new-domain":
+        if not (args.domain and args.title):
+            parser.error("new-domain needs a domain and --title")
+        import new_domain
+        written, port = new_domain.scaffold(args.domain, args.title)
+        errors = registry_errors({args.domain: yaml.safe_load((ROOT / "layer/dominios.yaml").read_text())[args.domain]})
+        if errors:
+            raise ValueError("\n".join(errors))
+        print("\n".join(["Written:", *(f"  {path}" for path in written),
+                         f"Registry passed. Ontop service ontop-{args.domain} on port {port}. Next:",
+                         f"  docker compose -f infra/docker-compose.yml up -d ontop-{args.domain}",
+                         f"  python layer/method.py experiment {args.domain} --init   (before the first commit)",
+                         "  the scope approved by a person, then add-question and add-source (skill start-domain)"]))
+        return
     registry = yaml.safe_load((ROOT / "layer/dominios.yaml").read_text())
     if args.domain and args.domain not in registry:
         parser.error("Unknown domain; initialize its registry entry first")
