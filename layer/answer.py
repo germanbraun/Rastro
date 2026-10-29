@@ -183,12 +183,16 @@ def to_answer(column, kind):
 
 # B sees the sources as they were loaded; D also sees Rastro's link tables
 # (each domain's users are in dominios.yaml)
-READER = "host=postgres port=5432 dbname=%s user={0} password={0}"
+def reader_dsn(user):
+    """A read-only user's connection. Its password is RASTRO_READER_PASSWORD (the customer setup sets one for every
+    reader: infra/customer/setup.sh); without it, the user's own name, as on the demo machine."""
+    password = os.environ.get("RASTRO_READER_PASSWORD") or user
+    return f"host=postgres port=5432 dbname={os.environ['PG_DB']} user={user} password={password}"
 
 
 def run_sql(query, approach, domain):
     user = DOMAINS[domain]["readers"][approach]
-    with psycopg.connect(READER.format(user) % os.environ["PG_DB"]) as conn:
+    with psycopg.connect(reader_dsn(user)) as conn:
         return [row[0] for row in conn.execute(query).fetchall()]
 
 
@@ -196,7 +200,7 @@ def sql_schema(approach, domain):
     """The schema of the tables the read-only user sees, with their documentation."""
     d = DOMAINS[domain]
     user = d["readers"][approach]
-    with psycopg.connect(READER.format(user) % os.environ["PG_DB"]) as conn:
+    with psycopg.connect(reader_dsn(user)) as conn:
         rows = conn.execute("""
             SELECT c.table_schema, c.table_name, string_agg(c.column_name || ' ' || c.data_type, ', '
                                                           ORDER BY c.ordinal_position)

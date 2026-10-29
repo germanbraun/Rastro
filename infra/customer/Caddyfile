@@ -1,0 +1,10 @@
+# The login in front of the app (docker-compose.customer.yml): every request needs the user and password of .env.
+# RASTRO_TLS is «internal» (a certificate of Caddy's own, which the browser warns about once) or an email for a
+# public certificate when RASTRO_HOST is a public name.
+{$RASTRO_HOST} {
+	tls {$RASTRO_TLS}
+	basic_auth {
+		{$RASTRO_LOGIN_USER} {$RASTRO_LOGIN_HASH}
+	}
+	reverse_proxy app:8501
+}

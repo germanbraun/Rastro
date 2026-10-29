@@ -1640,3 +1640,18 @@ experiment's log as method changes made after it; they do not change its measure
   source connectors as configuration, an orchestrator, approval screens and login (`docs/customer-deployment.md`).
   Whether a business user can answer what the agent leaves open is still unmeasured.
 
+## 2026-10-29 — The customer setup: hardening and a login, laid over the demo
+
+- **What:** `infra/docker-compose.customer.yml` with `infra/customer/` (`setup.sh`, `roles.sql`, `Caddyfile`,
+  `check.py`): Ontop out of dev mode; Ontop and the app reading as `rastro_readonly` (`pg_read_all_data`); the SQL
+  readers with the password of `.env` instead of their name (`answer.reader_dsn`); every port only on the machine
+  except a Caddy proxy with a password over HTTPS. The demo stays as it was.
+- **Checked on this machine** with a test env file: 31 of 32 checks pass; the one that fails is true (the demo `.env`
+  keeps the default owner password). Every section of the oil and gas app opens as the read-only users, the login
+  answers 401 without a password and 200 with it, and Streamlit's WebSocket passes through the proxy (101). Then the
+  demo was restored and checked again.
+- **Found on the way:** the readers' passwords were their own names, hard-coded; and `app/check_domain.py` still
+  looked for `st.tabs` after the sections change, so it failed. It now opens every section in turn, which checks
+  more than before (each section drawn on its own).
+- **Simple on purpose:** one shared login. The customer's single sign-on replaces the proxy service.
+

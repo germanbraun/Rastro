@@ -50,22 +50,63 @@ local model (`RASTRO_PROVIDER=ollama`), with lower quality.
 
 ### 2.2 Install
 
-On the VM, with Docker and Git:
+On the VM, with Docker and Git, from the repository root. The demo's compose file is set up for a laptop (Ontop in
+dev mode with open CORS, everything reading as the database owner, no login, ports open on every interface). The
+**customer setup** (`infra/docker-compose.customer.yml`) lays the hardening over it:
 
-```bash
-git clone <repository> rastro && cd rastro
-cp .env.example .env        # set PG_PASSWORD, ports and ANTHROPIC_API_KEY; never commit .env
-docker compose -f infra/docker-compose.yml up -d postgres app
-```
+| | Demo | Customer setup |
+|---|---|---|
+| Ontop | dev mode, CORS `*`, the database owner | dev mode off, CORS to the app's address, `rastro_readonly` |
+| App | the database owner, port open | `rastro_readonly`, port only on this machine |
+| SQL readers (`readers` in `layer/dominios.yaml`) | password = their name | the password of `.env` |
+| Postgres, Ontop, GraphDB ports | open on every interface | only on this machine |
+| Login | none | a proxy (Caddy) with a user and password, over HTTPS |
 
-**Harden it before it holds customer data.** The compose file is set up for a laptop demo:
+`rastro_readonly` reads every table, present and future, and writes nothing (`pg_read_all_data`).
 
-- Ontop runs with `ONTOP_DEV_MODE: "true"` and `ONTOP_CORS_ALLOWED_ORIGINS: "*"`: turn dev mode off and limit CORS.
-- Ontop and the app connect with the Postgres owner (`PG_USER`): give them a read-only user, created like the ones
-  `layer/dominios.yaml` already names for the SQL baselines (`readers`).
-- The app has **no login**: put it behind the customer's reverse proxy with single sign-on, or a VPN, and TLS.
-- Ports are published on all interfaces: bind them to localhost or the internal network only.
-- Change every default password in `.env`.
+1. **`.env`:** copy `.env.example` and fill in, before the first start (Postgres takes `PG_PASSWORD` when it creates
+   the database): `PG_PASSWORD`, `RASTRO_READONLY_PASSWORD`, `RASTRO_READER_PASSWORD` (for example
+   `openssl rand -hex 16`), `RASTRO_HOST` (the name users type), `RASTRO_LOGIN_USER`, `RASTRO_LOGIN_HASH` and,
+   if needed, `ANTHROPIC_API_KEY`. The hash goes between single quotes, because it contains `$`:
+
+   ```bash
+   docker run --rm caddy:2.8.4 caddy hash-password --plaintext 'the password'
+   ```
+
+2. **Start Postgres, create the users, start the rest.** `--env-file .env` is needed: Compose looks for `.env` next
+   to the first file, in `infra/`:
+
+   ```bash
+   docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.customer.yml up -d postgres
+   ```
+   ```bash
+   infra/customer/setup.sh
+   ```
+   ```bash
+   docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.customer.yml up -d postgres ontop-<domain> app proxy
+   ```
+
+   Run `setup.sh` again after loading a domain: its loader creates the domain's readers.
+
+3. **Check it took effect:**
+
+   ```bash
+   RASTRO_LOGIN_PASSWORD='the password' python3 infra/customer/check.py
+   ```
+
+   Each point says ✅ or ❌: dev mode off, who each service reads as, which ports are reachable, that
+   `rastro_readonly` reads and cannot write, that no reader logs in with its own name, that the app asks for a login
+   and opens with it. Then `docker compose ... exec -T app python /app/check_domain.py <domain>` opens every section
+   of the app as the read-only users.
+
+Users open `https://<RASTRO_HOST>:8443` (`RASTRO_HTTPS_PORT`). With `RASTRO_TLS=internal` the certificate is Caddy's
+own and the browser warns once; with an email and a public name, Caddy gets a public certificate. For the customer's
+single sign-on, replace the `proxy` service with the customer's own proxy, pointing at `app:8501`.
+
+**What changes for the work:** with dev mode off, Ontop does not reload an edited mapping: restart it
+(`docker compose ... restart ontop-<domain>`), as the skills already do. The mapping editor of «Bajo el capó» can
+still save mappings, so in the customer setup anyone who can log in can change them: give the login only to the
+team that builds the layer, or mount `mappings/` read-only.
 
 ### 2.3 Build the layer with the method
 
@@ -110,7 +151,7 @@ goes. It is the pilot's evidence of how much a person had to do.
 ### 2.5 Checklist
 
 - [ ] Read-only access to each source; the decision on what data may be sent to the model, in writing
-- [ ] VM with Docker; `.env` filled in; services hardened (section 2.2)
+- [ ] VM with Docker; `.env` filled in; customer setup started; `infra/customer/check.py` all ✅ (section 2.2)
 - [ ] Domain started; scope approved; questions approved
 - [ ] Each source loaded and recorded; dictionary and mappings checked; links reviewed by the customer
 - [ ] Quality rules run; evaluation measured and adjudicated; change test recorded
@@ -187,8 +228,7 @@ it is, and changes only who drives the agent.
 | The orchestrator | Walks the steps, runs each check, stores each approval, resumes after a failure | Large |
 | The wizard screens | One per approval (section 3.1); most can reuse the app's technical view (dictionary, links, quality, evaluation) | Large |
 | Agent runtime | The Agent SDK with the repo's skills and tools, sandboxed to the workspace | Medium |
-| Login and roles | The app has none: who may approve, who may only read | Medium |
-| Hardening by default | Section 2.2, built into the deployment instead of a checklist | Small |
+| Single sign-on and roles | The customer setup has one shared login (section 2.2); the wizard needs the customer's sign-on, and who may approve or only read | Medium |
 | Several databases read in place | Federation, or a writable database for links (section 2.3) | Medium |
 | One deployment per customer | Packaging and upgrades (images, migrations of the workspace) | Medium |
 

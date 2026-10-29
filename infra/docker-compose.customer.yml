@@ -1,0 +1,78 @@
+# The customer setup, laid over docker-compose.yml (docs/customer-deployment.md, section 2.2):
+#
+#   C="docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.customer.yml"
+#   $C up -d postgres
+#   infra/customer/setup.sh          # read-only database users, with the passwords of .env (Ontop needs them)
+#   $C up -d postgres ontop-energia app proxy
+#   python3 infra/customer/check.py  # says whether every point took effect
+#
+# What changes: Ontop out of dev mode and reading as a read-only user; the app reading as that user too; every port
+# reachable only from this machine, except the login proxy in front of the app (Caddy, with a password).
+# From the repository root. --env-file .env is needed: Compose looks for .env next to the first file, in infra/.
+
+x-ontop-customer: &ontop-customer
+  ONTOP_DEV_MODE: "false"
+  ONTOP_CORS_ALLOWED_ORIGINS: "https://${RASTRO_HOST:-localhost}"
+  ONTOP_DB_USER: rastro_readonly
+  ONTOP_DB_PASSWORD: ${RASTRO_READONLY_PASSWORD:?set RASTRO_READONLY_PASSWORD in .env}
+
+services:
+  postgres:
+    ports: !override
+      - "127.0.0.1:${PG_PORT:-5434}:5432"
+
+  ontop:
+    environment: *ontop-customer
+    ports: !override
+      - "127.0.0.1:${ONTOP_PORT:-8080}:8080"
+
+  ontop-proveedores:
+    environment: *ontop-customer
+    ports: !override
+      - "127.0.0.1:${ONTOP_PROVEEDORES_PORT:-8081}:8080"
+
+  ontop-energia:
+    environment: *ontop-customer
+    ports: !override
+      - "127.0.0.1:${ONTOP_ENERGIA_PORT:-8082}:8080"
+
+  ontop-afiliaciones:
+    environment: *ontop-customer
+    ports: !override
+      - "127.0.0.1:${ONTOP_AFILIACIONES_PORT:-8083}:8080"
+
+  graphdb:
+    ports: !override
+      - "127.0.0.1:${GRAPHDB_PORT:-7210}:7200"
+
+  app:
+    environment:
+      PG_USER: rastro_readonly
+      PG_PASSWORD: ${RASTRO_READONLY_PASSWORD:?set RASTRO_READONLY_PASSWORD in .env}
+      RASTRO_READER_PASSWORD: ${RASTRO_READER_PASSWORD:?set RASTRO_READER_PASSWORD in .env}
+    ports: !override
+      - "127.0.0.1:${APP_PORT:-8501}:8501"   # only from this machine; users come through the proxy
+
+  layer-eval:
+    environment:
+      RASTRO_READER_PASSWORD: ${RASTRO_READER_PASSWORD:?set RASTRO_READER_PASSWORD in .env}
+
+  # The login in front of the app: a password checked by Caddy, over HTTPS. For the customer's single sign-on, put
+  # the customer's own proxy here instead, pointing at app:8501.
+  proxy:
+    image: caddy:2.8.4
+    depends_on:
+      - app
+    environment:
+      RASTRO_HOST: ${RASTRO_HOST:-localhost}
+      RASTRO_TLS: ${RASTRO_TLS:-internal}
+      RASTRO_LOGIN_USER: ${RASTRO_LOGIN_USER:?set RASTRO_LOGIN_USER in .env}
+      RASTRO_LOGIN_HASH: ${RASTRO_LOGIN_HASH:?set RASTRO_LOGIN_HASH in .env (caddy hash-password)}
+    ports:
+      - "${RASTRO_HTTPS_PORT:-8443}:443"
+    volumes:
+      - ./customer/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+
+volumes:
+  caddy-data:

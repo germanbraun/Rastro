@@ -31,10 +31,21 @@ def check(domain):
         app = AppTest.from_string(f"import dominio\ndominio.render({str(config_path)!r}, {tech!r})").run(timeout=300)
         if app.exception:
             raise RuntimeError("\n".join(error.message for error in app.exception))
+        # Only the open section is drawn (screen.show_sections), so each one is opened in turn
+        sections = next(radio for radio in app.radio if radio.key == f"{app_config['domain']}_tab_open")
         expected = "Bajo el capó" if tech else "Preguntar"
-        if not any(tab.label == expected for tab in app.tabs):
+        if expected not in sections.options:
             raise ValueError(f"Required app view did not render: {expected}")
-        print(f"{'technical' if tech else 'business'} view: passed")
+        # The section names screen.render uses; the radio shows each one's label
+        names = [n for n in ("demo", "ask", "trust", "model", "example", "faq", "hood")
+                 if sections.format_func(n) in sections.options]
+        for name in names:
+            app.radio(key=sections.key).set_value(name).run(timeout=300)
+            if app.exception:
+                raise RuntimeError(f"{name}: " + "\n".join(error.message for error in app.exception))
+        if len(names) != len(sections.options):
+            raise ValueError(f"Sections not opened: {sections.options}")
+        print(f"{'technical' if tech else 'business'} view: passed, {len(names)} sections opened")
 
 
 if __name__ == "__main__":

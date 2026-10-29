@@ -212,7 +212,7 @@ def sql_table(query, domain, approach="D", params=None):
     sources as they come."""
     import psycopg
     user = answer.DOMAINS[domain]["readers"][approach]
-    with psycopg.connect(answer.READER.format(user) % os.environ["PG_DB"]) as conn:
+    with psycopg.connect(answer.reader_dsn(user)) as conn:
         cur = conn.execute(query, params)
         return [c.name for c in cur.description], cur.fetchall()
 

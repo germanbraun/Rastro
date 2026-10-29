@@ -13,7 +13,7 @@ from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, "/layer")
-from answer import DOMAINS, READER, run_sparql_table  # noqa: E402
+from answer import DOMAINS, reader_dsn, run_sparql_table  # noqa: E402
 
 import os  # noqa: E402
 
@@ -82,7 +82,7 @@ def without_rastro(cell):
 def main():
     sample = cells()
     user = DOMAINS[DOMAIN]["readers"]["D"]
-    with psycopg.connect(READER.format(user) % os.environ["PG_DB"]) as conn:
+    with psycopg.connect(reader_dsn(user)) as conn:
         scored = [{"cell": {"doi": c[0], "author": c[1], "affiliation": c[2], "organization": c[3]},
                    "C": with_rastro(c), "D": with_links(c, conn), "B": without_rastro(c)} for c in sample]
     totals = {a: sum(s[a]["traceable"] for s in scored) for a in "BDC"}

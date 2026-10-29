@@ -432,6 +432,11 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q45.** Is a VM per customer the right unit, or will customers expect a hosted service from the start? Which
   piece of the wizard would a buyer miss first: source connectors, approval screens or login?
 
+**H10. The customer setup** (2026-10-29)
+- **Decision:** a compose override that hardens the demo (read-only database users, Ontop out of dev mode, ports
+  only on the machine) and puts a password login over HTTPS in front of the app; a script checks every point.
+- **Q46.** Is one shared password login acceptable for a pilot, or should single sign-on be there from day one?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -503,7 +508,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q45). Skip any you have no view on.
+- Answer per question number (Q1–Q46). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

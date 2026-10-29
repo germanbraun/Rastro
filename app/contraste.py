@@ -146,7 +146,7 @@ def main(domain):
 
     def sql(query):
         user = answer.DOMAINS[domain]["readers"]["B"]
-        with psycopg.connect(answer.READER.format(user) % os.environ["PG_DB"]) as conn:
+        with psycopg.connect(answer.reader_dsn(user)) as conn:
             cur = conn.execute(query)
             return [c.name for c in cur.description], cur.fetchall()
 

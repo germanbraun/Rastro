@@ -119,6 +119,7 @@ services:
       RASTRO_PROVIDER: ${RASTRO_PROVIDER:-}
       RASTRO_MODEL: ${RASTRO_MODEL:-}
       OLLAMA_URL: ${OLLAMA_URL:-}
+      RASTRO_READER_PASSWORD: ${RASTRO_READER_PASSWORD:-}   # the customer setup's reader password (layer/answer.py)
     ports:
       - "${APP_PORT:-8501}:8501"
     volumes:
@@ -430,6 +431,7 @@ services:
       RASTRO_PROVIDER: ${RASTRO_PROVIDER:-}
       RASTRO_MODEL: ${RASTRO_MODEL:-}
       OLLAMA_URL: ${OLLAMA_URL:-}
+      RASTRO_READER_PASSWORD: ${RASTRO_READER_PASSWORD:-}   # the customer setup's reader password (layer/answer.py)
     volumes:
       - ../layer:/layer
       - ../ontology:/ontology:ro

@@ -106,7 +106,7 @@ fails if `app/app.py` or `app/dominio/` names a domain, a source or a word of on
    - the summary is saved with its date (`.json`, with `consulta`, `simple`, `como`, `temas`); the records are read
      live, so anyone can open a cited record and read the original text;
    - if the data changes, the summary is generated again; a person checks that each citation says what the theme says.
-7. **Check** (below), in both views with the real runner: `docker compose run --rm --no-deps -T app python /app/check_domain.py <domain>`. Then inspect the visual layout in the browser.
+7. **Check** (below), in both views with the real runner: `docker compose run --rm --no-deps -T app python /app/check_domain.py <domain>` (it opens every section in turn, since only the open one is drawn). Then inspect the visual layout in the browser.
 
 ## The check that decides
 
