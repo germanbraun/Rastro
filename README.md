@@ -61,7 +61,8 @@ What this means in practice:
 The full method, with its contracts and gates: [docs/method.md](docs/method.md) and
 [docs/method-contracts.md](docs/method-contracts.md). The plan by phases: [docs/plan.md](docs/plan.md). Decisions,
 with their numbers: [docs/decisions.md](docs/decisions.md). How sources are integrated:
-[docs/integracion.md](docs/integracion.md). What each source contains: [docs/fuentes.md](docs/fuentes.md).
+[docs/integracion.md](docs/integracion.md). What each source contains: [docs/fuentes.md](docs/fuentes.md); in the app, the sidebar's «Las fuentes de datos»
+explains each oil and gas source, with what was loaded read from Rastro's load records.
 
 ## The domains
 
@@ -131,7 +132,7 @@ recorded. Claude implemented it and another assistant reviewed every stage.
 | `linking/` | links between each domain's sources, with their rule, evidence and reviewed corrections |
 | `layer/` | the domain registry (`dominios.yaml`), lifecycle and method commands, natural-language questions (`answer.py`), the evaluation (`evaluar.py`) and each domain's evaluation, change tests and notes |
 | `lab/` | Rastro Lab: the Vaca Muerta gas model (`lab/gas/`) |
-| `app/` | the demo (Streamlit, in Spanish); each domain is a YAML file in `app/dominios/` |
+| `app/` | the demo (Streamlit, in Spanish with an English view); each domain is a YAML file in `app/dominios/` |
 | `.claude/skills/` | the method's skills, generic for any domain |
 | `docs/` | method, plan, decisions, experiments, decks (`slides/`), demo scripts and human review |
 | `tests/` | tests (pytest) |
@@ -144,7 +145,8 @@ debugging: `ONBOARDING.md`.
 
 ## The demo
 
-The app, decks and demo scripts are in Spanish, for Argentine audiences.
+The app, decks and demo scripts are in Spanish, for Argentine audiences. The app also has an English view, and the
+executive deck an English version (see «Selling Rastro»).
 
 | Domain | Script | Deck |
 |---|---|---|
