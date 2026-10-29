@@ -1668,3 +1668,20 @@ experiment's log as method changes made after it; they do not change its measure
   adds it with the first question. Tried with a throwaway domain (registry, Ontop, ontology check, experiment log,
   customer config), then removed.
 
+## 2026-10-29 — Talking to the data: a chat over the layer, with every number checked
+
+- **What:** Preguntar → «Conversar con los datos» (`layer/chat.py`, `app/dominio/chat_view.py`), switched on with
+  `conversar` in a domain's YAML (oil and gas). The model's context is the domain's ontology and notes, as for a free
+  question. Each turn: the model writes one SPARQL query reading the conversation so far (a follow-up resolves against
+  the earlier questions), Rastro runs it (errors go back to the model), the model answers in words from the result
+  only, and code flags every number of the answer that is not in the result (as is, rounded, or in thousands, millions
+  or billions; a year from the questions and the row count are allowed). Below each answer, the data and its evidence,
+  with the same view as a free question.
+- **Why this way:** narrow down, decide, test, as the method: the dictionary narrows what can be asked, the model
+  decides the query and the wording, and code decides whether each number is backed.
+- **In the material:** a slide in the oil and gas appendix (32, after the texts one), a «Si preguntan» line in the
+  demo script, the applications table of `docs/customer-deployment.md` and the README.
+- **Not measured yet:** the app here has no API key. Tested with the model replaced (6 tests: the ontology in the
+  context, follow-ups, retries, «sin datos», the number check). No accuracy is claimed until it is measured with the
+  domain's evaluation and «does it say when it lacks the data?» questions.
+

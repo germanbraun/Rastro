@@ -142,14 +142,28 @@ comes with `show-in-app`.
 The experiment log (`layer/method.py experiment <domain>`) records hours, interventions and decisions as the work
 goes. It is the pilot's evidence of how much a person had to do.
 
-### 2.4 What the customer keeps
+### 2.4 Applications on the layer
+
+Once the layer exists, the same dictionary serves several applications; the customer picks which ones to deploy.
+Each one is a module of the app, switched on in the domain's YAML (skill `show-in-app`):
+
+| Application | What it does | Needs |
+|---|---|---|
+| Business questions | The approved questions, answered with «¿Por qué este número?» | The layer |
+| Talk to the data (chat) | Free questions and follow-ups; the model's context is the ontology; every number of an answer is checked against the data | The Claude API |
+| Questions over texts (GraphRAG) | The graph picks the records by concept; the model reads only their texts and cites them | Free-text records; the Claude API |
+| Check a claim | Holds, does not hold, or no data, for a number read in a report | The layer |
+| Enrichment | Data from an outside source through a shared key, live or saved | A shared key (an identifier) |
+| A model with its evidence (like Rastro Lab) | Predictions explained with the layer's evidence | Custom work (an extension) |
+
+### 2.5 What the customer keeps
 
 - The dictionary (OWL), the mappings (R2RML), the quality rules (SHACL) and the links with their evidence (PROV-O):
   open standards that other knowledge-graph platforms or tools can read.
 - The app with its questions, both views, and the measured results with their limits.
 - The experiment log and `docs/decisions.md`: every decision, why, and who approved it.
 
-### 2.5 Checklist
+### 2.6 Checklist
 
 - [ ] Read-only access to each source; the decision on what data may be sent to the model, in writing
 - [ ] VM with Docker; `.env` filled in; customer setup started; `infra/customer/check.py` all ✅ (section 2.2)

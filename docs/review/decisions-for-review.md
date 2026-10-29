@@ -443,6 +443,12 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q47.** Should the scaffold also add the domain to the app (hidden until it has a question), so the wizard has one
   less step?
 
+**H12. A chat over the semantic layer** (2026-10-29)
+- **Decision:** a chat whose context is the ontology; each turn is a query over the layer, an answer from its result
+  only, and a code check that flags any number not in the result. A module of the app, not a separate product.
+- **Q48.** Is flagging an unbacked number enough, or should such an answer be withheld? Should the chat also search
+  the texts (GraphRAG) in the same conversation, choosing the tool per question?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -514,7 +520,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q47). Skip any you have no view on.
+- Answer per question number (Q1–Q48). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

@@ -17,6 +17,8 @@ avisos_cambio:                 # the change test records its check in Spanish; t
 evidencia: /layer/energia/evidencia.json   # cobertura de la evidencia (layer/evidencia.py)
 ontologia: /ontology/energia/energia.ttl
 texto: /layer/energia/textos/venteos.json   # la pregunta sobre textos (GraphRAG anclado)
+conversar:                     # «Conversar con los datos» en Preguntar (layer/chat.py)
+  ejemplo: "Por ejemplo: ¿quién produjo más gas en 2025? Y después: ¿y cuánto le corresponde por su participación?"
 diagrama: {archivo: ontologia-energia, titulo: diccionario de petróleo y gas}   # app/ontologia-energia.svg, lo dibuja docs/diagramas/build.py
 
 # The demo in two acts: Rastro Layer (a number you can trust), then Rastro Lab (a prediction you can defend)

@@ -15,6 +15,7 @@ from . import hood
 from . import trust_view
 from . import faq
 from . import sources_view
+from . import chat_view
 from . import extension
 
 
@@ -114,16 +115,19 @@ def show_sections(names, labels, key):
 def show_ask(cfg, tech, domain, questions):
     """«Preguntar»: an example question, a question over texts, a claim to check, outside data or a free question."""
     # Fixed internal names for the modes; the radio shows (and returns) their labels
-    mode_labels = {"example": idioma.t("dominio.render.mode_example"), "text": idioma.t("dominio.render.mode_text"),
+    mode_labels = {"example": idioma.t("dominio.render.mode_example"), "chat": idioma.t("dominio.render.mode_chat"),
+                   "text": idioma.t("dominio.render.mode_text"),
                    "claims": (cfg.get("afirmaciones") or {}).get("titulo"), "external": (cfg.get("externo") or {}).get("titulo"),
                    "free": idioma.t("dominio.render.mode_free")}
     # Checking a claim and outside data are rarer: only in the technical view
-    modes = ["example"] + (["text"] if cfg.get("texto") else []) \
+    modes = ["example"] + (["chat"] if cfg.get("conversar") else []) + (["text"] if cfg.get("texto") else []) \
         + (["claims"] if cfg.get("afirmaciones") and tech else []) + (["external"] if cfg.get("externo") and tech else [])
     by_label = {mode_labels[m]: m for m in modes + ["free"]}
     mode = by_label.get(st.radio(idioma.t("dominio.render.mode_label"), list(by_label), help=common.ayuda("modo"),
                                  horizontal=True, label_visibility="visible", key=f"{domain}_mode"))
-    if mode == "text":
+    if mode == "chat":
+        chat_view.show_chat(cfg, tech)
+    elif mode == "text":
         answers.show_text_question(cfg, tech)
     elif mode == "external":
         answers.show_external(cfg, tech)

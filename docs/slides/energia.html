@@ -541,6 +541,20 @@ por una persona.</aside>
 </section>
 </div>
 <div class="slide">
+<section id="e-conversar" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">También se puede conversar con los datos</p>
+<h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.15;width:1664px">«¿Quién produjo más gas en 2025?» … «¿Y cuánto le corresponde por su participación?»</h2>
+<div style="display:flex;gap:32px">
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px;display:flex;flex-direction:column;gap:10px"><p style="font-size:28px;color:#2F6FB5;font-weight:700">1 · El diccionario es el contexto</p><p style="font-size:28px;line-height:1.35">La IA lee el diccionario de negocio, no las tablas: traduce cada pregunta, y la que sigue, a una consulta con sus palabras.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px;display:flex;flex-direction:column;gap:10px"><p style="font-size:28px;color:#2F6FB5;font-weight:700">2 · Responde con los datos</p><p style="font-size:28px;line-height:1.35">Rastro ejecuta la consulta. La IA responde en palabras leyendo solo el resultado; si los datos no alcanzan, dice qué falta.</p></div>
+<div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:30px;display:flex;flex-direction:column;gap:10px"><p style="font-size:28px;color:#2F6FB5;font-weight:700">3 · Cada número se comprueba</p><p style="font-size:28px;line-height:1.35">Un número de la respuesta que no está en los datos queda marcado. Debajo, los datos y de dónde salen.</p></div>
+</div>
+<p style="font-size:32px;line-height:1.35;width:1664px"><b>La misma capa que responde las preguntas sostiene la conversación.</b> <span style="color:#4A5568">No hay que enseñarle a la IA las tablas de cada fuente.</span></p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>32</p></div>
+<aside>Una aplicación más de la capa semántica, en Preguntar → «Conversar con los datos». El contexto de la IA es el diccionario de negocio (la ontología) con sus notas: pregunta por conceptos, como Empresa, Concesión o Participación, y Rastro traduce esa consulta a las fuentes. Una pregunta que sigue a otra («¿y cuánto le corresponde?») se resuelve con lo que se preguntó antes. La respuesta en palabras sale solo del resultado, y un código comprueba cada número contra los datos: si la IA dice uno que no está, la app lo marca. A diferencia de la pregunta sobre textos (GraphRAG), acá no se buscan textos parecidos: se consulta el dato exacto. Todavía no está medido con el método de evaluación (hace falta la clave del modelo): no dar porcentajes de acierto.</aside>
+</section>
+</div>
+<div class="slide">
 <section id="dominio-energia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">La demo</p>
 <h2 style="font-family:'Times New Roman', Times, serif;font-size:56px;font-weight:600;line-height:1.1;width:1664px">¿Quién produce, quién opera y dónde se ventea gas en Argentina?</h2>
@@ -551,7 +565,7 @@ por una persona.</aside>
 <div style="flex:1;background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:36px"><p style="font-size:28px;color:#2F6FB5;font-weight:700">El problema</p><p style="font-size:32px;line-height:1.3;padding-top:12px">Datos que solo se unen en un mapa</p></div>
 </div>
 <p style="font-size:28px;line-height:1.4;width:1664px">Seis fuentes públicas de cuatro organismos: la producción pozo por pozo (Capítulo IV), los mapas de concesiones y venteos y los estudios ambientales de la Secretaría de Energía, los gasoductos de ENARGAS, las localidades y áreas protegidas del IGN, y el identificador global de empresas (GLEIF).</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>32</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>33</p></div>
 <aside>La pregunta del sector: quién produce, quién opera y dónde se ventea gas. Tres problemas: la misma empresa escrita de formas distintas en cada fuente; los socios de cada concesión están dentro de un texto del mapa, no en columnas; y muchas preguntas solo se responden ubicando puntos en un mapa. Cinco fuentes de cuatro organismos distintos.</aside>
 </section>
 </div>
@@ -572,7 +586,7 @@ por una persona.</aside>
 <li>¿Quiénes producen más gas de shale (Vaca Muerta)?</li>
 </ol>
 <p style="font-size:28px;color:#4A5568;width:1664px">En la app, cada una se responde en vivo y dice de qué fuente sale cada dato. Con un asistente de IA configurado, también se pueden hacer preguntas propias.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>33</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>34</p></div>
 <aside>Las diez preguntas de competencia del dominio, pensadas para operadoras y consultoras: producción por participación, operadora de cada pozo, venteos, no convencional, gasoductos, entorno, el registro global de empresas, las concesiones para revisar, los cambios de operadora y el gas de shale. Las diez están en la evaluación; las tres últimas se sumaron y se midieron después.</aside>
 </section>
 </div>
@@ -598,7 +612,7 @@ por una persona.</aside>
 <p style="font-size:28px">Capítulo IV · mapas de la Secretaría de Energía · ENARGAS · IGN · GLEIF, en Postgres. Los datos no se mueven.</p>
 </div>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>34</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>35</p></div>
 <aside>Rastro es una capa semántica: se pone entre las tablas y quien pregunta. Para quien sabe SQL, cada pieza tiene un equivalente. La ontología es el esquema de negocio que uno querría tener. Los mapeos son como definiciones de vistas, escritas en un estándar (R2RML). Los enlaces son las claves de join que no existían entre fuentes. SPARQL es SQL sobre conceptos, y Ontop es un compilador que lo traduce a SQL normal sobre las tablas reales.</aside>
 </section>
 </div>
@@ -614,7 +628,7 @@ por una persona.</aside>
 <div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:32px;font-weight:700;line-height:1.2">Datos de afuera, sin cargarlos</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Se conecta con datos abiertos como Wikidata por identificadores compartidos.</p></div>
 <div style="background:#FFFFFF;border:1px solid #E1E4E8;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:32px;font-weight:700;line-height:1.2">Sin atarse a un proveedor</p><p style="font-size:28px;line-height:1.4;color:#4A5568">Estándares abiertos del W3C, que entienden otras herramientas.</p></div>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>35</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>36</p></div>
 <aside>Lo que se lleva el cliente, en una diapositiva. Todo lo que sigue es la evidencia de cada punto. Consistencia: la misma pregunta escrita de cuatro formas da la misma respuesta. Lenguaje de negocio: el LLM recibe la ontología, no el esquema. Fuente: cada columna dice de dónde sale. Mantenimiento: el conocimiento de cada fuente está en los mapeos. Datos de afuera: una consulta une Rastro con Wikidata. Estándares: OWL, R2RML y SPARQL.</aside>
 </section>
 </div>
@@ -636,7 +650,7 @@ por una persona.</aside>
 </div>
 </div>
 <p style="font-size:28px;color:#4A5568">En vivo: layer/energia/externo/wikidata.rq (necesita internet). Guardado: wikidata-energia-loader.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>36</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>37</p></div>
 <aside>Lo mismo que en oncología con el identificador del fármaco, acá con el de empresa. El LEI viene de GLEIF y Rastro lo guarda para 12 empresas; Wikidata usa el mismo. Una consulta en GraphDB trae de Rastro la producción de 2025 y de Wikidata la sede, la bolsa y el sitio web. Así aparece que YPF y Pampa cotizan en Nueva York. Hay que decirlo: solo 3 de las 12 tienen el LEI en Wikidata. Por nombre aparecen otras cuatro, pero el nombre es el del grupo, no el de la sociedad argentina, y no se usan sin revisarlas. Esto es enriquecer: sumar lo que sabe otra fuente sin perder de dónde vino. Rastro lo hace de dos formas. En vivo, una consulta une los dos grafos al momento y está siempre al día. Guardado, lo que respondió Wikidata queda en Rastro como una fuente más, con el día de la consulta y la huella del archivo: no depende de internet y se puede repetir. Hoy no entra al modelo de Rastro Lab.</aside>
 </section>
 </div>
@@ -711,7 +725,7 @@ por una persona.</aside>
 <line x1="1182" y1="400" x2="1248" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 </svg>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>37</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>38</p></div>
 <aside>De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL.</aside>
 </section>
 </div>
@@ -793,7 +807,7 @@ por una persona.</aside>
 <text x="160.0" y="654" text-anchor="middle" font-size="20" fill="#4A5568">a su fuente</text>
 </svg>
 </div>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>38</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>39</p></div>
 <aside>El diccionario del dominio de petróleo y gas. La producción de cada pozo en 2025 la declara una empresa y pertenece a una concesión; cada concesión tiene socios, con su porcentaje, y una operadora en el mapa. Cada pozo tiene su operadora de hoy, según una regla escrita. Los venteos, vistos por satélite o declarados, caen en una concesión. Cada concesión sabe a qué distancia está el gasoducto de transporte más cercano (ENARGAS); cada venteo, su localidad más cercana y si cae en un área protegida (IGN); y las empresas que lo tienen, su LEI (GLEIF). Arriba, una regla de negocio: «no convencional» no tiene mapeo; Rastro la deduce de shale y tight. Cada unión guarda su evidencia, con PROV-O.</aside>
 </section>
 </div>
@@ -849,7 +863,7 @@ prov:wasGeneratedBy	lo generó (la regla)	rastro:activity/energia-stake-parsing
 </svg>
 </div>
 <p style="font-size:24px;color:#4A5568">Burbuja azul: una entidad · burbuja naranja: su clase en el diccionario · rectángulo: un dato simple (texto o número) · cada flecha: una propiedad, con su nombre de negocio.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>39</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>40</p></div>
 <aside>Así guarda Rastro que Chevron tiene el 50 % de Loma Campana: no como una columna, sino como un dato con su porcentaje, la concesión, la empresa, el texto del mapa del que salió, la fuente y la regla que lo creó. Cualquier herramienta que hable SPARQL lo lee igual. En el dibujo, cada burbuja es una entidad, cada rectángulo un dato simple y cada flecha una propiedad, con su nombre de negocio.</aside>
 </section>
 </div>
@@ -872,7 +886,7 @@ prov:wasGeneratedBy	lo generó (la regla)	rastro:activity/energia-stake-parsing
 </div>
 </div>
 <p style="font-size:28px;color:#4A5568">Después, Rastro une todo solo: cada pregunta usa la misma definición.</p>
-<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>40</p></div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;display:flex;justify-content:space-between;font-size:24px;color:#7A8699"><p>Rastro · Petróleo y gas en Argentina</p><p>41</p></div>
 <aside>Dos tipos de heterogeneidad. De datos: la misma empresa con nombres distintos en cada fuente (CGC), o dos fuentes que nombran operadoras distintas para el mismo pozo; el entity linking decide una vez, con una regla escrita y su evidencia. De esquema: la empresa está en una columna de la declaración jurada, en otra del mapa y dentro de un texto de socios; los mapeos las vuelven los mismos conceptos.</aside>
 </section>
 </div>

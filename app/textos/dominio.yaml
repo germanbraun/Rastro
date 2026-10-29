@@ -68,6 +68,7 @@ dominio.render.tab_faq: {es: "Preguntas frecuentes", en: "FAQ"}
 dominio.render.tab_hood: {es: "Bajo el capó", en: "Under the hood"}
 dominio.render.walkthrough: {es: "**{title}** · {header}", en: "**{title}** · {header}"}
 dominio.render.mode_example: {es: "Una pregunta de ejemplo", en: "An example question"}
+dominio.render.mode_chat: {es: "Conversar con los datos", en: "Talk to the data"}
 dominio.render.mode_text: {es: "Una pregunta sobre textos", en: "A question about texts"}
 dominio.render.mode_free: {es: "Mi propia pregunta", en: "My own question"}
 dominio.render.mode_label: {es: "Tipo de pregunta", en: "Kind of question"}
@@ -556,4 +557,16 @@ dominio.sources.watch: {es: "Qué conviene saber:", en: "Worth knowing:"}
 dominio.sources.loaded:
   es: "Licencia: {license} · [Sitio de la fuente]({url}) · Última carga: {date}, {rows} filas"
   en: "License: {license} · [Source website]({url}) · Last load: {date}, {rows} rows"
+
+dominio.chat.intro:
+  es: "Preguntá en tus palabras y seguí con otra pregunta («¿y Tecpetrol?»). Rastro traduce cada pregunta a una consulta sobre el diccionario de negocio, la responde con los datos y muestra debajo de dónde sale. Si un número de la respuesta no está en los datos, lo marca."
+  en: "Ask in your own words and follow up («and Tecpetrol?»). Rastro translates each question into a query over the business dictionary, answers it with the data and shows below where it comes from. If a number in the answer is not in the data, it flags it."
+dominio.chat.placeholder: {es: "Escribí una pregunta…", en: "Type a question…"}
+dominio.chat.thinking: {es: "Rastro consulta los datos…", en: "Rastro is querying the data…"}
+dominio.chat.data: {es: "Los datos y de dónde salen", en: "The data and where it comes from"}
+dominio.chat.new: {es: "Nueva conversación", en: "New conversation"}
+dominio.chat.no_data: {es: "Rastro no tiene los datos para responder: {missing}", en: "Rastro does not have the data to answer: {missing}"}
+dominio.chat.unsupported:
+  es: "Estos números de la respuesta no salen de los datos: {numbers}. Revisalos en la tabla de abajo."
+  en: "These numbers in the answer do not come from the data: {numbers}. Check them in the table below."
 

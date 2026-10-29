@@ -36,6 +36,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | `dominio/` | Every other domain's screen, drawn from its YAML. One module per part of the screen: |
 | `dominio/screen.py` | `render`: the sections (a radio styled as tabs, only the open one is drawn), in the business or the technical view |
 | `dominio/answers.py` | «Preguntar»: an answer with its sources and evidence, «¿Por qué este número?», the demo, claims, outside data, questions over texts |
+| `dominio/chat_view.py` | «Conversar con los datos» in Preguntar: the conversation, each answer with its data and evidence |
 | `dominio/hood.py` | «Bajo el capó»: dictionary, mappings, instances as RDF, quality rules, the SPARQL console, the mapping editor, the map |
 | `dominio/editor.py` | The two code editors (SPARQL and R2RML, with `streamlit-ace`) and their checks: syntax with its line, terms the dictionary lacks, R2RML structure; saving a mapping with a backup in `mappings/.backup/` |
 | `dominio/trust_view.py` | «Por qué confiar»: the measured evaluation, the change and correction tests, the «sin dato» test |
@@ -65,6 +66,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | `evidencia.py` | How many links keep their source, rule and evidence |
 | `method.py`, `lifecycle.py`, `experiment.py`, `experiment_log.py` | The method's executable gates, question lifecycle, gate runner and experiment log |
 | `new_domain.py` | A new domain's scaffold (`method.py new-domain`): folders, registry entry, Ontop service |
+| `chat.py` | Talking to the data: each turn writes a query over the ontology, runs it, answers from the result and flags unbacked numbers |
 | `change_guard.py` | Saves and restores the exact inputs of a change test |
 | `<domain>/` | Per domain: evaluation questions and saved answers (`eval/`), `resultados.json`, adjudication, change tests (`cambio/`) |
 

@@ -9,6 +9,8 @@ resumen: >-
   concessions, partners and gas venting and the environmental studies of the Secretaría de Energía, the pipelines of ENARGAS, the
   towns and protected areas of the IGN, and the global company identifier (GLEIF).
 ejemplo_libre: "For example: which companies produce the most gas in the Neuquén basin?"
+conversar:
+  ejemplo: "For example: who produced the most gas in 2025? And then: and how much belongs to it by its share?"
 diagrama: {titulo: oil and gas dictionary}
 
 demo_porque: >-
