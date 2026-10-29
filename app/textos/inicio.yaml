@@ -1,5 +1,12 @@
 # The start page (app/inicio.py) and the wizard's sketch (app/wizard.py)
 inicio.choose: {es: "¿Por dónde empezamos?", en: "Where do we start?"}
+inicio.problem: {es: "**Lo que cuesta no tener los datos integrados**, medido en la demo con datos públicos:", en: "**What it costs not to have the data integrated**, measured in the demo on public data:"}
+inicio.pilot_button: {es: "Hablemos de un piloto con tus datos", en: "Let's talk about a pilot with your data"}
+inicio.pilot_title: {es: "Un piloto de 6 semanas, con tus datos", en: "A 6-week pilot, with your data"}
+inicio.pilot_text:
+  es: "- **Hasta 10 preguntas de negocio** tuyas y **hasta 3 fuentes**, con acceso de solo lectura, en tu infraestructura si preferís.\n- **Unas 2 horas por semana** de una persona de negocio, para aprobar las preguntas y las definiciones y confirmar las uniones dudosas.\n- **Se mide con las mismas pruebas de la demo:** la respuesta con su evidencia, la misma pregunta de varias formas, una fuente que cambia.\n- **Lo que se construye queda para tu empresa**, en estándares abiertos que leen otras herramientas.\n\nAl terminar: la app con tus preguntas, los resultados medidos con sus límites y una recomendación de próximo paso."
+  en: "- **Up to 10 of your business questions** and **up to 3 sources**, with read-only access, on your infrastructure if you prefer.\n- **About 2 hours a week** of a business person, to approve the questions and definitions and confirm the doubtful links.\n- **Measured with the demo's own tests:** the answer with its evidence, the same question asked several ways, a source that changes.\n- **What gets built stays with your company**, in open standards other tools read.\n\nAt the end: the app with your questions, the measured results with their limits and a recommended next step."
+inicio.pilot_write: {es: "Escribinos", en: "Write to us"}
 inicio.demo_title: {es: "Ver la demo", en: "See the demo"}
 inicio.demo_text:
   es: "Rastro funcionando sobre datos públicos de petróleo y gas de Argentina: preguntas de negocio respondidas con su evidencia, una fuente que cambia, una corrección que llega a todo y un modelo que explica sus predicciones. Con «Ver detalles técnicos», los otros dominios."

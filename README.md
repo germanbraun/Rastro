@@ -174,7 +174,8 @@ docker compose up -d
 | Ontop, one per domain | oncology http://localhost:8080, suppliers :8081, oil and gas :8082, research affiliations :8083 (`/sparql`; the last one with `docker compose --profile afiliaciones up -d`) | Virtual SPARQL endpoint over Postgres, with its domain's ontology and mappings; reloads when they are edited |
 | GraphDB Free | http://localhost:7210 | Triplestore with the `rastro` repository: MeSH 2026 in the graph `<http://id.nlm.nih.gov/mesh/2026>` and the Lucene connector `mesh` |
 
-The app opens in Spanish, on a start page with two cards: «Ver la demo» and «Armá tu capa semántica» (a sketch of
+The app opens in Spanish, on a start page with the problem in three measured numbers, a call to a pilot (its
+«Escribinos» needs `RASTRO_CONTACT` in `.env`) and two cards: «Ver la demo» and «Armá tu capa semántica» (a sketch of
 the wizard, to discuss). `?inicio=demo` opens the demo directly; the sidebar's «Idioma» switch, or `?lang=en`, shows
 it in English.
 

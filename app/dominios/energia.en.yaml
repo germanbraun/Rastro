@@ -8,6 +8,14 @@ resumen: >-
   to see who operated each concession), the maps of
   concessions, partners and gas venting and the environmental studies of the Secretaría de Energía, the pipelines of ENARGAS, the
   towns and protected areas of the IGN, and the global company identifier (GLEIF).
+portada:
+  cifras:
+    - valor: "US$ {e01[dolares]} M"
+      texto: "of 2025 oil assigned in excess to YPF, summing by who reports it ({e01[exceso]} million m³, at US$ {e01[precio]} a barrel, an assumption)."
+    - valor: "{cambio[b_broken]} broken queries"
+      texto: "when the source renames a column. With Rastro, it is fixed in one line."
+    - valor: "{correccion[lugares]} places"
+      texto: "where the same value lives without Rastro. With Rastro it is corrected in one, and reaches every answer and the model."
 ejemplo_libre: "For example: who produced the most gas in 2025? And then: and how much belongs to it by its share?"
 diagrama: {titulo: oil and gas dictionary}
 

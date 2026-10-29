@@ -120,6 +120,8 @@ services:
       RASTRO_MODEL: ${RASTRO_MODEL:-}
       OLLAMA_URL: ${OLLAMA_URL:-}
       RASTRO_READER_PASSWORD: ${RASTRO_READER_PASSWORD:-}   # the customer setup's reader password (layer/answer.py)
+      RASTRO_CONTACT: ${RASTRO_CONTACT:-}   # the start page's «Escribinos» (an email); empty, no contact line
+    working_dir: /app                 # Streamlit reads its look from /app/.streamlit/config.toml
     ports:
       - "${APP_PORT:-8501}:8501"
     volumes:

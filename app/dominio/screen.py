@@ -110,8 +110,8 @@ def show_sections(names, labels, key):
     .st-key-{key} div[role=radiogroup] {{gap:0;border-bottom:1px solid rgba(49,51,63,.2);flex-wrap:wrap}}
     .st-key-{key} div[role=radiogroup] label {{margin:0;padding:.5rem 1rem;border-bottom:2px solid transparent}}
     .st-key-{key} div[role=radiogroup] label > div:first-child {{display:none}}
-    .st-key-{key} div[role=radiogroup] label:has(input:checked) {{border-bottom-color:#ff4b4b;color:#ff4b4b}}
-    .st-key-{key} div[role=radiogroup] label:has(input:checked) p {{color:#ff4b4b}}
+    .st-key-{key} div[role=radiogroup] label:has(input:checked) {{border-bottom-color:#2F6FB5;color:#2F6FB5}}
+    .st-key-{key} div[role=radiogroup] label:has(input:checked) p {{color:#2F6FB5}}
     </style>""", unsafe_allow_html=True)
     with st.container(key=key):
         return st.radio(idioma.t("dominio.render.sections"), names, format_func=labels.get, horizontal=True,

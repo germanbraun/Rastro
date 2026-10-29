@@ -1801,3 +1801,15 @@ experiment's log as method changes made after it; they do not change its measure
   calls no model. `?inicio=demo` opens the demo directly; the demo scripts use it.
 - **Checked:** both languages, the seven steps in a real browser, back to the start page and into the demo.
 
+## 2026-10-29 — A more commercial start: the problem in numbers, a call to a pilot, a product look
+
+- **The problem in three numbers** on the start page, from the demo domain's `portada`: US$ 3.600 M of 2025 oil
+  assigned in excess to YPF (its contrast card, read now; the price is an assumption and says so), 3 queries broken by
+  a renamed column (the change test) and 5 places where the same value lives (the correction test). None is typed;
+  if one cannot be read, the page shows without them.
+- **«Hablemos de un piloto con tus datos»** opens the pilot offer in short (docs/piloto.md); «Escribinos» appears
+  when `RASTRO_CONTACT` (an email) is set.
+- **A product look:** `app/.streamlit/config.toml`: the decks' colours (blue #2F6FB5, titles #14213D, background
+  #F7F6F2), always light, and no Streamlit developer menu or «Deploy» button; the app runs from `/app` to read it.
+  The open section's underline uses the same blue.
+

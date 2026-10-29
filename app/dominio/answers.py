@@ -192,12 +192,18 @@ def show_why(domain, why, columns, rows, where="preguntar", tech=False):
               key=f"{domain}_{where}_porque_tabla")
 
 
+def card_numbers(card, domain):
+    """A contrast card's numbers as text, read now the same way the slides read them (contraste.py); the queries'
+    answers are cached until the data changes."""
+    found = contraste.values(card, lambda q: _sql_saved(q, domain, common.data_version(domain, reads=q)),
+                             lambda q: common.run(common.prefixed(q, domain), domain))
+    return contraste.shown(card, found, idioma.number)
+
+
 def before_after(card, domain):
     """The same card at every moment of the demo: without Rastro on the left, with Rastro on the right. Its numbers are
     read now, the same way the slides read them (contraste.py)."""
-    found = contraste.values(card, lambda q: _sql_saved(q, domain, common.data_version(domain, reads=q)),
-                             lambda q: common.run(common.prefixed(q, domain), domain))
-    card = contraste.fill(card, contraste.shown(card, found, idioma.number))
+    card = contraste.fill(card, card_numbers(card, domain))
     left, right = st.columns(2)
     for col, key, title in [(left, "sin", card.get("titulo_sin", idioma.t("dominio.before_after.without"))),
                            (right, "con", idioma.t("dominio.before_after.with"))]:
