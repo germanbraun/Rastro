@@ -1753,3 +1753,10 @@ experiment's log as method changes made after it; they do not change its measure
 - **What it shows today:** oil and gas and suppliers wait on the independent references; oil and gas has 7 links to
   confirm; suppliers has no quality rules; affiliations has 104 links waiting in its own format.
 
+## 2026-10-29 — A new domain is in the app from the start, hidden until its first question
+
+- **What:** `method.py new-domain` also writes `app/dominios/<domain>.yaml` (with `preguntas: []`) and its line in
+  `app/dominios.yaml`; the app hides a domain whose `preguntas` is empty. A domain with a screen of its own and no
+  `preguntas` key (oncology) always shows: the first version of the filter hid it, caught before committing.
+- **Tried** with a throwaway domain: listed in the app's file, not shown; the four real domains shown; then removed.
+

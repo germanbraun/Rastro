@@ -140,8 +140,8 @@ order. Each step ends in a check that decides, and in an approval only where the
 | 6 | Verify, close and hand over | `verify`, `close-phase` | — |
 
 A new domain starts with one command, `python layer/method.py new-domain <domain> --title "..."`: its folders,
-registry entry and Ontop service (also in the customer setup), checked before anything is written. The app entry
-comes with `show-in-app`.
+registry entry, Ontop service (also in the customer setup) and its place in the app, hidden until it has a question;
+checked before anything is written.
 
 **Connecting the customer's sources.** Two ways; for a pilot, the first:
 
@@ -254,7 +254,7 @@ it is, and changes only who drives the agent.
 | Piece | Why it is needed | Size |
 |---|---|---|
 | Source connectors as configuration | Today each source is a loader written by the agent; the wizard needs a form for a database (JDBC), files and common APIs, with a generic loader | Large |
-| Domain set-up without hand edits | Done for the scaffold (`method.py new-domain`); the app entry is still added by hand in `show-in-app` | Small |
+| Domain set-up without hand edits | Done (`method.py new-domain`, including the app, hidden until the first question) | — |
 | The orchestrator | Walks the steps, runs each check, stores each approval, resumes after a failure | Large |
 | The wizard screens | One per approval (section 3.1); two exist: the method's state per step («Método») and confirming the doubtful links; the others can reuse the app's technical view (dictionary, quality, evaluation) | Large |
 | Agent runtime | The Agent SDK with the repo's skills and tools, sandboxed to the workspace | Medium |

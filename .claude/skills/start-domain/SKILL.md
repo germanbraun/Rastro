@@ -29,7 +29,8 @@ Reuse its findings and actual approvals; a favorable inspection alone does not a
    ```
    It writes the folders, the ontology header (with the domain's `DataSource`, `name` and `license`), a mapping whose
    only map reads the domain's sources (none until the first one, but Ontop starts), the notes, `reader.sql`, the
-   registry entry with only the keys whose piece exists, the Ontop service on the next free port and its customer
+   registry entry with only the keys whose piece exists, the app's file and list entry (hidden until the first
+   question), the Ontop service on the next free port and its customer
    settings. It refuses to overwrite anything. Do not copy another domain's evaluation command or constants.
 3. **Lifecycle.** `new-domain` declares `method.lifecycle` (the state file appears with the first transition);
    declare `method.source_manifest` (the source versions, written by the loaders) with the first loader, and

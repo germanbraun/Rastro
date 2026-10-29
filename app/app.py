@@ -30,7 +30,10 @@ st.markdown(f"**{t('app.tagline')}**")
 st.markdown(t("app.what"))
 st.caption(t("app.how_to_read", marks=" · ".join(enlaces.label(k) for k in ("regla", "ia", "persona"))))
 
-DOMAINS = idioma.localized("/app/dominios.yaml")
+# A new domain is listed from the start (method.py new-domain) with «preguntas: []» and stays hidden until it has a
+# question; a domain with a screen of its own (oncology) has no «preguntas» key and always shows
+DOMAINS = [d for d in idioma.localized("/app/dominios.yaml")
+           if (dominio.load_config(d["config"]) or {}).get("preguntas", True)]
 with st.sidebar:
     # The demo is the first domain; the others show with «Ver detalles técnicos», as proof that the same Rastro
     # works for other data

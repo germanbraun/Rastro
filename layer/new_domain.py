@@ -11,8 +11,10 @@ Writes what every domain has before its first question, and nothing it does not 
 - its Ontop service in infra/docker-compose.yml, on the next free port, and its customer settings in
   infra/docker-compose.customer.yml
 
-It refuses to overwrite: an existing domain, file or service stops it before anything is written. The app entry
-(app/dominios.yaml) is added later by show-in-app, when the domain has a question to show.
+- app/dominios/<domain>.yaml and its line in app/dominios.yaml: the app hides the domain until it has a question
+  (show-in-app fills the file)
+
+It refuses to overwrite: an existing domain, file or service stops it before anything is written.
 """
 import re
 from pathlib import Path
@@ -84,6 +86,13 @@ Each question's lifecycle state is in `layer/{domain}/lifecycle.json`.
                                           "Ontop does not support `*` or `+` paths.\n",
         f"layer/{domain}/sql-notes.md": f"# Notes for the assistant: {domain} (SQL over the sources as they come)\n",
         f"layer/{domain}/sql-enlaces-notes.md": f"# Notes for the assistant: {domain} (SQL with Rastro's links)\n",
+        f"app/dominios/{domain}.yaml": f"""# What belongs to {domain} in the app (drawn by app/dominio/; skill show-in-app). The app hides the
+# domain until «preguntas» has a question.
+domain: {domain}
+resumen: >-
+  {title[:1].upper() + title[1:]}.
+preguntas: []
+""",
         f"layer/{domain}/reader.sql": f"""-- Read-only users for the evaluation of {domain}: «without Rastro» sees the source tables as loaded, «SQL + links»
 -- also the tables Rastro builds. Each source's GRANTs are added with the source (skill add-source).
 DO $$
@@ -121,6 +130,14 @@ def registry_entry(domain, title, port):
     mapping: mappings/{domain}.r2rml.ttl
     ontop: {{service: ontop-{domain}, port: {port}}}
     lifecycle: layer/{domain}/lifecycle.json
+    app: app/dominios/{domain}.yaml
+"""
+
+
+def app_entry(domain, title):
+    return f"""- id: {domain}
+  name: {title[:1].upper() + title[1:]}
+  config: /app/dominios/{domain}.yaml
 """
 
 
@@ -171,9 +188,10 @@ def scaffold(domain, title, root=ROOT):
     if not NAME.match(domain):
         raise ValueError(f"«{domain}»: a short name in lowercase, letters, digits and _ (it is also the prefix)")
     registry_path, compose_path = root / "layer/dominios.yaml", root / "infra/docker-compose.yml"
+    app_list = root / "app/dominios.yaml"
     customer_path = root / "infra/docker-compose.customer.yml"
     registry_text, compose_text, customer_text = (p.read_text() for p in (registry_path, compose_path, customer_path))
-    if domain in (yaml.safe_load(registry_text) or {}):
+    if domain in (yaml.safe_load(registry_text) or {}) or f"- id: {domain}\n" in (root / "app/dominios.yaml").read_text():
         raise ValueError(f"«{domain}» is already in layer/dominios.yaml")
     if f"\n  ontop-{domain}:\n" in compose_text + customer_text:
         raise ValueError(f"ontop-{domain} already exists in the compose files")
@@ -189,6 +207,8 @@ def scaffold(domain, title, root=ROOT):
         (root / path).parent.mkdir(parents=True, exist_ok=True)
         (root / path).write_text(content)
     registry_path.write_text(registry_text.rstrip("\n") + "\n" + registry_entry(domain, title, port))
+    app_list.write_text(app_list.read_text().rstrip("\n") + "\n" + app_entry(domain, title))
     compose_path.write_text(compose_new)
     customer_path.write_text(customer_new)
-    return [*new, "layer/dominios.yaml", "infra/docker-compose.yml", "infra/docker-compose.customer.yml"], port
+    return [*new, "layer/dominios.yaml", "app/dominios.yaml", "infra/docker-compose.yml",
+            "infra/docker-compose.customer.yml"], port

@@ -91,7 +91,9 @@ fails if `app/app.py` or `app/dominio/` names a domain, a source or a word of on
    Below it, one line per optional module: whether the domain gets it and why (the piece it has). A person reviews it;
    the table goes into the decision or the experiment log.
 2. **Register the domain** in `app/dominios.yaml` (id, name in the users' language, configuration file) and its name
-   in `app/dominios.en.yaml`, and copy the shape of an existing configuration. The first domain in the list is the one
+   in `app/dominios.en.yaml`, and copy the shape of an existing configuration. A domain started with `method.py
+   new-domain` is already listed, with a file that says `preguntas: []`: the app hides it until the first question
+   is there; add its English name. The first domain in the list is the one
    the app opens with.
 3. **Business view first:** write the example questions of the proposal. For each: the question in plain words (`simple`), the technical wording (`tecnica`), the query file, readable
    column names, "why this number" for its main column, what Rastro added, the glossary. Use the users' words, never
