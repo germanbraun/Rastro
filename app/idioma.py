@@ -27,9 +27,14 @@ def init():
 
 
 def selector():
-    """The switch in the sidebar."""
+    """The switch in the sidebar.
+
+    Its label is translated, so switching language makes Streamlit see a new widget and reset it to the first option.
+    The language therefore lives in its own key («lang»), and the widget starts from it and writes back to it."""
     init()
-    st.radio(t("app.language"), list(LANGUAGES), format_func=LANGUAGES.get, key="lang", horizontal=True)
+    st.radio(t("app.language"), list(LANGUAGES), index=list(LANGUAGES).index(lang()), format_func=LANGUAGES.get,
+             key="lang_choice", horizontal=True,
+             on_change=lambda: st.session_state.update(lang=st.session_state["lang_choice"]))
 
 
 @st.cache_data
