@@ -5,6 +5,7 @@ A domain's configuration, the help texts and the FAQ get an English overlay next
 only the texts, laid over the Spanish file. Anything not translated yet falls back to Spanish. Data from the sources
 (names, evidence, rules) is shown as it comes.
 """
+import time
 from pathlib import Path
 
 import streamlit as st
@@ -37,17 +38,27 @@ def selector():
              on_change=lambda: st.session_state.update(lang=st.session_state["lang_choice"]))
 
 
-@st.cache_data
-def _texts(stamp):
-    merged = {}
-    for path in sorted(TEXTS.glob("*.yaml")):
-        merged.update(yaml.safe_load(path.read_text()) or {})
-    return merged
+_TEXTS = {"checked": 0.0, "stamp": None, "texts": {}}
+
+
+def _texts():
+    """All code texts, read again when a file in app/textos changes. A page draws hundreds of texts, so the files'
+    dates are checked at most once a second, not on every text."""
+    now = time.monotonic()
+    if now - _TEXTS["checked"] > 1:
+        stamp = tuple(p.stat().st_mtime for p in sorted(TEXTS.glob("*.yaml")))
+        if stamp != _TEXTS["stamp"]:
+            merged = {}
+            for path in sorted(TEXTS.glob("*.yaml")):
+                merged.update(yaml.safe_load(path.read_text()) or {})
+            _TEXTS.update(stamp=stamp, texts=merged)
+        _TEXTS["checked"] = now
+    return _TEXTS["texts"]
 
 
 def t(key, **values):
     """A code text in the current language; a key missing in the files is a bug and fails loudly."""
-    entry = _texts(tuple(p.stat().st_mtime for p in sorted(TEXTS.glob("*.yaml"))))[key]
+    entry = _texts()[key]
     text = entry.get(lang()) or entry["es"]
     return text.format(**values) if values else text
 

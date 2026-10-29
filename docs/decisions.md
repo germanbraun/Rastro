@@ -1608,3 +1608,13 @@ experiment's log as method changes made after it; they do not change its measure
   evaluator waited for the broken Ontop (now `--no-deps`), «—» counted as a broken answer, and the correction check
   read the CSV after the row was removed.
 
+
+## 2026-10-29 — The app checks its text files once a second, not on every text
+
+- **Measured:** a warm run of the page took 1,26 s on the server; 0,9 s of it was the ~300 visible texts, each
+  listing and dating every file in `app/textos/` before reading the cached texts. Now the dates are checked at most
+  once a second: a warm run takes 0,2 to 0,5 s, and a click in the Demo tab 1,0 to 1,4 s in the browser (was 1,5 to
+  3,2). No saved query runs again on a warm click.
+- **Not done:** removing domains. Suppliers and oncology only run when chosen in the technical view, so they cost
+  nothing in the oil and gas demo. The first visit after a restart still takes about 15 s (the warm-up computes the
+  questions and the Lab models): open the app once before a demo.
