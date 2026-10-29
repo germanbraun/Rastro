@@ -1576,3 +1576,19 @@ experiment's log as method changes made after it; they do not change its measure
 - **Check:** `tests/test_sources_view.py` (every entry complete, registered and translated); seen in the app in
   Spanish and English, business and technical view.
 - **Why:** the user asked for extended explanations of the oil and gas data sources.
+
+## 2026-10-29 — The demo in two acts: Rastro Layer, then Rastro Lab
+
+- **Before:** four moments, Ask, The source changes, Predict, One correction. The correction closed the demo by
+  changing the answer, the model's input and its explanation, so it pulled Lab into the middle of the Layer story.
+- **Now:** two acts. Rastro Layer, «a number you can trust»: Ask, The source changes, One correction (only the
+  answers). Rastro Lab, «a prediction you can defend»: one bridge sentence (everything Rastro knows, a model inherits
+  too), then Predict, which comes back to the same correction already in the model's input and flagged in its
+  explanation. It matches the two products and lets the audience see one correction twice.
+- **Not done:** making a well in Aguada Pichana Este the Lab example. Its 2025 wells have no fracturing data yet, and
+  the model predicts 53.8 million m³ for well 166269, which gave 17.7. The Lab moment keeps its well with data, and
+  the concession reaches Lab through the correction's rows. The prediction itself barely moves with the correction
+  (54.32 → 54.29 in `layer/energia/cambio/correccion.json`), so no text says it changes.
+- App (`acto`, `puente`, `parte`, `correccion` in the demo steps), script and deck (slides 6 and 7 swapped, act names
+  in the headers) changed together; no number was re-measured.
+

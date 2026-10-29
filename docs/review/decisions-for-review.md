@@ -414,6 +414,12 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
   for and its caveats, with what was loaded read live from Rastro's load records.
 - **Q42.** Are the caveats the right ones for a consultant evaluating the data, and is anything said too strongly
   (for example «a satellite venting is a sign, not a confirmation»)?
+**H7. The demo in two acts** (2026-10-29)
+- **Decision:** Rastro Layer (ask, the source changes, one correction) then Rastro Lab (predict), with the same
+  correction coming back in the model instead of closing the demo.
+- **Q43.** Does the callback land in three minutes, or would a sales audience rather see the correction once, at the
+  end, reaching everything at the same time? Is one bridge sentence enough to switch from answers to predictions?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -485,7 +491,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q42). Skip any you have no view on.
+- Answer per question number (Q1–Q43). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

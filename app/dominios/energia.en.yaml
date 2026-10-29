@@ -12,10 +12,12 @@ ejemplo_libre: "For example: which companies produce the most gas in the Neuqué
 diagrama: {titulo: oil and gas dictionary}
 
 demo_porque: >-
-  Four moments, each one sentence on what Rastro does: it answers with evidence, it is fixed in one place
-  when a database changes, it explains a model's predictions with that same evidence, and a correction made
-  once reaches every result. Everything runs live on public oil and gas data. The other
-  questions (who operates each well, venting on the map) are in «Ask».
+  Two acts. In Rastro Layer, a number you can trust: it answers with evidence, it is fixed in one place when a
+  database changes, and a correction made once reaches every answer. In Rastro Lab, a prediction you can defend:
+  the model inherits all of the above, and the same correction (Aguada Pichana Este) has already reached its input and
+  its explanation.
+  Everything runs live on public oil and gas data.
+  The other questions (who operates each well, venting on the map) are in «Ask».
 demo:
   - paso: Ask
     titulo: "How much oil belongs to each company?"
@@ -26,16 +28,20 @@ demo:
     titulo: "The source publishes a new version"
     muestra: >-
       Without Rastro, queries break one by one and have to be found. With Rastro, it is fixed in one place.
-  - paso: Predict
-    titulo: "How much gas will a new well produce?"
-    muestra: >-
-      The same model with and without Rastro: they predict equally well, but with Rastro the prediction says what it
-      relies on, where each value comes from and which values are corrected.
   - paso: A correction
-    titulo: "A value is corrected once, and everything changes"
+    titulo: "A value is corrected once, and every answer changes"
     muestra: >-
       A document says that in Aguada Pichana Este Total holds 55%, not the 27.27% on the map. It is corrected once
-      in Rastro, and the answer, what goes into the model and its explanation all change on their own.
+      in Rastro, with the document, and every answer that depends on that share changes on its own.
+  - paso: Predict
+    titulo: "How much gas will a new well produce?"
+    puente: >-
+      Everything Rastro knows (every link, every rule, every correction) a model inherits too.
+    muestra: >-
+      A new Vaca Muerta well. The same model with and without Rastro: they predict equally well, but with
+      Rastro the prediction says what it relies on, where each value comes from and which ones are worth checking.
+      Below, the correction from moment 3: without touching the model, it has already reached its input, and its
+      explanation flags it.
 
 fuentes:
   sig_energia: Maps (WFS)

@@ -284,16 +284,21 @@ def show_integration_example(example, domain, tech, key=None, record=None, run_i
 
 def show_demo(cfg, tech):
     """The demo: a few moments, each with a title, a sentence and something that runs live. Each moment is an
-    example question, a change to a database, a Rastro Lab prediction or a correction."""
+    example question, a change to a database, a Rastro Lab prediction or a correction. Moments may be grouped in
+    acts (acto), and the first moment of an act may open with a bridge sentence (puente)."""
     domain, steps = cfg["domain"], cfg["demo"]
     key = f"{domain}_demo_step"
     i = min(st.session_state.get(key, 0), len(steps) - 1)
     if cfg.get("demo_porque"):
         with st.expander(idioma.t("dominio.show_demo.why_moments", n=len(steps))):
             st.markdown(common.md(cfg["demo_porque"]))
-    st.markdown(" → ".join(f"**{n + 1} · {s['paso']}**" if n == i else f"{n + 1} · {s['paso']}"
-                           for n, s in enumerate(steps)))
+    acts = {}   # act name -> its moments, in order; without acts, one unnamed act
+    for n, s in enumerate(steps):
+        acts.setdefault(s.get("acto"), []).append(f"**{n + 1} · {s['paso']}**" if n == i else f"{n + 1} · {s['paso']}")
+    st.markdown("   |   ".join((f"*{act}:* " if act else "") + " → ".join(moments) for act, moments in acts.items()))
     step = steps[i]
+    if step.get("puente"):
+        st.info(common.md(step["puente"]))
     st.subheader(step["titulo"], help=common.ayuda("paso"))
     if step.get("que_es"):   # the other use cases still explain what each step is
         st.markdown(idioma.t("dominio.show_demo.what_is", step=common.md(step["paso"]).lower(), text=common.md(step["que_es"])))

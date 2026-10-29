@@ -32,7 +32,11 @@ def test_las_preguntas_de_la_app_tienen_su_consulta():
 def test_la_demo_de_petroleo_y_gas():
     cfg = cargar("app/dominios/energia.yaml")
     pasos = cfg["demo"]
-    assert [p["paso"] for p in pasos] == ["Preguntar", "La base cambia", "Predecir", "Una corrección"]
+    assert [p["paso"] for p in pasos] == ["Preguntar", "La base cambia", "Una corrección", "Predecir"]
+    # Two acts: the correction is told in Rastro Layer and comes back in Rastro Lab, already in the model
+    assert [p.get("acto") for p in pasos] == ["Rastro Layer"] * 3 + ["Rastro Lab"]
+    assert pasos[2].get("parte") == "layer" and pasos[3].get("correccion") and pasos[3].get("puente")
+    assert len(cargar("app/dominios/energia.en.yaml")["demo"]) == len(pasos)   # the English overlay goes by position
     ids = {q["id"] for q in cfg["preguntas"]}
     for p in pasos:
         assert p.get("tipo", "pregunta") in {"pregunta", "cambio", "lab", "correccion"}

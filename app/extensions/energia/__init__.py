@@ -56,12 +56,14 @@ class OilAndGas(Extension):
                          key=f"{key}_current_evidence")
 
     def show_demo_moment(self, step, key, tech):
+        from .correction import show_correction
         if step.get("tipo") == "lab":
             from . import lab
             lab.show_well(key=f"{key}_pozo", pozo=self.example_record())
+            if step.get("correccion"):   # the correction told in Rastro Layer, as it reached the model
+                show_correction(common.read_json(self.cfg["correccion"]), tech, part="lab")
         elif step.get("tipo") == "correccion":
-            from .correction import show_correction
-            show_correction(common.read_json(self.cfg["correccion"]), tech)
+            show_correction(common.read_json(self.cfg["correccion"]), tech, part=step.get("parte"))
 
     def show_story(self, why, columns, rows, where, tech):
         from .story import show_story

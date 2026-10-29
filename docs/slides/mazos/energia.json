@@ -14,8 +14,8 @@
     "e-esquema-capa",
     "e-integracion",
     "e-cambio",
-    "e-predecir",
     "e-correccion",
+    "e-predecir",
     "e-porque-capa",
     "limites-energia",
     "anexo-energia",
@@ -52,7 +52,7 @@
   ],
   "sections": {
     "s1": {
-      "description": "La demo: cuatro momentos",
+      "description": "La demo: dos actos, Rastro Layer y Rastro Lab",
       "start": "cover-energia"
     },
     "s2": {

@@ -7,12 +7,19 @@ description: Keep the demo story consistent across the app, the demo script and 
 
 > **Project skill, not part of the generic method** (`docs/method.md`): it keeps Rastro's own demo material (in Spanish) consistent.
 
-The oil and gas story is **four moments, one sentence each**, and it is told in three minutes:
+The oil and gas story is **two acts, four moments, one sentence each**, and it is told in three minutes:
+
+**Rastro Layer, a number you can trust:**
 
 1. **Ask:** Rastro answers with evidence (YPF's oil by who reports, `{{energia.e01.ypf_sin}}`, versus split among the partners, `{{energia.e01.ypf_con}}`).
 2. **The source changes:** without Rastro, broken queries you have to find; with Rastro, one line.
-3. **Predict:** the same model with and without Rastro predicts the same; with Rastro the prediction is explained and flags the doubtful data.
-4. **One correction:** you correct once and the answer, what goes into the model and its explanation all change on their own.
+3. **One correction:** you correct once and every answer that depends on it changes on its own. Do not mention the model yet.
+
+**Rastro Lab, a prediction you can defend** (opened by one bridge sentence: everything Rastro knows, a model inherits too):
+
+4. **Predict:** the same model with and without Rastro predicts the same; with Rastro the prediction is explained and flags the doubtful data. It comes back to moment 3: the same correction already reached the model's input and its explanation, without touching the model.
+
+In the app, each moment has its `acto`; the correction shows its Layer half (`parte: layer`) and the Lab moment its Lab half (`correccion: true`), both read from the measured correction test.
 
 The same thing in three places, which must say the same:
 

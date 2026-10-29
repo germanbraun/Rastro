@@ -2,12 +2,12 @@
 
 > **Los datos cambian. Las preguntas, no.**
 
-Para consultoras y equipos de datos del sector que saben SQL, sin conocimientos de tecnologías semánticas. Cuatro momentos, una frase cada uno: **Rastro responde con evidencia, se arregla en un lugar cuando una base cambia, explica las predicciones de un modelo con esa misma evidencia, y una corrección hecha una vez llega a todo.** El mazo de petróleo y gas (`docs/slides/energia.html`, diapositivas 1 a 9) y la app en la pestaña **Demo**, con «Ver detalles técnicos» apagado (así la app muestra solo petróleo y gas).
+Para consultoras y equipos de datos del sector que saben SQL, sin conocimientos de tecnologías semánticas. Dos actos. **Rastro Layer, un número en el que se puede confiar:** responde con evidencia, se arregla en un lugar cuando una base cambia, y una corrección hecha una vez llega a todas las respuestas. **Rastro Lab, una predicción que se puede defender:** un modelo hereda todo lo anterior, y la misma corrección ya llegó a su entrada y a su explicación. El mazo de petróleo y gas (`docs/slides/energia.html`, diapositivas 1 a 9) y la app en la pestaña **Demo**, con «Ver detalles técnicos» apagado (así la app muestra solo petróleo y gas).
 
 ## Antes de empezar
 
 1. Levantar todo, desde la carpeta del repo: `docker compose up -d` (lo hace alguien técnico, una vez).
-2. Abrir http://localhost:8501, pestaña **Demo**. Recorrer los cuatro momentos una vez: cada uno corre en vivo.
+2. Abrir http://localhost:8501, pestaña **Demo**. Recorrer los dos actos una vez: cada momento corre en vivo.
 
 ## 0:00 – 0:30 · Una pregunta, dos significados, y qué es una capa semántica (diapositivas 1 a 3)
 
@@ -15,25 +15,39 @@ Para consultoras y equipos de datos del sector que saben SQL, sin conocimientos 
 
 > (Diapositiva 3, unos segundos) «Así se ve una capa semántica: a la izquierda las fuentes como vienen; en el medio, un diccionario de negocio (pozo, concesión, empresa, participación) con sus traducciones, sus uniones con evidencia y sus reglas; a la derecha, quien pregunta, y Rastro Lab, que devuelve sus predicciones con su evidencia. Los datos no se copian. Con datos públicos de la Secretaría de Energía, ENARGAS, el IGN y el registro global de empresas.»
 
-## 0:30 – 1:15 · 1 · Preguntar (app, momento 1; diapositiva 4)
+## Rastro Layer: un número en el que se puede confiar
+
+### 0:30 – 1:15 · 1 · Preguntar (app, momento 1; diapositiva 4)
 
 > «¿Cuánto petróleo de 2025 le corresponde a cada empresa? Sumando por quien declara la producción, a YPF se le asignan 21,4 millones de m³: todo lo que opera, también lo de sus socios. Su parte es 12,6. Rastro separa los socios de cada concesión una vez, con su porcentaje, y vale para todas las preguntas.»
 
 En **¿Por qué este número?**, con YPF y Loma Campana: el 50 % de la producción de la concesión, con el texto original del mapa y los nombres de YPF unidos entre fuentes por el mismo nombre. Si preguntan por Vista o Chevron: sus partes dependen de correcciones revisadas por un asistente de IA que esperan la confirmación de una persona, y la app lo dice. El recorrido completo con Chevron está en el anexo (diapositivas 15 a 17); guion breve: `docs/demo-layer.md`.
 
-## 1:15 – 1:45 · 2 · La base cambia (app, momento 2; diapositiva 5)
+### 1:15 – 1:45 · 2 · La base cambia (app, momento 2; diapositiva 5)
 
 > «La Secretaría publica una versión nueva y una columna cambia de nombre. De las 10 preguntas, sin Rastro 8 tienen consulta, y 3 de esas se rompen: hay que encontrarlas una por una. Con Rastro, todo falla junto, en voz alta, y se arregla con una línea: las 10 preguntas vuelven a responder.»
 
-## 1:45 – 2:30 · 3 · Predecir (app, momento 3; diapositiva 6)
+### 1:45 – 2:10 · 3 · Una corrección (app, momento 3; diapositiva 6)
 
-> «Un modelo predice cuánto gas va a dar un pozo nuevo de Vaca Muerta. Es el mismo modelo con y sin Rastro, y predicen igual de bien. La diferencia: con Rastro, la predicción dice en qué se apoya (la concesión con su operadora, cómo se fracturó el pozo), de dónde sale cada dato y cuáles están corregidos o llegaron tarde.»
+> «Un documento dice que en Aguada Pichana Este Total tiene el 55 %, no el 27,27 % del mapa. Se corrige una vez en Rastro, con el documento, y cambian solas todas las respuestas que dependen de esa participación. Sin Rastro, ese dato vive en cinco lugares, y si se olvida uno los resultados no coinciden. Lo difícil se hace una vez, en un lugar.»
 
-Abrir **¿De dónde sale?** en la fractura: dice cuándo se cargó el dato.
+No decir todavía que la corrección llega al modelo: es la vuelta del acto siguiente.
 
-## 2:30 – 3:00 · 4 · Una corrección (app, momento 4; diapositivas 7 a 9)
+## Rastro Lab: una predicción que se puede defender
 
-> «Un documento dice que en Aguada Pichana Este Total tiene el 55 %, no el 27,27 % del mapa. Se corrige una vez en Rastro, con el documento, y cambian solos la respuesta, lo que entra al modelo y su explicación. Sin Rastro, ese dato vive en cinco lugares. Lo difícil se hace una vez, en un lugar.»
+### 2:10 – 2:50 · 4 · Predecir (app, momento 4; diapositiva 7)
+
+> (El puente, una frase) «Todo lo que Rastro sabe (cada unión, cada regla, cada corrección) también lo hereda un modelo.»
+
+> «Un modelo predice cuánto gas va a dar un pozo nuevo de Vaca Muerta. Es el mismo modelo con y sin Rastro, y predicen igual de bien. La diferencia: con Rastro, la predicción dice en qué se apoya (la concesión con su operadora, cómo se fracturó el pozo), de dónde sale cada dato y cuáles conviene revisar.»
+
+Abrir **¿De dónde sale?** en la fractura: dice cuándo se cargó el dato. Después, la tabla de abajo, la vuelta al momento 3:
+
+> «¿Se acuerdan de la corrección de Aguada Pichana Este? Nadie tocó el modelo: ya llegó a su entrada, y su explicación dice que es un dato corregido con documento. Sin Rastro, el modelo sigue leyendo el 27,27 %.»
+
+Si preguntan si cambió la predicción: casi nada (lo dice la prueba de la corrección); lo que cambia es que el dato es el correcto y lo dice.
+
+## 2:50 – 3:00 · Cierre (diapositivas 8 y 9)
 
 > (Diapositiva 8, unos segundos) «Eso es una capa semántica: el significado se define una vez, las fuentes se unen una vez con evidencia, las preguntas no dependen de cómo se guardan los datos, cada respuesta se audita, la IA pregunta por conceptos y todo está en estándares abiertos. Lo vieron con datos reales.»
 

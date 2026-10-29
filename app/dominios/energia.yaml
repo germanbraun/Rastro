@@ -19,37 +19,46 @@ ontologia: /ontology/energia/energia.ttl
 texto: /layer/energia/textos/venteos.json   # la pregunta sobre textos (GraphRAG anclado)
 diagrama: {archivo: ontologia-energia, titulo: diccionario de petróleo y gas}   # app/ontologia-energia.svg, lo dibuja docs/diagramas/build.py
 
-# La demo en cuatro momentos
+# The demo in two acts: Rastro Layer (a number you can trust), then Rastro Lab (a prediction you can defend)
 demo_porque: >-
-  Cuatro momentos, lo que hace Rastro en una frase cada uno: responde con evidencia, se arregla en un lugar
-  cuando una base cambia, explica las predicciones de un modelo con esa misma evidencia, y una corrección hecha
-  una vez llega a todos los resultados. Todo corre en vivo sobre datos públicos de petróleo y gas. Las demás
-  preguntas (quién opera cada pozo, venteos en el mapa) están en «Preguntar».
+  Dos actos. En Rastro Layer, un número en el que se puede confiar: responde con evidencia, se arregla en un lugar
+  cuando una base cambia, y una corrección hecha una vez llega a todas las respuestas. En Rastro Lab, una predicción
+  que se puede defender: el modelo hereda todo lo anterior, y la misma corrección (Aguada Pichana Este) ya llegó a su
+  entrada y a su explicación. Todo corre en vivo sobre datos públicos de petróleo y gas,. Las demás preguntas (quién opera cada pozo, venteos en el mapa) están en «Preguntar».
 demo:
   - paso: Preguntar
+    acto: Rastro Layer
     titulo: "¿Cuánto petróleo le corresponde a cada empresa?"
     pregunta: e01
     muestra: >-
       La respuesta primero. Con «¿Por qué este número?», elegir una empresa y una concesión para seguir
       el cálculo, las conexiones entre fuentes y los registros originales. Producción operada y participación son medidas distintas.
   - paso: La base cambia
+    acto: Rastro Layer
     titulo: "La fuente publica una versión nueva"
     tipo: cambio
     escenario: renombrar
     muestra: >-
       Sin Rastro, las consultas se rompen de a una y hay que encontrarlas. Con Rastro, se arregla en un lugar.
-  - paso: Predecir
-    titulo: "¿Cuánto gas va a dar un pozo nuevo?"
-    tipo: lab
-    muestra: >-
-      El mismo modelo con y sin Rastro: predicen igual de bien, pero con Rastro la predicción dice en qué se
-      apoya, de dónde sale cada dato y cuáles están corregidos.
   - paso: Una corrección
-    titulo: "Se corrige un dato una vez, y cambia todo"
+    acto: Rastro Layer
+    titulo: "Se corrige un dato una vez, y cambian todas las respuestas"
     tipo: correccion
+    parte: layer
     muestra: >-
       Un documento dice que en Aguada Pichana Este Total tiene el 55 %, no el 27,27 % del mapa. Se corrige una
-      vez en Rastro, y cambian solos la respuesta, lo que entra al modelo y su explicación.
+      vez en Rastro, con el documento, y cambian solas todas las respuestas que dependen de esa participación.
+  - paso: Predecir
+    acto: Rastro Lab
+    titulo: "¿Cuánto gas va a dar un pozo nuevo?"
+    tipo: lab
+    correccion: true
+    puente: >-
+      Todo lo que Rastro sabe (cada unión, cada regla, cada corrección) también lo hereda un modelo.
+    muestra: >-
+      Un pozo nuevo de Vaca Muerta. El mismo modelo con y sin Rastro: predicen igual de bien, pero con
+      Rastro la predicción dice en qué se apoya, de dónde sale cada dato y cuáles conviene revisar. Debajo, la
+      corrección del momento 3: sin tocar el modelo, ya llegó a su entrada y su explicación la marca.
 
 # Fuentes: nombre corto para los encabezados del modo técnico
 fuentes:
