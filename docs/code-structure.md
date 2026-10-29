@@ -33,6 +33,8 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | File | What it does |
 |---|---|
 | `app.py` | Entry point, the frame only: logo, language and view switches, the domain selector; it knows no domain |
+| `inicio.py` | The start page: «Ver la demo» or «Armá tu capa semántica»; `?inicio=demo` opens the demo directly |
+| `wizard.py`, `wizard.yaml` | A sketch of the wizard, to discuss: its seven steps, what Rastro would do and what the person decides; it connects to nothing |
 | `dominio/` | Every other domain's screen, drawn from its YAML. One module per part of the screen: |
 | `dominio/screen.py` | `render`: the sections (a radio styled as tabs, only the open one is drawn), in the business or the technical view |
 | `dominio/answers.py` | «Preguntar»: an answer with its sources and evidence, «¿Por qué este número?», the demo, claims, outside data, questions over texts |

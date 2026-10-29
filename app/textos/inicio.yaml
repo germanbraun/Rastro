@@ -1,0 +1,42 @@
+# The start page (app/inicio.py) and the wizard's sketch (app/wizard.py)
+inicio.choose: {es: "¿Por dónde empezamos?", en: "Where do we start?"}
+inicio.demo_title: {es: "Ver la demo", en: "See the demo"}
+inicio.demo_text:
+  es: "Rastro funcionando sobre datos públicos de petróleo y gas de Argentina: preguntas de negocio respondidas con su evidencia, una fuente que cambia, una corrección que llega a todo y un modelo que explica sus predicciones. Con «Ver detalles técnicos», los otros dominios."
+  en: "Rastro working on public oil and gas data from Argentina: business questions answered with their evidence, a source that changes, a correction that reaches everything and a model that explains its predictions. With «Show technical details», the other domains."
+inicio.demo_button: {es: "Ver la demo", en: "See the demo"}
+inicio.wizard_title: {es: "Armá tu capa semántica", en: "Build your own semantic layer"}
+inicio.wizard_text:
+  es: "Tus fuentes, tus preguntas y tus definiciones: Rastro propone cada paso y vos decidís lo que es de negocio. Es un boceto para discutir cómo sería: todavía no se conecta a nada."
+  en: "Your sources, your questions and your definitions: Rastro proposes each step and you decide what is a business decision. It is a sketch to discuss what it would be like: it does not connect to anything yet."
+inicio.wizard_button: {es: "Ver el boceto", en: "See the sketch"}
+inicio.back: {es: "← Inicio", en: "← Start"}
+
+wizard.sketch:
+  es: "**Boceto para discutir.** No se conecta a nada, no guarda lo que escribas ni llama a un modelo: cada paso muestra qué haría Rastro, qué decidís vos y dónde existe hoy esa pieza."
+  en: "**A sketch to discuss.** It connects to nothing, keeps nothing you type and calls no model: each step shows what Rastro would do, what you decide and where that piece exists today."
+wizard.agent: {es: "**Lo que hace Rastro**", en: "**What Rastro does**"}
+wizard.person: {es: "**Lo que decidís vos**", en: "**What you decide**"}
+wizard.today: {es: "Hoy: {where}", en: "Today: {where}"}
+wizard.source_kind: {es: "Agregá una fuente", en: "Add a source"}
+wizard.kind_database: {es: "Una base de datos", en: "A database"}
+wizard.kind_files: {es: "Archivos", en: "Files"}
+wizard.kind_api: {es: "Una API", en: "An API"}
+wizard.engine: {es: "Motor", en: "Engine"}
+wizard.host: {es: "Servidor y puerto", en: "Host and port"}
+wizard.database: {es: "Base", en: "Database"}
+wizard.user: {es: "Usuario de solo lectura", en: "Read-only user"}
+wizard.no_password:
+  es: "La contraseña no se escribe acá: en el wizard real la entrega el gestor de secretos de tu empresa."
+  en: "The password is not typed here: in the real wizard it comes from your company's secrets manager."
+wizard.files: {es: "CSV, Excel o Parquet", en: "CSV, Excel or Parquet"}
+wizard.files_note: {es: "En el boceto no se suben archivos.", en: "The sketch takes no files."}
+wizard.api: {es: "Dirección de la API", en: "API address"}
+wizard.inspect: {es: "Inspeccionar", en: "Inspect"}
+wizard.found:
+  es: "**Así se vería la inspección**, con las fuentes de la demo como ejemplo (leídas en vivo de los registros de carga de Rastro):"
+  en: "**This is what the inspection would look like**, with the demo's sources as the example (read live from Rastro's load records):"
+wizard.col_source: {es: "Fuente", en: "Source"}
+wizard.col_tables: {es: "Tablas", en: "Tables"}
+wizard.col_rows: {es: "Filas", en: "Rows"}
+wizard.col_loaded: {es: "Última carga", en: "Last load"}

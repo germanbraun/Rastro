@@ -7,7 +7,7 @@ Para equipos de laboratorios, CROs y consultoras de salud, sin conocimientos té
 ## Antes de empezar
 
 1. Levantar todo, desde la carpeta del repo: `docker compose up -d` (lo hace alguien técnico, una vez).
-2. Abrir http://localhost:8501, prender «Ver detalles técnicos» y elegir **Oncología** en **Caso de uso**. Abrir una vez la pregunta de HER2 y la pregunta sobre textos: corren en vivo.
+2. Abrir http://localhost:8501/?inicio=demo, prender «Ver detalles técnicos» y elegir **Oncología** en **Caso de uso**. Abrir una vez la pregunta de HER2 y la pregunta sobre textos: corren en vivo.
 
 ## 0:00 – 1:00 · Qué es Rastro y el problema (diapositivas 1 a 4)
 

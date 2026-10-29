@@ -1,0 +1,47 @@
+# English overlay of app/wizard.yaml, by id.
+pasos:
+  - id: fuentes
+    titulo: Your sources
+    agente: >-
+      Rastro connects with a read-only user, looks at the tables, the keys and a few sample rows, and says how each
+      source could be joined with the others.
+    persona: Which sources go in and which don't.
+    hoy: The step by step is done by a consultant with the method (skills inspect-sources and add-source).
+  - id: preguntas
+    titulo: Your questions
+    agente: >-
+      You write business questions in your own words. Rastro proposes what each word means and what kind of answer
+      is expected (a number, a list).
+    persona: Each question and what each word means.
+    hoy: Each domain's approved and validated questions (Ask; their status in «Method»).
+  - id: diccionario
+    titulo: The dictionary
+    agente: >-
+      Rastro builds the business dictionary with the concepts the questions need, drawn and in your words, and
+      translates it to each source.
+    persona: The definitions (for example, operated production or by share).
+    hoy: The dictionary and its translations, in «Under the hood» with «Show technical details».
+  - id: uniones
+    titulo: The links
+    agente: >-
+      Rastro links the same companies, places or assets across sources, each link with its rule and its evidence, and
+      puts the doubtful ones first.
+    persona: Confirm or reject each doubtful link, with its evidence in view.
+    hoy: Already there — «Why trust it» → «Links to confirm».
+  - id: calidad
+    titulo: Quality
+    agente: Rastro writes quality rules over the linked data and shows what fails them today.
+    persona: The thresholds, and whether the source gets corrected.
+    hoy: The rules and what fails them, in «Why trust it» → «Quality rules».
+  - id: resultados
+    titulo: The results
+    agente: >-
+      Each question answered with its evidence, measured without Rastro, with SQL over the links and with Rastro, by
+      independent evaluators.
+    persona: Where the approaches differ, which answer is right.
+    hoy: The measured tests in «Why trust it»; each step's status in «Method».
+  - id: publicar
+    titulo: Publish
+    agente: The app is ready for your team, behind your sign-in, with the approved questions.
+    persona: Who uses it and which questions they see.
+    hoy: The customer setup and its login (infra/customer/install.sh).

@@ -26,6 +26,8 @@ described in its configuration file, not programmed.
 - **Never show a question that has not been checked against its query** today.
 - **No internal class or table names in the business view:** columns, glossary and texts use the users' words.
 - **A saved text summary is regenerated,** never edited by hand.
+- **The start page:** the app opens on two cards, «Ver la demo» and «Armá tu capa semántica» (a sketch of the
+  wizard, `app/wizard.py`); a domain shows after «Ver la demo», and `?inicio=demo` opens it directly.
 - **Links to confirm:** when a domain's reviewed corrections have rows an AI reviewed, «Por qué confiar» opens with
   «Uniones para confirmar» (`review_view.py`), where a person confirms with a document or rejects with a reason. It
   writes `linking/`, so the app mounts it writable; nothing to configure.

@@ -1791,3 +1791,13 @@ experiment's log as method changes made after it; they do not change its measure
   restart steps were not run here (they would have switched this demo machine to the customer setup); they are the
   same commands `install.sh` runs, which were tried.
 
+## 2026-10-29 — A start page, and a sketch of the wizard to discuss
+
+- **What:** the app opens on two cards (`app/inicio.py`): «Ver la demo» (today's app, oil and gas first) and «Armá tu
+  capa semántica», a sketch of the wizard (`app/wizard.py`, `app/wizard.yaml` and its English overlay): the seven
+  steps of docs/customer-deployment.md 3.1, each with what Rastro would do, what the person decides and where that
+  piece exists in the app today. The first screen has the sources form; «Inspeccionar» shows the demo's nine sources,
+  read live from the load records, as the example. It connects to nothing, asks for no password, takes no files and
+  calls no model. `?inicio=demo` opens the demo directly; the demo scripts use it.
+- **Checked:** both languages, the seven steps in a real browser, back to the start page and into the demo.
+

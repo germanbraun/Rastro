@@ -7,7 +7,7 @@ Para consultoras y equipos de datos del sector que saben SQL, sin conocimientos 
 ## Antes de empezar
 
 1. Levantar todo, desde la carpeta del repo: `docker compose up -d` (lo hace alguien técnico, una vez).
-2. Abrir http://localhost:8501, pestaña **Demo**. Recorrer los dos actos una vez: cada momento corre en vivo.
+2. Abrir http://localhost:8501/?inicio=demo (sin `?inicio=demo` abre la portada: «Ver la demo» o «Armá tu capa semántica»), pestaña **Demo**. Recorrer los dos actos una vez: cada momento corre en vivo.
 
 ## 0:00 – 0:30 · Una pregunta, dos significados, y qué es una capa semántica (diapositivas 1 a 3)
 

@@ -205,7 +205,9 @@ Measured on the demo machine (a 3.2 GB database): the backup takes under a minut
 ### 3.1 What the customer would see
 
 A web wizard with one screen per step of the method. On each screen the agent has already done the work and the
-customer only decides what is theirs to decide:
+customer only decides what is theirs to decide. A sketch of it, to discuss, is on the app's start page («Armá tu capa
+semántica», `app/wizard.py`): each step with what Rastro would do, what the person decides and where it exists today;
+the first screen has the sources form, and its «Inspeccionar» shows the demo's own sources as the example:
 
 1. **Sources:** add a database connection (read-only), upload files or give an API. The agent inspects each one and
    shows what it found: tables, keys, sample rows, how it could join the others.

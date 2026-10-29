@@ -1,0 +1,48 @@
+# The wizard's sketch (app/wizard.py): one entry per screen, as docs/customer-deployment.md section 3.1 describes it.
+# For discussion: nothing here connects to anything. «hoy» says where that piece already exists in the app.
+pasos:
+  - id: fuentes
+    titulo: Tus fuentes
+    agente: >-
+      Rastro se conecta con un usuario de solo lectura, mira las tablas, las claves y unas filas de muestra, y dice
+      cómo podría unir cada fuente con las otras.
+    persona: Qué fuentes entran y qué no.
+    hoy: El paso a paso lo hace un consultor con el método (skills inspect-sources y add-source).
+  - id: preguntas
+    titulo: Tus preguntas
+    agente: >-
+      Escribís preguntas de negocio en tus palabras. Rastro propone qué significa cada palabra y qué tipo de
+      respuesta espera (un número, una lista).
+    persona: Cada pregunta y lo que significa cada palabra.
+    hoy: Las preguntas aprobadas y validadas de cada dominio (Preguntar; su estado en «Método»).
+  - id: diccionario
+    titulo: El diccionario
+    agente: >-
+      Rastro arma el diccionario de negocio con los conceptos que las preguntas necesitan, dibujado y con tus
+      palabras, y lo traduce a cada fuente.
+    persona: Las definiciones (por ejemplo, producción operada o por participación).
+    hoy: El diccionario y sus traducciones, en «Bajo el capó» con «Ver detalles técnicos».
+  - id: uniones
+    titulo: Las uniones
+    agente: >-
+      Rastro une las mismas empresas, lugares o activos entre fuentes, cada unión con su regla y su evidencia, y
+      pone primero las dudosas.
+    persona: Confirmar o rechazar cada unión dudosa, con su evidencia a la vista.
+    hoy: Ya existe — «Por qué confiar» → «Uniones para confirmar».
+  - id: calidad
+    titulo: La calidad
+    agente: Rastro escribe reglas de calidad sobre los datos unidos y muestra qué no las cumple hoy.
+    persona: Los umbrales, y si se corrige la fuente.
+    hoy: Las reglas y lo que no las cumple, en «Por qué confiar» → «Reglas de calidad».
+  - id: resultados
+    titulo: Los resultados
+    agente: >-
+      Cada pregunta respondida con su evidencia, medida sin Rastro, con SQL sobre las uniones y con Rastro, por
+      evaluadores independientes.
+    persona: Dónde los caminos difieren, cuál es la respuesta correcta.
+    hoy: Las pruebas medidas en «Por qué confiar»; el estado de cada paso en «Método».
+  - id: publicar
+    titulo: Publicar
+    agente: La app queda lista para tu equipo, detrás de tu inicio de sesión, con las preguntas aprobadas.
+    persona: Quién la usa y qué preguntas ven.
+    hoy: La configuración para clientes y su login (infra/customer/install.sh).
