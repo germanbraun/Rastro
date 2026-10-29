@@ -59,6 +59,7 @@ dominio.render.level_technical:
 dominio.render.level_independent:
   es: "Validada con referencias independientes, derivadas de las fuentes sin pasar por Rastro."
   en: "Validated with independent references, derived from the sources without going through Rastro."
+dominio.render.sections: {es: "Secciones", en: "Sections"}
 dominio.render.tab_demo: {es: "Demo", en: "Demo"}
 dominio.render.tab_ask: {es: "Preguntar", en: "Ask"}
 dominio.render.tab_trust: {es: "Por qué confiar", en: "Why trust it"}

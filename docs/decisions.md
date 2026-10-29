@@ -1618,3 +1618,15 @@ experiment's log as method changes made after it; they do not change its measure
 - **Not done:** removing domains. Suppliers and oncology only run when chosen in the technical view, so they cost
   nothing in the oil and gas demo. The first visit after a restart still takes about 15 s (the warm-up computes the
   questions and the Lab models): open the app once before a demo.
+
+## 2026-10-29 — Only the open section of the screen is drawn
+
+- **Measured:** Streamlit draws every `st.tabs` panel on every click. In the oil and gas screen «Por qué confiar»
+  (764 elements) and Rastro Lab (715) were most of the page (1.748), so a click in the Demo redrew them too. The
+  sections are now a radio styled as tabs, and only the open one is drawn: 421 elements, and a click or a section
+  change takes about 0,3 s (0,7 to 1,0 s measured with a fixed 0,7 s wait, from 1,0 to 1,4 s).
+- **Cost:** switching sections reruns the page (about 0,3 s) instead of being instant. Oncology keeps its own screen.
+- **Not done:** a warm-up when the app starts. Measured on the real server, the first visit after a restart takes
+  3,1 s, because the answers and the Lab models are saved on disk. Only after loading or rebuilding data does the
+  first visit recompute everything (about 45 s): open the app once before a demo.
+

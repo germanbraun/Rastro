@@ -46,9 +46,10 @@ with patch.dict(dominio.answer.DOMAINS, {{"library": registry}}), \\
 '''
     app = AppTest.from_string(script).run(timeout=15)
     assert not app.exception, [error.message for error in app.exception]
-    assert any("Preguntar" in tab.label for tab in app.tabs)
+    sections = next(radio for radio in app.radio if radio.key == "library_tab_open")   # the tabs (screen.show_sections)
+    assert "Preguntar" in sections.options
     if technical:
-        assert any("Bajo el capó" in tab.label for tab in app.tabs)
+        assert "Bajo el capó" in sections.options
     else:
         answer_button = next(button for button in app.button if button.label == "Responder")
         answer_button.click().run()

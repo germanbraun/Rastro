@@ -34,7 +34,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 |---|---|
 | `app.py` | Entry point, the frame only: logo, language and view switches, the domain selector; it knows no domain |
 | `dominio/` | Every other domain's screen, drawn from its YAML. One module per part of the screen: |
-| `dominio/screen.py` | `render`: the tabs, in the business or the technical view |
+| `dominio/screen.py` | `render`: the sections (a radio styled as tabs, only the open one is drawn), in the business or the technical view |
 | `dominio/answers.py` | «Preguntar»: an answer with its sources and evidence, «¿Por qué este número?», the demo, claims, outside data, questions over texts |
 | `dominio/hood.py` | «Bajo el capó»: dictionary, mappings, instances as RDF, quality rules, the SPARQL console, the mapping editor, the map |
 | `dominio/editor.py` | The two code editors (SPARQL and R2RML, with `streamlit-ace`) and their checks: syntax with its line, terms the dictionary lacks, R2RML structure; saving a mapping with a backup in `mappings/.backup/` |
