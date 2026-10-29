@@ -76,6 +76,13 @@ def main():
             check(variables.get("ONTOP_DB_USER") == "rastro_readonly", f"{name}: reads as rastro_readonly")
         if name == "app":
             check(variables.get("PG_USER") == "rastro_readonly", "app: reads as rastro_readonly")
+            # Which language model the app can call (docs/data-sent-to-model.md); with RASTRO_NO_MODEL=1, none
+            provider = variables.get("RASTRO_PROVIDER") or ("anthropic" if variables.get("ANTHROPIC_API_KEY") else "")
+            model = {"anthropic": "Claude API", "ollama": "a local model (Ollama)"}.get(provider, "none")
+            if e.get("RASTRO_NO_MODEL") == "1":
+                check(model == "none", f"app: calls no language model (configured: {model})")
+            else:
+                print(f"ℹ️  app: language model configured: {model} (RASTRO_NO_MODEL=1 makes this a check)")
         open_ports = [f"{b['HostIp'] or '0.0.0.0'}:{b['HostPort']}" for bindings in c["NetworkSettings"]["Ports"].values()
                       for b in bindings or [] if b["HostIp"] not in ("127.0.0.1", "::1")]
         if name == "proxy":

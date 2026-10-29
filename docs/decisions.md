@@ -1774,3 +1774,20 @@ experiment's log as method changes made after it; they do not change its measure
 - **To improve:** the affiliations card shows raw fields (DOI, positions, ROR link, decision); it needs the mention's
   text and the organization's name to read as business words.
 
+## 2026-10-29 — Operating a customer installation: what reaches the model, backups and upgrades
+
+- **What reaches the model:** `docs/data-sent-to-model.md`, checked against the code. In the app, three features call
+  a model: the chat (its answer step sends up to 50 result rows: customer data), «Explicame la consulta» (the query
+  and its SQL, only for a query without a saved explanation) and oncology's free question; oncology's older
+  evaluation runner too. Building the layer (the consultant's Claude Code session) reads samples and evidence texts.
+  A test fails if a new call to the model is not named on the page. `RASTRO_NO_MODEL=1` makes `check.py` fail if the
+  app can call a model; otherwise it says which one it can.
+- **Backups:** `infra/customer/backup.sh` (database, people's changes, `.env` encrypted only with a passphrase,
+  checksums) and `restore.sh` (`--check` restores into a temporary database and drops it). On this machine: 48 s and
+  305 MB for a 3.2 GB database; the check restored 129 of 129 tables and 187 of 187 load records in 1 min 42 s.
+- **Upgrades:** `infra/customer/upgrade.sh` backs up, commits people's changes locally, pulls (a merge), rebuilds,
+  restarts and runs `check.py` and `check_domain.py`. Tried in throwaway clones: a new version merged with a
+  customer's confirmation; a conflicting change to the same correction stopped it and left everything as it was. The
+  restart steps were not run here (they would have switched this demo machine to the customer setup); they are the
+  same commands `install.sh` runs, which were tried.
+

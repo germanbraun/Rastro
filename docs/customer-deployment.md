@@ -43,8 +43,10 @@ local model (`RASTRO_PROVIDER=ollama`), with lower quality.
   the licence ([LICENSE](../LICENSE), [NOTICE](../NOTICE)).
 - **Data access:** a read-only user on each source, or a copy (a dump, files). Never an owner's account.
 - **What may leave the customer's network.** The agent reads source structure and samples to propose mappings and
-  links, and the app sends questions to the Claude API. Agree in writing which data may be sent, or use Claude through
-  the customer's cloud provider, or a local model for the app. Write the decision in `docs/decisions.md`.
+  links, and the app sends questions to the Claude API. Exactly what each feature sends, and how to run with no model
+  (`RASTRO_NO_MODEL=1`, checked by `check.py`): [data-sent-to-model.md](data-sent-to-model.md). Agree in writing
+  which data may be sent, or use Claude through the customer's cloud provider, or a local model for the app. Write the
+  decision in `docs/decisions.md`.
 - **Where it runs:** a VM in the customer's network (recommended, so data stays there) or the consultant's machine
   with a copy of the data.
 
@@ -176,7 +178,18 @@ Each one is a module of the app, switched on in the domain's YAML (skill `show-i
 - The app with its questions, both views, and the measured results with their limits.
 - The experiment log and `docs/decisions.md`: every decision, why, and who approved it.
 
-### 2.6 Checklist
+### 2.6 Operate it: backups, restores and upgrades
+
+| What | Command | What it does |
+|---|---|---|
+| Back up | `infra/customer/backup.sh [folder]` | The whole database (`pg_dump`), what people changed while using Rastro (reviewed corrections and confirmations, question approvals, mappings edited in the app, experiment logs) and `.env` encrypted with `RASTRO_BACKUP_PASSPHRASE`, with checksums. Keep it off the machine. |
+| Check a backup | `infra/customer/restore.sh <folder> --check` | Restores it into a temporary database, compares tables and load records with the database in use, and drops it: nothing in use is touched |
+| Restore | `infra/customer/restore.sh <folder>` | Asks to type the folder's name, stops what reads the database, restores it and the state files, and starts them again; then `setup.sh` and `check.py` |
+| Upgrade | `infra/customer/upgrade.sh <domain>` | A backup first; people's changes kept in a local commit; `git pull`; rebuilds, restarts and checks (`check.py`, and `check_domain.py` for each domain). A conflict or a failed check stops it and says how to go back. `--dry-run` says what it would do; `--no-restart` stops before restarting |
+
+Measured on the demo machine (a 3.2 GB database): the backup takes under a minute (305 MB) and its check about two.
+
+### 2.7 Checklist
 
 - [ ] Read-only access to each source; the decision on what data may be sent to the model, in writing
 - [ ] VM with Docker; `infra/customer/install.sh <domain>`, with `check.py` all ✅ (section 2.2)
@@ -184,6 +197,7 @@ Each one is a module of the app, switched on in the domain's YAML (skill `show-i
 - [ ] Each source loaded and recorded; dictionary and mappings checked; links reviewed by the customer
 - [ ] Quality rules run; evaluation measured and adjudicated; change test recorded
 - [ ] App checked in both views (`app/check_domain.py`); `verify` passed
+- [ ] A backup, checked with `restore.sh --check`, kept off the machine
 - [ ] Hand-over: files, decisions, experiment log, results
 
 ## 3. Future: a wizard the customer runs
