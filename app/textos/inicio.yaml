@@ -67,4 +67,23 @@ wizard.col_rule: {es: "Regla", en: "Rule"}
 wizard.col_failing: {es: "No la cumplen", en: "Failing"}
 wizard.results_example: {es: "**Ejemplo:** dónde está la demo en cada paso del método:", en: "**Example:** where the demo stands in each step of the method:"}
 wizard.publish_example: {es: "**Hoy**, una instalación para un cliente es un comando, con su usuario de solo lectura, su login y su chequeo:", en: "**Today**, a customer installation is one command, with its read-only users, its login and its check:"}
+inicio.savings_title: {es: "¿Cuánto ahorraría tu equipo? Una estimación con tus supuestos", en: "How much would your team save? An estimate with your assumptions"}
+inicio.savings_intro:
+  es: "Cambiá los supuestos por los de tu equipo. Dos números salen de la demo (medidos); el resto es tuyo. Es una estimación, no una medición."
+  en: "Change the assumptions to your team's. Two numbers come from the demo (measured); the rest are yours. It is an estimate, not a measurement."
+inicio.savings_queries: {es: "Consultas y tableros que leen estas fuentes", en: "Queries and dashboards that read these sources"}
+inicio.savings_changes: {es: "Cambios de una fuente por año (columnas, unidades)", en: "Source changes per year (columns, units)"}
+inicio.savings_fix_hours: {es: "Horas para encontrar y arreglar una consulta rota", en: "Hours to find and fix one broken query"}
+inicio.savings_corrections: {es: "Datos corregidos por año (un porcentaje, un nombre)", en: "Values corrected per year (a share, a name)"}
+inicio.savings_place_hours: {es: "Horas para corregir un dato en un lugar", en: "Hours to correct a value in one place"}
+inicio.savings_rate: {es: "Costo por hora (US$)", en: "Cost per hour (US$)"}
+inicio.savings_measured:
+  es: "Medido en la demo: una columna renombrada rompió {b} de las {n} consultas SQL ({broken} %), y un mismo dato vive en {places} lugares sin Rastro."
+  en: "Measured in the demo: a renamed column broke {b} of the {n} SQL queries ({broken}%), and the same value lives in {places} places without Rastro."
+inicio.savings_without: {es: "Sin Rastro, por año", en: "Without Rastro, per year"}
+inicio.savings_with: {es: "Con Rastro, por año", en: "With Rastro, per year"}
+inicio.savings_saved: {es: "Ahorro por año", en: "Saved per year"}
+inicio.savings_formula:
+  es: "Sin Rastro: cambios × consultas × parte que se rompe × horas, más correcciones × lugares × horas. Con Rastro: cada cambio se arregla en una línea y cada corrección en un lugar."
+  en: "Without Rastro: changes × queries × share that breaks × hours, plus corrections × places × hours. With Rastro: each change is fixed in one line and each correction in one place."
 

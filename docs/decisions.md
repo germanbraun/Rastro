@@ -1832,3 +1832,12 @@ experiment's log as method changes made after it; they do not change its measure
   Spanish outside a session, so the checks and scripts are unchanged. The Spanish demo scripts open the app with
   `?inicio=demo&lang=es`.
 
+## 2026-10-29 — A savings estimate on the start page, with the visitor's assumptions
+
+- **What:** «How much would your team save?»: the visitor's queries, source changes, corrections, hours and cost per
+  hour (assumptions, editable, with example defaults), and two measured numbers from the demo (a renamed column broke
+  3 of the 8 SQL queries; a value lives in 5 places), read from the change and correction tests. The formula is shown
+  under the result, and the page says it is an estimate, not a measurement.
+- **With the defaults:** 210 h a year without Rastro, 18 h with it, US$ 11,520 saved at US$ 60 an hour; these depend
+  on the assumptions and are not claims.
+
