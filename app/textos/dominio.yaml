@@ -76,8 +76,8 @@ dominio.render.purpose_chat_tech:
   es: "Un chat sobre la capa semántica: el LLM tiene la ontología como contexto, escribe SPARQL, Ontop la responde con SQL sobre las fuentes y el LLM redacta la respuesta solo con ese resultado (layer/chat.py)."
   en: "A chat over the semantic layer: the LLM has the ontology as context, writes SPARQL, Ontop answers it with SQL over the sources and the LLM writes the answer from that result only (layer/chat.py)."
 dominio.render.purpose_text:
-  es: "**Para lo que dicen los documentos:** el grafo elige cuáles leer y la IA los resume, citando cada uno."
-  en: "**For what the documents say:** the graph picks which ones to read and the AI summarizes them, citing each one."
+  es: "**Para lo que dicen los textos de los registros:** el grafo elige cuáles leer y la IA los resume, citando cada uno."
+  en: "**For what the records' texts say:** the graph picks which ones to read and the AI summarizes them, citing each one."
 dominio.render.purpose_text_tech:
   es: "GraphRAG anclado en la capa: una consulta SPARQL exacta elige los registros (no hay búsqueda por similitud) y el LLM resume solo sus textos, citando cada uno por su identificador."
   en: "GraphRAG grounded in the layer: an exact SPARQL query picks the records (no similarity search) and the LLM summarizes only their texts, citing each one by its id."

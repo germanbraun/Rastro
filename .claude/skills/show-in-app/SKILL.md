@@ -110,7 +110,7 @@ fails if `app/app.py` or `app/dominio/` names a domain, a source or a word of on
    datos», `layer/chat.py`, `app/dominio/chat_view.py`). The context is the domain's ontology and notes; each turn
    writes a query, runs it, answers in words from the result only, and code flags any number not in the result.
    Nothing to write but `ejemplo_libre`, a first question and a follow-up the domain's data answers.
-   Preguntar says under each AI option what it is for (numbers and lists, or what the documents say); the technical
+   Preguntar says under each AI option what it is for (numbers and lists, or what the records' texts say); the technical
    view names them (a chat over the layer, GraphRAG grounded in the layer), so the two are not confused.
 7. **Check** (below), in both views with the real runner: `docker compose run --rm --no-deps -T app python /app/check_domain.py <domain>` (it opens every section in turn, since only the open one is drawn). Then inspect the visual layout in the browser.
 

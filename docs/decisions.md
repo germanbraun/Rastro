@@ -1703,3 +1703,14 @@ experiment's log as method changes made after it; they do not change its measure
   grounded in the layer (an exact SPARQL query picks the records, no similarity search). The business line has no
   tool names, as the register asks. The chat slide (32) and the demo script say the same.
 
+## 2026-10-29 — «Documents» was too much: the texts question reads short registry texts
+
+- **Found:** the oil and gas texts question reads the environmental studies listing, each record's type and a short
+  text (observations or the object's name; 33 characters on average, 597 at most, 3,529 of 12,957 with
+  observations), not the full reports, which are not loaded.
+- **Changed:** «lo que dicen los documentos» became «lo que dicen los textos de los registros» in the app (both
+  languages) and the help, and «los textos del listado de estudios» on the chat slide (32) and in the demo script;
+  the texts slide's notes (31) and the script say what is read and that it is not the PDFs.
+- **Later, if wanted:** GraphRAG over the full reports means loading their PDFs (where the portal publishes them, and
+  under which licence), with the graph still choosing which to read and each citation pointing to its page.
+

@@ -12,7 +12,7 @@ llm: >-
   their queries are already written and run live.
 modo: >-
   An example question: choose one of the prepared questions. A question about texts (GraphRAG): for what the
-  documents say; the AI summarizes only the texts the graph chose. Enrich with outside data: Rastro joined with Wikidata, live or saved. Talk to
+  records' texts say; the AI summarizes only the texts the graph chose. Enrich with outside data: Rastro joined with Wikidata, live or saved. Talk to
   the data (a chat): for numbers and lists, your own questions and follow-ups, answered in words with an exact
   query to the data (requires a configured AI assistant). The guided tour is in the
   «Demo» tab.
