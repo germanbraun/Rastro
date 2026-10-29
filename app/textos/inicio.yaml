@@ -7,8 +7,8 @@ inicio.demo_text:
 inicio.demo_button: {es: "Ver la demo", en: "See the demo"}
 inicio.wizard_title: {es: "Armá tu capa semántica", en: "Build your own semantic layer"}
 inicio.wizard_text:
-  es: "Tus fuentes, tus preguntas y tus definiciones: Rastro propone cada paso y vos decidís lo que es de negocio. Es un boceto para discutir cómo sería: todavía no se conecta a nada."
-  en: "Your sources, your questions and your definitions: Rastro proposes each step and you decide what is a business decision. It is a sketch to discuss what it would be like: it does not connect to anything yet."
+  es: "Con tus fuentes y tus preguntas. Rastro propone cada paso y vos decidís lo que es de negocio:\n\n1. **Conectás tus fuentes**, con un usuario de solo lectura: Rastro mira tablas, claves y muestras.\n2. **Escribís tus preguntas** en tus palabras y aprobás qué significa cada una.\n3. **Aprobás el diccionario de negocio** que Rastro arma para responderlas.\n4. **Confirmás las uniones dudosas** entre fuentes, con su evidencia a la vista.\n5. **Ves los resultados medidos** y publicás la app para tu equipo.\n\nEs un boceto para discutir cómo sería: todavía no se conecta a nada."
+  en: "With your sources and your questions. Rastro proposes each step and you decide what is a business decision:\n\n1. **You connect your sources**, with a read-only user: Rastro looks at tables, keys and samples.\n2. **You write your questions** in your own words and approve what each one means.\n3. **You approve the business dictionary** Rastro builds to answer them.\n4. **You confirm the doubtful links** between sources, with their evidence in view.\n5. **You see the measured results** and publish the app for your team.\n\nIt is a sketch to discuss what it would be like: it does not connect to anything yet."
 inicio.wizard_button: {es: "Ver el boceto", en: "See the sketch"}
 inicio.back: {es: "← Inicio", en: "← Start"}
 

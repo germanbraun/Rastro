@@ -6,6 +6,16 @@ import streamlit as st
 import idioma
 
 PLACES = ("start", "demo", "wizard")
+# Both cards as tall as the taller one, at any width: every level inside each column fills it, and the button sits at
+# the bottom of its card (scoped to the cards' own container)
+SAME_HEIGHT = """<style>
+.st-key-inicio_cards [data-testid=stColumn] [data-testid=stVerticalBlockBorderWrapper],
+.st-key-inicio_cards [data-testid=stColumn] [data-testid=stVerticalBlock],
+.st-key-inicio_cards [data-testid=stColumn] > div > div,
+.st-key-inicio_cards [data-testid=stVerticalBlockBorderWrapper] > div {height: 100%}
+.st-key-inicio_cards [data-testid=stHorizontalBlock] {align-items: stretch}
+.st-key-inicio_cards [data-testid=stColumn] [data-testid=stElementContainer]:last-child {margin-top: auto}
+</style>"""
 
 
 def place():
@@ -22,7 +32,8 @@ def go(where):
 
 def show_start():
     st.markdown(idioma.t("inicio.choose"))
-    demo, wizard = st.columns(2, gap="large")
+    st.markdown(SAME_HEIGHT, unsafe_allow_html=True)
+    demo, wizard = st.container(key="inicio_cards").columns(2, gap="large")
     with demo.container(border=True):
         st.subheader(idioma.t("inicio.demo_title"))
         st.markdown(idioma.t("inicio.demo_text"))
