@@ -69,6 +69,18 @@ dominio.render.tab_hood: {es: "Bajo el capó", en: "Under the hood"}
 dominio.render.walkthrough: {es: "**{title}** · {header}", en: "**{title}** · {header}"}
 dominio.render.mode_example: {es: "Una pregunta de ejemplo", en: "An example question"}
 dominio.render.mode_chat: {es: "Conversar con los datos", en: "Talk to the data"}
+dominio.render.purpose_chat:
+  es: "**Para números y listas:** la respuesta sale de una consulta exacta a los datos."
+  en: "**For numbers and lists:** the answer comes from an exact query to the data."
+dominio.render.purpose_chat_tech:
+  es: "Un chat sobre la capa semántica: el LLM tiene la ontología como contexto, escribe SPARQL, Ontop la responde con SQL sobre las fuentes y el LLM redacta la respuesta solo con ese resultado (layer/chat.py)."
+  en: "A chat over the semantic layer: the LLM has the ontology as context, writes SPARQL, Ontop answers it with SQL over the sources and the LLM writes the answer from that result only (layer/chat.py)."
+dominio.render.purpose_text:
+  es: "**Para lo que dicen los documentos:** el grafo elige cuáles leer y la IA los resume, citando cada uno."
+  en: "**For what the documents say:** the graph picks which ones to read and the AI summarizes them, citing each one."
+dominio.render.purpose_text_tech:
+  es: "GraphRAG anclado en la capa: una consulta SPARQL exacta elige los registros (no hay búsqueda por similitud) y el LLM resume solo sus textos, citando cada uno por su identificador."
+  en: "GraphRAG grounded in the layer: an exact SPARQL query picks the records (no similarity search) and the LLM summarizes only their texts, citing each one by its id."
 dominio.render.mode_text: {es: "Una pregunta sobre textos", en: "A question about texts"}
 dominio.render.mode_label: {es: "Tipo de pregunta", en: "Kind of question"}
 dominio.render.question: {es: "Pregunta", en: "Question"}

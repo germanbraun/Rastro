@@ -1695,3 +1695,11 @@ experiment's log as method changes made after it; they do not change its measure
 - **Cost:** each free question now makes one more model call (the answer in words), a few seconds more.
 - **Checked:** the three domains of the shared screen open every section in both views (`check_domain.py`).
 
+## 2026-10-29 — Chat and GraphRAG, each with what it is for
+
+- **What:** under «Tipo de pregunta», one line per AI option: «Conversar con los datos» for numbers and lists (an
+  exact query to the data), «Una pregunta sobre textos» for what the documents say (the graph picks them, the AI
+  summarizes and cites). The technical view and the «?» help name them: a chat over the semantic layer, and GraphRAG
+  grounded in the layer (an exact SPARQL query picks the records, no similarity search). The business line has no
+  tool names, as the register asks. The chat slide (32) and the demo script say the same.
+

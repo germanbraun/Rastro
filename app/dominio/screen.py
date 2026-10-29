@@ -125,6 +125,10 @@ def show_ask(cfg, tech, domain, questions):
     by_label = {mode_labels[m]: m for m in modes}
     mode = by_label.get(st.radio(idioma.t("dominio.render.mode_label"), list(by_label), help=common.ayuda("modo"),
                                  horizontal=True, label_visibility="visible", key=f"{domain}_mode"))
+    if mode in ("chat", "text"):   # what each one is for, so the two kinds of AI answer are not confused
+        st.markdown(idioma.t(f"dominio.render.purpose_{mode}"))
+        if tech:
+            st.caption(idioma.t(f"dominio.render.purpose_{mode}_tech"))
     if mode == "chat":
         chat_view.show_chat(cfg, tech)
     elif mode == "text":

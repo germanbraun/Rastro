@@ -11,10 +11,10 @@ llm: >-
   The AI assistant that translates your own question into a query. The example questions do not need it:
   their queries are already written and run live.
 modo: >-
-  An example question: choose one of the prepared questions. A question about texts: the AI summarizes only
-  the texts the graph chose. Enrich with outside data: Rastro joined with Wikidata, live or saved. Talk to
-  the data: your own questions and follow-ups, answered in words with the data (requires a configured AI
-  assistant). The guided tour is in the
+  An example question: choose one of the prepared questions. A question about texts (GraphRAG): for what the
+  documents say; the AI summarizes only the texts the graph chose. Enrich with outside data: Rastro joined with Wikidata, live or saved. Talk to
+  the data (a chat): for numbers and lists, your own questions and follow-ups, answered in words with an exact
+  query to the data (requires a configured AI assistant). The guided tour is in the
   «Demo» tab.
 pregunta: >-
   Example questions for this domain. Each one is answered live over the data, with a query over the

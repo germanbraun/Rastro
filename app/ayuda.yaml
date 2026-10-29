@@ -11,10 +11,10 @@ llm: >-
   El asistente de IA que traduce una pregunta propia en una consulta. Las preguntas de ejemplo no lo
   necesitan: sus consultas ya están escritas y corren en vivo.
 modo: >-
-  Una pregunta de ejemplo: elegir entre las preguntas ya preparadas. Una pregunta sobre textos: la IA
-  resume solo los textos que eligió el grafo. Enriquecer con datos de afuera: Rastro unido con Wikidata, en vivo o guardado. Conversar
-  con los datos: preguntas propias y las que siguen, respondidas en palabras con los datos (necesita un
-  asistente de IA configurado). El recorrido
+  Una pregunta de ejemplo: elegir entre las preguntas ya preparadas. Una pregunta sobre textos (GraphRAG): para
+  lo que dicen los documentos; la IA resume solo los textos que eligió el grafo. Enriquecer con datos de afuera: Rastro unido con Wikidata, en vivo o guardado. Conversar
+  con los datos (un chat): para números y listas, preguntas propias y las que siguen, respondidas en palabras
+  con una consulta exacta a los datos (necesita un asistente de IA configurado). El recorrido
   guiado está en la pestaña «Demo».
 pregunta: >-
   Preguntas de ejemplo de este dominio. Cada una se responde en vivo sobre los datos, con una consulta
