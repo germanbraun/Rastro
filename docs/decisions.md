@@ -1856,3 +1856,12 @@ experiment's log as method changes made after it; they do not change its measure
   model); `show-in-app` has the look's rules (one stylesheet, 4.5:1) and the English default; `decks` says how the
   Spanish scripts open the app.
 
+## 2026-10-29 — The app always shows its own theme
+
+- **Seen by the user:** navy titles and labels on a dark blue background. A browser that once chose Streamlit's
+  «Dark» keeps it (localStorage `stActiveTheme-/-v1`), and that choice wins over the app's theme, so the palette's
+  navy fell on Streamlit's dark background. Reproduced by storing «Dark».
+- **Fix:** the app has one theme. `estilo.apply` adds a tiny script that removes a stored theme that is not the app's
+  and reloads the page once (a zero-height component, hidden). Tried with «Dark» stored: one reload, then the app's
+  light blue background and navy titles.
+

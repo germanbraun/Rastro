@@ -7,10 +7,14 @@ background (Streamlit's captions, the text colour at 60 %, fell under it: they a
 palette with navy text, not Streamlit's own blue, yellow and green.
 """
 import streamlit as st
+import streamlit.components.v1 as components
 
 MARK = "#9C4A00"   # a warning mark in text (dark amber): 5:1 or more on the page's light blue
 
 CSS = """<style>
+/* The theme guard (apply) takes no room */
+[data-testid=stElementContainer]:has(iframe[height="0"]) {display: none;}
+
 /* Room for the content: less empty space above and at the sides */
 [data-testid=stMainBlockContainer] {padding: 2.5rem 3rem 6rem;}
 
@@ -63,5 +67,20 @@ button:disabled, button:disabled p {color: #5A6A80 !important;}
 </style>"""
 
 
+# Streamlit keeps the last theme a browser chose (localStorage), and that wins over the app's theme: a browser that
+# once had «Dark» drew this palette's navy titles on a dark background. The app has one theme, so a stored choice that
+# is not it is removed, and the page reloads once with the app's theme.
+KEEP_THEME = """<script>
+try {
+  const key = 'stActiveTheme-/-v1', stored = window.parent.localStorage.getItem(key);
+  if (stored && JSON.parse(stored).name !== 'Custom Theme') {
+    window.parent.localStorage.removeItem(key);
+    window.parent.location.reload();
+  }
+} catch (e) {}
+</script>"""
+
+
 def apply():
     st.markdown(CSS, unsafe_allow_html=True)
+    components.html(KEEP_THEME, height=0)
