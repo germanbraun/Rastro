@@ -450,6 +450,13 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q48.** Is flagging an unbacked number enough, or should such an answer be withheld? Should the chat also search
   the texts (GraphRAG) in the same conversation, choosing the tool per question?
 
+**H13. Confirming links in the app** (2026-10-29)
+- **Decision:** a person confirms an AI-reviewed correction in the app, with the document it rests on, or rejects it
+  with a reason; what they did is written into the reviewed CSV, and the change reaches the answers on the next
+  rebuild.
+- **Q49.** With one shared login, the name is typed, not known: is that enough evidence of who confirmed, or should
+  confirmations wait for single sign-on?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -521,7 +528,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q48). Skip any you have no view on.
+- Answer per question number (Q1–Q49). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

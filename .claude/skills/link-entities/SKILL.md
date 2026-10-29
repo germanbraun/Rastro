@@ -96,7 +96,12 @@ its whole schema (`DROP`): anything that cannot be rebuilt goes in its own schem
   written.
 - **The rule**, when it defines something about the business: who is responsible for an asset, what share belongs to a
   partner, since when a company holds something.
-- **Each correction** in the CSV. The ones an AI assistant reviewed stay flagged until a person confirms them.
+- **Each correction** in the CSV. The ones an AI assistant reviewed stay flagged until a person confirms them, in the
+  app: «Por qué confiar» → «Uniones para confirmar» (`app/dominio/review_view.py`), for CSVs with a `motivo`. The
+  person confirms with the document (the motivo then names who, when and which document, so the link turns ✅) or
+  rejects with a reason (the row moves to `<file>-rechazadas.csv`). Then run the linker and restart Ontop; after a
+  rejection, re-run the saved queries. A CSV with its own confirmation column (like `human_confirmation`) is not
+  covered yet.
 
 ## Grounding
 

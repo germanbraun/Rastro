@@ -579,3 +579,18 @@ dominio.chat.unsupported:
   es: "Estos números de la respuesta no salen de los datos: {numbers}. Revisalos en la tabla de abajo."
   en: "These numbers in the answer do not come from the data: {numbers}. Check them in the table below."
 
+dominio.review.title: {es: "Uniones para confirmar ({n})", en: "Links to confirm ({n})"}
+dominio.review.intro:
+  es: "Correcciones que revisó un asistente de IA y esperan a una persona. Confirmá con el documento en que se apoya, o rechazá con el motivo: queda escrito quién, cuándo y por qué, y llega a las respuestas cuando se vuelve a armar Rastro."
+  en: "Corrections an AI assistant reviewed that wait for a person. Confirm with the document they rest on, or reject with the reason: who, when and why stays written, and it reaches the answers when Rastro is rebuilt."
+dominio.review.person: {es: "Tu nombre (queda escrito en cada confirmación)", en: "Your name (written in each confirmation)"}
+dominio.review.document: {es: "Documento que lo respalda (nombre, fecha, página o enlace)", en: "Document that backs it (name, date, page or link)"}
+dominio.review.confirm: {es: "Confirmar", en: "Confirm"}
+dominio.review.reject: {es: "Rechazar", en: "Reject"}
+dominio.review.reason: {es: "Motivo del rechazo", en: "Reason for rejecting"}
+dominio.review.confirmed: {es: "Confirmada: ahora dice quién la confirmó, cuándo y con qué documento.", en: "Confirmed: it now says who confirmed it, when and with which document."}
+dominio.review.rejected: {es: "Rechazada: salió de las correcciones y quedó guardada con su motivo.", en: "Rejected: it left the corrections and is kept with its reason."}
+dominio.review.rebuild:
+  es: "Para que llegue a las respuestas: docker compose run --rm {linker} y docker compose restart {ontop}. Un rechazo cambia los datos: después, volver a ejecutar las consultas guardadas (rerun)."
+  en: "For it to reach the answers: docker compose run --rm {linker} and docker compose restart {ontop}. A rejection changes the data: then run the saved queries again (rerun)."
+

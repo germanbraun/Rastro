@@ -16,6 +16,7 @@ from . import trust_view
 from . import faq
 from . import sources_view
 from . import chat_view
+from . import review_view
 from . import extension
 
 
@@ -86,6 +87,7 @@ def render(cfg_path, tech):
         with service_guard():
             show_ask(cfg, tech, domain, questions)
     elif open_tab == "trust":
+        review_view.show_review(cfg, tech)   # the corrections an AI reviewed, for a person to confirm or reject
         if cfg.get("ejemplo_integracion") and not example_tab:
             with st.expander(idioma.t("dominio.render.walkthrough", title=cfg["ejemplo_integracion"]["titulo"],
                                             header=cfg["ejemplo_integracion"].get("encabezado", ""))), service_guard():

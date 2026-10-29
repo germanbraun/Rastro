@@ -36,6 +36,7 @@ Every domain repeats the same pattern; its paths and commands are registered in 
 | `dominio/` | Every other domain's screen, drawn from its YAML. One module per part of the screen: |
 | `dominio/screen.py` | `render`: the sections (a radio styled as tabs, only the open one is drawn), in the business or the technical view |
 | `dominio/answers.py` | «Preguntar»: an answer with its sources and evidence, «¿Por qué este número?», the demo, claims, outside data, questions over texts |
+| `dominio/review_view.py` | «Uniones para confirmar» in Por qué confiar: a person confirms an AI-reviewed correction with its document, or rejects it with a reason |
 | `dominio/chat_view.py` | «Conversar con los datos» in Preguntar: the conversation, each answer with its data and evidence |
 | `dominio/hood.py` | «Bajo el capó»: dictionary, mappings, instances as RDF, quality rules, the SPARQL console, the mapping editor, the map |
 | `dominio/editor.py` | The two code editors (SPARQL and R2RML, with `streamlit-ace`) and their checks: syntax with its line, terms the dictionary lacks, R2RML structure; saving a mapping with a backup in `mappings/.backup/` |

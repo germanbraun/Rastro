@@ -1725,3 +1725,18 @@ experiment's log as method changes made after it; they do not change its measure
 - **Not done on purpose:** changing the password of a database that already exists, which would break what uses it;
   the script says how instead.
 
+## 2026-10-29 — A person confirms the doubtful links in the app
+
+- **What:** «Por qué confiar» → «Uniones para confirmar» (`app/dominio/review_view.py`): the corrections of a domain's
+  reviewed CSVs whose `motivo` says an AI reviewed them, each with its evidence. A person writes their name and either
+  confirms with the document it rests on (the motivo then says who, when and which document, so `enlaces.status`
+  shows ✅ with no change to that code) or rejects with a reason (the row moves to `<file>-rechazadas.csv`). It
+  reaches the answers when the linker runs and Ontop restarts; a rejection changes the data, so the saved queries run
+  again. The app mounts `linking/` writable.
+- **Why:** it is the step the method gives to a person (docs/method.md, step 4) and was only possible by editing a
+  CSV; it is also the wizard's first approval screen.
+- **Checked:** 5 tests on a copy of the oil and gas CSV (confirming turns ✅, rejecting keeps who and why, nothing is
+  written without a name and a document, an unchanged file is written byte for byte); in the app, 7 links to confirm
+  in both languages and views, buttons disabled until there is a name and a document. No real correction was changed.
+- **Not covered yet:** CSVs with their own confirmation column (research affiliations, `human_confirmation`).
+

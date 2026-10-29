@@ -26,6 +26,9 @@ described in its configuration file, not programmed.
 - **Never show a question that has not been checked against its query** today.
 - **No internal class or table names in the business view:** columns, glossary and texts use the users' words.
 - **A saved text summary is regenerated,** never edited by hand.
+- **Links to confirm:** when a domain's reviewed corrections have rows an AI reviewed, «Por qué confiar» opens with
+  «Uniones para confirmar» (`review_view.py`), where a person confirms with a document or rejects with a reason. It
+  writes `linking/`, so the app mounts it writable; nothing to configure.
 - **Only the open section is drawn:** the screen's sections are a radio styled as tabs (`screen.show_sections`), because Streamlit draws every `st.tabs` panel on every click. Do not add `st.tabs` at the top level of a domain's screen; inside a section they are fine.
 - **Every visible text in Spanish and English:** edit the Spanish text and its English counterpart together
   (`app/dominios/<domain>.en.yaml`, `app/dominios.en.yaml`, and `app/textos/*.yaml` for texts the code uses). The overlay
