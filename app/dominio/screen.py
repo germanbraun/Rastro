@@ -17,6 +17,7 @@ from . import faq
 from . import sources_view
 from . import chat_view
 from . import review_view
+from . import method_view
 from . import extension
 
 
@@ -68,7 +69,7 @@ def render(cfg_path, tech):
     example_tab = bool(cfg.get("ejemplo_integracion")) and (tech or not has_trust)
     names = (["demo"] if cfg.get("demo") else []) + ["ask"] + (["trust"] if has_trust else []) \
         + (["model"] if ext and ext.has_tab() else []) + (["example"] if example_tab else []) \
-        + (["faq", "hood"] if tech else [])
+        + (["method", "faq", "hood"] if tech else [])
     labels = {name: cfg["ejemplo_integracion"]["titulo"] if name == "example" else idioma.t(f"dominio.render.tab_{name}")
               for name in names}
     # Only the open section is drawn: Streamlit draws every st.tabs panel on every click, and «Por qué confiar» and
@@ -93,6 +94,9 @@ def render(cfg_path, tech):
                                             header=cfg["ejemplo_integracion"].get("encabezado", ""))), service_guard():
                 answers.show_integration_example(cfg["ejemplo_integracion"], domain, tech, ext=ext)
         trust_view.trust(cfg, tech, evaluation, changes)
+    elif open_tab == "method":
+        with service_guard():
+            method_view.show_method(cfg)
     elif open_tab == "faq":
         faq.domain_faq(cfg, tech)
     elif open_tab == "model":

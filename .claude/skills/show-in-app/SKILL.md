@@ -62,6 +62,7 @@ The first screen says what Rastro is and how to read each screen (question → a
 | Data views | The answer table with the source of each column; the evidence as a table; the data behind "why this number" |
 | A record as a graph | One record of each important class, drawn as a graph and shown in Turtle (RDF) |
 | Query console | A SPARQL console over the domain, with its competency queries as examples and the generated SQL |
+| Method | Where the domain stands in each step of the method, read from its evidence (`method_view.py`): what is there, whether something waits for a person (🟡), and who approves; nothing to configure |
 | Dictionary, links and mappings | The ontology with its labels and diagram; the link tables read live with their rule and evidence; the R2RML blocks that build them |
 | Quality rules | Each rule in SHACL, a real record in RDF that passes it, a broken example and what SHACL says, the failures and the predictions that use them |
 | Measurement detail | Each evaluation question with the three approaches, their queries and the adjudication |

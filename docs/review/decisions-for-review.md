@@ -457,6 +457,12 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q49.** With one shared login, the name is typed, not known: is that enough evidence of who confirmed, or should
   confirmations wait for single sign-on?
 
+**H14. The method's state on screen** (2026-10-29)
+- **Decision:** a read-only «Método» section per domain, one row per step with its evidence, what waits for a person
+  and who approves; the wizard's skeleton.
+- **Q50.** Is three states (done, waits, not built) enough, or should «waits for a person» and «half done» be told
+  apart?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -528,7 +534,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q49). Skip any you have no view on.
+- Answer per question number (Q1–Q50). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

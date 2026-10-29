@@ -1740,3 +1740,16 @@ experiment's log as method changes made after it; they do not change its measure
   in both languages and views, buttons disabled until there is a name and a document. No real correction was changed.
 - **Not covered yet:** CSVs with their own confirmation column (research affiliations, `human_confirmation`).
 
+## 2026-10-29 — «Método»: where a domain stands in each step, on screen
+
+- **What:** a technical-view section (`app/dominio/method_view.py`) with one row per step of docs/method.md: its
+  status (✅ done, 🟡 waits for a person or half done, — not built), what is there and who approves. It only reads
+  what exists: the evaluation questions, the load records, the ontology and mapping, the reviewed corrections, the
+  quality result, the evaluation and the publication gate, the app's validated questions and the recorded change tests.
+- **Found building it:** two wrong readings, fixed before committing. A term source that Rastro does not load (the
+  model's predictions) counted as a missing source; and research affiliations showed its links as done while its 104
+  corrections are `pending` in their own `human_confirmation` column. Now only registered sources count, and pending
+  rows in another format show as waiting, saying the app does not review that format yet.
+- **What it shows today:** oil and gas and suppliers wait on the independent references; oil and gas has 7 links to
+  confirm; suppliers has no quality rules; affiliations has 104 links waiting in its own format.
+

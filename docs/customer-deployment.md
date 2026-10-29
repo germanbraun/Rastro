@@ -239,6 +239,8 @@ it is, and changes only who drives the agent.
 
 ### 3.3 What already exists and is reused
 
+- **The method's state on screen:** the technical view's «Método» section, each step with its evidence, what waits
+  for a person and who approves; the wizard's first screen, read-only.
 - **The method and its skills** (`.claude/skills/`), generic per domain: each domain's paths and commands come from its
   `method:` block in `layer/dominios.yaml`.
 - **The checks that decide,** as commands: `method.py registry|verify|publication|experiment`, `ontology-check`,
@@ -254,7 +256,7 @@ it is, and changes only who drives the agent.
 | Source connectors as configuration | Today each source is a loader written by the agent; the wizard needs a form for a database (JDBC), files and common APIs, with a generic loader | Large |
 | Domain set-up without hand edits | Done for the scaffold (`method.py new-domain`); the app entry is still added by hand in `show-in-app` | Small |
 | The orchestrator | Walks the steps, runs each check, stores each approval, resumes after a failure | Large |
-| The wizard screens | One per approval (section 3.1); the first exists: confirming the doubtful links in the app; the others can reuse the app's technical view (dictionary, quality, evaluation) | Large |
+| The wizard screens | One per approval (section 3.1); two exist: the method's state per step («Método») and confirming the doubtful links; the others can reuse the app's technical view (dictionary, quality, evaluation) | Large |
 | Agent runtime | The Agent SDK with the repo's skills and tools, sandboxed to the workspace | Medium |
 | Single sign-on and roles | The customer setup has one shared login (section 2.2); the wizard needs the customer's sign-on, and who may approve or only read | Medium |
 | Several databases read in place | Federation, or a writable database for links (section 2.3) | Medium |

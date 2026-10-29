@@ -82,6 +82,9 @@ checked, not assumed from an empty mapping. Record pending capabilities until th
 **A person approves:** the domain's scope (which sources, which period, which region) and who answers the business
 questions.
 
+In the app, the technical view's «Método» section reads this table for a domain: each step's evidence, what waits
+for a person and who approves (`app/dominio/method_view.py`).
+
 ## Where each domain keeps its pieces
 
 The skills are generic. What changes from one domain to another (its questions, mapping, Ontop service, loaders, linker,

@@ -37,7 +37,7 @@ def check(domain):
         if expected not in sections.options:
             raise ValueError(f"Required app view did not render: {expected}")
         # The section names screen.render uses; the radio shows each one's label
-        names = [n for n in ("demo", "ask", "trust", "model", "example", "faq", "hood")
+        names = [n for n in ("demo", "ask", "trust", "model", "example", "method", "faq", "hood")
                  if sections.format_func(n) in sections.options]
         for name in names:
             app.radio(key=sections.key).set_value(name).run(timeout=300)

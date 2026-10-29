@@ -61,6 +61,7 @@ dominio.render.level_independent:
   en: "Validated with independent references, derived from the sources without going through Rastro."
 dominio.render.sections: {es: "Secciones", en: "Sections"}
 dominio.render.tab_demo: {es: "Demo", en: "Demo"}
+dominio.render.tab_method: {es: "Método", en: "Method"}
 dominio.render.tab_ask: {es: "Preguntar", en: "Ask"}
 dominio.render.tab_trust: {es: "Por qué confiar", en: "Why trust it"}
 dominio.render.tab_model: {es: "Rastro Lab", en: "Rastro Lab"}
@@ -593,4 +594,43 @@ dominio.review.rejected: {es: "Rechazada: salió de las correcciones y quedó gu
 dominio.review.rebuild:
   es: "Para que llegue a las respuestas: docker compose run --rm {linker} y docker compose restart {ontop}. Un rechazo cambia los datos: después, volver a ejecutar las consultas guardadas (rerun)."
   en: "For it to reach the answers: docker compose run --rm {linker} and docker compose restart {ontop}. A rejection changes the data: then run the saved queries again (rerun)."
+
+dominio.method.intro:
+  es: "Dónde está este dominio en cada paso del método (docs/method.md), leído de la evidencia que ya existe: qué hay, si algo espera a una persona y quién aprueba."
+  en: "Where this domain stands in each step of the method (docs/method.md), read from the evidence that already exists: what is there, whether something waits for a person and who approves."
+dominio.method.legend: {es: "✅ hecho, con su evidencia · 🟡 algo espera a una persona o está a medias · — todavía no se construyó", en: "✅ done, with its evidence · 🟡 something waits for a person or is half done · — not built yet"}
+dominio.method.col_step: {es: "Paso", en: "Step"}
+dominio.method.col_status: {es: "Estado", en: "Status"}
+dominio.method.col_evidence: {es: "Qué hay", en: "What is there"}
+dominio.method.col_approves: {es: "Quién aprueba", en: "Who approves"}
+dominio.method.step_questions: {es: "0 · Preguntas de negocio", en: "0 · Business questions"}
+dominio.method.step_sources: {es: "1 · Conectar las fuentes", en: "1 · Connect the sources"}
+dominio.method.step_dictionary: {es: "2 · Diccionario", en: "2 · Dictionary"}
+dominio.method.step_mapping: {es: "3 · Mapeos", en: "3 · Mappings"}
+dominio.method.step_links: {es: "4 · Uniones con evidencia", en: "4 · Links with evidence"}
+dominio.method.step_quality: {es: "5 · Reglas de calidad", en: "5 · Quality rules"}
+dominio.method.step_evaluate: {es: "6 · Medir", en: "6 · Measure"}
+dominio.method.step_show: {es: "7 · Mostrar", en: "7 · Show"}
+dominio.method.step_maintain: {es: "8 · Mantener", en: "8 · Maintain"}
+dominio.method.approves_questions: {es: "El cliente: qué preguntas importan y qué significa cada palabra", en: "The client: which questions matter and what each word means"}
+dominio.method.approves_sources: {es: "Qué entra y qué no", en: "What goes in and what doesn't"}
+dominio.method.approves_dictionary: {es: "Las definiciones (por ejemplo, operada o por participación)", en: "The definitions (for example, operated or by share)"}
+dominio.method.approves_mapping: {es: "—", en: "—"}
+dominio.method.approves_links: {es: "Las uniones dudosas (Por qué confiar → Uniones para confirmar)", en: "The doubtful links (Why trust it → Links to confirm)"}
+dominio.method.approves_quality: {es: "Los umbrales, y si se corrige la fuente", en: "The thresholds, and whether the source is corrected"}
+dominio.method.approves_evaluate: {es: "La adjudicación donde los caminos difieren; las referencias independientes", en: "The adjudication where the approaches differ; the independent references"}
+dominio.method.approves_show: {es: "Cómo se dice para el negocio; las preguntas de la demo", en: "The wording for business users; the demo questions"}
+dominio.method.approves_maintain: {es: "El arreglo", en: "The fix"}
+dominio.method.questions: {es: "{n} preguntas en la evaluación", en: "{n} questions in the evaluation"}
+dominio.method.sources: {es: "{loaded} de {n} fuentes cargadas; última carga {last}", en: "{loaded} of {n} sources loaded; last load {last}"}
+dominio.method.dictionary: {es: "{classes} conceptos, {properties} relaciones y atributos", en: "{classes} concepts, {properties} relations and attributes"}
+dominio.method.mapping: {es: "{maps} traducciones (mapas R2RML)", en: "{maps} translations (R2RML maps)"}
+dominio.method.links: {es: "{corrections} correcciones revisadas; {waiting} esperan a una persona", en: "{corrections} reviewed corrections; {waiting} wait for a person"}
+dominio.method.links_other: {es: "Además, {n} esperan a una persona en un formato que la app todavía no revisa (columna human_confirmation).", en: "Also, {n} wait for a person in a format the app does not review yet (human_confirmation column)."}
+dominio.method.quality: {es: "{rules} reglas, comprobadas el {date}; {failing} datos no las cumplen", en: "{rules} rules, checked on {date}; {failing} values fail them"}
+dominio.method.evaluate: {es: "Con Rastro: {correct} de {n} preguntas, medido el {date}.", en: "With Rastro: {correct} of {n} questions, measured on {date}."}
+dominio.method.references_pending: {es: "Faltan las referencias independientes: los números son provisorios.", en: "The independent references are missing: the numbers are provisional."}
+dominio.method.show: {es: "{validated} de {n} preguntas de la app validadas", en: "{validated} of {n} app questions validated"}
+dominio.method.maintain: {es: "Pruebas registradas: {tests}", en: "Recorded tests: {tests}"}
+dominio.method.not_built: {es: "Todavía no", en: "Not yet"}
 
