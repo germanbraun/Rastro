@@ -1,14 +1,9 @@
 # Para correr en la máquina lo que no corre en Docker: Rastro Lab (lab/), la prueba de la corrección
 # (layer/energia/cambio/correccion.py), las pruebas (tests/) y el lint.
 #   python3 -m pip install -r requirements-dev.txt
-numpy==1.26.4
-pandas==2.2.3
-pyyaml==6.0.2
-requests==2.32.3      # lo usa data/comun.py (lo prueban las pruebas)
 scikit-learn==1.5.2   # Published-work validation and the read-only gas-tree experiment
 pytest==8.3.3
 ruff==0.6.9
-pyshacl==0.29.0
 
-# Exercise the real app template with the same dependencies as the runtime.
+# The runtime's own pins (numpy, pandas, pyyaml, requests, pyshacl, streamlit…), so tests and the app use the same versions
 -r infra/loaders/requirements.txt

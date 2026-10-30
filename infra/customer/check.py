@@ -33,7 +33,12 @@ def env():
 
 def containers():
     """Each running service and its inspection (environment and published ports)."""
-    ids = subprocess.run(COMPOSE + ["ps", "-q"], capture_output=True, text=True, check=True).stdout.split()
+    listed = subprocess.run(COMPOSE + ["ps", "-q"], capture_output=True, text=True)
+    if listed.returncode != 0:   # e.g. a machine without the customer setup: .env lacks its passwords
+        sys.exit("docker compose cannot read the customer setup: " + (listed.stderr.strip().splitlines() or ["?"])[-1])
+    ids = listed.stdout.split()
+    if not ids:   # nothing running: docker inspect with no ids would fail
+        return {}
     found = json.loads(subprocess.run(["docker", "inspect", *ids], capture_output=True, text=True, check=True).stdout)
     return {c["Config"]["Labels"]["com.docker.compose.service"]: c for c in found}
 
@@ -57,10 +62,25 @@ def https(path, user=None, password=None):
         return urllib.request.urlopen(request, context=ssl._create_unverified_context(), timeout=10).status
     except urllib.error.HTTPError as error:
         return error.code
+    except (urllib.error.URLError, OSError):   # the proxy does not answer: a failed check, not a trace
+        return None
+
+
+def readers():
+    """The read-only users of every domain (`readers: {B: …, D: …}` in layer/dominios.yaml), read as text: this
+    script runs with the standard library only."""
+    found = set()
+    for line in (ROOT / "layer/dominios.yaml").read_text().splitlines():
+        if "readers: {B: " in line:
+            inner = line.split("readers: {", 1)[1].split("}", 1)[0]
+            found |= {part.split(":", 1)[1].strip() for part in inner.split(",")}
+    return sorted(found)
 
 
 def main():
     e, running = env(), containers()
+    if not running:
+        sys.exit("No service is running: start them first (infra/customer/install.sh <domain>).")
     results = []
 
     def check(ok, what):
@@ -95,14 +115,15 @@ def main():
           "rastro_readonly logs in and reads")
     check(not psql("rastro_readonly", e.get("RASTRO_READONLY_PASSWORD", ""),
                    "BEGIN; CREATE TABLE rastro_meta.check_write (x int); ROLLBACK;"), "rastro_readonly cannot write")
-    readers = subprocess.run(["grep", "-o", r"readers: {B: [a-z_]*, D: [a-z_]*}", str(ROOT / "layer/dominios.yaml")],
-                             capture_output=True, text=True).stdout
-    for reader in sorted({r for line in readers.splitlines() for r in line[13:-1].replace("D: ", "").split(", ")}):
+    users = readers()
+    check(bool(users), f"read-only users found in layer/dominios.yaml ({len(users)})")
+    for reader in users:
         new, old = psql(reader, e.get("RASTRO_READER_PASSWORD", ""), "SELECT 1"), psql(reader, reader, "SELECT 1")
         if new or old:   # neither: the domain is not loaded here, so its reader does not exist
             check(new and not old, f"{reader}: logs in with the password of .env, not its own name")
     if "proxy" in running:
-        check(https("/") == 401, f"proxy: asks for a login (status {https('/')})")
+        status = https("/")
+        check(status == 401, f"proxy: asks for a login (status {status or 'no answer'})")
         if os.environ.get("RASTRO_LOGIN_PASSWORD"):
             status = https("/", e.get("RASTRO_LOGIN_USER"), os.environ["RASTRO_LOGIN_PASSWORD"])
             check(status == 200, f"proxy: the login opens the app (status {status})")

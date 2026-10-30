@@ -32,9 +32,11 @@ import psycopg
 import requests
 import yaml
 
+DEFAULT_MODELS = {"anthropic": "claude-opus-5-5", "ollama": "qwen2.5-coder:7b", "openai": "", "files": "files"}
 PROVIDER = os.environ.get("RASTRO_PROVIDER") or "anthropic"
-MODEL = os.environ.get("RASTRO_MODEL") or {"anthropic": "claude-opus-5-5", "ollama": "qwen2.5-coder:7b",
-                                           "openai": "", "files": "files"}[PROVIDER]
+if PROVIDER not in DEFAULT_MODELS:   # a typo in .env says so at once, instead of falling back to another provider
+    raise SystemExit(f"RASTRO_PROVIDER={PROVIDER}: use one of {', '.join(DEFAULT_MODELS)} (layer/answer.py)")
+MODEL = os.environ.get("RASTRO_MODEL") or DEFAULT_MODELS[PROVIDER]
 OLLAMA = os.environ.get("OLLAMA_URL") or "http://host.docker.internal:11434"
 MAX_ATTEMPTS = 3
 ROOT = Path(__file__).resolve().parent.parent
@@ -81,8 +83,8 @@ def output_schema(approach, kind):
 
 def ask(system, messages, schema):
     """One call to the LLM with JSON output. Returns (assistant message, data)."""
-    providers = {"ollama": ask_ollama, "openai": ask_openai, "files": ask_files}
-    call = providers.get(PROVIDER, ask_claude)
+    providers = {"anthropic": ask_claude, "ollama": ask_ollama, "openai": ask_openai, "files": ask_files}
+    call = providers[PROVIDER]
     if os.environ.get("RASTRO_RECORD") and PROVIDER != "files":
         return recorded(call, system, messages, schema)
     return call(system, messages, schema)
@@ -106,7 +108,9 @@ def ask_claude(system, messages, schema):
     )
     if response.stop_reason == "refusal":
         raise RuntimeError("El modelo rechazó la pregunta")
-    text = next(b.text for b in response.content if b.type == "text")
+    text = next((b.text for b in response.content if b.type == "text"), None)
+    if text is None:
+        raise RuntimeError("El modelo no devolvió texto")
     return response.content, json.loads(text)
 
 
@@ -230,9 +234,10 @@ def try_query(approach, query, kind, domain):
         return {"answer": None, "attempt": {"query": query, "error": None}}
     try:
         column = run_sparql(query, domain) if approach == "C" else run_sql(query, approach, domain)
+        result = to_answer(column, kind)   # inside: a text where a number was asked goes back to the model too
     except Exception as e:  # noqa: BLE001 - the error is returned to the model as is
         return {"answer": None, "attempt": {"query": query, "error": str(e).strip()[:2000]}}
-    return {"answer": to_answer(column, kind), "attempt": {"query": query, "error": None}}
+    return {"answer": result, "attempt": {"query": query, "error": None}}
 
 
 def sin_datos(query):
@@ -255,7 +260,7 @@ def reader_dsn(user):
     """A read-only user's connection. Its password is RASTRO_READER_PASSWORD (the customer setup sets one for every
     reader: infra/customer/setup.sh); without it, the user's own name, as on the demo machine."""
     password = os.environ.get("RASTRO_READER_PASSWORD") or user
-    return f"host=postgres port=5432 dbname={os.environ['PG_DB']} user={user} password={password}"
+    return f"host=postgres port=5432 connect_timeout=10 dbname={os.environ['PG_DB']} user={user} password={password}"
 
 
 def run_sql(query, approach, domain):

@@ -19,7 +19,11 @@ ENV_FILE="${RASTRO_ENV_FILE:-$ROOT/.env}"
 set -a; source "$ENV_FILE"; set +a
 OUT="${1:-$ROOT/backups/$(date +%Y%m%d-%H%M%S)}"
 mkdir -p "$OUT" && chmod 700 "$OUT"
-compose() { docker compose --env-file "$ENV_FILE" -f "$ROOT/infra/docker-compose.yml" "$@"; }
+# On a customer installation (install.sh set RASTRO_READONLY_PASSWORD) the customer file is read too: it adds the
+# proxy, which also has to stop while restoring. The demo machine has no such file settings.
+CUSTOMER=()
+[ -z "${RASTRO_READONLY_PASSWORD:-}" ] || CUSTOMER=(-f "$ROOT/infra/docker-compose.customer.yml")
+compose() { docker compose --env-file "$ENV_FILE" -f "$ROOT/infra/docker-compose.yml" ${CUSTOMER[@]+"${CUSTOMER[@]}"} "$@"; }
 
 echo "1. Database → $OUT/database.dump"
 compose exec -T postgres pg_dump -U "${PG_USER:-rastro}" -d "${PG_DB:-rastro}" -Fc > "$OUT/database.dump"

@@ -1993,3 +1993,23 @@ experiment's log as method changes made after it; they do not change its measure
 - **Checked:** `tests/test_chat_view.py` renders the chat with a model that fails (both views); a throwaway copy of
   the app whose model never answers (`RASTRO_PROVIDER=files`, an empty folder) showed the message, no trace; the
   console ran in the real app (10 rows, no error).
+
+## 2026-10-30 — Audit, batch 3: the same libraries everywhere, and fewer ways to fail
+
+- **Versions:** the app image did not pin NumPy or pandas and took 2.5.4 and 2.3.3, while the tests ran with 1.26.4
+  and 2.2.3. Both are pinned once, in `infra/loaders/requirements.txt`; `requirements-dev.txt` includes it and no
+  longer repeats pins (pyyaml, requests, pyshacl were in both). Every image rebuilt; the deck numbers the app computes
+  (`contraste.py energia`, Lab models included) came out identical before and after.
+- **restore.sh:** a failed `pg_restore` stopped the script (`set -e`) after stopping the app and Ontop, leaving
+  them down; a trap now starts what it stopped on any exit. On a customer installation it reads the customer compose
+  file too, so the proxy is stopped and started with them. `backup.sh` reads the same files. On the demo machine
+  (no customer passwords in `.env`) both keep reading only the base file. `tests/test_restore_script.py` runs the
+  script with a stand-in for docker whose restore fails, on both kinds of machine; it failed with the old script.
+- **check.py:** with nothing running, with the proxy not answering, or on a machine without the customer setup, it
+  printed a trace; now one sentence (or a failed check). The readers are read in one function, and finding none is
+  a failed check, not a silent pass.
+- **answer.py:** a misspelt `RASTRO_PROVIDER` stops at once with the valid names (before, `ask` quietly used Claude);
+  a reply with no text says so; a text where a number was asked goes back to the model as an error, like a failed
+  query; the reader connection has a 10 s connect timeout.
+- **Tests for what makes the published numbers:** the scoring (`evaluar.score`, `same`: 47 against 45 is right, 36
+  against 33 is not; F1 for lists) and the source shown per column (`answer.column_sources`).

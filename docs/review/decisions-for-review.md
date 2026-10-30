@@ -505,7 +505,11 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q55.** Should a failed turn retry once on its own before saying it failed, or is asking the person to try again
   the better behaviour in front of a customer?
 
-## 3. Open decisions
+**H20. The same libraries in the app and the tests** (2026-10-30)
+- **Decision:** NumPy and pandas are pinned once, for the app and the tests alike (before, the app took newer ones,
+  so the Lab numbers it showed came from versions the tests never ran); the deck numbers came out identical.
+- **Q56.** Should the published Lab numbers also record the library versions they were computed with?
+
 
 1. **A person confirms the references.**
    - **Open:** the oil and gas adjudication, the affiliations blind references (including the holdout), oncology's
@@ -576,7 +580,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q55). Skip any you have no view on.
+- Answer per question number (Q1–Q56). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

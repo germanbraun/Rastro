@@ -14,7 +14,11 @@ ENV_FILE="${RASTRO_ENV_FILE:-$ROOT/.env}"
 set -a; source "$ENV_FILE"; set +a
 BACKUP="${1:?Usage: infra/customer/restore.sh <folder> [--check]}"
 MODE="${2:-}"
-compose() { docker compose --env-file "$ENV_FILE" -f "$ROOT/infra/docker-compose.yml" "$@"; }
+# On a customer installation (install.sh set RASTRO_READONLY_PASSWORD) the customer file is read too: it adds the
+# proxy, which also has to stop while restoring. The demo machine has no such file settings.
+CUSTOMER=()
+[ -z "${RASTRO_READONLY_PASSWORD:-}" ] || CUSTOMER=(-f "$ROOT/infra/docker-compose.customer.yml")
+compose() { docker compose --env-file "$ENV_FILE" -f "$ROOT/infra/docker-compose.yml" ${CUSTOMER[@]+"${CUSTOMER[@]}"} "$@"; }
 psql_() { compose exec -T postgres psql -U "${PG_USER:-rastro}" -v ON_ERROR_STOP=1 -qAt "$@"; }
 
 echo "1. Files"
@@ -46,8 +50,9 @@ read -r -p "   Type the folder's name ($(basename "$BACKUP")) to continue: " ans
 [ "$answer" = "$(basename "$BACKUP")" ] || { echo "Nothing was changed."; exit 1; }
 READERS="$(compose ps --services --status running | grep -E '^(app|ontop.*|proxy)$' || true)"
 [ -z "$READERS" ] || compose stop $READERS >/dev/null
+# Whatever happens below (a failed restore stops the script), the services that were running start again
+trap '[ -z "$READERS" ] || compose start $READERS >/dev/null' EXIT
 compose exec -T postgres pg_restore -U "${PG_USER:-rastro}" -d "${PG_DB:-rastro}" --clean --if-exists --no-owner \
   < "$BACKUP/database.dump"
 tar -xzf "$BACKUP/state.tar.gz" -C "$ROOT"
-[ -z "$READERS" ] || compose start $READERS >/dev/null
 echo "Restored. Then: infra/customer/setup.sh (users and passwords) and python3 infra/customer/check.py."

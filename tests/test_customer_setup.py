@@ -45,3 +45,32 @@ def test_only_the_proxy_is_open_to_the_network():
     for name, service in customer.items():
         if name != "proxy" and "ports" in service:
             assert all(port.startswith("127.0.0.1:") for port in service["ports"]), name
+
+
+def load_check():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("check", ROOT / "infra/customer/check.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_check_reads_every_domains_readers():
+    check = load_check()
+    registry = yaml.safe_load((ROOT / "layer/dominios.yaml").read_text())
+    expected = {r for d in registry.values() if isinstance(d, dict) for r in (d.get("readers") or {}).values()}
+    assert expected and set(check.readers()) == expected
+
+
+def test_check_says_no_answer_and_nothing_running(monkeypatch):
+    import subprocess
+    import urllib.error
+    check = load_check()
+
+    def refused(*args, **kwargs):
+        raise urllib.error.URLError("connection refused")
+    monkeypatch.setattr(check.urllib.request, "urlopen", refused)
+    monkeypatch.setattr(check, "env", lambda: {})
+    assert check.https("/") is None
+    monkeypatch.setattr(check.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess(a, 0, stdout=""))
+    assert check.containers() == {}

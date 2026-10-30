@@ -84,3 +84,17 @@ def test_a_recorded_call_is_made_once(monkeypatch, tmp_path):
     for _ in range(2):
         assert answer.ask("s", [{"role": "user", "content": "q"}], SCHEMA)[1] == {"query": "SELECT 3"}
     assert len(calls) == 1 and len(list(tmp_path.glob("*.txt"))) == 1 and len(list(tmp_path.glob("*.json"))) == 1
+
+
+def test_an_unknown_provider_says_so_at_once():
+    import os
+    import subprocess
+    run = subprocess.run([sys.executable, "-c", "import answer"], cwd=ROOT / "layer", capture_output=True, text=True,
+                         env={**os.environ, "RASTRO_PROVIDER": "claude"}, timeout=60)
+    assert run.returncode != 0 and "RASTRO_PROVIDER=claude: use one of anthropic" in run.stderr
+
+
+def test_a_text_where_a_number_was_asked_goes_back_to_the_model(monkeypatch):
+    monkeypatch.setattr(answer, "run_sparql", lambda query, domain: ["YPF S.A."])
+    result = answer.try_query("C", "SELECT ?x WHERE {}", "número", "energia")
+    assert result["answer"] is None and "could not convert" in result["attempt"]["error"]

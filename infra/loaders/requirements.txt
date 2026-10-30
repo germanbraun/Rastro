@@ -7,4 +7,6 @@ streamlit==1.39.0
 sqlparse==0.5.1
 streamlit-ace==0.1.1  # the SPARQL and R2RML editors of «Bajo el capó»
 pyshacl==0.29.0
+numpy==1.26.4       # the same NumPy and pandas the tests run with (requirements-dev.txt includes this file):
+pandas==2.2.3       # unpinned, the image took NumPy 2.5 and pandas 2.3, so the app's Lab numbers came from other versions
 pyarrow==19.0.1     # Compatible with the development NumPy 1.26 pin and Streamlit 1.39
