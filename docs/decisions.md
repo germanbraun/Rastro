@@ -2013,3 +2013,6 @@ experiment's log as method changes made after it; they do not change its measure
   query; the reader connection has a 10 s connect timeout.
 - **Tests for what makes the published numbers:** the scoring (`evaluar.score`, `same`: 47 against 45 is right, 36
   against 33 is not; F1 for lists) and the source shown per column (`answer.column_sources`).
+- **Executive decks online:** they still said 7 of 10 and 3 of 5 (never synced after the re-measurement); their YPF
+  and trust slides are published again, keeping the online title «1 · Preguntar». The decks skill now says to sync
+  them too.
