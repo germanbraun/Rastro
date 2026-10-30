@@ -2090,3 +2090,14 @@ experiment's log as method changes made after it; they do not change its measure
 - **Pending, needs people:** the credibility step (a person checks the references and the AI-reviewed corrections, a
   blind test with outside consultants, a timed run by someone else), in `docs/plan.md`.
 
+## 2026-10-30 — The oil and gas annex reads its totals; one figure corrected
+
+- **Why:** the decks audit left some 20 numbers typed by hand in the annex. Those that are dated cases (CGC, Chevron
+  in Loma Campana, well 165404) already say their source and date in the notes, as the decks skill asks; the totals
+  that move with the data did not.
+- **What changed:** «Concesión para revisar» (45, 33, 21, 9), the ventings in protected areas (60) and near a town,
+  the companies with an LEI (12) and the Chihuido de la Sierra Negra case (334 ventings, 32,5 km) are one-row queries
+  in `numeros_demo` (`app/dominios/energia.yaml`), filled into slides e-revisar and e-fuentes.
+- **Corrected on the way:** the slide said «60 in protected areas; otros 61 near a town», but the 61 included ventings
+  already in a protected area. Counted as question 6 places them (protected first), the others are 47.
+

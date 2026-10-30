@@ -866,10 +866,32 @@ numeros_demo:                  # numbers only the slides show (app/contraste.py)
         OPTIONAL { ?f energia:waterM3 ?w } OPTIONAL { ?f energia:maxPressurePsi ?p } }
     - sparql: >-
         SELECT (MAX(?d) AS ?profundidad_max) WHERE { ?t energia:verticalDepthM ?d }
+    # «Concesión para revisar» and its two reasons (slides e-revisar and e-fuentes)
+    - sparql: SELECT (COUNT(DISTINCT ?c) AS ?revisar_total) WHERE { ?c a energia:ConcessionToReview }
+    - sparql: SELECT (COUNT(DISTINCT ?c) AS ?revisar_gasoducto) WHERE { ?c a energia:VentingFarFromPipeline }
+    - sparql: SELECT (COUNT(DISTINCT ?c) AS ?revisar_planillas) WHERE { ?c a energia:VentingWithoutReports }
+    - sparql: >-
+        SELECT (COUNT(DISTINCT ?c) AS ?revisar_ambas) WHERE { ?c a energia:VentingFarFromPipeline ,
+        energia:VentingWithoutReports }
+    # Ventings in a protected area, and the others within 3 km of a town (as question 6 places them)
+    - sparql: >-
+        SELECT (COUNT(DISTINCT ?d) AS ?venteos_protegidos) WHERE { ?s a energia:SurroundingsLink ;
+        energia:aboutVenting ?d ; energia:protectedArea ?a }
+    - sparql: >-
+        SELECT (COUNT(DISTINCT ?d) AS ?venteos_localidad) WHERE { ?s a energia:SurroundingsLink ;
+        energia:aboutVenting ?d ; energia:distanceKm ?km . FILTER (?km < 3) FILTER NOT EXISTS { ?s energia:protectedArea ?a } }
+    - sparql: SELECT (COUNT(DISTINCT ?e) AS ?empresas_lei) WHERE { ?e a energia:Company ; energia:lei ?l }
+    # The case the slide names: the concession with most ventings far from a pipeline
+    - sparql: >-
+        SELECT (COUNT(DISTINCT ?d) AS ?chihuido_venteos) (MIN(?km) AS ?chihuido_km) WHERE {
+        ?c energia:name "CHIHUIDO DE LA SIERRA NEGRA" . ?d a energia:DetectedVenting ; energia:inConcession ?c .
+        ?g a energia:PipelineLink ; energia:aboutConcession ?c ; energia:distanceKm ?km }
   calculos:
     pct_participaciones: 100 * gas_con_participacion / gas_total
-  decimales: {pct_participaciones: 1, agua_afectada: 0, psi_afectada: 0, profundidad_max: 0}
-  mostrar: [pct_participaciones, agua_afectada, psi_afectada, profundidad_max]
+  decimales: {pct_participaciones: 1, agua_afectada: 0, psi_afectada: 0, profundidad_max: 0, chihuido_km: 1}
+  mostrar: [pct_participaciones, agua_afectada, psi_afectada, profundidad_max, revisar_total, revisar_gasoducto,
+            revisar_planillas, revisar_ambas, venteos_protegidos, venteos_localidad, empresas_lei, chihuido_venteos,
+            chihuido_km]
 extension: energia.OilAndGas   # app/extensions/energia/: Rastro Lab, the answer walkthrough and the correction view
 fuera:                         # ¿dice cuándo no tiene el dato? lo mide layer/fuera.py
   archivo: /layer/energia/fuera/resultados.json

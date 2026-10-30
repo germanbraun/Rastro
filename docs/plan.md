@@ -138,7 +138,7 @@ Para el MVP 1, solo con Rastro Layer.
 - [x] Datos de afuera: una consulta une Rastro, MeSH y Wikidata (`layer/externo/`)
 - [x] Simplificar para quien no conoce estas tecnologías: modo negocio en la app, 6 diapositivas, guion y one-pager sin jerga
 - [ ] Verificación humana de las referencias de la evaluación (`docs/verificacion-humana.md`)
-- [ ] Video de respaldo: lo graba una persona siguiendo el guion
+- [x] Video de respaldo: `docs/respaldo/capturar.py` graba cada momento de la pestaña Demo (sin voz; una persona puede narrarlo)
 - [ ] Que alguien de ventas dé la demo siguiendo solo el guion
 
 **Checkpoint:** alguien de ventas da la demo siguiendo solo el guion.
@@ -186,7 +186,7 @@ Abiertas:
 Mismo Rastro, tercer Ontop (puerto 8082), con datos de la Secretaría de Energía, ENARGAS, el IGN y GLEIF. Preguntas en `ontology/energia/competency-questions.md`; guion en [demo-guion-energia.md](demo-guion-energia.md).
 
 - [x] Diez preguntas de competencia con su query, y la app abre en este caso
-- [x] Evaluación con tres formas (sin Rastro, SQL con enlaces, con Rastro): 7, 10 y 10 de 10 (`layer/energia/resultados.md`)
+- [x] Evaluación con tres formas (sin Rastro, SQL con enlaces, con Rastro): 8, 10 y 10 de 10 (`layer/energia/resultados.md`)
 - [x] Prueba de cambio: una columna cambia de nombre y se arregla con una línea (`layer/energia/cambio/cambio.sh`)
 - [x] Prueba de corrección: un dato corregido una vez llega a la respuesta, al modelo y a su explicación (`layer/energia/cambio/correccion.sh`)
 - [x] La demo en cuatro momentos: preguntar, la base cambia, predecir y una corrección
@@ -209,5 +209,5 @@ Plan aparte en [plan-proveedores.md](plan-proveedores.md): contratos federales, 
 
 - [x] Una pregunta de oncología sobre los motivos de los ensayos detenidos: el grafo elige los ensayos con una consulta exacta y un asistente de IA resume solo sus motivos, citando cada ensayo (`layer/textos/`, opción «Una pregunta sobre textos» en la app).
 - [x] El motivo de cada ensayo detenido como dato del grafo (`oncologia:stopReason`), clasificado con reglas, con evidencia en PROV-O y una muestra revisada (92 %).
-- [ ] El equivalente en proveedores, con la descripción de cada contrato (hay que descargarla).
+- [x] El equivalente en proveedores, con la descripción de cada contrato: los temas de los contratos del grupo Leidos (`layer/proveedores/textos/`).
 

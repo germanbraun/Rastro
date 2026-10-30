@@ -550,8 +550,8 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
    - **Open:** this was listed as "not decided" on 2026-10-26. The same day the first moment went back to YPF and the
      Chevron walkthrough moved to the appendix, but the log does not record an explicit decision on the timed demo.
 7. **Demo readiness** (plan).
-    - **Open:** the three-minute demo has not been rehearsed with a non-technical person, a salesperson has not given
-      it from the script alone, and there is no backup video.
+    - **Open:** the three-minute demo has not been rehearsed with a non-technical person, and a salesperson has not
+      given it from the pocket card alone. The backup (screenshots and a silent video) exists since 2026-10-29.
     - **Blocks:** the plan's final checkpoint.
 8. **Lab next steps** (2026-10-21).
     - **Open:** location, intensity per metre and start year as features; bootstrap intervals (the current range
@@ -564,9 +564,9 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 10. **A second unfamiliar domain for the transfer experiment** (2026-10-22).
     - **Open:** the experiment plan asks for a repeat on a second unfamiliar domain, and none is approved.
     - **Blocks:** any "the method generalizes" claim beyond one case.
-11. **A licence for the repository.**
-    - **Open:** this was named an owner's decision on 2026-10-21. The repository became public on 2026-10-27, and it
-      has no licence file.
+11. **A licence for the repository** — **resolved.**
+    - The repository is under the Business Source License 1.1 (`LICENSE`). Kept here so the reviewer sees it was
+      closed.
 
 ## 4. Known limits we already state
 
