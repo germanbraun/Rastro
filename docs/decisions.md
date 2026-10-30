@@ -1975,3 +1975,6 @@ experiment's log as method changes made after it; they do not change its measure
   the 5-question Lab score is said as counts; the 5 % tolerance is said next to 8 of 10 (47 against 45 counts).
 - **Checked:** slides measured under 920 px; the app's demo moment 1 in Spanish and English; the demo backup captured
   again.
+- **Found while publishing:** the Lab slide's body said «4 · 5 · 4» for the questions about predictions; the
+  measured result (`layer/energia_lab/resultados.json`) is 4, 5 and 5. Typed by hand; corrected. These scores should
+  become placeholders (batch 4).
