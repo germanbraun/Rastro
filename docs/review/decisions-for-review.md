@@ -271,11 +271,11 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Decision:** `lab/notebooks/rastro-lab.ipynb` runs the same model code on a saved snapshot of its inputs (the one
   exception to keeping data out of the repo), shows one prediction explained as columns and as concepts with
   evidence, the predictions to review and what a correction changes, and checks itself against the published run.
-- **Q24b.** For a technical reviewer, is a snapshot-based notebook convincing evidence of the explanation claim, or
+- **Q27b.** For a technical reviewer, is a snapshot-based notebook convincing evidence of the explanation claim, or
   does it need a live connection to the layer to show that the evidence is not prepared in advance?
 - **Added:** it also runs every algorithm tried. On the published cut, XGBoost and Random Forest on gas directly
   have a slightly lower mean error than ridge (16.12 and 16.27 against 16.67) and a lower R² (0.40, 0.43 against 0.46).
-- **Q24c.** Is publishing the linear model for its exact decomposition the right call when a gradient-boosted model
+- **Q27c.** Is publishing the linear model for its exact decomposition the right call when a gradient-boosted model
   is slightly more accurate on mean error, or should the explanation work over an ensemble (with approximate
   contributions) instead?
 
@@ -580,7 +580,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q56). Skip any you have no view on.
+- Answer per question number (Q1–Q58; some have a letter, such as Q27b, when they were added under an earlier question). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

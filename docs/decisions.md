@@ -2016,3 +2016,16 @@ experiment's log as method changes made after it; they do not change its measure
 - **Executive decks online:** they still said 7 of 10 and 3 of 5 (never synced after the re-measurement); their YPF
   and trust slides are published again, keeping the online title «1 · Preguntar». The decks skill now says to sync
   them too.
+
+## 2026-10-30 — Audit, batch 4: tidying
+
+- **The review file in step:** H21 (the front of the app: start page, English first, savings estimate, palette and
+  theme) and H22 (speed and the demo during an outage) bring in the 2026-10-29 decisions it lacked; Q24b and Q24c,
+  which sat after Q27, are Q27b and Q27c; the answer line says lettered questions exist.
+- **The Lab slide's scores are read, not typed:** `evaluacion_predicciones` in the domain's YAML points to
+  `layer/energia_lab/resultados.json`, and `contraste.py` gives the slides `demo.pred_b`, `pred_d`, `pred_c` and
+  `pred_n` (4, 5, 5 of 5). The other numbers came out identical. `contraste.py` also closes every file it reads.
+- **CI's comment** names the skill `verify`, not the old «verificar».
+- **Not done here:** the other hand-typed numbers in slide bodies (the review list, sources, walkthrough examples)
+  are correct today and stay as they are; Spanish comments are translated when their files are touched; GraphDB's
+  name in the oncology deck and docs waits for the user's decision on the rule.

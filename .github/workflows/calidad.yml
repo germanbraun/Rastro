@@ -1,5 +1,5 @@
-# Lint y pruebas en cada push: corren sin Docker ni base de datos (las pruebas con datos se hacen con la skill
-# «verificar», en una máquina con los servicios levantados).
+# Lint and tests on every push: they run without Docker or a database (the checks on data are done with the skill
+# «verify», on a machine with the services running).
 name: Calidad
 on: [push, pull_request]
 jobs:

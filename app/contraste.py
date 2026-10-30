@@ -9,6 +9,7 @@ docker compose exec -T app python /app/contraste.py energia > docs/slides/numero
 import json
 import os
 import sys
+from pathlib import Path
 
 TEXTS = ("sin", "con", "impacto")
 
@@ -95,13 +96,18 @@ def story_numbers(cfg, sparql, number, ext=None):
         for prefix, reading in (("opera", first), ("parte", share)):
             out.update({f"{prefix}_{key(n)}": number(float(v) / reading["divisor"], 1)
                         for n, v in sparql(reading["consulta"])[1][:3]})
-    fuera = json.load(open(cfg["fuera"]["archivo"])) if cfg.get("fuera") else {}
+    fuera = json.loads(Path(cfg["fuera"]["archivo"]).read_text()) if cfg.get("fuera") else {}
     if fuera:
         asked = fuera["preguntas"].values()
         out["sin_dato"] = number(sum(q["sin_datos"] for q in asked), 0)
         control = next(q for q in asked if not q["sin_datos"])
         out["control"] = number(float(control["C"]["respuesta"]), 0)
-    quality = json.load(open(cfg["calidad"]["archivo"])) if cfg.get("calidad") else {}
+    # A second evaluation, over a model's predictions (Rastro Lab): correct answers of each approach
+    if cfg.get("evaluacion_predicciones"):
+        predictions = json.loads(Path(cfg["evaluacion_predicciones"]).read_text())
+        out["pred_n"] = number(len(predictions["questions"]), 0)
+        out.update({f"pred_{k.lower()}": number(predictions["totals"][k]["correct"], 0) for k in ("B", "D", "C")})
+    quality = json.loads(Path(cfg["calidad"]["archivo"]).read_text()) if cfg.get("calidad") else {}
     failing = set()
     if quality:
         out["reglas"] = number(len(quality["reglas"]), 0)
@@ -126,7 +132,8 @@ def story_numbers(cfg, sparql, number, ext=None):
         from idioma import scaled
         spec = cfg["externo"]["numeros"]   # which columns of the saved file are the name and the number
         scale = cfg["unidades"][spec["unidad"]]["escala"]
-        rows = list(csv.DictReader(open(saved)))
+        import io
+        rows = list(csv.DictReader(io.StringIO(Path(saved).read_text(), newline='')))
         out.update({f"externo_{key(r[spec['nombre']])}": scaled(r[spec["valor"]], scale, "es") for r in rows})
         out["externo_con_lei"] = number(len(rows), 0)
     if ext:
@@ -153,10 +160,10 @@ def main(domain):
     def sparql(query):
         return answer.run_sparql_table(f"PREFIX {domain}: <{ns}>\n" + query, domain)
 
-    cfg = yaml.safe_load(open(f"/app/dominios/{domain}.yaml"))
+    cfg = yaml.safe_load(Path(f"/app/dominios/{domain}.yaml").read_text())
 
     def read(key):
-        return json.load(open(cfg[key])) if cfg.get(key) and os.path.exists(cfg[key]) else {}
+        return json.loads(Path(cfg[key]).read_text()) if cfg.get(key) and os.path.exists(cfg[key]) else {}
 
     numbers = {"confiar": {k: str(v) for k, v in trust_numbers(cfg, read("evaluacion"), read("cambio"), read("evidencia"),
                                                                 lambda v: format_number(v, 0, "es")).items()}}

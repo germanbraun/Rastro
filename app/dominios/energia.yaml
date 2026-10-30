@@ -22,6 +22,7 @@ portada:                       # the start page (app/inicio.py): the problem in 
       texto: "donde vive el mismo dato sin Rastro. Con Rastro se corrige en uno, y llega a todas las respuestas y al modelo."
 ejemplo_libre: "Por ejemplo: ¿quién produjo más gas en 2025? Y después: ¿y cuánto le corresponde por su participación?"
 evaluacion: /layer/energia/resultados.json
+evaluacion_predicciones: /layer/energia_lab/resultados.json   # the questions about Lab's predictions (slides: demo.pred_*)
 cambio: /layer/energia/cambio/resultado.json
 correccion: /layer/energia/cambio/correccion.json
 avisos_cambio:                 # the change test records its check in Spanish; the English file writes it again
