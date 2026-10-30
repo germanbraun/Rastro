@@ -15,8 +15,6 @@ from pathlib import Path
 sys.path.insert(0, "/layer")
 from answer import DOMAINS, reader_dsn, run_sparql_table  # noqa: E402
 
-import os  # noqa: E402
-
 import psycopg  # noqa: E402
 
 HERE = Path(__file__).parent

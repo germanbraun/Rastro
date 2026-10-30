@@ -63,6 +63,7 @@ layer/energia/cambio/impacto.sh registrar              # which predictions chang
 python3 lab/gas/modelo.py [<well>|--12-meses|--como-trabajo-publicado|--publicar|--comparar]   # Rastro Lab from the console
 python layer/method.py new-domain <domain> --title "…"  # a new domain's scaffold (skill start-domain)
 python3 docs/slides/build.py                           # builds the HTML decks
+python3 docs/respaldo/capturar.py                      # the demo's backup: each moment as a screenshot, and a video (needs Playwright)
 infra/customer/install.sh <domain>                     # a customer installation (skill deploy-customer): backup.sh, restore.sh, upgrade.sh
 ```
 

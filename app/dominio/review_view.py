@@ -14,7 +14,6 @@ so the saved answers are measured again.
 import csv
 import datetime
 import io
-from pathlib import Path
 
 import streamlit as st
 
@@ -104,7 +103,7 @@ def show_review(cfg, tech):
         person = st.text_input(idioma.t("dominio.review.person"), key=f"{domain}_review_person")
         if len(waiting) > PAGE:
             st.caption(idioma.t("dominio.review.page", shown=PAGE, n=len(waiting)))
-        for n, (path, index, row) in enumerate(waiting[:PAGE]):
+        for path, index, row in waiting[:PAGE]:
             with st.container(border=True):
                 why = row.get("motivo") or row.get("reason", "")
                 shown = {k: v for k, v in row.items() if v and k not in ("motivo", "reason", "source", "validated_by",

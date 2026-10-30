@@ -8,6 +8,7 @@ Para consultoras y equipos de datos del sector que saben SQL, sin conocimientos 
 
 1. Levantar todo, desde la carpeta del repo: `docker compose up -d` (lo hace alguien técnico, una vez).
 2. Abrir http://localhost:8501/?inicio=demo&lang=es (sin `?inicio=demo` abre la portada: «Ver la demo» o «Armá tu capa semántica»), pestaña **Demo**. Recorrer los dos actos una vez: cada momento corre en vivo.
+3. **Si la demo en vivo falla** (sin red, un servicio caído, otra computadora): el mazo es un archivo que abre sin servicios, y cada momento de la pestaña **Demo** está capturado en `docs/respaldo/es/` (`momento-1.png` a `momento-4.png`, y `momento-1-por-que.png` con YPF y Loma Campana abiertos). El video del recorrido queda en `data/raw/respaldo/demo-es.webm`, fuera del repo. Se capturan de nuevo con `python3 docs/respaldo/capturar.py` cada vez que cambia un número de la demo.
 
 ## 0:00 – 0:30 · Una pregunta, dos significados, y qué es una capa semántica (diapositivas 1 a 3)
 

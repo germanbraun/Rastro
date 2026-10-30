@@ -473,6 +473,14 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
   10 (was 7), SQL + links 10, with Rastro 10. With a throwaway filled form the publication gate passes, so the
   person's review is the only thing left.
 
+**H16. A backup of the live demo; the stylesheet's Streamlit markers under test** (2026-10-29)
+- **Decision:** a script captures each moment of the Demo tab as a whole-page screenshot in the repo (and a video
+  outside it), to tell the demo with nothing running; a test fails when an installed Streamlit lacks a page marker the
+  stylesheet targets, with Streamlit kept pinned.
+- **Q52.** Are static screenshots a credible fallback in front of a customer, or does a recorded video (or none,
+  rescheduling instead) serve the pitch better? Is testing Streamlit's internal markers worth it, or should the look
+  rely only on the theme file and accept less styling?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -544,7 +552,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q50). Skip any you have no view on.
+- Answer per question number (Q1–Q52). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

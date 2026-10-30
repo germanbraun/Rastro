@@ -86,15 +86,16 @@ Each question's lifecycle state is in `layer/{domain}/lifecycle.json`.
                                           "Ontop does not support `*` or `+` paths.\n",
         f"layer/{domain}/sql-notes.md": f"# Notes for the assistant: {domain} (SQL over the sources as they come)\n",
         f"layer/{domain}/sql-enlaces-notes.md": f"# Notes for the assistant: {domain} (SQL with Rastro's links)\n",
-        f"app/dominios/{domain}.yaml": f"""# What belongs to {domain} in the app (drawn by app/dominio/; skill show-in-app). The app hides the
-# domain until «preguntas» has a question.
+        f"app/dominios/{domain}.yaml": f"""# What belongs to {domain} in the app (drawn by app/dominio/; skill
+# show-in-app). The app hides the domain until «preguntas» has a question.
 domain: {domain}
 resumen: >-
   {title[:1].upper() + title[1:]}.
 preguntas: []
 """,
-        f"layer/{domain}/reader.sql": f"""-- Read-only users for the evaluation of {domain}: «without Rastro» sees the source tables as loaded, «SQL + links»
--- also the tables Rastro builds. Each source's GRANTs are added with the source (skill add-source).
+        f"layer/{domain}/reader.sql": f"""-- Read-only users for the evaluation of {domain}: «without Rastro» sees the source
+-- tables as loaded, «SQL + links» also the tables Rastro builds. Each source's GRANTs are added with the source
+-- (skill add-source).
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = '{domain}_reader') THEN

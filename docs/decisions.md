@@ -1900,3 +1900,19 @@ experiment's log as method changes made after it; they do not change its measure
   person's review of the references (`layer/energia/revision/`). The numbers stay provisional until then.
 - **Updated where typed:** the demo script, README, `docs/method.md`; the decks' numbers were refreshed and rebuilt
   (`b_correct` 8, `b_consistent` 2).
+
+## 2026-10-29 — A backup of the live demo, and the stylesheet's Streamlit markers under test
+
+- **Backup:** `docs/respaldo/capturar.py` opens the running app's Demo tab in Spanish (headless Chrome, through
+  Playwright), waits until each moment has finished running and saves it whole: `docs/respaldo/es/momento-1.png` to
+  `momento-4.png` and `momento-1-por-que.png` (the evidence for YPF and Loma Campana, as the script opens it), 1.4 MB
+  in all. It also records the walk-through as a video (6 MB) in `data/raw/respaldo/`, not versioned: it changes on
+  every capture. The deck already opens without services, so with these the three minutes can be told with nothing
+  running. Playwright is not a project dependency: the script says how to install it, and only whoever captures needs it.
+- **Why screenshots in the repo:** they are the backup only if they are on the demo laptop after a `git pull`, and
+  they must be captured again whenever a demo number changes (the decks skill says so), like the decks.
+- **Styling:** Streamlit was already pinned at 1.39.0. `tests/test_app_style.py` checks that the installed Streamlit
+  is the pinned one and that every `data-testid` the stylesheet targets (18, four of them the notices'
+  `stAlertContent<kind>`, which Streamlit builds from a prefix) and the stored-theme key `KEEP_THEME` removes still
+  exist in Streamlit's bundle. An upgrade that renames one fails in CI with the marker's name, instead of silently
+  breaking the look.
