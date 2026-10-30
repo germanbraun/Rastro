@@ -440,6 +440,7 @@ preguntas:
         - sparql: |                # all wells where the registry and the declarations disagree (the slide's notes)
             SELECT (COUNT(?l) AS ?distintos_pais) WHERE { ?l a energia:OperatorLink ; energia:rule "rige la declaración jurada" }
       fuentes: [capitulo4]
+      titulo_sin: Leyendo cada fuente por separado
       sin: {valor: "{padron} o {declaraciones}", detalle: "Dos respuestas: el padrón de pozos dice {padron} y las declaraciones juradas, {declaraciones}. En {otra} pozos el padrón nombra a otra empresa (Pecom, Velitec, Copesa)."}
       con: {valor: "{pozos} pozos", detalle: "Una regla escrita: rige quien declara la producción del último mes. Lo que dice el padrón queda a la vista en cada pozo. Son pozos de todo tipo: {petroliferos} petrolíferos, {gasiferos} gasíferos, {inyeccion} de inyección y {otro} de otro tipo; {produjeron} produjeron petróleo o gas en 2025."}
     evidencia:
@@ -487,6 +488,7 @@ preguntas:
               ?d a energia:DetectedVenting ; energia:inConcession/energia:name ?concesion .
             }
       fuentes: [sig_energia]
+      titulo_sin: Solo con la capa del satélite
       sin: {valor: "Neuquén: {neuquen}", detalle: "La capa del satélite solo dice fecha y provincia: no se sabe en qué concesión ni de qué empresa. Además escribe Tierra del Fuego de dos formas."}
       con: {valor: "La Calera: {la_calera}", detalle: "{ubicados} posibles venteos ubicados en su concesión, con su operadora. La Calera (Pluspetrol): {la_calera}, sin ningún punto de venteo declarado en el mapa."}
     evidencia:

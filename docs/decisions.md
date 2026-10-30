@@ -2042,3 +2042,20 @@ experiment's log as method changes made after it; they do not change its measure
 - **Found on the way:** `docs/diagramas/build.py` also rewrites the architecture and ontology slides, undoing the
   style `docs/slides/estilo.py` gave them (footer included); those four were restored, and only the oncology
   architecture slide was taken from the builder.
+
+## 2026-10-30 — The decks audited: labels and claims the size of what was measured
+
+- **Why:** an audit of the five decks found every number in step with its source, the script's slide numbers right
+  and the online decks equal to the repo; but cards still titled «Sin Rastro» where the evaluation's SQL without
+  Rastro answered right (wells, ventings), two link counts on adjacent slides, «tres» and «cuatro» pruebas for the
+  same slide, claims resting on one try, and wrong notes.
+- **What changed:** the wells and ventings cards (slides 27, 28 and the app's e02 and e03) are titled «Leyendo cada
+  fuente por separado» and «Solo con la capa del satélite»; slide 13's «SQL por nombre» card says what it is and
+  points to «¿Por qué este número?», not to the evaluation; slide 14 says SQL without Rastro rebuilds every join (its
+  two misses were distances and protected areas, not names); the quality slide says its count includes Rastro Lab's
+  records; «cuatro pruebas» in the slide and the script; «una prueba» for Lab's 1 of 1, «preguntado una vez» for the
+  AI assistant on slide 2, «en esas 5 preguntas» for nobody making things up, the unit after 16,7; the notes no
+  longer say the map splits Aguada Pichana Este equally (it gives Total 27,27 %), nor «segundo/tercer momento» for
+  annex slides, nor five sources where there are six.
+- **Next, not done:** oncology and suppliers (four slides past the footer, a fair-baseline framing, hand-typed
+  numbers) and placeholders for the oil and gas annex's hand-typed numbers.

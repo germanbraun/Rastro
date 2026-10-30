@@ -299,6 +299,7 @@ preguntas:
       Declaración jurada: {term: "Sworn production declaration", text: "what each company reports every month to the Secretaría de Energía about the production of each well."}
       Padrón de pozos: {term: "Well registry", text: "the register of all wells, with their location and their company."}
     antes_despues:
+      titulo_sin: Reading each source on its own
       sin: {valor: "{padron} or {declaraciones}", detalle: "Two answers: the well registry says {padron} and the sworn production declarations, {declaraciones}. In {otra} wells the registry names another company (Pecom, Velitec, Copesa)."}
       con: {valor: "{pozos} wells", detalle: "One written rule: whoever declares the production of the last month prevails. What the registry says stays in view for each well. They are wells of every type: {petroliferos} oil, {gasiferos} gas, {inyeccion} injection and {otro} of other types; {produjeron} produced oil or gas in 2025."}
     evidencia:
@@ -322,6 +323,7 @@ preguntas:
       Venteo: {term: "Venting", text: "releasing or flaring gas at the field instead of using it."}
       Posible venteo: {term: "Possible venting", text: "a thermal anomaly seen by a satellite. It is a sign to review, not a confirmation."}
     antes_despues:
+      titulo_sin: The satellite layer alone
       sin: {valor: "Neuquén: {neuquen}", detalle: "The satellite layer only gives date and province: it does not say which concession or which company. It also spells Tierra del Fuego in two ways."}
       con: {valor: "La Calera: {la_calera}", detalle: "{ubicados} possible venting events placed in their concession, with their operator. La Calera (Pluspetrol): {la_calera}, with no declared venting point on the map."}
     evidencia:
