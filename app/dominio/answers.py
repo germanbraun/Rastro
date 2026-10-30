@@ -24,11 +24,25 @@ from . import hood
 from . import trust_view
 
 
+def decimal_column(values):
+    """True if every value is a number and at least one has decimals (an id or a year never does)."""
+    present = [str(v) for v in values if v not in (None, "")]
+    try:
+        [float(v) for v in present]
+    except ValueError:
+        return False
+    return bool(present) and any("." in v for v in present)
+
+
 def as_table(columns, rows, cfg, tech, col_sources):
     """The answer as a table: columns with business names and readable numbers."""
     formats, names, units = cfg.get("formatos", {}), cfg.get("columnas", {}), cfg.get("unidades", {})
     decimals = {c: idioma.column_decimals([r[i] for r in rows], units[formats[c]]["escala"])
                 for i, c in enumerate(columns) if formats.get(c) in units}
+    # A column the domain does not declare (a chat query names its own) with decimal numbers, such as
+    # 5246629.4441300495: shown in the interface's format in the business view, exact in the technical one
+    plain = {} if tech else {c: idioma.column_decimals([r[i] for r in rows], 1) for i, c in enumerate(columns)
+                             if c not in formats and decimal_column([r[i] for r in rows])}
     data = []
     for row in rows:
         line = []
@@ -39,6 +53,8 @@ def as_table(columns, rows, cfg, tech, col_sources):
                 v = common.money(v)
             elif v is not None and formats.get(c) == "porcentaje":
                 v = f"{float(v) * 100:.0f} %"
+            elif v is not None and c in plain:
+                v = idioma.scaled(v, 1, decimals=plain[c])
             line.append("—" if v is None or v == "" else v)
         data.append(line)
     if tech:

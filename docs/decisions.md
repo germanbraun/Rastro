@@ -1951,4 +1951,7 @@ experiment's log as method changes made after it; they do not change its measure
   the data under an answer was an expander holding the answer's own evidence expander. It is a toggle now; tried in
   the browser with the demo's two questions (Total Austral; then 5,25 millones de miles de m³ by participation, the
   reference) and the data opened. A follow-up took 30–40 s.
-- **Not fixed:** the chat's data table shows the raw decimal (5246629.444…).
+- **Then fixed:** the chat's data table showed the raw decimal (5246629.444…). A column the domain does not declare
+  (a chat query names its own) with decimal numbers is now shown in the interface's format in the business view
+  (5.246.629,4) and exact in the technical one; ids and years, which have no decimals, are left as they are. Checked in
+  a throwaway copy of the app that read the saved gpt-5.5 replies (`RASTRO_PROVIDER=files`), with no API call.
