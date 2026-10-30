@@ -1,0 +1,1 @@
+{"query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (COUNT(DISTINCT ?concesion) AS ?concesiones_con_dos_motivos)\nWHERE {\n  ?concesion a energia:VentingFarFromPipeline ;\n             a energia:VentingWithoutReports .\n}\nLIMIT 50"}

@@ -488,6 +488,8 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q53.** Is a measurement where the model answers through files (same model, same prompts, no API call) credible
   enough to quote, or does the chat need a run through the real API before any number is shown? Should the two
   misses count as the chat's error or the question's?
+- **Update:** with gpt-5.5 through the OpenAI API (the model the demo runs), the same 13 turns: 13 of 13. Running
+  it live also found a display bug no test had caught (nested expanders), now fixed.
 
 ## 3. Open decisions
 

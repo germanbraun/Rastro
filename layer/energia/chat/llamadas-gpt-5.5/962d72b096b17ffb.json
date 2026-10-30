@@ -1,0 +1,1 @@
+{"query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (COUNT(?venteo) AS ?cantidad_venteos)\nWHERE {\n  ?concesion energia:name \"LOMA CAMPANA\" .\n  ?venteo a energia:DetectedVenting ;\n          energia:inConcession ?concesion .\n}\nLIMIT 50"}

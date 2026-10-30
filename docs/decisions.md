@@ -1938,3 +1938,17 @@ experiment's log as method changes made after it; they do not change its measure
 - **What it does not measure:** the app's own API call (a thin wrapper), and any other model. References are SPARQL
   over Rastro written by an AI assistant, like the evaluation's: a person still has to confirm them.
 - **Updated:** the demo script, the chat slide's notes, README, the evaluate and deploy-customer skills, CLAUDE.md.
+
+## 2026-10-30 — The chat runs live on OpenAI gpt-5.5, measured: 13 of 13
+
+- **Why:** the user added an OpenAI key for the demo. The model was chosen from the ones the key lists (`gpt-5.5`);
+  `.env` has `RASTRO_PROVIDER=openai` and `RASTRO_MODEL=gpt-5.5`.
+- **Measured:** `chat_eval.py energia puntaje --modelo` calls the configured model and keeps every call and reply
+  (`RASTRO_RECORD`, `layer/energia/chat/llamadas-gpt-5.5/`), so the score can be read back without paying again:
+  13 of 13, follow-ups 6 of 6, no unbacked number, no retries; 2 min 20 s for the 13 turns. It read «según su
+  participación en cada concesión» as the total, where Claude (through files) gave the breakdown.
+- **Found live:** the chat had never answered in the app. Its first answer failed with «Expanders may not be nested»:
+  the data under an answer was an expander holding the answer's own evidence expander. It is a toggle now; tried in
+  the browser with the demo's two questions (Total Austral; then 5,25 millones de miles de m³ by participation, the
+  reference) and the data opened. A follow-up took 30–40 s.
+- **Not fixed:** the chat's data table shows the raw decimal (5246629.444…).

@@ -79,8 +79,8 @@ same model trained twice, on the raw tables and on Rastro, and explains each pre
   (a source renames a column or changes a unit; one correction reaches every result; which predictions change when the
   source corrects a record).
 - **Applications on the layer:** a chat that talks to the data with the ontology as context (each number of an
-  answer checked against the data; 11 of 13 turns right, measured without an API key:
-  `layer/energia/chat/resultado.md`), questions over environmental texts (GraphRAG), checking a
+  answer checked against the data; 13 turns: 11 right with Claude, measured without an API key, and 13 with gpt-5.5:
+  `layer/energia/chat/`), questions over environmental texts (GraphRAG), checking a
   claim, and Wikidata enrichment. Which ones a customer gets: [docs/customer-deployment.md](docs/customer-deployment.md).
 - **Ontop** on :8082. Script: [docs/demo-guion-energia.md](docs/demo-guion-energia.md).
 

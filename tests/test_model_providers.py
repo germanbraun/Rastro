@@ -68,3 +68,19 @@ def test_files_waits_for_the_reply_then_reads_it(monkeypatch, tmp_path):
     assert answer.ask("sistema", messages, SCHEMA)[1] == {"query": "SELECT 2"}
     with pytest.raises(answer.Pending):   # another call is another file
         answer.ask("sistema", messages + [{"role": "user", "content": "¿y en 2024?"}], SCHEMA)
+
+
+def test_a_recorded_call_is_made_once(monkeypatch, tmp_path):
+    calls = []
+
+    def post(url, **kwargs):
+        calls.append(url)
+        return Reply({"content": '{"query": "SELECT 3"}'})
+    monkeypatch.setattr(answer, "PROVIDER", "openai")
+    monkeypatch.setattr(answer, "MODEL", "some-model")
+    monkeypatch.setenv("OPENAI_API_KEY", "test")
+    monkeypatch.setenv("RASTRO_RECORD", str(tmp_path))
+    monkeypatch.setattr(answer.requests, "post", post)
+    for _ in range(2):
+        assert answer.ask("s", [{"role": "user", "content": "q"}], SCHEMA)[1] == {"query": "SELECT 3"}
+    assert len(calls) == 1 and len(list(tmp_path.glob("*.txt"))) == 1 and len(list(tmp_path.glob("*.json"))) == 1

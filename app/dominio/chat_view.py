@@ -24,7 +24,8 @@ def show_turn(cfg, tech, turn, index):
             st.markdown(turn["answer"])
             if turn.get("unsupported"):
                 st.warning(idioma.t("dominio.chat.unsupported", numbers=", ".join(turn["unsupported"])))
-            with st.expander(idioma.t("dominio.chat.data")):
+            # A toggle, not an expander: the answer's own evidence is an expander, and Streamlit does not nest them
+            if st.toggle(idioma.t("dominio.chat.data"), key=f"{cfg['domain']}_chat_data_{index}"):
                 if tech:
                     st.code(turn["query"], language="sparql")
                 answers.show_answer(cfg, tech, turn["query"], turn["columns"], turn["rows"],

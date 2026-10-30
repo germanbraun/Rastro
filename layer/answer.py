@@ -82,7 +82,10 @@ def output_schema(approach, kind):
 def ask(system, messages, schema):
     """One call to the LLM with JSON output. Returns (assistant message, data)."""
     providers = {"ollama": ask_ollama, "openai": ask_openai, "files": ask_files}
-    return providers.get(PROVIDER, ask_claude)(system, messages, schema)
+    call = providers.get(PROVIDER, ask_claude)
+    if os.environ.get("RASTRO_RECORD") and PROVIDER != "files":
+        return recorded(call, system, messages, schema)
+    return call(system, messages, schema)
 
 
 def ask_claude(system, messages, schema):
@@ -142,14 +145,34 @@ class Pending(Exception):
     """A call written to a file whose reply is not there yet (RASTRO_PROVIDER=files)."""
 
 
-def ask_files(system, messages, schema):
-    """The call as a text file, named by its content, and the reply read from the JSON file next to it. The same call
-    always has the same name, so a run that stopped for a missing reply goes on from there once it is written."""
-    folder = Path(os.environ["RASTRO_FILES"])
+def call_text(system, messages, schema):
+    """A call as one text, and its key (from its content): the same call always has the same name."""
     said = "\n\n".join(f"[{m['role']}]\n{m['content']}" for m in messages)
     text = (f"[system]\n{system}\n\n{said}\n\n[formato]\nRespondé solo con un objeto JSON que cumpla este "
             f"esquema, sin texto alrededor:\n{json.dumps(schema, ensure_ascii=False)}\n")
-    key = hashlib.sha256(text.encode()).hexdigest()[:16]
+    return hashlib.sha256(text.encode()).hexdigest()[:16], text
+
+
+def recorded(call, system, messages, schema):
+    """With RASTRO_RECORD=<folder>, each call to the configured model is kept (<key>.txt) with its reply (<key>.json),
+    and a call already there is not made again: a measurement can be read back and scored without paying twice."""
+    folder = Path(os.environ["RASTRO_RECORD"])
+    key, text = call_text(system, messages, schema)
+    reply = folder / f"{key}.json"
+    if not reply.exists():
+        _, data = call(system, messages, schema)
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / f"{key}.txt").write_text(text)
+        reply.write_text(json.dumps(data, ensure_ascii=False))
+    content = reply.read_text()
+    return content, json.loads(content)
+
+
+def ask_files(system, messages, schema):
+    """The call as a text file, named by its content, and the reply read from the JSON file next to it. A run that
+    stopped for a missing reply goes on from there once it is written."""
+    folder = Path(os.environ["RASTRO_FILES"])
+    key, text = call_text(system, messages, schema)
     reply = folder / f"{key}.json"
     if reply.exists():
         content = reply.read_text()

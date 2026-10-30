@@ -83,7 +83,8 @@ One domain can have more than one question set (for example, questions about a m
 subagent told to read only that file and write its JSON reply to `<key>.json`; run `run` again until nothing waits
 (each round unblocks the next step: query, answer, follow-up), then `puntaje`. The chat's own code runs every turn;
 only the transport changes. Adjudicate a miss in `adjudicacion.md` before quoting the number, and quote it as
-«N de M», small as it is. With a key, the same set measures that model: say which one answered.
+«N de M», small as it is. With a key, `--modelo` measures the model in `.env`, keeping each call and reply (`chat/llamadas-<model>/`), and
+writes `resultado-<model>.json`: say which one answered. Then ask the demo's questions in the app itself.
 
 ## When it does not have the data
 

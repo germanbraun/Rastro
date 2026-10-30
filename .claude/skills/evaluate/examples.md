@@ -86,3 +86,9 @@ missing piece is the person's review.
 subagent reading only its call file. 11 of 13 right; follow-ups 5 of 6; no unbacked number; no retries; both
 no-data questions said what was missing. The two misses asked for a share «en cada concesión» and got the
 per-concession breakdown: the question's wording, adjudicated and counted as wrong, not re-measured.
+
+## The chat through a real API (oil and gas, 2026-10-30)
+
+`chat_eval.py energia puntaje --modelo` with `RASTRO_PROVIDER=openai`, `RASTRO_MODEL=gpt-5.5`: 13 of 13, follow-ups 6
+of 6, no unbacked number, 2 min 20 s; calls and replies kept in `chat/llamadas-gpt-5.5/`. The live app then showed a
+display bug the measurement could not (nested expanders): measure, and also try it in the app.

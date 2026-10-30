@@ -21,3 +21,5 @@ Además, las primeras siete respuestas con Rastro se descartaron y se repitieron
 | Turno | Diferencia | Qué se encontró | Resultado |
 |---|---|---|---|
 | c02.1 y c02.2 (petróleo que le corresponde a YPF, y a Tecpetrol) | La referencia es el total (12,6 y 1,0 millones de m³); el chat dio la parte de cada concesión, sin sumarla | La pregunta decía «según su participación en cada concesión», y el chat la leyó como un desglose: su consulta devuelve una fila por concesión y la respuesta las enumera. Los valores por concesión están bien (Loma Campana 2,57 = 5,15 × 50 %). **Ambigüedad de la pregunta**, escrita por quien mide, más que error del chat; pero una persona que pregunta «cuánto» espera el total. | Cuenta como incorrecta, como se midió. No se volvió a medir con otra redacción |
+
+Con `gpt-5.5` (OpenAI, `chat_eval.py energia puntaje --modelo`, el mismo día) las mismas 13 preguntas dieron 13 de 13: leyó la misma redacción como el total. Así que la ambigüedad existe, pero un modelo la resolvió como lo haría una persona; el fallo es tanto del modelo como de la pregunta.

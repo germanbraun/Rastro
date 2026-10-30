@@ -11,6 +11,10 @@ seeing only that file (the evaluation's rule: one prompt per evaluator), and wri
 
     docker compose run --rm -T layer-eval python /layer/chat_eval.py energia run|puntaje
 
+With --modelo, the model configured in .env answers instead (RASTRO_PROVIDER and RASTRO_MODEL): every call and its
+reply are kept in chat/llamadas-<model>/ (RASTRO_RECORD), so «puntaje» reads them back without calling it again, and
+the result goes to resultado-<model>.json / .md, next to the one measured through files.
+
 A turn is right when its answer in words says the reference: a number within 5 % (as written, or in thousands,
 millions or billions), the names of a list (80 % of them), or, where the data has no answer, that it says so (or its
 query finds nothing) instead of a number.
@@ -28,10 +32,16 @@ import yaml
 HERE = Path(__file__).parent
 DOMAIN = sys.argv[1] if len(sys.argv) > 1 else "energia"
 FOLDER = HERE / DOMAIN / "chat"
-os.environ.update(RASTRO_PROVIDER="files", RASTRO_FILES=str(FOLDER / "llamadas"))   # before answer reads them
+CONFIGURED = "--modelo" in sys.argv   # the model in .env answers; otherwise, files
+if not CONFIGURED:
+    os.environ.update(RASTRO_PROVIDER="files", RASTRO_FILES=str(FOLDER / "llamadas"))   # before answer reads them
 
 import answer  # noqa: E402
 import chat  # noqa: E402
+
+SUFFIX = f"-{answer.MODEL}" if CONFIGURED else ""
+if CONFIGURED:
+    os.environ["RASTRO_RECORD"] = str(FOLDER / f"llamadas{SUFFIX}")
 
 TOLERANCE = 0.05
 SCALES = (1, 1e3, 1e6, 1e9)
@@ -98,17 +108,22 @@ def puntaje():
                           "reference": reference, "answer": turn.get("answer"), "sin_datos": turn.get("sin_datos"),
                           "query": turn.get("query"), "attempts": len(turn.get("attempts", [])),
                           "unsupported": turn.get("unsupported", []), "right": right})
-    run = yaml.safe_load((HERE / DOMAIN / "eval" / "run.yaml").read_text())
-    result = {"date": datetime.date.today().isoformat(), "model": run["model"], "model_version": run["model_version"],
-              "how": "RASTRO_PROVIDER=files: a fresh assistant answered each call, seeing only its file",
+    if CONFIGURED:
+        model = {"model": answer.MODEL, "model_version": answer.MODEL,
+                 "how": f"RASTRO_PROVIDER={answer.PROVIDER}: the API answered each call; calls and replies in llamadas{SUFFIX}/"}
+    else:
+        run = yaml.safe_load((HERE / DOMAIN / "eval" / "run.yaml").read_text())
+        model = {"model": run["model"], "model_version": run["model_version"],
+                 "how": "RASTRO_PROVIDER=files: a fresh assistant answered each call, seeing only its file"}
+    result = {"date": datetime.date.today().isoformat(), **model,
               "totals": {"turns": len(turns), "right": sum(t["right"] for t in turns),
                          "follow_ups": sum(t["turn"] > 1 for t in turns),
                          "follow_ups_right": sum(t["right"] for t in turns if t["turn"] > 1),
                          "with_unsupported_numbers": sum(bool(t["unsupported"]) for t in turns),
                          "retries": sum(max(t["attempts"] - 1, 0) for t in turns)},
               "turns": turns}
-    (FOLDER / "resultado.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
-    (FOLDER / "resultado.md").write_text(markdown(result))
+    (FOLDER / f"resultado{SUFFIX}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n")
+    (FOLDER / f"resultado{SUFFIX}.md").write_text(markdown(result))
     print(markdown(result))
 
 

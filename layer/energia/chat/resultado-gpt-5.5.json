@@ -1,0 +1,193 @@
+{
+  "date": "2026-10-30",
+  "model": "gpt-5.5",
+  "model_version": "gpt-5.5",
+  "how": "RASTRO_PROVIDER=openai: the API answered each call; calls and replies in llamadas-gpt-5.5/",
+  "totals": {
+    "turns": 13,
+    "right": 13,
+    "follow_ups": 6,
+    "follow_ups_right": 6,
+    "with_unsupported_numbers": 0,
+    "retries": 0
+  },
+  "turns": [
+    {
+      "conversation": "c01",
+      "turn": 1,
+      "question": "¿Qué empresa declaró más gas en 2025?",
+      "kind": "lista",
+      "reference": [
+        "TOTAL AUSTRAL S.A."
+      ],
+      "answer": "TOTAL AUSTRAL S.A.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT ?empresa\nWHERE {\n  ?produccion a energia:WellProduction ;\n    energia:declaredBy ?compania ;\n    energia:gas ?gas .\n  ?compania energia:name ?empresa .\n}\nGROUP BY ?empresa\nORDER BY DESC(SUM(?gas))\nLIMIT 1",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c01",
+      "turn": 2,
+      "question": "¿Y cuánto gas le corresponde por su participación en las concesiones?",
+      "kind": "número",
+      "reference": 5246629.444130049,
+      "answer": "Le corresponden 5.246.629,44 miles de m³ de gas por su participación en las concesiones.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (SUM(?gas * ?porcentaje / 100) AS ?gas_miles_m3_correspondiente)\nWHERE {\n  ?compania energia:name \"TOTAL AUSTRAL S.A.\" .\n  ?participacion a energia:Stake ;\n    energia:partner ?compania ;\n    energia:percent ?porcentaje ;\n    energia:inConcession ?concesion .\n  ?produccion a energia:WellProduction ;\n    energia:inConcession ?concesion ;\n    energia:gas ?gas .\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c02",
+      "turn": 1,
+      "question": "¿Cuánto petróleo de 2025 le corresponde a YPF según su participación en cada concesión?",
+      "kind": "número",
+      "reference": 12570093.352460362,
+      "answer": "A YPF le corresponden 12,6 millones de m³ de petróleo de 2025 según su participación en cada concesión.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (SUM(?petroleo * ?porcentaje / 100) AS ?petroleo_m3)\nWHERE {\n  {\n    SELECT DISTINCT ?empresa\n    WHERE {\n      { ?empresa energia:name ?nombre . }\n      UNION\n      { ?nombre_empresa energia:company ?empresa ; energia:nameInSource ?nombre . }\n      FILTER(REGEX(UCASE(STR(?nombre)), \"^YPF(\\\\s+S\\\\.?A\\\\.?)?$\"))\n    }\n  }\n  ?participacion a energia:Stake ;\n    energia:partner ?empresa ;\n    energia:percent ?porcentaje ;\n    energia:inConcession ?concesion .\n  ?produccion a energia:WellProduction ;\n    energia:inConcession ?concesion ;\n    energia:oil ?petroleo .\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c02",
+      "turn": 2,
+      "question": "¿Y a Tecpetrol?",
+      "kind": "número",
+      "reference": 1018636.1097394,
+      "answer": "A Tecpetrol le corresponden 1.018.636,11 m³ de petróleo.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (SUM(?petroleo * ?porcentaje / 100) AS ?petroleo_m3)\nWHERE {\n  {\n    SELECT DISTINCT ?empresa\n    WHERE {\n      { ?empresa energia:name ?nombre . }\n      UNION\n      { ?nombre_empresa energia:company ?empresa ; energia:nameInSource ?nombre . }\n      FILTER(REGEX(UCASE(STR(?nombre)), \"^TECPETROL(\\\\s+S\\\\.?A\\\\.?)?$\"))\n    }\n  }\n  ?participacion a energia:Stake ;\n    energia:partner ?empresa ;\n    energia:percent ?porcentaje ;\n    energia:inConcession ?concesion .\n  ?produccion a energia:WellProduction ;\n    energia:inConcession ?concesion ;\n    energia:oil ?petroleo .\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c03",
+      "turn": 1,
+      "question": "¿Cuáles son las 5 concesiones con más posibles venteos vistos por satélite?",
+      "kind": "lista",
+      "reference": [
+        "LOMA CAMPANA",
+        "LOMA LA LATA - SIERRA BARROSA",
+        "BAJO DEL CHOIQUE - LA INVERNADA",
+        "LA CALERA",
+        "LA ANGOSTURA SUR I"
+      ],
+      "answer": "LOMA CAMPANA\nLOMA LA LATA - SIERRA BARROSA\nBAJO DEL CHOIQUE - LA INVERNADA\nLA CALERA\nLA ANGOSTURA SUR I",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT ?concesion\nWHERE {\n  {\n    SELECT ?c (COUNT(?venteo) AS ?cantidad_venteos)\n    WHERE {\n      ?venteo a energia:DetectedVenting ;\n              energia:inConcession ?c .\n    }\n    GROUP BY ?c\n    ORDER BY DESC(?cantidad_venteos)\n    LIMIT 5\n  }\n  ?c energia:name ?concesion .\n}\nORDER BY DESC(?cantidad_venteos)\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c03",
+      "turn": 2,
+      "question": "¿Cuántos tiene la primera?",
+      "kind": "número",
+      "reference": 956.0,
+      "answer": "La primera tiene 956.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (COUNT(?venteo) AS ?cantidad_venteos)\nWHERE {\n  ?concesion energia:name \"LOMA CAMPANA\" .\n  ?venteo a energia:DetectedVenting ;\n          energia:inConcession ?concesion .\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c04",
+      "turn": 1,
+      "question": "¿Cuántos pozos opera YPF?",
+      "kind": "número",
+      "reference": 15809.0,
+      "answer": "YPF opera 15809 pozos.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (COUNT(DISTINCT ?pozo) AS ?pozos)\nWHERE {\n  ?pozo a energia:Well ;\n        energia:operator ?empresa .\n  ?empresa energia:name ?empresa_nombre .\n  FILTER(REGEX(STR(?empresa_nombre), \"^YPF(\\\\b|\\\\s|\\\\.)\", \"i\"))\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c04",
+      "turn": 2,
+      "question": "¿Y Tecpetrol?",
+      "kind": "número",
+      "reference": 1188.0,
+      "answer": "Tecpetrol tiene 1188 pozos.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (COUNT(DISTINCT ?pozo) AS ?pozos)\nWHERE {\n  ?pozo a energia:Well ;\n        energia:operator ?empresa .\n  ?empresa energia:name ?empresa_nombre .\n  FILTER(REGEX(STR(?empresa_nombre), \"^TECPETROL(\\\\b|\\\\s|\\\\.)\", \"i\"))\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c05",
+      "turn": 1,
+      "question": "¿Cuántas concesiones habría que revisar por venteos?",
+      "kind": "número",
+      "reference": 45.0,
+      "answer": "45",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (COUNT(DISTINCT ?concesion) AS ?concesiones_para_revisar)\nWHERE {\n  ?concesion a energia:ConcessionToReview .\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c05",
+      "turn": 2,
+      "question": "¿Cuántas de ellas cumplen los dos motivos a la vez?",
+      "kind": "número",
+      "reference": 9.0,
+      "answer": "9",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (COUNT(DISTINCT ?concesion) AS ?concesiones_con_dos_motivos)\nWHERE {\n  ?concesion a energia:VentingFarFromPipeline ;\n             a energia:VentingWithoutReports .\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c06",
+      "turn": 1,
+      "question": "¿A qué precio vendió YPF el barril de petróleo en 2025?",
+      "kind": "sin_datos",
+      "reference": "sin datos",
+      "answer": null,
+      "sin_datos": "falta el precio de venta del barril de petróleo; la ontología no incluye ventas ni precios.",
+      "query": null,
+      "attempts": 0,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c06",
+      "turn": 2,
+      "question": "¿Y cuánto petróleo declaró ese año?",
+      "kind": "número",
+      "reference": 21389759.35,
+      "answer": "Declaró 21.389.759,35 m³ de petróleo.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\n\nSELECT (SUM(?petroleo) AS ?petroleo_m3)\nWHERE {\n  {\n    SELECT DISTINCT ?empresa\n    WHERE {\n      {\n        ?empresa energia:name ?nombre_empresa .\n      }\n      UNION\n      {\n        ?nombre a energia:CompanyName ;\n          energia:company ?empresa ;\n          energia:nameInSource ?nombre_empresa .\n      }\n      FILTER(REGEX(STR(?nombre_empresa), \"^YPF(\\\\b|\\\\s|\\\\.)\", \"i\"))\n    }\n  }\n  ?produccion a energia:WellProduction ;\n    energia:declaredBy ?empresa ;\n    energia:oil ?petroleo .\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c07",
+      "turn": 1,
+      "question": "¿Cuántas reservas de gas tiene Tecpetrol?",
+      "kind": "sin_datos",
+      "reference": "sin datos",
+      "answer": null,
+      "sin_datos": "falta el tema reservas de gas en las fuentes disponibles",
+      "query": null,
+      "attempts": 0,
+      "unsupported": [],
+      "right": true
+    }
+  ]
+}
