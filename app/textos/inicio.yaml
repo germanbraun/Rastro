@@ -20,8 +20,8 @@ inicio.wizard_button: {es: "Ver el boceto", en: "See the sketch"}
 inicio.back: {es: "← Inicio", en: "← Start"}
 
 wizard.sketch:
-  es: "**Boceto para discutir.** No se conecta a nada, no guarda lo que escribas ni llama a un modelo: cada paso muestra qué haría Rastro, qué decidís vos y dónde existe hoy esa pieza. **En uso real, necesita la API de Claude:** el agente que arma la capa corre con el Agent SDK de Claude y las mismas skills del método que hoy usa un consultor (docs/customer-deployment.md, sección 3)."
-  en: "**A sketch to discuss.** It connects to nothing, keeps nothing you type and calls no model: each step shows what Rastro would do, what you decide and where that piece exists today. **In real use, it needs the Claude API:** the agent that builds the layer runs on Claude's Agent SDK with the same method skills a consultant uses today (docs/customer-deployment.md, section 3)."
+  es: "**Boceto para discutir.** No se conecta a nada, no guarda lo que escribas ni llama a un modelo: cada paso muestra qué haría Rastro, qué decidís vos y dónde existe hoy esa pieza. **En uso real, Rastro arma la capa con la API de Claude,** siguiendo el mismo método que hoy usa un consultor."
+  en: "**A sketch to discuss.** It connects to nothing, keeps nothing you type and calls no model: each step shows what Rastro would do, what you decide and where that piece exists today. **In real use, Rastro builds the layer with the Claude API,** following the same method a consultant uses today."
 wizard.agent: {es: "**Lo que hace Rastro**", en: "**What Rastro does**"}
 wizard.person: {es: "**Lo que decidís vos**", en: "**What you decide**"}
 wizard.today: {es: "Hoy: {where}", en: "Today: {where}"}
@@ -65,8 +65,23 @@ wizard.links_example:
 wizard.quality_example: {es: "**Ejemplo:** las reglas de la demo, comprobadas el {date}, y cuántos datos no las cumplen:", en: "**Example:** the demo's rules, checked on {date}, and how many values fail them:"}
 wizard.col_rule: {es: "Regla", en: "Rule"}
 wizard.col_failing: {es: "No la cumplen", en: "Failing"}
-wizard.results_example: {es: "**Ejemplo:** dónde está la demo en cada paso del método:", en: "**Example:** where the demo stands in each step of the method:"}
-wizard.publish_example: {es: "**Hoy**, una instalación para un cliente es un comando, con su usuario de solo lectura, su login y su chequeo:", en: "**Today**, a customer installation is one command, with its read-only users, its login and its check:"}
+wizard.results_example: {es: "**Ejemplo:** las 10 preguntas de la demo, medidas por los tres caminos:", en: "**Example:** the demo's 10 questions, measured by the three approaches:"}
+wizard.results_correct: {es: "correctas", en: "correct"}
+wizard.of: {es: "{x} de {n}", en: "{x} of {n}"}
+wizard.results_without: {es: "Sin Rastro", en: "Without Rastro"}
+wizard.results_links: {es: "SQL con las uniones de Rastro", en: "SQL with Rastro's links"}
+wizard.results_with: {es: "Con Rastro", en: "With Rastro"}
+wizard.results_consistent:
+  es: "La misma pregunta escrita de cuatro formas da la misma respuesta en {c} de {n} con Rastro, y en {b} de {n} sin Rastro. Las referencias las armó un asistente de IA: falta que una persona las confirme."
+  en: "The same question written four ways gives the same answer in {c} of {n} with Rastro, and in {b} of {n} without Rastro. The references were built by an AI assistant: a person still has to confirm them."
+wizard.publish_example: {es: "La app queda detrás del inicio de sesión de tu empresa, con las preguntas que aprobaste y su evidencia.", en: "The app sits behind your company's sign-in, with the questions you approved and their evidence."}
+wizard.no_close: {es: "Ninguna pregunta aprobada de la demo se parece. En uso real, Rastro propondría su definición y vos la aprobarías.", en: "No approved question of the demo is close. In real use, Rastro would propose its definition and you would approve it."}
+wizard.try_examples: {es: "O probá con una pregunta aprobada de la demo:", en: "Or try an approved question of the demo:"}
+wizard.confirm: {es: "Confirmar", en: "Confirm"}
+wizard.reject: {es: "Rechazar", en: "Reject"}
+wizard.confirmed: {es: "✅ Confirmada (solo en esta sesión)", en: "✅ Confirmed (in this session only)"}
+wizard.rejected: {es: "❌ Rechazada (solo en esta sesión)", en: "❌ Rejected (in this session only)"}
+wizard.decision_kept: {es: "En uso real, tu decisión queda guardada con tu nombre y la fecha, y cambia todas las respuestas que usan esa unión.", en: "In real use, your decision is kept with your name and the date, and changes every answer that uses that link."}
 inicio.savings_title: {es: "¿Cuánto ahorraría tu equipo? Una estimación con tus supuestos", en: "How much would your team save? An estimate with your assumptions"}
 inicio.savings_intro:
   es: "Cambiá los supuestos por los de tu equipo. Dos números salen de la demo (medidos); el resto es tuyo. Es una estimación, no una medición."
@@ -88,6 +103,6 @@ inicio.savings_formula:
   en: "Without Rastro: changes × queries × share that breaks × hours, plus corrections × places × hours. With Rastro: each change is fixed in one line and each correction in one place."
 wizard.requirements_title: {es: "Requisitos mínimos para armar tu propia capa", en: "Minimum requirements to build your own layer"}
 wizard.requirements:
-  es: "- **Una máquina en tu red** con Docker y Git: 4 CPU, 8 GB de RAM y 50 GB de disco alcanzan para un piloto de pocas fuentes (el tamaño de tus datos decide el disco).\n- **Acceso de solo lectura** a cada fuente: un usuario por base de datos, o archivos.\n- **La API de Claude**, para el agente que arma la capa y para conversar con los datos. Las preguntas de ejemplo, la demo, las reglas de calidad y el modelo funcionan sin ella; si tus datos no pueden salir de tu red, se usa Claude desde tu nube o un modelo local.\n- **Personas:** una de negocio, unas 2 horas por semana, para aprobar preguntas, definiciones y uniones dudosas; y una técnica para los accesos.\n- **Opcional:** tu inicio de sesión (single sign-on) delante de la app; si no, un usuario y contraseña propios.\n\nEl detalle, con la instalación en un comando: docs/customer-deployment.md."
-  en: "- **A machine in your network** with Docker and Git: 4 CPUs, 8 GB of RAM and 50 GB of disk are enough for a pilot of a few sources (the size of your data decides the disk).\n- **Read-only access** to each source: a user per database, or files.\n- **The Claude API**, for the agent that builds the layer and to talk to the data. The example questions, the demo, the quality rules and the model work without it; if your data cannot leave your network, Claude through your cloud or a local model is used.\n- **People:** a business person, about 2 hours a week, to approve questions, definitions and doubtful links; and a technical person for the access.\n- **Optional:** your sign-on (single sign-on) in front of the app; otherwise, a user and password of its own.\n\nThe detail, with the one-command install: docs/customer-deployment.md."
+  es: "- **Una máquina en tu red** con Docker y Git: 4 CPU, 8 GB de RAM y 50 GB de disco alcanzan para un piloto de pocas fuentes (el tamaño de tus datos decide el disco).\n- **Acceso de solo lectura** a cada fuente: un usuario por base de datos, o archivos.\n- **La API de Claude**, para el agente que arma la capa y para conversar con los datos. Las preguntas de ejemplo, la demo, las reglas de calidad y el modelo funcionan sin ella; si tus datos no pueden salir de tu red, se usa Claude desde tu nube o un modelo local.\n- **Personas:** una de negocio, unas 2 horas por semana, para aprobar preguntas, definiciones y uniones dudosas; y una técnica para los accesos.\n- **Opcional:** tu inicio de sesión (single sign-on) delante de la app; si no, un usuario y contraseña propios.\n\nEl detalle, con la instalación en un comando, está en la guía de instalación del piloto."
+  en: "- **A machine in your network** with Docker and Git: 4 CPUs, 8 GB of RAM and 50 GB of disk are enough for a pilot of a few sources (the size of your data decides the disk).\n- **Read-only access** to each source: a user per database, or files.\n- **The Claude API**, for the agent that builds the layer and to talk to the data. The example questions, the demo, the quality rules and the model work without it; if your data cannot leave your network, Claude through your cloud or a local model is used.\n- **People:** a business person, about 2 hours a week, to approve questions, definitions and doubtful links; and a technical person for the access.\n- **Optional:** your sign-on (single sign-on) in front of the app; otherwise, a user and password of its own.\n\nThe detail, with the one-command install, is in the pilot's installation guide."
 

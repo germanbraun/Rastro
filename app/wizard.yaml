@@ -7,13 +7,13 @@ pasos:
       Rastro se conecta con un usuario de solo lectura, mira las tablas, las claves y unas filas de muestra, y dice
       cómo podría unir cada fuente con las otras.
     persona: Qué fuentes entran y qué no.
-    hoy: El paso a paso lo hace un consultor con el método (skills inspect-sources y add-source).
+    hoy: Lo hace un consultor con el método de Rastro.
   - id: preguntas
     titulo: Tus preguntas
     agente: >-
-      Escribís preguntas de negocio en tus palabras. Rastro propone qué significa cada palabra y qué tipo de
-      respuesta espera (un número, una lista).
-    persona: Cada pregunta y lo que significa cada palabra.
+      Rastro propone qué significa cada palabra de tu pregunta y qué tipo de respuesta espera (un número, una
+      lista).
+    persona: Escribís las preguntas de negocio en tus palabras y aprobás lo que significa cada una.
     hoy: Las preguntas aprobadas y validadas de cada dominio (Preguntar; su estado en «Método»).
   - id: diccionario
     titulo: El diccionario
@@ -45,4 +45,4 @@ pasos:
     titulo: Publicar
     agente: La app queda lista para tu equipo, detrás de tu inicio de sesión, con las preguntas aprobadas.
     persona: Quién la usa y qué preguntas ven.
-    hoy: La configuración para clientes y su login (infra/customer/install.sh).
+    hoy: Lo instala un consultor en la infraestructura de tu empresa, con su inicio de sesión.

@@ -6,13 +6,13 @@ pasos:
       Rastro connects with a read-only user, looks at the tables, the keys and a few sample rows, and says how each
       source could be joined with the others.
     persona: Which sources go in and which don't.
-    hoy: The step by step is done by a consultant with the method (skills inspect-sources and add-source).
+    hoy: A consultant does it with Rastro's method.
   - id: preguntas
     titulo: Your questions
     agente: >-
-      You write business questions in your own words. Rastro proposes what each word means and what kind of answer
-      is expected (a number, a list).
-    persona: Each question and what each word means.
+      Rastro proposes what each word of your question means and what kind of answer is expected (a number, a
+      list).
+    persona: You write the business questions in your own words and approve what each one means.
     hoy: Each domain's approved and validated questions (Ask; their status in «Method»).
   - id: diccionario
     titulo: The dictionary
@@ -44,4 +44,4 @@ pasos:
     titulo: Publish
     agente: The app is ready for your team, behind your sign-in, with the approved questions.
     persona: Who uses it and which questions they see.
-    hoy: The customer setup and its login (infra/customer/install.sh).
+    hoy: A consultant installs it in your company's infrastructure, with its sign-in.

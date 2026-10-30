@@ -12,8 +12,10 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+import contraste
 import idioma
-from dominio import common, faq, method_view, review_view, sources_view
+import inicio
+from dominio import common, faq, review_view, sources_view
 
 EXAMPLE_DOMAIN = "energia"   # the demo's pieces serve as the example of each step
 
@@ -108,19 +110,39 @@ def show_sources():
         common.tabla(pd.DataFrame(rows), key="wizard_found")
 
 
+# Words any question has: they say nothing about what it asks
+QUESTION_WORDS = {"quién", "quien", "quiénes", "cuánto", "cuanto", "cuánta", "cuántos", "cuántas", "cuál", "cuáles",
+                  "dónde", "cuándo", "cada", "tiene", "tienen", "what", "which", "much", "many", "does", "have", "each"}
+
+
 def words(text):
-    return set(re.findall(r"\w{4,}", text.lower()))
+    return set(re.findall(r"\w{4,}", text.lower())) - QUESTION_WORDS
+
+
+def closest(question, approved):
+    """The approved question with most words in common with the one typed, or None when none shares a word."""
+    def shared(item):
+        return len(words(question) & words(item["simple"] + " " + item["tecnica"]))
+    best = max(approved, key=shared, default=None)
+    return best if best and shared(best) else None
 
 
 def show_questions():
-    """You write a question; the closest approved question of the demo shows how it was defined (word overlap, no
-    model)."""
+    """You write a question, or pick one of the demo's; the closest approved question of the demo shows how it was
+    defined (word overlap, no model). With no word in common, it says so instead of showing an unrelated one."""
+    approved = common.validated_questions(example_cfg())
     question = st.text_input(idioma.t("wizard.your_question"), placeholder=idioma.t("wizard.question_placeholder"),
                              key="wizard_question")
     if not question:
+        st.caption(idioma.t("wizard.try_examples"))
+        for n, item in enumerate(approved[:3]):
+            st.button(item["simple"], key=f"wizard_example_{n}", on_click=st.session_state.update,
+                      kwargs={"wizard_question": item["simple"]})
         return
-    approved = common.validated_questions(example_cfg())
-    item = max(approved, key=lambda q: len(words(question) & words(q["simple"] + " " + q["tecnica"])))
+    item = closest(question, approved)
+    if not item:
+        st.info(idioma.t("wizard.no_close"))
+        return
     st.markdown(idioma.t("wizard.closest"))
     st.info(f"**{common.md(item['simple'])}**")
     st.caption(idioma.t("wizard.defined_as") + common.md(item["tecnica"]))
@@ -136,13 +158,24 @@ def show_dictionary():
 
 
 def show_links():
+    """The demo's doubtful links, each with «Confirmar» and «Rechazar»: the decision lives in this session only, never
+    in linking/ (the real form, review_view, writes there)."""
     waiting = review_view.pending(review_view.files(EXAMPLE_DOMAIN))
+    decided = st.session_state.setdefault("wizard_links", {})
     st.markdown(idioma.t("wizard.links_example", n=len(waiting)))
-    for _, _, row in waiting[:3]:
+    for n, (_, _, row) in enumerate(waiting[:3]):
         with st.container(border=True):
             shown = [v for k, v in row.items() if v and k != "motivo"]
             st.markdown(" → ".join(f"**{common.md(v)}**" for v in shown))
             st.caption(common.md(row["motivo"]))
+            if n in decided:
+                st.markdown(idioma.t(f"wizard.{decided[n]}"))
+            yes, no, _ = st.columns([1, 1, 4])
+            yes.button(idioma.t("wizard.confirm"), key=f"wizard_link_yes_{n}", on_click=decided.update,
+                       args=({n: "confirmed"},))
+            no.button(idioma.t("wizard.reject"), key=f"wizard_link_no_{n}", on_click=decided.update,
+                      args=({n: "rejected"},))
+    st.caption(idioma.t("wizard.decision_kept"))
 
 
 def show_quality():
@@ -154,16 +187,23 @@ def show_quality():
 
 
 def show_results():
+    """The demo's measured evaluation, as «Por qué confiar» shows it: correct answers by the three approaches, and
+    the consistency test."""
     cfg = example_cfg()
+    trust = contraste.trust_numbers(cfg, common.read_json(cfg["evaluacion"]), {}, {}, lambda v: idioma.number(v, 0))
     st.markdown(idioma.t("wizard.results_example"))
-    rows = method_view.steps(EXAMPLE_DOMAIN, cfg, {})
-    common.tabla(pd.DataFrame([{idioma.t("dominio.method.col_step"): idioma.t(f"dominio.method.step_{k}"),
-                                idioma.t("dominio.method.col_status"): s} for k, s, _ in rows]), key="wizard_results")
+    for column, (label, key) in zip(st.columns(3), (("without", "b_correct"), ("links", "d_correct"),
+                                                     ("with", "c_correct"))):
+        column.metric(idioma.t(f"wizard.results_{label}"),
+                      idioma.t("wizard.of", x=trust[key], n=trust["n_questions"]) + " " + idioma.t("wizard.results_correct"))
+    st.caption(idioma.t("wizard.results_consistent", c=trust["c_consistent"], b=trust["b_consistent"],
+                        n=trust["n_consistency"]))
 
 
 def show_publish():
     st.markdown(idioma.t("wizard.publish_example"))
-    st.code("infra/customer/install.sh <dominio>", language="bash")
+    if st.button(idioma.t("inicio.pilot_button"), type="primary", key="wizard_pilot"):
+        inicio.pilot_dialog()
 
 
 EXAMPLES = {"fuentes": show_sources, "preguntas": show_questions, "diccionario": show_dictionary,

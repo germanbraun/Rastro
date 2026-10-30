@@ -2101,3 +2101,16 @@ experiment's log as method changes made after it; they do not change its measure
 - **Corrected on the way:** the slide said «60 in protected areas; otros 61 near a town», but the 61 included ventings
   already in a protected area. Counted as question 6 places them (protected first), the others are 47.
 
+## 2026-10-30 — The wizard's sketch, in business words and with something to decide
+
+- **Why:** walking the sketch's seven steps found internal names in view (skill names, file paths, «Agent SDK»), the
+  person's part written in Rastro's box (step 2), an unrelated «closest» question when nothing matched, «confirm or
+  reject» with nothing to press, the method's internal 0–8 table as «the results», and an install command as the end.
+- **What changed:** the texts say who does what, in business words; step 2 offers three approved questions as buttons
+  and says when no approved question is close (question words such as «cuánto» or «quién» do not count as a match);
+  step 4 has «Confirmar» and «Rechazar» per link, kept in the session only (the real form, which writes to
+  `linking/`, is not used); step 6 shows the measured 8 · 10 · 10 of 10 and the consistency test, with the pending
+  human check; step 7 ends in the start page's pilot offer. Still a sketch: it connects to nothing and calls no model.
+- **Checked:** `tests/test_wizard.py` (no internal names in its texts, the matching), and the seven steps in a real
+  browser in both languages; `linking/` unchanged.
+
