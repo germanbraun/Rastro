@@ -548,6 +548,12 @@ dominio.evaluation_detail.correct: {es: "**Respuesta correcta:** {answer}", en: 
 dominio.evaluation_detail.attempts_one: {es: "{lines} líneas · {n} intento", en: "{lines} lines · {n} attempt"}
 dominio.evaluation_detail.attempts_many: {es: "{lines} líneas · {n} intentos", en: "{lines} lines · {n} attempts"}
 
+# When a call to the language model fails (an API error, a refusal, a reply without the expected form):
+# plain words where the answer would be (common.model_failed); the error itself only in the technical view
+dominio.model_failed:
+  es: "El modelo de lenguaje no respondió esta vez{question}. Probá de nuevo en unos segundos: el resto de Rastro sigue funcionando."
+  en: "The language model did not answer this time{question}. Try again in a few seconds: the rest of Rastro keeps working."
+dominio.model_failed_question: {es: " a «{question}»", en: " to «{question}»"}
 # When a service is down (dominio.service_guard): plain words where the answer would be
 dominio.service_down:
   es: "Rastro no puede consultar los datos en este momento: {what} no responde. Lo demás de la pantalla sigue funcionando, y las cifras medidas de «Por qué confiar» siguen a la vista."

@@ -155,7 +155,10 @@ def explain(query, sql, domain, item=None, where="preguntar"):
         st.session_state[key] = stored
         if not stored:
             with st.spinner(idioma.t("dominio.explain.reading")):
-                st.session_state[key] = answer.explain_query(query, sql, domain, idioma.lang())
+                try:
+                    st.session_state[key] = answer.explain_query(query, sql, domain, idioma.lang())
+                except Exception as error:  # noqa: BLE001 - said in plain words (common.model_failed)
+                    common.model_failed(common.error_text(error), tech=True)   # explain is only in the technical view
     if st.session_state.get(key):
         st.info(common.md(st.session_state[key]))
 

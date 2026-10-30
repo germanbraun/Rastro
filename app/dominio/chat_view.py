@@ -47,11 +47,17 @@ def show_chat(cfg, tech):
     if history and st.button(idioma.t("dominio.chat.new"), key=f"{key}_new"):
         history.clear()
         st.rerun()
+    failed = st.session_state.pop(f"{key}_failed", None)   # (question, error) of a turn the model did not answer
+    if failed:
+        common.model_failed(failed[1], tech, question=failed[0])
     example = cfg.get("ejemplo_libre") or idioma.t("dominio.chat.placeholder")
     question = st.chat_input(example, key=f"{key}_input")
     if question:
         with st.chat_message("user"):
             st.markdown(question)
         with st.chat_message("assistant"), st.spinner(idioma.t("dominio.chat.thinking")):
-            history.append(chat.turn(question, history, domain, idioma.lang()))
+            try:
+                history.append(chat.turn(question, history, domain, idioma.lang()))
+            except Exception as error:  # noqa: BLE001 - any model failure is said in plain words, not as a trace
+                st.session_state[f"{key}_failed"] = (question, common.error_text(error))
         st.rerun()

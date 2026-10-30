@@ -24,7 +24,7 @@ sys.path.insert(0, "/layer/eval")
 import answer  # noqa: E402
 from run import NAMES, normalize, score  # noqa: E402
 import dominio  # noqa: E402  (what the shared screen offers: explain, show_why, show_faq, under_the_hood…)
-from dominio import ayuda, tabla  # noqa: E402  (the «?» icons and the tables with long text)
+from dominio import ayuda, common, tabla  # noqa: E402  (the «?» icons and the tables with long text)
 import idioma  # noqa: E402  (the interface language: Spanish by default, English on request)
 from idioma import t  # noqa: E402
 
@@ -622,7 +622,14 @@ def show(tech):
             question = st.text_area(t("oncologia.ask.question"), placeholder=t("oncologia.ask.placeholder"), help=ayuda("propia"))
             if st.button(t("oncologia.ask.answer"), type="primary", disabled=not available or not question.strip()):
                 with st.spinner(t("oncologia.ask.spinner")):
-                    result = answer.ask_rastro(question, "oncologia")
+                    try:
+                        st.session_state["free_answer"] = (question, answer.ask_rastro(question, "oncologia"))
+                    except Exception as error:  # noqa: BLE001 - said in plain words, not as a trace
+                        st.session_state.pop("free_answer", None)
+                        common.model_failed(common.error_text(error), TECH)
+            # The answer is kept, so a click below it (a row, «¿Por qué?») does not erase it
+            asked, result = st.session_state.get("free_answer", (None, None))
+            if result and asked == question:
                 if result.get("sin_datos"):
                     st.warning(t("oncologia.ask.no_data", reason=result["sin_datos"]))
                 elif result["query"] is None:

@@ -349,17 +349,23 @@ def sparql_console(domain):
         try:
             columns, rows = common.run(query, domain)
         except Exception as e:  # noqa: BLE001 - Ontop's error is shown as is
+            st.session_state.pop(f"{key}_resultado", None)
             st.error(str(e).strip()[:2000])
             return
-        st.caption(idioma.t("dominio.sparql_console.rows_one" if len(rows) == 1 else "dominio.sparql_console.rows_many",
-                            n=len(rows), seconds=f"{time.time() - started:.1f}"))
-        common.tabla(pd.DataFrame(rows, columns=columns), hide_index=True, use_container_width=True)
-        with st.expander(idioma.t("dominio.sparql_console.sql")):
-            try:
-                st.code(sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper",
-                                        indent_width=2), language="sql")
-            except requests.RequestException:
-                st.caption(idioma.t("dominio.show_answer.no_sql"))
+        st.session_state[f"{key}_resultado"] = (query, columns, rows, time.time() - started)
+    # The result is kept, so picking a row of the table (a rerun) does not erase it; a changed query hides it
+    ran, columns, rows, seconds = st.session_state.get(f"{key}_resultado", (None, None, None, None))
+    if ran != query:
+        return
+    st.caption(idioma.t("dominio.sparql_console.rows_one" if len(rows) == 1 else "dominio.sparql_console.rows_many",
+                        n=len(rows), seconds=f"{seconds:.1f}"))
+    common.tabla(pd.DataFrame(rows, columns=columns), hide_index=True, use_container_width=True)
+    with st.expander(idioma.t("dominio.sparql_console.sql")):
+        try:
+            st.code(sqlparse.format(answer.ontop_sql(query, domain), reindent=True, keyword_case="upper",
+                                    indent_width=2), language="sql")
+        except requests.RequestException:
+            st.caption(idioma.t("dominio.show_answer.no_sql"))
 
 
 GEO = "PREFIX geo: <http://www.opengis.net/ont/geosparql#>\n"

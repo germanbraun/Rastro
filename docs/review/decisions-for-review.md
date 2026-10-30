@@ -498,6 +498,13 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Q54.** Does renaming the card weaken the demo's first moment, or make it more credible to an SQL-literate buyer?
   Is «what summing by the reporting company assigns too much» still a fair way to show the cost of not integrating?
 
+**H19. A model failure is said in plain words** (2026-10-30)
+- **Decision:** when the language model fails (API error, refusal, malformed reply), the chat and the other model
+  features say so in one sentence and keep working; the error is shown only in the technical view, and a failed chat
+  question is left out of the conversation.
+- **Q55.** Should a failed turn retry once on its own before saying it failed, or is asking the person to try again
+  the better behaviour in front of a customer?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -569,7 +576,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q54). Skip any you have no view on.
+- Answer per question number (Q1–Q55). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

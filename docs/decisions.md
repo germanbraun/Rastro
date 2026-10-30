@@ -1978,3 +1978,18 @@ experiment's log as method changes made after it; they do not change its measure
 - **Found while publishing:** the Lab slide's body said «4 · 5 · 4» for the questions about predictions; the
   measured result (`layer/energia_lab/resultados.json`) is 4, 5 and 5. Typed by hand; corrected. These scores should
   become placeholders (batch 4).
+
+## 2026-10-30 — Audit, batch 2: a model failure is said in plain words; answers are kept
+
+- **Why:** the screen's guard (`service_guard`) catches Ontop and the database going down, not the language model.
+  An API error, a refusal or a reply without the expected form showed a Python trace in the chat, in «Explicame la
+  consulta» and in oncology's free question: in a live demo, the most likely failure.
+- **What:** `common.model_failed` says «El modelo de lenguaje no respondió esta vez a «…». Probá de nuevo…» where
+  the answer would be; the error itself only in the technical view. In the chat, the failed question is not added
+  to the conversation, so the next one is not built on it.
+- **Kept answers:** the SPARQL console of «Bajo el capó» and oncology's free question kept their result only during
+  the click that made it; any later click (picking a row of a long-text table) erased it. Both are kept in the
+  session now and shown while the query or question is the same.
+- **Checked:** `tests/test_chat_view.py` renders the chat with a model that fails (both views); a throwaway copy of
+  the app whose model never answers (`RASTRO_PROVIDER=files`, an empty folder) showed the message, no trace; the
+  console ran in the real app (10 rows, no error).

@@ -266,6 +266,20 @@ def validated_questions(cfg):
     return result
 
 
+def model_failed(detail, tech, question=None):
+    """A call to the language model that failed: said in plain words where the answer would be, instead of an error
+    trace; the error itself (detail) only in the technical view."""
+    asked = idioma.t("dominio.model_failed_question", question=question) if question else ""
+    st.warning(idioma.t("dominio.model_failed", question=asked))
+    if tech:
+        st.caption(detail)
+
+
+def error_text(error):
+    """An exception as one short line, for model_failed."""
+    return f"{type(error).__name__}: {str(error).strip()[:300]}"
+
+
 def llm_status():
     if answer.PROVIDER == "ollama":
         try:
