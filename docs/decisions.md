@@ -2075,7 +2075,8 @@ experiment's log as method changes made after it; they do not change its measure
 - **The recorded chat:** `RASTRO_PROVIDER=replay` with `RASTRO_RECORD` reads the replies a model gave before (gpt-5.5,
   13 of 13) with no key and no wait (two chained questions in 8 s, all of it Rastro's queries); a question not
   recorded says so, never calls a model. Only the recorded conversations, in Spanish, written as in
-  `layer/energia/chat/conversaciones.yaml`.
+  `layer/energia/chat/conversaciones.yaml`; the chat shows them as buttons (each conversation's first question, then
+  only the next one of the conversation under way), so nobody has to type them exactly.
 - **Ready check:** `python3 docs/respaldo/revisar.py` says whether the app, Rastro, the deck, the backup and the chat's
   model are ready, or the command that fixes each.
 - **Not measured, so not said:** hours saved. The card and the script say the pilot measures them.

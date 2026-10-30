@@ -585,6 +585,10 @@ dominio.chat.placeholder: {es: "Escribí una pregunta…", en: "Type a question�
 dominio.chat.thinking: {es: "Rastro consulta los datos…", en: "Rastro is querying the data…"}
 dominio.chat.data: {es: "Los datos y de dónde salen", en: "The data and where it comes from"}
 dominio.chat.new: {es: "Nueva conversación", en: "New conversation"}
+# RASTRO_PROVIDER=replay: the chat answers only the recorded conversations (layer/<domain>/chat/conversaciones.yaml)
+dominio.chat.recorded: {es: "Conversaciones grabadas: elegí una pregunta (sin clave, el chat responde solo estas).", en: "Recorded conversations: pick a question (without a key, the chat answers only these)."}
+dominio.chat.recorded_done: {es: "No quedan preguntas grabadas en esta conversación: «Nueva conversación» empieza otra.", en: "No recorded questions left in this conversation: «New conversation» starts another."}
+dominio.chat.recorded_spanish: {es: "Las conversaciones grabadas están en español.", en: "The recorded conversations are in Spanish: switch the app to Spanish to ask them."}
 dominio.chat.no_data: {es: "Rastro no tiene los datos para responder: {missing}", en: "Rastro does not have the data to answer: {missing}"}
 dominio.chat.unsupported:
   es: "Estos números de la respuesta no salen de los datos: {numbers}. Revisalos en la tabla de abajo."

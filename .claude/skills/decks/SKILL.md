@@ -50,7 +50,7 @@ Rastro» lists them all. The documents type the numbers with their source file: 
 9. **Walk through the Demo tab** of the app (the Spanish scripts open it with `?inicio=demo&lang=es`: the app opens in
    English, on its start page) (after `docker compose restart app` if its code changed), in Spanish and in English, and the script from start to end, out loud: if it does not fit in three minutes, something has to go.
 10. **Capture the backup again** when a demo number or screen changed: `python3 docs/respaldo/capturar.py` (needs Playwright and the app running) saves each moment of the Demo tab to `docs/respaldo/<lang>/` and a video to `data/raw/respaldo/`. Look at every screenshot before committing it; the script links them in its «Antes de empezar».
-11. **Before each demo:** `python3 docs/respaldo/revisar.py` says whether the app, Rastro, the built deck, the backup and the chat's model are ready, or the command that fixes each. Without a key, the chat answers the recorded conversations (`RASTRO_PROVIDER=replay`, `RASTRO_RECORD=/layer/energia/chat/llamadas-gpt-5.5`): say they are recorded, and ask them as written in `layer/energia/chat/conversaciones.yaml`.
+11. **Before each demo:** `python3 docs/respaldo/revisar.py` says whether the app, Rastro, the built deck, the backup and the chat's model are ready, or the command that fixes each. Without a key, the chat answers the recorded conversations (`RASTRO_PROVIDER=replay`, `RASTRO_RECORD=/layer/energia/chat/llamadas-gpt-5.5`): say they are recorded; the chat shows the recorded questions as buttons.
 
 ## Rules
 

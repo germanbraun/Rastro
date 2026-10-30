@@ -4,8 +4,12 @@ Each answer is in words, with its data and evidence below (the same view as a fr
 answer says that is not in its result is flagged. It is how a free question is asked in every domain; its example
 is the domain's «ejemplo_libre».
 """
-import streamlit as st
+from pathlib import Path
 
+import streamlit as st
+import yaml
+
+import answer
 import chat
 import idioma
 
@@ -33,6 +37,38 @@ def show_turn(cfg, tech, turn, index):
                                     where=f"chat{index}")
 
 
+def recorded_next(domain, history):
+    """With the recorded conversations (RASTRO_PROVIDER=replay), the questions that have a recorded answer now: the
+    first one of every conversation or, once one is under way, its next question. Each is asked as written."""
+    path = Path(answer.__file__).parent / domain / "chat" / "conversaciones.yaml"
+    if not path.exists():
+        return []
+    asked = [turn["question"] for turn in history]
+    nexts = []
+    for conversation in yaml.safe_load(path.read_text())["conversations"]:
+        questions = [turn["question"] for turn in conversation["turns"]]
+        if questions[:len(asked)] == asked and len(asked) < len(questions):
+            nexts.append(questions[len(asked)])
+    return nexts
+
+
+def recorded_buttons(domain, history, key):
+    """The recorded questions as buttons, so the demo asks them exactly as recorded. Returns the one clicked."""
+    if idioma.lang() != "es":
+        st.caption(idioma.t("dominio.chat.recorded_spanish"))
+        return None
+    options = recorded_next(domain, history)
+    if not options:
+        st.caption(idioma.t("dominio.chat.recorded_done"))
+        return None
+    st.caption(idioma.t("dominio.chat.recorded"))
+    chosen = None
+    for i, option in enumerate(options):
+        if st.button(option, key=f"{key}_recorded_{len(history)}_{i}"):
+            chosen = option
+    return chosen
+
+
 def show_chat(cfg, tech):
     domain = cfg["domain"]
     key = f"{domain}_chat"
@@ -52,6 +88,8 @@ def show_chat(cfg, tech):
         common.model_failed(failed[1], tech, question=failed[0])
     example = cfg.get("ejemplo_libre") or idioma.t("dominio.chat.placeholder")
     question = st.chat_input(example, key=f"{key}_input")
+    if answer.PROVIDER == "replay":
+        question = recorded_buttons(domain, history, key) or question
     if question:
         with st.chat_message("user"):
             st.markdown(question)

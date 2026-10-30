@@ -31,3 +31,27 @@ with patch.object(common, "llm_status", lambda: (True, "test")), patch.object(ch
     assert any("no respondió" in w and "¿Cuánto gas?" in w for w in warnings), warnings
     assert any("API error 500" in c.value for c in app.caption) == technical
     assert app.session_state["energia_chat"] == []   # the failed question is not part of the conversation
+
+
+def test_the_recorded_questions_are_buttons_that_ask_them():
+    script = '''
+from unittest.mock import patch
+from dominio import chat_view, common
+import answer, chat
+
+def recorded(question, history, domain, lang):
+    return {"question": question, "sin_datos": "grabada"}
+
+with patch.object(common, "llm_status", lambda: (True, "test")), patch.object(answer, "PROVIDER", "replay"), \\
+        patch.object(chat, "turn", recorded):
+    chat_view.show_chat({"domain": "energia"}, False)
+'''
+    app = AppTest.from_string(script).run(timeout=15)
+    first = [b.label for b in app.button]
+    assert "¿Qué empresa declaró más gas en 2025?" in first and len(first) == 7   # one per conversation
+    next(b for b in app.button if b.label == first[0]).click().run(timeout=15)
+    app.run(timeout=15)   # the run after st.rerun(): AppTest keeps the earlier run's buttons until then
+    asked = [turn["question"] for turn in app.session_state["energia_chat"]]
+    assert asked == [first[0]]
+    follow = [b.label for b in app.button if b.label != "Nueva conversación"]
+    assert follow == ["¿Y cuánto gas le corresponde por su participación en las concesiones?"]   # only its next one
