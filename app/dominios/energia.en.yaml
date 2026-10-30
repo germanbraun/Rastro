@@ -480,7 +480,7 @@ externo:
   grafo:
     rastro: "Rastro\\ncompany · LEI · oil 2025"
     fuente: "Wikidata (internet)\\nheadquarters · stock exchange · owner · website"
-    consulta: "one query\\n(GraphDB)"
+    consulta: "one federated\\nquery"
     clave: "  the same LEI  "
   columnas_guardado: {empresa: Company, bolsa: Listed on, sede: Headquarters, consultado: Queried on, wikidata: Wikidata}
   fecha_guardado: Oct 20, 2026
@@ -578,7 +578,7 @@ faq:
       company); a person still has to confirm them. They are in linking/energia/correcciones.csv, with their reason.
   - pregunta: Can it be joined with data from other organizations, such as Wikidata?
     respuesta: >-
-      Yes, through the LEI, which Rastro and Wikidata use in the same way. A single query in GraphDB joins, live and without
+      Yes, through the LEI, which Rastro and Wikidata use in the same way. A single federated query joins, live and without
       loading anything, Rastro's companies with what Wikidata knows about them: headquarters, the stock exchange they are listed on
       and website. This shows that YPF and Pampa Energía are listed on the New York Stock Exchange, a fact that is not
       in any of the six sources. Only 3 of the 12 companies with an LEI have it recorded in

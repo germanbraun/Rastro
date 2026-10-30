@@ -2029,3 +2029,16 @@ experiment's log as method changes made after it; they do not change its measure
 - **Not done here:** the other hand-typed numbers in slide bodies (the review list, sources, walkthrough examples)
   are correct today and stay as they are; Spanish comments are translated when their files are touched; GraphDB's
   name in the oncology deck and docs waits for the user's decision on the rule.
+
+## 2026-10-30 — The triplestore is named only where it is set up
+
+- **Why:** the audit found the triplestore's product name in visible places: the oncology deck and its architecture
+  diagram, oncology's FAQ and sources, a slide of the oil and gas annex and the enrichment diagram of the technical
+  view. The rule against naming commercial knowledge-graph products could not hold literally, because the
+  infrastructure is that product (`infra/docker-compose.yml`).
+- **Decision (the user's):** it may be named where the infrastructure is set up or explained (README, deployment and
+  decision docs, compose, code); never in the app's texts or the decks. Those now say «base de grafos» / "graph store"
+  or «consulta federada». `CLAUDE.md` states the exception.
+- **Found on the way:** `docs/diagramas/build.py` also rewrites the architecture and ontology slides, undoing the
+  style `docs/slides/estilo.py` gave them (footer included); those four were restored, and only the oncology
+  architecture slide was taken from the builder.

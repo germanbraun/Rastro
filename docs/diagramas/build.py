@@ -82,7 +82,7 @@ def architecture(domain):
     b.append(arrow(262, 260, 318, 260))
     if a["graphdb"]:
         b.append(box(20, 490, 240, 100, "MeSH", ["vocabulario médico"]))
-        b.append(box(320, 490, 240, 100, "GraphDB", ["MeSH completo"]))
+        b.append(box(320, 490, 240, 100, "Base de grafos", ["MeSH completo"]))
         b.append(arrow(262, 540, 318, 540))
     b.append(f'<text x="140" y="628" text-anchor="middle" font-size="20" fill="{GRAY}">un cargador por fuente</text>')
     # Semantic layer
@@ -102,7 +102,7 @@ def architecture(domain):
     b.append(arrow(1182, 270, 1248, 270))
     b.append(arrow(1182, 400, 1248, 400))
     if a["graphdb"]:
-        b.append(box(1250, 454, 380, 90, "GraphDB federa", ["Rastro + MeSH + Wikidata"], sub=20))
+        b.append(box(1250, 454, 380, 90, "Consulta federada", ["Rastro + MeSH + Wikidata"], sub=20))
         b.append(box(1250, 572, 380, 70, "Wikidata", [], fill=LIGHT, dash=True))
         b.append(arrow(1182, 490, 1248, 490))
         b.append(arrow(1440, 546, 1440, 568))
@@ -232,7 +232,7 @@ for name, drawing, sid, label, title, notes in [
     ("arquitectura-energia", architecture("energia"), "arquitectura-energia", "Cómo está armado", "De seis fuentes a una capa semántica",
      "De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL."),
     ("arquitectura-oncologia", architecture("oncologia"), "arquitectura-oncologia", "Cómo está armado", "De cuatro fuentes a una capa semántica",
-     "De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL. En oncología, MeSH vive también en GraphDB, que puede unir Rastro con MeSH y Wikidata en una sola consulta."),
+     "De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL. En oncología, MeSH vive también en una base de grafos, que puede unir Rastro con MeSH y Wikidata en una sola consulta."),
     ("ontologia-proveedores", ontology_suppliers(), "ontologiaprov", "El diccionario de proveedores",
      "Contratos, empresas y grupos",
      "El diccionario del dominio de proveedores. Un contrato tiene una agencia, un sector y un proveedor; "

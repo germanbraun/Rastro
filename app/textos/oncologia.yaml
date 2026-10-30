@@ -2,8 +2,8 @@
 oncologia.sources.rastro_link: {es: "enlace Rastro", en: "Rastro link"}
 oncologia.sources.note_postgres: {es: "en Postgres", en: "in Postgres"}
 oncologia.sources.note_mesh:
-  es: "completo en GraphDB, con búsqueda de texto; su jerarquía, copiada en Postgres"
-  en: "complete in GraphDB, with text search; its hierarchy, copied into Postgres"
+  es: "completo en una base de grafos, con búsqueda de texto; su jerarquía, copiada en Postgres"
+  en: "complete in a graph store, with text search; its hierarchy, copied into Postgres"
 
 oncologia.columns.links: {es: "enlaces de Rastro", en: "Rastro's links"}
 oncologia.columns.registry: {es: "registro de fuentes", en: "source registry"}
@@ -20,6 +20,7 @@ oncologia.plain.meaning: {es: "¿Qué significa {terms}?", en: "What does {terms
 
 oncologia.llm.no_ollama: {es: "Ollama no responde en {url}", en: "Ollama does not answer at {url}"}
 oncologia.llm.none: {es: "Sin LLM configurado", en: "No LLM configured"}
+oncologia.graph_store: {es: "base de grafos", en: "graph store"}
 
 oncologia.link_methods.regex:
   es: "con expresiones regulares sobre el texto de las intervenciones"

@@ -785,7 +785,7 @@ externo:
   grafo:                       # the diagram: Rastro, the outside source, the query that joins them and the shared key
     rastro: "Rastro\\nempresa · LEI · petróleo 2025"
     fuente: "Wikidata (internet)\\nsede · bolsa · dueño · sitio web"
-    consulta: "una consulta\\n(GraphDB)"
+    consulta: "una consulta\\nfederada"
     clave: "  el mismo LEI  "
   columnas_guardado: {empresa: Empresa, bolsa: Cotiza en, sede: Sede, consultado: Consultado el, wikidata: Wikidata}
   numericas: [su_parte_m3, declara_m3]
@@ -923,7 +923,7 @@ faq:
       Chevron); falta que una persona las confirme. Están en linking/energia/correcciones.csv, con su motivo.
   - pregunta: ¿Se puede unir con datos de otras organizaciones, como Wikidata?
     respuesta: >-
-      Sí, por el LEI, que Rastro y Wikidata usan igual. Una sola consulta en GraphDB une, en vivo y sin
+      Sí, por el LEI, que Rastro y Wikidata usan igual. Una sola consulta federada une, en vivo y sin
       cargar nada, las empresas de Rastro con lo que Wikidata sabe de ellas: sede, bolsa en la que cotizan
       y sitio web. Así aparece que YPF y Pampa Energía cotizan en la Bolsa de Nueva York, un dato que no
       está en ninguna de las seis fuentes. Solo 3 de las 12 empresas con LEI lo tienen cargado en

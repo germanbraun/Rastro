@@ -10,10 +10,10 @@
 <p>Vandetanib</p><p>8</p><p><b>cáncer de tiroides</b></p>
 </div>
 <div style="flex:1;display:flex;flex-direction:column;gap:20px;font-size:30px;line-height:1.4">
-<p>Rastro y Wikidata usan el <b>mismo identificador</b> de fármaco. GraphDB une los dos en vivo, sin cargar nada.</p>
+<p>Rastro y Wikidata usan el <b>mismo identificador</b> de fármaco. Una consulta federada une los dos en vivo, sin cargar nada.</p>
 <p>Afatinib y vandetanib están aprobados para otros cánceres y se prueban en mama: un dato que ninguna fuente de Rastro tiene.</p>
 </div>
 </div>
 <p style="font-size:26px;color:#4A5568">Consulta en layer/externo/wikidata.rq. Tarda unos 10 segundos y necesita internet.</p>
-<aside>Esto es lo que una base SQL no hace en una sola consulta: unir, en vivo, datos de otra organización. Funciona porque Rastro usa identificadores compartidos, el ChEMBL ID, que Wikidata también tiene. La consulta corre en GraphDB y combina tres grafos: Rastro, MeSH en el propio GraphDB y Wikidata en internet. Para la demo hay una copia del resultado por si no hay red.</aside>
+<aside>Esto es lo que una base SQL no hace en una sola consulta: unir, en vivo, datos de otra organización. Funciona porque Rastro usa identificadores compartidos, el ChEMBL ID, que Wikidata también tiene. La consulta corre en la base de grafos y combina tres grafos: Rastro, MeSH en esa misma base y Wikidata en internet. Para la demo hay una copia del resultado por si no hay red.</aside>
 </section>

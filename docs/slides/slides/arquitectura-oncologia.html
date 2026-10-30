@@ -31,7 +31,7 @@
 <text x="140.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">MeSH</text>
 <text x="140.0" y="558" text-anchor="middle" font-size="22" fill="#4A5568">vocabulario médico</text>
 <rect x="320" y="490" width="240" height="100" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="440.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB</text>
+<text x="440.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Base de grafos</text>
 <text x="440.0" y="558" text-anchor="middle" font-size="22" fill="#4A5568">MeSH completo</text>
 <line x1="262" y1="540" x2="318" y2="540" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="140" y="628" text-anchor="middle" font-size="20" fill="#4A5568">un cargador por fuente</text>
@@ -72,7 +72,7 @@
 <line x1="1182" y1="270" x2="1248" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <line x1="1182" y1="400" x2="1248" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <rect x="1250" y="454" width="380" height="90" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1440.0" y="492" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB federa</text>
+<text x="1440.0" y="492" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Consulta federada</text>
 <text x="1440.0" y="520" text-anchor="middle" font-size="20" fill="#4A5568">Rastro + MeSH + Wikidata</text>
 <rect x="1250" y="572" width="380" height="70" rx="14" fill="#F7F6F2" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
 <text x="1440.0" y="615.6666666666666" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Wikidata</text>
@@ -81,5 +81,5 @@
 <polyline points="562,560 600,560 600,662 1215,662 1215,515 1246,515" fill="none" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 </svg>
 </div>
-<aside>De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL. En oncología, MeSH vive también en GraphDB, que puede unir Rastro con MeSH y Wikidata en una sola consulta.</aside>
+<aside>De izquierda a derecha. Las fuentes públicas del dominio se cargan tal como vienen, en Postgres. La capa semántica tiene cuatro piezas: el entity linking, que crea las claves que faltan entre fuentes, con su evidencia; la ontología, con los conceptos de negocio; los mapeos, que dicen qué columna es qué concepto; y Ontop, que traduce cada consulta a SQL. Los datos no se mueven. La usa la app de dos formas: para preguntas, el LLM lee el diccionario y escribe la consulta; y como GraphRAG anclado en la capa: el grafo elige los registros con una consulta exacta y el LLM resume solo esos textos, citando cada uno. También la puede usar cualquier herramienta que hable SPARQL. En oncología, MeSH vive también en una base de grafos, que puede unir Rastro con MeSH y Wikidata en una sola consulta.</aside>
 </section>

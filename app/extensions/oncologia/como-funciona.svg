@@ -97,7 +97,7 @@
   <rect x="420" y="506" width="310" height="60" rx="6" fill="#f2faf4" stroke="#9fd0ad"/>
   <text x="575" y="524" text-anchor="middle" class="b">Enlaces ya resueltos y revisados</text>
   <text x="575" y="541" text-anchor="middle" class="s">entity linking hecho una vez: 98-99 % de precisión</text>
-  <text x="575" y="557" text-anchor="middle" class="s">AACT · ChEMBL · openFDA en Postgres · MeSH en GraphDB</text>
+  <text x="575" y="557" text-anchor="middle" class="s">AACT · ChEMBL · openFDA en Postgres · MeSH en una base de grafos</text>
 
   <path d="M575,446 L575,452" class="arrow"/>
   <path d="M575,498 L575,504" class="arrow"/>

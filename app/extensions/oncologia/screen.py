@@ -579,7 +579,7 @@ def show(tech):
             for key, info in sources().items():
                 st.markdown(f"{STORAGE.get(key, '')} **{info['name']}**  \n<small>{info['license']}</small>",
                             unsafe_allow_html=True)
-            st.caption("🐘 Postgres · 🕸️ GraphDB")
+            st.caption("🐘 Postgres · 🕸️ " + t("oncologia.graph_store"))
         else:
             st.caption(t("oncologia.sidebar.public_data"))
 

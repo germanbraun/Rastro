@@ -37,7 +37,7 @@
     - 🐘 **AACT**, in Postgres: the public registry of **clinical trials**. Phase, status, sponsor and what is tested, as free text.
     - 🐘 **ChEMBL**, in Postgres: **drugs**, whether they are approved and which **protein** they act on (the target, with the name of its gene, such as HER2).
     - 🐘 **openFDA**, in Postgres: **adverse event reports** sent to the FDA. They are notices, not risk percentages.
-    - 🕸️ **MeSH**, in GraphDB, with a copy of its hierarchy in Postgres: the **medical vocabulary** that knows which disease is a subtype of which.
+    - 🕸️ **MeSH**, in a graph store, with a copy of its hierarchy in Postgres: the **medical vocabulary** that knows which disease is a subtype of which.
 
     More detail, examples and a glossary in docs/fuentes.md.
 
@@ -96,7 +96,7 @@
 
 - question: Can it query data that is not in Rastro?
   answer: |-
-    Yes, if they share identifiers. A single query in GraphDB combines Rastro, MeSH and **Wikidata**, live and without loading anything: for example, for each anti-HER2 drug, which diseases it treats according to Wikidata. The join is the ChEMBL ID, which Rastro and Wikidata use alike. That is how it shows that afatinib (approved for lung cancer) and vandetanib (thyroid) are tested in breast cancer.
+    Yes, if they share identifiers. A single federated query combines Rastro, MeSH and **Wikidata**, live and without loading anything: for example, for each anti-HER2 drug, which diseases it treats according to Wikidata. The join is the ChEMBL ID, which Rastro and Wikidata use alike. That is how it shows that afatinib (approved for lung cancer) and vandetanib (thyroid) are tested in breast cancer.
 
     Detail in layer/externo/.
 

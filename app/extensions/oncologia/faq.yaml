@@ -41,7 +41,7 @@
     - 🐘 **AACT**, en Postgres: el registro público de **ensayos clínicos**. Fase, estado, sponsor y qué se prueba, como texto libre.
     - 🐘 **ChEMBL**, en Postgres: **fármacos**, si están aprobados y sobre qué **proteína** actúan (el target, con el nombre de su gen, como HER2).
     - 🐘 **openFDA**, en Postgres: **reportes de efectos adversos** enviados a la FDA. Son avisos, no porcentajes de riesgo.
-    - 🕸️ **MeSH**, en GraphDB, con una copia de su jerarquía en Postgres: el **vocabulario médico** que sabe qué enfermedad es subtipo de cuál.
+    - 🕸️ **MeSH**, en una base de grafos, con una copia de su jerarquía en Postgres: el **vocabulario médico** que sabe qué enfermedad es subtipo de cuál.
 
     Más detalle, ejemplos y un glosario en docs/fuentes.md.
 # --- Frente a SQL -----------------------------------------------------
@@ -106,7 +106,7 @@
 - question: ¿Puede consultar datos que no están en Rastro?
   tecnico: true
   answer: |-
-    Sí, si comparten identificadores. Una sola consulta en GraphDB combina Rastro, MeSH y **Wikidata**, en vivo y sin cargar nada: por ejemplo, para cada fármaco anti-HER2, qué enfermedades trata según Wikidata. El cruce es el ChEMBL ID, que Rastro y Wikidata usan igual. Así aparece que afatinib (aprobado para cáncer de pulmón) y vandetanib (tiroides) se prueban en cáncer de mama.
+    Sí, si comparten identificadores. Una sola consulta federada combina Rastro, MeSH y **Wikidata**, en vivo y sin cargar nada: por ejemplo, para cada fármaco anti-HER2, qué enfermedades trata según Wikidata. El cruce es el ChEMBL ID, que Rastro y Wikidata usan igual. Así aparece que afatinib (aprobado para cáncer de pulmón) y vandetanib (tiroides) se prueban en cáncer de mama.
 
     Detalle en layer/externo/.
 

@@ -580,7 +580,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q58; some have a letter, such as Q27b, when they were added under an earlier question). Skip any you have no view on.
+- Answer per question number (Q1–Q59; some have a letter, such as Q27b, when they were added under an earlier question). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

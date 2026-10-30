@@ -28,7 +28,7 @@
 <text x="140.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">MeSH</text>
 <text x="140.0" y="558" text-anchor="middle" font-size="22" fill="#4A5568">vocabulario médico</text>
 <rect x="320" y="490" width="240" height="100" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="440.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB</text>
+<text x="440.0" y="528" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Base de grafos</text>
 <text x="440.0" y="558" text-anchor="middle" font-size="22" fill="#4A5568">MeSH completo</text>
 <line x1="262" y1="540" x2="318" y2="540" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <text x="140" y="628" text-anchor="middle" font-size="20" fill="#4A5568">un cargador por fuente</text>
@@ -69,7 +69,7 @@
 <line x1="1182" y1="270" x2="1248" y2="270" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <line x1="1182" y1="400" x2="1248" y2="400" stroke="#4A5568" stroke-width="2.5" marker-end="url(#arrow)"/>
 <rect x="1250" y="454" width="380" height="90" rx="14" fill="#FFFFFF" stroke="#9AA5B8" stroke-width="2"/>
-<text x="1440.0" y="492" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">GraphDB federa</text>
+<text x="1440.0" y="492" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Consulta federada</text>
 <text x="1440.0" y="520" text-anchor="middle" font-size="20" fill="#4A5568">Rastro + MeSH + Wikidata</text>
 <rect x="1250" y="572" width="380" height="70" rx="14" fill="#F7F6F2" stroke="#9AA5B8" stroke-width="2" stroke-dasharray="8,6"/>
 <text x="1440.0" y="615.6666666666666" text-anchor="middle" font-size="26" font-weight="700" fill="#14213D">Wikidata</text>
