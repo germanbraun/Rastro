@@ -32,7 +32,7 @@ Si no sos del dominio, leé primero [fuentes.md](fuentes.md) (10 minutos). La ap
 
 > «¿Por qué dice Rastro que un ensayo prueba trastuzumab? Cada enlace guarda su evidencia: lo que escribió el sponsor, con qué coincidió y con qué regla. Acá, "Adjuvant Systemic Therapy" es trastuzumab emtansina porque el sponsor lo declaró como alias. Se puede abrir cada ensayo. Esta procedencia está en el grafo, con un estándar del W3C: una respuesta auditable.»
 
-> «El LLM no vio tablas: recibió la ontología y escribió esta consulta corta, en conceptos. Abajo, el SQL que generó Ontop. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto; con la integración hecha, 435.»
+> «El LLM no vio tablas: recibió la ontología y escribió esta consulta corta, en conceptos. Abajo, el SQL que generó Ontop. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto; con la integración hecha, 517.»
 
 ## 3:00 – 4:30 · La comparación honesta (diapositiva 6)
 

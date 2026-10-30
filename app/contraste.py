@@ -173,6 +173,8 @@ def main(domain):
             numbers[item["id"]] = shown(card, values(card, sql, sparql),
                                         lambda value, decimals: format_number(value, decimals, "es"))
     numbers["cambio"] = change_numbers(cfg, read("cambio"), lambda value, decimals: format_number(value, decimals, "es"))
+    if read("correccion"):   # the correction test: in how many places the same value lives without Rastro
+        numbers["correccion"] = {"lugares": format_number(read("correccion")["lugares_sin_rastro"], 0, "es")}
     from dominio import extension
     numbers["demo"] = story_numbers(cfg, sparql, lambda value, decimals: format_number(value, decimals, "es"),
                                     extension.load(cfg))

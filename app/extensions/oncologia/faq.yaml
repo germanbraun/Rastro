@@ -74,7 +74,7 @@
 - question: ¿Dónde quedó la complejidad del SQL?
   tecnico: true
   answer: |-
-    En la integración, hecha una vez. En la pregunta de HER2, el LLM escribió 1.543 caracteres de SQL sin integración, 571 de SQL sobre las tablas de enlaces y 435 de SPARQL sobre Rastro. La gran diferencia la hace integrar; SPARQL la hace un poco más corta y en palabras de negocio, y Rastro genera el SQL.
+    En la integración, hecha una vez. En la pregunta de HER2, el LLM escribió 1.543 caracteres de SQL sin integración, 571 de SQL sobre las tablas de enlaces y 517 de SPARQL sobre Rastro. La gran diferencia la hace integrar; SPARQL la hace un poco más corta y en palabras de negocio, y Rastro genera el SQL.
 
 - question: En oncología, ¿qué pasó cuando cambió una fuente?
   tecnico: true

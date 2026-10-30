@@ -18,7 +18,7 @@ from pathlib import Path
 AQUI = Path(__file__).parent
 MAZO = AQUI / "mazos" / "energia.json"
 PIE_TEXTO = "Rastro · Petróleo y gas en Argentina"
-SIN_PIE = {"cover-energia", "anexo-energia"}    # cover and appendix divider
+SIN_PIE = {"cover-energia", "anexo-energia", "anexo-tecnico-energia"}    # cover and appendix dividers
 COMPARTIDAS = {"quees", "beneficios", "anexo"}  # copied for this deck
 ALTO_DIBUJO = {"arquitectura-energia": 600, "ontologiaenergia": 600, "instancia-energia": 440}   # px, so they fit above the footer
 TEXTO = "'Times New Roman', Times, serif"

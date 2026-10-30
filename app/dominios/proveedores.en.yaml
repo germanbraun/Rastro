@@ -89,7 +89,7 @@ preguntas:
     terminos:
       Grupo: {term: "Corporate group", text: "the parent company and all its subsidiaries."}
     antes_despues:
-      sin: {valor: "US$ 56.4 billion", detalle: "A search by the name «Leidos» leaves out companies of the group with another legal name (QTC, Dynetics, Gibbs & Cox and 1901 Group: US$ 7.7 billion) and includes a joint venture outside the group."}
+      sin: {valor: "US$ 56.4 billion", detalle: "A search by the name «Leidos» leaves out companies of the group with another legal name (QTC, Dynetics, Gibbs & Cox and 1901 Group: US$ 7.7 billion)."}
       con: {valor: "US$ 63.4 billion", detalle: "30 companies: the 13 «parent companies» in the contracts database, consolidated into one group, with the evidence for each link."}
     evidencia:
       texto: "Why each company is part of the Leidos corporate group (some examples):"

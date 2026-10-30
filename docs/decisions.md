@@ -2059,3 +2059,33 @@ experiment's log as method changes made after it; they do not change its measure
   annex slides, nor five sources where there are six.
 - **Next, not done:** oncology and suppliers (four slides past the footer, a fair-baseline framing, hand-typed
   numbers) and placeholders for the oil and gas annex's hand-typed numbers.
+
+## 2026-10-30 — The demo made to sell: a pocket card, the cost, the pilot, a recorded chat
+
+- **Why:** the demo proved Rastro is right but not what it is worth, its script had some 20 answers to «Si preguntan»
+  that nobody memorizes, the close said «un piloto» without its shape, and the chat needed a paid key and 20 to 40
+  seconds per answer.
+- **What changed:** a pocket card (`docs/slides/tarjeta.html`, two printable slides: the four sentences and the five
+  questions that always come up, numbers as placeholders); a slide «Lo que cuesta sin Rastro» (8) with three measured
+  numbers, the same as the app's start page: US$ 3.600 M assigned in excess (at an assumed US$ 65 a barrel), 3 broken
+  queries, 5 places for one value (the last now read from `correccion.json`, also on slide 6); the pilot slide of the
+  executive deck closes the oil and gas story (11); the annex split into frequent questions (12–35, with the Wikidata
+  slide moved in) and technical detail (36–44, its own divider). The story is 11 slides; the script's slide numbers
+  moved with it.
+- **The recorded chat:** `RASTRO_PROVIDER=replay` with `RASTRO_RECORD` reads the replies a model gave before (gpt-5.5,
+  13 of 13) with no key and no wait (two chained questions in 8 s, all of it Rastro's queries); a question not
+  recorded says so, never calls a model. Only the recorded conversations, in Spanish, written as in
+  `layer/energia/chat/conversaciones.yaml`.
+- **Ready check:** `python3 docs/respaldo/revisar.py` says whether the app, Rastro, the deck, the backup and the chat's
+  model are ready, or the command that fixes each.
+- **Not measured, so not said:** hours saved. The card and the script say the pilot measures them.
+- **Oncology and suppliers decks (the audit's second batch):** four diagram slides fit above the footer (the diagram
+  builder keeps their height); Leidos' «Sin Rastro» card no longer blames a joint venture the evaluated answer with
+  Rastro also added (64.100 against the query's 63.400, within 5 %: the notes say so); «4 de 5» says one of them is
+  the same wrong answer four times; oncology's consistency card says SQL over Rastro's links also changes in 0 of 10;
+  the SPARQL length is 517, as in `layer/eval/results.json` (435 was older); «tres» domains; jargon out of the
+  business slides (LLM, compliance, sponsor, targets); the shared «Qué es» and annex divider no longer promise what
+  one deck lacks.
+- **Pending, needs people:** the credibility step (a person checks the references and the AI-reviewed corrections, a
+  blind test with outside consultants, a timed run by someone else), in `docs/plan.md`.
+

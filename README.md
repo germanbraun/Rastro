@@ -282,6 +282,7 @@ Everything a prospect gets, in Spanish and in English (each page links its twin;
 | Executive deck (7 slides, a sales talk track in the notes) | `docs/slides/mazos/ejecutivo.json` | `docs/slides/mazos/ejecutivo-en.json` |
 | Email to a prospect (a draft) | [docs/email-prospecto.md](docs/email-prospecto.md) | same file |
 | The full demo and its script | `docs/slides/mazos/energia.json`, [docs/demo-guion-energia.md](docs/demo-guion-energia.md) | the app's English view |
+| For whoever gives the demo: the pocket card (four sentences, five objections) and the ready check | `docs/slides/mazos/tarjeta.json`, `python3 docs/respaldo/revisar.py` | — |
 
 The decks are built with `python3 docs/slides/build.py`; `--export <deck> <folder>` writes a deck's files for the
 shared slide decks. Every number comes from the measured result files, never typed.

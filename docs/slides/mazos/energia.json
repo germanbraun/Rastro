@@ -16,8 +16,10 @@
     "e-cambio",
     "e-correccion",
     "e-predecir",
+    "e-costo",
     "e-porque-capa",
     "limites-energia",
+    "e-piloto",
     "anexo-energia",
     "e-ejemplo-mapeo",
     "e-ejemplo-enlace",
@@ -41,11 +43,12 @@
     "e-revisar",
     "textos-energia",
     "e-conversar",
+    "e-externo",
+    "anexo-tecnico-energia",
     "dominio-energia",
     "preguntas-energia",
     "rastro-energia",
     "beneficios-energia",
-    "e-externo",
     "arquitectura-energia",
     "ontologiaenergia",
     "instancia-energia",
@@ -57,8 +60,12 @@
       "start": "cover-energia"
     },
     "s2": {
-      "description": "Anexo: las demás preguntas y el detalle técnico",
+      "description": "Anexo: una diapositiva por pregunta frecuente",
       "start": "anexo-energia"
+    },
+    "s3": {
+      "description": "Anexo técnico: dominio, preguntas, arquitectura y ontología",
+      "start": "anexo-tecnico-energia"
     }
   }
 }

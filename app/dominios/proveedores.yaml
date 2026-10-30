@@ -125,7 +125,7 @@ preguntas:
     terminos:
       Grupo: la empresa matriz y todas sus filiales.
     antes_despues:              # medido en layer/proveedores/resultados.json (SQL sin Rastro, 2026-10-19)
-      sin: {valor: "US$ 56.400 M", detalle: "Una búsqueda por el nombre «Leidos» omite empresas del grupo con otra razón social (QTC, Dynetics, Gibbs & Cox y 1901 Group: US$ 7.700 M) e incluye un consorcio ajeno al grupo."}
+      sin: {valor: "US$ 56.400 M", detalle: "Una búsqueda por el nombre «Leidos» omite empresas del grupo con otra razón social (QTC, Dynetics, Gibbs & Cox y 1901 Group: US$ 7.700 M)."}
       con: {valor: "US$ 63.400 M", detalle: "30 empresas: las 13 «matrices» de la base de contratos, consolidadas en un grupo, con la evidencia de cada vínculo."}
     evidencia:
       texto: "Por qué cada empresa es parte del grupo Leidos (algunos ejemplos):"

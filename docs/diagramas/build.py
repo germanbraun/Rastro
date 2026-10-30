@@ -219,6 +219,7 @@ def ontology_energy():
 
 # The same images go to the app and, each inside a slide, to the deck
 ROOT = HERE.parent.parent
+FIT = {"ontologia": 700, "ontologiaprov": 700}   # slide id → drawing height in px, where the full one would pass the footer
 SLIDE = """<section id="{id}" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">{label}</p>
 <h2 style="font-size:56px;font-weight:700;line-height:1.1">{title}</h2>
@@ -238,7 +239,7 @@ for name, drawing, sid, label, title, notes in [
      "El diccionario del dominio de proveedores. Un contrato tiene una agencia, un sector y un proveedor; "
      "el proveedor pertenece a un grupo, y el grupo y el proveedor tienen su entidad legal en el registro "
      "global (LEI), con su país y su matriz final. Los sectores incluyen sus subsectores. Arriba, una regla "
-     "de negocio: «proveedor para revisar» no tiene mapeo; Ontop la deduce de dos clases: matriz extranjera "
+     "de negocio: «proveedor para revisar» no tiene mapeo; Rastro la deduce de dos clases: matriz extranjera "
      "o coincidencia con una lista de control. Cada unión guarda su evidencia, con PROV-O."),
     ("ontologia-energia", ontology_energy(), "ontologiaenergia", "El diccionario de petróleo y gas",
      "Pozos, concesiones y socios",
@@ -247,19 +248,21 @@ for name, drawing, sid, label, title, notes in [
      "pozo tiene su operadora de hoy, según una regla escrita. Los venteos, vistos por satélite o declarados, caen "
      "en una concesión. Cada concesión sabe a qué distancia está el gasoducto de transporte más cercano (ENARGAS); "
      "cada venteo, su localidad más cercana y si cae en un área protegida (IGN); y las empresas que lo tienen, su LEI "
-     "(GLEIF). Arriba, una regla de negocio: «no convencional» no tiene mapeo; Ontop la deduce de shale y tight. Cada "
+     "(GLEIF). Arriba, una regla de negocio: «no convencional» no tiene mapeo; Rastro la deduce de shale y tight. Cada "
      "unión guarda su evidencia, con PROV-O."),
     ("ontologia", ontology(), "ontologia", "El diccionario de oncología", "Ensayos, fármacos y enfermedades",
      "Esto es lo que lee el LLM en lugar de las tablas. Un ensayo prueba fármacos, tiene un sponsor y estudia una "
      "condición, que es un descriptor de MeSH: así cáncer de pulmón incluye sus subtipos. Un fármaco actúa sobre "
      "targets y tiene reportes de eventos adversos. Arriba, las clases de fármaco: terapia dirigida no tiene ningún "
-     "mapeo, Ontop la deduce de sus subclases. Abajo, el enlace: cada «ensayo prueba fármaco» guarda su evidencia "
+     "mapeo, Rastro la deduce de sus subclases. Abajo, el enlace: cada «ensayo prueba fármaco» guarda su evidencia "
      "(el texto del sponsor, lo que coincidió y la regla) con PROV-O, el estándar del W3C para procedencia. "
      "Cada dato apunta a su fuente y su licencia."),
 ]:
     (HERE / f"{name}.svg").write_text(drawing)
     (ROOT / "app" / f"{name}.svg").write_text(drawing)
     inline = drawing.replace('width="1664" height="680"', 'width="100%"').replace('width="1680" height="740"', 'width="100%"')
+    if sid in FIT:   # the drawing's height on the slide, so it ends above the footer (920 px)
+        inline = inline.replace('width="100%"', f'width="100%" height="{FIT[sid]}"', 1)
     (ROOT / "docs" / "slides" / "slides" / f"{sid}.html").write_text(
         SLIDE.format(id=sid, label=label, title=title, svg=inline, notes=notes))
 print("Diagramas listos: docs/diagramas, app y docs/slides/slides")

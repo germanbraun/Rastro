@@ -143,6 +143,17 @@ Para el MVP 1, solo con Rastro Layer.
 
 **Checkpoint:** alguien de ventas da la demo siguiendo solo el guion.
 
+Commercial demo improvements (October 30, 2026). Done: the pocket card (`docs/slides/tarjeta.html`), the annex split
+into frequent questions and technical detail, the «what it costs without Rastro» slide, the pilot offer on the
+closing slide, the recorded chat (`RASTRO_CHAT_REPLAY`) and the demo-ready check. **Pending, needs people:**
+
+- [ ] A person checks the evaluation references (`layer/energia/revision/formulario.csv`, then
+      `review_packet.py energia record`), so «10 de 10» stops being provisional
+- [ ] A blind test with 2 or 3 consultants outside the project (`docs/invitacion-prueba-a-ciegas.md`)
+- [ ] A person confirms the AI-reviewed corrections the demo shows (Chevron, Vista, CGC in `linking/energia/`)
+- [ ] Someone outside the project gives the demo with the pocket card, timed, and says where it stalls
+- [ ] Optional: time an analyst redoing question 1 in SQL against Rastro (only said once measured)
+
 ## Riesgos
 
 | Riesgo | Qué hacemos |

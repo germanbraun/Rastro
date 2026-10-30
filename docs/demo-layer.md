@@ -3,9 +3,9 @@
 Abrir **Demo**, primer momento, o **Preguntar → primera pregunta → Responder**. En la demo de 3 minutos se usa YPF y
 Loma Campana (su unión de nombres no depende de una corrección); este recorrido, con Chevron, es el del anexo.
 
-1. **La respuesta** (diapositiva 15). «Cuánto le corresponde a cada empresa según su participación registrada. Es distinto de cuánto declara como operadora».
-2. **Las conexiones** (diapositiva 16). Activar **¿Por qué este número?**, elegir **CHEVRON** y **LOMA CAMPANA**. «La producción de los pozos se conecta con los socios de la misma concesión. Su parte es producción × participación; el total suma todas sus concesiones».
-3. **La evidencia** (diapositiva 17). Abrir **Ver los registros originales** y **Ver cómo se conectaron los nombres**. «El texto del mapa conserva el nombre original; el enlace apunta a una empresa compartida y dice con qué regla se unió». Decir que la confirmación humana sigue pendiente: la parte de Chevron en Loma Campana depende de esa unión, y la app y las diapositivas lo muestran.
+1. **La respuesta** (diapositiva 17). «Cuánto le corresponde a cada empresa según su participación registrada. Es distinto de cuánto declara como operadora».
+2. **Las conexiones** (diapositiva 18). Activar **¿Por qué este número?**, elegir **CHEVRON** y **LOMA CAMPANA**. «La producción de los pozos se conecta con los socios de la misma concesión. Su parte es producción × participación; el total suma todas sus concesiones».
+3. **La evidencia** (diapositiva 19). Abrir **Ver los registros originales** y **Ver cómo se conectaron los nombres**. «El texto del mapa conserva el nombre original; el enlace apunta a una empresa compartida y dice con qué regla se unió». Decir que la confirmación humana sigue pendiente: la parte de Chevron en Loma Campana depende de esa unión, y la app y las diapositivas lo muestran.
 
 El mensaje: **las fuentes se traducen al mismo vocabulario y las entidades se conectan una vez; las preguntas reutilizan esas definiciones**. SQL sobre los mismos enlaces también puede obtener el resultado. No prometer mayor precisión por usar RDF.
 

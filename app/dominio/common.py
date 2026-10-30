@@ -270,7 +270,8 @@ def model_failed(detail, tech, question=None):
     """A call to the language model that failed: said in plain words where the answer would be, instead of an error
     trace; the error itself (detail) only in the technical view."""
     asked = idioma.t("dominio.model_failed_question", question=question) if question else ""
-    st.warning(idioma.t("dominio.model_failed", question=asked))
+    key = "dominio.model_not_recorded" if answer.PROVIDER == "replay" else "dominio.model_failed"
+    st.warning(idioma.t(key, question=asked))
     if tech:
         st.caption(detail)
 
@@ -287,6 +288,8 @@ def llm_status():
             return True, f"Ollama · {answer.MODEL}"
         except requests.RequestException:
             return False, idioma.t("dominio.llm_status.no_answer", url=answer.OLLAMA)
+    if answer.PROVIDER == "replay" and os.environ.get("RASTRO_RECORD"):
+        return True, idioma.t("dominio.llm_status.replay", folder=os.path.basename(os.environ["RASTRO_RECORD"]))
     if answer.PROVIDER == "openai" and os.environ.get("OPENAI_API_KEY") and answer.MODEL:
         return True, f"OpenAI API · {answer.MODEL}"
     if os.environ.get("ANTHROPIC_API_KEY"):

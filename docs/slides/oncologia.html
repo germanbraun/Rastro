@@ -55,7 +55,7 @@ addEventListener('resize', fit); fit();
 <div style="display:flex;align-items:center;gap:28px">
 <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Las bases de datos</p><p style="font-size:30px;line-height:1.4;color:#4A5568">Cada una con sus nombres y su formato. Permanecen donde están.</p></div>
 <p style="font-size:64px;color:#2F6FB5">→</p>
-<div style="flex:1.2;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Diccionario de negocio</p><p style="font-size:30px;line-height:1.4">Contrato, empresa, grupo, agencia. Rastro traduce cada base a estas palabras, una vez.</p></div>
+<div style="flex:1.2;background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Diccionario de negocio</p><p style="font-size:30px;line-height:1.4">Los conceptos del negocio, con sus nombres de siempre. Rastro traduce cada base a estas palabras, una vez.</p></div>
 <p style="font-size:64px;color:#2F6FB5">→</p>
 <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px"><p style="font-size:40px;font-weight:700">Las preguntas</p><p style="font-size:30px;line-height:1.4;color:#4A5568">En lenguaje de negocio. Cada respuesta indica su fuente.</p></div>
 </div>
@@ -85,7 +85,7 @@ addEventListener('resize', fit); fit();
 <li>¿Cuántos ensayos hay por fase para fármacos que actúan sobre EGFR?</li>
 <li>¿Qué empresas tienen más ensayos detenidos en cáncer de pulmón, y por qué?</li>
 <li>¿Cuáles son los eventos adversos más reportados de los fármacos que se prueban en leucemia?</li>
-<li>¿Qué targets tienen fármacos en ensayos activos pero ningún fármaco aprobado?</li>
+<li>¿Sobre qué dianas actúan fármacos en ensayos activos pero ningún fármaco aprobado?</li>
 <li>¿Cuántos ensayos de fase 3 de cáncer de mama prueban alguna terapia dirigida?</li>
 <li>¿Por qué se detuvieron los ensayos de fase 3 de cáncer de pulmón con inhibidores de quinasa?</li>
 </ol>
@@ -106,7 +106,7 @@ addEventListener('resize', fit); fit();
 <div style="flex:1.2;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:16px">
 <p style="font-size:28px;color:#4A5568">Y por qué lo dice: lo que escribió quien registró el ensayo</p>
 <p style="font-size:30px;line-height:1.4">«Bevacizumab (drug), Herceptin (drug)» → <b>trastuzumab</b>, por su marca</p>
-<p style="font-size:30px;line-height:1.4">«Adjuvant Systemic Therapy» → <b>trastuzumab emtansina</b>, porque el sponsor lo declaró así</p>
+<p style="font-size:30px;line-height:1.4">«Adjuvant Systemic Therapy» → <b>trastuzumab emtansina</b>, porque el patrocinador lo declaró así</p>
 <p style="font-size:26px;color:#4A5568">Cada ensayo se puede abrir y comprobar.</p>
 </div>
 </div>
@@ -119,10 +119,10 @@ addEventListener('resize', fit); fit();
 <h2 style="font-size:60px;font-weight:700;line-height:1.12;width:1664px">Ensayos clínicos de cáncer: «¿Qué fármacos contra HER2 se prueban en cáncer de mama?»</h2>
 <div style="display:flex;gap:32px">
 <div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Sin Rastro</p><p style="font-size:72px;font-weight:700;color:#4A5568">9 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">preguntas cambiaron de respuesta al formularse de cuatro maneras distintas. El mismo fármaco figura como «Pembrolizumab 200 mg», como un código o como «KEYTRUDA».</p></div>
-<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">0 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">La respuesta se mantiene, porque cada fármaco se vinculó una sola vez, con su evidencia.</p></div>
+<div style="flex:1;background:#FFFFFF;border-radius:20px;padding:36px;display:flex;flex-direction:column;gap:14px"><p style="font-size:32px;font-weight:700">Con Rastro</p><p style="font-size:72px;font-weight:700;color:#2F6FB5">0 de 10</p><p style="font-size:28px;line-height:1.4;color:#4A5568">La respuesta se mantiene, porque cada fármaco se vinculó una sola vez, con su evidencia. Un SQL sobre los mismos enlaces de Rastro, también 0 de 10.</p></div>
 </div>
-<p style="font-size:34px;line-height:1.35;width:1664px"><b>El enfoque es aplicable a cualquier dominio; la demo lo muestra en dos.</b></p>
-<aside>El mismo Rastro, con datos de otro mundo: ensayos clínicos de cáncer, fármacos, efectos adversos y enfermedades, de cuatro fuentes públicas. El problema es el mismo: el mismo fármaco escrito de varias formas. Haciendo cada pregunta de cuatro formas, sin Rastro la respuesta cambió en 9 de 10 preguntas; con Rastro, en ninguna. Si hay tiempo, mostrarlo en la app cambiando el dominio a Oncología.</aside>
+<p style="font-size:34px;line-height:1.35;width:1664px"><b>El enfoque es aplicable a cualquier dominio; la demo lo muestra en tres.</b></p>
+<aside>El mismo Rastro, con datos de otro mundo: ensayos clínicos de cáncer, fármacos, efectos adversos y enfermedades, de cuatro fuentes públicas. El problema es el mismo: el mismo fármaco escrito de varias formas. Haciendo cada pregunta de cuatro formas, sin Rastro la respuesta cambió en 9 de 10 preguntas; con Rastro, en ninguna. Con un SQL sobre las mismas tablas de enlaces de Rastro, tampoco: la consistencia viene de integrar una vez (layer/consistencia/README.md). Si hay tiempo, mostrarlo en la app cambiando el dominio a Oncología.</aside>
 </section>
 </div>
 <div class="slide">
@@ -176,7 +176,7 @@ addEventListener('resize', fit); fit();
 <section id="anexo" style="background:#2F6FB5;color:#FFFFFF;font-family:'Times New Roman', Times, serif;padding:128px;display:flex;flex-direction:column;justify-content:center;gap:36px">
 <p style="font-size:32px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:#D7E6F7">Anexo técnico</p>
 <h2 style="font-size:88px;font-weight:700;line-height:1.1">Para quien quiera el detalle</h2>
-<p style="font-size:36px;line-height:1.4;width:1500px">Las piezas en términos de SQL, la comparación completa, los cambios, los datos de afuera, la arquitectura y la ontología.</p>
+<p style="font-size:36px;line-height:1.4;width:1500px">Las piezas en términos de SQL, la arquitectura, la ontología y un dato del grafo.</p>
 <aside>A partir de acá, para audiencias técnicas o para responder preguntas.</aside>
 </section>
 </div>
@@ -187,7 +187,7 @@ addEventListener('resize', fit); fit();
 <div style="display:flex;flex-direction:column;gap:16px">
 <div style="background:#FFFFFF;border-radius:20px;padding:26px 40px;display:flex;align-items:center;gap:40px">
 <p style="font-size:30px;font-weight:700;width:300px">Quien pregunta</p>
-<p style="font-size:30px;line-height:1.4">El LLM lee la ontología y escribe SPARQL: <span style="color:#4A5568">como SQL, pero sobre conceptos</span></p>
+<p style="font-size:30px;line-height:1.4">La IA lee la ontología y escribe SPARQL: <span style="color:#4A5568">como SQL, pero sobre conceptos</span></p>
 </div>
 <div style="background:#2F6FB5;color:#FFFFFF;border-radius:20px;padding:32px 40px;display:flex;flex-direction:column;gap:22px">
 <p style="font-size:38px;font-weight:700">Capa semántica · Rastro la traduce a SQL</p>
@@ -211,7 +211,7 @@ addEventListener('resize', fit); fit();
 <h2 style="font-size:64px;font-weight:700;line-height:1.1;width:1664px">Los datos se integran una vez y se usan en todas las preguntas</h2>
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:28px">
 <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Respuestas consistentes</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Una sola definición de cada concepto. La misma pregunta, la misma respuesta.</p></div>
-<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Preguntas en lenguaje de negocio</p><p style="font-size:27px;line-height:1.4;color:#4A5568">El LLM lee un vocabulario, no cientos de columnas.</p></div>
+<div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Preguntas en lenguaje de negocio</p><p style="font-size:27px;line-height:1.4;color:#4A5568">La IA lee un vocabulario, no cientos de columnas.</p></div>
 <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Cada dato con su fuente</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Respuestas auditables, con la licencia de cada fuente.</p></div>
 <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Menos mantenimiento</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Si una fuente cambia, se arregla en un lugar, no en cada consulta.</p></div>
 <div style="background:#FFFFFF;border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:12px"><p style="font-size:34px;font-weight:700;line-height:1.2">Datos de afuera, sin cargarlos</p><p style="font-size:27px;line-height:1.4;color:#4A5568">Se conecta con datos abiertos como Wikidata por identificadores compartidos.</p></div>
@@ -234,19 +234,19 @@ addEventListener('resize', fit); fit();
 <p style="font-size:28px;color:#4A5568">y otros 9 · fuentes: AACT, ChEMBL, MeSH</p>
 </div>
 <div style="flex:1.3;display:flex;flex-direction:column;gap:16px">
-<p style="font-size:28px;color:#4A5568">Lo que escribió el LLM, en caracteres</p>
+<p style="font-size:28px;color:#4A5568">Lo que escribió la IA, en caracteres</p>
 <div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL sin integración</p><div style="width:420px;height:48px;background:#D99A2B;border-radius:10px"></div><p style="font-size:36px;font-weight:700">1.543</p></div>
 <div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px">SQL sobre los enlaces</p><div style="width:155px;height:48px;background:#9AA5B8;border-radius:10px"></div><p style="font-size:36px;font-weight:700">571</p></div>
-<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px;font-weight:700">SPARQL sobre Rastro</p><div style="width:118px;height:48px;background:#2F6FB5;border-radius:10px"></div><p style="font-size:36px;font-weight:700">435</p></div>
-<p style="font-size:30px;line-height:1.4;padding-top:12px">Sin integración, el LLM adivina qué fármaco nombra cada ensayo, con texto. Con la integración hecha una vez, solo nombra conceptos.</p>
+<div style="display:flex;align-items:center;gap:24px"><p style="font-size:28px;width:330px;font-weight:700">SPARQL sobre Rastro</p><div style="width:141px;height:48px;background:#2F6FB5;border-radius:10px"></div><p style="font-size:36px;font-weight:700">517</p></div>
+<p style="font-size:30px;line-height:1.4;padding-top:12px">Sin integración, la IA adivina qué fármaco nombra cada ensayo, con texto. Con la integración hecha una vez, solo nombra conceptos.</p>
 </div>
 </div>
-<aside>Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto. Con las tablas de enlaces, 571. Con Rastro, 435 de SPARQL, solo conceptos, y Rastro genera el SQL. La gran diferencia la hace integrar una vez; SPARQL la hace un poco más corta y en palabras de negocio.</aside>
+<aside>Cruza tres fuentes: el ensayo, el target del fármaco y la jerarquía de enfermedades. Sin integración, el LLM escribió 1.543 caracteres de SQL adivinando nombres en el texto. Con las tablas de enlaces, 571. Con Rastro, 517 de SPARQL, solo conceptos, y Rastro genera el SQL. La gran diferencia la hace integrar una vez; SPARQL la hace un poco más corta y en palabras de negocio.</aside>
 </section>
 </div>
 <div class="slide">
 <section id="confianza" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:100px 128px;display:flex;flex-direction:column;gap:32px">
-<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El mismo LLM, tres formas de darle los datos</p>
+<p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El mismo asistente de IA, tres formas de darle los datos</p>
 <h2 style="font-size:60px;font-weight:700;line-height:1.1;width:1664px">Los enlaces dan la precisión; la capa, lo demás</h2>
 <div style="display:grid;grid-template-columns:600px 1fr 1fr 1fr;font-size:29px;background:#FFFFFF;border-radius:20px;padding:12px 36px">
 <p style="padding:14px 0"></p><p style="padding:14px 0;color:#4A5568;font-weight:600">SQL directo</p><p style="padding:14px 0;color:#4A5568;font-weight:600">SQL + enlaces de Rastro</p><p style="padding:14px 0;color:#2F6FB5;font-weight:700">Rastro</p>
@@ -386,7 +386,7 @@ addEventListener('resize', fit); fit();
 <section id="ontologia" style="background:#F7F6F2;color:#14213D;font-family:'Times New Roman', Times, serif;padding:80px 120px;display:flex;flex-direction:column;gap:28px">
 <p style="font-size:28px;font-weight:600;color:#2F6FB5;letter-spacing:2px;text-transform:uppercase">El diccionario de oncología</p>
 <h2 style="font-size:56px;font-weight:700;line-height:1.1">Ensayos, fármacos y enfermedades</h2>
-<div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 740" width="100%" font-family="'Times New Roman', Times, serif">
+<div style="width:1680px"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1680 740" width="100%" height="700" font-family="'Times New Roman', Times, serif">
 <defs>
 <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4A5568"/></marker>
 <marker id="sub" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto"><path d="M0,0 L12,6 L0,12 z" fill="#FFFFFF" stroke="#4A5568" stroke-width="1.5"/></marker>
@@ -479,7 +479,7 @@ prov:wasDerivedFrom	deriva de	rastro:source/chembl
 prov:wasDerivedFrom	deriva de	rastro:source/aact
 prov:wasGeneratedBy	generado por	rastro:activity/entity-linking
 -->
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 750" width="100%" font-family="'Times New Roman', Times, serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 750" width="100%" height="550" font-family="'Times New Roman', Times, serif">
 <rect width="1664" height="750" rx="18" fill="#FFFFFF"/>
 <defs><marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#7A8699"/></marker></defs>
 <line x1="832" y1="315" x2="832" y2="116" stroke="#7A8699" stroke-width="2.0" marker-end="url(#flecha)"/>

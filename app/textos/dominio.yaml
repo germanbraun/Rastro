@@ -533,6 +533,7 @@ dominio.show_map.review: {es: "Para revisar: ", en: "To review: "}
 
 dominio.llm_status.no_answer: {es: "Ollama no responde en {url}", en: "Ollama does not answer at {url}"}
 dominio.llm_status.none: {es: "Sin LLM configurado", en: "No LLM configured"}
+dominio.llm_status.replay: {es: "Conversaciones grabadas · {folder}", en: "Recorded conversations · {folder}"}
 
 dominio.evaluation_detail.title:
   es: "##### Detalle técnico: las preguntas de la evaluación"
@@ -554,6 +555,9 @@ dominio.model_failed:
   es: "El modelo de lenguaje no respondió esta vez{question}. Probá de nuevo en unos segundos: el resto de Rastro sigue funcionando."
   en: "The language model did not answer this time{question}. Try again in a few seconds: the rest of Rastro keeps working."
 dominio.model_failed_question: {es: " a «{question}»", en: " to «{question}»"}
+dominio.model_not_recorded:   # RASTRO_PROVIDER=replay: only the recorded conversations answer
+  es: "Esta pregunta no está grabada{question}. Sin un modelo configurado, el chat responde solo las conversaciones grabadas, escritas igual y en el mismo orden."
+  en: "This question is not recorded{question}. Without a configured model, the chat answers only the recorded conversations, written the same way and in the same order (in Spanish)."
 # When a service is down (dominio.service_guard): plain words where the answer would be
 dominio.service_down:
   es: "Rastro no puede consultar los datos en este momento: {what} no responde. Lo demás de la pantalla sigue funcionando, y las cifras medidas de «Por qué confiar» siguen a la vista."

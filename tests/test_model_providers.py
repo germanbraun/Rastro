@@ -98,3 +98,15 @@ def test_a_text_where_a_number_was_asked_goes_back_to_the_model(monkeypatch):
     monkeypatch.setattr(answer, "run_sparql", lambda query, domain: ["YPF S.A."])
     result = answer.try_query("C", "SELECT ?x WHERE {}", "número", "energia")
     assert result["answer"] is None and "could not convert" in result["attempt"]["error"]
+
+
+def test_replay_reads_a_recorded_call_and_never_calls_a_model(monkeypatch, tmp_path):
+    monkeypatch.setattr(answer, "PROVIDER", "replay")
+    monkeypatch.setenv("RASTRO_RECORD", str(tmp_path))
+    monkeypatch.setattr(answer.requests, "post", lambda *a, **kw: pytest.fail("replay called a model"))
+    messages = [{"role": "user", "content": "¿cuántas concesiones?"}]
+    with pytest.raises(RuntimeError, match="no está grabada"):
+        answer.ask("sistema", messages, SCHEMA)
+    key, _ = answer.call_text("sistema", messages, SCHEMA)
+    (tmp_path / f"{key}.json").write_text(json.dumps({"query": "SELECT 4"}))
+    assert answer.ask("sistema", messages, SCHEMA)[1] == {"query": "SELECT 4"}

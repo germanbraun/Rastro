@@ -53,6 +53,9 @@ rules and decisions; the data stays in the customer's database (`data/raw/` is n
   and the explanation of a new query say a model is needed, and everything else works. With `RASTRO_NO_MODEL=1` in `.env`,
   `infra/customer/check.py` fails if the app has a key or a provider configured, so the setting can be shown to
   the customer's security team.
+- **Recorded conversations:** `RASTRO_PROVIDER=replay` and `RASTRO_RECORD` (a folder of calls and replies recorded
+  earlier). Nothing is sent: the chat reads back the replies to the same calls, and any other question says it is not
+  recorded. For a demo without a key; a customer's own questions are never recorded ones.
 - **A local model:** `RASTRO_PROVIDER=ollama` and `OLLAMA_URL` pointing to a model on the customer's network. Nothing
   leaves it. Expect weaker queries from a small local model: measure them with the domain's questions before
   relying on them.

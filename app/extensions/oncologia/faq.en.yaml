@@ -68,7 +68,7 @@
 
 - question: Where did the complexity of the SQL go?
   answer: |-
-    Into the integration, done once. In the HER2 question, the LLM wrote 1,543 characters of SQL without integration, 571 of SQL over the link tables and 435 of SPARQL over Rastro. Integrating makes the big difference; SPARQL makes it a bit shorter and in business words, and Rastro generates the SQL.
+    Into the integration, done once. In the HER2 question, the LLM wrote 1,543 characters of SQL without integration, 571 of SQL over the link tables and 517 of SPARQL over Rastro. Integrating makes the big difference; SPARQL makes it a bit shorter and in business words, and Rastro generates the SQL.
 
 - question: In oncology, what happened when a source changed?
   answer: |-

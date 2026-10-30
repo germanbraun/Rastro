@@ -510,6 +510,17 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
   so the Lab numbers it showed came from versions the tests never ran); the deck numbers came out identical.
 - **Q56.** Should the published Lab numbers also record the library versions they were computed with?
 
+**H21. The demo made to sell** (2026-10-30)
+- **Decision:** a two-sided pocket card for whoever gives the demo; a «what it costs without Rastro» slide with
+  three measured numbers (one rests on an assumed oil price, and says so); the pilot offer closes the story; the annex
+  split into frequent questions and technical detail; a recorded chat that answers only the recorded conversations,
+  with no key. Hours saved are not claimed: not measured.
+- **Q57.** Is a dollar figure built on an assumed price a fair «cost» for an SQL-literate buyer, or does it invite a
+  debate the demo cannot win?
+- **Q58.** Is a recorded chat honest in a live demo if the presenter says it is recorded, or should the demo show it
+  only with a live model?
+- **Q59.** Are five objections the right ones (SQL, correctness, AI inventing, own data, price), or is one missing?
+
 
 1. **A person confirms the references.**
    - **Open:** the oil and gas adjudication, the affiliations blind references (including the holdout), oncology's

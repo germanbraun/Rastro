@@ -1,0 +1,21 @@
+{
+  "v": 4,
+  "lists": "css",
+  "faces": {},
+  "designSystems": [],
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-30T12:00:00Z"
+  },
+  "title": "Rastro · La demo en una tarjeta",
+  "order": [
+    "tarjeta-guion",
+    "tarjeta-objeciones"
+  ],
+  "sections": {
+    "s1": {
+      "description": "Las cuatro frases y las cinco objeciones, para quien da la demo",
+      "start": "tarjeta-guion"
+    }
+  }
+}

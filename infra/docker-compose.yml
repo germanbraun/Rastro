@@ -120,6 +120,7 @@ services:
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
       RASTRO_PROVIDER: ${RASTRO_PROVIDER:-}
       RASTRO_MODEL: ${RASTRO_MODEL:-}
+      RASTRO_RECORD: ${RASTRO_RECORD:-}   # with RASTRO_PROVIDER=replay, the recorded chat (layer/answer.py)
       OLLAMA_URL: ${OLLAMA_URL:-}
       RASTRO_READER_PASSWORD: ${RASTRO_READER_PASSWORD:-}   # the customer setup's reader password (layer/answer.py)
       RASTRO_CONTACT: ${RASTRO_CONTACT:-}   # the start page's «Escribinos» (an email); empty, no contact line
@@ -437,6 +438,7 @@ services:
       OPENAI_BASE_URL: ${OPENAI_BASE_URL:-}
       RASTRO_PROVIDER: ${RASTRO_PROVIDER:-}
       RASTRO_MODEL: ${RASTRO_MODEL:-}
+      RASTRO_RECORD: ${RASTRO_RECORD:-}   # with RASTRO_PROVIDER=replay, the recorded chat (layer/answer.py)
       OLLAMA_URL: ${OLLAMA_URL:-}
       RASTRO_READER_PASSWORD: ${RASTRO_READER_PASSWORD:-}   # the customer setup's reader password (layer/answer.py)
     volumes:

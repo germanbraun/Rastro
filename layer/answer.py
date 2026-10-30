@@ -20,6 +20,8 @@ The LLM is chosen with RASTRO_PROVIDER:
              for another server with the same API)
   files      no API: each call is written to a file and its reply read from another (RASTRO_FILES), so an
              assistant without a key answers them; see layer/chat_eval.py
+  replay     no API: the replies a model gave before, recorded with RASTRO_RECORD, read back with no key and no
+             wait (the demo's chat); a call never recorded says so
 Without either, eval/manual.py prints the prompts to answer them by hand.
 """
 
@@ -32,7 +34,8 @@ import psycopg
 import requests
 import yaml
 
-DEFAULT_MODELS = {"anthropic": "claude-opus-5-5", "ollama": "qwen2.5-coder:7b", "openai": "", "files": "files"}
+DEFAULT_MODELS = {"anthropic": "claude-opus-5-5", "ollama": "qwen2.5-coder:7b", "openai": "", "files": "files",
+                  "replay": "replay"}
 PROVIDER = os.environ.get("RASTRO_PROVIDER") or "anthropic"
 if PROVIDER not in DEFAULT_MODELS:   # a typo in .env says so at once, instead of falling back to another provider
     raise SystemExit(f"RASTRO_PROVIDER={PROVIDER}: use one of {', '.join(DEFAULT_MODELS)} (layer/answer.py)")
@@ -83,9 +86,10 @@ def output_schema(approach, kind):
 
 def ask(system, messages, schema):
     """One call to the LLM with JSON output. Returns (assistant message, data)."""
-    providers = {"anthropic": ask_claude, "ollama": ask_ollama, "openai": ask_openai, "files": ask_files}
+    providers = {"anthropic": ask_claude, "ollama": ask_ollama, "openai": ask_openai, "files": ask_files,
+                 "replay": ask_replay}
     call = providers[PROVIDER]
-    if os.environ.get("RASTRO_RECORD") and PROVIDER != "files":
+    if os.environ.get("RASTRO_RECORD") and PROVIDER not in ("files", "replay"):
         return recorded(call, system, messages, schema)
     return call(system, messages, schema)
 
@@ -184,6 +188,18 @@ def ask_files(system, messages, schema):
     folder.mkdir(parents=True, exist_ok=True)
     (folder / f"{key}.txt").write_text(text)
     raise Pending(key)
+
+
+def ask_replay(system, messages, schema):
+    """A reply recorded before in RASTRO_RECORD, read back: the same call, written the same way, gets the same reply.
+    Nothing is sent anywhere; a call that was never recorded is an error, never a call to a model."""
+    key, _ = call_text(system, messages, schema)
+    reply = Path(os.environ.get("RASTRO_RECORD") or ".") / f"{key}.json"
+    if not reply.exists():
+        raise RuntimeError("Esta pregunta no está grabada: con RASTRO_PROVIDER=replay solo responden las "
+                           "conversaciones grabadas, escritas igual y en el mismo orden")
+    content = reply.read_text()
+    return content, json.loads(content)
 
 
 # --- Answer -------------------------------------------------------
