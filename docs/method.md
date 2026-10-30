@@ -124,7 +124,7 @@ Every failure in the measurement is classified, to know which step to strengthen
 
 ## What is proven and what isn't
 
-**Proven in one domain, with numbers:** 10 of 10 correct with Rastro and 8 of 10 without; a correction in 1 place
+**Measured in one domain, with numbers (references made by an AI assistant, still to be confirmed by a person; 5 % tolerance on numbers):** 10 of 10 correct with Rastro and 8 of 10 without; a correction in 1 place
 instead of 5; the quality rules found real errors; nothing was made up when the data was missing; predictions are
 explained with their records. The same Rastro works in two other domains.
 

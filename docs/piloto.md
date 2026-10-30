@@ -27,8 +27,8 @@ archivos de resultados; ver `docs/demo-guion-energia.md`):
 
 | | Sin Rastro | Con Rastro |
 |---|---|---|
-| **¿Cuánto petróleo le corresponde a YPF?** | 21,4 millones de m³: le asigna también lo de sus socios | **12,6**, su parte en cada concesión, con la evidencia |
-| **Lo asignado de más** | 8,8 millones de m³: unos US$ 3.600 millones a US$ 65 el barril (un supuesto) | — |
+| **¿Cuánto petróleo le corresponde a YPF?** | sumando por quien declara, 21,4 millones de m³: le asigna también lo de sus socios | **12,6**, su parte en cada concesión, con la evidencia |
+| **Lo asignado de más, sumando por quien declara** | 8,8 millones de m³: unos US$ 3.600 millones a US$ 65 el barril (un supuesto) | — |
 | **La fuente cambia el nombre de una columna** | 3 consultas rotas, que hay que encontrar | **1 línea** |
 | **Un documento corrige un porcentaje** | 5 lugares para corregir | **1 lugar**, y cambian solos la respuesta, el modelo y su explicación |
 | **Un modelo de machine learning** | predice, pero no dice en qué se apoya | **predice igual de bien** y cada predicción dice de dónde sale cada dato y qué revisar |

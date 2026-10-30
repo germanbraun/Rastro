@@ -27,8 +27,8 @@ see `docs/demo-guion-energia.md`):
 
 | | Without Rastro | With Rastro |
 |---|---|---|
-| **How much oil belongs to YPF?** | 21.4 million m³: it also gets its partners' share | **12.6**, its share of each concession, with the evidence |
-| **The over-assignment** | 8.8 million m³: about US$ 3,600 million at US$ 65 a barrel (an assumption) | — |
+| **How much oil belongs to YPF?** | summing by the reporting company, 21.4 million m³: it also gets its partners' share | **12.6**, its share of each concession, with the evidence |
+| **Over-assigned when summing by the reporting company** | 8.8 million m³: about US$ 3,600 million at US$ 65 a barrel (an assumption) | — |
 | **The source renames a column** | 3 broken queries you have to find | **1 line** |
 | **A document corrects a stake** | 5 places to correct | **1 place**, and the answer, the model and its explanation change on their own |
 | **A machine-learning model** | predicts, but doesn't say what it relies on | **predicts just as well** and every prediction says where each value comes from and what to check |

@@ -24,12 +24,12 @@ pregunta en conceptos de negocio, y cada respuesta dice de qué fuente sale.**
 | Reglas de calidad (SHACL) | Los `CHECK` que las fuentes no tienen, sobre los datos ya integrados |
 | SPARQL | SQL sobre conceptos, que Rastro traduce a SQL sobre las tablas reales |
 
-## La evidencia (el mismo LLM, 10 preguntas, medido el 20 de octubre de 2026)
+## La evidencia (el mismo LLM, 10 preguntas, medido el 29 de octubre de 2026; referencias hechas por un asistente de IA, falta que una persona las confirme)
 
 | | SQL directo | SQL + enlaces de Rastro | Rastro |
 |---|---|---|---|
-| Correctas, de 10 | 7 | 10 | **10** |
-| Misma respuesta, preguntando de 4 formas | 3 de 5 | 5 de 5 | **5 de 5** |
+| Correctas, de 10 (tolerancia del 5 % en los números) | 8 | 10 | **10** |
+| Misma respuesta, preguntando de 4 formas | 2 de 5 | 5 de 5 | **5 de 5** |
 | Una columna de la fuente cambia de nombre | consultas rotas, a encontrar | igual | **1 línea del mapeo** |
 | Un documento corrige una participación | 5 lugares | 5 lugares | **1 lugar**, con el documento |
 | De dónde sale cada dato | no | no | **por columna** |

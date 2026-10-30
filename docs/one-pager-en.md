@@ -23,8 +23,8 @@ evidence) and checks the data with quality rules. Then anyone asks in those word
 
 | | Without Rastro | With Rastro |
 |---|---|---|
-| **How much of 2025's oil belongs to YPF?** | 21.4 million m³: it adds its partners' share | **12.6**, its share of each concession, with the evidence |
-| **The same question, asked 4 ways** | the same answer in 3 of 5 questions | **in 5 of 5** |
+| **How much of 2025's oil belongs to YPF?** | summing by the reporting company, 21.4 million m³: it adds its partners' share | **12.6**, its share of each concession, with the evidence |
+| **The same question, asked 4 ways** | the same answer in 2 of 5 questions | **in 5 of 5** |
 | **The source renames a column** | broken queries you have to find | **fixed in 1 line** |
 | **A document corrects a stake** | the value lives in 5 places | **corrected in 1**, and the answer, the model and its explanation change on their own |
 

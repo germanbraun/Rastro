@@ -22,8 +22,8 @@ los datos con reglas de calidad. Después, cualquiera pregunta con esas palabras
 
 | | Sin Rastro | Con Rastro |
 |---|---|---|
-| **¿Cuánto petróleo de 2025 le corresponde a YPF?** | 21,4 millones de m³: le suma lo de sus socios | **12,6**, su parte en cada concesión, con la evidencia |
-| **La misma pregunta, hecha de 4 formas** | la misma respuesta en 3 de 5 preguntas | **en 5 de 5** |
+| **¿Cuánto petróleo de 2025 le corresponde a YPF?** | sumando por quien declara, 21,4 millones de m³: le suma lo de sus socios | **12,6**, su parte en cada concesión, con la evidencia |
+| **La misma pregunta, hecha de 4 formas** | la misma respuesta en 2 de 5 preguntas | **en 5 de 5** |
 | **La fuente cambia el nombre de una columna** | consultas rotas que hay que encontrar | **se arregla en 1 línea** |
 | **Un documento corrige un porcentaje** | el dato vive en 5 lugares | **se corrige en 1**, y cambian solos la respuesta, el modelo y su explicación |
 

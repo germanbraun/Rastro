@@ -375,10 +375,11 @@ preguntas:
       calculos: {exceso: ypf_sin - ypf_con, barriles: exceso * 6.2898, precio: "65", dolares: "round(barriles * precio, -2)"}
       decimales: {barriles: 0}
       fuentes: [capitulo4, sig_energia]
+      titulo_sin: Sumando por quien declara   # the card names the reading, not «Sin Rastro»: told the definition, SQL also reaches the share
       sin: {valor: "YPF: {ypf_sin} M m³", detalle: "Sumando la producción por la empresa que la declara, a YPF se le asigna todo lo que opera, y la mitad de La Amarga Chica, que figura a nombre de Petronas E&P Argentina (de Vista desde 2025), no aparece."}
       con: {valor: "YPF: {ypf_con} M m³", detalle: "Su parte en cada concesión, según los socios del mapa. Vista: {vista} M m³, con la mitad de La Amarga Chica ({vista_lac}), que compró con Petronas E&P Argentina en 2025; Chevron: {chevron} M m³, con sus dos razones sociales. Esas dos uniones son 🟠 revisadas por IA, falta una persona; el {ypf_con} de YPF no depende de ellas."}
       impacto: >-
-        Sin integrar, a YPF se le asignan {exceso} millones de m³ de más ({barriles} millones de barriles): unos
+        Sumando por quien declara, a YPF se le asignan {exceso} millones de m³ de más ({barriles} millones de barriles): unos
         US$ {dolares} millones, con un precio supuesto de US$ {precio} por barril. Es producción de sus socios.
     evidencia:
       texto: "Los socios de cada concesión, tal como los informa el mapa (algunos ejemplos):"
@@ -962,7 +963,7 @@ faq:
     respuesta: |-
       Un trabajo publicado une estas mismas fuentes públicas (producción por pozo, padrón, datos de fractura y
       trayectorias) para predecir el gas del primer año de 642 pozos de shale gas de Vaca Muerta. Rastro Lab lo usa
-      para validar que su modelo da números razonables con los mismos datos: con el diseño de ese trabajo, la
+      para comparar si su modelo da números razonables con los mismos datos (comparar no demuestra que sean iguales): con el diseño de ese trabajo, la
       mediana por área da prácticamente lo mismo (R² 0,45 contra 0,47). Rastro Lab hace la misma predicción con
       otro objetivo: que cada predicción se explique en conceptos de negocio, con la fuente de cada dato.
 

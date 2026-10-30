@@ -271,10 +271,11 @@ preguntas:
       Participación: {term: "Share", text: "the percentage of a concession that belongs to each partner (share). The operator runs the wells, but the oil is divided among the partners."}
       m³: {term: "m³", text: "cubic metres of oil. One cubic metre is about 6.3 barrels."}
     antes_despues:
+      titulo_sin: Summing by the reporting company
       sin: {valor: "YPF: {ypf_sin} M m³", detalle: "Adding up production by the company that declares it, YPF is assigned everything it operates, and half of La Amarga Chica, which is in the name of Petronas E&P Argentina (Vista's since 2025), does not appear."}
       con: {valor: "YPF: {ypf_con} M m³", detalle: "Its share in each concession, according to the partners on the map. Vista: {vista} M m³, with half of La Amarga Chica ({vista_lac}), which it bought from Petronas E&P Argentina in 2025; Chevron: {chevron} M m³, with its two legal names. Those two joins are 🟠 reviewed by AI, a person must confirm; YPF's {ypf_con} does not depend on them."}
       impacto: >-
-        Without integration, YPF is assigned {exceso} million m³ too much ({barriles} million barrels): about
+        Summing by the reporting company, YPF is assigned {exceso} million m³ too much ({barriles} million barrels): about
         US$ {dolares} million, at an assumed price of US$ {precio} per barrel. It is its partners' production.
     evidencia:
       texto: "The partners of each concession, as the map reports them (some examples):"
@@ -618,7 +619,7 @@ faq:
     respuesta: |-
       A published study joins these same public sources (production per well, registry, fracturing data and
       trajectories) to predict the first-year gas of 642 shale gas wells in Vaca Muerta. Rastro Lab uses it
-      to validate that its model gives reasonable numbers with the same data: with that study's design, the
+      to compare whether its model gives reasonable numbers with the same data (a comparison does not prove they are equal): with that study's design, the
       median by area gives practically the same result (R² 0.45 against 0.47). Rastro Lab makes the same prediction with
       another goal: that each prediction is explained in business concepts, with the source of each value.
 

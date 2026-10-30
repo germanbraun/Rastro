@@ -35,7 +35,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Decision:** the message is "integrate once and maintain it as a standard layer". The fair baseline D (SQL plus
   Rastro's link tables) is reported alongside C in every domain.
 - **Why:** D ties C on accuracy everywhere it was measured. Oncology: B 18/20, C 20/20, D 20/20. Suppliers
-  (2026-10-19): B 4/9, D 8/9, C 8/9. Oil and gas (2026-10-20): B 7/10, D 10/10, C 10/10. The claimed advantages of the
+  (2026-10-19): B 4/9, D 8/9, C 8/9. Oil and gas (re-measured 2026-10-29): B 8/10, D 10/10, C 10/10. The claimed advantages of the
   semantic layer are therefore: a source change is fixed in one place, every value carries its evidence, and outside
   graphs can be joined live. The project says up front that a layer of SQL views would solve part of this.
 - **Q2.** If plain SQL over the same link tables scores the same, what does an ontology, R2RML and Ontop add that a
@@ -150,7 +150,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 **C4. Every link is a PROV-O entity** (2026-10-18, 2026-10-19, measured 2026-10-20)
 - **Decision:** each link is a `prov:Entity` with `prov:wasDerivedFrom` its sources, plus its rule and its matched text.
 - **Why:** per-column provenance can be imitated in SQL; per-record evidence is what convinces. Measured coverage: oil
-  and gas 107,795 of 107,795 links (the deck later cites 107,841), suppliers 9,108 of 9,108, oncology 112,461 of
+  and gas 107,841 of 107,841 links between sources (113,913 counting Rastro Lab's records, which the quality rule checks), suppliers 9,108 of 9,108, oncology 112,461 of
   112,461 trial→drug links.
 - **Q15.** "100 % of links have evidence" is true by construction, because the linker writes the evidence. Does that
   number mean anything to a buyer, or should the metric be the correctness of the evidence?
@@ -491,6 +491,13 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 - **Update:** with gpt-5.5 through the OpenAI API (the model the demo runs), the same 13 turns: 13 of 13. Running
   it live also found a display bug no test had caught (nested expanders), now fixed.
 
+**H18. What a customer reads says what was measured** (2026-10-30)
+- **Decision:** after an audit, the YPF card is titled «Sumando por quien declara», not «Sin Rastro», because a SQL
+  query told the definition also reaches YPF's share (the evaluation's 8 of 10); the one-pagers carry the
+  re-measured numbers; «proven» became «measured», with the AI-made references and the 5 % tolerance said.
+- **Q54.** Does renaming the card weaken the demo's first moment, or make it more credible to an SQL-literate buyer?
+  Is «what summing by the reporting company assigns too much» still a fair way to show the cost of not integrating?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -562,7 +569,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q53). Skip any you have no view on.
+- Answer per question number (Q1–Q54). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same

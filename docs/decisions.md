@@ -1955,3 +1955,23 @@ experiment's log as method changes made after it; they do not change its measure
   (a chat query names its own) with decimal numbers is now shown in the interface's format in the business view
   (5.246.629,4) and exact in the technical one; ids and years, which have no decimals, are left as they are. Checked in
   a throwaway copy of the app that read the saved gpt-5.5 replies (`RASTRO_PROVIDER=files`), with no API call.
+
+## 2026-10-30 — Audit, batch 1: what a customer reads says what was measured
+
+- **Why:** an audit of numbers and claims found sales-facing texts out of step with the re-measurement, and labels
+  that contradict it.
+- **Stale numbers:** the one-pagers said «3 de 5» (now 2 de 5); the technical one-pager said measured on 20 October
+  with 7 of 10 (now 29 October, 8 of 10, with the 5 % tolerance and the AI-made references said).
+- **«Sin Rastro: 21,4»:** in the evaluation, a SQL query without Rastro told what a share is answered 12,58 for YPF
+  (right). The 21,4 is summing by the reporting company, the most common query. The YPF card (app, slides 4 in the
+  oil and gas and executive decks, one-pagers, pilot docs) is now titled «Sumando por quien declara» («Summing by the
+  reporting company»; the app card's `titulo_sin`), and the 8,8 millones de m³ «de más» says it is over that reading.
+  The slide notes say what to answer if asked.
+- **Two link counts:** `evidencia.py energia` re-run: 107.841 links between sources, unchanged. The quality rule
+  checks 113.913 because it also covers Rastro Lab's records (well starts, fractures, trajectories) and the saved
+  enrichment. Both now say what they count (script, quality slide, decisions-for-review).
+- **Claims:** `docs/method.md` «Proven» → «Measured… references made by an AI assistant, still to be confirmed»;
+  the Lab comparison with the published study «compares», not «validates»; «lo comprobamos» says it was one test;
+  the 5-question Lab score is said as counts; the 5 % tolerance is said next to 8 of 10 (47 against 45 counts).
+- **Checked:** slides measured under 920 px; the app's demo moment 1 in Spanish and English; the demo backup captured
+  again.
