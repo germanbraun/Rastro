@@ -1,0 +1,102 @@
+# Conversaciones para medir «Conversar con los datos» (layer/chat.py) con layer/chat_eval.py.
+#
+# Escritas como las escribiría una persona en el chat: cortas, y la segunda pregunta se apoya en la primera
+# («¿Y a Tecpetrol?»). Cada turno dice qué se espera:
+#   kind: "número", "lista" (los nombres que la respuesta tiene que decir) o "sin_datos" (los datos de Rastro no
+#         lo responden: tiene que decir qué falta, no inventar).
+#   reference: SPARQL sobre Rastro con la respuesta correcta en una sola columna ?answer, para la lectura que se
+#              pide. La escribió un asistente de IA (Claude Code), no el modelo medido; falta que la confirme una
+#              persona. Como sale de Rastro, si el chat responde otra cosa se revisa con los datos (adjudicacion.md).
+# Las magnitudes son las de los datos: petróleo en m³, gas en miles de m³; la respuesta en palabras puede
+# redondear o pasar a millones.
+
+prefixes: |
+  PREFIX energia: <https://w3id.org/rastro/energia#>
+
+conversations:
+
+  - id: c01
+    turns:
+      - question: ¿Qué empresa declaró más gas en 2025?
+        kind: lista
+        reference: |
+          SELECT ?answer WHERE {
+            { SELECT ?answer (SUM(?g) AS ?t) WHERE { ?p a energia:WellProduction ; energia:declaredBy/energia:name ?answer ; energia:gas ?g . }
+              GROUP BY ?answer }
+          } ORDER BY DESC(?t) LIMIT 1
+      - question: ¿Y cuánto gas le corresponde por su participación en las concesiones?
+        kind: número
+        reference: |
+          SELECT (SUM(?g * ?pct / 100) AS ?answer) WHERE {
+            ?p a energia:WellProduction ; energia:inConcession ?c ; energia:gas ?g .
+            ?s a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "TOTAL AUSTRAL S.A." ; energia:percent ?pct .
+          }
+
+  - id: c02
+    turns:
+      - question: ¿Cuánto petróleo de 2025 le corresponde a YPF según su participación en cada concesión?
+        kind: número
+        reference: |
+          SELECT (SUM(?oil * ?pct / 100) AS ?answer) WHERE {
+            ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil .
+            ?s a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "YPF S.A." ; energia:percent ?pct .
+          }
+      - question: ¿Y a Tecpetrol?
+        kind: número
+        reference: |
+          SELECT (SUM(?oil * ?pct / 100) AS ?answer) WHERE {
+            ?p a energia:WellProduction ; energia:inConcession ?c ; energia:oil ?oil .
+            ?s a energia:Stake ; energia:inConcession ?c ; energia:partner/energia:name "TECPETROL S.A." ; energia:percent ?pct .
+          }
+
+  - id: c03
+    turns:
+      - question: ¿Cuáles son las 5 concesiones con más posibles venteos vistos por satélite?
+        kind: lista
+        reference: |
+          SELECT ?answer WHERE {
+            { SELECT ?answer (COUNT(?d) AS ?n) WHERE { ?d a energia:DetectedVenting ; energia:inConcession/energia:name ?answer . }
+              GROUP BY ?answer }
+          } ORDER BY DESC(?n) LIMIT 5
+      - question: ¿Cuántos tiene la primera?
+        kind: número
+        reference: |
+          SELECT (MAX(?n) AS ?answer) WHERE {
+            { SELECT ?c (COUNT(?d) AS ?n) WHERE { ?d a energia:DetectedVenting ; energia:inConcession ?c . } GROUP BY ?c }
+          }
+
+  - id: c04
+    turns:
+      - question: ¿Cuántos pozos opera YPF?
+        kind: número
+        reference: |
+          SELECT (COUNT(DISTINCT ?w) AS ?answer) WHERE { ?w a energia:Well ; energia:operator/energia:name "YPF S.A." . }
+      - question: ¿Y Tecpetrol?
+        kind: número
+        reference: |
+          SELECT (COUNT(DISTINCT ?w) AS ?answer) WHERE { ?w a energia:Well ; energia:operator/energia:name "TECPETROL S.A." . }
+
+  - id: c05
+    turns:
+      - question: ¿Cuántas concesiones habría que revisar por venteos?
+        kind: número
+        reference: |
+          SELECT (COUNT(DISTINCT ?c) AS ?answer) WHERE { ?c a energia:ConcessionToReview . }
+      - question: ¿Cuántas de ellas cumplen los dos motivos a la vez?
+        kind: número
+        reference: |
+          SELECT (COUNT(DISTINCT ?c) AS ?answer) WHERE { ?c a energia:VentingFarFromPipeline , energia:VentingWithoutReports . }
+
+  - id: c06
+    turns:
+      - question: ¿A qué precio vendió YPF el barril de petróleo en 2025?
+        kind: sin_datos
+      - question: ¿Y cuánto petróleo declaró ese año?
+        kind: número
+        reference: |
+          SELECT (SUM(?oil) AS ?answer) WHERE { ?p a energia:WellProduction ; energia:declaredBy/energia:name "YPF S.A." ; energia:oil ?oil . }
+
+  - id: c07
+    turns:
+      - question: ¿Cuántas reservas de gas tiene Tecpetrol?
+        kind: sin_datos

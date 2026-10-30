@@ -1916,3 +1916,25 @@ experiment's log as method changes made after it; they do not change its measure
   `stAlertContent<kind>`, which Streamlit builds from a prefix) and the stored-theme key `KEEP_THEME` removes still
   exist in Streamlit's bundle. An upgrade that renames one fails in CI with the marker's name, instead of silently
   breaking the look.
+
+## 2026-10-30 — OpenAI as a model option, and the chat measured without an API key
+
+- **OpenAI:** `RASTRO_PROVIDER=openai` with `OPENAI_API_KEY` and `RASTRO_MODEL` (the model's name; no default, so
+  nothing is guessed; `OPENAI_BASE_URL` for another server with the same API). One function in `layer/answer.py`
+  (`ask_openai`, the same JSON schema as the other providers, strict); the chat, «Explicame la consulta» and the
+  evaluation run through it unchanged. The status line, `.env.example`, compose, `infra/customer/check.py` and
+  `docs/data-sent-to-model.md` name it. Rastro's numbers were measured with Claude, so a number quoted for an OpenAI
+  model needs its own measurement.
+- **The chat, measured:** the slide said the chat «never answered a question». `RASTRO_PROVIDER=files` writes each
+  model call to a file and reads the reply from the file next to it; `layer/chat_eval.py` runs the chat's own code
+  (`chat.turn`: query, Rastro running it, answer in words, number check) over 7 conversations, 13 turns
+  (`layer/energia/chat/conversaciones.yaml`: follow-ups such as «¿Y a Tecpetrol?», and two questions the data
+  cannot answer). Each call was answered by a fresh subagent (Claude Opus 5.5, as the evaluation) reading only its
+  file: 24 calls in 4 rounds.
+- **Result:** 11 of 13 right; follow-ups 5 of 6; no answer with a number missing from the data; no query retried;
+  both no-data questions (prices, reserves) said what was missing. The two misses (c02.1 and c02.2) asked for the
+  share «según su participación en cada concesión» and got the per-concession breakdown, not the total: the
+  question's wording, adjudicated in `layer/energia/adjudicacion.md` and counted as wrong; not re-measured.
+- **What it does not measure:** the app's own API call (a thin wrapper), and any other model. References are SPARQL
+  over Rastro written by an AI assistant, like the evaluation's: a person still has to confirm them.
+- **Updated:** the demo script, the chat slide's notes, README, the evaluate and deploy-customer skills, CLAUDE.md.

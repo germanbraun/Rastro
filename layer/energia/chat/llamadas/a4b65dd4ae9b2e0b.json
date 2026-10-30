@@ -1,0 +1,1 @@
+{"query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?empresa (SUM(?g) AS ?gas_miles_m3)\nWHERE {\n  ?p a energia:WellProduction ;\n     energia:declaredBy ?c ;\n     energia:gas ?g .\n  ?c energia:name ?empresa .\n}\nGROUP BY ?empresa\nORDER BY DESC(?gas_miles_m3)\nLIMIT 1"}

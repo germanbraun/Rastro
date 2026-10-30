@@ -15,7 +15,9 @@ Se elige en `.env` con `RASTRO_PROVIDER`:
 | Opción | Qué hace falta | Costo |
 |---|---|---|
 | `anthropic` (por defecto) | `ANTHROPIC_API_KEY` de la Claude API | De pago por uso: unos pocos dólares por una corrida completa con Claude Opus 5.5 |
+| `openai` | `OPENAI_API_KEY` y `RASTRO_MODEL` (el nombre del modelo) | De pago por uso; los números de Rastro se midieron con Claude, así que hay que medirlo antes de citarlos |
 | `ollama` | Ollama instalado y corriendo en la Mac | Gratis, sin internet; más débil para escribir queries |
+| `files` | Nada: cada llamada queda en un archivo y un asistente sin clave escribe la respuesta (`chat_eval.py`) | El de la sesión del asistente |
 | Ninguna | Nada | `eval/manual.py` imprime cada prompt para responderlo a mano (por ejemplo, en claude.ai) |
 
 Las respuestas de la evaluación ya están guardadas en `eval/results.json`: para verlas y puntuarlas no hace falta ningún LLM.

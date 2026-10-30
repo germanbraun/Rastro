@@ -1,0 +1,193 @@
+{
+  "date": "2026-10-30",
+  "model": "Claude Opus 5.5",
+  "model_version": "claude-opus-5-5",
+  "how": "RASTRO_PROVIDER=files: a fresh assistant answered each call, seeing only its file",
+  "totals": {
+    "turns": 13,
+    "right": 11,
+    "follow_ups": 6,
+    "follow_ups_right": 5,
+    "with_unsupported_numbers": 0,
+    "retries": 0
+  },
+  "turns": [
+    {
+      "conversation": "c01",
+      "turn": 1,
+      "question": "¿Qué empresa declaró más gas en 2025?",
+      "kind": "lista",
+      "reference": [
+        "TOTAL AUSTRAL S.A."
+      ],
+      "answer": "La empresa que declaró más gas en 2025 fue TOTAL AUSTRAL S.A., con unos 12,3 millones de miles de m³ (12.335.523,9 miles de m³).",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?empresa (SUM(?g) AS ?gas_miles_m3)\nWHERE {\n  ?p a energia:WellProduction ;\n     energia:declaredBy ?c ;\n     energia:gas ?g .\n  ?c energia:name ?empresa .\n}\nGROUP BY ?empresa\nORDER BY DESC(?gas_miles_m3)\nLIMIT 1",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c01",
+      "turn": 2,
+      "question": "¿Y cuánto gas le corresponde por su participación en las concesiones?",
+      "kind": "número",
+      "reference": 5246629.444130049,
+      "answer": "Por su participación en las concesiones, a TOTAL AUSTRAL S.A. le corresponden unos 5.246.629 miles de m³ de gas (alrededor de 5,2 millones de miles de m³).",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?empresa (SUM(?gas_concesion * ?pct / 100) AS ?gas_que_le_corresponde_miles_m3)\nWHERE {\n  ?c energia:name ?empresa .\n  FILTER(?empresa = \"TOTAL AUSTRAL S.A.\")\n  ?s a energia:Stake ;\n     energia:partner ?c ;\n     energia:percent ?pct ;\n     energia:inConcession ?con .\n  {\n    SELECT ?con (SUM(?g) AS ?gas_concesion)\n    WHERE {\n      ?p a energia:WellProduction ;\n         energia:inConcession ?con ;\n         energia:gas ?g .\n    }\n    GROUP BY ?con\n  }\n}\nGROUP BY ?empresa\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c02",
+      "turn": 1,
+      "question": "¿Cuánto petróleo de 2025 le corresponde a YPF según su participación en cada concesión?",
+      "kind": "número",
+      "reference": 12570093.352460362,
+      "answer": "Según su participación, a YPF le corresponden en 2025 unos 2,57 millones de petróleo en Loma Campana (50 %), 2,1 millones en La Amarga Chica (50 %), 1,6 millones en Bandurria Sur (44,90 %) y 1,28 millones en La Angostura Sur I (100 %), seguidas por La Calera (673.864), Diadema (573.379) y Aguada del Chañar (493.831). El resultado lista 50 concesiones, de las cuales Cajón de los Caballos (Sector Oriental), Aguada Villanueva, Las Tacanas I, Aguada de Castro y La Ribera Bloque II no registran petróleo en 2025.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?concesion ?empresa ?porcentaje ?petroleoConcesion ((?petroleoConcesion * ?porcentaje / 100) AS ?petroleoQueLeCorresponde)\nWHERE {\n  ?stake a energia:Stake ;\n         energia:partner ?socia ;\n         energia:percent ?porcentaje ;\n         energia:inConcession ?c .\n  ?socia energia:name ?empresa .\n  FILTER(REGEX(?empresa, \"^YPF\", \"i\"))\n  ?c energia:name ?concesion .\n  {\n    SELECT ?c (SUM(?oil) AS ?petroleoConcesion)\n    WHERE {\n      ?p a energia:WellProduction ;\n         energia:inConcession ?c ;\n         energia:oil ?oil .\n    }\n    GROUP BY ?c\n  }\n}\nORDER BY DESC(?petroleoQueLeCorresponde)\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": false
+    },
+    {
+      "conversation": "c02",
+      "turn": 2,
+      "question": "¿Y a Tecpetrol?",
+      "kind": "número",
+      "reference": 1018636.1097394,
+      "answer": "A Tecpetrol S.A. le corresponde petróleo en 11 concesiones; las mayores son Fortín de Piedra (100 %, 472.828), Puesto Parada (100 %, 304.254), Los Toldos II Este (90 %, 95.369) y Los Toldos I Norte (90 %, 72.903). Le siguen Agua Salada (70 %, 33.435), Ramos (58 %, 15.509), Aguaragüe (23 %, 10.594), Los Bastos (100 %, 9.153), Punta Senillosa (100 %, 2.761), Los Toldos I Sur (10 %, 1.371) y San Antonio Sur (23 %, 460).",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?concesion ?empresa ?porcentaje ?petroleoConcesion ((?petroleoConcesion * ?porcentaje / 100) AS ?petroleoQueLeCorresponde)\nWHERE {\n  ?stake a energia:Stake ;\n         energia:partner ?socia ;\n         energia:percent ?porcentaje ;\n         energia:inConcession ?c .\n  ?socia energia:name ?empresa .\n  FILTER(REGEX(?empresa, \"^TECPETROL\", \"i\"))\n  ?c energia:name ?concesion .\n  {\n    SELECT ?c (SUM(?oil) AS ?petroleoConcesion)\n    WHERE {\n      ?p a energia:WellProduction ;\n         energia:inConcession ?c ;\n         energia:oil ?oil .\n    }\n    GROUP BY ?c\n  }\n}\nORDER BY DESC(?petroleoQueLeCorresponde)\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": false
+    },
+    {
+      "conversation": "c03",
+      "turn": 1,
+      "question": "¿Cuáles son las 5 concesiones con más posibles venteos vistos por satélite?",
+      "kind": "lista",
+      "reference": [
+        "LOMA CAMPANA",
+        "LOMA LA LATA - SIERRA BARROSA",
+        "BAJO DEL CHOIQUE - LA INVERNADA",
+        "LA CALERA",
+        "LA ANGOSTURA SUR I"
+      ],
+      "answer": "Las 5 concesiones con más posibles venteos vistos por satélite son LOMA CAMPANA (956), LOMA LA LATA - SIERRA BARROSA (750), BAJO DEL CHOIQUE - LA INVERNADA (590), LA CALERA (482) y LA ANGOSTURA SUR I (395).",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?concesion (COUNT(DISTINCT ?venteo) AS ?posiblesVenteos)\nWHERE {\n  ?venteo a energia:DetectedVenting ;\n          energia:inConcession ?c .\n  ?c energia:name ?concesion .\n}\nGROUP BY ?concesion\nORDER BY DESC(?posiblesVenteos)\nLIMIT 5",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c03",
+      "turn": 2,
+      "question": "¿Cuántos tiene la primera?",
+      "kind": "número",
+      "reference": 956.0,
+      "answer": "La primera concesión, LOMA CAMPANA, tiene 956 posibles venteos.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?concesion (COUNT(DISTINCT ?venteo) AS ?posiblesVenteos)\nWHERE {\n  ?venteo a energia:DetectedVenting ;\n          energia:inConcession ?c .\n  ?c energia:name ?concesion .\n}\nGROUP BY ?concesion\nORDER BY DESC(?posiblesVenteos)\nLIMIT 1",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c04",
+      "turn": 1,
+      "question": "¿Cuántos pozos opera YPF?",
+      "kind": "número",
+      "reference": 15809.0,
+      "answer": "YPF S.A. opera 15809 pozos.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?operadora (COUNT(DISTINCT ?pozo) AS ?pozos)\nWHERE {\n  ?pozo a energia:Well ;\n        energia:operator ?empresa .\n  ?empresa energia:name ?operadora .\n  FILTER(REGEX(?operadora, \"^YPF\", \"i\"))\n}\nGROUP BY ?operadora\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c04",
+      "turn": 2,
+      "question": "¿Y Tecpetrol?",
+      "kind": "número",
+      "reference": 1188.0,
+      "answer": "TECPETROL S.A. opera 1188 pozos.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?operadora (COUNT(DISTINCT ?pozo) AS ?pozos)\nWHERE {\n  ?pozo a energia:Well ;\n        energia:operator ?empresa .\n  ?empresa energia:name ?operadora .\n  FILTER(REGEX(?operadora, \"^TECPETROL\", \"i\"))\n}\nGROUP BY ?operadora\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c05",
+      "turn": 1,
+      "question": "¿Cuántas concesiones habría que revisar por venteos?",
+      "kind": "número",
+      "reference": 45.0,
+      "answer": "Habría que revisar 45 concesiones por venteos.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?concesion) AS ?concesiones_para_revisar)\nWHERE {\n  ?concesion a energia:ConcessionToReview .\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c05",
+      "turn": 2,
+      "question": "¿Cuántas de ellas cumplen los dos motivos a la vez?",
+      "kind": "número",
+      "reference": 9.0,
+      "answer": "9 concesiones cumplen los dos motivos a la vez.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT (COUNT(DISTINCT ?concesion) AS ?concesiones_con_los_dos_motivos)\nWHERE {\n  ?concesion a energia:VentingFarFromPipeline .\n  ?concesion a energia:VentingWithoutReports .\n}\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c06",
+      "turn": 1,
+      "question": "¿A qué precio vendió YPF el barril de petróleo en 2025?",
+      "kind": "sin_datos",
+      "reference": "sin datos",
+      "answer": null,
+      "sin_datos": "Rastro no tiene precios de venta del petróleo; solo volúmenes producidos (m³ de petróleo y miles de m³ de gas) por pozo en 2025.",
+      "query": null,
+      "attempts": 0,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c06",
+      "turn": 2,
+      "question": "¿Y cuánto petróleo declaró ese año?",
+      "kind": "número",
+      "reference": 21389759.35,
+      "answer": "YPF S.A. declaró 21.389.759 m³ de petróleo en 2025, unos 21,4 millones de m³.",
+      "sin_datos": null,
+      "query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?empresa (SUM(?petroleo) AS ?petroleo_m3)\nWHERE {\n  ?prod a energia:WellProduction ;\n        energia:declaredBy ?e ;\n        energia:oil ?petroleo .\n  ?e energia:name ?empresa .\n  FILTER(STRSTARTS(UCASE(STR(?empresa)), \"YPF\"))\n}\nGROUP BY ?empresa\nORDER BY DESC(?petroleo_m3)\nLIMIT 50",
+      "attempts": 1,
+      "unsupported": [],
+      "right": true
+    },
+    {
+      "conversation": "c07",
+      "turn": 1,
+      "question": "¿Cuántas reservas de gas tiene Tecpetrol?",
+      "kind": "sin_datos",
+      "reference": "sin datos",
+      "answer": null,
+      "sin_datos": "Rastro no tiene reservas de gas; solo la producción declarada de 2025 pozo por pozo (gas producido, no reservas).",
+      "query": null,
+      "attempts": 0,
+      "unsupported": [],
+      "right": true
+    }
+  ]
+}

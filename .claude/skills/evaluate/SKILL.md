@@ -75,6 +75,16 @@ Preserve pre-existing edits; review generated diffs, including date-only changes
 
 One domain can have more than one question set (for example, questions about a model's predictions, separate from the Layer evaluation), each with its own read-only users and SQL notes. A new set is an entry in `layer/dominios.yaml` (it can inherit from another with `<<: *ancla`) and its folder with `eval/questions.yaml`, `consistencia/parafrasis.yaml` and `reader.sql`.
 
+## The chat (conversations)
+
+`layer/chat_eval.py <domain> run|puntaje` measures «Conversar con los datos» with `<folder>/chat/conversaciones.yaml`
+(short conversations, a follow-up after the first question, and questions the data cannot answer), with no API key:
+`RASTRO_PROVIDER=files` writes each model call to `<folder>/chat/llamadas/<key>.txt`. Answer each with a fresh
+subagent told to read only that file and write its JSON reply to `<key>.json`; run `run` again until nothing waits
+(each round unblocks the next step: query, answer, follow-up), then `puntaje`. The chat's own code runs every turn;
+only the transport changes. Adjudicate a miss in `adjudicacion.md` before quoting the number, and quote it as
+«N de M», small as it is. With a key, the same set measures that model: say which one answered.
+
 ## When it does not have the data
 
 `layer/fuera.py` measures whether the assistant says what is missing instead of making things up: questions the data cannot answer and one control question that it can (`<folder>/fuera/preguntas.yaml`). One subagent per path (A, B, D and C) with all the questions together:

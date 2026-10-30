@@ -16,9 +16,14 @@ The LLM is chosen with RASTRO_PROVIDER:
   anthropic  Claude API (needs ANTHROPIC_API_KEY). Default model: claude-opus-5-5
   ollama     a local model on the Mac (needs Ollama running). Default model:
              qwen2.5-coder:7b. See layer/README.md
+  openai     the OpenAI API (needs OPENAI_API_KEY and RASTRO_MODEL, the model's name; OPENAI_BASE_URL
+             for another server with the same API)
+  files      no API: each call is written to a file and its reply read from another (RASTRO_FILES), so an
+             assistant without a key answers them; see layer/chat_eval.py
 Without either, eval/manual.py prints the prompts to answer them by hand.
 """
 
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -28,8 +33,8 @@ import requests
 import yaml
 
 PROVIDER = os.environ.get("RASTRO_PROVIDER") or "anthropic"
-MODEL = os.environ.get("RASTRO_MODEL") or {"anthropic": "claude-opus-5-5",
-                                           "ollama": "qwen2.5-coder:7b"}[PROVIDER]
+MODEL = os.environ.get("RASTRO_MODEL") or {"anthropic": "claude-opus-5-5", "ollama": "qwen2.5-coder:7b",
+                                           "openai": "", "files": "files"}[PROVIDER]
 OLLAMA = os.environ.get("OLLAMA_URL") or "http://host.docker.internal:11434"
 MAX_ATTEMPTS = 3
 ROOT = Path(__file__).resolve().parent.parent
@@ -76,7 +81,8 @@ def output_schema(approach, kind):
 
 def ask(system, messages, schema):
     """One call to the LLM with JSON output. Returns (assistant message, data)."""
-    return ask_ollama(system, messages, schema) if PROVIDER == "ollama" else ask_claude(system, messages, schema)
+    providers = {"ollama": ask_ollama, "openai": ask_openai, "files": ask_files}
+    return providers.get(PROVIDER, ask_claude)(system, messages, schema)
 
 
 def ask_claude(system, messages, schema):
@@ -112,6 +118,45 @@ def ask_ollama(system, messages, schema):
     r.raise_for_status()
     text = r.json()["message"]["content"]
     return text, json.loads(text)
+
+
+def ask_openai(system, messages, schema):
+    if not MODEL:
+        raise RuntimeError("RASTRO_PROVIDER=openai necesita RASTRO_MODEL, el nombre del modelo")
+    base = os.environ.get("OPENAI_BASE_URL") or "https://api.openai.com/v1"
+    r = requests.post(f"{base}/chat/completions", timeout=600,
+                      headers={"Authorization": f"Bearer {os.environ['OPENAI_API_KEY']}"},
+                      json={"model": MODEL,
+                            "messages": [{"role": "system", "content": system}, *messages],
+                            # The reply is restricted to this JSON schema
+                            "response_format": {"type": "json_schema",
+                                                "json_schema": {"name": "respuesta", "schema": schema, "strict": True}}})
+    r.raise_for_status()
+    message = r.json()["choices"][0]["message"]
+    if message.get("refusal"):
+        raise RuntimeError("El modelo rechazó la pregunta")
+    return message["content"], json.loads(message["content"])
+
+
+class Pending(Exception):
+    """A call written to a file whose reply is not there yet (RASTRO_PROVIDER=files)."""
+
+
+def ask_files(system, messages, schema):
+    """The call as a text file, named by its content, and the reply read from the JSON file next to it. The same call
+    always has the same name, so a run that stopped for a missing reply goes on from there once it is written."""
+    folder = Path(os.environ["RASTRO_FILES"])
+    said = "\n\n".join(f"[{m['role']}]\n{m['content']}" for m in messages)
+    text = (f"[system]\n{system}\n\n{said}\n\n[formato]\nRespondé solo con un objeto JSON que cumpla este "
+            f"esquema, sin texto alrededor:\n{json.dumps(schema, ensure_ascii=False)}\n")
+    key = hashlib.sha256(text.encode()).hexdigest()[:16]
+    reply = folder / f"{key}.json"
+    if reply.exists():
+        content = reply.read_text()
+        return content, json.loads(content)
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / f"{key}.txt").write_text(text)
+    raise Pending(key)
 
 
 # --- Answer -------------------------------------------------------

@@ -1,0 +1,1 @@
+{"query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?empresa (SUM(?petroleo) AS ?petroleo_m3)\nWHERE {\n  ?prod a energia:WellProduction ;\n        energia:declaredBy ?e ;\n        energia:oil ?petroleo .\n  ?e energia:name ?empresa .\n  FILTER(STRSTARTS(UCASE(STR(?empresa)), \"YPF\"))\n}\nGROUP BY ?empresa\nORDER BY DESC(?petroleo_m3)\nLIMIT 50"}

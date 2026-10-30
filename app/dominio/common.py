@@ -273,6 +273,8 @@ def llm_status():
             return True, f"Ollama · {answer.MODEL}"
         except requests.RequestException:
             return False, idioma.t("dominio.llm_status.no_answer", url=answer.OLLAMA)
+    if answer.PROVIDER == "openai" and os.environ.get("OPENAI_API_KEY") and answer.MODEL:
+        return True, f"OpenAI API · {answer.MODEL}"
     if os.environ.get("ANTHROPIC_API_KEY"):
         return True, f"Claude API · {answer.MODEL}"
     return False, idioma.t("dominio.llm_status.none")

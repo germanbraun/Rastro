@@ -1,0 +1,1 @@
+{"query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?operadora (COUNT(DISTINCT ?pozo) AS ?pozos)\nWHERE {\n  ?pozo a energia:Well ;\n        energia:operator ?empresa .\n  ?empresa energia:name ?operadora .\n  FILTER(REGEX(?operadora, \"^TECPETROL\", \"i\"))\n}\nGROUP BY ?operadora\nLIMIT 50"}

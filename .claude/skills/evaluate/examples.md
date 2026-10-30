@@ -79,3 +79,10 @@ measured. The throwaway files were removed and the results restored; the real fo
 D 10, C 10 of 10. Three B queries timed out and were given the error back (e08 succeeded on its third attempt). The
 consistency forms (n = 1–3) were not re-measured and say so. With `eval/run.yaml` and the prompts, the gate's only
 missing piece is the person's review.
+
+## The chat, without an API key (oil and gas, 2026-10-30)
+
+`chat_eval.py energia`: 7 conversations, 13 turns, answered in 4 rounds (7, 6, 6 and 5 calls), each by a fresh
+subagent reading only its call file. 11 of 13 right; follow-ups 5 of 6; no unbacked number; no retries; both
+no-data questions said what was missing. The two misses asked for a share «en cada concesión» and got the
+per-concession breakdown: the question's wording, adjudicated and counted as wrong, not re-measured.

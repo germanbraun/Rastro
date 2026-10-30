@@ -57,6 +57,7 @@ docker compose run --rm calidad                        # quality rules (SHACL) o
 docker compose run --rm -T layer-eval python /layer/fuera.py energia prompt|guardar|puntaje   # does it say when it lacks the data?
 docker compose run --rm -T layer-eval python /layer/evaluar.py energia rerun|puntaje   # evaluation (energia_lab: questions about the predictions)
 docker compose run --rm -T layer-eval python /layer/review_packet.py energia build|record   # a person checks the references
+docker compose run --rm -T layer-eval python /layer/chat_eval.py energia run|puntaje   # the chat, measured without an API key
 layer/energia/cambio/cambio.sh registrar               # change test (always ends with «deshacer»)
 layer/energia/cambio/correccion.sh registrar           # one correction, every result (~15 min)
 layer/energia/cambio/impacto.sh registrar              # which predictions change if the source corrects a record (~15 min)

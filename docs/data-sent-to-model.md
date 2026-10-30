@@ -15,8 +15,10 @@ run without any. Checked against the code on 2026-10-29; when a feature changes,
 
 ## The app, at run time
 
-The app calls the model configured in `.env` (`RASTRO_PROVIDER`, `ANTHROPIC_API_KEY`, `RASTRO_MODEL`), through
-`layer/answer.py` (`ask`). The large context goes in the system prompt and is cached by the provider for a short time.
+The app calls the model configured in `.env` (`RASTRO_PROVIDER`, `ANTHROPIC_API_KEY` or
+`OPENAI_API_KEY`, `RASTRO_MODEL`), through `layer/answer.py` (`ask`): the Claude API by default, the OpenAI API with
+`RASTRO_PROVIDER=openai`, or a local model. Whichever is configured receives everything in the table below; the
+large context goes in the system prompt, and the Claude API caches it for a short time.
 
 | Feature (where) | What is sent | Customer data in it? | Code |
 |---|---|---|---|
@@ -38,6 +40,7 @@ method, the agent reads:
 | Inspect sources, map them, link entities | Table and column names, documentation, **sample rows**, and the texts that link candidates are decided on (company names, affiliation strings) |
 | Questions over texts (generating the saved summary) | **The selected records' texts** (for oil and gas, the short texts of the environmental studies listing) |
 | Evaluate (independent evaluators) | Each evaluator's prompt: the domain description and either the SQL schema (table and column names, their documentation) or the ontology, and the question; its queries run locally and only errors go back. Oncology's older runner calls the configured model itself (`layer/answer.py` `answer`, from `layer/eval/run.py`), with the same prompts |
+| Measure the chat (`layer/chat_eval.py`, no API key) | Each chat call as a file: the same content the app would send (table above), up to 50 result rows included; a fresh assistant in the consultant's session answers it |
 | Review doubtful links (when an assistant reviews them) | The candidate and its evidence text |
 
 Agree before the pilot which of this may be read (docs/customer-deployment.md, section 2.1), and write it in
@@ -46,13 +49,17 @@ rules and decisions; the data stays in the customer's database (`data/raw/` is n
 
 ## Running without a model, or with a local one
 
-- **No model:** leave `ANTHROPIC_API_KEY` empty and `RASTRO_PROVIDER` empty. The app cannot call any model: the chat
+- **No model:** leave `ANTHROPIC_API_KEY`, `OPENAI_API_KEY` and `RASTRO_PROVIDER` empty. The app cannot call any model: the chat
   and the explanation of a new query say a model is needed, and everything else works. With `RASTRO_NO_MODEL=1` in `.env`,
   `infra/customer/check.py` fails if the app has a key or a provider configured, so the setting can be shown to
   the customer's security team.
 - **A local model:** `RASTRO_PROVIDER=ollama` and `OLLAMA_URL` pointing to a model on the customer's network. Nothing
   leaves it. Expect weaker queries from a small local model: measure them with the domain's questions before
   relying on them.
+- **OpenAI instead of Claude:** `RASTRO_PROVIDER=openai`, `OPENAI_API_KEY` and `RASTRO_MODEL` (the model's name;
+  `OPENAI_BASE_URL` for another server with the same API). The same features send the same content, to OpenAI.
+  Rastro's numbers were measured with Claude: measure the chosen model with the domain's questions before quoting
+  them for it.
 - **The customer's own cloud:** Claude is also offered through the large cloud providers; whether a given feature is
   available there, and under which terms, is checked for that customer before the pilot.
 

@@ -13,3 +13,11 @@ Las referencias salen de Rastro, así que donde las respuestas difieren se revis
 Además, las primeras siete respuestas con Rastro se descartaron y se repitieron: las notas de SPARQL no decían cómo están escritos los nombres de empresa (las de proveedores sí). Se agregó la misma frase general («como en cada fuente, casi siempre en mayúsculas y con su forma societaria»), sin nombrar ninguna empresa.
 
 **e08 y e09 se midieron después (19 de octubre)**, con el mismo protocolo y subagentes nuevos. Antes de medir se completó lo que cada forma ve, sin tocar las preguntas ya medidas: sin Rastro no tenía permiso para leer los estudios ambientales ni notas sobre las declaraciones de 2023 y 2024, y SQL + enlaces no tenía las tablas de concesiones para revisar y de cambios de operadora. e08 sin Rastro quedó sin respuesta: se le acabó el tiempo en los tres intentos, como en e05 (distancias a gasoductos sin PostGIS). En e08 y e09, tres respuestas usaron un intento de más porque el subagente mandó la consulta envuelta en el JSON del prompt; no cambia ningún puntaje.
+
+## Conversar con los datos (30 de octubre de 2026)
+
+`layer/chat_eval.py`, 13 turnos en 7 conversaciones (`layer/energia/chat/`). Revisión hecha por un asistente de IA (Claude Code), a confirmar por una persona.
+
+| Turno | Diferencia | Qué se encontró | Resultado |
+|---|---|---|---|
+| c02.1 y c02.2 (petróleo que le corresponde a YPF, y a Tecpetrol) | La referencia es el total (12,6 y 1,0 millones de m³); el chat dio la parte de cada concesión, sin sumarla | La pregunta decía «según su participación en cada concesión», y el chat la leyó como un desglose: su consulta devuelve una fila por concesión y la respuesta las enumera. Los valores por concesión están bien (Loma Campana 2,57 = 5,15 × 50 %). **Ambigüedad de la pregunta**, escrita por quien mide, más que error del chat; pero una persona que pregunta «cuánto» espera el total. | Cuenta como incorrecta, como se midió. No se volvió a medir con otra redacción |

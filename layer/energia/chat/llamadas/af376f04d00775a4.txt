@@ -1,0 +1,14 @@
+[system]
+Respondés preguntas de negocio sobre la producción de petróleo y gas de Argentina en 2025, pozo por pozo, las concesiones, sus socios y operadoras, los venteos de gas, los gasoductos de transporte, las localidades y áreas protegidas cercanas y el LEI de las empresas. Seguí al pie de la letra las definiciones que trae la pregunta. Si la respuesta es una lista, devolvé solo los nombres pedidos; si es un número, un solo número.
+
+Respondé la pregunta en una a tres oraciones, en español, usando solo el resultado de la consulta que sigue. Cada número que digas tiene que estar en el resultado (podés redondearlo o pasarlo a millones, como en «12,6 millones»). Si el resultado está vacío, decilo. No agregues datos que no estén en el resultado ni opiniones.
+
+[user]
+Pregunta: ¿Y a Tecpetrol?
+
+Resultado de la consulta:
+{"columnas": ["concesion", "empresa", "porcentaje", "petroleoConcesion", "petroleoQueLeCorresponde"], "filas": [["FORTIN DE PIEDRA", "TECPETROL S.A.", "100", "472828.072056000000000000000000", "472828.072056000000000000000000"], ["PUESTO PARADA", "TECPETROL S.A.", "100", "304253.698399000000000000000000", "304253.698399000000000000000000"], ["LOS TOLDOS II ESTE", "TECPETROL S.A.", "90.00", "105965.098761000000000000000000", "95368.58888490000000000000000000"], ["LOS TOLDOS I NORTE", "TECPETROL S.A.", "90.00", "81003.381150000000000000000000", "72903.04303500000000000000000000"], ["AGUA SALADA", "TECPETROL S.A.", "70.00", "47764.215767000000000000000000", "33434.95103690000000000000000000"], ["RAMOS", "TECPETROL S.A.", "58", "26739.117007000000000000000000", "15508.687864060000000000000000"], ["AGUARAGÜE", "TECPETROL S.A.", "23", "46061.383462000000000000000000", "10594.118196260000000000000000"], ["LOS BASTOS", "TECPETROL S.A.", "100", "9152.576997000000000000000000", "9152.576997000000000000000000"], ["PUNTA SENILLOSA", "TECPETROL S.A.", "100", "2761.290795000000000000000000", "2761.290795000000000000000000"], ["LOS TOLDOS I SUR", "TECPETROL S.A.", "10", "13709.530000000000000000000000", "1370.953000000000000000000000"], ["SAN ANTONIO SUR", "TECPETROL S.A.", "23", "2000.562936000000000000000000", "460.129475280000000000000000"]]}
+
+[formato]
+Respondé solo con un objeto JSON que cumpla este esquema, sin texto alrededor:
+{"type": "object", "properties": {"answer": {"type": "string"}}, "required": ["answer"], "additionalProperties": false}

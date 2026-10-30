@@ -170,6 +170,8 @@ def llm_status():
             return True, f"Ollama · {answer.MODEL}"
         except requests.RequestException:
             return False, t("oncologia.llm.no_ollama", url=answer.OLLAMA)
+    if answer.PROVIDER == "openai" and os.environ.get("OPENAI_API_KEY") and answer.MODEL:
+        return True, f"OpenAI API · {answer.MODEL}"
     if os.environ.get("ANTHROPIC_API_KEY"):
         return True, f"Claude API · {answer.MODEL}"
     return False, t("oncologia.llm.none")

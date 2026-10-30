@@ -1,0 +1,1 @@
+{"query": "PREFIX energia: <https://w3id.org/rastro/energia#>\nSELECT ?concesion (COUNT(DISTINCT ?venteo) AS ?posiblesVenteos)\nWHERE {\n  ?venteo a energia:DetectedVenting ;\n          energia:inConcession ?c .\n  ?c energia:name ?concesion .\n}\nGROUP BY ?concesion\nORDER BY DESC(?posiblesVenteos)\nLIMIT 1"}

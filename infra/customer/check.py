@@ -78,7 +78,8 @@ def main():
             check(variables.get("PG_USER") == "rastro_readonly", "app: reads as rastro_readonly")
             # Which language model the app can call (docs/data-sent-to-model.md); with RASTRO_NO_MODEL=1, none
             provider = variables.get("RASTRO_PROVIDER") or ("anthropic" if variables.get("ANTHROPIC_API_KEY") else "")
-            model = {"anthropic": "Claude API", "ollama": "a local model (Ollama)"}.get(provider, "none")
+            model = {"anthropic": "Claude API", "openai": "OpenAI API",
+                     "ollama": "a local model (Ollama)"}.get(provider, "none")
             if e.get("RASTRO_NO_MODEL") == "1":
                 check(model == "none", f"app: calls no language model (configured: {model})")
             else:

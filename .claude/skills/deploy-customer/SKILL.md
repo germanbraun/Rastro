@@ -21,7 +21,7 @@ description: Install, check, back up, restore and upgrade Rastro on a customer's
 
 1. **Before installing, the model question.** Read `docs/data-sent-to-model.md` with the customer: what each feature
    sends (the chat's answer step sends up to 50 result rows). They choose: the Claude API, Claude through their cloud,
-   a local model, or none (`RASTRO_NO_MODEL=1`). Write it in `docs/decisions.md`.
+   the OpenAI API (`RASTRO_PROVIDER=openai`), a local model, or none (`RASTRO_NO_MODEL=1`). Write it in `docs/decisions.md`.
 2. **Install:** `infra/customer/install.sh <domain>`. It fills in `.env` only what is missing, shows the login's
    password once (it keeps only its hash), starts the services in order and runs `check.py`. Every line must be ✅;
    a ❌ is fixed before anything else (a demo default password, a port open to the network).

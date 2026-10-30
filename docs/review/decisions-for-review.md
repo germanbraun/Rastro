@@ -481,6 +481,14 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
   rescheduling instead) serve the pitch better? Is testing Streamlit's internal markers worth it, or should the look
   rely only on the theme file and accept less styling?
 
+**H17. OpenAI as a model option; the chat measured without a key** (2026-10-30)
+- **Decision:** the app can call the OpenAI API instead of Claude (no default model name). The chat was measured
+  with its own code and the model call replaced by files that fresh assistants answer: 11 of 13 turns right,
+  follow-ups 5 of 6, no unbacked number; the two misses read «in each concession» as a breakdown.
+- **Q53.** Is a measurement where the model answers through files (same model, same prompts, no API call) credible
+  enough to quote, or does the chat need a run through the real API before any number is shown? Should the two
+  misses count as the chat's error or the question's?
+
 ## 3. Open decisions
 
 1. **A person confirms the references.**
@@ -552,7 +560,7 @@ plus Rastro's link tables (the "fair baseline"); **C** = an LLM writing SPARQL o
 
 ## 5. How to answer
 
-- Answer per question number (Q1–Q52). Skip any you have no view on.
+- Answer per question number (Q1–Q53). Skip any you have no view on.
 - For each answer, say whether you **agree, disagree or would change** the decision, and why. Name the alternative
   you would choose and what it would cost.
 - **Flag any claim that looks circular or unsupported:** a number whose reference, check or fix came from the same
